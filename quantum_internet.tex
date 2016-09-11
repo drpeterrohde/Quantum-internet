@@ -36,7 +36,15 @@
 \affiliation{Centre for Quantum Computation \& Intelligent Systems (QCIS), Faculty of Engineering \& Information Technology, University of Technology Sydney, NSW 2007, Australia}
 
 \author{Jonathan P. Olson}
-\affiliation{Department of Chemistry and Chemical Biology, Harvard University, Cambridge MA 02138, USA}
+\affiliation{Department of Chemistry \& Chemical Biology, Harvard University, Cambridge MA 02138, USA}
+
+\author{Z.-E. Su}
+\affiliation{Hefei National Laboratory for Physical Sciences at Microscale and Department of Modern Physics,
+University of Science \& Technology of China, Hefei, Anhui 230026, China}
+
+\author{Chao-Yang Lu}
+\affiliation{Hefei National Laboratory for Physical Sciences at Microscale and Department of Modern Physics,
+University of Science \& Technology of China, Hefei, Anhui 230026, China}
 
 \date{\today}
 
@@ -430,6 +438,10 @@ Thus, both dephasing and depolarization are examples of Pauli error models.
 In the qubit basis (i.e not including loss, for example), the Pauli matrices form a complete basis for quantum operations. Thus, the depolarizing channel is the most general qubit error model, since it effectively applies all four Pauli error channels. For this reason, when evaluating fault-tolerance thresholds for QEC codes, thresholds are typically quoted in terms of the depolarizing error rate.
 
 Like the dephasing channel, the error probability of multiple channels in series accumulates multiplicativly.
+
+\subsubsection{Amplitude Damping}
+
+\comment{TO DO. Talk about t1, t2 and t2* times in these sections}
 
 \subsubsection{Mode-Mismatch} \label{sec:MM_error}
 
@@ -1399,7 +1411,11 @@ A final building block, that will be essential in many networks, is quantum memo
 
 Building upon the above building blocks, we now describe some of the major elementary quantum protocols. All of those discussed here have been subject to extensive experimental investigation and demonstration.
 
-\subsubsection{Entanglement Purification}
+\subsubsection{Entanglement Distribution}
+
+\comment{To do - this is a lead-up to the next section. Introduce Bell pair distribution and error models. This leads directly into the entanglement purification section. Talk about effect of dephasing on entanglement metric. Treat entanglement as the `resource' that we want to communicate.}
+
+\subsubsection{Entanglement Purification} \label{sec:ent_purif}
 
 Entangled states, most notably Bell- or Einstein-Podolsky-Rosen (EPR)-pairs,
 \begin{align} \label{eq:bell_basis}
@@ -1418,7 +1434,11 @@ Taking two polarization-encoded photonic Bell pairs, say $\ket{\Psi^+}$ and subj
 \end{align}
 where $F$ is the entanglement fidelity, which is a function of the dephasing rate. Note that $\ket{\Psi^+}$ and $\ket{\Psi^-}$ are related by local phase-flip operations ($\hat{Z}$) applied to either qubit.
 
-An linear optics entanglement purification protocol can be simply implemented using two polarizing beamsplitters (PBSs). Alice uses one PBS to interfere the photons from her side of each of the photon pairs, measuring one output only, which implements a Bell projection. Bob does the same on his side. What's left is one photon in Alice's hands and one in Bob's. When successful, they will now be sharing a single entangled pair of higher Bell state fidelity than the two starting states. The protocol is shown in Fig.~\ref{fig:ent_purif_prot}.
+An linear optics entanglement purification protocol can be simply implemented using two polarizing beamsplitters (PBS's). Alice uses one PBS to interfere the photons from her side of each of the photon pairs, measuring one output only, which implements a non-deterministic, partial Bell projection. Bob does the same on his side. What's left is one photon in Alice's hands and one in Bob's. When successful, they will now be sharing a single entangled pair of higher Bell state fidelity than the two starting states. The protocol is shown in Fig.~\ref{fig:ent_purif_prot}.
+
+Note that when using PBS's to perform the Bell projections, the protocol is necessarily non-deterministic, since PBS's are only able to distinguish two of the four Bell states. Thus, each PBS has a success probability of $1/2$. And there are two PBS's per instance of the protocol, therefore the net success probability is $1/4$. When concatenated, $n$ applications of the protocol thus has an exponentially low success probability of $1/4^n$. This could be overcome using deterministic CNOT gates. But, as we know, these are challenging using linear optics.
+
+Furthermore, the protocol consumes two Bell pairs upon each trial, only one quarter of which are successful. Thus, on average, 8 Bell pairs are consumed for every purified Bell pair prepared, and the expected number of Bell pairs required to perform $n$ iterations of entanglement purification grows exponentially as $8^n$.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.9\columnwidth]{ent_purif_prot}
@@ -1466,7 +1486,7 @@ The first step of the protocol is for Alice to perform a two-qubit entangling me
 which is Alice's initial state. For all four possible Bell measurement outcomes we have,
 \begin{align}
 \ket\psi_\mathrm{proj}^{\Psi^+} &= \frac{1}{2} (\alpha \ket{0}_B + \beta \ket{1}_B) \nonumber \\
-&= \ket\phi_B, \nonumber \\
+&= \frac{1}{2} \ket\phi_B, \nonumber \\
 \ket\psi_\mathrm{proj}^{\Psi^-} &= \frac{1}{2} (\alpha \ket{0}_B - \beta \ket{1}_B) \nonumber \\
 &= \frac{1}{2} \hat{Z}\ket\phi_B, \nonumber \\
 \ket\psi_\mathrm{proj}^{\Phi^+} &= \frac{1}{2} (\alpha \ket{1}_B + \beta \ket{0}_B) \nonumber \\
@@ -1511,14 +1531,15 @@ Now if instead of Alice and Bob we have a long chain of these operations in seri
 \caption{Entanglement swapping between two nodes. Each node initially holds a Bell pair (dotted ellipses) comprising two qubits (grey circles). One qubit from each pair is sent to repeater between them, which measures them in the Bell basis. After local unitary corrections, the two nodes share an entangled pair.} \label{fig:ent_swap}
 \end{figure}
 
-The advantage to this approach is that the range of each repeater can be much smaller than the entire length of the channel, easing constraints imposed by errors, notably loss. Furthermore, the entanglement swapping needn't be actually performed in any chronologically linear sequence. The operations could be arbitrarily ordered. Thus, if some segments are detected as failing (e.g qubits are lost), just those segments can be performed again without requiring the entire protocol to start from scratch, unlike the na{\" i}ve direct communication technique.
-This `divide and conquer' approach can drastically improve performance of the network in terms of channel capacity, improving the exponential dependence of loss on distance.
+The advantage to this approach is that the range of each repeater can be much smaller than the entire length of the channel, easing constraints imposed by errors, notably loss. Furthermore, the entanglement swapping needn't be actually performed in any chronologically linear sequence. The operations could be arbitrarily ordered, since the measurements are independent and commute. Thus, if some segments are detected as failing (e.g qubits are lost), just those segments can be performed again without requiring the entire protocol to start from scratch, unlike the na{\" i}ve direct communication technique. This `divide and conquer' approach can drastically improve performance of the network in terms of channel capacity, improving the exponential dependence of loss on distance. 
 
-Because the protocol is constructed entirely on top of many instances of the teleportation protocol, it inherent all the same error propagation characteristics as for teleportation discussed previously.
+The protocol is conceptually very similar to teleportation, where instead of teleporting a qubit state, we are teleporting entanglement. Because of this similarity, it inherits similar error propagation characteristics as for teleportation discussed previously. That is, errors acting on the qubits upon which the Bell measurements are performed are effectively teleported onto the remaining qubits. Then, entanglement purification can be implemented as a higher-level layer on top of the repeaters, enabling high-fidelity entanglement distribution.
 
-\subsubsection{Optical Interfacing}
+\subsubsection{Optical Interfacing} \label{sec:opt_int}
 
-\comment{TO DO}
+\comment{TO DO. Discuss how to couple non-optical qubits to optical qubits. e.g atoms in cavities. Stimulated emission of atomic ensemble etc.}
+
+\peter{This is an area of research under active development \cite{???}, and will  be instrumental in the development of the quantum internet. For example, much progress has been made in coupling photonic qubits with atomic \cite{???}, quantum dot \cite{???}, and atomic ensemble \cite{???} systems, with rapidly improving coupling efficiencies and fidelities.}
 
 \subsubsection{Quantum Memory}
 
@@ -1538,11 +1559,19 @@ However, in addition to this, the quantum memory will of course accumulate addit
 
 Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. There is only a single provably secure encryption protocol, the \emph{one-time-pad}. This protocol requires Alice and Bob to share a random bit-string as long as the message being communicated between them. This reduces the problem of perfect secrecy of arbitrary messages to secrecy of shared randomness. QKD protocols enable this by providing a shared source of randomness between Alice and Bob, where any intercept-resent attack may be detected, guaranteed by the laws of quantum physics.
 
-The two original QKD protocols, known as the \emph{BB84 protocol}) \cite{bib:BennetBrassard84}, and \emph{Ekert 91 protocol} \cite{bib:Ekert91}, are based on polarisation encoding in photons. BB84 requires only the transmission of a sequence of single photons, polarisation encoded with random data. Ekert 91, on the other hand, requires a server that distributes entangled Bell pairs between Alice and Bob. Since, numerous other protocols for QKD have been proposed, for example, using continuous variable states.
+The two original QKD protocols, known as the \emph{BB84 protocol} \cite{bib:BennetBrassard84}, and \emph{E91} \cite{bib:Ekert91}, are based on polarisation encoding in photons. BB84 requires only the transmission of a sequence of single photons, polarisation encoded with random data. Ekert 91, on the other hand, requires a server that distributes entangled Bell pairs between Alice and Bob. Since, numerous other protocols for QKD have been proposed, for example, using continuous variable states.
 
 It is easy to see the utility of quantum networks in enabling commodity deployment of QKD -- users desire to communicate photons across long-range ad hoc networks, with low loss, so as to maximise bit-rates, and minimising costs in, for example, fidelity, entanglement, and purity. A global quantum internet would allow quantum cryptography to truly supersede classical cryptography, bypassing the vulnerabilities faced by classical cryptography in the quantum computing era.
 
 Unlike quantum computing, QKD is at the stage of commercial viability, and several vendors offer off-the-shelf plug-and-play QKD systems. Thus, a quantum internet with low cost metrics would already find substantial utility with today's technology. Currently, great progress in being made in the implementation of QKD in fibre \cite{???}, over free space \cite{bib:Buttler00}, and even over intercontinental satellite uplinks \cite{JWP}. It seems extremely likely that some government agencies would be rolling out QKD systems \cite{bib:Secret}, especially in light of the paranoia surrounding quantum codebreaking.
+
+\subsubsection{Quantum Anonymous Broadcasting}
+
+\comment{Ryan TO DO}
+
+\subsubsection{Superdense Coding}
+
+\comment{Ryan to do}
 
 \subsection{Cloud Quantum Computing} \label{sec:cloud}
 
@@ -1550,7 +1579,7 @@ From the perspective of quantum computing, by far the most pressing goal for qua
 
 There are several protocols necessary to facilitate cloud quantum computing. First of all, we must have a means by which to remotely process data prepared by a host on a server(s). At the most basic level, this simply involves communicating quantum and/or classical data from a client to a single server for processing, which returns quantum or classical information to the client. In the most general case, a computation may be processed by multiple servers, each responsible for a different part of the computation -- \emph{distributed quantum computation}. Many real-world applications for quantum computing will involve sensitive data, in terms of both the information being processed and the algorithms being employed. This necessitates encryption allowing computations to be performed securely over a network, such that intercept-resend attacks are unable to infer the client's data. These form the basic building blocks from which a secure cloud-based model for quantum computing may be constructed, and economic models based on the outsourcing of computations may emerge.
 
-\subsubsection{Single Client, Single Server}
+\subsubsection{Outsourced Computation}
 
 Most simply, an outsourced computation involves Alice preparing either a quantum or classical input state, which she would like processed on Bob's computer. Bob performs the computation and returns either a quantum or classical state to Alice.
 
@@ -1601,6 +1630,8 @@ In the usual circuit model, blind quantum computation has been shown to be viabl
 
 These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver information-theoretically secure data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
 
+\comment{Say more about this}
+
 \subsubsection{Cluster States} \label{sec:CSQC}
 
 The \emph{circuit model} is the conventional approach for expressing quantum algorithms. However, the \emph{cluster state model} for quantum computation \cite{bib:Raussendorf01, bib:Raussendorf03, bib:Nielsen06} (also referred to as the \emph{one-way}, \emph{measurement-based}, or \emph{graph state} models for quantum computation) is an extremely powerful, yet conceptually distinct paradigm, that warrants treatment of its own, owing to its significant distinction from the more familiar circuit model.
@@ -1626,13 +1657,20 @@ Much work has been done on the efficient preparation of cluster states \cite{bib
 
 If the intention is to perform quantum computations using the cluster states shared over the network, QEC and fault-tolerance \emph{must} be taken into consideration, or catastrophic algorithmic failure will inevitably follow -- the cluster state model is no different from the circuit model in this respect. Fault-tolerance theory places hard thresholds on the amount of noise (typically depolarizing errors and loss) qubits may be subject to in order for fault-tolerance to be possible and computations to succeed. This places strict QoS constraints on the network, which can be accommodated for by using the usual depolarizing and efficiency cost metrics when developing networking strategies and link performance requirements.
 
-From cluster states, certain \emph{topological QEC codes} \cite{???} can be readily constructed. This implements a form of QEC-encoded measurement-based quantum computing protocol, where the computation proceeds in a measurement-based fashion, but is fault-tolerant. These codes have been shown to have very favourable fault-tolerance thresholds in terms of both depolarizing noise and loss \cite{bib:StaceBarrettDohertyLoss, bib:BarrettStaceFT}.
+From cluster states, certain \emph{topological QEC codes} \cite{???} can be readily constructed. This implements a form of QEC-encoded measurement-based quantum computing protocol, where the computation proceeds in a measurement-based fashion, but is fault-tolerant. These codes have been shown to have very favourable fault-tolerance thresholds in terms of both depolarizing noise and loss \cite{bib:StaceBarrettDohertyLoss, bib:BarrettStaceFT}, as well as frugal resource overhead compared to traditional concatenated codes.
 
-Homomorphic and blind quantum computing have been described natively to the cluster state model \cite{homoCS}, and in fact are conceptually more straightforward to understand in this formalism.
+Homomorphic and blind quantum computing have been described natively to the cluster state model \cite{homoCS}, and in fact are conceptually more straightforward to understand in this formalism. \comment{Explain these protocols}
 
-Importantly, the preparation of cluster states is readily parallelized. All the entangling operations commute, the order in which they are applied is irrelevant, and a rectangular lattice cluster is completely uniform. Thus, the graphs representing smaller cluster states may be easily \emph{fused} together to form larger cluster states using, for example, CZ gates (several other types of entangling gates can also be employed, such as polarizing beamsplitters). This allows the preparation of cluster states to be performed in a `patchwork quilt' manner -- a number of nodes each prepare small lattice clusters, they are all put side-by-side, and stitched together using CZ gates. This type of distributed state preparation is a perfect application for in-parallel distributed quantum processing.
+Importantly, the preparation of cluster states is readily parallelised. All the entangling operations commute, the order in which they are applied is irrelevant, and a rectangular lattice cluster is completely uniform. Thus, the graphs representing smaller cluster states may be easily \emph{fused} together to form larger cluster states using, for example, CZ gates (several other types of entangling gates can also be employed, such as polarising beamsplitters). This allows the preparation of cluster states to be performed in a `patchwork quilt' manner -- a number of nodes each prepare small lattice clusters, they are all put side-by-side, and stitched together using CZ gates. This type of distributed state preparation is a perfect application for in-parallel distributed quantum processing.
 
 Consider the scenario whereby Alice requests a large cluster state from Bob, but, while she was unable to prepare the cluster state herself, she has the technological ability to perform the measurement-based computation on the state. This would effectively bypass the need for blind/homomorphic quantum computation on Bob's hardware altogether, enabling computation with \emph{perfect} secrecy, since no foreign parties would be involved in the computation stage, and no secret data is communicated. By commuting all the technologically challenging aspects of a quantum computation to the state preparation stage, we can effectively mitigate the need for blind quantum computing entirely, since the `hard work' has been done in advance by the host, and Alice gets to fulfill the computation on her own, completely bypassing poor old Bob, who was just dying to read Alice's secret love letters before processing them into Hallmark cards.
+
+There are several cluster state identities we will utilise later, summarised in Fig.~\ref{fig:cluster_ident}.
+
+\begin{figure}
+\includegraphics[width=\columnwidth]{cluster_identities}
+\caption{Several cluster state identities. (a) a CZ gate between two qubits creates an edge between them in the graph. (b) Measurement of a qubit in the $\hat{Y}$ basis removes that qubit from the graph, while creating new edges between the neighbouring qubits. (c) Measurement of a qubit in the $\hat{Z}$ basis removes that qubit and any neighbouring edges.} \label{fig:cluster_ident} 
+\end{figure}
 
 \subsubsection{Universal Linear Optics} \label{sec:KLM_univ}
 
@@ -1657,7 +1695,7 @@ Both quantum walks and {\sc BosonSampling} have been subject to extensive experi
 
 Because these models are entirely passive, they can be made cloud-based very trivially: Alice prepares her permutation of single photons as the input state, sends it to Bob over the quantum network, who applies the passive operations before returning the state to Alice. Importantly, no intermediate client/server interaction is required. Alternately, she could classically communicate a bit-string to Bob indicating the input photon-number configuration, in case she is unable to prepare it herself.
 
-It was recently shown that this model may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}. This encryption also does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy.
+It was recently shown that this model may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}. This encryption also does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy. \comment{Explain in detail}
 
 \subsubsection{Continuous Variables}
 
@@ -1670,20 +1708,24 @@ Gaussian states
 
 \subsubsection{Hybrid Architectures} \label{sec:hybrid}
 
-It is unlikely that future, large-scale quantum computers will be purely optical. Some other technologies have a more favourable outlook in terms of scalability. Nonetheless, when it comes to networking quantum computers, optics is the natural approach, motivating investigation of hybrid architectures, where qubits are represented using some non-optical system, but entangling operations between them are mediated by optical states. The natural example is qubits which couple to single-photon states, whereupon which-path erasure between coupled optical modes teleports entanglement onto the physical qubits. Similarly, measurement of the qubits is performed by stimulating the emission of photons from the physical qubits. This idea has been applied to $\lambda$-configuration atomic qubits \cite{bib:BarrettKok05}, shown in Fig.~\ref{fig:barrett_kok}, and atomic ensemble qubits \cite{bib:RohdeAtEns10}.
+It is unlikely that future, large-scale quantum computers will be purely optical. Some other technologies have a more favourable outlook in terms of scalability. Nonetheless, when it comes to networking quantum computers, optics is the natural approach, motivating investigation of hybrid architectures, where qubits are represented using some non-optical system, but entangling operations between them are mediated by optical states.
+
+The natural example is qubits which couple to single-photon states, whereupon which-path erasure between coupled optical modes teleports entanglement onto the physical qubits. Similarly, measurement of the qubits may be performed by stimulating the emission of photons from the physical qubits. This idea has been applied to $\lambda$-configuration atomic qubits \cite{bib:BarrettKok05}, shown in Fig.~\ref{fig:barrett_kok}, and atomic ensemble qubits \cite{bib:RohdeAtEns10}. A novel `double heralding' technique, introduced in \cite{bib:BarrettKok05} allows loss to be overcome \comment{Check this, is this what the double heralding does?}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.75\columnwidth]{barrett_kok}
-\caption{Two atomic systems in $\lambda$-configurations, each coupled with an optical mode. An entangling operation between them is mediated via linear optics \cite{bib:BarrettKok05}. Each system contains two ground states, which jointly encode a qubit ($\ket{\!\uparrow}$, $\ket{\!\downarrow}$), and an additional excited state ($\ket{e}$), which only couples to the $\ket{\!\downarrow}$ state. A $\pi$-pulse excites the electron from the $\ket{\!\downarrow}$ to the $\ket{e}$ state, after which emission of a photon is associated with a relaxation back to $\ket{\!\downarrow}$. If the two optical modes are interfered on a 50:50 beamsplitter, and a single photon is detected between the two photodetectors, $D_1$ and $D_2$, which-path erasure entangles the two qubits into a maximally entangled Bell pair. More complicated networks based on this entangling operation allow the preparation of cluster states, enabling universal quantum computation. In a quantum networking context, the matter qubits could be held by a client, and the optical interferometry implementing the computation outsourced to the cloud, i.e $D_1$ and $D_2$ are routed into the quantum network.} \label{fig:barrett_kok}
+\caption{Two atomic systems in $\lambda$-configurations, each coupled with an optical mode. An entangling operation between them is mediated via linear optics \cite{bib:BarrettKok05}. Each system contains two ground states, which jointly encode a qubit ($\ket{\!\uparrow}$, $\ket{\!\downarrow}$), and an additional excited state ($\ket{e}$), which only couples to the $\ket{\!\downarrow}$ state. A $\pi$-pulse excites the electron from the $\ket{\!\downarrow}$ to the $\ket{e}$ state, after which emission of a photon is associated with a coherent relaxation back to $\ket{\!\downarrow}$. If the two optical modes are interfered on a 50:50 beamsplitter, and a single photon is detected between the two photodetectors, $D_1$ and $D_2$, which-path erasure entangles the two qubits into a maximally entangled Bell pair. More complicated networks based on this entangling operation allow the preparation of cluster states, enabling universal quantum computation. In a quantum networking context, the matter qubits could be held by a client, and the optical interferometry implementing the computation outsourced to the cloud, i.e the PBS, $D_1$ and $D_2$ are implemented in the cloud.} \label{fig:barrett_kok}
 \end{figure}
 
-The attractive feature of this type of approach is that the actual entanglement is generated using all-optical operations, despite the underlying logical qubits being stationary. This allows the entangling operations to be performed remotely in the cloud, without moving the qubits. Such hybrid systems present an interesting platform for cloud quantum computing -- despite the qubits being stationary, we are able to outsource the interactions between them to distant servers.
+The attractive feature of this type of approach is that the actual entanglement is generated using all-optical operations, despite the underlying logical qubits being stationary, and potentially physically separated. This allows the entangling operations to be performed remotely in the cloud, without moving the qubits. Such hybrid systems present an interesting platform for cloud quantum computing -- despite the qubits being stationary, we are able to outsource the interactions between them to distant servers.
 
-More generally, we can envisage that future quantum networks interfacing with arbitrary physical architectures for quantum computing will require \emph{interfaces}, coupling the quantum states of different types of physical systems for representing qubits. This is an area of research under active development \cite{???}, and will be instrumental in the development of the quantum internet. For example, much progress has been made in coupling photonic qubits with atomic \cite{???}, quantum dot \cite{???}, and atomic ensemble \cite{???} systems, with rapidly improving coupling efficiencies and fidelities.
+Expanding upon this idea, we can envisage that future quantum networks with arbitrary underlying physical architectures will require \emph{interfaces}, coupling the quantum states of different types of physical systems for representing qubits. It is most likely that optical interfacing will be the major player here, since it allows speed-of-light interfacing between distant qubits. Optical interfacing is discussed in Sec.~\ref{sec:opt_int}.
+
+\comment{Say much more about this}
 
 \subsubsection{Modularised Computation}
 
-How does one build a large-scale quantum computer, given the extremely daunting technological requirements. In any industry, economies of scale allow the mass production, and rapid decrease in the price of technology. To achieve this, we must find a way to make quantum technologies commodity items, which avoid all the hassle of cutting-edge labs.
+How does one build a large-scale quantum computer, given the extremely daunting technological requirements? In any industry, economies of scale allow the mass production, and rapid decrease in the price of technology. To achieve this, we must find a way to make quantum technologies commodity items, which avoid all the hassle of cutting-edge labs.
 
 In Sec.~\ref{sec:dist_QC} we introduced the notion of distributed quantum computation. There the motivation was to enable a computation to be distributed across multiple servers, which either parallelise computation or process it as a pipeline in series.
 
@@ -1699,25 +1741,23 @@ A rectangular lattice graph is sufficient for universal quantum computation, eve
 
 Let us first assume that we wish to construct a cluster state with $n_\mathrm{logical}$ logical qubits. We additionally allow each logical qubit to be the root node of a graph with a $+$ structure, where each branch comprises $n_\mathrm{ancilla}$ ancillary physical qubits. These collectively form a single \emph{module} in the topology. Our goal is to fuse modules via nearest neighbour entanglement.
 
-There are several identities that we will shortly make use of, which we will introduce here. First, a measurement of any qubit in the $\hat{Z}$ basis removes that vertex from the graph, and any edges emanating from the removed vertex. Second, the measurement of a qubit in the $\hat{Y}$ basis removes that qubit, and creates links between all its neighbours. Finally, upon success, a CZ gate creates a new edge between the two qubits acted upon by the gate. In the event of failure (since the gate is non-determinisitic), both qubits acted upon by the gate are effectively measured in the $\hat{Z}$ basis, i.e they, and associated edges, are removed from the graph, thereby shortening the respective branches. This is summarised in Fig.~\ref{fig:cluster_ident}.
-
 \begin{figure}[!htb]
-\includegraphics[width=\columnwidth]{cluster_ident}
-\caption{Several cluster state identities. (a) Two cluster states with a $+$ topology are fused together using an EO (dashed). (b) Upon success, an edge is created between the respective qubits. (c) Upon failure, both qubits are effectively measured in the $\hat{Z}$ basis, thereby removing them, and any associated edges, from the graph. (d) Following a successful EO, the unwanted ancillary qubits may be eliminated using measurements in the $\hat{Y}$ basis, creating edges between their neighbours. If the grey qubits represent the desired logical qubits, this can be used to remove the remainder of the branches emanating from them.} \label{fig:cluster_ident}
+\includegraphics[width=0.9\columnwidth]{cluster_ident}
+\caption{Several cluster state identities for modularised quantum computation. (a) Two cluster states with a $+$ topology are fused together using an EO (dashed). (b) Upon success, an edge is created between the respective qubits. (c) Upon failure, both qubits are effectively measured in the $\hat{Z}$ basis, thereby removing them, and any associated edges, from the graph. (d) Following a successful EO, the unwanted ancillary qubits may be eliminated using measurements in the $\hat{Y}$ basis, creating edges between their neighbours. If the grey qubits represent the desired logical qubits, this can be used to remove the remainder of the branches emanating from them.} \label{fig:plus_cluster_ident}
 \end{figure}
 
 We arrange the modules to internally represent a $+$ topology where each node has neighbouring branches in each of the up/down/left/right directions. But we imagine the situation whereby each logical qubit, along with its respective ancillary branches, is held by a different server. Thus, the final cluster state is truly decentralised across all the servers, and in general local computations cannot be performed.
 
-Using the ancillary states in the respective directions, we attempt to fuse neighbouring clusters using entangling operations (EO's), such as CZ gates (e.g a KLM CZ gate), linear optics \emph{fusion gates} (i.e rotated polarising beamsplitters) \cite{???}, or atoms with a $\lambda$-configuration coupled to photons \cite{barrett}. Importantly, using the fusion gate approach, only a single beamsplitter is required to perform the EO, which only necessitates high-visibility HOM \cite{HOM} interference, mitigating the need for far more challenging interferometric stability.
+Using the ancillary states in the respective directions, we attempt to fuse neighbouring clusters using entangling operations (EO's), such as CZ gates (e.g a KLM CZ gate), linear optics \emph{fusion gates} (i.e rotated polarising beamsplitters) \cite{???}, or atoms with a $\lambda$-configuration coupled to photons \cite{barrett}, which undergo which-path erasure. Importantly, using the fusion gate approach, only a single beamsplitter is required to perform the EO, which only necessitates high-visibility HOM \cite{HOM} interference, mitigating the need for far more challenging interferometric stability.
 
-When an EO is successful, we have fused two logical qubits together, albeit potentially with ancillary states between them. When it fails, we have lost the respective ancillary states, and we attempt again using the next ancillary qubits in each of the the respective branches. The bonding only fails if all $n_\mathrm{ancilla}$ EO's fail. Upon successful bonding, any remaining ancillary qubits between the respective logical qubits are measured in the $\hat{Y}$ basis to remove the intermittent ancillary qubits, whilst connecting their neighbours, leaving the two respective logical qubits as nearest neighbours in the graph. Our goal is for the entire graph to have a lattice structure, once ancillary qubits have been measured out. These ideas are illustrated in Fig.~\ref{fig:module}.
+When an EO is successful, we have fused two logical qubits together, albeit potentially with ancillary states between them. When it fails, we have lost the respective ancillary states, and we attempt again using the next ancillary qubits in each of the the respective branches. The bonding only fails if all $n_\mathrm{ancilla}$ EO's fail. Upon successful bonding, any remaining ancillary qubits between the respective logical qubits are measured in the $\hat{Y}$ basis to remove the intermittent ancillary qubits, whilst connecting their neighbours, leaving the two respective logical qubits as nearest neighbours in the graph. The relevant identities are shown in Fig.~\ref{fig:plus_cluster_ident}. Our goal is for the entire graph to have a lattice structure, once ancillary qubits have been measured out, as illustrated in Fig.~\ref{fig:module}.
 
 \begin{figure}[!htb]
-\includegraphics[width=\columnwidth]{module}
-\caption{The modularised approach to scalable and economically efficient, distributed quantum computation using cluster states. We consider a simple \mbox{$2\times 2$} case where each module (rounded rectangles) comprises a single logical qubit (centre of each module in grey) and a number of ancillary qubits (white in each module), which facilitate bonding the logical qubits of nearest neighbours. The preparation of the modules is performed via nearest neighbour EO's, beginning at the end of branches, and working towards the root node upon each failure, until (hopefully) an EO is successful.} \label{fig:module}
+\includegraphics[width=0.8\columnwidth]{module}
+\caption{The modularised approach to scalable and economically efficient, distributed quantum computation using cluster states. We consider a simple \mbox{$2\times 2$} case where each module (rounded rectangles) comprises a single logical qubit (centre of each module in grey) and a number of ancillary qubits (white in each module), which facilitate bonding the logical qubits of nearest neighbours. The preparation of the modules is performed via nearest neighbour EO's (dashed ellipses), beginning at the end of branches, and working towards the root node upon each failure, until (hopefully) an EO is successful. (a) A \mbox{$2\times 2$} lattice of modules with their respective ancillary qubits. We attempt to bond the endpoints of chains using EO's. (b) Upon measuring the remaining ancillary qubits in the $\hat{Y}$ basis, only the logical qubits remain, with nearest neighbour bonds between adjacent modules, creating a distributed cluster state.} \label{fig:module}
 \end{figure}
 
-The probability of successfully creating an edge between two logical qubits is then,
+Let us perform a rudimentary analysis of the resource scaling of this type of approach. The probability of successfully creating an edge between two logical qubits is,
 \begin{align}
 p_\mathrm{success} = 1 - {p_\mathrm{failure}}^{n_\mathrm{ancilla}},
 \end{align}
@@ -1735,7 +1775,7 @@ n_\mathrm{logical} &= \frac{\mathrm{log}(p_\mathrm{total})}{\mathrm{log}(p_\math
 Thus, we have efficient (linear) scaling in the number of required ancillary qubits against the desired number of logical qubits. This implies that when distributing a computation using this approach, the resource overhead is efficient.
 \comment{Check this!}
 
-Of course, this is the most simple model, with a single logical qubit per module. In due course, we would expect modules to become far more capable.
+Of course, this is the most simple model, with a single logical qubit per module. In due course, we would expect modules to become far more capable, and resource scaling to improve.
 
 \section{State of the Art}
 
@@ -1786,7 +1826,7 @@ Large-scale quantum computing may still seem a formidable, and somewhat long-ter
 
 It is essential for the adoption of quantum technology, that quantum networking infrastructure be sufficiently well developed that it is ready to be deployed the minute the first useful, post-classical hardware becomes available. The proliferation of the defining technology of the 21st century depends upon it.
 
-\emph{--- Ad astra per alas fideles. Scientia potentia est.}
+\emph{--- Ad astra per alas porci. Scientia potentia est.}
 
 %\begin{acknowledgments}
 %\end{acknowledgments}
