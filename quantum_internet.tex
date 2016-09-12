@@ -101,7 +101,7 @@ The distinction between costs and attributes, is that costs may be expressed in 
 \begin{definition}[Network cost metrics] \label{def:metric} Cost metrics satisfy the properties:
 \begin{itemize}
     \item Identity operations: If a channel performs nothing, its associated cost is zero, \mbox{$c(\mathbb{\hat{I}}) = 0$}.
-    \item Triangle inequality: $c(v_1\to v_3) \leq c(v_1\to v_2) + c(v_2\to v_3)$, across all paths \mbox{$v_1 \to v_2 \to v_3$}.
+    \item Triangle inequality: $c(v_1\to v_2\to v_3) \leq c(v_1\to v_2) + c(v_2\to v_3)$, across all paths \mbox{$v_1 \to v_2 \to v_3$}.
     \item Positivity: \mbox{$c\geq 0$}. This ensures that shortest-path algorithms will function correctly.
 \end{itemize}
 \end{definition}
@@ -178,11 +178,17 @@ c_\mathrm{min} &= \min_\mathcal{S} (c_\mathrm{total}), \nonumber \\
 \mathcal{S}_\mathrm{opt} &= \mathrm{argmin}_\mathcal{S} (c_\mathrm{total}).
 \end{align}
 
-Choosing optimal strategies is a challenging problem, potentially requiring complex, computationally inefficient optimisation techniques. Strategy optimisation is an example of resource allocation, whose optimal solutions are often notoriously difficult to solve, residing in complexity classes like \textbf{NP}-complete (or worse). In general the number of possible routes through a graph will grow exponentially with the number of vertices. Thus, explicitly enumerating each possible route is generally prohibitive for large networks, unless some known structure provides `shortcuts' to optimisation. Having said this, Dijkstra's shortest path algorithm is the perfect counterexample, demonstrating that although an exponential number of routes may exist between two points, an optimal one can be found in polynomial time.
+Choosing optimal strategies is a challenging problem, potentially requiring complex, computationally inefficient optimisation techniques. Strategy optimisation is an example of resource allocation, whose optimal solutions are often notoriously difficult to solve, residing in complexity classes like \textbf{NP}-complete (or worse!). In general, the number of possible routes through a graph will grow exponentially with the number of vertices. Thus, explicitly enumerating each possible route is generally prohibitive for large networks, unless some known structure provides `shortcuts' to optimisation. Having said this, Dijkstra's shortest path algorithm is the perfect counterexample, demonstrating that although an exponential number of routes may exist between two points, an optimal one can be found in polynomial time.
 
-There are two general approaches one might consider when choosing strategies -- \emph{local optimisation} ({\sc Local}) and \emph{global optimisation} ({\sc Global}). {\sc Local} simply takes each state to be communicated, one-by-one, and allows it to individually choose an optimal routing strategy based on the state of the network's costs at that moment. {\sc Global} is far more sophisticated and simultaneously optimises the sum of the routing costs, Eq.~\ref{eq:c_total}, of all currently in-demand routes.
+\subsubsection{Local vs. Global Optimisation}
+
+There are two general approaches one might consider when choosing strategies -- \emph{local optimisation} ({\sc Local}) and \emph{global optimisation} ({\sc Global}). {\sc Local} simply takes each state to be communicated, one-by-one, and allows it to individually choose an optimal routing strategy based on the state of the network at that moment. {\sc Global} is far more sophisticated and simultaneously optimises the sum of the routing costs, Eq.~\ref{eq:c_total}, of all currently in-demand routes.
 
 {\sc Global} must clearly perform at least as well as {\sc Local}, since \mbox{{\sc Local}$\subset${\sc Global}}, but we expect it to be better in general owing to the additional information it has of other users on the network. However, {\sc Global} requires solving a complex, simultaneous optimisation problem, which is likely to be computationally hard, whereas {\sc Local} can be efficiently solved using multiple independent applications of, for example, an efficient shortest-path algorithm (so-called `greedy' algorithms).
+
+A further stumbling block for {\sc Global} is that it requires some central authority, responsible for the global decision-making, to have complete, real-time knowledge of the state of the entire network. This may be plausible for small LAN's, but would clearly be completely implausible for the internet as a whole. So it is to be expected that different layers and subnets in the network hierarchy will employ entirely different strategy optimisation protocols. This is certainly reminiscent of the structure of the present-day internet.
+
+Roughly speaking, we might intuitively guess that at lower levels in the network hierarchy, responsible for smaller subnets, there will be a tendency towards the adoption of {\sc Global} strategies, as full knowledge of the state of the subnet is readily obtained. However, as we move to the highest levels of the network hierarchy (e.g routing of data across international or intercontinental boundaries), we might expect more laissez-faire (i.e greedy) strategies to be adopted, since the prospects of enforcing a central authority with full knowledge of the state of the internet, who is also trusted by all nations to fairly and impartially allocate network resources and mediate traffic, is highly questionable.
 
 We will not aim to comprehensively characterise the computational complexity of {\sc Global} strategies. However, in Sec.~\ref{sec:strategies} we will present some elementary analyses of several toy models for realistic strategies. Some such strategies are efficient although not optimal, but nonetheless satisfy certain criteria we might expect.
 
@@ -190,9 +196,9 @@ Future developments in the optimisation techniques required for {\sc Global} str
 
 When employing {\sc Local}, on the other hand, things are often far simpler. If we are optimising over a cost metric satisfying the distance interpretation, we may simply employ a shortest-path algorithm to find optimal routes through the network.
 
-If one were to become even more sophisticated, one might even envisage treating network resource allocation in a game theoretic context, which we will not go into here.
+If one were to become even more sophisticated, one might even envisage treating network resource allocation in a game theoretic context, which we won't even begin to go into here.
 
-\subsection{Message- vs Packet-Level Routing}
+\subsection{Message- vs. Packet-Level Routing}
 
 In Eq.~\ref{eq:S_G} we defined the action of a strategy, $\mathcal{S}$, on a network, $G$. However, we were intentionally ambiguous in our introduction of the time-dependence, given by $t$. This is to allow us to consider changes at one of two different time-scales: the packet level, or the message level. Recall that the \emph{message} is the entire data stream transmitted from Alice to Bob, whereas the \emph{packet} is a small block of data taken from the message.
 
@@ -206,9 +212,9 @@ Like classical channels, quantum channels are inevitably subject to errors. Thes
 
 \subsection{Quantum Processes}
 
-To quantify the operation of nodes and links within our network, we must characterise the evolution they impose upon quantum states passing through them. Quantum processes, also known as \emph{completely positive maps} (CP-maps) are able to capture all the physical processes relevant to quantum networking, such as: unitary evolution, decoherence, measurement, quantum memory, state preparation, switching, and indeed entire quantum computations.
+To quantify the operation of nodes and links within our network, we must characterise the evolution they impose upon quantum states passing through them. Quantum processes, also known as \emph{completely positive maps} (CP-maps) are able to capture all the physical processes relevant to quantum networking, such as: unitary evolution, decoherence, measurement, quantum memory, state preparation, switching, and indeed entire quantum computations. And they are able to capture physical processes in any degree of freedom, most commonly in the qubit basis, but also, for photons, in the spatio-temporal, photon-number, or polarisation degrees of freedom.
 
-Quantum processes are able to capture physical processes in any degree of freedom, most commonly in the qubit basis, but also, for photons, in the spatio-temporal, photon-number, or polarisation degrees of freedom.
+The only limitation faced by quantum processes is that they are described over discrete-time. To consider continuous-time evolution, master equations can be used. However, here we will only make use of discrete-time quantum processes, since they naturally correspond to the evolution of states between discrete points in a network.
 
 Quantum processes are most easily represented using \emph{Kraus operators}, $\{\hat{K}_i\}$,
 \begin{align}
@@ -246,7 +252,7 @@ In general, the Kraus operator representation for quantum processes is not uniqu
 \mathcal{E}(\hat\rho) = \sum_{i,j=1}^4 \chi_{i,j} \hat{\sigma}_i\hat\rho\,\hat{\sigma}_j^\dag.
 \end{align}
 
-The Hermitian matrix $\chi$ is known as the \emph{process matrix}, from which many other metrics of interest may be directly computed (some of which are discussed in Sec.~\ref{sec:quantum_meas_cost}). Process matrices share many properties and interpretations in common with density matrices. The diagonal elements can be regarded as the amplitudes associated with applying each of the four Pauli operators, while the off-diagonal elements represent the coherences between them, i.e whether the operations on the diagonal being applied probabilistically or coherently. For the process to be trace preserving we require,
+The Hermitian matrix $\chi$ is known as the \emph{process matrix}, from which many other metrics of interest may be directly computed (some of which are discussed in Sec.~\ref{sec:quantum_meas_cost}). Process matrices share many properties and interpretations in common with density matrices. The diagonal elements can be regarded as the amplitudes associated with applying each of the four Pauli operators, while the off-diagonal elements represent the coherences between them, i.e whether the operations on the diagonal are being applied probabilistically or coherently. For the process to be trace preserving we require,
 \begin{align}
 \mathrm{tr}(\chi) = 1.
 \end{align}
@@ -351,11 +357,11 @@ Another type of CV state, which can encode quantum information is superpositions
 \ket{1} &\equiv \frac{1}{\sqrt{2(1-e^{-2|\alpha|^2})}}(\ket{\alpha}-\ket{-\alpha}) \nonumber \\
 &= \ket{\mathrm{cat_-(\alpha)}}.
 \end{align}
-These two basis states contain strictly even or strictly odd photon-number terms respectively, implying they are always orthogonal,
+These two basis states contain strictly even or odd photon-number terms respectively (i.e they have well-defined parity), implying they are always orthogonal,
 \begin{align}
 \langle\mathrm{cat}_+(\alpha)|\mathrm{cat}_-(\alpha)\rangle = 0 \,\,\forall\,\alpha,
 \end{align}
-making them directly appropriate for qubit encoding, even for weak coherent amplitudes. Unfortunately, cat states are notoriously difficult to prepare.
+making them directly appropriate for qubit encoding, even for weak coherent amplitudes. Unfortunately, cat states are notoriously difficult to prepare, and extremely sensitive to loss.
 
 \section{Errors in Quantum Networks} \label{sec:errors_in_nets}
 
@@ -367,7 +373,7 @@ As with classical data, quantum data is susceptible to corruption during transmi
 
 The most trivial error mechanism is when a unitary channel (e.g an identity channel) actually implements some unitary transformation that is not that which is desired. However, the unitary is constant, not varying from trial to trial, and is known, which can be easily determined using QPT on the channel. For example, an optical fibre might induce a polarisation rotation on transmitted photons, but the fibre isn't changing and neither is the rotation. If consistently implementing the same known unitary then reversing it is straightforward in most architectures.
 
-\subsubsection{Efficiency} \label{sec:eff_err}
+\subsubsection{Loss} \label{sec:eff_err}
 
 Given that quantum communication links will typically be optical, the dominant error mechanism is likely to be loss. We let the efficiency, $\eta$, of an optical quantum process be the probability that a given photon entering the channel leaves the channel in the desired mode, or probability \mbox{$1-\eta$} of being lost. In the case of information encoded into single-photon states, e.g using the polarisation degree of freedom, $\eta$ corresponds exactly to the success probability of the communication.
 
@@ -398,7 +404,11 @@ The dephasing error model describes the deterioration of quantum coherence in a 
 \begin{align} \label{eq:dephasing_channel}
 \mathcal{E}_p^\mathrm{dephasing}(\hat\rho) = p\cdot\hat\rho + (1-p)\cdot \hat{Z}\hat\rho\hat{Z},
 \end{align}
-where $\hat\rho$ is the state of a single qubit, and $\hat{Z}$ is the Pauli phase-flip operator. Intuitively this tells us that the dephasing channel creates a mixture of an input state with its phase-flipped self. An alternate interpretation for the dephasing channel is that it is equivalent to the outside environment measuring $\hat\rho$ in the logical ($\hat{Z}$) basis, but unknown to us, thereby projecting the state onto one basis state or another, yielding a mixture of the two. Dephasing acting on $\hat\rho$ can be very elegantly visualised as simply nullifying the off-diagonal matrix elements, i.e eliminating coherence terms. Dephasing is a ubiquitous error mechanism and affects all current quantum computing architectures.
+where $\hat\rho$ is the state of a single qubit, and $\hat{Z}$ is the Pauli phase-flip operator. Intuitively this tells us that the dephasing channel creates a mixture of an input state with its phase-flipped self.
+
+An alternate interpretation for the dephasing channel is that it is equivalent to the outside environment measuring $\hat\rho$ in the logical ($\hat{Z}$) basis, but unknown to us, thereby projecting the state onto one basis state or another, yielding a mixture of the two.
+
+Dephasing acting on $\hat\rho$ can be very elegantly visualised as simply nullifying the off-diagonal matrix elements, i.e eliminating coherence terms. Dephasing is a ubiquitous error mechanism and affects all current quantum computing architectures.
 
 As a simple example, consider the \mbox{$p=1/2$} dephasing channel acting on the \mbox{$\ket{+} = (\ket{0}+\ket{1})/\sqrt{2}$} state. Then we have,
 \begin{align}
@@ -407,7 +417,7 @@ As a simple example, consider the \mbox{$p=1/2$} dephasing channel acting on the
 &= \frac{1}{2} (\ket{0}\bra{0} + \ket{1}\bra{1}) \nonumber \\
 &= \frac{\mathbb{\hat{I}}}{2},
 \end{align}
-is the complexity mixed state. That is, the state has completely decohered. Note, however, that this complete decoherence depended on the choice of input state. A computational basis state, on the other hand, would be left unchanged by this channel,
+is the completely mixed state. That is, the state has completely decohered. Note, however, that this complete decoherence depended on the choice of input state. A computational basis state, on the other hand, would be left unchanged by this channel,
 \begin{align}
 \mathcal{E}^\mathrm{dephasing}_{1/2}(\ket{0}\bra{0}) &= \frac{1}{2} (\ket{0}\bra{0} + \hat{Z}\ket{0}\bra{0}\hat{Z}) \nonumber \\
 &= \ket{0}\bra{0}.
@@ -421,6 +431,8 @@ for some arbitrary basis enumerated by $i$.
 
 Note that the probability of no dephasing occurring over multiple dephasing channels in series is given by the product of the respective probabilities for the individual channels.
 
+A dephasing channel is often quoted in terms of its $T_2$ time, a characteristic time for dephasing to occur under continuous time-evolution.
+
 \subsubsection{Depolarisation}
 
 Depolarisation is a noise model more general than dephasing, that probabilistically replaces a state with the completely mixed state (regardless of the input state). That is, with some probability we lose \emph{all} quantum \emph{and} classical information, i.e both coherences and probability amplitudes. Note that the dephasing channel introduced above only destroys quantum coherence, whilst preserving amplitudes. Formally, the depolarising channel can be expressed as,
@@ -431,7 +443,7 @@ where $\mathbb{\hat{I}}/\mathrm{dim}(\hat\rho)$ is the completely mixed state in
 
 When acting on qubits, the depolarizing channel can equivalently be represented as the action of each of the four Pauli matrices with equal probability, since,
 \begin{align}
-\frac{\mathbb{\hat{I}}}{2} = \frac{1}{4}(\hat{I}\hat\rho\hat{I} + \hat{X}\hat\rho\hat{X} + \hat{Y}\hat\rho\hat{Y} + \hat{Z}\hat\rho\hat{Z}).
+\frac{\mathbb{\hat{I}}}{2} = \frac{1}{4}(\hat\rho + \hat{X}\hat\rho\hat{X} + \hat{Y}\hat\rho\hat{Y} + \hat{Z}\hat\rho\hat{Z}).
 \end{align}
 Thus, both dephasing and depolarization are examples of Pauli error models.
 
@@ -441,7 +453,16 @@ Like the dephasing channel, the error probability of multiple channels in series
 
 \subsubsection{Amplitude Damping}
 
-\comment{TO DO. Talk about t1, t2 and t2* times in these sections}
+An error that is not so much relevant to optics, but which arises very naturally in some other systems, such as atomic systems, is amplitude damping. Here the process models the relaxation of a higher energy level, $\ket{1}$, to a lower energy one, $\ket{0}$. The $\ket{0}$ state is assumed to be the ground state and cannot relax any further, but the $\ket{1}$ state can spontaneously relax to the ground state. After complete amplitude damping, any input state will be left in the ground state $\ket{0}$. This model can be thought of as energy dissipating from the qubit system.
+
+The amplitude damping channel is easily represented in the quantum process formalism using two Kraus operators,
+\begin{align}
+\hat{K}_1 &= \ket{0}\bra{0} + \sqrt\eta\ket{1}\bra{1}, \nonumber \\
+\hat{K}_2 &= \sqrt{1-\eta}\ket{0}\bra{1}, 
+\end{align}
+where \mbox{$0\leq\eta\leq 1$} quantifies the degree of damping. The physical intuition is clear upon inspection of the structure of the projectors in the Kraus operators.
+
+The degree of amplitude damping is often quoted in terms of a channel's $T_1$ time, characterising the expected time for a $\ket{1}$ state to undergo spontaneous emission and relax to the $\ket{0}$ state.
 
 \subsubsection{Mode-Mismatch} \label{sec:MM_error}
 
@@ -1411,10 +1432,6 @@ A final building block, that will be essential in many networks, is quantum memo
 
 Building upon the above building blocks, we now describe some of the major elementary quantum protocols. All of those discussed here have been subject to extensive experimental investigation and demonstration.
 
-\subsubsection{Entanglement Distribution}
-
-\comment{To do - this is a lead-up to the next section. Introduce Bell pair distribution and error models. This leads directly into the entanglement purification section. Talk about effect of dephasing on entanglement metric. Treat entanglement as the `resource' that we want to communicate.}
-
 \subsubsection{Entanglement Purification} \label{sec:ent_purif}
 
 Entangled states, most notably Bell- or Einstein-Podolsky-Rosen (EPR)-pairs,
@@ -1424,7 +1441,7 @@ Entangled states, most notably Bell- or Einstein-Podolsky-Rosen (EPR)-pairs,
 \end{align}
 play a central role in many quantum technologies. These maximally entangled states are easily represented optically using polarization encoding of single photons, and can be non-deterministically prepared directly using spontaneous parametric down-conversion (SPDC).
 
-Bell pairs are the basis for building cluster states (see Sec.~\ref{sec:CSQC}), some quantum cryptography protocols (see Sec.~\ref{sec:QKD}), and quantum teleportation, to name just a few applications. Therefore distributing entangled states with the highest entanglement metrics is extremely important.
+Bell pairs are the basis for building cluster states (see Sec.~\ref{sec:CSQC}), some quantum cryptography protocols (see Sec.~\ref{sec:QKD}), and quantum teleportation (see Sec.~\ref{sec:teleport}), to name just a few applications. Therefore distributing entangled states with the highest entanglement metrics is extremely important. In short, entanglement can be considered a valuable quantum resource, upon which many other protocols are built.
 
 Suppose Alice and Bob share an entangled pair. Quantum mechanics, specifically the very definition of entanglement itself, prohibits local operations performed by Alice and Bob from increasing the level of entanglement. However, if Alice and Bob share multiple pairs, they can perform an operation known as \emph{entanglement purification}, whereby two lower-fidelity entangled pairs are consumed and projected onto a single entangled pair with higher-fidelity. Such protocols will be extremely useful in protocols where achieving the highest possible degree of entanglement is paramount.
 
@@ -1432,7 +1449,10 @@ Taking two polarization-encoded photonic Bell pairs, say $\ket{\Psi^+}$ and subj
 \begin{align}
 \hat\rho_\mathrm{in} = F\ket{\Psi^+}\bra{\Psi^+} + (1-F)\ket{\Psi^-}\bra{\Psi^-},
 \end{align}
-where $F$ is the entanglement fidelity, which is a function of the dephasing rate. Note that $\ket{\Psi^+}$ and $\ket{\Psi^-}$ are related by local phase-flip operations ($\hat{Z}$) applied to either qubit.
+where $F$ is the entanglement fidelity, which is a function of the dephasing rate. Note that $\ket{\Psi^+}$ and $\ket{\Psi^-}$ are related by local phase-flip operations ($\hat{Z}$) applied to either qubit,
+\begin{align} \label{eq:bell_basis}
+\ket{\Psi^-} = \hat{Z}_A \ket{\Psi^+} = \hat{Z}_B \ket{\Psi^+}.
+\end{align}
 
 An linear optics entanglement purification protocol can be simply implemented using two polarizing beamsplitters (PBS's). Alice uses one PBS to interfere the photons from her side of each of the photon pairs, measuring one output only, which implements a non-deterministic, partial Bell projection. Bob does the same on his side. What's left is one photon in Alice's hands and one in Bob's. When successful, they will now be sharing a single entangled pair of higher Bell state fidelity than the two starting states. The protocol is shown in Fig.~\ref{fig:ent_purif_prot}.
 
@@ -1460,7 +1480,7 @@ Note that there is a break-even point, above which the protocol strictly increas
 
 A theoretical analysis of this protocol has been performed, accounting for mode-mismatch in the protocol \cite{bib:RohdeOptEntPur06}, where it was found than mode-mismatch shifts the break-even point upwards, and lowers the maximum value of $F_\mathrm{out}$ -- with more mode-mismatch, a higher starting fidelity is required to break even, and we achieve a lower output fidelity. In this case, a cost function that combines the dephasing and mode-mismatch metrics of the network will be required.
 
-\subsubsection{Quantum Teleportation}
+\subsubsection{Quantum Teleportation} \label{sec:teleport}
 
 Quantum teleportation is an essential ingredient in many higher-level protocols. It forms the basis of cluster state quantum computing (see Sec.~\ref{sec:CSQC}), some QEC codes, the KLM linear optics quantum computing scheme (see Sec.~\ref{sec:KLM_univ}), and can act as a mediator for long-range transmission of quantum states, amongst others.
 
@@ -1535,6 +1555,8 @@ The advantage to this approach is that the range of each repeater can be much sm
 
 The protocol is conceptually very similar to teleportation, where instead of teleporting a qubit state, we are teleporting entanglement. Because of this similarity, it inherits similar error propagation characteristics as for teleportation discussed previously. That is, errors acting on the qubits upon which the Bell measurements are performed are effectively teleported onto the remaining qubits. Then, entanglement purification can be implemented as a higher-level layer on top of the repeaters, enabling high-fidelity entanglement distribution.
 
+\comment{Say something about the scalability of quantum repeater networks under different strategies. I believe with appropriate strategies it's possible to achieve poly rather than exp scaling. Is that right? Show details.}
+
 \subsubsection{Optical Interfacing} \label{sec:opt_int}
 
 \comment{TO DO. Discuss how to couple non-optical qubits to optical qubits. e.g atoms in cavities. Stimulated emission of atomic ensemble etc.}
@@ -1555,13 +1577,19 @@ However, in addition to this, the quantum memory will of course accumulate addit
 
 \subsubsection{Quantum Key Distribution (QKD)} \label{sec:QKD}
 
-\comment{Show technical details}
+Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. There is only a single provably secure encryption protocol, the \emph{one-time-pad}. This protocol requires Alice and Bob to share a random bit-string as long as the message being communicated between them. This reduces the problem of perfect secrecy of arbitrary messages to secrecy of shared randomness. QKD protocols enable this by providing a shared source of randomness between Alice and Bob, where any intercept-resend attack may be detected, guaranteed by the laws of quantum physics.
 
-Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. There is only a single provably secure encryption protocol, the \emph{one-time-pad}. This protocol requires Alice and Bob to share a random bit-string as long as the message being communicated between them. This reduces the problem of perfect secrecy of arbitrary messages to secrecy of shared randomness. QKD protocols enable this by providing a shared source of randomness between Alice and Bob, where any intercept-resent attack may be detected, guaranteed by the laws of quantum physics.
+The two original QKD protocols, known as the \emph{BB84 protocol} \cite{bib:BennetBrassard84}, and \emph{E91} \cite{bib:Ekert91}, are based on polarisation encoding in photons. BB84 requires only the transmission of a sequence of single photons, polarisation encoded with random data. E91, on the other hand, requires a server that distributes entangled Bell pairs between Alice and Bob. Since then, numerous other protocols for QKD have been proposed, for example, using continuous variable states.
 
-The two original QKD protocols, known as the \emph{BB84 protocol} \cite{bib:BennetBrassard84}, and \emph{E91} \cite{bib:Ekert91}, are based on polarisation encoding in photons. BB84 requires only the transmission of a sequence of single photons, polarisation encoded with random data. Ekert 91, on the other hand, requires a server that distributes entangled Bell pairs between Alice and Bob. Since, numerous other protocols for QKD have been proposed, for example, using continuous variable states.
+Let us briefly consider the BB84 protocol. Alice first chooses a random basis, either $\hat{X}$ or $\hat{Z}$, in which to encode one of two randomly chosen basis states, either \mbox{$\{\ket{H},\ket{V}\}$} or \mbox{$\{\ket{+}=(\ket{H}+\ket{V})/\sqrt{2},\ket{-}=(\ket{H}-\ket{V})/\sqrt{2}\}$} respectively. She sends this state to Bob, without announcing either the choice of basis or basis state. Bob subsequently measures the photon in one of the two bases, chosen randomly also. This is repeated as many times as is necessary. Finally, Bob confirms to Alice that he has received her photons, at which point she announces to him the choice of basis for each of the sent photons (this does not require secrecy). In the instances where Alice and Bob's basis choices matched, Bob has measured the same state that Alice sent, and he records the value. Otherwise he discards that sample. What remains is approximately half as many bits, which are guaranteed to be the same for Alice and Bob.
 
-It is easy to see the utility of quantum networks in enabling commodity deployment of QKD -- users desire to communicate photons across long-range ad hoc networks, with low loss, so as to maximise bit-rates, and minimising costs in, for example, fidelity, entanglement, and purity. A global quantum internet would allow quantum cryptography to truly supersede classical cryptography, bypassing the vulnerabilities faced by classical cryptography in the quantum computing era.
+Suppose an eavesdropper, Eve, were to perform an intercept-resend attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of bases, and Eve will not know the basis in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. Thus, by sacrificing a small fraction of their shared bits, via openly communicating them to one another for comparison, such an intercept-resend attack will quickly be detected by Alice and Bob, with success probability exponentially asymptoting to unity. Thus, Alice and Bob have great confidence that they have a shared secret bit-string, which may subsequently be employed in a one-time-pad.
+
+A key observation in the BB84 protocol is that it requires no entanglement, no mode-matching, no interference, and no interferometric stability. It can be realised using nothing more than single-photon sources, waveplates, and photodetectors. For these reasons, QKD is a technology that is entirely viable on a large scale using present-day technology.
+
+Importantly, unlike classical cryptographic protocols, QKD makes no assumptions about the computational complexity of inverting encoding algorithms. The protocol is information theoretically secure, and therefore no physically realisable computer, even a quantum computer, can compromise it.
+
+It is easy to see the utility of quantum networks in enabling commodity deployment of QKD -- users desire to communicate photons across long-range ad hoc networks, with low loss and dephasing. A global quantum internet would allow quantum cryptography to truly supersede classical cryptography, bypassing the vulnerabilities faced by classical cryptography in the era of quantum computing.
 
 Unlike quantum computing, QKD is at the stage of commercial viability, and several vendors offer off-the-shelf plug-and-play QKD systems. Thus, a quantum internet with low cost metrics would already find substantial utility with today's technology. Currently, great progress in being made in the implementation of QKD in fibre \cite{???}, over free space \cite{bib:Buttler00}, and even over intercontinental satellite uplinks \cite{JWP}. It seems extremely likely that some government agencies would be rolling out QKD systems \cite{bib:Secret}, especially in light of the paranoia surrounding quantum codebreaking.
 
@@ -1634,20 +1662,20 @@ These encryption protocols induce a resource overhead in circuit size and number
 
 \subsubsection{Cluster States} \label{sec:CSQC}
 
-The \emph{circuit model} is the conventional approach for expressing quantum algorithms. However, the \emph{cluster state model} for quantum computation \cite{bib:Raussendorf01, bib:Raussendorf03, bib:Nielsen06} (also referred to as the \emph{one-way}, \emph{measurement-based}, or \emph{graph state} models for quantum computation) is an extremely powerful, yet conceptually distinct paradigm, that warrants treatment of its own, owing to its significant distinction from the more familiar circuit model.
+The \emph{circuit model} is the conventional and intuitive approach for expressing quantum algorithms. However, the \emph{cluster state model} for quantum computation \cite{bib:Raussendorf01, bib:Raussendorf03, bib:Nielsen06} (also referred to as the \emph{one-way}, \emph{measurement-based}, or \emph{graph state} models for quantum computation) is an extremely powerful, yet conceptually distinct paradigm, that warrants treatment of its own, owing to its significant distinction from the more familiar circuit model.
 
-In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \emph{cluster state} or \emph{graph state}. The state is associated with a graph of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation. 
+In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \emph{cluster state} or \emph{graph state}. The state is associated with a graph of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation. That is, they act as a \emph{substrate} for implementing arbitrary computations.
 
 In the graph, vertices represent qubits initialised into the \mbox{$\ket{+}=(\ket{0}+\ket{1})/\sqrt{2}$} state, and edges represent the application of maximally entangling controlled-phase (CZ) gates between vertices, given by \mbox{$\hat{U}_\mathrm{CZ}=\mathrm{diag}(1,1,1,-1)$}. An example is presented in Fig.~\ref{fig:cluster_state}. Cluster states are easily encoded optically using photonic polarisation encoding, and therefore readily lend themselves to optical networking.
 
 \begin{figure}[!htb]
-\includegraphics[width=0.7\columnwidth]{cluster_state}
+\includegraphics[width=0.6\columnwidth]{cluster_state}
 \caption{Example of a \mbox{$4\times 3$} rectangular lattice cluster state. Each vertex in the graph represents a qubit initialised as \mbox{$\ket{+}=(\ket{0}+\ket{1})/\sqrt{2}$}. Edges represent the application of CZ gates between qubits (CZ gates commute, so the order is unimportant). Of sufficient dimension, states of this topology enable universal measurement-based quantum computation, whereby computation proceeds purely via single-qubit measurements, and all entangling operations have been commuted to the state preparation stage.} \label{fig:cluster_state}
 \end{figure}
 
 Having prepared this state, the computation is implemented purely via a well-orchestrated routine of single-qubit measurements. The order and basis in which they are performed (which depends on previous measurement outcomes in general) then stipulates the computation. It is easily shown that this model may be directly mapped to the circuit model, and is therefore universal.
 
-The distinctive feature of this model is that all the entangling operations (e.g CZ gates) are performed at the very beginning of the protocol, during state preparation. The algorithm itself is purely measurement-based, requiring only single-qubit measurements (no entangling measurements).
+The distinctive feature of this model is that all the entangling operations (e.g CZ gates) are performed at the very beginning of the protocol, during the state preparation stage. The algorithm itself is purely measurement-based, requiring only single-qubit measurements (no entangling measurements).
 
 This alternate formalism has proven very useful, enabling the development of LOQC protocols, orders of magnitude more efficient than the original KLM protocol (see Sec.~\ref{sec:KLM_univ}) \cite{???}.
 
@@ -1725,7 +1753,7 @@ Expanding upon this idea, we can envisage that future quantum networks with arbi
 
 \subsubsection{Modularised Computation}
 
-How does one build a large-scale quantum computer, given the extremely daunting technological requirements? In any industry, economies of scale allow the mass production, and rapid decrease in the price of technology. To achieve this, we must find a way to make quantum technologies commodity items, which avoid all the hassle of cutting-edge labs.
+How does one build a large-scale quantum computer, given the extremely daunting technological requirements? In any industry, economies of scale allow the mass production, and rapid decrease in the price of technology. To achieve this, we must find a way to make quantum technologies commodity items, which avoid all the hassle of customised cutting-edge labs. What we really desire is `Lego for Adults', allowing ad hoc connection of \emph{modules}, which implement small subsections of a large computation. The modules could all be identical, just patched together differently, paving the way for their mass production, and an associated equivalent of Moore's Law.
 
 In Sec.~\ref{sec:dist_QC} we introduced the notion of distributed quantum computation. There the motivation was to enable a computation to be distributed across multiple servers, which either parallelise computation or process it as a pipeline in series.
 
@@ -1733,7 +1761,7 @@ An alternate direction, for economic reasons, is that it is unviable for a singl
 
 This is not the same motivation as for in-series computation, where different servers in the pipeline have different proprietary algorithms as subroutines of a larger computation. And it also differs from in-parallel computation, where multiple servers implement the same algorithm on different data, which is subsequently merged by a root node, as per, for example, a {\sc MapReduce}-style protocol.
 
-Instead, the motivation is one of economics -- individual servers will have finite resources, but there may be many of them, which can be networked to implement a larger algorithm virtually.
+Instead, the motivation is one of economics. First, individual servers will have finite resources, but there may be many of them, which can be networked to implement a larger algorithm virtually. Second, because the modules in the architecture are identical and lend themselves to mass production, one can expect more favourable economics than that offered by a provider who sells entire, customised, full-fledged quantum computers, which do not lend themselves to the same level of mass production.
 
 The concept of this model is best explained using the cluster state formalism (Sec.~\ref{sec:CSQC}), which lends itself naturally to this approach.
 
@@ -1754,7 +1782,7 @@ When an EO is successful, we have fused two logical qubits together, albeit pote
 
 \begin{figure}[!htb]
 \includegraphics[width=0.8\columnwidth]{module}
-\caption{The modularised approach to scalable and economically efficient, distributed quantum computation using cluster states. We consider a simple \mbox{$2\times 2$} case where each module (rounded rectangles) comprises a single logical qubit (centre of each module in grey) and a number of ancillary qubits (white in each module), which facilitate bonding the logical qubits of nearest neighbours. The preparation of the modules is performed via nearest neighbour EO's (dashed ellipses), beginning at the end of branches, and working towards the root node upon each failure, until (hopefully) an EO is successful. (a) A \mbox{$2\times 2$} lattice of modules with their respective ancillary qubits. We attempt to bond the endpoints of chains using EO's. (b) Upon measuring the remaining ancillary qubits in the $\hat{Y}$ basis, only the logical qubits remain, with nearest neighbour bonds between adjacent modules, creating a distributed cluster state.} \label{fig:module}
+\caption{The modularised approach to scalable and economically efficient, distributed quantum computation using cluster states. The modules are all identical, and can be arbitrarily patched to one another, allowing the construction of arbitrary graph topologies. Because the modules are all identical, one might hope that mass production and economy of scale will drive down the cost of modules. We consider a simple \mbox{$2\times 2$} case where each module (rounded rectangles) comprises a single logical qubit (centre of each module in grey) and a number of ancillary qubits (white in each module), which facilitate bonding the logical qubits of nearest neighbours. The preparation of the modules is performed via nearest neighbour EO's (dashed ellipses), beginning at the end of branches, and working towards the root node upon each failure, until (hopefully) an EO is successful. (a) A \mbox{$2\times 2$} lattice of modules with their respective ancillary qubits. We attempt to bond the endpoints of chains using EO's. (b) Upon measuring the remaining ancillary qubits in the $\hat{Y}$ basis, only the logical qubits remain, with nearest neighbour bonds between adjacent modules, creating a distributed cluster state.} \label{fig:module}
 \end{figure}
 
 Let us perform a rudimentary analysis of the resource scaling of this type of approach. The probability of successfully creating an edge between two logical qubits is,
@@ -1763,7 +1791,7 @@ p_\mathrm{success} = 1 - {p_\mathrm{failure}}^{n_\mathrm{ancilla}},
 \end{align}
 and the probability of preparing the entire lattice (ignoring boundary conditions for simplicity) is,
 \begin{align}
-p_\mathrm{total} = O({p_\mathrm{success}}^{n_\mathrm{logical}}).
+p_\mathrm{total} = {p_\mathrm{success}}^{n_\mathrm{logical}}.
 \end{align}
 The number of logical qubits that may be prepared in the final lattice is therefore,
 \begin{align}
@@ -1779,7 +1807,25 @@ Of course, this is the most simple model, with a single logical qubit per module
 
 \section{State of the Art}
 
-\comment{TO DO! Talk about where different technologies are currently at. What are some realistic cost metrics etc. What protocols have been demonstrated? What's coming in the near future?}
+\comment{TO DO!}
+
+\comment{Talk about where different technologies are currently at.}
+
+\comment{What are some realistic cost metrics etc (e.g what are the best efficiencies, visibilities, fidelities, purities that are achievable using todays technology}
+
+\comment{Where's the technology likely to be in the next 5 years.}
+
+\comment{What protocols have been demonstrated? What's coming in the near future? How big are they? How big will they be in 5 years?}
+
+\comment{Talk about Chinese quantum satellite.}
+
+\comment{Talk about long range line-of-sight experiments between islands.}
+
+\comment{Talk about fibre comm developments.}
+
+\comment{Talk about status of using telecom wavelength optics for quantum protocols. How is this likely to progress? Will we one day all be using the existing fibre infrastructure for the quantum internet, or will new infrastructure need to be built?}
+
+\comment{A comparison of different technologies (NOT just optical ones, but others too. ESPECIALLY provide information on hybrid architectures, where optics mediates entangling operations, but the qubits themselves are atomic, quantum dot, atomic ensemble, NV centre etc etc.}
 
 \section{The Economics of the Quantum Internet} \label{sec:economics}
 
@@ -1787,23 +1833,21 @@ Quantum computers are highly likely to, at least initially, be extremely expensi
 
 A key question regarding the economics of the quantum internet is the extent to which it will be able to piggyback off existing optical communications infrastructure, given that networking will almost inevitably be optically mediated. We have an existing intercontinental fibre-optic backbone, as well as sophisticated satellite networks. To what extent will this existing infrastructure (or future telecom infrastructure) be able to be exploited so as to avoid having to rebuild the entire future quantum internet infrastructure from scratch? This is a question worth tens of billions of dollars. We also need to factor in that given the massive driving force behind telecom technology, its cost is following a Moore's Law-like trajectory, and what costs a billion dollars today might cost a million dollars in a decade's time. In light of this, telecom wavelength quantum optics is being hotly pursued \cite{???}. And at the time of writing this paragraph, a world-leading Chinese experimental team has just successfully launched a QKD satellite into low Earth orbit, enabling intercontinental QKD, with talk of the next space race being the one for quantum supremacy.
 
-Technology should benefit humanity, not only an elite few. In light of this, who exactly will benefit from the quantum internet? Its beauty is that it doesn't create a system of winners and losers. Rather, it establishes a technological infrastructure from which all can benefit, rich or poor. Well-resourced operators who can afford quantum computers, for example, will benefit from being able to license out compute time on their computers, ensuring no wasted clock-cycles and maximising efficiency. The less-well-resourced will benefit in that they will have a means by which to access the extraordinary power of quantum computing on a licensed basis, facilitating access to infrastructure by those who otherwise would have been priced out of the market. This is essentially the same model as what is employed by some present-day supercomputer operators, enabling small players access to supercomputing infrastructure. The quantum internet is critical to achieving the same goal. This could have transformative effects on the developing world in particular.
+Technology should benefit humanity, not only an elite few. In light of this, who exactly will benefit from the quantum internet? Its beauty is that it doesn't create a system of winners and losers. Rather, it establishes a technological infrastructure from which all can benefit, rich or poor. Well-resourced operators who can afford quantum computers, for example, will benefit from being able to license out compute time on their computers, ensuring no wasted clock-cycles and maximising efficiency. The less-well-resourced will benefit in that they will have a means by which to access the extraordinary power of quantum computing on a licensed basis, facilitating access to infrastructure by those who otherwise would have been priced out of the market. This is essentially the same model as what is employed by some present-day supercomputer operators, enabling small players access to supercomputing infrastructure. The quantum internet is critical to achieving the same goal. This could have transformative effects on the developing world in particular. And many emerging industries, for whom access to quantum computation will be critical, but who cannot afford them, will benefit immensely from the client/server model for quantum computation.
 
 The quantum internet will facilitate the communication and trade of quantum assets beyond just quantum computation and cryptography. There are many uses for various hard-to-prepare quantum states, for example in metrology or lithography, where outsourcing state preparation would be valuable. Alternately, performing some quantum measurements can be technologically challenging, and the ability to delegate them to someone better-equipped would be desirable. The quantum internet goes beyond just quantum computing. Rather, it extends to a full range of quantum resources.
 
-To commodify quantum computing, if constructing large-scale quantum computers were a simple matter of plug-and-play, where quantum Lego building blocks are available off-the-shelf and straightforward to assemble even for monkeys, mass-production would rapidly force down prices. By arbitrarily interconnecting these boxes, large-scale quantum computers could be scaled up with demand.
+To commodify quantum computing, if constructing large-scale quantum computers were a simple matter of plug-and-play, where quantum Lego building blocks are available off-the-shelf and straightforward to assemble even for monkeys, mass production would rapidly force down prices. By arbitrarily interconnecting these boxes, large-scale quantum computers could be scaled up with demand, with a trajectory following a Quantum Moore's Law. We envisage that each of these commodity items is a black box, within which a relatively small number of qubits are present. Then, to build a larger quantum computer, we don't need to upgrade our boxes. Rather, we simply purchase more boxes to connect to the network. This notion is tailored to cluster states in particular -- because a cluster state can be obtained by nearest neighbour interactions, and since all preparation stages commute with one another, they naturally lend themselves to distributed preparation.
 
-We envisage that each of these commodity items is a black box, within which a relatively small number of qubits are present. Then, to build a larger quantum computer, we don't need to upgrade our boxes. Rather, we simply purchase more boxes to connect to the network. Following this model, these black boxes would become mass-produced commodity items, allowing quantum computers of arbitrary size to be economically scaled up, and broadly accessible as mass-production drives down costs. This notion is tailored to cluster states in particular -- because a cluster state can be obtained by nearest neighbour interactions, and all preparation stages commute with one another, they naturally lend themselves to distributed preparation.
-
-On the other hand, if quantum computers were only ever sold as room-sized, complete solutions (think D-Wave), such mass-production would not experience the driving force of commodified, off-the-shelf building blocks, each of which is cheap, yet frugal in its computational power alone.
+On the other hand, if quantum computers were only ever sold as room-sized, complete solutions (think D-Wave), such mass production would not experience the driving force of commodified, off-the-shelf building blocks, each of which is cheap, yet frugal in its computational power alone.
 
 Modularised quantum computation mitigates the need to purchase large-scale quantum computers outright, allowing them to be gradually scaled up as demand increases and production costs diminish.
 
-While the power of classical computers scales roughly linearly with the number of transistors, the power of quantum computers scales exponentially with the number of qubits. The classical Moore's law is close to saturation -- we simply can't make transistors too much smaller than they already are! We therefore envisage a new quantum Moore's law, which follows a far more impressive trajectory than its classical counterpart. The point of critical mass in quantum computing will take place when the classical and quantum Moore's law extrapolations intersect, signalling the commencement of the post-classical era. A somewhat speculative trend for this kind of scaling is illustrated in Fig.~\ref{fig:moores}, based on current real-world data and making plausible extrapolations thereof.
+While the power of classical computers scales roughly linearly with the number of transistors, the power of quantum computers scales exponentially with the number of qubits. The classical Moore's Law is close to saturation -- we simply can't make transistors too much smaller than they already are! We therefore envisage a new Quantum Moore's Law, which follows a far more impressive trajectory than its classical counterpart. The point of critical mass in quantum computing will take place when the classical and quantum Moore's Law extrapolations intersect, signalling the commencement of the post-classical era. A somewhat speculative trend for this kind of scaling is illustrated in Fig.~\ref{fig:moores}, based on current real-world data and making plausible extrapolations thereof.
 
 \begin{figure}[!htb]
 %includegraphics[width=\columnwidth]{module}
-\caption{Superimposed are Moore's law for the power of classical computers (bottom), with a speculated quantum version of Moore's law (top). The point of intersection signals the beginning of the post-classical era for quantum computing. The somewhat speculative curves suggest that this era might arrive already in the not too distant future.} \label{fig:moores}
+\caption{Superimposed are Moore's Law for the power of classical computers (bottom), with a speculated Quantum Moore's Law (top). The point of intersection signals the beginning of the post-classical era for quantum computing. The somewhat speculative curves suggest that this era might arrive already in the not too distant future. \comment{TO DO. Make figure.}} \label{fig:moores}
 \end{figure}
 
 \section{The Vision of the Global Quantum Internet}
@@ -1814,11 +1858,13 @@ We have presented an early formulation and analysis of quantum networking protoc
 
 There are a number of schools of thought one might subscribe to when quantum networking. One might demand perfect data integrity and best-case network performance. But that would come at the expense of necessitating an all-powerful central authority to oversee all communications and ensure that scheduling was absolutely perfect -- a potentially very challenging optimisation problem. Or one might tolerate lost data packets or suboptimal performance, but at the expense of limiting the applicability of the network. Or maybe some arbitrary compromise between different metrics and attributes is best. These are open questions that needn't have concrete, one-size-fits-all answers. The QTCP framework we presented is sufficiently flexible and extensible that these questions can be answered and enforced independently by different subnetworks, depending on their individual characteristics and requirements, in much the same way that every organisation connected to the classical internet today is free to structure their own LAN as they please, enforcing their own network policies.
 
-The quantum internet will allow quantum computation to become distributed, not just outsourced. In the same way that many present-day classical algorithms are heavily parallelised and distributed across large clusters, or even across the internet itself (e.g the SETI project), quantum networks will allow the distribution of quantum computation across many nodes, either in parallel, in series, or in a modulerised fashion. This will be central to achieving scalability. Keeping in mind that the classical-equivalent power of a quantum computer grows exponentially with the number of qubits, it is highly desirable to squeeze out every last available qubit for our computations.
+The quantum internet will allow quantum computation to become distributed, not just outsourced. In the same way that many present-day classical algorithms are heavily parallelised and distributed across large clusters, CUDA cores, or even across the internet itself (e.g the SETI project), quantum networks will allow the distribution of quantum computation across many nodes, either in parallel, in series, or in a modularised fashion. This will be central to achieving scalability. Keeping in mind that the classical-equivalent power of a quantum computer grows exponentially with the number of qubits, it is highly desirable to squeeze out every last available qubit for our computations.
 
 Combined with recent advances in homomorphic encryption and blind quantum computation, commercial models for the distribution of quantum computation will emerge, allowing computational power to be outsourced, with both client and server confident in the security of their data and proprietary algorithms. This is a notion that is challenging on classical computers, but will be of utmost importance in quantum computing, where it is expected sensitive data and algorithms will often be at stake.
 
-From the security perspective, the global quantum internet will enable an international QKD communications network with perfect secrecy, guaranteed by the laws of physics. This will be of immense economic and strategic benefit to commercial enterprises, governments, and individuals. Classical cryptography is already a multi-billion dollar industry worldwide. Quantum cryptography will supersede it, and be of especial importance in the era of quantum computers, which compromise some essential classical cryptographic protocols, such as RSA \cite{bib:RSA}, which forms the basis of most current internet encryption. Not only is quantum cryptography being pursued optically, but even credit cards with embedded quantum circuitry are being actively developed to prevent fraud. Inevitably, this will require the communication between bank automats and servers to be mediated by a quantum network.
+From the security perspective, the global quantum internet will enable an international QKD communications network with perfect secrecy, guaranteed by the laws of physics. This will be of immense economic and strategic benefit to commercial enterprises, governments, and individuals. Classical cryptography is already a multi-billion dollar industry worldwide. Quantum cryptography will supersede it, and be of especial importance in the era of quantum computers, which compromise some essential classical cryptographic protocols, such as RSA \cite{bib:RSA}, which forms the basis of most current internet encryption, digital signatures, and the Blockchain/Bitcoin. Not only is quantum cryptography being pursued optically, but even credit cards with embedded quantum circuitry are being actively developed to prevent fraud. Inevitably, this will require the communication between bank automats and servers to be mediated by a quantum network.
+
+Already, off-the-shelf QKD systems are available as commodity items (e.g by magiQ and idQuantique) \comment{Check this. Are there others. Add refs.}, which may be simply interconnected via an optical fibre link, thereby implementing end-to-end quantum cryptography. This is of a similar flavour to, and a first step towards, modularised quantum computing, which would greatly enhance the economic viability and scalability of general purpose quantum computing by paving the way for the mass production of interconnected elementary modules.
 
 The reality is that we are only just beginning to understand the full potential for quantum technologies, and as we learn more we will inevitably find new uses for networking them.
 
