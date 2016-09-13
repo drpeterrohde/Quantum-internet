@@ -10,7 +10,7 @@
 \newcommand{\ket}[1]{|#1\rangle}
 
 \newcommand{\comment}[1]{{\color{blue}{\textbf{#1}}}}
-\newcommand{\peter}[1]{{\color{MidnightBlue}{#1}}}
+\newcommand{\peter}[1]{{\color{Aquamarine}{#1}}}
 \newcommand{\jonny}[1]{{\color{Orchid}{#1}}}
 \newcommand{\ryan}[1]{{\color{YellowGreen}{#1}}}
 \newcommand{\chaoyang}[1]{{\color{Apricot}{#1}}}
@@ -178,13 +178,23 @@ c_\mathrm{min} &= \min_\mathcal{S} (c_\mathrm{total}), \nonumber \\
 \mathcal{S}_\mathrm{opt} &= \mathrm{argmin}_\mathcal{S} (c_\mathrm{total}).
 \end{align}
 
-Choosing optimal strategies is a challenging problem, potentially requiring complex, computationally inefficient optimisation techniques. Strategy optimisation is an example of resource allocation, whose optimal solutions are often notoriously difficult to solve, residing in complexity classes like \textbf{NP}-complete (or worse!). In general, the number of possible routes through a graph will grow exponentially with the number of vertices. Thus, explicitly enumerating each possible route is generally prohibitive for large networks, unless some known structure provides `shortcuts' to optimisation. Having said this, Dijkstra's shortest path algorithm is the perfect counterexample, demonstrating that although an exponential number of routes may exist between two points, an optimal one can be found in polynomial time.
+Choosing optimal strategies is a challenging problem, potentially requiring complex, computationally inefficient optimisation techniques. Strategy optimisation is an example of resource allocation, whose optimal solutions are often notoriously difficult to solve, residing in complexity classes like \textbf{NP}-complete (or worse!). In general, the number of possible routes through a graph will grow exponentially with the number of vertices. Thus, explicitly enumerating each possible route is generally prohibitive for large networks, unless some known structure provides `shortcuts' to optimisation. Having said this, Dijkstra's shortest path algorithm (discussed in Sec.~\ref{sec:shortest_path}) is the perfect counterexample, demonstrating that although an exponential number of routes may exist between two points, an optimal one can be found in polynomial time.
+
+\subsubsection{Ad hoc Operation vs. Central Authorities}
+
+\peter{When considering strategy optimisation, the first question to ask is `Who performs the optimisation, and who has access to what information?'.
+
+In terms of who performs the optimisation, the two main options are that either each node is responsible for optimising the routes of packets passing through it ({\sc Individual} algorithms), or there is a reliable and trusted central authority who oversees network operation and performs all strategy decision-making ({\sc Central} algorithms).
+
+In the case of {\sc Individual} algorithms, the required knowledge of the state of the network could be obtained using network exploration algorithms (see Sec.~\ref{sec:path_exp}). On the other hand, for {\sc Central} algorithms, either network exploration could be employed, or alternately the network policy could require nodes to notify the central authority upon joining or leaving the network. The former introduces an overhead in classical networking resource usage, since network exploration must be performed routinely to keep the central ledger up to date. The latter, on the other hand, avoids this, but introduces a point of failure, in that all network participants must be reliable in notifying the central authority as required by the network policy.}
 
 \subsubsection{Local vs. Global Optimisation}
 
-There are two general approaches one might consider when choosing strategies -- \emph{local optimisation} ({\sc Local}) and \emph{global optimisation} ({\sc Global}). {\sc Local} simply takes each state to be communicated, one-by-one, and allows it to individually choose an optimal routing strategy based on the state of the network at that moment. {\sc Global} is far more sophisticated and simultaneously optimises the sum of the routing costs, Eq.~\ref{eq:c_total}, of all currently in-demand routes.
+\peter{There are two general approaches one might consider when choosing strategies -- \emph{local optimisation} ({\sc Local}) and \emph{global optimisation} ({\sc Global}). {\sc Local} simply takes each state to be communicated, one-by-one, and allows it to individually choose an optimal routing strategy based on the state of the network at that moment. {\sc Global} is far more sophisticated and simultaneously optimises the sum of the routing costs, Eq.~\ref{eq:c_total}, of all currently in-demand routes.
 
-{\sc Global} must clearly perform at least as well as {\sc Local}, since \mbox{{\sc Local}$\subset${\sc Global}}, but we expect it to be better in general owing to the additional information it has of other users on the network. However, {\sc Global} requires solving a complex, simultaneous optimisation problem, which is likely to be computationally hard, whereas {\sc Local} can be efficiently solved using multiple independent applications of, for example, an efficient shortest-path algorithm (so-called `greedy' algorithms).
+To implement {\sc Local} optimisation, either {\sc Individual} or {\sc Central} algorithms may be employed. On the other hand, {\sc Global} optimisation necessarily requires a {\sc Central} algorithm, since it requires knowledge of the entire state of the network, which is collectively optimised.}
+
+\peter{Since {\sc Global} represents the class of all algorithms that take all network costs by all packets into consideration, it must clearly perform at least as well as {\sc Local}, which only takes into consideration the costs of a given packet. But we expect {\sc Global} to perform better than {\sc Local} in general, owing to the additional information it takes into consideration. We express this as \mbox{{\sc Local}$\subset${\sc Global}}. However, {\sc Global} requires solving a complex, simultaneous optimisation problem, which is likely to be computationally hard, whereas {\sc Local} can be efficiently solved using multiple independent applications of, for example, an efficient shortest-path algorithm (so-called `greedy' algorithms), discussed in Sec.~\ref{sec:shortest_path}.}
 
 A further stumbling block for {\sc Global} is that it requires some central authority, responsible for the global decision-making, to have complete, real-time knowledge of the state of the entire network. This may be plausible for small LAN's, but would clearly be completely implausible for the internet as a whole. So it is to be expected that different layers and subnets in the network hierarchy will employ entirely different strategy optimisation protocols. This is certainly reminiscent of the structure of the present-day internet.
 
@@ -1251,7 +1261,7 @@ A \emph{spanning tree} $S$, of a graph $G$, is a tree subgraph \mbox{$S\subset G
 \caption{A random graph (blue) with its MST highlighted (red).} \label{fig:mst}
 \end{figure}
 
-The calculation of MSTs is most likely to come into consideration when actually performing the initial construction of networks, where we wish to connect all nodes in the network, but using the most frugal possible physical resources. MSTs serve this purpose, and since they are trees, inherit all the same properties of tree networks.
+The calculation of MST's is most likely to come into consideration when actually performing the initial construction of networks, where we wish to connect all nodes in the network, but using the most frugal possible physical resources. MST's serve this purpose, and since they are trees, inherit all the same properties of tree networks.
 
 \subsubsection{The Internet Webgraph}
 
@@ -1291,20 +1301,24 @@ Having introduced some of the more relevant graph structures, we now introduce s
 
 \subsection{Network Exploration \& Pathfinding} \label{sec:path_exp}
 
-Here the goal is to systematically explore every vertex in an unknown graph exactly once, so as to reconstruct the entire network graph, or, to find a target node with unknown location (which can obviously be achieved if the former can be). The two main approaches are \emph{breadth-first-search} (BFS) and \emph{depth-first-search} (DFS) algorithms. In both cases we begin at a starting (root) node, from which we wish to explore the entire graph by only following edges.
+Here the goal is to systematically explore every vertex in an unknown graph exactly once, so as to reconstruct the entire network graph, or to find a target node with unknown location (which can obviously be achieved if the former can be). The two main approaches are \emph{breadth-first-search} (BFS) and \emph{depth-first-search} (DFS) algorithms. In both cases we begin at a starting (root) node, from which we wish to explore the entire graph by only following edges.
 
 In BFS we proceed from the root node to visit every one of its neighbours. Having done so, and created a list of those neighbours, we proceed onto the neighbours of the neighbours, and so on, until every vertex in the graph has been visited, or the target node found.
 
 In DFS, on the other hand, we begin by following a single arbitrary path until we reach a dead-end, at which point we backtrack until we reach a branch leading to a vertex we hadn't previously visited.
 
-Both BFS and DFS guarantee visiting every vertex in a connected graph, and do so using only nearest neighbour transitions. Such algorithms are therefore very useful for network discovery. The BFS algorithm is particularly applicable to pathfinding in ad hoc networks. Consider the situation where there is no central authority with full knowledge of the network, overseeing network operation. Rather, everyone needs to figure things out for themselves by speaking to their neighbours. This directly leads to a BFS search algorithm, where a node speaks to each of its neighbours in turn, who subsequently do the same thing. This can be naturally parallelised, as each node can be interrogating its neighbours independently.
-
-Both BFS and DFS exhibit runtime \mbox{$O(|V|+|E|)$}, where $|V|$ and $|E|$ are the number of vertices and edges respectively. Thus, these graph exploration algorithms reside in the complexity class \textbf{P}, and are classically efficient.
+Examples of these two algorithms are shown in Fig.~\ref{fig:BFS_DFS}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.6\columnwidth]{BFS_DFS}
-\caption{Comparison of the order in which vertices are explored, using the depth-first search (DFS) and breadth-first search (BFS) algorithms, where vertex 1 is the root vertex.} \label{fig:BFS_DFS}
+\caption{Comparison of the order in which vertices are explored, using the breadth-first-search (BFS) and depth-first-search (DFS) algorithms, where vertex 1 is the root vertex.} \label{fig:BFS_DFS}
 \end{figure}
+
+\peter{Both BFS and DFS guarantee visiting every vertex in a connected graph, and do so using only nearest neighbour transitions. Such algorithms are therefore very useful for network discovery.
+
+The BFS algorithm is particularly applicable to pathfinding in ad hoc networks. Consider the situation where there is no central authority with full knowledge of the network, overseeing network operation. Rather, everyone needs to figure things out for themselves by only interrogating their neighbours, to whom they have direct connections. This directly leads to a BFS algorithm, where a node speaks to each of its neighbours in turn, who subsequently do the same thing. This can be naturally parallelised, as each node can be interrogating its neighbours independently, thereby implementing a distributed BFS algorithm. Note that, when searching for a target node, while the BFS algorithm obviously finds the target using the smallest number of hops (i.e a lowest-order route), it needn't necessarily find the route with the lowest cost (which is distinct from the number of hops in general). Shortest-path algorithms require a priori knowledge of the full network graph, discussed in Sec.~\ref{sec:shortest_path}.}
+
+Both BFS and DFS exhibit runtime \mbox{$O(|V|+|E|)$}, where $|V|$ and $|E|$ are the number of vertices and edges respectively. Thus, these graph exploration algorithms reside in the complexity class \textbf{P}, and are classically efficient.
 
 \subsection{Shortest-Path} \label{sec:shortest_path}
 
@@ -1327,6 +1341,14 @@ This is the motivating factor behind representing network graphs purely in terms
 For the purposes of the QTCP protocol, we are interested in the case of directed graphs (recall that in terms of cost metrics, undirected graphs can be converted to directed graphs by replacing undirected edges with a pair of edges in opposite directions).
 
 Shortest-path techniques find widespread application in many areas. Computer networks are an obvious candidate, since networks are inherently graph-theoretic by nature.
+
+\peter{To implement the shortest-path algorithms discussed above, the party performing the calculation requires knowledge of the full network graph. In an ad hoc network, where users might be added to or removed from the network arbitrarily, this isn't necessarily the case.
+
+One solution is for a central authority to be responsible for maintaining a ledger of all network participants and their connectivity, which users are required to notify upon joining or leaving the network. The central authority may then apply shortest-path calculations, which may be queried by users. However, a disruption in connection to the central authority, or failure of nodes to notify the central authority upon joining or leaving the network, introduces a point of failure into the operation of the protocol.
+
+Another approach, which does not require a reliable central authority, is for users to implement network exploration algorithms each time they wish to perform a shortest-path calculation. This facilitates truly ad hoc networking, but incurs the cost overhead associated with nodes frequently implementing network exploration. However, network exploration is a purely classical algorithm, which may run entirely over the classical network, and therefore incurs no cost in quantum resources.
+
+With this approach, a new node can join the network, without having to know anything about the topology of the network. Similarly, upon leaving the network, it needn't notify anyone, since a future interrogation by a neighbour will be detected as a non-existent node. The BFS is therefore highly suited to ad hoc operation.}
 
 \subsection{Minimum Spanning Tree} \label{sec:min_tree}
 
@@ -1581,9 +1603,9 @@ Aside from quantum computing, a central use for quantum technologies is in crypt
 
 The two original QKD protocols, known as the \emph{BB84 protocol} \cite{bib:BennetBrassard84}, and \emph{E91} \cite{bib:Ekert91}, are based on polarisation encoding in photons. BB84 requires only the transmission of a sequence of single photons, polarisation encoded with random data. E91, on the other hand, requires a server that distributes entangled Bell pairs between Alice and Bob. Since then, numerous other protocols for QKD have been proposed, for example, using continuous variable states.
 
-Let us briefly consider the BB84 protocol. Alice first chooses a random basis, either $\hat{X}$ or $\hat{Z}$, in which to encode one of two randomly chosen basis states, either \mbox{$\{\ket{H},\ket{V}\}$} or \mbox{$\{\ket{+}=(\ket{H}+\ket{V})/\sqrt{2},\ket{-}=(\ket{H}-\ket{V})/\sqrt{2}\}$} respectively. She sends this state to Bob, without announcing either the choice of basis or basis state. Bob subsequently measures the photon in one of the two bases, chosen randomly also. This is repeated as many times as is necessary. Finally, Bob confirms to Alice that he has received her photons, at which point she announces to him the choice of basis for each of the sent photons (this does not require secrecy). In the instances where Alice and Bob's basis choices matched, Bob has measured the same state that Alice sent, and he records the value. Otherwise he discards that sample. What remains is approximately half as many bits, which are guaranteed to be the same for Alice and Bob.
+Let us briefly consider the BB84 protocol. Alice first chooses a random basis, either $\hat{X}$ or $\hat{Z}$, in which to encode one of two randomly chosen basis states, either \mbox{$\{\ket{H},\ket{V}\}$} or \mbox{$\{\ket{+}=(\ket{H}+\ket{V})/\sqrt{2},\ket{-}=(\ket{H}-\ket{V})/\sqrt{2}\}$} respectively. She sends this state to Bob, without announcing either the choice of basis or basis state. Bob subsequently measures the photon in one of the two bases, chosen randomly also. This is repeated as many times as is necessary. Finally, Bob confirms to Alice that he has received her photons, at which point she announces to him the choice of basis for each of the sent photons (this does not require secrecy). In the instances where Alice and Bob's basis choices matched, Bob has measured the same state that Alice sent, and he records the value. Otherwise he discards that sample. What remains is approximately half as many random bits, which are guaranteed to be the same for Alice and Bob.
 
-Suppose an eavesdropper, Eve, were to perform an intercept-resend attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of bases, and Eve will not know the basis in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. Thus, by sacrificing a small fraction of their shared bits, via openly communicating them to one another for comparison, such an intercept-resend attack will quickly be detected by Alice and Bob, with success probability exponentially asymptoting to unity. Thus, Alice and Bob have great confidence that they have a shared secret bit-string, which may subsequently be employed in a one-time-pad.
+Suppose an eavesdropper, Eve, were to perform an intercept-resend attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of bases, and Eve will not know the basis in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. Thus, by sacrificing a small fraction of their shared bits, via openly communicating them to one another for comparison, such an intercept-resend attack will quickly be detected by Alice and Bob, with success probability exponentially asymptoting to unity. Thus, Alice and Bob have great confidence that they have a shared, secret, random bit-string, which may subsequently be employed in a one-time-pad.
 
 A key observation in the BB84 protocol is that it requires no entanglement, no mode-matching, no interference, and no interferometric stability. It can be realised using nothing more than single-photon sources, waveplates, and photodetectors. For these reasons, QKD is a technology that is entirely viable on a large scale using present-day technology.
 
@@ -1723,7 +1745,7 @@ Both quantum walks and {\sc BosonSampling} have been subject to extensive experi
 
 Because these models are entirely passive, they can be made cloud-based very trivially: Alice prepares her permutation of single photons as the input state, sends it to Bob over the quantum network, who applies the passive operations before returning the state to Alice. Importantly, no intermediate client/server interaction is required. Alternately, she could classically communicate a bit-string to Bob indicating the input photon-number configuration, in case she is unable to prepare it herself.
 
-It was recently shown that this model may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}. This encryption also does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy. \comment{Explain in detail}
+It was recently shown that this model may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}. This encryption also does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy. \comment{Explain in detail - but put into encryption section, not here}
 
 \subsubsection{Continuous Variables}
 
@@ -1862,7 +1884,7 @@ The quantum internet will allow quantum computation to become distributed, not j
 
 Combined with recent advances in homomorphic encryption and blind quantum computation, commercial models for the distribution of quantum computation will emerge, allowing computational power to be outsourced, with both client and server confident in the security of their data and proprietary algorithms. This is a notion that is challenging on classical computers, but will be of utmost importance in quantum computing, where it is expected sensitive data and algorithms will often be at stake.
 
-From the security perspective, the global quantum internet will enable an international QKD communications network with perfect secrecy, guaranteed by the laws of physics. This will be of immense economic and strategic benefit to commercial enterprises, governments, and individuals. Classical cryptography is already a multi-billion dollar industry worldwide. Quantum cryptography will supersede it, and be of especial importance in the era of quantum computers, which compromise some essential classical cryptographic protocols, such as RSA \cite{bib:RSA}, which forms the basis of most current internet encryption, digital signatures, and the Blockchain/Bitcoin. Not only is quantum cryptography being pursued optically, but even credit cards with embedded quantum circuitry are being actively developed to prevent fraud. Inevitably, this will require the communication between bank automats and servers to be mediated by a quantum network.
+From the security perspective, the global quantum internet will enable an international QKD communications network with perfect secrecy, guaranteed by the laws of physics. This will be of immense economic and strategic benefit to commercial enterprises, governments, and individuals. Classical cryptography is already a multi-billion dollar industry worldwide. Quantum cryptography will supersede it, and be of especial importance in the era of quantum computers, which compromise some essential classical cryptographic protocols, such as RSA \cite{bib:RSA}, which forms the basis of most current internet encryption, digital signatures, and the Blockchain/Bitcoin protocol. Not only is quantum cryptography being pursued optically, but even credit cards with embedded quantum circuitry are being actively developed to prevent fraud. Inevitably, this will require the communication between bank automats and servers to be mediated by a quantum network.
 
 Already, off-the-shelf QKD systems are available as commodity items (e.g by magiQ and idQuantique) \comment{Check this. Are there others. Add refs.}, which may be simply interconnected via an optical fibre link, thereby implementing end-to-end quantum cryptography. This is of a similar flavour to, and a first step towards, modularised quantum computing, which would greatly enhance the economic viability and scalability of general purpose quantum computing by paving the way for the mass production of interconnected elementary modules.
 
