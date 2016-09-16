@@ -60,7 +60,7 @@ University of Science \& Technology of China, Hefei, Anhui 230026, China}
 
 \section{Foreword}
 
-Quantum technologies are not just of interest to quantum physicists, but will have transformative effects across countless areas. For this reason, this paper is directed at a general audience of not only quantum computer scientists, but also classical computer scientists, and computer, software and network engineers. More broadly, we hope this paper will be of interest to those who recognise the significance of quantum technologies, and the implications (or even just curiousities) that networking them might have.
+Quantum technologies are not just of interest to quantum physicists, but will have transformative effects across countless areas. For this reason, this paper is directed at a general audience of not only quantum computer scientists, but also classical computer scientists, and computer, software and network engineers. More broadly, we hope this paper will be of interest to those who recognise the future significance of quantum technologies, and the implications (or even just curiousities) that networking them might have.
 
 A basic understanding of both quantum mechanics and classical networking are helpful, but not essential, to following our discussion. Some mathematical sections require a basic understanding of the mathematical notation of quantum mechanics. Although the reader without this background ought to be able to nonetheless follow the broader arguments.
 
@@ -77,6 +77,8 @@ The digital internet may be considered a technology stack, such as TCP/IP (Trans
 In the context of a quantum internet, packets of data will instead be quantum states, and the transmission control protocol is responsible for guiding them to their destination and ensuring quality control.
 
 Here we present a treatment for such Quantum Transmission Control Protocols (QTCP) as a theoretical foundation for a future quantum internet. We consider how such ad hoc networks may be described mathematically, how to quantify network performance, and present a QTCP stack for operating it. While the goals of QTCP are similar as for classical TCP, there are major conceptual differences between the classical and quantum internets, owing to the unique properties of quantum states with no classical analogue.
+
+Our treatment of quantum networks will be optics-heavy, based on the reasonable assumption that communications channels will almost certainly be optical, albeit with many possible choices of optical states and mediums. However, this does not preclude non-optical systems from representing quantum information that is not in transit, and we consider such `hybrid' architectures in detail.
 
 The quantum internet will enable advances in the large-scale deployment of quantum technology. Most notably, in the context of quantum computing it will allow initially very expensive technology to be economically viable and broadly accessible via the outsourcing of computations to well-resourced hosts -- \emph{cloud quantum computing}.
 
@@ -463,7 +465,7 @@ Like the dephasing channel, the error probability of multiple channels in series
 
 \subsubsection{Amplitude Damping}
 
-An error that is not so much relevant to optics, but which arises very naturally in some other systems, such as atomic systems, is amplitude damping. Here the process models the relaxation of a higher energy level, $\ket{1}$, to a lower energy one, $\ket{0}$. The $\ket{0}$ state is assumed to be the ground state and cannot relax any further, but the $\ket{1}$ state can spontaneously relax to the ground state. After complete amplitude damping, any input state will be left in the ground state $\ket{0}$. This model can be thought of as energy dissipating from the qubit system.
+An error that is not so much relevant to optics, but which arises very naturally in some other systems, such as atomic systems or quantum dots, is amplitude damping. Here the process models the relaxation of a higher energy level, $\ket{1}$, to a lower energy one, $\ket{0}$. The $\ket{0}$ state is assumed to be the ground state and cannot relax any further, but the $\ket{1}$ state can spontaneously relax to the ground state. After complete amplitude damping, any input state will be left in the ground state $\ket{0}$. This model can be thought of as energy dissipating from the qubit system and being measured by the environment, leading to a type of decoherence whereby the input state is probabilistically replaced by the ground state.
 
 The amplitude damping channel is easily represented in the quantum process formalism using two Kraus operators,
 \begin{align}
@@ -535,7 +537,7 @@ The fidelity is invariant under a common unitary applied to both states,
 \mathcal{F}(\hat\rho_1,\hat\rho_2) = \mathcal{F}(\hat{U}\hat\rho_1 \hat{U}^\dag,\hat{U} \hat\rho_2\hat{U}^\dag).
 \end{align}
 
-\peter{We define the fidelity of two processes to be the fidelity between two identical copies of a state that have been evolved under each of those processes, minimised over all possible states. That is, it provides a lower bound on the fidelity between identical states evolved under the two processes. In the context of networking, where quality must be guaranteed, this definition is more appropriate than say the average case fidelity. Specifically,}
+\peter{We define the fidelity of two processes to be the fidelity between two identical copies of a state that have been evolved under each of those processes, minimised over all possible states. That is, it provides a lower bound on the fidelity between identical states evolved under the two processes. In the context of networking, where quality must be guaranteed, this definition is more appropriate than, say, the average case fidelity. Specifically,}
 \begin{align}
 \mathcal{F}(\mathcal{E}_1,\mathcal{E}_2) &= \min_{\hat\rho} \left[\mathcal{F}(\mathcal{E}_1(\hat\rho),\mathcal{E}_2(\hat\rho))\right] \nonumber \\
 &= \mathrm{tr}\left(\sqrt{\chi_1^{1/2}\cdot\chi_2\cdot\chi_1^{1/2}}\right),
@@ -743,6 +745,10 @@ We envisage a network with a set of senders, $\{A_i\}$, and receivers, $\{B_i\}$
 The routing strategies we introduce in Sec.~\ref{sec:strategies} will not always guarantee that packets have immediate access to network bandwidth the moment they demand it. Inevitably, in shared networks there will sometimes be competition, forcing some users to wait their turn. For this reason, many quantum networks will require at least some nodes (the ones liable to competition) to have access to quantum memories, such that quantum packets can be stored for a sufficient duration that they can wait their turn on the shared network resources. Of course, quantum memories induce quantum processes of their own, which need to be factored into cost calculations. Quantum memories are easily accommodated for in the QTCP framework by allowing self-loops at nodes, which implement a memory process. The implementation of quantum memory is discussed in Sec.~\ref{sec:memory}.
 
 Given that classical networking is decades more advanced than quantum networking, and extremely cheap and reliable, we will assume that classical resources `come for free', and only quantum resources are of practical interest. That is, classical communication and computation is a free resource available to mediate the operation of the quantum network. We therefore envisage a \emph{dual network} with two complementary networks operating in parallel and in tandem -- the quantum network for communicating quantum data, and a topologically identical classical network operating side-by-side and synchronised with the quantum network.
+
+The motivation for the dual network is to ensure that classical and quantum data that jointly represent packets (see Sec.~\ref{sec:prot_stack}) remain synchronised and subject to the same QoS issues, such as packet collisions (see Sec.~\ref{sec:collision}) and network congestion.
+
+We envisage quantum networks to extend beyond just client/server quantum computation, to include the free trade of any quantum asset. This includes state preparation, measurement, computation, randomness, entanglement, and information. Much like the classical internet, by allowing quantum assets to be exchanged, we can maximise utility, improve economy of scale, and enable new models for commercialisation.
 
 \section{The Quantum Transmission Control Protocol (QTCP)}
 
@@ -1165,7 +1171,7 @@ The {\sc Costs} and {\sc Attributes} fields within the {\sc Header} are very pow
 
 {\sc Costs} naturally capture characteristics of the network that accumulate additively along routes, whereas {\sc Attributes} capture any other characteristics that aren't additive. A network needn't have both costs \emph{and} attributes. It may have one or the other, or both, but not neither, since there must be some measure by which to judge routes.
 
-\section{Interconnecting Networks}
+\section{Interconnecting \& Interfacing Networks}
 
 Any global-scale network will inevitably comprise participants choosing to go about things their own way. The physical architecture and medium may vary from one subnetwork to the next, as may the QTCP policies they adopt. The key then is to construct efficient \emph{interconnects} between different levels of the network hierarchy, each of which may subscribe to their own QTCP policies and cross between different physical mediums. Note that the QTCP protocol presented here does not enforce any particular networking policies, but rather provides a high-level framework that can be customised essentially arbitrarily.
 
@@ -1775,7 +1781,7 @@ Expanding upon this idea, we can envisage that future quantum networks with arbi
 
 \subsubsection{Modularised Computation}
 
-How does one build a large-scale quantum computer, given the extremely daunting technological requirements? In any industry, economies of scale allow the mass production, and rapid decrease in the price of technology. To achieve this, we must find a way to make quantum technologies commodity items, which avoid all the hassle of customised cutting-edge labs. What we really desire is `Lego for Adults', allowing ad hoc connection of \emph{modules}, which implement small subsections of a large computation. The modules could all be identical, just patched together differently, paving the way for their mass production, and an associated equivalent of Moore's Law.
+How does one build a large-scale quantum computer, given the extremely daunting technological requirements and high costs? In any industry, economies of scale allow the mass production, and rapid decrease in the price of technology. To achieve this, we must find a way to make quantum technologies commodity items, which avoid all the hassle of customised cutting-edge labs. What we really desire is `Lego for Adults', allowing ad hoc connection of \emph{modules}, which implement small subsections of a large computation. The modules could all be identical, just patched together differently, paving the way for their mass production, and an associated equivalent of Moore's Law.
 
 In Sec.~\ref{sec:dist_QC} we introduced the notion of distributed quantum computation. There the motivation was to enable a computation to be distributed across multiple servers, which either parallelise computation or process it as a pipeline in series.
 
@@ -1829,13 +1835,39 @@ Of course, this is the most simple model, with a single logical qubit per module
 
 \section{State of the Art}
 
-\comment{TO DO!}
+When will we have the quantum internet? This is a question with as many answers as there are people one asks. In this section we discuss the state of the art of current quantum networking primitives across various physical architectures, and speculate as to where that technology will be in the next 5 years. We pay attention to the different relevant cost metrics, and how they are progressing, as well as scalability considerations. With this we aim to shed light on what quantum networking services could be readily implemented today, using present-day technology, and what is likely to be in the near future. We then venture into the world of the unknown, and discuss how far technology must develop in order to enable the basic building blocks for a scalable quantum internet.
 
 \comment{Talk about where different technologies are currently at.}
 
+\comment{Where's the technology likely to be in the next 5 years.}
+
 \comment{What are some realistic cost metrics etc (e.g what are the best efficiencies, visibilities, fidelities, purities that are achievable using todays technology}
 
-\comment{Where's the technology likely to be in the next 5 years.}
+\subsection{State Preparation}
+
+\comment{Preparation of different types of optical states. e.g coherent states, single photons, cat states, squeezed states, etc.}
+
+\comment{Preparation of non-optical states: atomic ensembles, atoms in cavities, quantum dots, NV centres, superconducting rings, etc.}
+
+\subsection{Measurement}
+
+\comment{Photo-detection, homodyne measurement, etc.}
+
+\subsection{Evolution}
+
+\comment{How many qubits do different types of physical architectures allow? Fidelities, scalability issues}
+
+\comment{For optics: waveguides, loops, bulk optics}
+
+\comment{For non-optical: all the different physical systems for QC}
+
+\subsection{Memory}
+
+\comment{Fibre loops and free-space loops, coupling to long-lifetime atoms or atomic ensembles}
+
+\subsection{Protocols}
+
+\comment{All the stuff mentioned in Applications $\to$ Elementary protocols}
 
 \comment{What protocols have been demonstrated? What's coming in the near future? How big are they? How big will they be in 5 years?}
 
