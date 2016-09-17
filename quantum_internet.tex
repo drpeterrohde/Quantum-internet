@@ -1426,6 +1426,7 @@ As a last (and possibility also intermediate) step in any quantum protocol is th
     \item Continuous variable states require, for example, homodyne measurements.
     \item Cluster states require either a large bank of photodetectors, or a fast dynamic switching scheme to measure multiple qubits either in parallel or in quick succession.
     \item Coherent state amplitude measurements require Avalanche Photo-Diodes (APDs).
+    \item Bell state projection, when using polarisation-encoded photons, can be implemented deterministically using a CNOT gate (e.g a KLM gate), or non-deterministically using a PBS (with success probability of $1/2$, since it is only able to distinguish two of the four Bell states). The latter only requires high HOM visibility, avoiding the need for interferometric stability.
 \end{itemize}
 
 All of these bring with them their own (potentially substantial) costs and technological challenges. State of the art micropillar photodetectors, at the time of writing, cost on the order of hundreds of thousands of dollars, and require a sophisticated laboratory setup. Clearly this type of infrastructure is inaccessible to many players, and borrowing or licensing access to such equipment over a quantum network would pave the way for broader accessibility to state of the art technology. However, each type of state being measured, in combination with the nature of the detection scheme, bring with it their own limitations. For example, number-resolved photodetectors exhibit dead-time, are too slow to enable fast-feedforward, have spectral filtering characteristics, and mode-matching requirements. All of these challenges make outsourcing of the use of the technology highly desirable.
@@ -1508,6 +1509,8 @@ Note that there is a break-even point, above which the protocol strictly increas
 
 A theoretical analysis of this protocol has been performed, accounting for mode-mismatch in the protocol \cite{bib:RohdeOptEntPur06}, where it was found than mode-mismatch shifts the break-even point upwards, and lowers the maximum value of $F_\mathrm{out}$ -- with more mode-mismatch, a higher starting fidelity is required to break even, and we achieve a lower output fidelity. In this case, a cost function that combines the dephasing and mode-mismatch metrics of the network will be required.
 
+Importantly, this protocol is based on partial Bell state measurement, and therefore does not require interferometric stability, only high HOM visibility, thus making stabilisation comparatively easy over long distances.
+
 \subsubsection{Quantum Teleportation} \label{sec:teleport}
 
 Quantum teleportation is an essential ingredient in many higher-level protocols. It forms the basis of cluster state quantum computing (see Sec.~\ref{sec:CSQC}), some QEC codes, the KLM linear optics quantum computing scheme (see Sec.~\ref{sec:KLM_univ}), and can act as a mediator for long-range transmission of quantum states, amongst others.
@@ -1559,6 +1562,8 @@ Thus, in terms of Pauli errors, no special treatment is required by the QTCP pro
 
 The total resources required to teleport a single qubit are: the qubit to be teleported, a single Bell pair, a two-qubit measurement in the Bell basis, and the transmission of two classical bits. This is more costly than sending the qubit using a direct link, but may be the only approach if a direct link is not available.
 
+The Bell state measurement can be implemented either using a CNOT gate, or as a partial Bell state measurement using a PBS, which does not require interferometric stability.
+
 \subsubsection{Entanglement Swapping \& Quantum Repeaters} \label{sec:repeater}
 
 The obvious approach to sending a qubit from Alice to Bob is to send a qubit from Alice to Bob. However, over long distances this may accrue impractical error rates, particularly losses. The other alternative is to employ the quantum teleportation protocol to teleport the state between the two parties. However, this requires that Alice and Bob first share an entangled Bell pair, which must itself be distributed across the same distances. \emph{Quantum repeaters} are devices that allow entanglement to be shared between distant nodes using a bootstrapped \emph{entanglement swapping} protocol. Entanglement swapping is the process of taking two Bell pairs, one held by each party, and swapping the entanglement between them such that the two parties share an entangled state. This procedure can be bootstrapped to progressively swap the entanglement over longer and longer distances.
@@ -1582,6 +1587,8 @@ Now if instead of Alice and Bob we have a long chain of these operations in seri
 The advantage to this approach is that the range of each repeater can be much smaller than the entire length of the channel, easing constraints imposed by errors, notably loss. Furthermore, the entanglement swapping needn't be actually performed in any chronologically linear sequence. The operations could be arbitrarily ordered, since the measurements are independent and commute. Thus, if some segments are detected as failing (e.g qubits are lost), just those segments can be performed again without requiring the entire protocol to start from scratch, unlike the na{\" i}ve direct communication technique. This `divide and conquer' approach can drastically improve performance of the network in terms of channel capacity, improving the exponential dependence of loss on distance. 
 
 The protocol is conceptually very similar to teleportation, where instead of teleporting a qubit state, we are teleporting entanglement. Because of this similarity, it inherits similar error propagation characteristics as for teleportation discussed previously. That is, errors acting on the qubits upon which the Bell measurements are performed are effectively teleported onto the remaining qubits. Then, entanglement purification can be implemented as a higher-level layer on top of the repeaters, enabling high-fidelity entanglement distribution.
+
+Each Bell measurement can be implemented non-deterministically using a PBS, mitigating the need for interferometric stability, as before, but therefore introducing non-determinism into the protocol.
 
 \comment{Say something about the scalability of quantum repeater networks under different strategies. I believe with appropriate strategies it's possible to achieve poly rather than exp scaling. Is that right? Show details.}
 
@@ -1835,7 +1842,7 @@ Of course, this is the most simple model, with a single logical qubit per module
 
 \section{State of the Art}
 
-When will we have the quantum internet? This is a question with as many answers as there are people one asks. In this section we discuss the state of the art of current quantum networking primitives across various physical architectures, and speculate as to where that technology will be in the next 5 years. We pay attention to the different relevant cost metrics, and how they are progressing, as well as scalability considerations. With this we aim to shed light on what quantum networking services could be readily implemented today, using present-day technology, and what is likely to be in the near future. We then venture into the world of the unknown, and discuss how far technology must develop in order to enable the basic building blocks for a scalable quantum internet.
+\peter{When will we have the quantum internet? This is a question with as many answers as there are people one asks. In this section we discuss the state of the art of current quantum technologies that form our networking primitives across various physical architectures, and speculate as to where that technology will be in the next 5 years. We pay attention to the different relevant cost metrics, and how they are progressing, as well as scalability considerations. With this we aim to shed light on what quantum networking services could be readily implemented today, using present-day technology, and what is likely to be viable in the near future. We then venture into the world of the unknown, and discuss how far technology must develop in order to enable the basic building blocks for a scalable quantum internet, implementing protocols of practical use.}
 
 \comment{Talk about where different technologies are currently at.}
 
