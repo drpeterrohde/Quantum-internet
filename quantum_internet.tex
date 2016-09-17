@@ -435,15 +435,23 @@ is the completely mixed state. That is, the state has completely decohered. Note
 &= \ket{0}\bra{0}.
 \end{align}
 
-The notion of dephasing can be easily generalised to non-qubit systems. In general, dephasing has the property of mapping a superposition of basis states to a mixture of the same basis states, whilst preserving amplitudes. Thus, for perfect dephasing,
+Note that the probability of no dephasing occurring over multiple dephasing channels in series is given by the product of the respective probabilities for the individual channels.
+
+A qubit dephasing channel is often quoted in terms of its $T_2$ time, a characteristic time for dephasing to occur under continuous time-evolution.
+
+\peter{The notion of dephasing can be easily generalised to non-qubit systems. In general, dephasing has the property of mapping a superposition of basis states to a mixture of the same basis states, whilst preserving amplitudes. Thus, for perfect dephasing,
 \begin{align}
 \mathcal{E}^\mathrm{dephasing}\left(\sum_i \alpha_i\ket{i} \cdot \sum_j \alpha_j^*\bra{j} \right) \to \sum_i |\alpha_i|^2 \ket{i}\bra{i},
 \end{align}
-for some arbitrary basis enumerated by $i$.
-
-Note that the probability of no dephasing occurring over multiple dephasing channels in series is given by the product of the respective probabilities for the individual channels.
-
-A dephasing channel is often quoted in terms of its $T_2$ time, a characteristic time for dephasing to occur under continuous time-evolution.
+for some arbitrary basis enumerated by $i$ and $j$. For partial dephasing, we can express the channel as creating as a mixture over the input state with different phase rotations applied,
+\begin{align}
+\mathcal{E}(\hat\rho) = \int_{0}^{2\pi} \phi(\omega) \hat{\Phi}(\omega)\hat\rho\,\hat{\Phi}(\omega)^\dag\,d\omega,
+\end{align}
+where $\hat{\Phi}(\omega)$ is a phase-shift operator with phase $\omega$, and $\phi(\omega)$ characterises the probability distribution of phase-shifts. In the case of optical states, the phase-shift operators take the form,
+\begin{align}
+\hat\Phi(\omega) = e^{i\omega\hat{n}},
+\end{align}
+in the photon-number basis, where $\hat{n}=\hat{a}^\dag\hat{a}$ is the photon-number operator.}
 
 \subsubsection{Depolarisation}
 
@@ -1171,7 +1179,7 @@ The {\sc Costs} and {\sc Attributes} fields within the {\sc Header} are very pow
 
 {\sc Costs} naturally capture characteristics of the network that accumulate additively along routes, whereas {\sc Attributes} capture any other characteristics that aren't additive. A network needn't have both costs \emph{and} attributes. It may have one or the other, or both, but not neither, since there must be some measure by which to judge routes.
 
-\section{Interconnecting \& Interfacing Networks}
+\section{Interconnecting \& Interfacing Networks} \label{sec:inter}
 
 Any global-scale network will inevitably comprise participants choosing to go about things their own way. The physical architecture and medium may vary from one subnetwork to the next, as may the QTCP policies they adopt. The key then is to construct efficient \emph{interconnects} between different levels of the network hierarchy, each of which may subscribe to their own QTCP policies and cross between different physical mediums. Note that the QTCP protocol presented here does not enforce any particular networking policies, but rather provides a high-level framework that can be customised essentially arbitrarily.
 
@@ -1180,8 +1188,8 @@ For example, the cost metrics and attributes employed at the intercontinental le
 Such interconnects will typically comprise a combination of:
 \begin{itemize}
 \item Packet switching: such that packets can be arbitrarily switched between the different levels of the network hierarchy.
-\item Physical interface: interconnect may be switching between different media. Such physical interfaces have costs associated with them. For example, coupling between free-space and fibre is typically very lossy.
-\item Quantum memory: such that data can be buffered while it awaits its turn at being switched between networks, as different networks may have different loads and operate at different clock rates.
+\item Physical interface: interconnect may be switching between different media. Such physical interfaces have costs associated with them. For example, coupling between free-space and fibre is typically very lossy. This is discussed in Sec.~\ref{sec:opt_int}.
+\item Quantum memory: such that data can be buffered while it awaits its turn at being switched between networks, as different networks may have different loads and operate at different clock rates. This is discussed in Sec.~\ref{sec:memory}.
 \item Packet format conversion: different levels of the network hierarchy may be employing entirely different cost metrics, attributes, and cost functions, requiring packet headers to be reformatted upon switching between networks.
 \end{itemize}
 
@@ -1410,7 +1418,9 @@ So-called NOON states, path-number entangled two-mode states of the form,
 \begin{align}
 \ket\psi_\mathrm{NOON} = \frac{1}{\sqrt{2}}(\ket{N,0}+\ket{0,N}),
 \end{align}
-may be exploited to perform Heisenberg-limited quantum metrology, allowing extremely precise phase measurement with large photon-number $N$. However, these states are notoriously difficult and technologically challenging to prepare. If a remote server had the capacity to prepare such states, they would be in high demand across the globe. Hindering this, NOON states are very fragile creatures. First, they exhibit exponentially increased susceptibility to loss -- loss of just a single photon completely decoheres the state, rendering it useless for metrological purposes. Second, the large photon-number, $N$, amplifies dephasing by a factor of $N$. These considerations can be readily accommodated for in the QTCP protocol by tracking dephasing and loss metrics of the packets encapsulating the NOON states.
+may be exploited to perform Heisenberg-limited quantum metrology, allowing extremely precise phase measurement with large photon-number $N$. However, these states are notoriously difficult and technologically challenging to prepare, and can only prepared non-deterministically using linear optics.
+
+If a remote server had the capacity to prepare such states, they would be in high demand across the globe. Hindering this, NOON states are very fragile creatures. First, they exhibit exponentially increased susceptibility to loss -- loss of just a single photon completely decoheres the state, rendering it useless for metrological purposes. Second, the large photon-number, $N$, amplifies dephasing by a factor of $N$. These considerations can be readily accommodated for in the QTCP protocol by tracking dephasing and loss metrics of the packets encapsulating the NOON states.
 
 The NOON state is just a two-mode state. But indeed an entire universal quantum computation can be performed using the `cluster state' measurement-based model for quantum computation (to be discussed in detail in Sec.~\ref{sec:CSQC}). In the case of cluster state preparation, state preparation can not only be outsourced, but distributed, with different hosts preparing different parts of the state, which are then combined.
 
@@ -1450,12 +1460,34 @@ The notable exception is non-linear optics, whereby additional errors in the pho
 
 \subsubsection{Memory} \label{sec:memory}
 
-A final building block, that will be essential in many networks, is quantum memory, which simply delays a packet by some fixed amount of time. This is modelled as per Fig.~\ref{fig:memory} via a self-loop implementing a process that delays packets. Ideally, the associated process should implement the identity operation in all degrees of freedom, except the temporal one, affecting only the {\sc Lifetime} metric of the packets passing through it, incrementing it by the duration of the quantum memory. Note that this is not directly compatible with conventional shortest-path algorithms, which ignore self-loops, requiring modifications to our strategy optimisation algorithms.
+A final building block, that will be essential in many networks, is quantum memory, which simply delays a packet by some fixed amount of time. This will be required when, for example, quantum data packets reach a network bottleneck, and face one of two options: wait, or be discarded. As discussed earlier, discarding quantum packets is often a highly undesirable enterprise, as they often cannot be easily recreated, most notably when entangled with other systems.
+
+Quantum memory is modelled in our network graph representation as per Fig.~\ref{fig:memory} via a self-loop implementing a process that delays packets. Ideally, the associated process should implement the identity operation in all degrees of freedom, except the temporal one, affecting only the {\sc Lifetime} metric of the packets passing through it, incrementing it by the duration of the quantum memory.
+
+\peter{Note that this is not directly compatible with conventional shortest-path algorithms, which ignore self-loops. One approach is to modify our strategy optimisation algorithms to accommodate self-loops. Alternately, we could construct a `virtual' graph, obtained by adding additional nodes to the network, with connections determined by `unravelling' the self-loops. For example, in Fig.~\ref{fig:memory}, we could eliminate the self-loop, and instead replace $B$ with multiple redundant nodes in parallel between $A$ and $C$, each associated with their own latency cost.}
 
 \begin{figure}[!htb]
 \includegraphics[width=0.7\columnwidth]{memory}
 \caption{Simple model for a quantum memory via a self-loop that passes through a memory process, $\mathcal{E}_\mathrm{mem}$. Ideally, $\mathcal{E}_\mathrm{mem}$ does not affect any of the costs or attributes of states passing through the link, except for the latency cost, which is incremented according to the duration of the memory.} \label{fig:memory}
 \end{figure}
+
+\peter{At the physical level, there are two main approaches we could use to put optical states into memory. The first is simply to employ delay lines, either in free-space or in fibre. The second is to interface the state with a non-optical system with a long lifetime, which holds the information content until needed. This can be achieved using, for example, the interfacing techniques discussed in Sec.~\ref{sec:opt_inter}.
+
+The former is experimentally straightforward, but plagued by loss, and is only suitable over short timescales, on the order of nanoseconds. The latter is more experimentally challenging, but can achieve longer storage times, limited by the lifetime ($T_1$ and $T_2$ times) of the non-optical system. For some physical systems, this can be very high, on the order of milliseconds for atomic ensemble qubits, for example, which is adequate for the purposes of waiting out network bottlenecks.}
+
+\subsubsection{Optical Interfacing} \label{sec:opt_inter}
+
+\peter{Unless the entire pipeline of quantum operations through the course of a protocol is all-optical, there will be a need to exchange information between physical systems, i.e light-matter interactions. The archetypal interface is that between a photonic qubit in the \mbox{$\{\ket{0},\ket{1}\}$} photon-number basis, and a two-level matter qubit, such as an atom in a cavity, an atomic ensemble, a nitrogen-vacancy (NV) centre, or a quantum dot. In this case, the interface can be expressed as an interaction Hamiltonian of the form,
+\begin{align}
+\hat{H}_\mathrm{int} = \hbar g (\hat{a}\,\hat\sigma^+ + \hat{a}^\dag\hat\sigma^-),
+\end{align}
+where $\hat{a}$ ($\hat{a}^\dag$) is the photonic annihilation (creation) operator, $\hat\sigma^\pm$ are the Pauli spin-flip operators, and $g$ is the interaction strength. The interpretation of this Hamiltonian is very clear upon inspection -- the annihilation (creation) of a photon is associated with the excitation (relaxation) of the two-level matter system, thereby directly exchanging quantum information between the two systems, as shown in Fig.~\ref{fig:opt_int}.}
+
+\begin{figure}[!htb]
+\includegraphics[width=0.6\columnwidth]{opt_inter}
+\caption{\peter{Light-matter interfacing between a single-photon state and a two-level matter qubit. The absorption (emission) of a photon is associated with the excitation (relaxation) of the matter qubit.}} \label{fig:opt_int}
+\end{figure}
+
 
 \subsection{Elementary Protocols}
 
@@ -1592,24 +1624,6 @@ Each Bell measurement can be implemented non-deterministically using a PBS, miti
 
 \comment{Say something about the scalability of quantum repeater networks under different strategies. I believe with appropriate strategies it's possible to achieve poly rather than exp scaling. Is that right? Show details.}
 
-\subsubsection{Optical Interfacing} \label{sec:opt_int}
-
-\comment{TO DO. Discuss how to couple non-optical qubits to optical qubits. e.g atoms in cavities. Stimulated emission of atomic ensemble etc.}
-
-\peter{This is an area of research under active development \cite{???}, and will  be instrumental in the development of the quantum internet. For example, much progress has been made in coupling photonic qubits with atomic \cite{???}, quantum dot \cite{???}, and atomic ensemble \cite{???} systems, with rapidly improving coupling efficiencies and fidelities.}
-
-\subsubsection{Quantum Memory}
-
-A key requirement in large-scale quantum networks will be the ability to store qubits. This will be required when, for example, quantum data packets reach a network bottleneck, and face one of two options: wait, or be discarded. As discussed earlier, discarding quantum packets is often a highly undesirable enterprise, as they often cannot be easily recreated.
-
-Storing photons directly is challenging owing to their travelling nature, and ease with which they can be absorbed and lost. One approach has been to use optical cavities to trap photons, but storage times and efficiencies using this technique remain impractically low.
-
-A more plausible approach is to convert optical qubits to matter qubits with long lifetimes. Some matter-based qubits are being demonstrated with very long decoherence times. For example, atomic ensemble qubits have been demonstrated with decoherence times on the order of hundreds of milliseconds \comment{Check this!} \cite{???}, certainly long enough to wait out a typical network bottleneck.
-
-This effectively reduces the problem of optical quantum memory to that of optical interfacing between light-matter systems, as discussed in the previous section, and all the previously discussed issues surrounding optical interfacing apply as described.
-
-However, in addition to this, the quantum memory will of course accumulate additional costs associated with the idle storage time. This could be in the form of any of the usual error models applying to the matter qubit in question. In terms of our graph-theoretic description, memory can be modelled as self-loops at nodes, where the quantum process of the looped link is that of a single unit of time in the quantum memory. The remainder of the QTCP framework remains unchanged, although it must be ensured that the network strategy algorithms function correctly with self-loops.
-
 \subsubsection{Quantum Key Distribution (QKD)} \label{sec:QKD}
 
 Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. There is only a single provably secure encryption protocol, the \emph{one-time-pad}. This protocol requires Alice and Bob to share a random bit-string as long as the message being communicated between them. This reduces the problem of perfect secrecy of arbitrary messages to secrecy of shared randomness. QKD protocols enable this by providing a shared source of randomness between Alice and Bob, where any intercept-resend attack may be detected, guaranteed by the laws of quantum physics.
@@ -1635,6 +1649,12 @@ Unlike quantum computing, QKD is at the stage of commercial viability, and sever
 \subsubsection{Superdense Coding}
 
 \comment{Ryan to do}
+
+\subsubsection{Quantum Metrology}
+
+\comment{Discuss NOON states}
+
+\comment{Discuss MORDOR}
 
 \subsection{Cloud Quantum Computing} \label{sec:cloud}
 
