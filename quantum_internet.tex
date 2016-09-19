@@ -1,3 +1,7 @@
+%
+% The Quantum Internet - A Vision for the Future
+%
+
 \documentclass[aps,rmp,twocolumn,amsmath,amssymb,nofootinbib,superscriptaddress]{revtex4}
 
 \usepackage[pdftex]{graphicx}
@@ -11,6 +15,7 @@
 
 \newcommand{\comment}[1]{{\color{blue}{\textbf{#1}}}}
 \newcommand{\peter}[1]{{\color{Aquamarine}{#1}}}
+%\newcommand{\peter}[1]{{\color{black}{#1}}}
 \newcommand{\jonny}[1]{{\color{Orchid}{#1}}}
 \newcommand{\ryan}[1]{{\color{YellowGreen}{#1}}}
 \newcommand{\chaoyang}[1]{{\color{Apricot}{#1}}}
@@ -25,7 +30,15 @@
 
 \bibliographystyle{apsrev}
 
+%
+% Title
+%
+
 \title{The Quantum Internet -- A Vision for the Future}
+
+%
+% Authors
+%
 
 \author{Peter P. Rohde}
 \email[To whom correspondence should be addressed: ]{dr.rohde@gmail.com}
@@ -50,55 +63,81 @@ University of Science \& Technology of China, Hefei, Anhui 230026, China}
 
 \frenchspacing
 
+%
+% Abstract
+%
+
 \begin{abstract}
-\peter{Large ad hoc networks, such as the internet, require well-constructed protocols to efficiently and reliably facilitate communication between arbitrary distant parties. In the classical world, the Transmission Control Protocol (TCP) is the standard framework for achieving this, upon which other higher-level protocols are built. TCP is based upon certain expectations and goals for classical networks. When dealing with quantum networks, however, the expectations are entirely different and TCP requires a complete revamp. We introduce the Quantum Transmission Control Protocol (QTCP), discuss its operation and implementation, including a presentation of the low-level algorithms underpinning it, and consider its application to various quantum protocols to which networking will foreseeably be applied in the future. The end goal is to facilitate the construction of the \emph{global quantum internet}, allowing future quantum networks to implement full global networking services, and enabling new models for the commercialisation and proliferation of quantum technologies. In particular, we discuss \emph{cloud quantum computing}, whereby clients can license compute time on a host's quantum computer to process their data in the cloud. This is of great importance given the high expected initial cost of quantum computers. While this work is only a first step in a rapidly developing field, still in its infancy, the central concepts we present will be highly relevant to future, more sophisticated protocols.}
+Large ad hoc networks, such as the internet, require well-constructed protocols to efficiently and reliably facilitate communication between arbitrary distant parties. In the classical world, the Transmission Control Protocol (TCP) is the standard framework for achieving this, upon which other higher-level protocols are built. TCP is based upon certain expectations and goals for classical networks. When dealing with quantum networks, however, the expectations are entirely different, and TCP requires a complete revamp. We discuss quantum networking, and introduce the Quantum Transmission Control Protocol (QTCP), its operation and implementation, including a presentation of the low-level algorithms underpinning it, and consider its application to various quantum protocols to which networking will foreseeably be applied in the future. The end goal is to facilitate the construction of the \emph{global quantum internet}, allowing future quantum networks to implement full global networking services, and enabling new models for the commercialisation and proliferation of quantum technologies. In particular, we discuss \emph{cloud quantum computing}, whereby clients can license compute time on a host's quantum computer to process their data in the cloud. This is of great importance given the high expected initial cost of quantum computers. While this work is only a first step in a rapidly developing field, still in its infancy, the central concepts we present will be highly relevant to future, more sophisticated protocols.
 \end{abstract}
 
 \maketitle
 
 \tableofcontents
 
+%
+% Foreword
+%
+
 \section{Foreword}
 
-Quantum technologies are not just of interest to quantum physicists, but will have transformative effects across countless areas. For this reason, this paper is directed at a general audience of not only quantum computer scientists, but also classical computer scientists, and computer, software and network engineers. More broadly, we hope this paper will be of interest to those who recognise the future significance of quantum technologies, and the implications (or even just curiousities) that networking them might have.
+Quantum technologies are not just of interest to quantum physicists, but will have transformative effects across countless areas. For this reason, this paper is directed at a general audience of not only quantum computer scientists, but also classical computer scientists, physicists, and computer, software and network engineers. More broadly, we hope this paper will be of interest to those who recognise the future significance of quantum technologies, and the implications (or even just curiosities) that networking them might have.
 
 A basic understanding of both quantum mechanics and classical networking are helpful, but not essential, to following our discussion. Some mathematical sections require a basic understanding of the mathematical notation of quantum mechanics. Although the reader without this background ought to be able to nonetheless follow the broader arguments.
 
 Our goal is to present a broadly accessible technical overview of how we foresee quantum technologies to operate in the era of quantum globalisation.
 
+%
+% Introduction
+%
+
 \section{Introduction}
 
 The internet is one of the key technological achievements of the 20th century, an enabling factor in every aspect of our everyday use of modern technology. While digital computing was the definitive technology of the 20th century, quantum technologies will be for the 21st \cite{bib:NielsenChuang00}. Already we are beginning to see elementary realisations of essential quantum technologies such as quantum computing, cryptography, and metrology. As these technologies become increasingly viable and more ubiquitous, the demand for networking them and sharing quantum resources between them will become a pressing issue. Most notably, quantum cryptography and \emph{cloud quantum computing} will be pivotal in the proliferation of quantum technology, which necessarily requires reliable quantum communications channels.
 
-The first demonstrations of digital computer networks were nothing more than simple two-party, point-to-point communication. However, the internet we have today extends far beyond this, allowing essentially arbitrary networking across completely ad hoc networks, with any number of parties, in an entirely plug-and-play fashion. Similarly, elementary demonstrations of quantum communication have been performed across a small number of parties, and much work has been done on analysing quantum channel capacities in this context \cite{??? channel_capacity}. But, as with digital computing, demand for a future \emph{quantum internet} is foreseeable, enabling the arbitrary communication of quantum resources, between any number of parties, over ad hoc networks.
+The first demonstrations of digital computer networks were nothing more than simple two-party, point-to-point communication. However, the internet we have today extends far beyond this, allowing essentially arbitrary worldwide networking across completely ad hoc networks comprising many different mediums, with any number of parties, in an entirely plug-and-play fashion. Similarly, elementary demonstrations of quantum communication have been performed across a small number of parties, and much work has been done on analysing quantum channel capacities in this context \cite{??? channel_capacity}. But, as with digital computing, demand for a future \emph{quantum internet} is foreseeable, enabling the arbitrary communication of quantum resources, between any number of parties, over ad hoc networks.
 
 The digital internet may be considered a technology stack, such as TCP/IP (Transmission Control Protocol/Internet Protocol), comprising different levels of abstraction of digital information \cite{textbookOnNetworking}. At the lowest level we have raw digital data we wish to communicate. Above this, we decompose the data into packets. The packets are transmitted over a network, and TCP is responsible for routing the packets to their destination and guaranteeing data integrity and Quality of Service ({\sc QoS}). Finally, the packets received by the recipient are combined and the raw data reconstructed.
 
+\peter{The TCP layer remains largely transparent to the end-user, enabling virtual software interfaces to remote digital assets that behave as though they were local. This allows high-level services such as the File Transfer Protocol (FTP), the worldwide web, video and audio streaming, and outsourced computation on supercomputers, as though everything was taking place locally, with the end-user oblivious to the underlying networking protocols. To the user, YouTube videos or Spotify tracks behave as though they were held as local copies. And FTP allows storage on a data centre to be mounted as though it were a local volume. We foresee a demand for these same criteria in the quantum era.}
+
 In the context of a quantum internet, packets of data will instead be quantum states, and the transmission control protocol is responsible for guiding them to their destination and ensuring quality control.
 
-Here we present a treatment for such Quantum Transmission Control Protocols (QTCP) as a theoretical foundation for a future quantum internet. We consider how such ad hoc networks may be described mathematically, how to quantify network performance, and present a QTCP stack for operating it. While the goals of QTCP are similar as for classical TCP, there are major conceptual differences between the classical and quantum internets, owing to the unique properties of quantum states with no classical analogue.
+Here we present a treatment for such Quantum Transmission Control Protocols (QTCP's) as a theoretical foundation for a future quantum internet. We consider how such ad hoc networks may be described mathematically, how to quantify network performance, and present a QTCP stack for operating it. While the goals of QTCP are similar as for classical TCP, there are major conceptual differences between the classical and quantum internets, owing to the unique properties of quantum states with no classical analogue.
 
 Our treatment of quantum networks will be optics-heavy, based on the reasonable assumption that communications channels will almost certainly be optical, albeit with many possible choices of optical states and mediums. However, this does not preclude non-optical systems from representing quantum information that is not in transit, and we consider such `hybrid' architectures in detail.
 
-The quantum internet will enable advances in the large-scale deployment of quantum technology. Most notably, in the context of quantum computing it will allow initially very expensive technology to be economically viable and broadly accessible via the outsourcing of computations to well-resourced hosts -- \emph{cloud quantum computing}.
+The quantum internet will enable advances in the large-scale deployment of quantum technologies. Most notably, in the context of quantum computing it will allow initially very expensive technology to be economically viable and broadly accessible via the outsourcing of computations to well-resourced hosts -- \emph{cloud quantum computing}.
+
+%
+% Classical Networks
+%
 
 \section{Classical Networks}
 
-To set the context for our treatment of quantum networks, we begin by defining a mathematical construction for \emph{classical} networks. This encompasses representing networks as graphs, representing the cost of communications within the network, and how to optimise network routing to minimise costs. These notions will be essential in our later treatment of quantum networks. A description of the network algorithms we later employ is provided in Sec.~\ref{sec:graph_theory}.
+To set the context for our treatment of quantum networks, we begin by defining a mathematical construction for \emph{classical} networks. This encompasses representing networks as graphs, representing the cost of communications within the network, and how to optimise network routing to minimise costs. These notions will be essential in our treatment of quantum networks.
+
+%
+% Graph-Theoretic Representation
+%
 
 \subsection{Graph-Theoretic Representation}
 
-We consider a classical network to be a weighted, directed graph \mbox{$G=(V,E)$}, where vertices represent \emph{nodes} (\mbox{$v\in V$}) in the network, and the weighted edges represent communication \emph{links} (\mbox{$e\in E$}) between neighbouring nodes.
+We consider a classical network to be a weighted, directed graph \mbox{$G=(V,E)$}, where vertices represent \emph{nodes} (\mbox{$v\in V$}) in the network, and the weighted edges represent communication \emph{links} (\mbox{$e\in E$}) between neighbouring nodes \cite{???}.
 
-A node could be, for example, data storage, a classical computer implementing a computation, a router that switches the connections between incoming and outgoing links, or an end user. A link on the other hand is any arbitrary means of communication between nodes, such as optical fibre, satellite, radio, electrical, smoke signals, or well-trained carrier pigeon. In the protocols to be described here, it is completely irrelevant what the specific means of communication are. Rather what matters are \emph{costs}, quantifying the relative performance of different links.
+A node could be, for example, data storage, a classical computer implementing a computation, a router that switches the connections between incoming and outgoing links, or an end-user. A link on the other hand is any arbitrary means of communication between nodes, such as optical fibre, satellite, radio, electrical, smoke signals, or well-trained carrier pigeon. In the protocols to be described here, it is completely irrelevant what the specific mediums for communication are. Rather what matters are \emph{costs}, quantifying the relative performance of different links.
 
-A key feature of the global internet is redundancy. In a packet-switched environment, sending identical packets twice might each follow entirely different routes to their common destination. Node-to-node redundancy is easily accommodated for in the graph-theoretic model by allowing multiple edges between nodes. It is extremely important to accommodate multiple edge in network graphs, since redundant routes provide a direct means by which to load-balance a route. So, for example, a hub in Australia might connect to a sister hub in New Zealand using both a fibre-optic undersea cable, and simultaneously via a satellite uplink. If the faster of the two connections is running out of capacity, a proportion of the packets can simply be switched to the other link, thereby balancing the load.
+A key feature of the global internet is redundancy. In a packet-switched \cite{???} environment, sending identical packets twice might each follow entirely different routes to their common destination. Node-to-node redundancy is easily accommodated for in the graph-theoretic model by allowing multiple distinct edges between nodes. It is extremely important to accommodate multiple edges in network graphs, since redundant routes provide a direct means by which to load-balance a route. So, for example, a hub in Australia might connect to a sister hub in New Zealand using both a fibre-optic undersea cable, and simultaneously via a satellite uplink. If the faster of the two connections is running out of capacity, a proportion of the packets can simply be switched to the other link, thereby balancing the load.
+
+%
+% Network Costs & Attributes
+%
 
 \subsection{Network Costs \& Attributes} \label{sec:costs}
 
 The edge weights in $G$ represent the \emph{costs} ($\vec c$) and \emph{attributes} ($\vec a$) associated with using that link. In general these needn't be single numbers, but would rather be sets, representing different types of costs and attributes of links, of which there may be many. These could include, for example, latency, bandwidth, dollar cost, and quality.
 
-The distinction between costs and attributes, is that costs may be expressed in terms of units which may be interpreted as \emph{distances} in a Euclidean sense, obeying the following requirements:
+The distinction between costs and attributes, is that costs may be expressed in terms of units which may be interpreted as distances metrics in a Euclidean sense, obeying the following requirements:
 
 \begin{definition}[Network cost metrics] \label{def:metric} Cost metrics satisfy the properties:
 \begin{itemize}
@@ -107,10 +146,9 @@ The distinction between costs and attributes, is that costs may be expressed in 
     \item Positivity: \mbox{$c\geq 0$}. This ensures that shortest-path algorithms will function correctly.
 \end{itemize}
 \end{definition}
-
 Attributes, on the other hand do not have a distance interpretation, and may have arbitrary structure. A detailed discussion on the relationship between costs and attributes is presented in Sec.~\ref{sec:c_vs_a}.
 
-The reason we demand costs have a distance interpretation is so that graph-theoretic pathfinding algorithms (see Sec.~\ref{sec:shortest_path}) are applicable, allowing us to build upon the vast pre-existing understanding of graph theory. Ideally we would like equality in costs' triangle inequality, which yields an exact cost. But often this isn't possible and we are satisfied with the inequality, which simply dictates an upper bound on cost.
+The reason we demand costs have a distance interpretation is so that graph-theoretic pathfinding algorithms (Sec.~\ref{sec:shortest_path}) are applicable, allowing us to build upon the vast pre-existing understanding of graph theory. Ideally we would like equality in costs' triangle inequality, which yields an exact cost. But often this isn't possible and we are satisfied with the inequality, which simply dictates an upper bound on cost.
 
 A \emph{route} between two nodes, Alice ($A$) and Bob ($B$), of the network, $G$, is an acyclic subgraph connecting those nodes, \mbox{$R_{A\to B}\subset G$}. In general ad hoc networks there will typically be multiple paths between two nodes \mbox{$A\to B$}. For a particular cost metric, the cost of an entire route is simply the sum of the costs of each of the constituent links,
 \begin{align}
@@ -130,13 +168,13 @@ Fig.~\ref{fig:example_routes} illustrates a simple example network with all of i
 \caption{The same network graph from Fig.~\ref{fig:example_routes}, with links weighted by some arbitrary cost metric. Applying a shortest-path algorithm yields the optimal route between Alice and Bob to be \mbox{$A\to F\to B$}, which incurs a net cost of \mbox{$c=2$}, as opposed to all other routes, which incur a net cost of \mbox{$c=3$}.} \label{fig:simp_route_opt}
 \end{figure}
 
-In a given network, it is unlikely that only a single cost metric or attribute will be of interest when determining optimal routings. There may be a tradeoff between different measures. For example, for time-critical applications the cost of a route might be considered a combination of both dollar cost and latency -- a satellite has very low latency but is extremely expensive, while a carrier pigeon is slow but cheap. What is the best tradeoff between the two?
+In a given network, it is unlikely that only a single cost metric or attribute will be of interest when determining optimal routings. There may be a tradeoff between different measures. For example, for time-critical applications the cost of a route might be considered a combination of both dollar cost and latency -- a satellite has very low latency but is extremely expensive, while a carrier pigeon is slow but cheap (and prohibited by PETA). What is the best tradeoff between the two?
 
 To accommodate this, we allow the \emph{net cost} of a route to be defined as an arbitrary function of other primitive cost metrics and attributes of the route,
 \begin{align} \label{eq:net_cost_R}
 c_\mathrm{net}(R) = f_\mathrm{cost}(\vec{c}(R),\vec{a}(R)),
 \end{align}
-where $c_\mathrm{net}$ is a single numeric value representing the net cost as calculated from the arbitrary cost function $f_\mathrm{cost}$. Note that the net cost needn't be a metric, as the cost function could be arbitrary. The net cost can be thought of as a ranking for routes, but not necessarily as a metric that accumulates across routes.
+where $c_\mathrm{net}$ is a single numeric value representing the net cost as calculated from an arbitrary cost function $f_\mathrm{cost}$. Note that the net cost needn't be a metric, as the cost function could be arbitrary. The net cost can be thought of as a ranking for routes, but not necessarily as a metric that accumulates across routes.
 
 Eq.~\ref{eq:net_cost_R} gives us the net cost of a given route. For multiple users we would like to simultaneously optimise the cost across all users of the network. Thus we define the routing cost for the entire network to be,
 \begin{align} \label{eq:c_total}
@@ -144,17 +182,25 @@ c_\mathrm{total}(\vec{R}_{\vec{A}\to \vec{B}}) = \sum_{r \in {\vec R}_{\vec{A}\t
 \end{align}
 where $\vec{R}_{\vec{A}\to \vec{B}}$ is a set of routes connecting each pair \mbox{$A_i\to B_i~\forall ~ i$}.
 
+%
+% Flow Networks
+%
+
 \subsection{Flow Networks} \label{sec:flow_networks}
 
-On a shared network with many users utilising the network simultaneously, it may be the case the preferred goal for the network is to maximise \emph{flow} -- the amount of information that can be transmitted per unit time, i.e the net utilisation of the network's resources. In this case we can build on the existing theory of \emph{flow networks}, which characterise the load of links within the network.
+On a shared network with many users utilising the network simultaneously, it may be the case the preferred goal for the network is to maximise \emph{flow} \cite{???} -- the amount of information that can be transmitted per unit time, i.e the net utilisation of the network's resources. In this case we can build on the existing theory of \emph{flow networks} \cite{???}, which characterise the load of links within the network.
 
 A flow network is easily obtained from the network graph by associating a `capacity' attribute with each link and defining the graph weighted by the capacities as the flow network, preserving the underlying structure of the network graph.
 
-When a route within the graph is utilised, we decrement the capacities of each link in that route, generating the so-called \emph{residual network}, which will now take the place of the original network in subsequent calculations. This process effectively tallies the links' utilisation, and when the tally hits zero, the link can no longer be used for any new routes. This forms a basic building block for more complex flow network algorithms.
+When a route within the graph is utilised, we decrement the capacities of each link in that route, generating the so-called \emph{residual network} \cite{???}, which will now take the place of the original network in subsequent calculations. This process effectively tallies the links' utilisation, and when the tally hits zero, the link can no longer be used for any new routes. This forms a basic building block for more complex flow network algorithms.
 
 There are many variations on flow networks. The simplest case is of a single user transmitting multiple packets simultaneously to a recipient. Depending on link capacities, different packets may need to follow different routes through the network, if network performance is to be maximised. Alternately, it may not be possible to send the desired number packets simultaneously if the network capacity saturates.
 
-The more complex (and realistic) scenario is of multiple users each transmitting from distinct starting nodes to distinct recipient nodes across a shared network. This is known as a \emph{multi-commodity flow network}, and is likely to be the dominant class of networks in real-world networking applications.
+The more complex (and realistic) scenario is of multiple users each transmitting from distinct starting nodes to distinct recipient nodes across a shared network. This is known as a \emph{multi-commodity flow network} \cite{???}, and is likely to be the dominant class of networks in real-world networking applications.
+
+%
+% Routing Strategies
+%
 
 \subsection{Routing Strategies} \label{sec:route_strats}
 
@@ -172,9 +218,13 @@ G_{t+1} = \mathcal{S}_t(G_t).
 \end{align}
 For example, the network might have bandwidth restrictions on some links, in which case if more than a certain amount of data is transmitted through a link, it is no longer available for use until previous transmissions have completed. Or, based on market dynamics, the dollar cost of utilising a link may change with its demand.
 
+%
+% Strategy Optimisation
+%
+
 \subsection{Strategy Optimisation} \label{sec:strat_opt}
 
-Clearly the goal when choosing routing strategies is to minimise the net cost, Eq.~\ref{eq:net_cost_R}. That is, solving the optimisation problem,
+Clearly the goal when choosing routing strategies is to minimise the total cost, Eq.~\ref{eq:net_cost_R}. That is, solving the optimisation problem,
 \begin{align}
 c_\mathrm{min} &= \min_\mathcal{S} (c_\mathrm{total}), \nonumber \\
 \mathcal{S}_\mathrm{opt} &= \mathrm{argmin}_\mathcal{S} (c_\mathrm{total}).
@@ -182,25 +232,33 @@ c_\mathrm{min} &= \min_\mathcal{S} (c_\mathrm{total}), \nonumber \\
 
 Choosing optimal strategies is a challenging problem, potentially requiring complex, computationally inefficient optimisation techniques. Strategy optimisation is an example of resource allocation, whose optimal solutions are often notoriously difficult to solve, residing in complexity classes like \textbf{NP}-complete (or worse!). In general, the number of possible routes through a graph will grow exponentially with the number of vertices. Thus, explicitly enumerating each possible route is generally prohibitive for large networks, unless some known structure provides `shortcuts' to optimisation. Having said this, Dijkstra's shortest path algorithm (discussed in Sec.~\ref{sec:shortest_path}) is the perfect counterexample, demonstrating that although an exponential number of routes may exist between two points, an optimal one can be found in polynomial time.
 
+%
+% Ad hoc Operation vs. Central Authorities
+%
+
 \subsubsection{Ad hoc Operation vs. Central Authorities}
 
-\peter{When considering strategy optimisation, the first question to ask is `Who performs the optimisation, and who has access to what information?'.
+When considering strategy optimisation, the first question to ask is `Who performs the optimisation, and who has access to what information?'.
 
 In terms of who performs the optimisation, the two main options are that either each node is responsible for optimising the routes of packets passing through it ({\sc Individual} algorithms), or there is a reliable and trusted central authority who oversees network operation and performs all strategy decision-making ({\sc Central} algorithms).
 
-In the case of {\sc Individual} algorithms, the required knowledge of the state of the network could be obtained using network exploration algorithms (see Sec.~\ref{sec:path_exp}). On the other hand, for {\sc Central} algorithms, either network exploration could be employed, or alternately the network policy could require nodes to notify the central authority upon joining or leaving the network. The former introduces an overhead in classical networking resource usage, since network exploration must be performed routinely to keep the central ledger up to date. The latter, on the other hand, avoids this, but introduces a point of failure, in that all network participants must be reliable in notifying the central authority as required by the network policy.}
+In the case of {\sc Individual} algorithms, the required knowledge of the state of the network could be obtained using network exploration algorithms (Sec.~\ref{sec:path_exp}). On the other hand, for {\sc Central} algorithms, either network exploration could be employed, or alternately the network policy could require nodes to notify the central authority upon joining or leaving the network. The former introduces an overhead in classical networking resource usage, since network exploration must be performed routinely to keep the ledger of nodes up-to-date. The latter, on the other hand, avoids this, but introduces a point of failure, in that all network participants must be reliable in notifying the central authority as required by the network policy. Failure to do so could result in invalid strategies.
+
+%
+% Local vs. Global Optimisation
+%
 
 \subsubsection{Local vs. Global Optimisation}
 
-\peter{There are two general approaches one might consider when choosing strategies -- \emph{local optimisation} ({\sc Local}) and \emph{global optimisation} ({\sc Global}). {\sc Local} simply takes each state to be communicated, one-by-one, and allows it to individually choose an optimal routing strategy based on the state of the network at that moment. {\sc Global} is far more sophisticated and simultaneously optimises the sum of the routing costs, Eq.~\ref{eq:c_total}, of all currently in-demand routes.
+There are two general approaches one might consider when choosing strategies -- \emph{local optimisation} ({\sc Local}) and \emph{global optimisation} ({\sc Global}). {\sc Local} simply takes each state to be communicated, one-by-one, and allows it to individually choose an optimal routing strategy based on the state of the network at that moment. {\sc Global} is far more sophisticated and simultaneously optimises the sum of the routing costs, Eq.~\ref{eq:c_total}, of all currently in-demand routes.
 
-To implement {\sc Local} optimisation, either {\sc Individual} or {\sc Central} algorithms may be employed. On the other hand, {\sc Global} optimisation necessarily requires a {\sc Central} algorithm, since it requires knowledge of the entire state of the network, which is collectively optimised.}
+To implement {\sc Local} optimisation, either {\sc Individual} or {\sc Central} algorithms may be employed. On the other hand, {\sc Global} optimisation necessarily requires a {\sc Central} algorithm, since it requires knowledge of the entire state of the network, which is collectively optimised.
 
-\peter{Since {\sc Global} represents the class of all algorithms that take all network costs by all packets into consideration, it must clearly perform at least as well as {\sc Local}, which only takes into consideration the costs of a given packet. But we expect {\sc Global} to perform better than {\sc Local} in general, owing to the additional information it takes into consideration. We express this as \mbox{{\sc Local}$\subset${\sc Global}}. However, {\sc Global} requires solving a complex, simultaneous optimisation problem, which is likely to be computationally hard, whereas {\sc Local} can be efficiently solved using multiple independent applications of, for example, an efficient shortest-path algorithm (so-called `greedy' algorithms), discussed in Sec.~\ref{sec:shortest_path}.}
+Since {\sc Global} represents the class of all algorithms that take all network costs by all packets into consideration, it must clearly perform at least as well as {\sc Local}, which only takes into consideration the costs of a given packet. But we expect {\sc Global} to perform better than {\sc Local} in general, owing to the additional information it takes into consideration. We express this as \mbox{{\sc Local}$\subset${\sc Global}}. However, {\sc Global} requires solving a complex, simultaneous optimisation problem, which is likely to be computationally hard, whereas {\sc Local} can be efficiently solved using multiple independent applications of, for example, an efficient shortest-path algorithm (so-called {\sc Greedy} algorithms), discussed in Sec.~\ref{sec:shortest_path}.
 
 A further stumbling block for {\sc Global} is that it requires some central authority, responsible for the global decision-making, to have complete, real-time knowledge of the state of the entire network. This may be plausible for small LAN's, but would clearly be completely implausible for the internet as a whole. So it is to be expected that different layers and subnets in the network hierarchy will employ entirely different strategy optimisation protocols. This is certainly reminiscent of the structure of the present-day internet.
 
-Roughly speaking, we might intuitively guess that at lower levels in the network hierarchy, responsible for smaller subnets, there will be a tendency towards the adoption of {\sc Global} strategies, as full knowledge of the state of the subnet is readily obtained. However, as we move to the highest levels of the network hierarchy (e.g routing of data across international or intercontinental boundaries), we might expect more laissez-faire (i.e greedy) strategies to be adopted, since the prospects of enforcing a central authority with full knowledge of the state of the internet, who is also trusted by all nations to fairly and impartially allocate network resources and mediate traffic, is highly questionable.
+Roughly speaking, we might intuitively guess that at lower levels in the network hierarchy, responsible for smaller subnets, there will be a tendency towards the adoption of {\sc Global} strategies, as full knowledge of the state of the subnet is readily obtained. However, as we move to the highest levels of the network hierarchy (e.g routing of data across international or intercontinental boundaries), we might expect more laissez-faire (i.e {\sc Greedy}) strategies to be adopted, since the prospects of enforcing a central authority with full knowledge of the state of the internet, who is also trusted by all nations to fairly and impartially allocate network resources and mediate traffic, is highly questionable.
 
 We will not aim to comprehensively characterise the computational complexity of {\sc Global} strategies. However, in Sec.~\ref{sec:strategies} we will present some elementary analyses of several toy models for realistic strategies. Some such strategies are efficient although not optimal, but nonetheless satisfy certain criteria we might expect.
 
@@ -208,25 +266,37 @@ Future developments in the optimisation techniques required for {\sc Global} str
 
 When employing {\sc Local}, on the other hand, things are often far simpler. If we are optimising over a cost metric satisfying the distance interpretation, we may simply employ a shortest-path algorithm to find optimal routes through the network.
 
-If one were to become even more sophisticated, one might even envisage treating network resource allocation in a game theoretic context, which we won't even begin to go into here.
+If one were to become even more sophisticated, one might even envisage treating network resource allocation in a game theoretic context \cite{???}, which we won't even begin to delve into here.
+
+%
+% Message- vs. Packet-Level Routing
+%
 
 \subsection{Message- vs. Packet-Level Routing}
 
-In Eq.~\ref{eq:S_G} we defined the action of a strategy, $\mathcal{S}$, on a network, $G$. However, we were intentionally ambiguous in our introduction of the time-dependence, given by $t$. This is to allow us to consider changes at one of two different time-scales: the packet level, or the message level. Recall that the \emph{message} is the entire data stream transmitted from Alice to Bob, whereas the \emph{packet} is a small block of data taken from the message.
+In Eq.~\ref{eq:S_G} we defined the action of a strategy, $\mathcal{S}$, on a network, $G$. However, we were intentionally ambiguous in our introduction of the time-dependence, given by $t$. This is to allow us to consider changes at one of two different time-scales: the packet level, or the message level. The \emph{message} is the entire data stream transmitted from Alice to Bob, whereas the \emph{packet} is a small block of data taken from the message, where each packet may be independently routed.
 
 When defining the action of strategies, we could do so at either of these time-scales. We could choose routes in their entirety, from start to finish, at the beginning of the message transmission, under the assumption that the costs in the network will be constant over that duration and no one will misbehave. We refer to such strategies as \emph{message-level strategies}. Alternately, and perhaps more realistically in many scenarios, the costs and attributes of a network could be highly dynamic and readily change within the transmission time-window. In that case, we will employ \emph{packet-level strategies}, which reevaluate the strategy independently for each packet and for each of their hops between nodes.
 
 In our future discussions on routing strategies, context will make it clear when we are referring to packet-level or message-level strategies.
 
+%
+% Quantum Channels
+%
+
 \section{Quantum Channels} \label{sec:quant_chan}
 
-Like classical channels, quantum channels are inevitably subject to errors. These errors could be an intrinsic part of the system, or induced by interaction with the external environment. The \emph{quantum process} formalism provides an elegant mathematical description for all physically realistic error mechanisms \cite{bib:Gilchrist05}. Here we review the quantum process formalism and discuss several specific error models that will be of particular interest in quantum networks. This paves the way for the quantum notion of costs and attributes.
+Like classical channels, quantum channels are inevitably subject to errors. These errors could be an intrinsic part of the system, or induced by interaction with the external environment. The \emph{quantum process} formalism provides an elegant mathematical description for all physically realistic error mechanisms \cite{bib:NielsenChuang00, bib:Gilchrist05}. Here we review the quantum process formalism and discuss several specific error models that will be of particular interest in quantum networks. This paves the way for the quantum notion of costs and attributes.
+
+%
+% Quantum Processes
+%
 
 \subsection{Quantum Processes}
 
-To quantify the operation of nodes and links within our network, we must characterise the evolution they impose upon quantum states passing through them. Quantum processes, also known as \peter{\emph{trace-preserving, completely positive maps}} (CP-maps) are able to capture all the physical processes relevant to quantum networking, such as: unitary evolution, decoherence, measurement, quantum memory, state preparation, switching, and indeed entire quantum computations. And they are able to capture physical processes in any degree of freedom, most commonly in the qubit basis, but also, for photons, in the spatio-temporal, photon-number, or polarisation degrees of freedom.
+To quantify the operation of nodes and links within our network, we must characterise the evolution they impose upon quantum states passing through them. Quantum processes, also known as \emph{trace-preserving, completely positive maps} (CP-maps) are able to capture all the physical processes relevant to quantum networking, such as: unitary evolution; decoherence; measurement; quantum memory; state preparation; switching; and, indeed entire quantum computations. And they are able to capture physical processes in any degree of freedom, most commonly in the qubit basis, but also, for photons, in the spatio-temporal, photon-number, or polarisation degrees of freedom.
 
-The only limitation faced by quantum processes is that they are described over discrete-time. To consider continuous-time evolution, master equations can be used. However, here we will only make use of discrete-time quantum processes, since they naturally correspond to the evolution of states between discrete points in a network.
+The only limitation faced by quantum processes is that they are described over discrete-time only. To consider continuous-time evolution, master equations can be used. However, here we will only make use of discrete-time quantum processes, since they naturally correspond to the evolution of states between discrete points within a network.
 
 Quantum processes are most easily represented using \emph{Kraus operators}, $\{\hat{K}_i\}$,
 \begin{align}
@@ -239,7 +309,7 @@ where,
 Here $\mathcal{E}$ is a superoperator, denoting the action of the process on state $\hat\rho$. This representation has the elegant interpretation as the probabilistic application of each of the Kraus operators. In the ideal case, the two types of evolution of interest are unitary evolution, in which case there is only one Kraus operator, \mbox{$\hat{K}_1=\hat{U}$}, and projective measurement, where there is again only one Kraus operator, \mbox{$\hat{K}_1=\ket{m}\bra{m}$}, for measurement outcome $m$.
 
 Mathematically, quantum processes are equivalent to a state jointly undergoing unitary evolution with an external environment that is not observed (i.e traced out),
-\begin{align}
+\begin{align} \label{eq:proc_environment}
 \mathcal{E}(\hat\rho_S) = \mathrm{tr}_E (\hat{U}_{S,E} [\hat\rho_S\otimes \ket{0}_E\bra{0}_E] \hat{U}^\dag_{S,E}),
 \end{align}
 where $S$ denotes the primary system to which the process is applied, and $E$ is an auxiliary environment system.
@@ -257,9 +327,9 @@ Multiple processes may be composed using the notation,
 \begin{align}
 \mathcal{E}_n(\dots \mathcal{E}_2(\mathcal{E}_1(\hat\rho)))=(\mathcal{E}_n \circ \dots \circ \mathcal{E}_2\circ\mathcal{E}_1)(\hat\rho).
 \end{align}
-In general, processes do not commute, i.e \mbox{$\mathcal{E}_1\circ \mathcal{E}_2 \neq \mathcal{E}_2\circ \mathcal{E}_1$}. Unless unitary, quantum processes are irreversible, meaning that errors accumulate and cannot be overcome without the overhead of some form of Quantum Error Correction (QEC).
+In general, processes do not commute, i.e \mbox{$\mathcal{E}_1\circ \mathcal{E}_2 \neq \mathcal{E}_2\circ \mathcal{E}_1$}. Unless unitary, quantum processes are irreversible, meaning that errors accumulate and cannot be overcome without the overhead of some form of Quantum Error Correction (QEC) \cite{???, bib:NielsenChuang00}.
 
-In general, the Kraus operator representation for quantum processes is not unique -- there may be multiple choices of Kraus operators that implement identical processes. But if the representation is not unique, how do we compare different quantum processes? To address this, it is common to choose a `standard' basis for representing quantum processes, such that they may be consistently and fairly compared. This requires choosing a basis which is complete for operations on the Hilbert space acted upon by the process. For example, for a single qubit, the Pauli operators -- $\sigma_1$ (identity, $\mathbb{\hat{I}}$), $\sigma_2$ (bit-flip, $\hat{X}$), $\sigma_3$ (bit-phase-flip, $\hat{Y}$), and $\sigma_4$ (phase-flip, $\hat{Z}$) -- are complete for single-qubit operations. Therefore by decomposing our Kraus operators into linear combinations of these basis operators we have a standardised representation for single-qubit processes. Formally, for one qubit,
+In general, the Kraus operator representation for quantum processes is not unique -- there may be multiple choices of Kraus operators that implement identical processes. But if the representation is not unique, how do we compare different quantum processes? To address this, it is common to choose a `standard' basis for representing quantum processes, such that they may be consistently and fairly compared. This requires choosing a basis which is complete for operations on the Hilbert space acted upon by the process. For example, for a single qubit, the Pauli operators -- $\sigma_1$ (identity, $\mathbb{\hat{I}}$), $\sigma_2$ (bit-flip, $\hat{X}$), $\sigma_3$ (bit-phase-flip, $\hat{Y}$), and $\sigma_4$ (phase-flip, $\hat{Z}$) -- are complete for single-qubit operations ($\mathbb{C}_2$). Therefore by decomposing our Kraus operators into linear combinations of these basis operators we have a standardised representation for single-qubit processes. Formally, for one qubit,
 \begin{align}
 \mathcal{E}(\hat\rho) = \sum_{i,j=1}^4 \chi_{i,j} \hat{\sigma}_i\hat\rho\,\hat{\sigma}_j^\dag.
 \end{align}
@@ -269,9 +339,13 @@ The Hermitian matrix $\chi$ is known as the \emph{process matrix}, from which ma
 \mathrm{tr}(\chi) = 1.
 \end{align}
 
+%
+% Quantum Processes in Quantum Networks
+%
+
 \subsection{Quantum Processes in Quantum Networks} \label{sec:quant_proc_in}
 
-Letting $v_i$ represent the $i$th node within a route $R$, the process associated with communication from that node to the next is $\mathcal{E}_{v_i\to v_{i+1}}$. For the same network used previously, Fig.~\ref{fig:example_proc_graph} shows the quantum processes associated with the links in the network. The cumulative process associated with the entire route is therefore,
+Letting $v_i$ represent the $i$th node within a route $R$, the process associated with communication from that node to the next is $\mathcal{E}_{v_i\to v_{i+1}}$. For the same network used previously, Fig.~\ref{fig:example_proc_graph} shows the quantum processes associated with the links in the network. The cumulative process associated with an entire route is therefore,
 \begin{align}
 \mathcal{E}_R = \mathcal{E}_{{v_{|R|-1}}\to v_{|R|}} \circ \dots \circ \mathcal{E}_{v_2\to v_3} \circ \mathcal{E}_{v_1\to v_2},
 \end{align}
@@ -282,53 +356,75 @@ where $|R|$ is the number of nodes in $R$, and to simplify notation, all $v_i$ a
 \caption{The network from Fig.~\ref{fig:example_routes}, with the quantum processes associated with each link. The net process associated with a route is given by the composition of each of the processes over the length of the route. For example, the route \mbox{$R_1=A\to C\to B$} induces the process \mbox{$\mathcal{E}_{R_1} = \mathcal{E}_{C\to B} \circ \mathcal{E}_{A\to C}$}.} \label{fig:example_proc_graph}
 \end{figure}
 
-In general, both nodes and links in a quantum network may implement quantum processes. However, for the purposes of compatibility with the graph-theoretic algorithms employed later, we will eliminate node processes by merging them into link processes, such that the processes in the network are described entirely by links. This reduction procedure is straightforward, shown in Fig.~\ref{fig:remove_nodes}.
+In general, both nodes and links in a quantum network may implement quantum processes. However, for the purposes of compatibility with the graph-theoretic algorithms described in Sec.~\ref{sec:graph_theory}, we will eliminate node processes by merging them into link processes, such that the processes in the network are described entirely by links. This reduction procedure is straightforward, shown in Fig.~\ref{fig:remove_nodes}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.7\columnwidth]{remove_nodes}
 \caption{Removing node processes from network graphs on a trivial network with two nodes, $A$ and $B$. Each node is associated with a quantum process ($\mathcal{E}_A$ and $\mathcal{E}_B$). Similarly, each link is associated with a process ($\mathcal{E}_{A\to B}$ and $\mathcal{E}_{B\to A}$). (a) Representation where the node and link processes are shown explicitly. (b) The node processes are replaced with identity operations by replacing each link process with the composition of the link process and its target node process. Equivalently, the cost of each node process is added to the cost of \emph{every} incoming link and then eliminated. The same may be applied for attributes rather than costs. This procedure requires that all links be directed. If undirected links are present, they may simply be replaced by two directed links, one in each direction, implementing identical quantum processes each way.} \label{fig:remove_nodes}
 \end{figure}
 
+%
+% Characterising Quantum Channels
+%
+
 \subsection{Characterising Quantum Channels}
 
 Given a link implementing some arbitrary quantum process, it is essential that it can be experimentally determined such that network performance may be characterised. For example, if an optical channel is lossy, what is the loss rate? This is crucial when attempting to choose routing strategies that optimise certain cost metrics.
 
-Treating a link or node as an unknown black box, \emph{Quantum Process Tomography} (QPT) \cite{bib:ChuangNielsen97} is a technique that may be applied to fully characterise the quantum process it implements, reproducing its complete process matrix. QPT has become a standard procedure, demonstrated in numerous architectures, most notably in optics \cite{bib:OBrien04}. QPT works in general for processes in any degree of freedom, e.g the qubit degree of freedom. However, it is important to note that full QPT requires statistics across the entire basis over which measurements are defined, which typically grows exponentially with the size of the system. For example, the number of measurement bases required to perform full QPT on $n$ qubits grows exponentially with $n$. However, often full process characterisation is not necessary. Instead, knowing particular metrics of interest may suffice. Some of the more noteworthy such metrics will be discussed in Sec.~\ref{sec:quantum_meas_cost}. In this instance, much work has been done in the field of \emph{compressed sensing} \cite{??? compressed_sensing}, in which process metrics of interest can be experimentally determined using far fewer physical resources than via a full reconstruction of the process matrix using QPT.
+Treating a link or node as an unknown black box, \emph{Quantum Process Tomography} (QPT) \cite{???, bib:ChuangNielsen97} is a technique that may be applied to fully characterise the quantum process it implements, reproducing its complete process matrix. QPT has become a standard procedure, demonstrated in numerous architectures, most notably in optics \cite{???, bib:OBrien04}.
+
+QPT works in general for processes in any degree of freedom, e.g the qubit degree of freedom. However, it is important to note that full QPT requires statistics across the entire basis over which measurements are defined, which typically grows exponentially with the size of the system. For example, the number of measurement bases required to perform full QPT on $n$ qubits grows exponentially with $n$. However, often full process characterisation is not necessary. Instead, knowing particular metrics of interest may suffice. Some of the more noteworthy such metrics will be discussed in Sec.~\ref{sec:quantum_meas_cost}. In this instance, much work has been done in the field of \emph{compressed sensing} \cite{??? compressed_sensing}, in which process metrics of interest can be experimentally determined using far fewer physical resources than via a full reconstruction of the process matrix using QPT.
+
+%
+% Optical Encoding of Quantum Information
+%
 
 \section{Optical Encoding of Quantum Information}
 
-While all-optical quantum computing is an unlikely architecture for future scalable quantum computers, it is all but inevitable that optics will play a central role in quantum communications networks. Foremost, this is because photons are `flying' by their very nature and can very easily be transmitted across large distances -- it's quite challenging to transmit a superconducting circuit containing information from Australia to the United States in the blink of an eye! Additionally, optical states are, in many cases, relatively easy to prepare, manipulate and measure, and can also be readily interfaced with other physical quantum systems, allowing the transfer of quantum information from optical communications systems to some other architecture better suited to a given task.
+While all-optical quantum computing is an unlikely architecture for future scalable quantum computers, it is all but inevitable that optics will play a central role in quantum communications networks. Foremost, this is because photons are `flying' by their very nature and can very easily be transmitted across large distances -- it's quite challenging to transmit a superconducting circuit containing information from Australia to the United States in the blink of an eye! Additionally, optical states are, in many cases, relatively easy to prepare, manipulate and measure, and can also be readily interfaced with other physical quantum systems (Sec.~\ref{sec:opt_inter}), allowing the transfer of quantum information from optical communications systems to some other architecture better suited to a given task.
 
-Optical systems are very versatile, allowing quantum information to be optically encoded in a number of ways -- into single photons, many photons, or even an indeterminate number of photons, and in both discrete or continuous degrees of freedom. Different types of encodings may have very different properties in terms of the errors they are susceptible to.
+Optical systems are very versatile, allowing quantum information to be optically encoded in a number of ways -- into single photons, many photons, or even an indeterminate number of photons, and in both discrete or continuous degrees of freedom. Different types of encodings may have very different properties in terms of the errors they are susceptible to (Sec.~\ref{sec:errors_in_nets}).
 
-When dealing with single photons, information can be encoded in a number of ways. Most obviously, it can be encoded into the polarisation basis, allowing one bit of information per photon (i.e horizontal and vertical polarisation represent the logical 0 and 1 states). Or it could be directly encoded into the photon-number basis. However, other degrees of freedom, such as the spectral/temporal degrees of freedom could be employed, encoding information into time- or frequency-bins, with potentially far more levels than a simple polarisation qubit \cite{bib:RohdeInfCap13}.
+When dealing with single photons, information can be encoded in a number of ways. Most obviously, it can be encoded into the polarisation basis, allowing one qubit of information per photon (i.e horizontal and vertical polarisation represent the logical 0 and 1 states). Or it could be directly encoded into the photon-number basis. However, other degrees of freedom, such as the spectral/temporal degrees of freedom could be employed, encoding information into time- or frequency-bins, with potentially far more levels than a simple polarisation qubit \cite{bib:RohdeInfCap13}.
+
+%
+% Single-Photon Qubit Encodings
+%
 
 \subsubsection{Single-Photon Qubit Encodings}
 
-A very attractive feature of single photons is that they undergo very little decoherence, even over large distances -- dephasing in the polarisation degree of freedom, for example, is negligible in free-space. They are, however, very susceptible to loss, and protocols relying on many single-photon states suffer exponential decay in their success rates as the number of photons is increased (see Sec.~\ref{sec:eff_err}).
+A very attractive feature of single photons is that they undergo very little decoherence, even over large distances -- dephasing (Sec.~\ref{sec:dephasing_error}) in the polarisation degree of freedom, for example, is negligible in free-space. They are, however, very susceptible to loss, and protocols relying on many single-photon states suffer exponential decay in their success rates as the number of photons is increased (Sec.~\ref{sec:eff_err}).
 
 We can encode a single qubit into a single photon in the polarisation basis using the horizontal and vertical polarisation degrees of freedom. Equivalently, one can employ `dual rail' encoding, whereby a single photon is placed into a superposition across two spatial modes. This leads to the equivalent representations for qubits,
 \begin{align} \label{eq:single_photon_enc}
-\ket{\psi}_\mathrm{qubit} &= \alpha\ket{0} + \beta\ket{1}, \nonumber \\
-\ket{\psi}_\mathrm{pol} &= \alpha\ket{H} + \beta\ket{V}, \nonumber \\
-\ket{\psi}_\mathrm{dual} &= \alpha\ket{0,1} + \beta\ket{1,0}.
+\ket{\psi}_\mathrm{qubit} &\equiv \alpha\ket{0} + \beta\ket{1}, \nonumber \\
+\ket{\psi}_\mathrm{pol} &\equiv \alpha\ket{H} + \beta\ket{V}, \nonumber \\
+\ket{\psi}_\mathrm{dual} &\equiv \alpha\ket{0,1} + \beta\ket{1,0}.
 \end{align}
+
+%
+% Photon-Number Qudit Encoding
+%
 
 \subsubsection{Photon-Number Qudit Encoding}
 
-Of course, the photon-number degree of freedom needn't be limited to 0 or 1. By fully exploiting the photon-number degree of freedom, we can encode a qudit of arbitrary dimension into a single optical mode,
+Of course, the photon-number degree of freedom needn't be limited to 0 or 1 photons. By fully exploiting the photon-number degree of freedom, we can encode a qudit of arbitrary dimension into a single optical mode,
 \begin{align} \label{eq:number_qudit}
-\ket\psi_\mathrm{qudit} = \sum_{n=0}^\infty \alpha_n \ket{n}.
+\ket\psi_\mathrm{qudit} \equiv \sum_{n=0}^\infty \alpha_n \ket{n}.
 \end{align}
-This may give the impression that a single optical mode has infinite information capacity. Needless to say, this sounds too good to be true, and it is. Loss decoheres photon-number-encoded states exponentially with photon-number. So although in principle we can encode an $\infty$-level qudit, the moment any non-zero loss is introduced, its exponential dependence destroys the state (see Sec.~\ref{sec:eff_err}).
+This may give the impression that a single optical mode has infinite information capacity. Needless to say, this sounds too good to be true, and it is. Loss decoheres photon-number-encoded states exponentially with photon-number. So although in principle we can encode an $\infty$-level qudit, the moment any non-zero loss is introduced, its exponential dependence destroys the state (Sec.~\ref{sec:eff_err}).
 
-\subsubsection{Spectral Qudit Encoding}
+%
+% Spatio-Temporal Qudit Encoding
+%
+
+\subsubsection{Spatio-Temporal Qudit Encoding}
 
 Completely independent of the photon-number degree of freedom, are the spatio-temporal degrees of freedom, which encode the spatial, temporal, and spectral structure of photons. In the temporal domain, for example, we could define the temporal structure of a single photon as,
 \begin{align}
 \ket\psi_\mathrm{temporal} = \int_{-\infty}^\infty \psi(t) \hat{a}^\dag(t)\,dt\,\ket{0},
 \end{align}
-where $\hat{a}^\dag(t)$ is the time-specific photonic creation operator, and $\psi(t)$ is the temporal distribution function.
+where $\hat{a}^\dag(t)$ is the time-specific photonic creation operator, and $\psi(t)$ is the temporal distribution function \cite{???}.
 
 Alternately, we can define \emph{mode operators}, which are mathematically equivalent to creation operators, but create photons with a specific temporal envelope,
 \begin{align}
@@ -341,9 +437,13 @@ Now by defining an orthonormal basis of temporal distribution functions, $\{\xi_
 \end{align}
 we can encode a qudit of arbitrary dimension into the spatio-temporal degrees of freedom,
 \begin{align}
-\ket\psi_\mathrm{qudit} = \sum_{i=1}^\infty \alpha_i \hat{A}^\dag_{\xi_i} \ket{0}.
+\ket\psi_\mathrm{qudit} \equiv \sum_{i=1}^\infty \alpha_i \hat{A}^\dag_{\xi_i} \ket{0}.
 \end{align}
 Again, however, summing to infinity is somewhat fanciful, given any realistic spatio-temporal error model, such as an imperfect frequency response.
+
+%
+% Continuous Variable (CV) Qudit Encoding
+%
 
 \subsubsection{Continuous Variable (CV) Qudit Encoding} \label{sec:CV_enc}
 
@@ -351,8 +451,8 @@ When encoding information optically, we needn't restrict ourselves to photon-num
 
 As a simple example, a coherent state, $\ket\alpha$, is parameterised by a single complex value, $\alpha$, given by a phase and amplitude. By manipulating these parameters, information can be encoded into coherent states. We could, for example, define two coherent states of opposite phase to represent qubit basis states,
 \begin{align}
-\ket{0} &= \ket{\alpha}, \nonumber \\
-\ket{1} &= \ket{-\alpha}.
+\ket{0} &\equiv \ket{\alpha}, \nonumber \\
+\ket{1} &\equiv \ket{-\alpha}.
 \end{align}
 Note, however, that this representation for qubits is only approximate, since the two basis states are not perfectly orthogonal,
 \begin{align}
@@ -362,7 +462,7 @@ which is non-zero for any finite $\alpha$, whereas for ideal qubits we require \
 
 This representation for qubits using coherent states is easily generalised to qudits by considering coherent states orbiting the origin of phase-space at equal angular intervals of \mbox{$2\pi/d$}, for a $d$-level qudit.
 
-Another type of CV state, which can encode quantum information is superpositions of coherent states (colloquially known as `cat' states), with the encoding,
+Another type of CV state, which can encode quantum information is superpositions of coherent states (colloquially known as `cat' states), with the encoding \cite{???},
 \begin{align}
 \ket{0} &\equiv \frac{1}{\sqrt{2(1+e^{-2|\alpha|^2})}} (\ket{\alpha}+\ket{-\alpha}) \nonumber \\
 &= \ket{\mathrm{cat_+(\alpha)}},\nonumber \\
@@ -375,25 +475,42 @@ These two basis states contain strictly even or odd photon-number terms respecti
 \end{align}
 making them directly appropriate for qubit encoding, even for weak coherent amplitudes. Unfortunately, cat states are notoriously difficult to prepare, and extremely sensitive to loss.
 
+%
+% Errors in Quantum Networks
+%
+
 \section{Errors in Quantum Networks} \label{sec:errors_in_nets}
 
 As with classical data, quantum data is susceptible to corruption during transmission. However, in addition to all the usual classical error models, quantum information is subject to further uniquely quantum errors. These errors can be represented using the quantum process formalism and fully characterised using QPT. We now briefly discuss several of the dominant errors arising in quantum systems.
 
+%
+% Examples
+%
+
 \subsection{Examples}
+
+%
+% Known Unitaries
+%
 
 \subsubsection{Known Unitaries}
 
-The most trivial error mechanism is when a unitary channel (e.g an identity channel) actually implements some unitary transformation that is not that which is desired. However, the unitary is constant, not varying from trial to trial, and is known, which can be easily determined using QPT on the channel. For example, an optical fibre might induce a polarisation rotation on transmitted photons, but the fibre isn't changing and neither is the rotation. If consistently implementing the same known unitary then reversing it is straightforward in most architectures.
+The most trivial error mechanism is when a unitary channel (e.g an identity channel) actually implements some unitary transformation, $\hat{U}$, that is not that which is desired. However, the unitary is constant, not varying from trial to trial, and is known, which can be easily determined by performing QPT on the channel. For example, an optical fibre might induce a polarisation rotation on transmitted photons, but the fibre isn't changing and neither is the rotation. If consistently implementing the same known unitary then reversing it is straightforward in most architectures, by applying $\hat{U}^\dag$, since $\hat{U}^\dag\hat{U}=\hat{\mathbb{I}}$.
+
+%
+% Loss
+%
 
 \subsubsection{Loss} \label{sec:eff_err}
 
 Given that quantum communication links will typically be optical, the dominant error mechanism is likely to be loss. We let the efficiency, $\eta$, of an optical quantum process be the probability that a given photon entering the channel leaves the channel in the desired mode, or probability \mbox{$1-\eta$} of being lost. In the case of information encoded into single-photon states, e.g using the polarisation degree of freedom, $\eta$ corresponds exactly to the success probability of the communication.
 
-When implementing protocols employing post-selection upon detecting all photons, the protocol will be non-deterministic, where loss equates to the protocol's success probability. Specifically, with $n$ photons, each with $\eta$ efficiency, the net post-selection success probability of the entire device is $\eta^n$. This implies an exponential number of trials in post-selected protocols. Clearly this exponential scaling is of concern, requiring demanding efficiencies in future large-scale implementations.
+When implementing protocols employing post-selection upon detecting all photons, the protocol will be non-deterministic, where loss dictates the protocol's success probability. Specifically, with $n$ photons, each with $\eta$ efficiency, the net post-selection success probability of the entire device is $\eta^n$. This implies an exponential number of trials, \mbox{$(1/\eta)^n$}, is required in post-selected protocols. Clearly this exponential scaling is of concern, requiring demanding efficiencies in future large-scale implementations.
 
 Formally, let $\mathcal{E}^\mathrm{loss}_\eta$ be the loss channel with efficiency $\eta$. The channel acting on an initially pure single-photon state, $\ket{1}$, can be modelled as a beamsplitter with transmissivity $\eta$ acting on the state, where the reflected mode is traced out. This yields,
 \begin{align}
-\mathcal{E}^\mathrm{loss}_\eta(\ket{1}\bra{1}) = (1-\eta)\ket{0}\bra{0} + \eta\ket{1}\bra{1}.
+\mathcal{E}^\mathrm{loss}_\eta(\ket{0}\bra{0}) &= \ket{0}\bra{0}, \nonumber \\
+\mathcal{E}^\mathrm{loss}_\eta(\ket{1}\bra{1}) &= (1-\eta)\ket{0}\bra{0} + \eta\ket{1}\bra{1}.
 \end{align}
 This process would apply equivalently to both horizontal and vertical polarisations. Therefore, via linearity, the loss channel acting on a polarisation-encoded qubit (Eq.~\ref{eq:single_photon_enc}) yields,
 \begin{align}
@@ -407,8 +524,13 @@ Coherent states are the one example of states, which are in a sense robust again
 \begin{align}
 \mathcal{E}^\mathrm{loss}_\eta(\ket\alpha\bra\alpha) = \ket{\eta\alpha}\bra{\eta\alpha}.
 \end{align}
+However, although coherence is maintained, the process is irreversible, since noise-free amplitude amplification is not possible in general \cite{???}.
 
 To the contrary, while cat states are simple superpositions of coherent states, they are extremely sensitive to loss. This is because cat states have well-defined photon-number parity (even or odd), and therefore the loss of just a single photon will flip a cat state to an orthogonal one. Since the probability of photon loss occurring increases exponentially with photon-number, large amplitude cat states are exponentially sensitive to loss channels.
+
+%
+% Dephasing
+%
 
 \subsubsection{Dephasing} \label{sec:dephasing_error}
 
@@ -432,38 +554,50 @@ As a simple example, consider the \mbox{$p=1/2$} dephasing channel acting on the
 is the completely mixed state. That is, the state has completely decohered. Note, however, that this complete decoherence depended on the choice of input state. A computational basis state, on the other hand, would be left unchanged by this channel,
 \begin{align}
 \mathcal{E}^\mathrm{dephasing}_{1/2}(\ket{0}\bra{0}) &= \frac{1}{2} (\ket{0}\bra{0} + \hat{Z}\ket{0}\bra{0}\hat{Z}) \nonumber \\
-&= \ket{0}\bra{0}.
+&= \ket{0}\bra{0}, \nonumber \\
+\mathcal{E}^\mathrm{dephasing}_{1/2}(\ket{1}\bra{1}) &= \frac{1}{2} (\ket{1}\bra{1} + \hat{Z}\ket{1}\bra{1}\hat{Z}) \nonumber \\
+&= \ket{1}\bra{1}.
 \end{align}
 
 Note that the probability of no dephasing occurring over multiple dephasing channels in series is given by the product of the respective probabilities for the individual channels.
 
-A qubit dephasing channel is often quoted in terms of its $T_2$ time, a characteristic time for dephasing to occur under continuous time-evolution.
+A qubit dephasing channel is often quoted in terms of its $T_2$-time, a characteristic time for dephasing to occur under continuous time-evolution.
 
-\peter{The notion of dephasing can be easily generalised to non-qubit systems. In general, dephasing has the property of mapping a superposition of basis states to a mixture of the same basis states, whilst preserving amplitudes. Thus, for perfect dephasing,
+The notion of dephasing can be easily generalised to non-qubit states of light, i.e with photon-number \mbox{$n>1$}. In general, dephasing has the property of mapping a superposition of basis states to a mixture of the same basis states, whilst preserving amplitudes. Thus, for perfect dephasing,
 \begin{align}
 \mathcal{E}^\mathrm{dephasing}\left(\sum_i \alpha_i\ket{i} \cdot \sum_j \alpha_j^*\bra{j} \right) \to \sum_i |\alpha_i|^2 \ket{i}\bra{i},
 \end{align}
-for some arbitrary basis enumerated by $i$ and $j$. For partial dephasing, we can express the channel as creating as a mixture over the input state with different phase rotations applied,
-\begin{align}
-\mathcal{E}(\hat\rho) = \int_{0}^{2\pi} \phi(\omega) \hat{\Phi}(\omega)\hat\rho\,\hat{\Phi}(\omega)^\dag\,d\omega,
+for some arbitrary basis enumerated by $i$ and $j$. For partial dephasing, we can express the channel as creating a mixture over the input state with different phase rotations applied,
+\begin{align} \label{eq:deph_int}
+\mathcal{E}^\mathrm{dephasing}(\hat\rho) = \int_{0}^{2\pi} \phi(\omega) \hat{\Phi}(\omega)\hat\rho\,\hat{\Phi}(\omega)^\dag\,d\omega,
 \end{align}
-where $\hat{\Phi}(\omega)$ is a phase-shift operator with phase $\omega$, and $\phi(\omega)$ characterises the probability distribution of phase-shifts. In the case of optical states, the phase-shift operators take the form,
+where $\hat{\Phi}(\omega)$ is a phase-shift operator with phase $\omega$, obeying \mbox{$\hat\Phi(\omega)^\dag = \hat\Phi(-\omega)$}, and $\phi(\omega)$ is a normalised probability density function characterising the distribution of phase-shifts. In the case of optical states, the phase-shift operators take the form,
 \begin{align}
 \hat\Phi(\omega) = e^{i\omega\hat{n}},
 \end{align}
-in the photon-number basis, where $\hat{n}=\hat{a}^\dag\hat{a}$ is the photon-number operator. With no dephasing, \mbox{$\phi(\omega)=\delta(\omega)$} and $\mathcal{E}$ reduces to the identity channel. Otherwise, the off-diagonal (i.e coherence) terms in the density operator begin to cancel out, leaving the diagonal (i.e amplitude) terms unchanged.} 
+in the photon-number basis, where $\hat{n}=\hat{a}^\dag\hat{a}$ is the photon-number operator. With no dephasing, \mbox{$\phi(\omega)=\delta(\omega)$} and $\mathcal{E}$ reduces to the identity channel. Otherwise, the off-diagonal (coherence) terms in the density operator begin to cancel out, leaving the diagonal (amplitude) terms unchanged.
+
+From this definition it can be seen that susceptibility to dephasing increases with photon-number, since the number operator adds a multiplicative factor to the acquired phase-shift,
+\begin{align}
+\hat\Phi(\omega) \ket{m} = e^{i\omega m}\ket{m}.
+\end{align}
+For number states not in superposition, this corresponds to a simple unimportant global phase, since number states are phase invariant. However, in superposition this adds relative phases, thereby destroying coherences upon applying the integral from Eq.~\ref{eq:deph_int}.
+
+%
+% Depolarisation
+%
 
 \subsubsection{Depolarisation}
 
 Depolarisation is a noise model more general than dephasing, that probabilistically replaces a state with the completely mixed state (regardless of the input state). That is, with some probability we lose \emph{all} quantum \emph{and} classical information, i.e both coherences and probability amplitudes. Note that the dephasing channel introduced above only destroys quantum coherence, whilst preserving amplitudes. Formally, the depolarising channel can be expressed as,
 \begin{align} \label{eq:depolarizing_channel}
-\mathcal{E}^\mathrm{depolarizing}_p(\hat\rho) = p \cdot \hat\rho + (1-p)\cdot \frac{\mathbb{\hat{I}}}{\mathrm{dim}(\hat\rho)},
+\mathcal{E}^\mathrm{depolarising}_p(\hat\rho) = p \cdot \hat\rho + (1-p)\cdot \frac{\mathbb{\hat{I}}}{\mathrm{dim}(\hat\rho)},
 \end{align}
 where $\mathbb{\hat{I}}/\mathrm{dim}(\hat\rho)$ is the completely mixed state in the $d$-dimensional Hilbert space.
 
 When acting on qubits, the depolarising channel can equivalently be represented as the action of each of the four Pauli matrices with equal probability, since,
 \begin{align}
-\frac{\mathbb{\hat{I}}}{2} = \frac{1}{4}(\hat\rho + \hat{X}\hat\rho\hat{X} + \hat{Y}\hat\rho\hat{Y} + \hat{Z}\hat\rho\hat{Z}).
+\frac{\mathbb{\hat{I}}}{2} = \frac{1}{4}(\hat\rho + \hat{X}\hat\rho\hat{X} + \hat{Y}\hat\rho\,\hat{Y} + \hat{Z}\hat\rho\hat{Z}).
 \end{align}
 Thus, both dephasing and depolarisation are examples of Pauli error models.
 
@@ -471,38 +605,58 @@ In the qubit basis (i.e not including loss, for example), the Pauli matrices for
 
 Like the dephasing channel, the error probability of multiple channels in series accumulates multiplicatively.
 
+%
+% Amplitude Damping
+%
+
 \subsubsection{Amplitude Damping}
 
-An error that is not so much relevant to optics, but which arises very naturally in some other systems, such as atomic systems or quantum dots, is amplitude damping. Here the process models the relaxation of a higher energy level, $\ket{1}$, to a lower energy one, $\ket{0}$. The $\ket{0}$ state is assumed to be the ground state and cannot relax any further, but the $\ket{1}$ state can spontaneously relax to the ground state. After complete amplitude damping, any input state will be left in the ground state $\ket{0}$. This model can be thought of as energy dissipating from the qubit system and being measured by the environment, leading to a type of decoherence whereby the input state is probabilistically replaced by the ground state.
+An error not so much relevant to optics, but which arises very naturally in some other systems, such as atomic systems or quantum dots, is amplitude damping. Here the process models the relaxation of a higher energy level, $\ket{1}$, to a lower energy one, $\ket{0}$. The $\ket{0}$ state is assumed to be the ground state and cannot relax any further, but the $\ket{1}$ state can spontaneously relax to the ground state. After complete amplitude damping, any input state will be left in the ground state $\ket{0}$. This model can be thought of as energy dissipating from the qubit system and being measured by the environment, leading to a type of decoherence whereby the input state is probabilistically replaced by the ground state.
 
 The amplitude damping channel is easily represented in the quantum process formalism using two Kraus operators,
 \begin{align}
 \hat{K}_1 &= \ket{0}\bra{0} + \sqrt\eta\ket{1}\bra{1}, \nonumber \\
 \hat{K}_2 &= \sqrt{1-\eta}\ket{0}\bra{1}, 
 \end{align}
-where \mbox{$0\leq\eta\leq 1$} quantifies the degree of damping. The physical intuition is clear upon inspection of the structure of the projectors in the Kraus operators.
+where \mbox{$0\leq\eta\leq 1$} quantifies the degree of damping (\mbox{$\eta=0$} represents complete damping). The physical intuition is clear upon inspection of the structure of the projectors in the Kraus operators, with $\hat{K}_2$ representing relaxation from the excited state to the ground state, with probability \mbox{$1-\eta$}.
 
-The degree of amplitude damping is often quoted in terms of a channel's $T_1$ time, characterising the expected time for a $\ket{1}$ state to undergo spontaneous emission and relax to the $\ket{0}$ state.
+The degree of amplitude damping is often quoted in terms of a channel's $T_1$-time, characterising the expected time for the excited state to undergo spontaneous emission and relax to the ground state.
+
+%
+% Mode-Mismatch
+%
 
 \subsubsection{Mode-Mismatch} \label{sec:MM_error}
 
 Mode-mismatch is an error model unique to optical implementations. For perfect interference to take place between two optical modes, which is necessary to entangle them, the photons in those modes must be perfectly indistinguishable, i.e they must exhibit identical spatio-temporal structure \cite{bib:RohdeMauererSilberhorn07}. The Hong-Ou-Mandel (HOM) \cite{bib:HOM87} \emph{visibility} is a direct measure of the indistinguishability of two photons based on their interference fringes. Specifically, interference fringes are reduced as the photons become more distinguishable. Once completely distinguishable, they obey classical statistics.
 
-In real-world experiments, the most common form of mode-mismatch is temporal mode-mismatch, whereby the timing of different photons are not perfectly synchronised, yielding temporal distinguishability, and thereby reduced quantum interference. This type of error is easily introduced via mismatched path lengths in an experiment, or incorrectly accounted for changes in refractive index. This is easily represented mathematically via translations in the temporal distribution functions of photons,
+In real-world experiments, the most common form of mode-mismatch is temporal mode-mismatch, whereby the timing of different photons are not perfectly synchronised, yielding temporal distinguishability, thereby reduced quantum interference. This type of error is easily introduced via mismatched path lengths in an experiment, or incorrectly accounted for changes in refractive index. This is easily represented mathematically via translations in the temporal distribution functions of photons,
 \begin{align}
 \psi(t) \to \psi(t+\tau),
 \end{align}
 for temporal mismatch $\tau$.
 
-Mode-mismatch has been studied extensively in the context of linear optics quantum computing (LOQC) \cite{bib:KLM01}. In particular, it was shown that in the cluster state formalism (see Sec.~\ref{sec:CSQC}), mode-mismatch is equivalent to a dephasing error model, where the dephasing rate is related to the degree of photon distinguishability (i.e visibility) \cite{bib:RohdeRalph06}. More generally, the operation of entangling gates \cite{bib:RohdeFreqTemp05, bib:RohdeGateChar05, bib:RohdeOptPhot05, bib:RohdeTimeRes11} and boson-sampling \cite{bib:RohdeArbSpec15, bib:RohdeArbLow12} have been considered, and explicit error models derived.
+Mode-mismatch has been studied extensively in the context of linear optics quantum computing (LOQC), introduced in Sec.~\ref{sec:KLM_univ}. In particular, it was shown that in the cluster state formalism (Sec.~\ref{sec:CSQC}), mode-mismatch is equivalent to a dephasing error model, where the dephasing rate is related to the degree of photon distinguishability (i.e visibility) \cite{bib:RohdeRalph06}. More generally, the operation of entangling gates \cite{bib:RohdeFreqTemp05, bib:RohdeGateChar05, bib:RohdeOptPhot05, bib:RohdeTimeRes11} and boson-sampling \cite{bib:RohdeArbSpec15, bib:RohdeArbLow12} have been considered, and explicit error models derived.
+
+%
+% Quantum Cost Metrics
+%
 
 \section{Quantum Cost Metrics} \label{sec:quantum_meas_cost}
 
-As with the classical case in Sec.~\ref{sec:costs}, there will be costs associated with the links and nodes in a network -- nothing is free! In the quantum case, all the usual classical costs are valid, but there are some very important additions of far greater relevance to most quantum applications. Classical digital data is discretised, resulting in data transmission highly robust against noise. In a quantum setting this is necessarily not the case, as the coefficients in quantum superpositions are not discrete, meaning that errors accumulate during transmission and states will inevitably deteriorate. This requires a rethinking of appropriate cost metrics.
+As with the classical case in Sec.~\ref{sec:costs}, there will be costs associated with the links and nodes in a network -- nothing is free! In the quantum case, all the usual classical costs are valid, but there are some very important additions of far greater relevance to most quantum applications. Classical digital data is discretised, resulting in data transmission highly robust against noise. In a quantum setting this is necessarily not the case, as the coefficients in quantum superpositions are continuous, meaning that errors accumulate during transmission and states will inevitably deteriorate. This requires a rethinking of appropriate cost metrics.
+
+%
+% Examples
+%
 
 \subsection{Examples} \label{sec:sig_errs}
 
 We now briefly introduce some of the key measures for quantifying the quality of quantum communications links, and how they may be expressed as metrics with meaningful operational interpretations. Many of the measures typically employed for characterising quantum systems are not true metrics (i.e costs), but in many cases can be converted to metrics, or used meaningfully as attributes instead.
+
+%
+% Efficiency
+%
 
 \subsubsection{Efficiency}
 
@@ -512,19 +666,27 @@ The efficiency measure introduced previously is multiplicative, so for consecuti
 \end{align}
 where $\eta_i$ is the efficiency of the $i$th channel. Intuitively, this is simply telling us that if a photon passes through a channel with success probability $\eta_1$, followed by another with $\eta_2$, the total success probability is \mbox{$\eta_1\eta_2$}.
 
-When employing single-photon encoding of qubits (e.g using the polarisation degree of freedom), there are three basis states of interest: a single photon horizontally polarised ($\ket{H}$), a single photon vertically polarised ($\ket{V}$), and the vacuum state ($\ket{\mathrm{vac}}$). The effect of the loss channel on this type of state is to map $\ket{H}$ and $\ket{V}$ to $\ket{\mathrm{vac}}$ with probability \mbox{$1-\eta$}, while doing nothing to $\ket{\mathrm{vac}}$. Note that because the loss process affects both logical basis states ($\ket{H}$ and $\ket{V}$) identically, its action is invariant under unitary operations in the logical (i.e polarisation) basis space.
+When employing single-photon encoding of qubits (e.g using the polarisation degree of freedom), there are three basis states of interest: a single photon horizontally polarised ($\ket{H}$); a single photon vertically polarised ($\ket{V}$); and, the vacuum state ($\ket{\mathrm{vac}}$). The effect of the loss channel on this type of state is to map $\ket{H}$ and $\ket{V}$ to $\ket{\mathrm{0}}$ with probability \mbox{$1-\eta$}, while doing nothing to $\ket{\mathrm{0}}$. Note that because the loss process affects both logical basis states ($\ket{H}$ and $\ket{V}$) identically, its action is invariant under unitary operations in the logical (i.e polarisation) basis space.
+
+%
+% Decoherence
+%
 
 \subsubsection{Decoherence}
 
-The dephasing and depolarizing channels, given by Eq.~\ref{eq:dephasing_channel} \& Eq.~\ref{eq:depolarizing_channel}, behave multiplicatively. If $p_i$ is the probability that the state passing through the $i$th channel in series does not undergo the error process, then the probability of the state passing though the entire series without error is simply,
+The dephasing and depolarising channels, given by Eq.~\ref{eq:dephasing_channel} \& Eq.~\ref{eq:depolarizing_channel}, behave multiplicatively. If $p_i$ is the probability that the state passing through the $i$th channel in series does not undergo the error process, then the probability of the state passing though the entire series without error is simply,
 \begin{align}
 p_\mathrm{net}=\prod_i p_i,
 \end{align}
 exhibiting the same multiplicative behaviour as the loss channel.
 
+%
+% Fidelity
+%
+
 \subsubsection{Fidelity} \label{sec:fid_metric}
 
-The fidelity of two states directly quantifies how close they are to one another in a geometric sense (i.e on the Bloch sphere), or, in the context of a state passing through a quantum channel, a measure of how well the state is preserved.
+The fidelity of two states directly quantifies how close they are to one another in a geometric sense, i.e on the Bloch sphere \cite{???}, or, in the context of a state passing through a quantum channel, a measure of how well the state is preserved.
 
 The fidelity between two states is defined as,
 \begin{align}
@@ -532,20 +694,25 @@ The fidelity between two states is defined as,
 \end{align}
 where,
 \begin{align}
-0\leq \mathcal{F}(\hat\rho_1,\hat\rho_2) \leq 1.
+& \mathcal{F}(\hat\rho_1,\hat\rho_2) = \mathcal{F}(\hat\rho_2,\hat\rho_1), \nonumber \\
+& 0\leq \mathcal{F}(\hat\rho_1,\hat\rho_2) \leq 1.
 \end{align}
 \mbox{$\mathcal{F}(\hat\rho_1,\hat\rho_2)=1$} iff the states are equal, and \mbox{$\mathcal{F}(\hat\rho_1,\hat\rho_2)=0$} iff they are orthogonal.
 In the case where one of the states is a pure state, this simplifies to,
 \begin{align}
-\mathcal{F}(\hat\rho_1,\ket{\psi_2}) = \bra{\psi_2}\hat\rho_1\ket{\psi_2}.
+\mathcal{F}(\hat\rho_1,\ket{\psi_2}) = \bra{\psi_2}\hat\rho_1\ket{\psi_2},
+\end{align}
+and when both states are pure to simply,
+\begin{align}
+\mathcal{F}(\ket{\psi_1},\ket{\psi_2}) = |\langle\psi_1 | \psi_2\rangle|^2.
 \end{align}
 
 The fidelity is invariant under a common unitary applied to both states,
 \begin{align}
-\mathcal{F}(\hat\rho_1,\hat\rho_2) = \mathcal{F}(\hat{U}\hat\rho_1 \hat{U}^\dag,\hat{U} \hat\rho_2\hat{U}^\dag).
+\mathcal{F}(\hat\rho_1,\hat\rho_2) = \mathcal{F}(\hat{U}\hat\rho_1 \hat{U}^\dag,\hat{U} \hat\rho_2\,\hat{U}^\dag).
 \end{align}
 
-\peter{We define the fidelity of two processes to be the fidelity between two identical copies of a state that have been evolved under each of those processes, minimised over all possible states. That is, it provides a lower bound on the fidelity between identical states evolved under the two processes. In the context of networking, where quality must be guaranteed, this definition is more appropriate than, say, the average case fidelity. Specifically,}
+We define the fidelity of two processes to be the fidelity between two identical copies of a state that have been evolved under each of those processes, minimised over all possible states. That is, it provides a lower bound on the fidelity between identical states evolved under the two processes. In the context of networking, where quality must be guaranteed, this definition is more appropriate than, say, the average case fidelity. Specifically,
 \begin{align}
 \mathcal{F}(\mathcal{E}_1,\mathcal{E}_2) &= \min_{\hat\rho} \left[\mathcal{F}(\mathcal{E}_1(\hat\rho),\mathcal{E}_2(\hat\rho))\right] \nonumber \\
 &= \mathrm{tr}\left(\sqrt{\chi_1^{1/2}\cdot\chi_2\cdot\chi_1^{1/2}}\right),
@@ -576,9 +743,13 @@ Generalising to a sequence of $n$ processes in series yields,
 \mathcal{F}(\mathcal{E}_n\circ\dots\circ\mathcal{E}_1) \geq \prod_{i=1}^n \mathcal{F}(\mathcal{E}_i).
 \end{align}
 
+%
+% Purity
+%
+
 \subsubsection{Purity}
 
-The purity of a state that was initially pure quantifies how quantum coherence was maintained during evolution, equivalently how well superpositions are maintained. The purity is defined as,
+The purity of a state that was initially pure quantifies how well quantum coherence was maintained during evolution, equivalently how well superpositions are maintained. The purity is defined as,
 \begin{align}
 \mathcal{P}(\hat\rho) = \mathrm{tr}(\hat\rho^2),
 \end{align}
@@ -603,7 +774,7 @@ The purity of a process is defined analogously to the fidelity of a process (but
 \mathcal{P}(\mathcal{E}_2\circ\mathcal{E}_1)
 \geq \mathcal{P}(\mathcal{E}_2)\cdot\mathcal{P}(\mathcal{E}_1).
 \end{align}
-If the channel implements a unitary operation then necessarily \mbox{$\mathcal{P}(\mathcal{E})=1$}.
+\comment{CHECK THIS!}. If the channel implements a unitary operation then necessarily \mbox{$\mathcal{P}(\mathcal{E})=1$}.
 
 Like the process fidelity, the purity of a quantum process is invariant under unitary operations,
 \begin{align}
@@ -615,6 +786,10 @@ Generalising to a sequence of $n$ processes in series yields,
 \begin{align}
 \mathcal{P}(\mathcal{E}_n\circ\dots\circ\mathcal{E}_1) \geq \prod_{i=1}^n \mathcal{P}(\mathcal{E}_i).
 \end{align}
+
+%
+% Entanglement
+%
 
 \subsubsection{Entanglement} \label{sec:ent_meas}
 
@@ -629,11 +804,15 @@ The entanglement between two systems in invariant under local unitaries,
 \end{align}
 \comment{What about for processes?}
 
+%
+% Channel Capacity
+%
+
 \subsubsection{Channel Capacity}
 
-The measures considered until now have quantified the preservation of quantum states. Alternately, one might consider information theoretic measures, which quantify the number of bits/qubits transmitted by a link, i.e the number of bits/qubits in common before and after the link's quantum process. This is an extremely powerful tool as it upper bounds the amount of information the receiver can extract from the transmitter under \emph{any} measurement scheme, very useful in a cryptographic context.
+The measures considered until now have quantified the preservation of quantum states. Alternately, one might consider information theoretic measures, which quantify the number of bits/qubits transmitted by a link, i.e the number of bits/qubits in common before and after the channel. This is an extremely powerful tool as it upper bounds the amount of information the receiver can extract from the transmitter under \emph{any} measurement scheme, very useful in a cryptographic context.
 
-The Shannon entropy of a classical probability distribution $X$ is given by,
+The Shannon entropy \cite{???} of a classical probability distribution $X$ is given by,
 \begin{align}
 H(X) = -\sum_x p_x\mathrm{log}_2(p_x),
 \end{align}
@@ -642,12 +821,12 @@ or for a joint distribution over $X$ and $Y$,
 H(X,Y) =  -\sum_{x,y} p_{x,y}\mathrm{log}_2(p_{x,y})
 \end{align}
 
-The von Neuman entropy for quantum density operators, $S(\hat\rho)$, is defined analogously, replacing probabilities with density operator eigenvalues,
+The von Neuman entropy \cite{???} for quantum density operators, $S(\hat\rho)$, is defined analogously, replacing probabilities with density operator eigenvalues,
 \begin{align}
 S(\hat\rho) &= - \sum_x \lambda_x \mathrm{log}_2 (\lambda_x) \nonumber \\
 &= -\mathrm{tr}(\hat\rho\,\mathrm{log}\,\hat\rho),
 \end{align}
-where $\lambda$ are the eigenvalues of $\hat\rho$. This modification is logically justified, as the eigenvalues can be interpreted directly as a purely classical probability distribution of orthogonal states when the density operator is transformed into a basis with no coherences between basis states (i.e a diagonal basis or spectral decomposition). In that case the Shannon and von Neuman entropies essentially have identical physical interpretations.
+where $\{\lambda\}$ is the eigenvalue spectrum of $\hat\rho$. This modification is logically justified, as the eigenvalues can be interpreted directly as a purely classical probability distribution of orthogonal states when the density operator is transformed into a basis with no coherences between basis states (i.e a diagonal basis or spectral decomposition). In that case the Shannon and von Neuman entropies essentially have identical physical interpretations.
 
 The \emph{mutual information} specifies the number of bits in common between two distributions. Equivalently, it is the maximum number of bits that one party can learn about the other. For two classical distributions, $A$ and $B$, this is given by,
 \begin{align}
@@ -662,7 +841,7 @@ The mutual information between two quantum states is invariant under local unita
 \begin{align}
 I(\hat\rho_A;\hat\rho_B) = I(\hat{U}_A\hat\rho_A \hat{U}_A^\dag; \hat{U}_B\hat\rho_B \hat{U}_B^\dag),
 \end{align}
-since the eigenvalue spectrum of a density operator is invariant under unitary transformation. Therefore, the mutual information represents the maximum amount of information Bob can learn about Alice's state under \emph{any} local operations.
+since the eigenvalue spectrum of a density operator is invariant under unitary transformations. Therefore, the mutual information represents the maximum amount of information Bob can learn about Alice's state under \emph{any} local operations.
 
 The mutual information is defined as being between a particular known pair of states. Of course, in a quantum network we will seldom know what the states being communicated are and will therefore be unable to directly calculate the mutual information. To address this, the \emph{classical channel capacity} of a channel is defined as,
 \begin{align}
@@ -670,11 +849,11 @@ The mutual information is defined as being between a particular known pair of st
 \end{align}
 with the intuitive interpretation as the maximum mutual information between input and output states that can be achieved for the channel. (Note: this definition of `capacity' is not to be confused with that which we referred to in flow networks).
 
-Analogous to the mutual information for classical systems is the \emph{coherent information} for quantum systems \cite{???}. The coherent information quantifies the number of qubits \comment{Check this!} (as opposed to bits) in common, before and after a channel, defined as,
+Analogous to the mutual information for classical systems is the \emph{coherent information} for quantum systems \cite{???}, defined as,
 \begin{align}
 I(\hat\rho,\mathcal{E}) = S(\mathcal{E}(\hat\rho)) - S_e(\hat\rho,\mathcal{E}).
 \end{align}
-Here $S_e$ is the \emph{exchange entropy}, a measure of how much information is exchanged between the state $\hat\rho$ and the environment under the action of the process. This yields the intuitive interpretation that the coherent information is the information contained in the evolved state, discounted by the amount lost to the environment.
+Here $S_e$ is the \emph{exchange entropy}, a measure of how much information is exchanged between the state $\hat\rho$ and the environment under the action of the process. Specifically, it is given by the entropy of the environment subsystem in Eq.~\ref{eq:proc_environment}, after application of the channel. This yields the intuitive interpretation that the coherent information is the information contained in the evolved state, discounted by the amount lost to the environment.
 
 The quantum coherent information exhibits much of the same mathematical structure as the classical mutual information. And analogously, we can define the \emph{quantum channel capacity} as,
 \begin{align}
@@ -682,6 +861,10 @@ The quantum coherent information exhibits much of the same mathematical structur
 \end{align}
 
 Analytic solutions to $\mathcal{C}(\mathcal{E})$ and $\mathcal{Q}(\mathcal{E})$ are not known even for simple Pauli error channels such as dephasing and depolarisation. However, once net dephasing or depolarisation rates have been calculated across a route, the channel capacities can easily be solved numerically, which is sufficient for the numerical algorithms we will rely upon.
+
+%
+% Latency
+%
 
 \subsubsection{Latency} \label{sec:latency_metric}
 
@@ -693,6 +876,10 @@ By defining the latency of a link/node as the time between receipt of a quantum 
 \end{align}
 where $\mathcal{L}_i$ is the latency associated with the $i$th link in route $R$.
 
+%
+% Dollars
+%
+
 \subsubsection{Dollars} \label{sec:dollars}
 
 Not to be overlooked is the actual dollar cost of communicating information. It is unlikely that Alice and Bob outright own the entire infrastructure of particular routes. Rather, different links and nodes are likely to be owned by different operators (particularly in ad hoc networks), who are most likely going to charge users for bandwidth in their network (quantum networks won't be cheap). Clearly dollar costs are additive over the links and nodes within routes,
@@ -701,16 +888,20 @@ Not to be overlooked is the actual dollar cost of communicating information. It 
 \end{align}
 where $\mathcal{C}_i$ is the dollar cost of utilising the $i$th link in route $R$.
 
+%
+% Costs as Distance Metrics
+%
+
 \subsection{Costs as Distance Metrics} \label{sec:cost_as_dist}
 
 Def.~\ref{def:metric} defines the properties of a cost metric in the classical context. We now wish to consider this in the quantum context.
 
-If we consider a lossy photonic channel for example, efficiencies ($\eta$) are multiplicative. For a route \mbox{$v_1\to v_2\to v_3$}, the net efficiency is given by the product of the individual efficiencies, \begin{align}
-\eta_{v_1\to v_3} = \eta_{v_1\to v_2} \eta_{v_2\to v_3}.
+If we consider a lossy photonic channel for example, efficiencies ($\eta$) are multiplicative -- for a route \mbox{$v_1\to v_2\to v_3$}, the net efficiency is given by the product of the individual efficiencies, \begin{align}
+\eta_{v_1\to v_2 \to v_3} = \eta_{v_1\to v_2} \eta_{v_2\to v_3}.
 \end{align}
 This is multiplicative rather than additive, clearly not satisfying our definition for a cost metric. However, multiplicative metrics such as this can easily be made additive by shifting to a logarithmic scale, since
 \begin{align}
-\log(\eta_{v_1\to v_3}) = \log(\eta_{v_1\to v_2}) + \log(\eta_{v_2\to v_3}),
+\log(\eta_{v_1\to v_2\to v_3}) = \log(\eta_{v_1\to v_2}) + \log(\eta_{v_2\to v_3}),
 \end{align}
 which now has a legitimate interpretation as a distance. In general, for a series of links \mbox{$v_1\to v_2 \to \dots \to v_n$} characterised by multiplicative measure $m$, the equivalent cost metric is,
 \begin{align} \label{eq:dist_log}
@@ -720,7 +911,7 @@ We have assumed that \mbox{$0\leq m \leq 1$}, where \mbox{$m=0$} represents comp
 
 With these properties, the costs in our graph have an elegant interpretation. In the case of perfect operation, \mbox{$m=1$}, the cost is \mbox{$c=0$}, creating an ideal direct link between neighbouring nodes at no cost. On the other hand for complete failure, \mbox{$m=0$}, the cost metric is \mbox{$c=\infty$}, effectively removing the link from the network and prohibiting pathfinding algorithms from following that route altogether.
 
-Such a logarithmic scale is particularly convenient when a cost metric over links accumulates on a per physical distance basis, in which case the cost metric is simply the physical length of the link times the metric per unit distance. For example, if a fibre channel implements loss at 3dB/km, then the loss over 10km is 10$\times$3dB.
+Such a logarithmic scale is particularly convenient when a cost metric over links accumulates on a per physical distance basis, in which case the cost metric is simply the physical length of the link times the metric per unit distance. For example, if a fibre channel implements loss at 3dB/km, the loss over 10km is 10$\times$3dB.
 
 Note that lower bounds on fidelity, purity, efficiency and dephasing are all multiplicative on a scale of 0 to 1, and thus their logarithms may be regarded as cost metrics.
 
@@ -736,6 +927,10 @@ or for a channel,
 d_\mathrm{VI}(\hat\rho,\mathcal{E}) &= S(\hat\rho,\mathcal{E}(\hat\rho)) - I(\hat\rho;\mathcal{E}(\hat\rho)),
 \end{align}
 
+%
+% Non-Trivial Node Operations
+%
+
 \subsection{Non-Trivial Node Operations}
 
 Thus far we have considered how to accumulate cost metrics across routes through a network, where each link is subject to some quantum process obeying our notion of a cost metric. But what happens when the links are interspersed with nodes that may be doing more than just simple switching?
@@ -744,7 +939,13 @@ A more general scenario to consider is where the nodes are not restricted to rou
 
 All of the examples for cost metrics we introduced in Sec.~\ref{sec:quantum_meas_cost} have the property that they are invariant under unitary operations. Therefore the costs along a route may simply be accumulated as before, summing up the edge weights, without needing any special treatment for node operations, provided they are unitary. For non-unitary node processes, we can merge them into their neighbouring link processes as before (see Fig.~\ref{fig:remove_nodes}).
 
+%
+% Quantum Networks
+%
+
 \section{Quantum Networks} \label{sec:quant_net}
+
+\comment{UP TO HERE}
 
 Quantum networks comprise all the same ingredients as classical networks, but with additions. Nodes can additionally implement quantum computations, quantum-to-classical interfaces (i.e measurements), quantum-to-quantum interfaces (interconnects), quantum memories, or any quantum process in general. The cost associated with links could include measures that are uniquely quantum, such as fidelity, purity or entanglement measures, none of which are applicable to classical digital data. As in the classical case, our goal is to find routing strategies that optimise a chosen cost metric. But in the quantum context costs will be constructed entirely differently owing to the quantum nature of the information being communicated.
 
@@ -758,6 +959,10 @@ The motivation for the dual network is to ensure that classical and quantum data
 
 We envisage quantum networks to extend beyond just client/server quantum computation, to include the free trade of any quantum asset. This includes state preparation, measurement, computation, randomness, entanglement, and information. Much like the classical internet, by allowing quantum assets to be exchanged, we can maximise utility, improve economy of scale, and enable new models for commercialisation.
 
+%
+% The Quantum Transmission Control Protocol (QTCP)
+%
+
 \section{The Quantum Transmission Control Protocol (QTCP)}
 
 In the classical world, TCP is employed for data transmission and routing. Next we define the quantum equivalent -- the Quantum Transmission Control Protocol (QTCP).
@@ -768,7 +973,11 @@ The goal of QTCP is to abstract away the low-level physical operation of a quant
 
 We consider the scenario where Alice (or a set of Alice's) has some state, which she wishes to communicate to Bob (Bob's), with the aim of optimising some arbitrary cost measure. Bob is no guru and doesn't want to concern himself with how the state got from Alice to himself. His only concern is that he receives it and that it satisfies quality constraints he and Alice have agreed upon.
 
-QTCP is the joint software/hardware stack that facilitates these objectives. QTCP begins by logically separating different levels of network functionality into distinct layers in a protocol stack. The stack is described in detail in Sec.~\ref{sec:prot_stack}. In addition to simple packet switching, the protocol stack is responsible for two very important problems -- routing \emph{strategies} (to be discussed in Sec.~\ref{sec:strategies}), and \emph{collision detection} (Sec.~\ref{sec:collision}). Both of these problems are very low-level in nature, and must be abstracted away by QTCP such that the end user is oblivious to their operation.
+QTCP is the joint software/hardware stack that facilitates these objectives. QTCP begins by logically separating different levels of network functionality into distinct layers in a protocol stack. The stack is described in detail in Sec.~\ref{sec:prot_stack}. In addition to simple packet switching, the protocol stack is responsible for two very important problems -- routing \emph{strategies} (to be discussed in Sec.~\ref{sec:strategies}), and \emph{collision detection} (Sec.~\ref{sec:collision}). Both of these problems are very low-level in nature, and must be abstracted away by QTCP such that the end-user is oblivious to their operation.
+
+%
+% QTCP Protocol Stack
+%
 
 \section{QTCP Protocol Stack} \label{sec:prot_stack}
 
@@ -792,17 +1001,33 @@ The structure of the protocol stack for QTCP is shown in Fig.~\ref{fig:stack}. I
 
 Next we describe the operation of the layers in the protocol stack in detail.
 
+%
+% Data (Message)
+%
+
 \subsection{Data (Message)}
 
 At the lowest level of the protocol we have the raw {\sc Data} Alice wishes to communicate to Bob. {\sc Data} is allowed to comprise both {\sc Quantum Data} and {\sc Classical Data} components, and may contain one or the other, or both.
+
+%
+% Quantum Data
+%
 
 \subsubsection{Quantum Data}
 
 {\sc Quantum Data} is allowed to be an arbitrary quantum state. It could be a pure or mixed state, of arbitrary (but predetermined) dimension, or even a subsystem of a larger external state (i.e entangled with another system).
 
+%
+% Classical Data
+%
+
 \subsubsection{Classical Data}
 
 {\sc Classical Data} is a purely classical state with no coherence (i.e a diagonal density matrix), which may be represented as a classical bit-string. We very intentionally segregate the {\sc Classical} and {\sc Quantum} components of {\sc Data}, since the classical network is expected to be cheaper and more reliable than the quantum network operating in parallel to it. The {\sc Classical Data} could, for example, provide nodes with classical instructions on what quantum computations to perform on the {\sc Quantum Data}.
+
+%
+% Packet
+%
 
 \subsection{Packet}
 
@@ -816,9 +1041,17 @@ where $i$ denotes the $i$th packet. Here $\hat\rho_\mathrm{quantum}$ ($\hat\rho_
 
 Note that while one can always measure classical data without disturbance, this is not the case with quantum data, where measurements cause wavefunction collapse. Thus, while Alice is always able to know $\hat\rho_\mathrm{classical}$ and $\hat\rho_\mathrm{header}$, she may or may not know $\hat\rho_\mathrm{quantum}$. Clearly if she prepared the state herself, she would (hopefully) know what she was doing. But in general, quantum networks could be used for far less trivial networking, where Alice is, for example, an intermediary in a distributed quantum computation. In this instance, Alice is unlikely to know what her {\sc Quantum Data} is.
 
+%
+% Packet Data
+%
+
 \subsubsection{Packet Data}
 
 Comprises blocks of both {\sc Quantum Data} and {\sc Classical Data}, of sizes {\sc Quantum Block Size} and {\sc Classical Block Size} respectively. {\sc Packet Data} requires that {\sc Data} be decomposed into distinct subsystems which are independently transmitted by QTCP. We will restrict ourselves to the case where the {\sc Data} is encoded into a stream of qubits ({\sc Quantum Data}) and bits ({\sc Classical Data}). There is no loss of generality in applying this constraint since any quantum (classical) information can be encoded into qubits (bits), and once represented as such, the decomposition of {\sc Data} into {\sc Packets} arises very naturally and intuitively. The {\sc Packet's} {\sc Quantum Data} is what is transmitted via the quantum channels, while the {\sc Classical Data} is communicated via classical channels.
+
+%
+% Packet Header
+%
 
 \subsubsection{Packet Header} \label{sec:packet_header}
 
@@ -841,6 +1074,10 @@ Comprises blocks of both {\sc Quantum Data} and {\sc Classical Data}, of sizes {
 
 One might question why {\sc Packet Headers} tally accumulated costs when we ought to already know all the costs, since these were employed by the algorithm for choosing strategies in the first case. In the ideal case where all strategies are determined \emph{a priori} and are implemented as intended, this is certainly valid. However, for generality we retain this option since more realistic networks may require dynamically updating strategies during the course of propagation, in which case dynamically tallying costs is appropriate.
 
+%
+% Strategy
+%
+
 \subsection{Strategy} \label{sec:into_strat}
 
 Based on the {\sc Packet Headers} of all users sharing the network, choose routing strategies to optimise cost metrics. The notion of strategies is introduced in Sec.~\ref{sec:strat_opt}, and a detailed discussion of example strategies is presented in Sec.~\ref{sec:strategies}.
@@ -850,6 +1087,10 @@ Once routings have been determined for all {\sc Packets}, the {\sc Routing Queue
 In the case of dynamic, time-dependent strategies, which can be updated within the duration of transmissions, the {\sc Routing Queues} may need to be updated. A change in a {\sc Packet's} route simply requires flushing the queue and pushing new node identifiers for each of the nodes in the new route, in chronological order.
 
 The {\sc Strategy} layer is responsible for evaluating the net cost function $f_\mathrm{cost}$ from Eq.~\ref{eq:net_cost_R}, which accounts for both {\sc Costs} and {\sc Attributes} to calculate a single effective cost measure that may be employed in routing decisions.
+
+%
+% Transport
+%
 
 \subsection{Transport} \label{sec:transport}
 
@@ -888,6 +1129,10 @@ function Transport(Packet):
 \caption{Algorithm implemented by the {\sc Transport} layer of QTCP for each {\sc Packet}. The {\tt Attributes.Update()} function is left undefined. This is where arbitrary {\sc Attribute} dynamics may take place.} \label{tab:transport_alg}
 \end{table}
 
+%
+% Reconstruction
+%
+
 \subsection{Reconstruction}
 
 The {\sc Reconstruction} layer only serves one purpose -- to chronologically reorder the received {\sc Packets} based on the {\sc Order} field in their {\sc Packet Headers}. This stage is only performed by Bob -- the final recipient -- and not at any intermediate stage. In general this will require Bob to have a quantum memory, able to hold all {\sc Packet Data} for a sufficient duration as to enable an arbitrary permutation to be applied, reproducing the correct chronological order.
@@ -901,8 +1146,12 @@ function Reconstruction(Packets):
     \item Packets.Receiver.Notify(message)
      \item $\Box$
 \end{enumerate}}}
-\caption{The goal of the {\sc Reconstruction} layer, is to take a collection of received {\sc Packets} and reassemble them into a single data-stream.} \label{tab:reconstruction}
+\caption{The goal of the {\sc Reconstruction} layer, is to take a collection of received {\sc Packets} and reassemble them into the {\sc Message}.} \label{tab:reconstruction}
 \end{table}
+
+%
+% Quality of Service (QoS)
+%
 
 \subsection{Quality of Service (QoS)}
 
@@ -916,7 +1165,7 @@ As an alternative to checksums, we could borrow the notion of fault-tolerance fr
 
 Different error correcting codes have different error correcting power, and different resource overheads, which must be taken into consideration. The appropriate choice of code will largely be determined by the final {\sc Services \& Applications} layer. For some simple quantum communications protocols, simple error correction (or even no error correction) may suffice. A full-fledged quantum computation on the other hand will require error rates within a fault-tolerance thresholds.
 
-The field of fault-tolerance is already extremely well developed and could be applied directly to QTCP as an abstraction layer directly below the {\sc Services \& Application} layer of the protocol stack, abstracting it away from the end user.
+The field of fault-tolerance is already extremely well developed and could be applied directly to QTCP as an abstraction layer directly below the {\sc Services \& Application} layer of the protocol stack, abstracting it away from the end-user.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\tt
@@ -937,9 +1186,17 @@ function QoS(Packets):
 \caption{QoS algorithm based on any appropriate existing QEC code.} \label{tab:qos}
 \end{table}
 
+%
+% Services & Applications
+%
+
 \subsection{Services \& Applications}
 
 Having communicated all the {\sc Packet Data} from Alice to Bob, performed {\sc Reconstruction}, and applied {\sc QoS} protocols, Bob ought to have $\hat\rho_\mathrm{data}$ to a good approximation. The quality of Bob's received state can be inferred directly from the {\sc Costs} vector contained in the {\sc Packet Headers}. The final state and its associated quality metrics ({\sc Costs} and QEC outcomes) may then be provided to Bob as a software interface for end use.
+
+%
+% Collision Handling & Classical Errors
+%
 
 \section{Collision Handling \& Classical Errors} \label{sec:collision}
 
@@ -963,9 +1220,17 @@ This algorithm could, depending upon implementation, be executed locally on the 
 
 In instances where corruption or loss of packets cannot be tolerated, a more proactive approach may be applied. To preempt the risk of packet collision, one could introduce \emph{probe packets} -- packets containing only classical data, that query a route ahead to negotiate channel usage for the following proper packet, thereby avoiding collisions. Of course, if an upcoming node is unable to guarantee channel capacity immediately, the packet may need to be stored in quantum memory until the channel is available. Thus, it is important to accommodate for this by ensuring that quantum memory is available in nodes preceding links/nodes where collisions are not guaranteed to be mitigated immediately. Quantum memory will be discussed in Sec.~\ref{sec:memory}.
 
+%
+% Strategies
+%
+
 \section{Strategies} \label{sec:strategies}
 
 In Sec.~\ref{sec:costs} we introduced the notion of network costs, strategies for allocating network resources in Sec.~\ref{sec:route_strats}, and a general formalism for optimising strategies so as to minimise costs in Sec.~\ref{sec:strat_opt}. In this section we present some meaningful example strategies and associated pseudo-code fragments, illustrating the implementation of various aspects of strategies of practical real-world interest.
+
+%
+% Single User (Shortest-Path)
+%
 
 \subsection{Single User (Shortest-Path)} \label{sec:single_user_shortest}
 
@@ -989,6 +1254,10 @@ function Strategy.SingleUser(Packets):
 \end{enumerate}}}
 \caption{For a single user, a simple shortest-path algorithm necessarily finds the optimal route, as there is no potential for packet collisions or competition for network resources.} \label{tab:single_user}
 \end{table}
+
+%
+% Multiple Users
+%
 
 \subsection{Multiple Users} \label{sec:two_user}
 
@@ -1027,6 +1296,10 @@ Generalising this to any number of users is a straightforward extension to the r
 
 In the upcoming sections we discuss multi-user strategies in more detail. None of these are true {\sc Global} strategies, but nonetheless address some of the problems facing {\sc Local} strategies mentioned above.
 
+%
+% Round Robin
+%
+
 \subsection{Round Robin} \label{sec:round_robin}
 
 Perhaps the simplest and most elegant multi-user scheduling strategy is to borrow from the idea of time-division multiplexing for preemptive multitasking employed by UNIX operating systems. Here we simply put all live packets in a list, and go through the list, one-by-one, giving each packet an equal time-share of network resources, independent of costs. The algorithm for this is shown in Alg.~\ref{tab:round_robin}.
@@ -1051,17 +1324,29 @@ The {\sc Round Robin} strategy can be considered base skeleton code for more sop
 
 While such a protocol clearly ensures scheduling that gives all packets attention, it is the perfect example of an algorithm subject to the resource allocation imbalance discussed in Sec.~\ref{sec:two_user}. Specifically, the routes being followed by some packets may systemically receive more favourable treatment than others, based on the ordering of the list of packets. Also, equal timesharing fails to accommodate for the fact that some routes are inherently more costly than others and deserve a greater share of network resources.
 
+%
+% Data Priority
+%
+
 \subsection{Data Priority} \label{sec:data_priority}
 
 Are all men created equal? No. Some packets may inherently be more important than others, and ought to receive priority when allocating network resources. A simple variation on the {\sc Round Robin} strategy is to, before iterating through the list of packets, order them according to a {\sc Priority} attribute. Thus, when applying a shortest-path algorithm, it is deemed most important to minimise the costs of the more important packets.
 
 This is trivially achieved by taking the existing {\sc Round Robin} strategy, and first ordering the packet list by their priority attributes, i.e by inserting a new line 1, \mbox{\tt Packets.SortByPriority()}.
 
+%
+% Randomisation
+%
+
 \subsection{Randomisation} \label{sec:random}
 
 The imbalance issue facing the {\sc Round Robin} strategy (Sec.~\ref{sec:round_robin}) may be most trivially addressed using randomisation of the strategy, such that routes are optimised in an order chosen randomly each time. This would allow the different sender/receiver pairs to have equal access to network resources, when averaged over many network uses.
 
 This is also straightforward variation of the {\sc Round Robin} strategy, achieved by first randomising the list of packets before the other stages, i.e insert a new line 1, \mbox{\tt Packets.RandomizeOrder()}.
+
+%
+% Cost Priority
+%
 
 \subsection{Cost Priority} \label{sec:cost_priority}
 
@@ -1121,9 +1406,13 @@ In other words, the net cost is taken directly from the underlying cost metric, 
 
 This provides us with a simple illustration of how costs and attributes can compliment one another to yield meaningful strategies, that improve network performance over na\"ive, but well-intentioned, time-sharing approaches.
 
+%
+% All or Nothing
+%
+
 \subsection{All or Nothing} \label{sec:all_or_nothing}
 
-In some cases, end user applications may have strict QoS constraints associated with any data they receive. For example, in a time-critical enterprise, say high-frequency trading, receiving information a millisecond too late is worthless, and it would be best to discard the out of date information to free up bandwidth for the next round of information. In such a context, the {\sc Strategy} will apply hard boundaries on QoS metrics, discarding anything violating it. The algorithm is summarised in Alg.~\ref{tab:all_or_nothing}.
+In some cases, end-user applications may have strict QoS constraints associated with any data they receive. For example, in a time-critical enterprise, say high-frequency trading, receiving information a millisecond too late is worthless, and it would be best to discard the out of date information to free up bandwidth for the next round of information. In such a context, the {\sc Strategy} will apply hard boundaries on QoS metrics, discarding anything violating it. The algorithm is summarised in Alg.~\ref{tab:all_or_nothing}.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\tt
@@ -1145,6 +1434,10 @@ function Strategy.AllOrNothing(Packets, threshold):
 \end{enumerate}}}
 \caption{The {\sc All or Nothing Strategy}. If the net cost of a packet exceeds a certain {\tt threshold}, it is discarded outright, and the sender and recipient notified.} \label{tab:all_or_nothing}
 \end{table}
+
+%
+% Optimal Flow
+%
 
 \subsection{Optimal Flow}
 
@@ -1171,6 +1464,10 @@ function Strategy.OptimalFlow(Packets):
 \caption{A generic optimal flow routing strategy. {\sc Packets} is the array of all packets that ought to be transmitted simultaneously, which are collectively optimised using some flow optimisation algorithm before undergoing transport.} \label{tab:opt_flow}
 \end{table}
 
+%
+% Extensibility of QTCP
+%
+
 \section{Extensibility of QTCP} \label{sec:c_vs_a}
 
 In Sec.~\ref{sec:costs} we introduced the notion of the \emph{costs} and \emph{attributes} of links in a classical network, and in Sec.~\ref{sec:quantum_meas_cost} generalised these notions to the quantum case. In Sec.~\ref{sec:packet_header} we described the header format for quantum packets.
@@ -1179,7 +1476,11 @@ The {\sc Costs} and {\sc Attributes} fields within the {\sc Header} are very pow
 
 {\sc Costs} naturally capture characteristics of the network that accumulate additively along routes, whereas {\sc Attributes} capture any other characteristics that aren't additive. A network needn't have both costs \emph{and} attributes. It may have one or the other, or both, but not neither, since there must be some measure by which to judge routes.
 
-\section{Interconnecting \& Interfacing Networks} \label{sec:inter}
+%
+% Interconnecting & Interfacing Quantum Networks
+%
+
+\section{Interconnecting \& Interfacing Quantum Networks} \label{sec:inter}
 
 Any global-scale network will inevitably comprise participants choosing to go about things their own way. The physical architecture and medium may vary from one subnetwork to the next, as may the QTCP policies they adopt. The key then is to construct efficient \emph{interconnects} between different levels of the network hierarchy, each of which may subscribe to their own QTCP policies and cross between different physical mediums. Note that the QTCP protocol presented here does not enforce any particular networking policies, but rather provides a high-level framework that can be customised essentially arbitrarily.
 
@@ -1195,6 +1496,10 @@ Such interconnects will typically comprise a combination of:
 
 The packet switching and quantum memory are implemented as quantum processes at nodes, using the usual quantum process formalism. The physical interface between different mediums, if there is one, could be very diverse, encompassing many types of physical systems, but can always be characterised using the quantum process formalism. Packet headers, which contain all formatting, cost, and routing information are represented entirely classically and communicated entirely by the classical network. Thus, this operation also takes place at nodes, but no quantum processes are taking place.
 
+%
+% Network Topologies
+%
+
 \section{Network Topologies}
 
 As quantum (or classical) networks inherently reside on graphs, it is important to introduce some of the key graph structures of relevance to networking and some of their properties of relevance to quantum networking protocols.
@@ -1204,6 +1509,10 @@ In principle a network could be characterised by any connected graph whatsoever.
 It is paramount that QTCP protocols have the capacity to deal with the diverse network topologies that are likely to present themselves in the future real-world quantum internet. Thankfully, the most important graph-theoretic algorithms that we rely on in our QTCP protocol (see Sec.~\ref{sec:graph_theory}) are computationally efficient for \emph{arbitrary} graph topologies, even more so for certain classes of graphs exhibiting particular structure, such as tree graphs or complete graphs.
 
 We will now review some of the graph structures most likely to arise in quantum networks.
+
+%
+% Complete
+%
 
 \subsection{Complete}
 
@@ -1217,6 +1526,10 @@ In reality, this type of topology might arise quite naturally on small Local Are
 \includegraphics[width=0.7\columnwidth]{K_15}
 \caption{The 15-vertex complete graph, $K_{15}$. Every vertex has an edge to every other, with a total of 105 edges.} \label{fig:complete_graph}
 \end{figure}
+
+%
+% Lattice
+%
 
 \subsection{Lattice}
 
@@ -1235,11 +1548,19 @@ L_1 = |x_\mathrm{start} - x_\mathrm{finish}| + |y_\mathrm{start} - y_\mathrm{fin
 \end{align}
 In this case, route finding is simplified, since \emph{all} routes, which strictly traverse in one direction vertically and one direction horizontally, are optimal and of equal distance.
 
+%
+% Tree
+%
+
 \subsection{Tree} \label{sec:tree_graph}
 
 A tree is a graph containing no cycles, only \emph{branches}. There are many uses for tree graphs, but one property is of particular convenience in many applications: because the graph is acyclic, there is always exactly one path from any vertex to any other. This mitigates the need for shortest-path algorithms designed for general graphs, and simplifies route-finding algorithms (to be discussed in Sec.~\ref{sec:path_exp}).
 
 Trees are specified entirely by \emph{branching parameters} ($b_i$) -- the number of child nodes emanating from a given node, $i$. In general, branching parameters may be distinct for each node, although often trees with symmetries in their branching structures are considered, such as the balanced trees discussed in Sec.~\ref{sec:bal_tree}. A node terminates a branch if its branching parameter is zero (i.e it has no children). The \emph{depth} ($d$) of a tree is the maximum number of steps from the root node to a terminating node with no children. The depth scales between \mbox{$d=|V|$}, for the trivial linear tree (\mbox{$b_i=1$}), and \mbox{$d=O(\mathrm{log}|V|)$} for non-trivial branching parameters (i.e \mbox{$b_i\neq 1$}). The worst-case number of edges that must be traversed to reach any vertex from any other is twice the depth, which implies that cost metrics scale as at most \mbox{$c=O(\mathrm{log}|V|)$}. Trees are the most frugal graphs in their number of edges, which are fixed at \mbox{$|E|=|V|-1$}, irrespective of the branching parameters, since because the graph is strictly acyclic, every addition of an edge requires the addition of a single vertex.
+
+%
+% Balanced Tree
+%
 
 \subsubsection{Balanced Tree} \label{sec:bal_tree}
 
@@ -1254,6 +1575,10 @@ A balanced tree is a tree with a regular, self-similar structure, in which every
 
 This type of structure is natural in many realistic scenarios. Consider for example a network containing a hierarchy of clusters of nodes representing a Local Area Network (LAN), followed by a neighbouring internet router, followed by a city-wide router, followed by a country-wide router. In such a case, this type of general structure is typical.
 
+%
+% Random Tree
+%
+
 \subsubsection{Random Tree}
 
 While balanced trees accurately capture the hierarchical nature of realistic networks, they are somewhat contrived in their perfect symmetry. The sub-networks in a given network are not likely to actually all be identical. Random trees are perhaps more realistic, in that their tree structure captures the hierarchical nature of real-world networks, and also their highly ad hoc nature.
@@ -1266,6 +1591,10 @@ To construct a random tree we simply randomly choose a branching parameter, up t
 \caption{Random trees with different randomised branching parameters (higher $b$ at bottom). When a node has zero branches, it terminates the branch. This type of graph topology qualitatively captures the hierarchical, yet ad hoc qualities of many real-world networks, and may act as a useful test model for simulations.} \label{fig:random_tree}
 \end{figure}
 
+%
+% Minimum Spanning Tree
+%
+
 \subsubsection{Minimum Spanning Tree} \label{sec:graph_MST}
 
 A \emph{spanning tree} $S$, of a graph $G$, is a tree subgraph \mbox{$S\subset G$}, containing every vertex of $G$. The \emph{weight} of a spanning tree is the sum of all its constituent edge weights. Thus, the \emph{Minimum Spanning Tree} (MST) is a spanning tree that minimises weight. An example is shown in Fig.~\ref{fig:mst}. See Sec.~\ref{sec:min_tree} for a discussion on MST algorithms.
@@ -1277,6 +1606,10 @@ A \emph{spanning tree} $S$, of a graph $G$, is a tree subgraph \mbox{$S\subset G
 
 The calculation of MST's is most likely to come into consideration when actually performing the initial construction of networks, where we wish to connect all nodes in the network, but using the most frugal possible physical resources. MST's serve this purpose, and since they are trees, inherit all the same properties of tree networks.
 
+%
+% The Internet Webgraph
+%
+
 \subsubsection{The Internet Webgraph}
 
 Of course, all the topological structures described until now are in-principle constructs. Of most relevance is the \emph{Webgraph}, the graph of the actual internet. Fig.~\ref{fig:webgraph} illustrates the Webgraph via the Internet Mapping Project. The combination of random, densely and sparsely connected, and tree structures, and clear hierarchical structure are all evident. This encourages our intuition of the different types of structures present in realistic networks.
@@ -1285,6 +1618,10 @@ Of course, all the topological structures described until now are in-principle c
 \includegraphics[width=\columnwidth]{webgraph}
 \caption{The real-world webgraph, capturing the high-level structure of the global internet. A random tree structure is visually apparent. \comment{CITE THE SOURCE! Is it open source?}} \label{fig:webgraph}
 \end{figure}
+
+%
+% Random
+%
 
 \subsection{Random}
 
@@ -1299,6 +1636,10 @@ A variation on the complete graph, $K_{|V|}$, is to instead have a randomised im
 
 Random graphs capture the ad hoc nature of networks that exhibit no planned structure, but are rather cobbled together in a completely improvised manner.
 
+%
+% Hybrid
+%
+
 \subsection{Hybrid}
 
 Real networks are highly unlikely to fit the exact form factor of any of the classes of graphs presented above. Rather, a truly global internet is inevitably going to comprise many sub-networks, each structured completely independently of one another, with little consistency or large-scale planning between them. Who thinks about the broader structure of the global internet when setting up their office network?
@@ -1309,9 +1650,17 @@ Furthermore, the real-world internet is not simply a hierarchy of different type
 
 This hybrid network topology is the norm today in our classical internet, and it is entirely foreseeable that a similar trend will emerge in the future quantum internet as quantum technologies become more mainstream, their networking less well structured, and competing, redundant links are in place.
 
+%
+% Network Algorithms
+%
+
 \section{Network Algorithms} \label{sec:graph_theory}
 
 Having introduced some of the more relevant graph structures, we now introduce some of the key graph theory algorithms that are of direct relevance to networking theory. In graph theory, many fundamental problems are believed to be computationally hard to solve. However, there are several important graph algorithms that are classically efficient to solve, and which are of great utility to us as network architects.
+
+%
+% Network Exploration & Pathfinding
+%
 
 \subsection{Network Exploration \& Pathfinding} \label{sec:path_exp}
 
@@ -1328,11 +1677,15 @@ Examples of these two algorithms are shown in Fig.~\ref{fig:BFS_DFS}.
 \caption{Comparison of the order in which vertices are explored, using the breadth-first-search (BFS) and depth-first-search (DFS) algorithms, where vertex 1 is the root vertex.} \label{fig:BFS_DFS}
 \end{figure}
 
-\peter{Both BFS and DFS guarantee visiting every vertex in a connected graph, and do so using only nearest neighbour transitions. Such algorithms are therefore very useful for network discovery.
+Both BFS and DFS guarantee visiting every vertex in a connected graph, and do so using only nearest neighbour transitions. Such algorithms are therefore very useful for network discovery.
 
-The BFS algorithm is particularly applicable to pathfinding in ad hoc networks. Consider the situation where there is no central authority with full knowledge of the network, overseeing network operation. Rather, everyone needs to figure things out for themselves by only interrogating their neighbours, to whom they have direct connections. This directly leads to a BFS algorithm, where a node speaks to each of its neighbours in turn, who subsequently do the same thing. This can be naturally parallelised, as each node can be interrogating its neighbours independently, thereby implementing a distributed BFS algorithm. Note that, when searching for a target node, while the BFS algorithm obviously finds the target using the smallest number of hops (i.e a lowest-order route), it needn't necessarily find the route with the lowest cost (which is distinct from the number of hops in general). Shortest-path algorithms require a priori knowledge of the full network graph, discussed in Sec.~\ref{sec:shortest_path}.}
+The BFS algorithm is particularly applicable to pathfinding in ad hoc networks. Consider the situation where there is no central authority with full knowledge of the network, overseeing network operation. Rather, everyone needs to figure things out for themselves by only interrogating their neighbours, to whom they have direct connections. This directly leads to a BFS algorithm, where a node speaks to each of its neighbours in turn, who subsequently do the same thing. This can be naturally parallelised, as each node can be interrogating its neighbours independently, thereby implementing a distributed BFS algorithm. Note that, when searching for a target node, while the BFS algorithm obviously finds the target using the smallest number of hops (i.e a lowest-order route), it needn't necessarily find the route with the lowest cost (which is distinct from the number of hops in general). Shortest-path algorithms require a priori knowledge of the full network graph, discussed in Sec.~\ref{sec:shortest_path}.
 
 Both BFS and DFS exhibit runtime \mbox{$O(|V|+|E|)$}, where $|V|$ and $|E|$ are the number of vertices and edges respectively. Thus, these graph exploration algorithms reside in the complexity class \textbf{P}, and are classically efficient.
+
+%
+% Shortest-Path
+%
 
 \subsection{Shortest-Path} \label{sec:shortest_path}
 
@@ -1356,13 +1709,17 @@ For the purposes of the QTCP protocol, we are interested in the case of directed
 
 Shortest-path techniques find widespread application in many areas. Computer networks are an obvious candidate, since networks are inherently graph-theoretic by nature.
 
-\peter{To implement the shortest-path algorithms discussed above, the party performing the calculation requires knowledge of the full network graph. In an ad hoc network, where users might be added to or removed from the network arbitrarily, this isn't necessarily the case.
+To implement the shortest-path algorithms discussed above, the party performing the calculation requires knowledge of the full network graph. In an ad hoc network, where users might be added to or removed from the network arbitrarily, this isn't necessarily the case.
 
 One solution is for a central authority to be responsible for maintaining a ledger of all network participants and their connectivity, which users are required to notify upon joining or leaving the network. The central authority may then apply shortest-path calculations, which may be queried by users. However, a disruption in connection to the central authority, or failure of nodes to notify the central authority upon joining or leaving the network, introduces a point of failure into the operation of the protocol.
 
 Another approach, which does not require a reliable central authority, is for users to implement network exploration algorithms each time they wish to perform a shortest-path calculation. This facilitates truly ad hoc networking, but incurs the cost overhead associated with nodes frequently implementing network exploration. However, network exploration is a purely classical algorithm, which may run entirely over the classical network, and therefore incurs no cost in quantum resources.
 
-With this approach, a new node can join the network, without having to know anything about the topology of the network. Similarly, upon leaving the network, it needn't notify anyone, since a future interrogation by a neighbour will be detected as a non-existent node. The BFS is therefore highly suited to ad hoc operation.}
+With this approach, a new node can join the network, without having to know anything about the topology of the network. Similarly, upon leaving the network, it needn't notify anyone, since a future interrogation by a neighbour will be detected as a non-existent node. The BFS is therefore highly suited to ad hoc operation.
+
+%
+% Minimum Spanning Tree
+%
 
 \subsection{Minimum Spanning Tree} \label{sec:min_tree}
 
@@ -1372,11 +1729,19 @@ Because MST algorithms are efficient, they play a very useful role in the design
 
 Fig.~\ref{fig:mst} shows an example of a graph with its MST.
 
+%
+% Minimum Cost Flow
+%
+
 \subsection{Minimum Cost Flow} \label{sec:min_cost_flow_prob}
 
 The \emph{minimum cost flow} problem is that of minimising costs through a network for a specified amount of flow, which acts as a constraint on the problem. The definition of `cost' in this context is compatible with our earlier definition of cost metrics.
 
 This problem can be efficiently solved using linear programming. Specifically, cost metrics along links in series are given by linear combinations of individual link costs. If, in addition, we let our net cost function be linear in the constituent costs then the net cost will also be linear in all the edge weights. This lends itself directly to optimisation via linear programming techniques. Algorithms for linear programming, such as the \emph{simplex} algorithm, have polynomial-time solutions (i.e reside in \textbf{P}), and a plethora of software libraries are available for implementing them numerically.
+
+%
+% Maximum Flow
+%
 
 \subsection{Maximum Flow} \label{sec:max_flow_prob}
 
@@ -1384,11 +1749,21 @@ The \emph{maximum flow problem} is the seemingly simple goal of -- as the name s
 
 This problem can be tackled using a number of techniques. In some circumstances, linear programming techniques can be employed. The best-known algorithm is the Ford-Fulkerson algorithm \cite{???}, which finds a solution in \mbox{$O(|E|\cdot c_\mathrm{max})$} runtime, where $|E|$ is the number of links in the network and $c_\mathrm{max}$ is the maximum cost present in the network. The algorithm behaves pathologically in some conditions, which can easily be overcome in the context we present here. Using Ford-Fulkerson as a starting point, numerous other more sophisticated algorithms have been developed.
 
+%
+% Multi-Commodity Flow
+%
+
 \subsection{Multi-Commodity Flow} \label{sec:multi_comm_flow}
 
 The \emph{multi-commodity flow problem} generalises the previous algorithms to be applicable to multi-user networks. The generalisation is that there may be a number of distinct senders, residing on different nodes, each transmitting to distinct recipients, residing on different nodes. This is the most realistic scenario we are likely to encounter in a real-world quantum internet, where networks will inevitably be shared by many users.
 
 Unfortunately the computational complexity of solving this problem is much harder than the previous algorithms in general. Specifically, solving the problem exactly is \textbf{NP}-complete in general. However, in specific circumstances it can be approached using linear programming or polynomial-time approximation schemes.
+
+Note that, using Grover's search algorithm \cite{???}, although not efficient, quantum computers offer a quadratic improvement in the runtime of \textbf{NP}-complete problems, which is pertinent to consider in the upcoming quantum era.
+
+%
+% Applications for the Quantum Internet
+%
 
 \section{Applications for the Quantum Internet}
 
@@ -1398,9 +1773,17 @@ Much of the recent experimental progress in quantum technology has been in the a
 
 We keep in mind that although throughout this presentation we have been very quantum computing-centric, quantum computing is not the \emph{only} quantum resource worth communicating. In the same way that \emph{digital assets} encompass a broad range of digital systems and information, any aspect of a quantum system -- from a state, to an operation, storage, to a measurement, or anything else -- could be treated as a \emph{quantum asset}, which, for generality, we would like our quantum networks to be able to handle.
 
+%
+% Low-Level Resources
+%
+
 \subsection{Low-Level Resources}
 
 At the lowest physical level, quantum protocols have in common that they involve state preparation, evolution, and measurement as the fundamental primitives upon which more complex protocols are constructed.
+
+%
+% State Preparation
+%
 
 \subsubsection{State Preparation}
 
@@ -1420,13 +1803,25 @@ So-called NOON states, path-number entangled two-mode states of the form,
 \end{align}
 may be exploited to perform Heisenberg-limited quantum metrology, allowing extremely precise phase measurement with large photon-number $N$. However, these states are notoriously difficult and technologically challenging to prepare, and can only prepared non-deterministically using linear optics.
 
-If a remote server had the capacity to prepare such states, they would be in high demand across the globe. Hindering this, NOON states are very fragile creatures. First, they exhibit exponentially increased susceptibility to loss -- loss of just a single photon completely decoheres the state, rendering it useless for metrological purposes. Second, the large photon-number, $N$, amplifies dephasing by a factor of $N$. These considerations can be readily accommodated for in the QTCP protocol by tracking dephasing and loss metrics of the packets encapsulating the NOON states.
+If a remote server had the capacity to prepare such states, they would be in high demand across the globe. Hindering this, NOON states are very fragile creatures. First, they exhibit exponentially increased susceptibility to loss -- loss of just a single photon completely decoheres the state, rendering it useless for metrological purposes. Second, the large photon-number, $N$, amplifies dephasing by a factor of $N$, as discussed in Sec.~\ref{sec:dephasing_error}. These considerations can be readily accommodated for in the QTCP protocol by tracking dephasing and loss metrics of the packets encapsulating the NOON states.
 
 The NOON state is just a two-mode state. But indeed an entire universal quantum computation can be performed using the `cluster state' measurement-based model for quantum computation (to be discussed in detail in Sec.~\ref{sec:CSQC}). In the case of cluster state preparation, state preparation can not only be outsourced, but distributed, with different hosts preparing different parts of the state, which are then combined.
+
+Another class of states are Greenberger–Horne–Zeilinger (GHZ) states \cite{???}, which are maximally-entangled states across an arbitrary number of qubits, of the form,
+\begin{align}
+\ket\psi_\mathrm{GHZ} = \frac{1}{\sqrt{2}}(\ket{0,\dots,0} + \ket{1,\dots,1}).
+\end{align}
+GHZ states are useful for various quantum information processing applications, including quantum anonymous broadcasting, discussed in Sec.~\ref{sec:anon_broad}. These states are particularly susceptible to loss, since the loss of a single qubit completely decoheres the state into a perfect mixture of the \mbox{$\ket{0,\dots,0}$} and \mbox{$\ket{1,\dots,1}$} states, with complete loss of entanglement.
+
+Bell states (Eq.~\ref{eq:bell_basis}), maximally-entangled two-qubit states, are particularly useful for many applications, including quantum teleportation (see Sec.~\ref{sec:teleport}), cluster state preparation (see Sec.~\ref{sec:CSQC}), and entanglement swapping (see Sec.~\ref{sec:repeater}). Bell states are the special case of two-qubit cluster states, or equivalently, two-qubit GHZ states.
 
 There are other continuous variable states of interest, such as `cat' states (superpositions of coherent states), and certain Gaussian states, which have utility in alternate models for quantum computing too.
 
 We see that even the most basic primitive in quantum technologies -- state preparation -- already brings with it much to take into consideration when designing quantum networks. However, the QTCP protocols we described earlier are versatile enough to be capable of mediating their distribution across quantum networks, whilst providing QoS guarantees.
+
+%
+% Meausrement
+%
 
 \subsubsection{Measurement}
 
@@ -1452,11 +1847,19 @@ All the states mentioned above are accommodated for using the cost metric approa
 
 These represent significant technological challenges, which are costly to overcome, necessitating outsourcing over the quantum internet to be economically viable on a large scale. However, the QTCP protocol is able to accommodate error metrics and attributes covering all the above error models, enabling reliable, predictable QoS for outsourced quantum measurement.
 
+%
+% Evolution
+%
+
 \subsubsection{Evolution}
 
 The evolution of optical states represents an extremely broad category of quantum operations, including passive linear optics, postselected linear optics, non-linear optics, light-matter interactions, amongst many others. Clearly even this restricted list presents technological challenges, inaccessible to many users. However, the fundamental error mechanisms are essentially the same as for the measurement errors listed above.
 
 The notable exception is non-linear optics, whereby additional errors in the photon-number degree of freedom or phase-space are possible, since, unlike linear optics, photon-number needn't be conserved in general. This additional degree of freedom in error mechanisms can be accommodated for by introducing an error measure capturing confusion in photon-number or unwanted phase-space transformations. For example, for a given non-linear interaction, error metrics quantifying error bounds on phase-space transformations, such as fluctuation in squeezing or displacement operations, could be employed, which can be represented as metrics, and are therefore compatible with the error metric formalism upon which QTCP is based.
+
+%
+% Memory
+%
 
 \subsubsection{Memory} \label{sec:memory}
 
@@ -1464,34 +1867,45 @@ A final building block, that will be essential in many networks, is quantum memo
 
 Quantum memory is modelled in our network graph representation as per Fig.~\ref{fig:memory} via a self-loop implementing a process that delays packets. Ideally, the associated process should implement the identity operation in all degrees of freedom, except the temporal one, affecting only the {\sc Lifetime} metric of the packets passing through it, incrementing it by the duration of the quantum memory.
 
-\peter{Note that this is not directly compatible with conventional shortest-path algorithms, which ignore self-loops. One approach is to modify our strategy optimisation algorithms to accommodate self-loops. Alternately, we could construct a `virtual' graph, obtained by adding additional nodes to the network, with connections determined by `unravelling' the self-loops. For example, in Fig.~\ref{fig:memory}, we could eliminate the self-loop, and instead replace $B$ with multiple redundant nodes in parallel between $A$ and $C$, each associated with their own latency cost.}
+Note that this is not directly compatible with conventional shortest-path algorithms, which ignore self-loops. One approach is to modify our strategy optimisation algorithms to accommodate self-loops. Alternately, we could construct a `virtual' graph, obtained by adding additional nodes to the network, with connections determined by `unravelling' the self-loops. For example, in Fig.~\ref{fig:memory}, we could eliminate the self-loop, and instead replace $B$ with multiple redundant nodes in parallel between $A$ and $C$, each associated with their own latency cost.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.7\columnwidth]{memory}
 \caption{Simple model for a quantum memory via a self-loop that passes through a memory process, $\mathcal{E}_\mathrm{mem}$. Ideally, $\mathcal{E}_\mathrm{mem}$ does not affect any of the costs or attributes of states passing through the link, except for the latency cost, which is incremented according to the duration of the memory.} \label{fig:memory}
 \end{figure}
 
-\peter{At the physical level, there are two main approaches we could use to put optical states into memory. The first is simply to employ delay lines, either in free-space or in fibre. The second is to interface the state with a non-optical system with a long lifetime, which holds the information content until needed. This can be achieved using, for example, the interfacing techniques discussed in Sec.~\ref{sec:opt_inter}.
+At the physical level, there are two main approaches we could use to put optical states into memory. The first is simply to employ delay lines, either in free-space or in fibre. The second is to interface the state with a non-optical system with a long lifetime, which holds the information content until needed. This can be achieved using, for example, the interfacing techniques discussed in Sec.~\ref{sec:opt_inter}.
 
-The former is experimentally straightforward, but plagued by loss, and is only suitable over short timescales, on the order of nanoseconds. The latter is more experimentally challenging, but can achieve longer storage times, limited by the lifetime ($T_1$ and $T_2$ times) of the non-optical system. For some physical systems, this can be very high, on the order of milliseconds for atomic ensemble qubits, for example, which is adequate for the purposes of waiting out network bottlenecks.}
+The former is experimentally straightforward, but plagued by loss, and is only suitable over short timescales, on the order of nanoseconds. The latter is more experimentally challenging, but can achieve longer storage times, limited by the lifetime ($T_1$ and $T_2$ times) of the non-optical system. For some physical systems, this can be very high, on the order of milliseconds for atomic ensemble qubits, for example, which is adequate for the purposes of waiting out network bottlenecks.
+
+%
+% Optical Interfacing
+%
 
 \subsubsection{Optical Interfacing} \label{sec:opt_inter}
 
-\peter{Unless the entire pipeline of quantum operations through the course of a protocol is all-optical, there will be a need to exchange information between physical systems, i.e light-matter interactions. The archetypal interface is that between a photonic qubit in the \mbox{$\{\ket{0},\ket{1}\}$} photon-number basis, and a two-level matter qubit, such as an atom in a cavity, an atomic ensemble, a nitrogen-vacancy (NV) centre, or a quantum dot. In this case, the interface can be expressed as an interaction Hamiltonian of the form,
+Unless the entire pipeline of quantum operations through the course of a protocol is all-optical, there will be a need to exchange information between physical systems, for example light-matter interactions. The archetypal interface is that between a photonic qubit in the \mbox{$\{\ket{0},\ket{1}\}$} photon-number basis, and a two-level matter qubit in the $\ket{g}$ (ground) and $\ket{e}$ (excited) state basis. Examples include atoms in cavities, atomic ensembles, nitrogen-vacancy (NV) centres, and quantum dots. In this case, the interface can be expressed as an interaction Hamiltonian of the form,
 \begin{align}
-\hat{H}_\mathrm{int} = \hbar g (\hat{a}\,\hat\sigma^+ + \hat{a}^\dag\hat\sigma^-),
+\hat{H}_\mathrm{int} = \hbar \chi (\hat{a}\,\hat\sigma^+ + \hat{a}^\dag\hat\sigma^-),
 \end{align}
-where $\hat{a}$ ($\hat{a}^\dag$) is the photonic annihilation (creation) operator, $\hat\sigma^\pm$ are the Pauli spin-flip operators, and $g$ is the interaction strength. The interpretation of this Hamiltonian is very clear upon inspection -- the annihilation (creation) of a photon is associated with the excitation (relaxation) of the two-level matter system, thereby directly exchanging quantum information between the two systems, as shown in Fig.~\ref{fig:opt_int}.}
+where $\hat{a}$ ($\hat{a}^\dag$) is the photonic annihilation (creation) operator, $\hat\sigma^\pm$ are the Pauli spin-flip operators, and $\chi$ is the interaction strength. The interpretation of this Hamiltonian is very clear upon inspection -- the annihilation (creation) of a photon is associated with the excitation (relaxation) of the two-level matter system, thereby directly exchanging quantum information between the two systems, as shown in Fig.~\ref{fig:opt_int}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.6\columnwidth]{opt_inter}
-\caption{\peter{Light-matter interfacing between a single-photon state and a two-level matter qubit. The absorption (emission) of a photon is associated with the excitation (relaxation) of the matter qubit.}} \label{fig:opt_int}
+\caption{Light-matter interfacing between a single-photon state ($\hat{a}$, $\hat{a}^\dag$) and a two-level matter qubit ($\ket{g}$, $\ket{e}$). The absorption (emission) of a photon is associated with the excitation (relaxation) of the matter qubit ($\hat\sigma^\pm$).} \label{fig:opt_int}
 \end{figure}
 
+%
+% Elementary Protocols
+%
 
 \subsection{Elementary Protocols}
 
 Building upon the above building blocks, we now describe some of the major elementary quantum protocols. All of those discussed here have been subject to extensive experimental investigation and demonstration.
+
+%
+% Entanglement Purification
+%
 
 \subsubsection{Entanglement Purification} \label{sec:ent_purif}
 
@@ -1504,7 +1918,7 @@ play a central role in many quantum technologies. These maximally entangled stat
 
 Bell pairs are the basis for building cluster states (see Sec.~\ref{sec:CSQC}), some quantum cryptography protocols (see Sec.~\ref{sec:QKD}), and quantum teleportation (see Sec.~\ref{sec:teleport}), to name just a few applications. Therefore distributing entangled states with the highest entanglement metrics is extremely important. In short, entanglement can be considered a valuable quantum resource, upon which many other protocols are built.
 
-Suppose Alice and Bob share an entangled pair. Quantum mechanics, specifically the very definition of entanglement itself, prohibits local operations performed by Alice and Bob from increasing the level of entanglement. However, if Alice and Bob share multiple pairs, they can perform an operation known as \peter{\emph{entanglement purification} or \emph{entanglement distillation}}, whereby two lower-fidelity entangled pairs are consumed and projected onto a single entangled pair with higher-fidelity. Such protocols will be extremely useful in protocols where achieving the highest possible degree of entanglement is paramount.
+Suppose Alice and Bob share an entangled pair. Quantum mechanics, specifically the very definition of entanglement itself, prohibits local operations performed by Alice and Bob from increasing the level of entanglement. However, if Alice and Bob share multiple pairs, they can perform an operation known as \emph{entanglement purification} or \emph{entanglement distillation}, whereby two lower-fidelity entangled pairs are consumed and projected onto a single entangled pair with higher-fidelity. Such protocols will be extremely useful in protocols where achieving the highest possible degree of entanglement is paramount.
 
 Taking two polarisation-encoded photonic Bell pairs, say $\ket{\Psi^+}$ and subjecting them to a dephasing error model yields a mixed state of the form,
 \begin{align}
@@ -1523,7 +1937,7 @@ Furthermore, the protocol consumes two Bell pairs upon each trial, only one quar
 
 \begin{figure}[!htb]
 \includegraphics[width=0.9\columnwidth]{ent_purif_prot}
-\caption{Elementary entanglement purification using linear optics. Two Bell pairs are distributed between Alice and Bob, each of which has been subject to a dephasing error model. Alice and Bob perform Bell measurements on their two qubits using a polarising beamsplitter (PBS) and polarisation-resolved photodetection ($D_1$ and $D_2$). Upon successful Bell-state projection (Bell measurements are necessarily non-deterministic using linear optics), Alice and Bob will share a single Bell-pair with higher fidelity than the two input pairs.} \label{fig:ent_purif_prot}
+\caption{Elementary entanglement purification using linear optics. Two Bell pairs are distributed between Alice and Bob, each of which has been subject to a dephasing error model. Alice and Bob perform Bell measurements on their two qubits using PBS and polarisation-resolved photodetection ($D_1$ and $D_2$). Upon successful Bell-state projection (Bell measurements are necessarily non-deterministic using linear optics), Alice and Bob will share a single Bell-pair with higher fidelity than the two input pairs.} \label{fig:ent_purif_prot}
 \end{figure}
 
 Specifically, the relationship between the input ($F_\mathrm{in}$) and output ($F_\mathrm{out}$) fidelities of the protocol is,
@@ -1542,6 +1956,10 @@ Note that there is a break-even point, above which the protocol strictly increas
 A theoretical analysis of this protocol has been performed, accounting for mode-mismatch in the protocol \cite{bib:RohdeOptEntPur06}, where it was found than mode-mismatch shifts the break-even point upwards, and lowers the maximum value of $F_\mathrm{out}$ -- with more mode-mismatch, a higher starting fidelity is required to break even, and we achieve a lower output fidelity. In this case, a cost function that combines the dephasing and mode-mismatch metrics of the network will be required.
 
 Importantly, this protocol is based on partial Bell state measurement, and therefore does not require interferometric stability, only high HOM visibility, thus making stabilisation comparatively easy over long distances.
+
+%
+% Quantum Teleportation
+%
 
 \subsubsection{Quantum Teleportation} \label{sec:teleport}
 
@@ -1596,6 +2014,10 @@ The total resources required to teleport a single qubit are: the qubit to be tel
 
 The Bell state measurement can be implemented either using a CNOT gate, or as a partial Bell state measurement using a PBS, which does not require interferometric stability.
 
+%
+% Entanglement Swapping
+%
+
 \subsubsection{Entanglement Swapping} \label{sec:repeater}
 
 The obvious approach to sending a qubit from Alice to Bob is to send a qubit from Alice to Bob. However, over long distances this may accrue impractical error rates, particularly losses. The other alternative is to employ the quantum teleportation protocol to teleport the state between the two parties. However, this requires that Alice and Bob first share an entangled Bell pair, which must itself be distributed across the same distances. \emph{Quantum repeaters} are devices that allow entanglement to be shared between distant nodes using a bootstrapped \emph{entanglement swapping} protocol. Entanglement swapping is the process of taking two Bell pairs, one held by each party, and swapping the entanglement between them such that the two parties share an entangled state. This procedure can be bootstrapped to progressively swap the entanglement over longer and longer distances.
@@ -1622,13 +2044,21 @@ The protocol is conceptually very similar to teleportation, where instead of tel
 
 Each Bell measurement can be implemented non-deterministically using a PBS, mitigating the need for interferometric stability, as before, but therefore introducing non-determinism into the protocol.
 
+%
+% Quantum Repeater Networks
+%
+
 \subsubsection{Quantum Repeater Networks} \label{sec:rep_net}
 
 \comment{Say something about the scalability of quantum repeater networks under different strategies. I believe with appropriate strategies it's possible to achieve poly rather than exp scaling. Is that right? Show details.}
 
+%
+% Quantum Key Distribution (QKD)
+%
+
 \subsubsection{Quantum Key Distribution (QKD)} \label{sec:QKD}
 
-Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. There is only a single provably secure encryption protocol, the \emph{one-time-pad}. This protocol requires Alice and Bob to share a random bit-string as long as the message being communicated between them. This reduces the problem of perfect secrecy of arbitrary messages to secrecy of shared randomness. QKD protocols enable this by providing a shared source of randomness between Alice and Bob, where any intercept-resend attack may be detected, guaranteed by the laws of quantum physics.
+Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. There is only a single provably secure encryption protocol, the \emph{one-time-pad}. This protocol requires Alice and Bob to share a random bit-string as long as the message being communicated between them. The two bit-strings undergo bit-wise XOR operations to form the ciphertext. This reduces the problem of perfect secrecy of arbitrary messages to secrecy of shared randomness. QKD protocols enable this by providing a shared source of randomness between Alice and Bob, where any intercept-resend attack may be detected, guaranteed by the laws of quantum physics.
 
 The two original QKD protocols, known as the \emph{BB84 protocol} \cite{bib:BennetBrassard84}, and \emph{E91} \cite{bib:Ekert91}, are based on polarisation encoding in photons. BB84 requires only the transmission of a sequence of single photons, polarisation encoded with random data. E91, on the other hand, requires a server that distributes entangled Bell pairs between Alice and Bob. Since then, numerous other protocols for QKD have been proposed, for example, using continuous variable states.
 
@@ -1644,13 +2074,25 @@ It is easy to see the utility of quantum networks in enabling commodity deployme
 
 Unlike quantum computing, QKD is at the stage of commercial viability, and several vendors offer off-the-shelf plug-and-play QKD systems. Thus, a quantum internet with low cost metrics would already find substantial utility with today's technology. Currently, great progress in being made in the implementation of QKD in fibre \cite{???}, over free space \cite{bib:Buttler00}, and even over intercontinental satellite uplinks \cite{JWP}. It seems extremely likely that some government agencies would be rolling out QKD systems \cite{bib:Secret}, especially in light of the paranoia surrounding quantum codebreaking.
 
-\subsubsection{Quantum Anonymous Broadcasting}
+%
+% Quantum Anonymous Broadcasting
+%
+
+\subsubsection{Quantum Anonymous Broadcasting} \label{sec:anon_broad}
 
 \comment{Ryan TO DO}
+
+%
+% Superdense Coding
+%
 
 \subsubsection{Superdense Coding}
 
 \comment{Ryan to do}
+
+%
+% Quantum Metrology
+%
 
 \subsubsection{Quantum Metrology}
 
@@ -1658,11 +2100,19 @@ Unlike quantum computing, QKD is at the stage of commercial viability, and sever
 
 \comment{Discuss MORDOR}
 
+%
+% Cloud Quantum Computing
+%
+
 \subsection{Cloud Quantum Computing} \label{sec:cloud}
 
-From the perspective of quantum computing, by far the most pressing goal for quantum networking is to facilitate \emph{cloud quantum computing}, whereby computations can be performed over a network via a client/server model. This will be of immense importance economically, allowing the very expensive quantum computers to be accessible to end users, who would be unable to purchase them themselves. This economic model is critical to the widespread adoption of quantum computation.
+From the perspective of quantum computing, by far the most pressing goal for quantum networking is to facilitate \emph{cloud quantum computing}, whereby computations can be performed over a network via a client/server model. This will be of immense importance economically, allowing the very expensive quantum computers to be accessible to end-users, who would be unable to purchase them themselves. This economic model is critical to the widespread adoption of quantum computation.
 
 There are several protocols necessary to facilitate cloud quantum computing. First of all, we must have a means by which to remotely process data prepared by a host on a server(s). At the most basic level, this simply involves communicating quantum and/or classical data from a client to a single server for processing, which returns quantum or classical information to the client. In the most general case, a computation may be processed by multiple servers, each responsible for a different part of the computation -- \emph{distributed quantum computation}. Many real-world applications for quantum computing will involve sensitive data, in terms of both the information being processed and the algorithms being employed. This necessitates encryption allowing computations to be performed securely over a network, such that intercept-resend attacks are unable to infer the client's data. These form the basic building blocks from which a secure cloud-based model for quantum computing may be constructed, and economic models based on the outsourcing of computations may emerge.
+
+%
+% Outsourced Computation
+%
 
 \subsubsection{Outsourced Computation}
 
@@ -1673,6 +2123,10 @@ The algorithm, which Bob implements, could either be stipulated by Alice, in whi
 Despite the model being very simple, there may still be stringent requirements on the costs in the network. When the result of the computation is returned to Alice, there may be fidelity requirements. An approximate solution to a problem, or a computation with any logical errors whatsoever, may be useless, particularly for algorithms, which are not efficiently verifiable. For example, if Alice is attempting to factorise a large number using Shor's algorithm \cite{bib:ShorFactor}, a number of incorrect digits may make the the correct solution realistically impossible to determine. Or if a large satisfiability problem is being solved, almost any classical bit-flip errors will invalidate the result, requiring additional computation by Alice to resolve.
 
 In the case of classical communication of input and output data, we can reasonably assume error-free communication, owing to its digital nature. However, in the case of quantum communication it is inevitable that at least some degree of noise will be present. Depending on the application, this may require the client and host to jointly implement a distributed implementation of Quantum Error Correction (QEC) \cite{bib:Shor95, bib:CalderbankShor96, bib:NielsenChuang00}, whereby Alice and Bob communicate encoded states with one another, to which syndrome measurement and error correction are applied upon receipt. This will necessitate a limited amount of quantum processing to be directly available to Alice. In the case where she is completely starved of any quantum processing resources whatsoever, this may be a limiting factor. Otherwise, this type of cooperative QEC may be plausible.
+
+%
+% Distributed Computation
+%
 
 \subsubsection{Distributed Computation} \label{sec:dist_QC}
 
@@ -1703,6 +2157,10 @@ Thus, $k$-fold quantum parallelisation corresponds to a $k$th-order exponential 
 
 The alternate scenario is in-series distributed computation, in which a computation proceeds through a pipeline of different stages, potentially performed by different hosts. This model allows a complex algorithm comprising smaller sub-algorithms, each of which may be proprietary with different owners, to be delegated across the network. The different stages may communicate classical and/or quantum data. As with the simple single-host model, if the different stages of the processing pipeline are sharing quantum data, distributed QEC will generally be necessary to protect the computation. This necessarily introduces an (efficient) overhead in the number of physical qubits being communicated across the network, introducing additional bandwidth costs, which must be accommodated for in networking strategies.
 
+%
+% Encrypted Computation
+%
+
 \subsubsection{Encrypted Computation} \label{sec:homo_blind}
 
 Extremely important to many high-performance data-processing applications is security, as proprietary or sensitive data may be being dealt with. To address this, two models for outsourced quantum computation exist for addressing this -- \emph{homomorphic encryption} \cite{gentry2009fully, van2010fully} and \emph{blind quantum computation} \cite{bib:blind2, bib:blind3, bib:blind1, PhysRevLett.108.200502, bib:Morimae3486, bib:Morimae5460, bib:Morimae3966}.
@@ -1716,6 +2174,10 @@ In the usual circuit model, blind quantum computation has been shown to be viabl
 These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver information-theoretically secure data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
 
 \comment{Say more about this}
+
+%
+% Cluster States
+%
 
 \subsubsection{Cluster States} \label{sec:CSQC}
 
@@ -1757,6 +2219,10 @@ There are several cluster state identities we will utilise later, summarised in 
 \caption{Several cluster state identities. (a) a CZ gate between two qubits creates an edge between them in the graph. (b) Measurement of a qubit in the $\hat{Y}$ basis removes that qubit from the graph, while creating new edges between the neighbouring qubits. (c) Measurement of a qubit in the $\hat{Z}$ basis removes that qubit and any neighbouring edges.} \label{fig:cluster_ident} 
 \end{figure}
 
+%
+% Universal Linear Optics
+%
+
 \subsubsection{Universal Linear Optics} \label{sec:KLM_univ}
 
 With single-photon encoding of qubits in the quantum network, the obvious architecture to implement quantum computation is Linear Optics Quantum Computation (LOQC) \cite{bib:KLM01, bib:KokLovettBook} (KLM), since the states being processed by the computer are of the same form as the states traversing the network.
@@ -1770,6 +2236,10 @@ LOQC allows universal quantum computing to be implemented using single-photon po
 
 Significant progress is being made on reconfigurable, integrated LOQC devices \cite{bib:UniversalLOOBrien}, but switching times remain orders of magnitude slower than required for fast-feedforward. The resource overhead associated with overcoming the non-determinism of entangling gates is substantial in the original KLM proposal. But despite being improved upon by orders of magnitude using cluster state approaches \cite{bib:Nielsen04, bib:BrowneRudolph05}, resource scaling remains daunting. It therefore seems most likely that certain elements from LOQC might be combined into hybrid architectures, to be discussed in detail in Sec.~\ref{sec:hybrid}.
 
+%
+% Passive Linear Optics
+%
+
 \subsubsection{Passive Linear Optics} \label{sec:BS}
 
 While the KLM protocol is universal for quantum computing, some of the key technological requirements are very challenging, and unlikely to be achieved in the short-term. However, simplified yet non-universal models for optical quantum computing can abandon some of the more challenging requirements, nonetheless implementing a restricted set of post-classical quantum computations. The two main contenders are quantum walks \cite{bib:Aharonov93, bib:Aharonov01, bib:Kempe03, bib:Salvador12} and {\sc BosonSampling} \cite{bib:AaronsonArkhipov10, bib:RohdeIntroBS15}, both closely related in that they require only passive linear optics and single-photon states. Since, evidence has been presented that similar passive linear optics protocols may implement computationally hard problems using states of light other than photon-number states \cite{bib:RandBS, bib:RohdePhotAdd15, bib:RohdeDisp15, bib:RohdeCat15}.
@@ -1782,6 +2252,10 @@ Because these models are entirely passive, they can be made cloud-based very tri
 
 It was recently shown that this model may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}. This encryption also does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy. \comment{Explain in detail - but put into encryption section, not here}
 
+%
+% Continuous Variables
+%
+
 \subsubsection{Continuous Variables}
 
 \comment{TO DO}
@@ -1791,6 +2265,10 @@ Sec.~\ref{sec:CV_enc}
 Cat states
 Gaussian states
 
+%
+% Hybrid Architectures
+%
+
 \subsubsection{Hybrid Architectures} \label{sec:hybrid}
 
 It is unlikely that future, large-scale quantum computers will be purely optical. Some other technologies have a more favourable outlook in terms of scalability. Nonetheless, when it comes to networking quantum computers, optics is the natural approach, motivating investigation of hybrid architectures, where qubits are represented using some non-optical system, but entangling operations between them are mediated by optical states.
@@ -1799,14 +2277,16 @@ The natural example is qubits which couple to single-photon states, whereupon wh
 
 \begin{figure}[!htb]
 \includegraphics[width=0.75\columnwidth]{barrett_kok}
-\caption{Two atomic systems in $\lambda$-configurations, each coupled with an optical mode. An entangling operation between them is mediated via linear optics \cite{bib:BarrettKok05}. Each system contains two ground states, which jointly encode a qubit ($\ket{\!\uparrow}$, $\ket{\!\downarrow}$), and an additional excited state ($\ket{e}$), which only couples to the $\ket{\!\downarrow}$ state. A $\pi$-pulse excites the electron from the $\ket{\!\downarrow}$ to the $\ket{e}$ state, after which emission of a photon is associated with a coherent relaxation back to $\ket{\!\downarrow}$. If the two optical modes are interfered on a 50:50 beamsplitter, and a single photon is detected between the two photodetectors, $D_1$ and $D_2$, which-path erasure entangles the two qubits into a maximally entangled Bell pair. More complicated networks based on this entangling operation allow the preparation of cluster states, enabling universal quantum computation. In a quantum networking context, the matter qubits could be held by a client, and the optical interferometry implementing the computation outsourced to the cloud, i.e the PBS, $D_1$ and $D_2$ are implemented in the cloud.} \label{fig:barrett_kok}
+\caption{Two atomic systems in $\lambda$-configurations, each coupled with an optical mode. An entangling operation between them is mediated via linear optics \cite{bib:BarrettKok05}. Each system contains two degenerate ground states, which jointly encode a qubit ($\ket{\!\uparrow}$, $\ket{\!\downarrow}$), and an additional excited state ($\ket{e}$), which only couples to the $\ket{\!\downarrow}$ state. A $\pi$-pulse excites the electron from the $\ket{\!\downarrow}$ to the $\ket{e}$ state, after which emission of a photon is associated with a coherent relaxation back to $\ket{\!\downarrow}$. If the two optical modes are interfered on a 50:50 beamsplitter, and a single photon is detected between the two photodetectors, $D_1$ and $D_2$, which-path erasure entangles the two qubits into a maximally entangled Bell pair. More complicated networks based on this entangling operation allow the preparation of cluster states, enabling universal quantum computation. In a quantum networking context, the matter qubits could be held by a client, and the optical interferometry implementing the computation outsourced to the cloud, i.e the PBS, $D_1$ and $D_2$ are implemented in the cloud.} \label{fig:barrett_kok}
 \end{figure}
 
-The attractive feature of this type of approach is that the actual entanglement is generated using all-optical operations, despite the underlying logical qubits being stationary, and potentially physically separated. This allows the entangling operations to be performed remotely in the cloud, without moving the qubits. Such hybrid systems present an interesting platform for cloud quantum computing -- despite the qubits being stationary, we are able to outsource the interactions between them to distant servers.
+The attractive feature of this type of approach is that the actual entanglement is generated using all-optical operations, despite the underlying logical qubits being stationary and potentially physically separated, mitigating the need for direct matter-matter interactions, and enabling distributed computation. Optical interfacing is discussed in Sec.~\ref{sec:opt_inter}. This allows the entangling operations to be performed remotely in the cloud, without moving the qubits. Such hybrid systems present an interesting platform for cloud quantum computing -- despite the qubits being stationary, we are able to outsource the interactions between them to distant servers.
 
-Expanding upon this idea, we can envisage that future quantum networks with arbitrary underlying physical architectures will require \emph{interfaces}, coupling the quantum states of different types of physical systems for representing qubits. It is most likely that optical interfacing will be the major player here, since it allows speed-of-light interfacing between distant qubits. Optical interfacing is discussed in Sec.~\ref{sec:opt_int}.
+Expanding upon this idea, we can envisage distributed models for quantum computation, where the qubits needn't even be of the same physical medium. We could, for example, entangle quantum dot qubits, atomic qubits, and atomic ensemble qubits with one another by coupling them to optical modes and performing which-path erasure between them.
 
-\comment{Say much more about this}
+%
+% Modularised Computation
+%
 
 \subsubsection{Modularised Computation}
 
@@ -1862,9 +2342,15 @@ Thus, we have efficient (linear) scaling in the number of required ancillary qub
 
 Of course, this is the most simple model, with a single logical qubit per module. In due course, we would expect modules to become far more capable, and resource scaling to improve.
 
+%
+% State of the Art
+%
+
 \section{State of the Art}
 
-\peter{When will we have the quantum internet? This is a question with as many answers as there are people one asks. In this section we discuss the state of the art of current quantum technologies that form our networking primitives across various physical architectures, and speculate as to where that technology will be in the next 5 years. We pay attention to the different relevant cost metrics, and how they are progressing, as well as scalability considerations. With this we aim to shed light on what quantum networking services could be readily implemented today, using present-day technology, and what is likely to be viable in the near future. We then venture into the world of the unknown, and discuss how far technology must develop in order to enable the basic building blocks for a scalable quantum internet, implementing protocols of practical use.}
+\comment{TO DO by Shanghai group}
+
+When will we have the quantum internet? This is a question with as many answers as there are people one asks. In this section we discuss the state of the art of current quantum technologies that form our networking primitives across various physical architectures, and speculate as to where that technology will be in the next 5 years. We pay attention to the different relevant cost metrics, and how they are progressing, as well as scalability considerations. With this we aim to shed light on what quantum networking services could be readily implemented today, using present-day technology, and what is likely to be viable in the near future. We then venture into the world of the unknown, and discuss how far technology must develop in order to enable the basic building blocks for a scalable quantum internet, implementing protocols of practical use.
 
 \comment{Talk about where different technologies are currently at.}
 
@@ -1872,17 +2358,17 @@ Of course, this is the most simple model, with a single logical qubit per module
 
 \comment{What are some realistic cost metrics etc (e.g what are the best efficiencies, visibilities, fidelities, purities that are achievable using todays technology}
 
-\subsection{State Preparation}
+-- State Preparation
 
 \comment{Preparation of different types of optical states. e.g coherent states, single photons, cat states, squeezed states, etc.}
 
 \comment{Preparation of non-optical states: atomic ensembles, atoms in cavities, quantum dots, NV centres, superconducting rings, etc.}
 
-\subsection{Measurement}
+-- Measurement
 
 \comment{Photo-detection, homodyne measurement, etc.}
 
-\subsection{Evolution}
+-- Evolution
 
 \comment{How many qubits do different types of physical architectures allow? Fidelities, scalability issues}
 
@@ -1890,11 +2376,11 @@ Of course, this is the most simple model, with a single logical qubit per module
 
 \comment{For non-optical: all the different physical systems for QC}
 
-\subsection{Memory}
+-- Memory
 
 \comment{Fibre loops and free-space loops, coupling to long-lifetime atoms or atomic ensembles}
 
-\subsection{Protocols}
+-- Protocols
 
 \comment{All the stuff mentioned in Applications $\to$ Elementary protocols}
 
@@ -1909,6 +2395,10 @@ Of course, this is the most simple model, with a single logical qubit per module
 \comment{Talk about status of using telecom wavelength optics for quantum protocols. How is this likely to progress? Will we one day all be using the existing fibre infrastructure for the quantum internet, or will new infrastructure need to be built?}
 
 \comment{A comparison of different technologies (NOT just optical ones, but others too. ESPECIALLY provide information on hybrid architectures, where optics mediates entangling operations, but the qubits themselves are atomic, quantum dot, atomic ensemble, NV centre etc etc.}
+
+%
+% The Economics of the Quantum Internet
+%
 
 \section{The Economics of the Quantum Internet} \label{sec:economics}
 
@@ -1926,12 +2416,20 @@ On the other hand, if quantum computers were only ever sold as room-sized, compl
 
 Modularised quantum computation mitigates the need to purchase large-scale quantum computers outright, allowing them to be gradually scaled up as demand increases and production costs diminish.
 
-While the power of classical computers scales roughly linearly with the number of transistors, \peter{the classical-equivalent power} of quantum computers scales exponentially with the number of qubits. The classical Moore's Law is close to saturation -- we simply can't make transistors too much smaller than they already are! We therefore envisage a new Quantum Moore's Law, which follows a far more impressive trajectory than its classical counterpart. The point of critical mass in quantum computing will take place when the classical and quantum Moore's Law extrapolations intersect, signalling the commencement of the post-classical era. A somewhat speculative trend for this kind of scaling is illustrated in Fig.~\ref{fig:moores}, based on current real-world data and making plausible extrapolations thereof.
+While the power of classical computers scales roughly linearly with the number of transistors, the classical-equivalent power of quantum computers scales exponentially with the number of qubits. The classical Moore's Law is close to saturation -- we simply can't make transistors too much smaller than they already are! We therefore envisage a new Quantum Moore's Law, which follows a far more impressive trajectory than its classical counterpart. The point of critical mass in quantum computing will take place when the classical and quantum Moore's Law extrapolations intersect, signalling the commencement of the post-classical era. This is more challenging that it sounds, since although the classical Moore's Law is extremely well established with an excellent fit to an exponential trajectory, there aren't enough data points to make a strong statement about a quantum Moore's Law and to what trajectory it best fits.
 
-\begin{figure}[!htb]
+\comment{Can we estimate the Quantum Moore's Law curve using existing or predicted data.}
+
+%A somewhat speculative trend for this kind of scaling is illustrated in Fig.~\ref{fig:moores}, based on current real-world data and making plausible extrapolations thereof.
+
+%\begin{figure}[!htb]
 %includegraphics[width=\columnwidth]{moores}
-\caption{Superimposed are Moore's Law for the power of classical computers (bottom), with a speculated Quantum Moore's Law (top). The point of intersection signals the beginning of the post-classical era for quantum computing. The somewhat speculative curves suggest that this era might arrive already in the not too distant future. \comment{TO DO. Make figure.}} \label{fig:moores}
-\end{figure}
+%\caption{Superimposed are Moore's Law for the power of classical computers (bottom), with a speculated Quantum Moore's Law (top). The point of intersection signals the beginning of the post-classical era for quantum computing. The somewhat speculative curves suggest that this era might arrive already in the not too distant future. \comment{TO DO. Make figure.}} \label{fig:moores}
+%\end{figure}
+
+%
+% The Vision of the Global Quantum Internet
+%
 
 \section{The Vision of the Global Quantum Internet}
 
@@ -1957,8 +2455,16 @@ It is essential for the adoption of quantum technology, that quantum networking 
 
 \emph{--- Ad astra per alas porci. Scientia potentia est.}
 
-%\begin{acknowledgments}
-%\end{acknowledgments}
+%
+% Acknowledgments
+%
+
+\begin{acknowledgments}
+\end{acknowledgments}
+
+%
+% Bibliography
+%
 
 \bibliography{quantum_internet}
 
