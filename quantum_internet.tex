@@ -119,15 +119,6 @@ But quantum technologies extend far beyond computation. Many other exciting appl
 It is hard to foresee the future of quantum technology. But it is certain that as the internet transformed digital technology, the quantum internet will define the future of quantum technologies.
 
 %
-% Introduction to Quantum Optics
-%
-
-\section{Introduction to quantum optics}
-
-\ref{sec:hybrid}
-\ref{sec:opt_inter}
-
-%
 % Classical Networks
 %
 
@@ -1947,12 +1938,22 @@ Bell states (Eq.~\ref{eq:bell_basis}) (also known as Einstein-Podolsky-Rosen (EP
 Cat states (Sec.~\ref{sec:cat_enc}) are extremely difficult to prepare, most easily via non-linear processes. However, they are very useful for optical quantum computation and for the study of macroscopic quantum systems, when using large coherent amplitudes. Because of the difficulty of their preparation, the ability to outsource it would be very valuable.
 
 %
-% More Exotic States
+% More Exotic States of Light
 %
 
-\subsubsection{More exotic states}
+\subsubsection{More exotic states of light}
 
 As discussed in Sec.~\ref{sec:exotic}, many other far more elaborate states are very difficult to prepare, and it would be highly desirable if they could be obtained/purchased over a quantum network. This includes certain Gaussian states, which have utility in alternate models for quantum computing \cite{Menicucci,Ralph,Lund}, and squeezed states, which can be useful for sub-shotnoise limited metrology \cite{???}.
+
+%
+% Matter Qubits
+%
+
+\subsubsection{Matter qubits}
+
+In addition to preparing optical states, they can be used to mediate the preparation of systems comprising matter qubits, using which-path erasure techniques (Sec.~\ref{sec:hybrid}, Fig.~\ref{fig:barrett_kok}) or light-matter interactions (Sec.~\ref{sec:opt_inter}, Fig.~\ref{fig:opt_int}). These techniques are very versatile, and apply to many different matter qubit systems, such as two-level atoms, nitrogen-vacancy centres, quantum dots, and atomic ensembles.
+
+This is useful when matter-based architectures are more scalable or technologically simpler than all-optical architectures (Sec.~\ref{sec:KLM_univ}), and particularly for quantum memory (Sec.~\ref{sec:memory}), when using matter qubits with long lifetimes.
 
 %
 % Measurement
@@ -2018,6 +2019,18 @@ LOQC gates, in particular, are very technologically challenging, particularly fo
 \subsubsection{Detector banks}
 
 In the case of an entire quantum computation, whether it be in the circuit model or cluster state model, many qubits may need to be measured independently, adding a direct multiplicative overhead in the required number of detectors. Furthermore, in protocols requiring fast-feedforward, the detectors may be required to have very fast time-response. These requirements can quickly become very challenging and expensive, further exaggerating the desirability of outsourcing the measurement stage.
+
+%
+% Matter Qubits
+%
+
+\subsubsection{Matter qubits}
+
+Many non-optical systems can be indirectly measured by first entangling optical states with the matter qubits and then measuring the optical state. Because of the entanglement, projective measurement on the optical state teleports the measurement onto the matter qubit.
+
+In Fig.~\ref{fig:barrett_kok} we illustrate a scheme for entangling two $\lambda$-configuration atoms using which-path erasure. Consider just one of these qubits in isolation. If a $\pi$-pulse is applied to the atom, the $\ket{\downarrow}$ state is excited to the $\ket{e}$ state, after which, upon relaxation, emits a photon. Thus, upon measurement, the presence or absence of a photon directly indicates whether the qubit was in the $\ket\uparrow$ or $\ket\downarrow$ state.
+
+The attractive feature of this, is that although the matter qubit is stationary, its indirect measurement via optical coupling may be performed over arbitrary distances across the optical network, allowing the measurement stage to be outsourced.
 
 %
 % Evolution
@@ -2352,18 +2365,18 @@ To illustrate this, let us consider a simple example -- cat state quantum comput
 \item Continuous variable measurement.
 \end{enumerate}
 
-Each of these stages present their own technological challenges, sufficiently challenging that one might wish to outsource all three stages. However, suppose there is not a single host on the network with the ability to perform all three, but rather there are three hosts ($B_1$, $B_2$ and $B_3$), each specialising in one of those tasks. In this instance, it would be most resource savvy for the network to implement the pipeline \mbox{$A\to B_1\to B_2\to B_3\to A$}, without going back and forth to Alice after each step. In fact, it may not even be technologically possible to implement back-and-forth to Alice if she has no capacity for handling quantum resources (i.e the \mbox{$A\to B_1$} and \mbox{$B_3\to A$} stages are purely classical). The pipeline is shown in Fig.~\ref{fig:delegated}.
+Each of these stages present their own technological challenges, sufficiently challenging that one might wish to outsource all three stages. However, suppose there is no single host on the network with the ability to perform all three, but rather there are three hosts ($B_1$, $B_2$ and $B_3$), each specialising in one of those tasks. In this instance, it would be most resource savvy for the network to implement the pipeline \mbox{$A\to B_1\to B_2\to B_3\to A$}, without going back and forth to Alice after each step. In fact, it may not even be technologically possible to implement back-and-forth to Alice if she has no capacity for handling quantum resources (i.e the \mbox{$A\to B_1$} and \mbox{$B_3\to A$} stages are purely classical). An example of such a pipeline is shown in Fig.~\ref{fig:delegated}.
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{delegated}
 \caption{Delegated quantum computation, where each of the three computational stages (state preparation, evolution and measurement) are outsourced to the cloud without intermittent interaction with the client, $A$. $A$ provides only a classical description of the processing pipeline to be implemented, each stage of which is delegated to a server specialised in that particular task. Thus, the total processing pipeline takes the form \mbox{$A\to B_1\to B_2\to B_3\to A$}, where \mbox{$A\to B_1$} and \mbox{$B_3\to A$} are classical, and \mbox{$B_1\to B_2$} and \mbox{$B_2\to B_3$} are quantum channels.} \label{fig:delegated}
 \end{figure}
 
-This can be achieved by adding a {\sc Pipeline} field to the packet header prepared by Alice -- a FIFO stack describing the entire processing pipeline that Alice's packet (which initially contains only classical data) ought to follow through the network. Only at the very completion of the protocol is a packet (containing only classical data) returned to Alice.
+This can be achieved by adding a {\sc Pipeline} field to the packet header prepared by Alice -- a FIFO stack describing the entire processing pipeline that Alice's packet (which initially contains only classical data) ought to follow through the network. Following completion of each stage of the pipeline we pop the stack and transmit the packet to the next specified host. Only at the very completion of the protocol is a packet (containing only classical data) returned to Alice.
 
 Another good case study is quantum metrology using NOON states (Secs.~\ref{sec:NOON} \& \ref{sec:metrology}) for Heisenberg limited metrology. Preparing NOON states is extremely challenging, and additionally Alice may not possess the unknown phase to be measured, but rather wishes a NOON state, prepared by $B_1$, to be provided to a third party, $B_2$, who applies the unknown phase, and passes the resulting state to $B_3$, who implements the required high-efficiency parity measurements required to complete the protocol. In this case, the pipeline would take the same form as above, again with no back-and-forth communication to Alice.
 
-Such delegated protocols will be very useful in quantum networks, where different hosts specialise in different tasks (which may be the most economically efficient model), but poor old Alice specialises in none of them, despite knowing exactly what needs to be done. This would allow an aspiring undergraduate student, who is poor (aren't they all?), to sit in his bedroom at his classical PC, and implement entire quantum information processing protocols in the cloud, with no quantum resources or interactions whatsoever.
+Such delegated protocols will be very useful in quantum networks, where different hosts specialise in different tasks (which may be the most economically efficient model), but poor old Alice specialises in none of them, despite knowing exactly what needs to be done. This would allow an aspiring undergraduate student, who is poor (aren't they all?), to sit in his bedroom at his classical PC, and implement entire distributed quantum information processing protocols in the cloud, with no quantum resources or interactions whatsoever.
 
 %
 % Cluster States
