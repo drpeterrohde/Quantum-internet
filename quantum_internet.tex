@@ -124,7 +124,7 @@ It is hard to foresee the future of quantum technology. But it is certain that a
 
 \section{Classical networks}
 
-To set the context for our treatment of quantum networks, we begin by defining a mathematical construction for \emph{classical} networks. This encompasses representing networks as graphs, representing the cost of communications within the network, and how to optimise network routing to minimise costs. These notions will be essential in our treatment of quantum networks.
+To set the context for our upcoming treatment of quantum networks, we begin by discussing \emph{classical} networks, and defining a mathematical construction for their representation. This encompasses representing networks as graphs, representing the cost of communications within the network, and how to optimise network routing to minimise costs. Importantly, we discuss the protocol stack employed by the classical internet (TCP/UDP/IP) for implementing classical networking. These notions will be essential in our treatment of quantum networks.
 
 %
 % Protocols
@@ -132,29 +132,41 @@ To set the context for our treatment of quantum networks, we begin by defining a
 
 \subsection{Protocols}
 
+The present-day internet is built on top of a protocol stack comprising the internet protocol (IP), user datagram protocol (UDP), and transmission control protocol (TCP). Most commonly, these are simply referred to as TCP/IP. These define a protocol stack of different layers of abstraction for communicating data packets between nodes in a network, determining their routing, and enforcing any quality of service requirements.
+
 %
 % Internet Protocol (IP)
 %
 
-\subsubsection{Internet Protocol (IP)}
+\subsubsection{Internet protocol (IP)}
 
-\comment{To do}
+IP is the standard protocol employed in the internet for communicating data packets point-to-point. It is a low-level protocol that encapsulates data into packets containing a header field, which specifies routing information, most notably the IP addresses of the source and destination. IP does not enforce any kind of quality control, which is instead delegated to TCP, a higher-level protocol built on top of IP (Sec.~\ref{sec:TCP}). Multiple packets with the same source and destination needn't follow the same route -- the routing is determined dynamically in realtime by routers, based on network characteristics such as load. Thus, packets belonging to the same underlying data may arrive out of order. IP does not address this issue, instead leaving it for higher-level protocols (such as TCP and UDP) to handle.
 
 %
 % User Datagram Protocol (UDP)
 %
 
-\subsubsection{User Datagram Protocol (UDP)}
+\subsubsection{User datagram protocol (UDP)}
 
-\comment{To do}
+The UDP is a simple protocol built on top of IP, based on a `send-and-forget' principle for sending data packets. That is, there is no quality of service guarantee, and no notifications are provided to the sender as to whether packets successfully reached their destination. However, a checksum (hash) forms a part of the packet headers to enable error detection by the recipient. The lack of quality control bypasses the associated latency, making it particularly useful in time-critical applications, where the late arrival of a packet is useless and therefore needn't be retransmitted.
+
+UDP is connectionless, meaning that no designated connection is established between hosts. Instead data is simply transmitted and then forgotten about. The receiver may not even be operational on the network, in which case the packets are lost without notice.
+
+Key examples for the use of UDP are realtime audio and video transmission. If a packet associated with a frame in a video link is delayed, it is useless, since it is associated strictly with a particular frame in the video. Quality control therefore would achieve nothing. This applies similarly to live audio streaming, such as voice-over-IP (VoIP), where the late arrival of a packet cannot possibly be correctly inserted into the audio playback and might as well be discarded.
+
+Therefore, UDP prioritises latency over reliability, and is best suited to time-critical applications where quality of service is not relevant.
 
 %
 % Transmission Control Protocol (TCP)
 %
 
-\subsubsection{Transmission Control Protocol (TCP)}
+\subsubsection{Transmission control protocol (TCP)} \label{sec:TCP}
 
-\comment{To do}
+TCP differs from UDP in that it intrinsically supports quality control. The protocol is able to determine whether a packet successfully reached its destination, and if not, retransmit it as often as necessary to guarantee packet delivery. A checksum is also included in packets to enable error detection. This quality control has made TCP the dominant protocol employed in the present-day internet, where, in most scenarios, we wish to guarantee that data has been correctly delivered -- if an email is missing random segments of its text, users will become irate very quickly (don't use UDP for email!).
+
+TCP is connection-oriented, meaning that a handshaking protocol establishes a designated bidirectional channel between two hosts. It also enforces packet reordering, to counter out-of-order packet arrival.
+
+However, the enforced quality control and handshaking protocols incur a network performance overhead that UDP does not, since handshaking protocols consume bandwidth. Thus, TCP should not be used instead of UDP if there are no quality of service requirements.
 
 %
 % Ethernet
@@ -162,7 +174,11 @@ To set the context for our treatment of quantum networks, we begin by defining a
 
 \subsubsection{Ethernet}
 
-\comment{To do}
+Ethernet is a networking protocol based on `broadcasting' on a shared network. This model is particularly suited to local area networks (LAN's), where all users share a single communications channel.
+
+In the Ethernet protocol, every user is free to broadcast data onto the shared channel as they please -- all users transmit to, and receive from a single shared channel. However, clearly sometimes packet `collisions' will occur, resulting in packet corruption. To overcome this, Ethernet packets contain a checksum that can be used to verify whether a packet has been corrupted following a collision. If a collision is detected, the respective users are able to re-broadcast, following a randomly chosen waiting period (known as `backoff'). Collisions therefore reduce network performance, and it follows that network bandwidth decreases with the number of users competing for bandwidth. From this protocol, any given packet will eventually be successfully transmitted uncorrupted, collision-free, albeit with uncertain timing that grows with the number of competing users.
+
+The beauty of this approach is that only a single channel is required for connecting all users. No point-to-point connections are required. As the number of users increases, the complexity of the network topology does not. For small LAN's this is clearly reasonably functional. However, as the size of networks increases, the rate at which packet collisions occur increases, resulting in a reduction in network bandwidth. Thus, the Ethernet protocol is ideally suited to small LAN's, but is clearly not viable at a global level, where network competition is astronomical and the overhead from backoff would reduce network performance to a standstill, wasting most of the bandwidth.
 
 %
 % Graph-Theoretic Representation
@@ -1085,7 +1101,7 @@ All of the examples for cost metrics we introduced in Sec.~\ref{sec:quantum_meas
 % Quantum Transmission Control Protocol (QTCP)
 %
 
-\section{Quantum Transmission Control Protocol (QTCP)}
+\section{Quantum transmission control protocol (QTCP)}
 
 In the classical world, TCP is employed for data transmission and routing. Next we define the quantum equivalent -- the Quantum Transmission Control Protocol (QTCP).
 
@@ -1107,7 +1123,7 @@ As with classical networking, our protocols for quantum networks will be separat
 
 The structure of the protocol stack for QTCP is shown in Fig.~\ref{fig:stack}. In summary, the layers in the protocol stack are, beginning from the lowest level:
 \begin{itemize}
-\item {\sc Data (Message)}: Raw data Alice wishes to transmit to Bob. Comprises both {\sc Quantum Data} and {\sc Classical Data}.
+\item {\sc Data (Message)}: Raw data (`payload') Alice wishes to transmit to Bob. Comprises both {\sc Quantum Data} and {\sc Classical Data}.
 \item {\sc Packet}: Decomposition of {\sc Data} into blocks ({\sc Packet Data}), and associated classical {\sc Packet Headers} containing metadata (e.g routing information).
 \item {\sc Strategy}: Construct {\sc Packet} routing strategies based on a cost optimisation algorithm.
 \item {\sc Transport}: Physical routing of {\sc Packets} to arrive at their destination, based upon metadata contained in {\sc Packet Header}. Perform collision detection during transit.
@@ -1322,7 +1338,7 @@ Having communicated all the {\sc Packet Data} from Alice to Bob, performed {\sc 
 
 \section{Collision handling \& classical errors} \label{sec:collision}
 
-In classical networking, protocols such as Ethernet allow users to simply broadcast data at their leisure and rely on \emph{collision detection} to detect when the broadcasts of multiple users have interfered, signalling that both users ought to retransmit after a brief random waiting period (known as `backoff') to minimise the chances of another collision occurring. While this {\sc Resend Until Success} approach has certainly proven to be effective in classical networking, in a quantum setting the rules of the game are entirely different.
+In classical networking, protocols such as Ethernet allow users to simply broadcast data at their leisure and rely on \emph{collision detection} to detect when the broadcasts of multiple users have interfered, signalling that both users ought to retransmit following backoff, to minimise the chances of another collision occurring. While this {\sc Resend Until Success} approach has certainly proven to be effective in classical networking, in a quantum setting the rules of the game are entirely different.
 
 First, collision detection necessarily requires measuring a communications channel to test whether data has been corrupted. Classical networks typically do this by transmitting a checksum with the data, which is recalculated upon arrival for comparison. This raises the obvious problem that quantum measurements are destructive, which means that testing the integrity of our data destroys it in the process -- the last feature we'd like our network to exhibit! However, to overcome this, in Sec.~\ref{sec:transport} we describe a protocol based on the dual classical/quantum network that allows collision detection without measuring quantum states.
 
@@ -1716,7 +1732,7 @@ A balanced tree is a tree with a regular, self-similar structure, in which every
 \caption{Balanced tree graphs with branching factor $b=8$, and depths $d=3,4,5$ (top to bottom). Despite having no redundant paths, the hierarchical structure of balanced trees somewhat resembles that of real-world networks, which are typically decomposed into a pyramid scheme of progressively smaller sub-networks.} \label{fig:tree_example}
 \end{figure}
 
-This type of structure is natural in many realistic scenarios. Consider for example a network containing a hierarchy of clusters of nodes representing a Local Area Network (LAN), followed by a neighbouring internet router, followed by a city-wide router, followed by a country-wide router. In such a case, this type of general structure is typical.
+This type of structure is natural in many realistic scenarios. Consider for example a network containing a hierarchy of clusters of nodes representing a LAN, followed by a neighbouring internet router, followed by a city-wide router, followed by a country-wide router. In such a case, this type of general structure is typical.
 
 %
 % Random Tree
