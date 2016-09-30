@@ -127,6 +127,44 @@ It is hard to foresee the future of quantum technology. But it is certain that a
 To set the context for our treatment of quantum networks, we begin by defining a mathematical construction for \emph{classical} networks. This encompasses representing networks as graphs, representing the cost of communications within the network, and how to optimise network routing to minimise costs. These notions will be essential in our treatment of quantum networks.
 
 %
+% Protocols
+%
+
+\subsection{Protocols}
+
+%
+% Internet Protocol (IP)
+%
+
+\subsubsection{Internet Protocol (IP)}
+
+\comment{To do}
+
+%
+% User Datagram Protocol (UDP)
+%
+
+\subsubsection{User Datagram Protocol (UDP)}
+
+\comment{To do}
+
+%
+% Transmission Control Protocol (TCP)
+%
+
+\subsubsection{Transmission Control Protocol (TCP)}
+
+\comment{To do}
+
+%
+% Ethernet
+%
+
+\subsubsection{Ethernet}
+
+\comment{To do}
+
+%
 % Graph-Theoretic Representation
 %
 
@@ -601,6 +639,17 @@ Formally, let $\mathcal{E}^\mathrm{loss}_\eta$ be the loss channel with efficien
 \mathcal{E}^\mathrm{loss}_\eta(\ket{0}\bra{0}) &= \ket{0}\bra{0}, \nonumber \\
 \mathcal{E}^\mathrm{loss}_\eta(\ket{1}\bra{1}) &= (1-\eta)\ket{0}\bra{0} + \eta\ket{1}\bra{1}.
 \end{align}
+
+Consecutive loss channels act multiplicatively,
+\begin{align}
+\mathcal{E}_{\eta_1}^\mathrm{loss} \circ \mathcal{E}_{\eta_2}^\mathrm{loss} = \mathcal{E}_{\eta_1 \eta_2}^\mathrm{loss}.
+\end{align}
+In the special case of linear optics circuits, loss channels have the elegant property that, provided the loss rate is uniform across all modes, they can be commuted through the circuit to the front or back \cite{???}. Specifically,
+\begin{align}
+(\mathcal{E}_{\eta}^\mathrm{loss})^{\otimes m} \circ \mathcal{E}_U = \mathcal{E}_U \circ (\mathcal{E}_{\eta}^\mathrm{loss})^{\otimes m},
+\end{align}
+where $\mathcal{E}_U$ is a unitary linear optics process. This simplifies the treatment of distinct system inefficiencies (such as source, network and detector inefficiencies) by allowing us to commute them to the beginning or end of the circuit and combine them together into a single net efficiency. In many scenarios, this allows the different system inefficiencies to be dealt with via postselection.
+
 This process would apply equivalently to both horizontal and vertical polarisations. Therefore, via linearity, the loss channel acting on a polarisation-encoded qubit (Sec.~\ref{sec:single_phot_enc}) yields,
 \begin{align}
 \mathcal{E}^\mathrm{loss}_\eta(\ket\psi_\mathrm{pol}\bra\psi_\mathrm{pol}) = (1-\eta) \ket{0}\bra{0} + \eta\ket\psi_\mathrm{pol}\bra\psi_\mathrm{pol}.
@@ -615,7 +664,9 @@ Coherent states are the one example of states, which are in a sense robust again
 \end{align}
 However, although coherence is maintained, the process is irreversible, since noise-free amplitude amplification is not possible in general \cite{???}. Thermal states exhibit the same property, that a loss channel simply yields another thermal state with reduced amplitude.
 
-To the contrary, while cat states are simple superpositions of coherent states, they are extremely sensitive to loss. This is because cat states have well-defined photon-number parity (even or odd photon-number), and therefore the loss of just a single photon will flip a cat state to an orthogonal one. Since the probability of photon loss occurring increases exponentially with photon-number, large amplitude cat states are exponentially sensitive to loss channels.
+To the contrary, while cat states (Sec.~\ref{sec:cat_enc}) are simple superpositions of coherent states, they are extremely sensitive to loss. This is because cat states have well-defined photon-number parity (even or odd photon-number), and therefore the loss of just a single photon will flip a cat state to an orthogonal one. Since the probability of photon loss occurring increases exponentially with photon-number, large amplitude cat states are exponentially sensitive to loss channels.
+
+Similarly, NOON states (Sec.~\ref{sec:NOON}) undergo a complete wavefunction collapse to the $\ket{0}$ state if just a single photon is lost to the environment, and because there are $N$ photons in total, the probability of wavefunction collapse grows exponentially with photon-number.
 
 %
 % Dephasing
@@ -697,7 +748,10 @@ Thus, both dephasing and depolarisation are examples of Pauli error models.
 
 In the qubit basis (i.e not including loss, for example), the Pauli matrices form a complete basis for quantum operations. Thus, the depolarising channel is the most general qubit error model, since it effectively applies all four Pauli error channels. For this reason, when evaluating fault-tolerance thresholds for QEC codes, thresholds are typically quoted in terms of the depolarising error rate.
 
-Like the dephasing channel, the error probability of multiple channels in series accumulates multiplicatively, as per Eq.~\ref{eq:multi_deph}.
+Like the dephasing and loss channels, the error probability of multiple channels in series accumulates multiplicatively,
+\begin{align}
+\mathcal{E}_{p_1}^\mathrm{depolarising} \circ \mathcal{E}_{p_2}^\mathrm{depolarising} = \mathcal{E}_{p_1 p_2}^\mathrm{depolarising}.
+\end{align}
 
 %
 % Amplitude Damping
@@ -1028,10 +1082,10 @@ A more general scenario to consider is where the nodes are not restricted to rou
 All of the examples for cost metrics we introduced in Sec.~\ref{sec:quantum_meas_cost} have the property that they are invariant under unitary operations. Therefore the costs along a route may simply be accumulated as before, summing up the edge weights, without needing any special treatment for node operations, provided they are unitary. For non-unitary node processes, we can merge them into their neighbouring link processes as before (see Fig.~\ref{fig:remove_nodes}).
 
 %
-% The Quantum Transmission Control Protocol (QTCP)
+% Quantum Transmission Control Protocol (QTCP)
 %
 
-\section{The Quantum Transmission Control Protocol (QTCP)}
+\section{Quantum Transmission Control Protocol (QTCP)}
 
 In the classical world, TCP is employed for data transmission and routing. Next we define the quantum equivalent -- the Quantum Transmission Control Protocol (QTCP).
 
@@ -1047,7 +1101,7 @@ QTCP is the joint software/hardware stack that facilitates these objectives. QTC
 % QTCP Protocol Stack
 %
 
-\section{The QTCP protocol stack} \label{sec:prot_stack}
+\section{QTCP protocol stack} \label{sec:prot_stack}
 
 As with classical networking, our protocols for quantum networks will be separated into distinct layers, each performing a specific set of tasks with different levels of abstraction.
 
@@ -1546,6 +1600,26 @@ The {\sc Costs} and {\sc Attributes} fields within the {\sc Header} are very pow
 {\sc Costs} naturally capture characteristics of the network that accumulate additively along routes, whereas {\sc Attributes} capture any other characteristics that aren't additive. A network needn't have both costs \emph{and} attributes. It may have one or the other, or both, but not neither, since there must be some measure by which to judge routes.
 
 %
+% Scalability
+%
+
+\section{Scalability of QTCP}
+
+\comment{To do}
+
+\comment{Protocol changes depending on scale. How does strategy change over different scales.}
+
+%
+% Message- vs. Packet-Level Routing
+%
+
+\section{Message- vs. Packet-Level Routing}
+
+\comment{To do}
+
+\comment{Limit of packet$\to$message size. How does this change strategy.}
+
+%
 % Interconnecting & Interfacing Quantum Networks
 %
 
@@ -1718,6 +1792,14 @@ For example, at the global scale, it is entirely plausible that the internet mig
 Furthermore, the real-world internet is not simply a hierarchy of different types of well-known graph structures. Rather, it takes the form of `glued' graphs, whereby networks running over different mediums, or via different operators, each exhibit their own independent graph topologies, meeting at interconnect points that join the different networks. Typically this yields redundancy in the routes between different nodes.
 
 This hybrid network topology is the norm today in our classical internet, and it is entirely foreseeable that a similar trend will emerge in the future quantum internet as quantum technologies become more mainstream, their networking less well structured, and competing, redundant links are in place.
+
+%
+% Scale-Free Networks
+%
+
+\subsection{Scale-free networks}
+
+\comment{To do}
 
 %
 % Network Algorithms
@@ -2231,6 +2313,8 @@ Each Bell measurement can be implemented non-deterministically using a PBS, miti
 
 \comment{Say something about the scalability of quantum repeater networks under different strategies. I believe with appropriate strategies it's possible to achieve poly rather than exp scaling. Is that right? Show details.}
 
+\comment{For early gen repeater networks, need to know exact route - for higher level networks the route can be invisible to user.}
+
 %
 % Quantum Key Distribution
 %
@@ -2709,7 +2793,7 @@ Large-scale quantum computing may still seem a formidable, and somewhat long-ter
 
 It is essential for the adoption of quantum technology, that quantum networking infrastructure be sufficiently well developed that it is ready to be deployed the minute the first useful, post-classical hardware becomes available. The proliferation of the defining technology of the 21st century depends upon it.
 
-\emph{--- Ad astra per alas porci. Scientia potentia est.}
+\emph{--- Ad astra per alas porci. Im Wandel der Zeiten. Scientia potentia est.}
 
 %
 % Acknowledgments
