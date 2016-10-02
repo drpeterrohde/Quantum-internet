@@ -124,7 +124,7 @@ It is hard to foresee the future of quantum technology. But it is certain that a
 
 \section{Classical networks}
 
-To set the context for our upcoming treatment of quantum networks, we begin by discussing \emph{classical} networks, and defining a mathematical construction for their representation. This encompasses representing networks as graphs, representing the cost of communications within the network, and how to optimise network routing to minimise costs. Importantly, we discuss the protocol stack employed by the classical internet (TCP/UDP/IP) for implementing classical networking. These notions will be essential in our treatment of quantum networks.
+To set the context for our upcoming treatment of quantum networks, we begin by discussing \emph{classical} networks, and defining a mathematical construction for their representation that we will subsequently generalise to the context of quantum networks. This encompasses representing networks as graphs, representing the cost of communications within the network, and how to optimise network routing to minimise costs. Importantly, we discuss the protocol stack employed by the classical internet (TCP/UDP/IP) for implementing classical networking. These notions will be essential in our treatment of quantum networks.
 
 %
 % Protocols
@@ -140,7 +140,9 @@ The present-day internet is built on top of a protocol stack comprising the inte
 
 \subsubsection{Internet protocol (IP)}
 
-IP is the standard protocol employed in the internet for communicating data packets point-to-point. It is a low-level protocol that encapsulates data into packets containing a header field, which specifies routing information, most notably the IP addresses of the source and destination. IP does not enforce any kind of quality control, which is instead delegated to TCP, a higher-level protocol built on top of IP (Sec.~\ref{sec:TCP}). Multiple packets with the same source and destination needn't follow the same route -- the routing is determined dynamically in realtime by routers, based on network characteristics such as load. Thus, packets belonging to the same underlying data may arrive out of order. IP does not address this issue, instead leaving it for higher-level protocols (such as TCP and UDP) to handle.
+IP is the standard protocol employed in the internet for communicating data packets point-to-point. It is a low-level protocol that encapsulates data into packets containing a header field, which specifies routing information, most notably the IP addresses of the source and destination. IP does not enforce any kind of quality control, which is instead delegated to TCP, a higher-level protocol built on top of IP (Sec.~\ref{sec:TCP}).
+
+Multiple packets with the same source and destination needn't follow the same route -- the routing is determined dynamically in realtime by routers, based on network characteristics such as load. Thus, packets belonging to the same underlying data may arrive out of order. IP does not address this issue, instead leaving it for higher-level protocols (such as TCP and UDP) to handle.
 
 %
 % User Datagram Protocol (UDP)
@@ -162,9 +164,9 @@ Therefore, UDP prioritises latency over reliability, and is best suited to time-
 
 \subsubsection{Transmission control protocol (TCP)} \label{sec:TCP}
 
-TCP differs from UDP in that it intrinsically supports quality control. The protocol is able to determine whether a packet successfully reached its destination, and if not, retransmit it as often as necessary to guarantee packet delivery. A checksum is also included in packets to enable error detection. This quality control has made TCP the dominant protocol employed in the present-day internet, where, in most scenarios, we wish to guarantee that data has been correctly delivered -- if an email is missing random segments of its text, users will become irate very quickly (don't use UDP for email!).
+TCP differs from UDP in that it intrinsically supports quality control. The protocol is able to determine whether a packet successfully reached its destination, and if not, retransmit it as often as necessary to guarantee packet delivery. A checksum is also included in packets to enable error detection. This quality control has made TCP the dominant protocol employed in the present-day internet, where, in most scenarios, we wish to guarantee that data has been correctly delivered -- if an email is missing random segments of its text, users will become irate very quickly!
 
-TCP is connection-oriented, meaning that a handshaking protocol establishes a designated bidirectional channel between two hosts. It also enforces packet reordering, to counter out-of-order packet arrival.
+TCP is connection-oriented, meaning that a handshaking protocol establishes a dedicated bidirectional channel between two hosts. It also enforces packet reordering, to counter out-of-order packet arrival.
 
 However, the enforced quality control and handshaking protocols incur a network performance overhead that UDP does not, since handshaking protocols consume bandwidth. Thus, TCP should not be used instead of UDP if there are no quality of service requirements.
 
@@ -176,9 +178,11 @@ However, the enforced quality control and handshaking protocols incur a network 
 
 Ethernet is a networking protocol based on `broadcasting' on a shared network. This model is particularly suited to local area networks (LAN's), where all users share a single communications channel.
 
-In the Ethernet protocol, every user is free to broadcast data onto the shared channel as they please -- all users transmit to, and receive from a single shared channel. However, clearly sometimes packet `collisions' will occur, resulting in packet corruption. To overcome this, Ethernet packets contain a checksum that can be used to verify whether a packet has been corrupted following a collision. If a collision is detected, the respective users are able to re-broadcast, following a randomly chosen waiting period (known as `backoff'). Collisions therefore reduce network performance, and it follows that network bandwidth decreases with the number of users competing for bandwidth. From this protocol, any given packet will eventually be successfully transmitted uncorrupted, collision-free, albeit with uncertain timing that grows with the number of competing users.
+In the Ethernet protocol, every user is free to broadcast data onto the shared channel as they please -- all users transmit to, and receive from a single shared channel. However, clearly sometimes packet `collisions' will occur, resulting in packet corruption. To overcome this, Ethernet packets contain a checksum that can be used to verify whether a packet has been corrupted following a collision. If a collision is detected, the respective users are able to re-broadcast, following a randomly chosen waiting period (known as `backoff'). Collisions therefore reduce network performance, and it follows that network bandwidth decreases with the number of users competing for bandwidth.
 
-The beauty of this approach is that only a single channel is required for connecting all users. No point-to-point connections are required. As the number of users increases, the complexity of the network topology does not. For small LAN's this is clearly reasonably functional. However, as the size of networks increases, the rate at which packet collisions occur increases, resulting in a reduction in network bandwidth. Thus, the Ethernet protocol is ideally suited to small LAN's, but is clearly not viable at a global level, where network competition is astronomical and the overhead from backoff would reduce network performance to a standstill, wasting most of the bandwidth.
+From this protocol, any given packet will eventually be successfully transmitted uncorrupted, collision-free, albeit with uncertain timing that grows with the number of competing users.
+
+The beauty of this approach is that only a single channel is required for connecting all users. No dedicated point-to-point connections are required. As the number of users increases, the complexity of the network topology does not. For small LAN's this is clearly reasonably functional. However, as the size of networks increases, the rate at which packet collisions occur increases, resulting in a reduction in network bandwidth. Thus, the Ethernet protocol is ideally suited to small LAN's, but is clearly not viable at a global level, where network competition is astronomical and the overhead from backoff would reduce network performance to a standstill, wasting most of the bandwidth.
 
 %
 % Graph-Theoretic Representation
@@ -456,7 +460,7 @@ In general, both nodes and links in a quantum network may implement quantum proc
 
 Given a link implementing some arbitrary quantum process, it is essential that it can be experimentally determined such that network performance may be characterised. For example, if an optical channel is lossy, what is the loss rate? This is crucial when attempting to choose routing strategies that optimise certain cost metrics.
 
-Treating a link or node as an unknown black box, \emph{Quantum Process Tomography} (QPT) \cite{???, bib:ChuangNielsen97} is a technique that may be applied to fully characterise the quantum process it implements, reproducing its complete process matrix. QPT has become a standard procedure, demonstrated in numerous architectures, most notably in optics \cite{???, bib:OBrien04}.
+Treating a link or node as an unknown black box, \emph{quantum process tomography} (QPT) \cite{bib:ChuangNielsen97, ???} is a technique that may be applied to fully characterise the quantum process it implements, reproducing its complete process matrix. QPT has become a standard procedure, demonstrated in numerous architectures, most notably in optics \cite{bib:OBrien04, bib:RohdeGateChar05}.
 
 QPT works in general for processes in any degree of freedom, e.g the qubit degree of freedom. However, it is important to note that full QPT requires statistics across the entire basis over which measurements are defined, which typically grows exponentially with the size of the system. For example, the number of measurement bases required to perform full QPT on $n$ qubits grows exponentially with $n$. However, often full process characterisation is not necessary. Instead, knowing particular metrics of interest may suffice. Some of the more noteworthy such metrics will be discussed in Sec.~\ref{sec:quantum_meas_cost}. In this instance, much work has been done in the field of \emph{compressed sensing} \cite{??? compressed_sensing}, in which process metrics of interest can be experimentally determined using far fewer physical resources than via a full reconstruction of the process matrix using QPT.
 
@@ -515,9 +519,9 @@ Completely independent of the photon-number degree of freedom, are the spatio-te
 \begin{align}
 \ket\psi_\mathrm{temporal} = \int_{-\infty}^\infty \psi(t) \hat{a}^\dag(t)\,dt\,\ket{0},
 \end{align}
-where $\hat{a}^\dag(t)$ is the time-specific photonic creation operator, and $\psi(t)$ is the temporal distribution function \cite{???}.
+where $\hat{a}^\dag(t)$ is the time-specific photonic creation operator, and $\psi(t)$ is the temporal distribution function \cite{bib:RohdeFreqTemp05}.
 
-Alternately, we can define \emph{mode operators}, which are mathematically equivalent to creation operators, but create photons with a specific temporal envelope,
+Alternately, we can define \emph{mode operators} \cite{bib:RohdeMauererSilberhorn07}, which are mathematically equivalent to creation operators, but create photons with a specific temporal envelope,
 \begin{align}
 \hat{A}^\dag_\psi &= \int_{-\infty}^\infty \psi(t) \hat{a}^\dag(t)\,dt, \nonumber \\
 \ket\psi_\mathrm{temporal} &= \hat{A}^\dag_\psi \ket{0}.
@@ -545,7 +549,7 @@ In time-bin encoding we define our basis of modes (whether it be qubits or highe
 \end{align}
 as well as the usual orthonormality constraints. Here $\tau$ is sufficiently large, and $\xi_i(t)$ sufficiently temporally localised, that the temporal modes are orthogonal.
 
-Time-bin encoding arises naturally in architectures where the photon source driving the system is operating at a high repetition rate, $R$, in which case \mbox{$\tau=1/R$}. Architectures for optical quantum computing have been described \cite{rohdeBSloop, rohdeUnivLoop}, and experimentally demonstrated \cite{???}, based entirely on time-bin encoding.
+Time-bin encoding arises naturally in architectures where the photon source driving the system is operating at a high repetition rate, $R$, in which case \mbox{$\tau=1/R$}. Architectures for optical quantum computing have been described \cite{bib:RohdeLoop15, bib:RohdeUnivLoop15}, and experimentally demonstrated \cite{???}, based entirely on time-bin encoding.
 
 These schemes can be very resource efficient, since a single source operating at high repetition rate can replace an entire bank of distinct sources that would ordinarily be required in spatial architectures. Similarly, a single time-resolved detector, with resolution at least $\tau$, can replace a bank of detectors operating in parallel. And only a single spatial mode is required to store an arbitrary number of qubits/qudits, so long as it is long enough to support the entire pulse-train -- at least $2n\tau$ for $n$ qubits.
 
@@ -678,11 +682,13 @@ Coherent states are the one example of states, which are in a sense robust again
 \begin{align}
 \mathcal{E}^\mathrm{loss}_\eta(\ket\alpha\bra\alpha) = \ket{\eta\alpha}\bra{\eta\alpha}.
 \end{align}
-However, although coherence is maintained, the process is irreversible, since noise-free amplitude amplification is not possible in general \cite{???}. Thermal states exhibit the same property, that a loss channel simply yields another thermal state with reduced amplitude.
+This arises because coherent states are eigenstates of the photonic annihilation operator, \mbox{$\hat{a}\ket{\alpha}=\alpha\ket{\alpha}$}.
 
-To the contrary, while cat states (Sec.~\ref{sec:cat_enc}) are simple superpositions of coherent states, they are extremely sensitive to loss. This is because cat states have well-defined photon-number parity (even or odd photon-number), and therefore the loss of just a single photon will flip a cat state to an orthogonal one. Since the probability of photon loss occurring increases exponentially with photon-number, large amplitude cat states are exponentially sensitive to loss channels.
+However, although coherence is maintained under the loss channel, the process is irreversible, since noise-free amplitude amplification is not possible in general \cite{???}. Thermal states exhibit the same property, that a loss channel simply yields another thermal state with reduced amplitude.
 
-Similarly, NOON states (Sec.~\ref{sec:NOON}) undergo a complete wavefunction collapse to the $\ket{0}$ state if just a single photon is lost to the environment, and because there are $N$ photons in total, the probability of wavefunction collapse grows exponentially with photon-number.
+To the contrary, while cat states (Sec.~\ref{sec:cat_enc}) are simple superpositions of coherent states, they are extremely sensitive to loss. This is because cat states have well-defined photon-number parity (strictly even or odd photon-number), and therefore the loss of just a single photon will flip a cat state to an orthogonal one. Since the probability of photon loss occurring increases exponentially with photon-number, large amplitude cat states are exponentially sensitive to loss channels.
+
+Similarly, NOON states (Sec.~\ref{sec:NOON}) undergo complete wavefunction collapse if just a single photon is lost to the environment, and because there are $N$ photons in total, the probability of wavefunction collapse grows exponentially with photon-number.
 
 %
 % Dephasing
@@ -730,7 +736,7 @@ The notion of dephasing can be easily generalised to non-qubit states of light, 
 \end{align}
 for some arbitrary basis enumerated by $i$ and $j$. For partial dephasing, we can express the channel as creating a mixture over the input state with different phase rotations applied,
 \begin{align} \label{eq:deph_int}
-\mathcal{E}^\mathrm{dephasing}(\hat\rho) = \int_{0}^{2\pi} \phi(\omega) \hat{\Phi}(\omega)\hat\rho\,\hat{\Phi}(\omega)^\dag\,d\omega,
+\mathcal{E}_{\phi}^\mathrm{dephasing}(\hat\rho) = \int_{0}^{2\pi} \phi(\omega) \hat{\Phi}(\omega)\hat\rho\,\hat{\Phi}(\omega)^\dag\,d\omega,
 \end{align}
 where $\hat{\Phi}(\omega)$ is a phase-shift operator with phase $\omega$, obeying \mbox{$\hat\Phi(\omega)^\dag = \hat\Phi(-\omega)$}, and $\phi(\omega)$ is a normalised probability density function characterising the distribution of phase-shifts. In the case of optical states, the phase-shift operators take the form,
 \begin{align}
@@ -742,7 +748,7 @@ From this definition it can be seen that susceptibility to dephasing increases w
 \begin{align}
 \hat\Phi(\omega) \ket{m} = e^{i\omega m}\ket{m}.
 \end{align}
-For number states not in superposition, this corresponds to a simple unimportant global phase, since number states are phase invariant. However, in superposition this adds relative phases, thereby destroying coherences upon applying the integral from Eq.~\ref{eq:deph_int}.
+For number states not in superposition, this corresponds to a simple unimportant global phase, since number states are phase-invariant. However, in superposition this adds relative phases, thereby destroying coherences upon applying the integral from Eq.~\ref{eq:deph_int}.
 
 %
 % Depolarisation
@@ -1926,7 +1932,7 @@ The \emph{multi-commodity flow problem} \cite{???} generalises the previous algo
 
 Unfortunately the computational complexity of solving this problem is much harder than the previous algorithms in general. Specifically, solving the problem exactly is \textbf{NP}-complete in general. However, in specific circumstances it can be approached using linear programming or polynomial-time approximation schemes.
 
-Note that, using Grover's search algorithm \cite{???}, although not efficient, quantum computers offer a quadratic improvement in the runtime of \textbf{NP}-complete problems, which is pertinent to consider in the upcoming quantum era.
+Note that, using Grover's search algorithm \cite{bib:Grover96}, although not efficient, quantum computers offer a quadratic improvement in the runtime of \textbf{NP}-complete problems, which is pertinent to consider in the upcoming quantum era.
 
 %
 % Protocols for the Quantum Internet
@@ -1992,7 +1998,7 @@ So-called NOON states, path-number entangled two-mode states of the form,
 \begin{align}
 \ket\psi_\mathrm{NOON} = \frac{1}{\sqrt{2}}(\ket{N,0}+\ket{0,N}),
 \end{align}
-may be exploited to perform Heisenberg-limited quantum metrology, allowing extremely precise phase measurement with large photon-number $N$ \cite{???}. However, these states are notoriously difficult and technologically challenging to prepare, and can only be prepared non-deterministically using linear optics.
+may be exploited to perform Heisenberg-limited quantum metrology, allowing extremely precise phase measurement with large photon-number $N$ \cite{bib:Dowling08}. However, these states are notoriously difficult and technologically challenging to prepare, and can only be prepared non-deterministically using linear optics \cite{bib:Cable07}.
 
 If a remote server had the capacity to prepare such states, they would be in high demand across the globe. Hindering this, NOON states are very fragile creatures. First, they exhibit exponentially increased susceptibility to loss -- loss of just a single photon completely decoheres the state, rendering it useless for metrological purposes. Second, the large photon-number, $N$, amplifies dephasing by a factor of $N$, as discussed in Sec.~\ref{sec:dephasing_error}. These considerations can be readily accommodated for in the QTCP protocol by tracking dephasing and loss metrics of the packets encapsulating the NOON states.
 
@@ -2041,7 +2047,7 @@ Cat states (Sec.~\ref{sec:cat_enc}) are extremely difficult to prepare, most eas
 
 \subsubsection{More exotic states of light}
 
-As discussed in Sec.~\ref{sec:exotic}, many other far more elaborate states are very difficult to prepare, and it would be highly desirable if they could be obtained/purchased over a quantum network. This includes certain Gaussian states, which have utility in alternate models for quantum computing \cite{Menicucci,Ralph,Lund}, and squeezed states, which can be useful for sub-shotnoise limited metrology \cite{???}.
+As discussed in Sec.~\ref{sec:exotic}, many other far more elaborate states are very difficult to prepare, and it would be highly desirable if they could be obtained/purchased over a quantum network. This includes certain CV states, which have utility in alternate models for quantum computing \cite{bib:Menicucci06, Ralph, Lund}, and squeezed states, which can be useful for sub-shotnoise limited metrology \cite{???}.
 
 %
 % Matter Qubits
@@ -2106,7 +2112,7 @@ A homodyne detector interferes a state with a coherent state on a beamsplitter, 
 
 \subsubsection{Bell state projection} \label{sec:bell_proj}
 
-For the purposes of which-path erasure, essential for optical cluster state (Sec.~\ref{sec:CSQC}) preparation and quantum teleportation (Sec.~\ref{sec:teleport}), Bell state measurements are important. To realise this, there are two primary options. The first is to use a controlled-NOT (CNOT) gate (the quantum equivalent of the classical XOR gate), for example an LOQC gate (Sec.~\ref{sec:KLM_univ}). The second is to perform a \emph{partial} Bell state projection using a polarising beamsplitter (PBS) -- a beamsplitter which completely transmits vertical polarisation, and completely reflects horizontal polarisation. The former can be implemented with arbitrarily high success probability in principle. However, in most scenarios of interest the latter succeeds with probability of $1/2$, since a PBS is only able to uniquely distinguish two of the four Bell states. To its advantage, partial Bell measurements only require high Hong-Ou-Mandel (HOM) visibility \cite{HOM}, avoiding the need for the interferometric stability internal to LOQC gates.
+For the purposes of which-path erasure, essential for optical cluster state (Sec.~\ref{sec:CSQC}) preparation and quantum teleportation (Sec.~\ref{sec:teleport}), Bell state measurements are important. To realise this, there are two primary options. The first is to use a controlled-NOT (CNOT) gate (the quantum equivalent of the classical XOR gate), for example an LOQC gate (Sec.~\ref{sec:KLM_univ}). The second is to perform a \emph{partial} Bell state projection using a polarising beamsplitter (PBS) -- a beamsplitter which completely transmits vertical polarisation, and completely reflects horizontal polarisation. The former can be implemented with arbitrarily high success probability in principle. However, in most scenarios of interest the latter succeeds with probability of $1/2$, since a PBS is only able to uniquely distinguish two of the four Bell states. To its advantage, partial Bell measurements only require high HOM visibility, avoiding the need for the interferometric stability internal to LOQC gates.
 
 LOQC gates, in particular, are very technologically challenging, particularly for high success probability. Thus, outsourcing them to the cloud may be very economically efficient.
 
@@ -2385,7 +2391,7 @@ QKD has been widely experimentally demonstrated \cite{???}, and unlike quantum c
 
 The goal of quantum metrology is to estimate and unknown phase with the greatest degree of precision. This finds many applications, perhaps most notably the recent gravity wave measurement protocols \cite{???}. The shot-noise limit (SNL) represents the maximum achievable precision using classical states, whereas the Heisenberg limit (HL) is the best that can be achieved using quantum resources. The goal of quantum metrology is to beat the SNL and achieve the HL.
 
-Achieving the SNL is easily done using coherent states (Sec.~\ref{sec:coherent_states}), which are not true quantum states. However, HL metrology can be achieved using NOON states (Sec.~\ref{sec:NOON}) \cite{DowlingNOON}. An alternate recent proposal (known as the MORDOR protocol), employs only single-photon states (Sec.~\ref{sec:single_phot_src}) and passive linear optics, which, although not saturating the HL, significantly beats the SNL \cite{MORDOR, MORDOR2}.
+Achieving the SNL is easily done using coherent states (Sec.~\ref{sec:coherent_states}), which are not true quantum states. However, HL metrology can be achieved using NOON states (Sec.~\ref{sec:NOON}) \cite{bib:Dowling08}. An alternate recent proposal (known as the MORDOR protocol, after the authors), employs only single-photon states (Sec.~\ref{sec:single_phot_src}) and passive linear optics, which, although not saturating the HL, significantly beats the SNL \cite{MORDOR, MORDOR2}.
 
 Both of these types of state have their difficulties to prepare, but especially NOON states, as they cannot be deterministically prepared using linear optics, and no current source natively prepares them directly. Thus, outsourcing these state preparation stages could be of great value to end-users of metrology.
 
@@ -2497,13 +2503,13 @@ In the graph, vertices represent qubits initialised into the \mbox{$\ket{+}=(\ke
 
 Having prepared this state, the computation is implemented purely via a well-orchestrated routine of single-qubit measurements. The order and basis in which they are performed (which depends on previous measurement outcomes in general) then stipulates the computation. It is easily shown that this model may be directly mapped to the circuit model, and is therefore universal.
 
-The distinctive feature of this model is that all the entangling operations (e.g CZ gates) are performed at the very beginning of the protocol, during the state preparation stage. The algorithm itself is purely measurement-based, requiring only single-qubit measurements (no entangling measurements).
+The distinctive feature of this model is that all the entangling CZ gates are performed at the very beginning of the protocol, during the state preparation stage. The algorithm itself is purely measurement-based, requiring only single-qubit measurements (no entangling measurements).
 
-This alternate formalism has proven very useful, enabling the development of linear optics quantum computing (Sec.~\ref{sec:KLM_univ}) protocols, orders of magnitude more efficient than the original KLM protocol (Sec.~\ref{sec:KLM_univ}) \cite{???}.
+This alternate formalism has proven very useful, enabling the development of linear optics quantum computing (Sec.~\ref{sec:KLM_univ}) protocols, orders of magnitude more efficient than the original KLM protocol, where much work has been performed on efficient preparation strategies for various topologies \cite{bib:Nielsen04, bib:BarrettKok05, bib:BrowneRudolph05, bib:BenjaminEisert05, bib:Gross06, bib:RohdeStratCS07, bib:Kieling06, bib:KielingRudolphEisert06, bib:RohdeBarrett07}.
 
 These cluster states are highly valuable, given their computational power, and the ability to communicate them from Alice, who is able to prepare them, to Bob, who lacks the technology, would be a boon for Bob.
 
-Much work has been done on the efficient preparation of cluster states \cite{bib:BarrettKok05, bib:BenjaminEisert05, bib:Gross06, bib:RohdeStratCS07}, but optically the technological requirements are daunting -- essentially the same as for universal linear optics quantum computing, albeit with improved efficiencies. It would be most practical, economical, and resource efficient to have a single, well-equipped server with the ability to prepare such states, who does so on behalf of everyone else, and communicates the fresh cluster states to them over the quantum internet.
+It would be most practical, economical, and resource efficient to have a single, well-equipped server with the ability to prepare such states, who does so on behalf of everyone else, and communicates the fresh cluster states to them over the quantum internet.
 
 If the intention is to perform quantum computations using the cluster states shared over the network, QEC and fault-tolerance \emph{must} be taken into consideration, or catastrophic algorithmic failure will inevitably follow -- the cluster state model is no different from the circuit model in this respect. Fault-tolerance theory places hard thresholds on the amount of noise (typically depolarising errors and loss) qubits may be subject to in order for fault-tolerance to be possible and computations to succeed. This places strict QoS constraints on the network, which can be accommodated for by using the usual depolarising and efficiency cost metrics when developing networking strategies and link performance requirements.
 
@@ -2526,9 +2532,9 @@ There are several cluster state identities we will utilise later, summarised in 
 
 \subsection{Universal linear optics} \label{sec:KLM_univ}
 
-With single-photon encoding of qubits in the quantum network, the obvious architecture to implement quantum computation is linear optics quantum computing (LOQC) \cite{bib:KLM01, bib:KokLovettBook} (KLM), since the states being processed by the computer are of the same form as the states traversing the network.
+With single-photon encoding of qubits in the quantum network, the obvious architecture to implement quantum computation is linear optics quantum computing (LOQC) \cite{bib:KLM01, bib:Kok05, bib:KokLovettBook} (KLM), since the states being processed by the computer are of the same form as the states traversing the network.
 
-LOQC allows universal quantum computing to be implemented using single-photon polarisation or dual-rail encoding, using only linear optics interactions, i.e beamsplitter networks \cite{bib:Reck94}, with the addition of quantum memory, and fast-feedforward, whereby some photons are measured, and the remaining part of the optical circuit is dynamically reconfigured based on the measurement outcomes. The former is readily available technology today, and elementary demonstrations have been performed \cite{???, bib:OBrien03}, but the latter two have proven to be somewhat more challenging. A sketch of the general KLM formalism is shown in Fig.~\ref{fig:KLM_protocol}.
+LOQC allows universal quantum computing to be implemented using single-photon polarisation or dual-rail encoding, using only linear optics interactions, i.e beamsplitter networks \cite{bib:Reck94}, with the addition of quantum memory, and fast-feedforward, whereby some photons are measured, and the remaining part of the optical circuit is dynamically reconfigured based on the measurement outcomes. The former is readily available technology today, and elementary demonstrations have been performed \cite{bib:OBrien03, bib:UniversalLOOBrien}, but the latter two have proven to be somewhat more challenging. A sketch of the general KLM formalism is shown in Fig.~\ref{fig:KLM_protocol}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.5\columnwidth]{KLM}
@@ -2551,15 +2557,15 @@ Significant progress is being made on reconfigurable, integrated LOQC devices \c
 
 \subsection{Passive linear optics} \label{sec:BS}
 
-While the KLM protocol (and subsequent improvements, e.g using cluster states) is universal for quantum computing, some of the key technological requirements are very challenging, and unlikely to be achieved in the short-term. However, simplified yet non-universal models for optical quantum computing can abandon some of the more challenging requirements, nonetheless implementing a restricted set of post-classical quantum computations. The two main contenders are quantum walks \cite{bib:Aharonov93, bib:Aharonov01, bib:Kempe03, bib:Salvador12, RohdeOptQW} and {\sc BosonSampling} \cite{bib:AaronsonArkhipov10, bib:RohdeIntroBS15}, both closely related in that they require only passive linear optics and single-photon states. Since, evidence has been presented that similar passive linear optics protocols may implement computationally hard problems using states of light other than photon-number states \cite{bib:RandBS, bib:RohdePhotAdd15, bib:RohdeDisp15, bib:RohdeCat15, ???}.
+While the KLM protocol (and subsequent improvements, e.g using cluster states) is universal for quantum computing, some of the key technological requirements are very challenging, and unlikely to be achieved in the short-term. However, simplified yet non-universal models for optical quantum computing can abandon some of the more challenging requirements, nonetheless implementing a restricted set of post-classical quantum computations. The two main contenders are quantum walks \cite{bib:Aharonov93, bib:Aharonov01, bib:Kempe03, bib:Salvador12, bib:RohdeMultiWalk11} and {\sc BosonSampling} \cite{bib:AaronsonArkhipov10, bib:RohdeIntroBS15}, both closely related in that they require only passive linear optics and single-photon states. Since, evidence has been presented that similar passive linear optics protocols may implement computationally hard problems using states of light other than photon-number states \cite{bib:RandBS, bib:RohdePhotAdd15, bib:RohdeDisp15, bib:RohdeCat15}.
 
 These protocols involve nothing more than evolving multiple single-photon states through beamsplitter networks and measuring the output photostatistics. This is equivalent to just taking the first stage of the KLM protocol shown in Fig.~\ref{fig:KLM_protocol}.
 
-The computational hardness of these models for computation relate to the fact that the amplitudes in the output superpositions are related to matrix permanents, which are \textbf{\#P}-hard in general, yielding computationally complex sampling problems.
+The computational hardness of these models for computation relate to the fact that the amplitudes in the output superpositions are proportional to matrix permanents, which are \textbf{\#P}-hard in general, yielding computationally complex sampling problems.
 
 In the case of {\sc BosonSampling}, the unitary is chosen randomly from the Haar-measure. In the case of quantum walks on the other hand, the matrix encodes a graph, where the photons `hop' between vertices by following edges \cite{RohdeQWintro}.
 
-Both quantum walks and {\sc BosonSampling} have been subject to extensive experimental investigation in recent years \cite{bib:PeruzzoQW, bib:Broome10, bib:Schreiber11b, bib:Owens11, bib:RohdeQWExp12, bib:Broome2012, bib:RohdeQWExp12, bib:Spring2, bib:Crespi3, bib:Tillmann4, ???}.
+Both quantum walks and {\sc BosonSampling} have been subject to extensive experimental investigation in recent years \cite{bib:PeruzzoQW, bib:Broome10, bib:Schreiber11b, bib:Owens11, bib:RohdeQWExp12, bib:Broome2012, bib:RohdeQWExp12, bib:Spring2, bib:Crespi3, bib:Tillmann4}.
 
 Because these models are entirely passive, they can be made cloud-based very trivially: Alice prepares her permutation of single photons as the input state, sends it to Bob over the quantum network, who applies the passive operations before returning the state to Alice. In this case, no intermediate client/server interaction is required. Alternately, she could classically communicate a bit-string to Bob indicating the input photon-number configuration, in case she is unable to prepare it herself.
 
@@ -2605,13 +2611,11 @@ Extremely important to many high-performance data-processing applications is sec
 
 In both cases, Alice has secret data, and wishes to not only ensure that an interceptor is unable to read it, but that the server performing the computation isn't able to either -- she trusts no one. That is, she wishes the data to be processed in encrypted form, without first requiring decryption.
 
-The difference between the two protocols lies in the treatment of algorithms. In homomorphic encryption, Alice provides only the data, whereas Bob provides the processing and the algorithm it implements (which he would also like to keep to himself). In blind computing, Alice provides both the algorithm \emph{and} the data, and wishes \emph{both} to remain secret. Both of these protocols seem like very challenging goals, yet significant developments have been made on both fronts. Classical homomorphic encryption has only been described very recently \cite{bib:gentry2009fully, bib:van2010fully}.
+The difference between the two protocols lies in the treatment of algorithms. In homomorphic encryption, Alice provides only the data, whereas Bob provides the processing and the algorithm it implements (which he would also like to keep to himself). In blind computing, Alice provides both the algorithm \emph{and} the data, and wishes \emph{both} to remain secret. Both of these protocols seem like very challenging goals, yet significant developments have been made on both fronts. Classical homomorphic encryption has only been described very recently \cite{bib:gentry2009fully, bib:van2010fully}. \comment{What about classical blind computation?}
 
-In the usual circuit model, blind quantum computation has been shown to be viable, and optimal bounds derived. Similarly, such protocols have been described \cite{homoCS} in the cluster state model (Sec.~\ref{sec:CSQC}). For universal computation, such protocols necessarily require classical interaction between the client and host. However, it was shown that in some restricted (i.e non-universal) models for optical quantum computation, specifically {\sc BosonSampling} and quantum walks, non-interactive homomorphic encryption may be implemented almost optimally (Sec.~\ref{sec:BS}).
+In the usual circuit model, blind quantum computation has been shown to be viable, and optimal bounds derived. Similarly, such protocols have been described \cite{homoCS} in the cluster state model (Sec.~\ref{sec:CSQC}). For universal computation, such protocols necessarily require classical interaction between the client and host. However, it was shown that in some restricted (i.e non-universal) models for optical quantum computation, specifically {\sc BosonSampling} and quantum walks, non-interactive homomorphic encryption may be implemented almost optimally.
 
 These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver information-theoretically secure data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
-
-It was recently shown that cluster state model (Sec.~\ref{sec:CSQC}) may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}. This encryption also does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy.
 
 %
 % Passive Linear Optics
@@ -2621,6 +2625,8 @@ It was recently shown that cluster state model (Sec.~\ref{sec:CSQC}) may be triv
 
 \comment{To do}
 
+It was recently shown that processing photonic states using passive linear optics may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}. This encryption does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy.
+
 %
 % Cluster States
 %
@@ -2628,6 +2634,8 @@ It was recently shown that cluster state model (Sec.~\ref{sec:CSQC}) may be triv
 \subsubsection{Cluster states}
 
 \comment{To do}
+
+Most simply, if Alice has the limited quantum resources required to perform single-qubit measurements, and she knows the algorithm she wishes to implement, then by outsourcing just the cluster state preparation stage, whilst performing the single-qubit measurements herself, she can obviously obtain \emph{perfect} secrecy of both her data and her algorithm.
 
 Homomorphic and blind quantum computing have been described natively to the cluster state model \cite{homoCS}, and in fact are conceptually more straightforward to understand in this formalism. 
 
@@ -2659,7 +2667,7 @@ Instead, the motivation is one of economics. First, individual servers will have
 
 The concept of this model is best explained using the optical cluster state formalism (Sec.~\ref{sec:CSQC}), which lends itself naturally to this approach. A rectangular lattice graph is sufficient for universal quantum computation, even if the cluster state graph is not local (but classical communication between nodes is allowed).
 
-Let us first assume that we wish to construct a cluster state with $n_\mathrm{logical}$ logical qubits. We additionally allow each logical qubit to be the root node of a graph with a $+$ structure, where each branch comprises $n_\mathrm{ancilla}$ ancillary physical qubits. These are sometimes referred to as \emph{microclusters} \cite{???Nielsen}. A single microcluster collectively forms a single \emph{module} in the topology. Our goal is to fuse modules via nearest neighbour entanglement to build up the desired cluster state.
+Let us first assume that we wish to construct a cluster state with $n_\mathrm{logical}$ logical qubits. We additionally allow each logical qubit to be the root node of a graph with a $+$ structure, where each branch comprises $n_\mathrm{ancilla}$ ancillary physical qubits. These are sometimes referred to as \emph{microclusters} \cite{bib:Nielsen04}. A single microcluster collectively forms a single \emph{module} in the topology. Our goal is to fuse modules via nearest neighbour entanglement to build up the desired cluster state.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.9\columnwidth]{cluster_ident}
@@ -2668,7 +2676,7 @@ Let us first assume that we wish to construct a cluster state with $n_\mathrm{lo
 
 We arrange the modules to internally represent a $+$ topology where each node has neighbouring branches in each of the up/down/left/right directions. But we imagine the situation whereby each logical qubit, along with its respective ancillary branches, is held by a different server. Thus, the final cluster state is truly decentralised across all the servers, and in general local computations cannot be performed.
 
-Using the ancillary states in the respective directions, we attempt to fuse neighbouring clusters using entangling operations (EO's), such as CZ gates (e.g a KLM CZ gate), linear optics \emph{fusion gates} (i.e rotated polarising beamsplitters followed by photodetection) \cite{???}, or atoms with a $\lambda$-configuration coupled to photons \cite{barrett}, which undergo which-path erasure (Sec.~\ref{sec:hybrid}). Importantly, using the fusion gate approach, only a single beamsplitter is required to perform the EO, which only necessitates high-visibility HOM \cite{HOM} interference, mitigating the need for far more challenging interferometric stability.
+Using the ancillary states in the respective directions, we attempt to fuse neighbouring clusters using entangling operations (EO's), such as CZ gates (e.g a KLM CZ gate), linear optics \emph{fusion gates} (i.e rotated polarising beamsplitters followed by photodetection) \cite{bib:BrowneRudolph05}, or atoms with a $\lambda$-configuration coupled to photons \cite{bib:BarrettKok05}, which undergo which-path erasure (Sec.~\ref{sec:hybrid}). Importantly, using the fusion gate approach, only a single beamsplitter is required to perform the EO, which only necessitates high-visibility HOM \cite{HOM} interference, mitigating the need for far more challenging interferometric stability.
 
 When an EO is successful, we have fused two logical qubits together, albeit potentially with some leftover ancillary states between them. When it fails, we have lost the respective ancillary states, and we attempt again using the next ancillary qubits in each of the the respective branches. The bonding only fails if all $n_\mathrm{ancilla}$ EO's fail.
 
@@ -2683,14 +2691,14 @@ This approach has been shown to be resource-efficient \cite{nielsenoptcs}. Let u
 \begin{align}
 p_\mathrm{success} = 1 - {p_\mathrm{failure}}^{n_\mathrm{ancilla}},
 \end{align}
-which can be made arbitrarily close to unity with sufficiently long ancillary chains, the required length of whom scales as,
+where $p_\mathrm{success}$ is the probability of joining two modules, $p_\mathrm{failure}$ is the probability that a single EO fails, and $n_\mathrm{ancilla}$ is the number of ancillary qubits per chain. $p_\mathrm{success}$ can be made arbitrarily close to unity with sufficiently long ancillary chains, the required length of whom scales as,
 \begin{align}
 n_\mathrm{ancilla} = \frac{\mathrm{log}(1-p_\mathrm{success})}{\mathrm{log}(p_\mathrm{failure})}.
 \end{align}
 
 Now, for simplicity we will consider the preparation of linear cluster states, although these ideas can easily be extended to more complex topologies, such as 2D lattice graphs. Let us assume that we have a `primary' linear topology of modules, which we will incrementally attempt to `grow' by tacking on new modules to the end. When we do so, with probability $p_\mathrm{success}$ we grow the length of the primary by 1, otherwise we decrement it by 1. This proceeds as a random walk, with on average \mbox{$2p_\mathrm{success}-1$} new qubits added to the primary per time-step. Provided this number is positive, i.e \mbox{$p_\mathrm{success}>1/2$}, which can always be achieved with sufficient $n_\mathrm{ancilla}$, the length of the primary grows linearly over time, allowing efficient state preparation.
 
-This is just a very primitive model for linear cluster states. Much further work has been performed on the resource scaling of efficiently preparing different graph topologies \cite{KielingGrossEisert???, RohdeBarrett???, Rudolph???, BarrettKok???}.
+This is just a very primitive model for preparing linear cluster states, using an equally primitive strategy for constructing them using non-determinisitic gates. As discussed in Sec.~\ref{sec:CSQC}, much further work has been performed on the resource scaling of efficiently preparing cluster states of different graph topologies using different non-deterministic bonding strategies.
 
 Of course, we have used the most simple model for modules, where each accommodates a single logical qubit. In due course, we would expect commodity modules to become far more capable, and resource scaling to improve. We might envisage that each module houses a small rectangular lattice of logical qubits, and the interconnects between them glue them together, patchwork-style.
 
