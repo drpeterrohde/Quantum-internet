@@ -2583,11 +2583,32 @@ Significant progress is being made on reconfigurable, integrated LOQC devices \c
 
 \subsection{Passive linear optics} \label{sec:BS}
 
-While the KLM protocol (and subsequent improvements, e.g using cluster states) is universal for quantum computing, some of the key technological requirements are very challenging, and unlikely to be achieved in the short-term. However, simplified yet non-universal models for optical quantum computing can abandon some of the more challenging requirements, nonetheless implementing a restricted set of post-classical quantum computations. The two main contenders are quantum walks \cite{bib:Aharonov93, bib:Aharonov01, bib:Kempe03, bib:Salvador12, bib:RohdeMultiWalk11} and {\sc BosonSampling} \cite{bib:AaronsonArkhipov10, bib:RohdeIntroBS15}, both closely related in that they require only passive linear optics and single-photon states. Since, evidence has been presented that similar passive linear optics protocols may implement computationally hard problems using states of light other than photon-number states \cite{bib:RandBS, bib:RohdePhotAdd15, bib:RohdeDisp15, bib:RohdeCat15}.
+While the KLM protocol (and subsequent improvements, e.g using cluster states) is universal for quantum computing, some of the key technological requirements are very challenging, and unlikely to be achieved in the short-term. However, simplified yet non-universal models for optical quantum computing can abandon some of the more challenging requirements, nonetheless implementing a restricted set of post-classical quantum computations.
+
+Optically, the two main contenders for this are multi-photon quantum walks \cite{bib:Aharonov93, bib:Aharonov01, bib:Kempe03, bib:Salvador12, bib:RohdeMultiWalk11} and {\sc BosonSampling} \cite{bib:AaronsonArkhipov10, bib:RohdeIntroBS15}, both closely related in that they require only passive linear optics and single-photon states. Since, evidence has been presented that similar passive linear optics protocols may implement computationally hard problems using states of light other than photon-number states \cite{bib:RandBS, bib:RohdePhotAdd15, bib:RohdeDisp15, bib:RohdeCat15}.
 
 These protocols involve nothing more than evolving multiple single-photon states through beamsplitter networks and measuring the output photostatistics. This is equivalent to just taking the first stage of the KLM protocol shown in Fig.~\ref{fig:KLM_protocol}.
 
-The computational hardness of these models for computation relate to the fact that the amplitudes in the output superpositions are proportional to matrix permanents, which are \textbf{\#P}-hard in general, yielding computationally complex sampling problems.
+The computational hardness of these models for computation relate to the fact that the amplitudes in the output superpositions are proportional to matrix permanents, which are known to be \textbf{\#P}-hard in general. This is believed to be a classically hard complexity class, even harder than \textbf{NP}-hard in the complexity hierarchy, requiring exponential classical time to evaluate. This yields computationally complex sampling problems.
+
+Specifically, for an $m$-mode interferometer, and input state,
+\begin{align}
+\ket\psi_\mathrm{in} = \ket{T_1,\dots,T_m},
+\end{align}
+where there are $T_i$ photons in the $i$th input mode, the output superposition takes the form,
+\begin{align}
+\ket\psi_\mathrm{out} = \sum_S \gamma_{S,T} \ket{S_1,\dots,S_m},
+\end{align}
+and $S$ sums over all possible photon-number configurations at the output, of which there are,
+\begin{align}
+|S| = \binom{n+m-1}{n}.
+\end{align}
+
+The amplitudes $\gamma_{S,T}$ are given by,
+\begin{align}
+\gamma_{S,T} = \frac{\mathrm{Per}(U_{S,T})}{\sqrt{S_1!\dots S_m! T_1!\dots T_m!}},
+\end{align}
+where $\mathrm{Per}(\cdot)$ denotes the matrix permanent, and $U_{S,T}$ is obtained by taking $S_i$ copies of the $i$th row, and $T_j$ copies of the $j$th column of the linear optics unitary matrix $U$.
 
 In the case of {\sc BosonSampling}, the unitary is chosen randomly from the Haar-measure. In the case of quantum walks on the other hand, the matrix encodes a graph, where the photons `hop' between vertices by following edges \cite{RohdeQWintro}.
 
@@ -2649,13 +2670,22 @@ These encryption protocols induce a resource overhead in circuit size and number
 
 \subsubsection{Passive linear optics}
 
-It was recently shown that processing photonic states using passive linear optics may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}. This encryption does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy. The full protocol is given in Alg.~\ref{tab:homo_LO}.
+It was recently shown that processing photonic states using passive linear optics may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}. This encryption does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy.
+
+For $m$ modes, the resource requirements are:
+\begin{itemize}
+\item $m$ single-photons -- one per input mode.
+\item $m$ classically controlled waveplates, able to implement arbitrary polarisation rotations.
+\item $m$ polarisation filters.
+\item $m$ photodetectors.
+\end{itemize}
+The full protocol is given in Alg.~\ref{tab:homo_LO}.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\tt
 function HomomorphicLinearOptics($S$):
 \begin{enumerate}
-    \item Alice prepares the state,
+    \item Alice meditates upon, but needn't actually prepare the state,
     \begin{align}
     \ket\psi_\mathrm{number} = \otimes_{i=1}^m \ket{S_i},    
     \end{align}
@@ -2664,26 +2694,28 @@ function HomomorphicLinearOptics($S$):
 S_i\in\{0,1\},
     \end{align}
 is the photon-number of the $i$th mode.
-   \item Alice makes the substitutions from the photon-number basis into the polarisation basis, 
+   \item Alice prepares a polarisation-encoded input state by making the substitutions from the photon-number basis into the polarisation basis, 
    \begin{align}
    \ket{0}&\to\ket{H}, \nonumber \\
    \ket{1}&\to\ket{V}. 
    \end{align}
    to obtain $\ket\psi_\mathrm{pol}$.
-   \item Alice chooses a random private key from the uniform distribution,
+   \item Alice chooses a random private key as a real number from the uniform distribution,
    \begin{align}
     k\in(0,2\pi).
     \end{align}
-    \item Alice prepares the encoded state by applying the same polarisation rotation, $k$, to each mode,
+    \item Alice prepares the encoded state by applying the same polarisation rotation (using waveplates), of angle $k$, to each mode,
    \begin{align}
    \ket\psi_\mathrm{enc} = \hat{R}(k)^{\otimes m}\ket\psi_\mathrm{pol},
    \end{align}
    where,
    \begin{align}
-   \hat{R}(\theta) = \left(\begin{array}{cc}\mathrm{cos}\,\theta & -\mathrm{sin}\,\theta \\\mathrm{sin}\,\theta & \mathrm{cos}\,\theta \end{array}\right).
+   \hat{R}(\theta) = \left(\begin{array}{cc}
+\mathrm{cos}\,\theta & -\mathrm{sin}\,\theta \\
+\mathrm{sin}\,\theta & \mathrm{cos}\,\theta \end{array}\right).
    \end{align}
     \item Alice sends $\ket\psi_\mathrm{enc}$ to Bob.
-    \item Bob applies processing using his linear optics network, to obtain,
+    \item Bob applies processing using his linear optics computer, to obtain,
     \begin{align}
     \ket\psi_\mathrm{enc\,comp} = \hat{U} \ket\psi_\mathrm{enc},
     \end{align}
@@ -2693,9 +2725,10 @@ is the photon-number of the $i$th mode.
     \ket\psi_\mathrm{comp} = \hat{R}(-k)^{\otimes m}\ket\psi_\mathrm{enc\,comp}.
     \end{align}
     \item Alice measures $\ket\psi_\mathrm{comp}$ using polarisation-resolved photodetectors, keeping only vertically polarised photons, whilst discarding horizontally polarised ones.
+    \item $\ket\psi_\mathrm{comp}$ is the unencrypted output of the computation.
     \item $\Box$
 \end{enumerate}}}
-\caption{Protocol for implementing homomorphic encryption on photonic, passive linear optics. This includes {\sc BosonSampling} and photonic quantum walks.} \label{tab:homo_LO}
+\caption{Protocol for implementing homomorphic encryption on photonic, passive linear optics.} \label{tab:homo_LO}
 \end{table}
 
 The key idea here is that orthogonal polarisations do not interfere with one another under linear optics evolution. Thus, by inserting additional orthogonal `dummy' photons, and applying random polarisation rotations, we can confuse any eavesdropper and hide the secret data from them.
@@ -2704,7 +2737,7 @@ Using this protocol, it was shown that the probability of Bob correctly guessing
 \begin{align}
 P_\mathrm{guess} = \sqrt{\frac{8}{\pi m}},
 \end{align}
-for sufficiently large $m$, which asymptotically approaches 0. Furthermore, because a single computation requires Alice to perform only a single call to Bob's algorithm, which we treat as a black box, Alice gains minimum knowledge about Bob's secret algorithm.
+for sufficiently large $m$, which asymptotically (but unfortunately only polynomially) approaches 0. Furthermore, because a single computation requires Alice to perform only a single call to Bob's algorithm, which we treat as a black box, Alice gains minimum knowledge about Bob's secret algorithm.
 
 %
 % Cluster States
