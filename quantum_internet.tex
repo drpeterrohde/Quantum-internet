@@ -2,7 +2,7 @@
 % The Quantum Internet - A Vision for the Future
 %
 
-\documentclass[aps,rmp,twocolumn,amsmath,amssymb,nofootinbib,superscriptaddress]{revtex4}
+\documentclass[aps,rmp,twocolumn,amsmath,amssymb,nofootinbib,superscriptaddress,longbibliography,floatfix]{revtex4-1}
 
 \usepackage[pdftex]{graphicx}
 \usepackage{mathrsfs}
@@ -28,8 +28,6 @@
 \newtheorem{definition}{Definition}
 
 \begin{document}
-
-\bibliographystyle{apsrev}
 
 %
 % Title
@@ -1407,7 +1405,7 @@ In Sec.~\ref{sec:costs} we introduced the notion of network costs, strategies fo
 % Single User (Shortest-Path)
 %
 
-\subsection{Single user (shortest-path)} \label{sec:single_user_shortest}
+\subsection{Single user} \label{sec:single_user_shortest}
 
 Let us begin our discussion of strategies by considering the simplest case of just a single user on the network. Consider the graph shown in Fig.~\ref{fig:simp_route_opt}. This is the same example used earlier, but now the edges have been weighted by some arbitrary cost metric. There are four routes from $A$ to $B$. All have cost \mbox{$c=3$} except the route indicated by the red arrow, which has cost \mbox{$c=2$}. Clearly the latter is optimal in terms of cost minimisation, and any shortest-path algorithm applied between $A$ and $B$ will accurately come to that conclusion. Thus, single-user networks are very trivial to optimise, and there is no distinction between {\sc Local} and {\sc Global} strategies.
 
@@ -2178,6 +2176,20 @@ The evolution of optical states represents an extremely broad category of quantu
 The notable exception is non-linear optics, whereby additional errors in the photon-number degree of freedom or phase-space are possible, since, unlike linear optics, photon-number needn't be conserved in general. This additional degree of freedom in error mechanisms can be accommodated for by introducing an error measure capturing confusion in photon-number or unwanted phase-space transformations. For example, for a given non-linear interaction, error metrics quantifying error bounds on phase-space transformations, such as fluctuation in squeezing or displacement operations, could be employed, which can be represented as metrics, and are therefore compatible with the error metric formalism upon which QTCP is based.
 
 %
+% Random Number Generation
+%
+
+\subsection{Random number generation}
+
+Perhaps the simplest quantum information processing task is that of perfect random number generation. True random numbers have widespread applications in cryptography, Monte-Carlo simulations, and any type of randomised algorithm.
+
+Classical random number generators are actually deterministic, but so difficult to predict that we accept them to be as good as random. But for some applications this isn't enough, and we must make sure that no correlations of any type exist between different random numbers, or between the random numbers and their environment.
+
+This can be achieved in many different ways quantum mechanically. Ultimately, they are all based on the Heisenberg uncertainty principle, that certain quantum mechanical measurements yield uncertainty. Most trivially, we can prepare a photon with diagonal polarisation -- i.e \mbox{$\ket{+} = (\ket{H}+\ket{V})/\sqrt{2}$} -- and then measure it in the horizontal/vertical polarisation basis. Assuming the device is perfectly implementing this procedure, we will measure a perfect random 50/50 distribution between $\ket{H}$ and $\ket{V}$.
+
+The cynics amongst us might question the non-determinism of the laws of Nature, and ask whether quantum random numbers really are truly random (in the sense of non-determinism), or whether they also are just too hard to predict that we treat them as effectively random. The answer to this is that it has been proven that quantum mechanics is inconsistent with `hidden variable theories' \cite{Bell}, i.e that there is an underlying, but inaccessible determinism in the world, which is guiding quantum measurements in a completely deterministic manner. This disproof effectively validates the notion of quantum mechanical perfect random number generation.
+
+%
 % Memory
 %
 
@@ -2237,7 +2249,7 @@ Taking two polarisation-encoded photonic Bell pairs, say $\ket{\Psi^+}$ and subj
 \hat\rho_\mathrm{in} = F\ket{\Psi^+}\bra{\Psi^+} + (1-F)\ket{\Psi^-}\bra{\Psi^-},
 \end{align}
 where $F$ is the entanglement fidelity, which is a function of the dephasing rate. Note that $\ket{\Psi^+}$ and $\ket{\Psi^-}$ are related by local phase-flip operations ($\hat{Z}$) applied to either qubit,
-\begin{align} \label{eq:bell_basis}
+\begin{align} \label{eq:psi_minus}
 \ket{\Psi^-} = \hat{Z}_A \ket{\Psi^+} = \hat{Z}_B \ket{\Psi^+}.
 \end{align}
 
@@ -2509,7 +2521,7 @@ Each of these stages present their own technological challenges, sufficiently ch
 \caption{Delegated quantum computation, where each of the three computational stages (state preparation, evolution and measurement) are outsourced to the cloud without intermittent interaction with the client, $A$. $A$ provides only a classical description of the processing pipeline to be implemented, each stage of which is delegated to a server specialised in that particular task. Thus, the total processing pipeline takes the form \mbox{$A\to B_1\to B_2\to B_3\to A$}, where \mbox{$A\to B_1$} and \mbox{$B_3\to A$} are classical, and \mbox{$B_1\to B_2$} and \mbox{$B_2\to B_3$} are quantum channels.} \label{fig:delegated}
 \end{figure}
 
-This can be achieved by adding a {\sc Pipeline} field to the packet header prepared by Alice -- a FIFO stack describing the entire processing pipeline that Alice's packet (which initially contains only classical data) ought to follow through the network. Following completion of each stage of the pipeline we pop the stack and transmit the packet to the next specified host. Only at the very completion of the protocol is a packet (containing only classical data) returned to Alice.
+This can be achieved by adding a {\sc Pipeline} field to the packet header prepared by Alice -- a FIFO queue describing the entire processing pipeline that Alice's packet (which initially contains only classical data) ought to follow through the network. Following completion of each stage of the pipeline we pop the stack and transmit the packet to the next specified host. Only at the very completion of the protocol is a packet (containing only classical data) returned to Alice.
 
 Another good case study is quantum metrology using NOON states (Secs.~\ref{sec:NOON} \& \ref{sec:metrology}) for Heisenberg limited metrology. Preparing NOON states is extremely challenging, and additionally Alice may not possess the unknown phase to be measured, but rather wishes a NOON state, prepared by $B_1$, to be provided to a third party, $B_2$, who applies the unknown phase, and passes the resulting state to $B_3$, who implements the required high-efficiency parity measurements required to complete the protocol. In this case, the pipeline would take the same form as above, again with no back-and-forth communication to Alice.
 
@@ -2525,7 +2537,15 @@ The \emph{circuit model} is the conventional and intuitive approach for expressi
 
 In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \emph{cluster state} or \emph{graph state}. The state is associated with a graph of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation. That is, they act as a \emph{substrate} for implementing arbitrary computations.
 
-In the graph, vertices represent qubits initialised into the \mbox{$\ket{+}=(\ket{0}+\ket{1})/\sqrt{2}$} state, and edges represent the application of maximally entangling controlled-phase (CZ) gates between vertices, given by \mbox{$\hat{U}_\mathrm{CZ}=\mathrm{diag}(1,1,1,-1)$}. An example is presented in Fig.~\ref{fig:cluster_state}. Cluster states are easily encoded optically using photonic polarisation encoding (Sec.~\ref{sec:single_phot_enc}), and therefore readily lend themselves to optical networking.
+In the graph, vertices represent qubits initialised into the \mbox{$\ket{+}=(\ket{0}+\ket{1})/\sqrt{2}$} state, and edges represent the application of maximally entangling controlled-phase (CZ) gates between vertices, given by,
+\begin{align}
+\hat{U}_\mathrm{CZ} = \left(\begin{array}{cccc}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & -1 \end{array}\right).
+\end{align}
+An example is presented in Fig.~\ref{fig:cluster_state}. Cluster states are easily encoded optically using photonic polarisation encoding (Sec.~\ref{sec:single_phot_enc}), and therefore readily lend themselves to optical networking.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.6\columnwidth]{cluster_state}
@@ -2940,7 +2960,7 @@ Combined with recent advances in homomorphic encryption and blind quantum comput
 
 From the security perspective, the global quantum internet will enable an international QKD communications network with perfect secrecy, guaranteed by the laws of physics. This will be of immense economic and strategic benefit to commercial enterprises, governments, and individuals. Classical cryptography is already a multi-billion dollar industry worldwide. Quantum cryptography will supersede it, and be of especial importance in the era of quantum computers, which compromise some essential classical cryptographic protocols, such as RSA \cite{bib:RSA}, which forms the basis of most current internet encryption, digital signatures, and the Blockchain/Bitcoin protocol. Not only is quantum cryptography being pursued optically, but even credit cards with embedded quantum circuitry are being actively developed to prevent fraud. Inevitably, this will require the communication between bank automats and servers to be mediated by a quantum network.
 
-Already, off-the-shelf QKD systems are available as commodity items (e.g by magiQ and idQuantique) \comment{Check this. Are there others?}, which may be simply interconnected via an optical fibre link, thereby implementing end-to-end quantum cryptography \cite{???, IDQUANTIQUE, MAGICQ}. This is of a similar flavour to, and a first step towards, modularised quantum computing, which would greatly enhance the economic viability and scalability of general purpose quantum computing by paving the way for the mass production of interconnected elementary modules.
+Already, off-the-shelf QKD systems are available as commodity items, e.g from MagiQ \cite{bib:MagiQ} and ID Quantique \cite{bib:IDQuant}, which may be simply interconnected via an optical fibre link, thereby implementing end-to-end quantum cryptography. This is of a similar flavour to, and a first step towards, modularised quantum computing, which would greatly enhance the economic viability and scalability of general purpose quantum computing by paving the way for the mass production of interconnected elementary modules.
 
 The reality is that we are only just beginning to understand the full potential for quantum technologies, and as we learn more we will inevitably find new uses for networking them.
 
@@ -2948,13 +2968,12 @@ Large-scale quantum computing may still seem a formidable, and somewhat long-ter
 
 It is essential for the adoption of quantum technology, that quantum networking infrastructure be sufficiently well developed that it is ready to be deployed the minute the first useful, post-classical hardware becomes available. The proliferation of the defining technology of the 21st century depends upon it.
 
-\emph{--- Ad astra per alas porci. Im Wandel der Zeiten. Scientia potentia est.}
-
 %
 % Acknowledgments
 %
 
 \begin{acknowledgments}
+\emph{--- Ad astra per alas porci. Im Wandel der Zeiten. Scientia potentia est.}
 \end{acknowledgments}
 
 %
