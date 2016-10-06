@@ -139,27 +139,37 @@ There have been numerous approaches employed in the past for sharing communicati
 
 In this work we will focus on packet-switched networks when we later introduce our quantum networking protocols. However, with sufficient flexibility in the design of our upcoming quantum protocols, packet-switched networks can easily be made to effectively implement channel-switched, or time-/frequency-multiplexed communication.
 
-The present-day internet is built on top of a protocol stack comprising primarily the internet protocol (IP), user datagram protocol (UDP), and transmission control protocol (TCP). Most commonly, these are simply referred to as TCP/IP. These define a protocol stack of different layers of abstraction for communicating data packets between nodes in a network, determining their routing, and enforcing any quality of service requirements.
+The present-day internet is built on top of a protocol stack comprising primarily the Internet Protocol (IP), User Datagram Protocol (UDP), and Transmission Control Protocol (TCP). Most commonly, these are simply referred to as TCP/IP. These define a protocol stack of different layers of abstraction for communicating data packets between nodes in a network, determining their routing, and enforcing any quality of service requirements.
 
 %
 % Internet Protocol (IP)
 %
 
-\subsection{Internet protocol (IP)}
+\subsection{Internet Protocol (IP)}
 
 IP is the standard protocol employed in the internet for communicating data packets point-to-point. It is a low-level protocol that encapsulates digital data into packets containing a header field, which specifies routing information, most notably the IP addresses of the source and destination. IP does not enforce any kind of quality control, which is instead delegated higher-level protocols like TCP (Sec.~\ref{sec:TCP}, a higher-level protocol built on top of IP (Sec.~\ref{sec:TCP}).
 
 Multiple packets with the same source and destination needn't follow the same route -- the routing is determined dynamically in realtime by routers, based on network characteristics such as load or latency. Thus, packets belonging to the same underlying data may arrive out of order, or some may go missing altogether. IP does not address these issues, instead engaging in only `best-effort' delivery. 
 
-In IP there is no central authority with knowledge of the state of the entire network, which tells routers in the network how to best route packets. Thus, IP must be complemented with  
+In IP there is no central authority with knowledge of the state of the entire network, which tells routers in the network how to best route packets. Thus, IP must be complemented with up-to-date routing tables, held by routers/nodes in the network, which make routing decisions on a per-packet basis. This is achieved using gateway protocols, discussed next.
 
-instead leaving it for higher-level protocols (such as TCP and UDP) to handle.
+%
+% Routing Tables
+%
+
+\subsection{Gateway protocols \& routing tables} \label{sec:gateway}
+
+In the absence of a central mediating authority, routing decisions must be made by individual nodes in the network, upon receipt of packets. For routers to make sensible routing decisions, they must have some idea of overall structure and state of the network. This is achieved using gateway protocols, which communicate information about the state of the network on a nearest-neighbour basis. The are various gateway protocols in use, with the Exterior Gateway Protocol (EGP) and Border Gateway Protocol (BGP) being very common.
+
+We let every node in the network have a routing table, initially empty, that will ultimately be populated with information on how to best route incoming packets further along the route to their destination.
+
+To mitigate the need for a central authority, nodes engage in only nearest neighbour communication, sharing their routing tables with one another, to query about the distance metrics (Sec.~\ref{sec:costs}) associated with routes to different destinations. This communication is taking place regularly, and as nodes' routing tables become populated, updating in real-time, they will (hopefully) reach a steady-state. From these tables, single-source shortest path algorithms (Sec.~\ref{sec:single_source_sp}) can be applied by nodes to construct a complete picture of costs to every point in the network.
 
 %
 % User Datagram Protocol (UDP)
 %
 
-\subsection{User datagram protocol (UDP)}
+\subsection{User Datagram Protocol (UDP)}
 
 The UDP is a simple protocol built on top of IP, based on a `send-and-forget' principle for sending data packets. That is, there is no quality of service guarantee, and no notifications are provided to the sender as to whether packets successfully reached their destination. However, a checksum (hash) forms a part of the packet headers to enable error detection by the recipient. The lack of quality control bypasses the associated latency, making it particularly useful in time-critical applications, where the late arrival of a packet is useless and therefore needn't be retransmitted.
 
@@ -173,7 +183,7 @@ Therefore, UDP prioritises latency over reliability, and is best suited to time-
 % Transmission Control Protocol (TCP)
 %
 
-\subsection{Transmission control protocol (TCP)} \label{sec:TCP}
+\subsection{Transmission Control Protocol (TCP)} \label{sec:TCP}
 
 TCP differs from UDP in that it intrinsically supports quality control. The protocol is able to determine whether a packet successfully reached its destination, and if not, retransmit it as often as necessary to guarantee packet delivery. A checksum is also included in packets to enable error detection. This quality control has made TCP the dominant protocol employed in the present-day internet, where, in most scenarios, we wish to guarantee that data has been correctly delivered -- if an email is missing random segments of its text, users will become irate very quickly!
 
@@ -196,14 +206,6 @@ From this protocol, any given packet will eventually be successfully transmitted
 The beauty of this approach is that only a single channel is required for connecting all users. No dedicated point-to-point connections are required. As the number of users increases, the complexity of the network topology does not -- requiring only the addition of a node to the existing backbone. For small LAN's this is clearly reasonably functional. However, as the size of networks increases, the rate at which packet collisions occur increases, resulting in a reduction in network bandwidth. Thus, the Ethernet protocol is ideally suited to small LAN's, but is clearly not viable at a global level, where network competition is astronomical and the overhead from backoff would reduce network performance to a standstill, wasting most of the bandwidth.
 
 Another elegant feature of the Ethernet protocol is that bandwidth allocation is self-regulating, with bandwidth fairly and equitably allocated between users. This applies even in completely ad hoc networks, with users joining and leaving the network willy nilly. Provided all users are correctly and honestly implementing the `broadcast-and-backoff' protocol, network bandwidth is allocated evenly amongst users, and no mediating, overriding central authority is needed to oversee network resource allocation. This allows Ethernet networks to be truly `plug-and-play'.
-
-%
-% Routing Tables
-%
-
-\subsection{Routing tables}
-
-\comment{To do}
 
 %
 % Network Hierarchies
@@ -358,7 +360,7 @@ When considering strategy optimisation, the first question to ask is `Who perfor
 
 In terms of who performs the optimisation, the two main options are that either each node is responsible for optimising the routes of packets passing through it ({\sc Individual} algorithms), or there is a reliable and trusted central authority who oversees network operation and performs all strategy decision-making ({\sc Central} algorithms).
 
-In the case of {\sc Individual} algorithms, the required knowledge of the state of the network could be obtained using network exploration algorithms (Sec.~\ref{sec:path_exp}). Here nodes engage in only nearest neighbour communication, asking one another about the distance metrics associated with their neighbouring links. Each node maintains a routing table, which is shared with its neighbours, and updated every time such a communication takes place. As these communications are repeated, nodes' routing tables become populated and remain updated in real-time, until (hopefully) they reach a steady-state. From these tables, algorithms such as the Bellman-Ford single-source shortest path algorithm \cite{BF} can be applied by nodes to construct a complete picture of costs to every point in the network.
+In the case of {\sc Individual} algorithms, the required knowledge of the state of the network could be obtained using network exploration algorithms (Sec.~\ref{sec:path_exp}) or gateway protocols (Sec.~\ref{sec:gateway}). 
 
 On the other hand, for {\sc Central} algorithms, either network exploration could be employed, or alternately the network policy could require nodes to notify the central authority upon joining or leaving the network. The former introduces an overhead in classical networking resource usage, since network exploration must be performed routinely to keep the ledger of nodes up-to-date. The latter, on the other hand, avoids this, but introduces a point of failure, in that all network participants must be reliable in notifying the central authority as required by the network policy. Failure to do so could result in invalid strategies.
 
@@ -1160,7 +1162,7 @@ All of the examples for cost metrics we introduced in Sec.~\ref{sec:quantum_meas
 % Quantum Transmission Control Protocol (QTCP)
 %
 
-\section{Quantum transmission control protocol (QTCP)}
+\section{Quantum Transmission Control Protocol (QTCP)}
 
 In the classical world, TCP is employed for data transmission and routing. Next we define the quantum equivalent -- the Quantum Transmission Control Protocol (QTCP).
 
@@ -1200,7 +1202,7 @@ Next we describe the operation of the layers in the protocol stack in detail.
 % Data (Message)
 %
 
-\subsection{Data (message)}
+\subsection{Data (Message)}
 
 At the lowest level of the protocol we have the raw {\sc Data} Alice wishes to communicate to Bob. {\sc Data} is allowed to comprise both {\sc Quantum Data} and {\sc Classical Data} components, and may contain one or the other, or both.
 
@@ -1949,7 +1951,7 @@ With this approach, a new node can join the network, without having to know anyt
 % Single-Source Shortest-Path
 %
 
-\subsection{Single-source shortest-path}
+\subsection{Single-source shortest-path} \label{sec:single_source_sp}
 
 The shortest-path algorithm by Dijkstra presented above finds the shortest route between two specified nodes in a network. However, when employing {\sc Individual} routing strategies, where there is no central mediation of the network, each node desires an up-to-date routing table, showing the best route to take to any other point in the network. Then, upon receiving packets with particular destinations, rather than repeatedly applying Dijkstra's algorithm, we can simply look up the destination on the node's local routing table.
 
