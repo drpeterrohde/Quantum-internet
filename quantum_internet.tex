@@ -198,6 +198,14 @@ The beauty of this approach is that only a single channel is required for connec
 Another elegant feature of the Ethernet protocol is that bandwidth allocation is self-regulating, with bandwidth fairly and equitably allocated between users. This applies even in completely ad hoc networks, with users joining and leaving the network willy nilly. Provided all users are correctly and honestly implementing the `broadcast-and-backoff' protocol, network bandwidth is allocated evenly amongst users, and no mediating, overriding central authority is needed to oversee network resource allocation. This allows Ethernet networks to be truly `plug-and-play'.
 
 %
+% Routing Tables
+%
+
+\subsection{Routing tables}
+
+\comment{To do}
+
+%
 % Network Hierarchies
 %
 
@@ -1938,14 +1946,16 @@ Another approach, which does not require a reliable central authority, is for us
 With this approach, a new node can join the network, without having to know anything about the topology of the network. Similarly, upon leaving the network, it needn't notify anyone, since a future interrogation by a neighbour will be detected as a non-existent node. The BFS is therefore highly suited to ad hoc operation.
 
 %
-% Single-Source Shortest Path
+% Single-Source Shortest-Path
 %
 
-\subsection{Single-source shortest path}
+\subsection{Single-source shortest-path}
 
-\comment{To do}
-Bellman-Ford algorithm
-Worst-case runtime $O(|V|\cdot |E|)$.
+The shortest-path algorithm by Dijkstra presented above finds the shortest route between two specified nodes in a network. However, when employing {\sc Individual} routing strategies, where there is no central mediation of the network, each node desires an up-to-date routing table, showing the best route to take to any other point in the network. Then, upon receiving packets with particular destinations, rather than repeatedly applying Dijkstra's algorithm, we can simply look up the destination on the node's local routing table.
+
+Single-source shortest-path algorithms address this problem by calculating the shortest paths from the current node to \emph{every} other node in the network topology.
+
+The best-known algorithm for this problem is the Bellman-Ford algorithm \cite{BF}, which requires worst-case runtime of $O(|V|\cdot |E|)$. Clearly this is more complex than Dijkstra's algorithm for finding a particular shortest-path. But it is more efficient than using brute-force to find the shortest-path between every pair of nodes in the network via repeated application of Dijkstra.
 
 %
 % Minimum Spanning Tree
