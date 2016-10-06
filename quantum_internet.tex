@@ -101,9 +101,9 @@ Our goal is to present a broadly accessible technical overview of how we foresee
 
 The internet is one of the key technological achievements of the 20th century, an enabling factor in every aspect of our everyday use of modern technology. While digital computing was the definitive technology of the 20th century, quantum technologies will be for the 21st \cite{bib:NielsenChuang00}. 
 
-Perhaps the most exciting prospect in the quantum age is the development of quantum computers. Richard Feynman \cite{bib:Feynman85} was the first to ask the question `If quantum systems are so exponentially complex that we are unable to simulate them on our classical computers, can those same quantum systems  be exploited to exponentially outperform our classical computers?'. Subsequently, the Deutsch-Jozsa algorithm \cite{DJ} presented for the first time an algorithm that can run on a quantum computer, exponentially outperforming any classical algorithm.
+Perhaps the most exciting prospect in the quantum age is the development of quantum computers. Richard Feynman \cite{bib:Feynman85} was the first to ask the question `If quantum systems are so exponentially complex that we are unable to simulate them on our classical computers, can those same quantum systems  be exploited in a controlled way to exponentially outperform our classical computers?'. Subsequently, the Deutsch-Jozsa algorithm \cite{DJ} presented for the first time an algorithm that can run on a quantum computer, exponentially outperforming any classical algorithm. Since then, an enormous amount of research has been dedicated to finding new quantum algorithms, and the search has indeed been a very fruitful one \cite{algorithmZoo}.
 
-Since then, an enormous amount of research has been dedicated to finding new quantum algorithms, and the search has indeed been a very fruitful one \cite{algorithmZoo}. In addition to many practical applications, the onset of quantum computing carries with it deep philosophical implications. Specifically, the Extended Church-Turing (ECT) thesis hypothesises that any physically realisable system can \emph{efficiently} be simulated by a universal Turing machine. The believed exponential complexity of quantum systems inclines quantum computer scientists to believe that the ECT thesis is false. The demonstration of large-scale quantum computers, while unable to prove or disprove the ECT thesis\footnote{The term `efficient' is defined to mean that a problem can be solved in time at most polynomial in the size of the problem. When one talks about `scalability' or the ECT thesis, we are talking about asymptotic relationships. Clearly no finite-sized experiment can prove asymptotic scaling with certainty. But with a sufficiently large quantum computer at our disposal, demonstrating exponentially more computational power than its classical sibling, we might be satisfied in convincing ourselves about the nature of the scaling of different computational models.}, could at least provide some convincing evidence against the ECT conjecture.
+In addition to many the practical applications, the onset of quantum computing carries with it deep philosophical implications. Specifically, the Extended Church-Turing (ECT) thesis hypothesises that any physically realisable system can \emph{efficiently} be simulated by a universal Turing machine. The believed exponential complexity of quantum systems inclines quantum computer scientists to believe that the ECT thesis is false. The demonstration of large-scale quantum computers, while unable to prove or disprove the ECT thesis\footnote{The term `efficient' is defined to mean that a problem can be solved in time at most polynomial in the size of the problem. When one talks about `scalability' or the ECT thesis, we are talking about asymptotic relationships. Clearly no finite-sized experiment can prove asymptotic scaling with certainty. But with a sufficiently large quantum computer at our disposal, demonstrating exponentially more computational power than its classical sibling, we might be satisfied in convincing ourselves about the nature of the scaling of different computational models.}, could at least provide some convincing evidence against the ECT conjecture.
 
 Already we are beginning to see elementary realisations of essential quantum technologies such as quantum computing, cryptography, and metrology. As these technologies become increasingly viable and more ubiquitous, the demand for networking them and sharing quantum resources between them will become a pressing issue. Most notably, quantum cryptography and \emph{cloud quantum computing} will be pivotal in the proliferation of quantum technology, which necessarily requires reliable quantum communications channels.
 
@@ -135,6 +135,10 @@ It is hard to foresee the future of quantum technology. But it is certain that a
 
 To set the context for our upcoming treatment of quantum networks, we begin by discussing \emph{classical} networks, and some of the key protocols behind their operation.
 
+There have been numerous approaches employed in the past for sharing communications links between multiple users. This includes channel-switched networks, time- or frequency-multiplexed networks, and Code Division Multiple Access (CDMA). Nowadays packet-switched networks have become the norm in most digital networks, as they facilitate far greater efficiency in the use of network bandwidth, and are more easily scaled to greater numbers of users in a dynamic and ad hoc manner. It is foreseeable the same trend will continue with quantum technologies, especially given their initial high cost, where maximising network utility is paramount.
+
+In this work we will focus on packet-switched networks when we later introduce our quantum networking protocols. However, with sufficient flexibility in the design of our upcoming quantum protocols, packet-switched networks can easily be made to effectively implement channel-switched, or time-/frequency-multiplexed communication.
+
 The present-day internet is built on top of a protocol stack comprising primarily the internet protocol (IP), user datagram protocol (UDP), and transmission control protocol (TCP). Most commonly, these are simply referred to as TCP/IP. These define a protocol stack of different layers of abstraction for communicating data packets between nodes in a network, determining their routing, and enforcing any quality of service requirements.
 
 %
@@ -143,9 +147,13 @@ The present-day internet is built on top of a protocol stack comprising primaril
 
 \subsection{Internet protocol (IP)}
 
-IP is the standard protocol employed in the internet for communicating data packets point-to-point. It is a low-level protocol that encapsulates digital data into packets containing a header field, which specifies routing information, most notably the IP addresses of the source and destination. IP does not enforce any kind of quality control, which is instead delegated to TCP, a higher-level protocol built on top of IP (Sec.~\ref{sec:TCP}).
+IP is the standard protocol employed in the internet for communicating data packets point-to-point. It is a low-level protocol that encapsulates digital data into packets containing a header field, which specifies routing information, most notably the IP addresses of the source and destination. IP does not enforce any kind of quality control, which is instead delegated higher-level protocols like TCP (Sec.~\ref{sec:TCP}, a higher-level protocol built on top of IP (Sec.~\ref{sec:TCP}).
 
-Multiple packets with the same source and destination needn't follow the same route -- the routing is determined dynamically in realtime by routers, based on network characteristics such as load or latency. Thus, packets belonging to the same underlying data may arrive out of order. IP does not address this issue, instead leaving it for higher-level protocols (such as TCP and UDP) to handle.
+Multiple packets with the same source and destination needn't follow the same route -- the routing is determined dynamically in realtime by routers, based on network characteristics such as load or latency. Thus, packets belonging to the same underlying data may arrive out of order, or some may go missing altogether. IP does not address these issues, instead engaging in only `best-effort' delivery. 
+
+In IP there is no central authority with knowledge of the state of the entire network, which tells routers in the network how to best route packets. Thus, IP must be complemented with  
+
+instead leaving it for higher-level protocols (such as TCP and UDP) to handle.
 
 %
 % User Datagram Protocol (UDP)
@@ -286,7 +294,7 @@ where $\vec{R}_{\vec{A}\to \vec{B}}$ is a set of routes connecting each pair \mb
 
 \subsection{Flow networks} \label{sec:flow_networks}
 
-On a shared network with many users utilising the network simultaneously, it may be the case the preferred goal for the network is to maximise \emph{flow} \cite{???} -- the amount of information that can be transmitted per unit time, i.e the net utilisation of the network's resources. In this case we can build on the existing theory of \emph{flow networks} \cite{???}, which characterise the load of links within the network.
+On a shared network with many users utilising the network simultaneously, it may be the case the preferred goal for the network is to maximise \emph{flow} \cite{???} -- the total amount of information that can be transmitted per unit time, i.e the net utilisation of the network's resources, summed over all users. In this case we can build on the existing theory of \emph{flow networks} \cite{???}, which characterise the load of links within the network.
 
 A flow network is easily obtained from the network graph by associating a `capacity' attribute with each link and defining the graph weighted by the capacities as the flow network, preserving the underlying structure of the network graph.
 
@@ -316,6 +324,8 @@ G_{t+1} = \mathcal{S}_t(G_t).
 \end{align}
 For example, the network might have bandwidth restrictions on some links, in which case if more than a certain amount of data is transmitted through a link, it is no longer available for use until previous transmissions have completed. Or, based on market dynamics, the dollar cost of utilising a link may change with its demand.
 
+This type of cost minimisation approach to routing is analogous to \emph{distance-vector routing protocols} in classical networking theory.
+
 %
 % Strategy Optimisation
 %
@@ -340,7 +350,9 @@ When considering strategy optimisation, the first question to ask is `Who perfor
 
 In terms of who performs the optimisation, the two main options are that either each node is responsible for optimising the routes of packets passing through it ({\sc Individual} algorithms), or there is a reliable and trusted central authority who oversees network operation and performs all strategy decision-making ({\sc Central} algorithms).
 
-In the case of {\sc Individual} algorithms, the required knowledge of the state of the network could be obtained using network exploration algorithms (Sec.~\ref{sec:path_exp}). On the other hand, for {\sc Central} algorithms, either network exploration could be employed, or alternately the network policy could require nodes to notify the central authority upon joining or leaving the network. The former introduces an overhead in classical networking resource usage, since network exploration must be performed routinely to keep the ledger of nodes up-to-date. The latter, on the other hand, avoids this, but introduces a point of failure, in that all network participants must be reliable in notifying the central authority as required by the network policy. Failure to do so could result in invalid strategies.
+In the case of {\sc Individual} algorithms, the required knowledge of the state of the network could be obtained using network exploration algorithms (Sec.~\ref{sec:path_exp}). Here nodes engage in only nearest neighbour communication, asking one another about the distance metrics associated with their neighbouring links. Each node maintains a routing table, which is shared with its neighbours, and updated every time such a communication takes place. As these communications are repeated, nodes' routing tables become populated and remain updated in real-time, until (hopefully) they reach a steady-state. From these tables, algorithms such as the Bellman-Ford single-source shortest path algorithm \cite{BF} can be applied by nodes to construct a complete picture of costs to every point in the network.
+
+On the other hand, for {\sc Central} algorithms, either network exploration could be employed, or alternately the network policy could require nodes to notify the central authority upon joining or leaving the network. The former introduces an overhead in classical networking resource usage, since network exploration must be performed routinely to keep the ledger of nodes up-to-date. The latter, on the other hand, avoids this, but introduces a point of failure, in that all network participants must be reliable in notifying the central authority as required by the network policy. Failure to do so could result in invalid strategies.
 
 %
 % Local vs. Global Optimisation
@@ -1144,8 +1156,6 @@ All of the examples for cost metrics we introduced in Sec.~\ref{sec:quantum_meas
 
 In the classical world, TCP is employed for data transmission and routing. Next we define the quantum equivalent -- the Quantum Transmission Control Protocol (QTCP).
 
-There have been numerous approaches employed in the past for sharing communications links between multiple users. This includes channel-switched networks, time- or frequency-multiplexed networks, and Code Division Multiple Access (CDMA). Nowadays packet-switched networks have become the norm in most digital networks, as they facilitate far greater efficiency in the use of network bandwidth, and are more easily scaled to greater numbers of users in a dynamic and ad hoc manner. It is foreseeable the same trend will continue with quantum technologies, especially given their initial high cost, where maximising network utility is paramount.
-
 The goal of QTCP is to abstract away the low-level physical operation of a quantum network to create a virtual interface between Alice and Bob, allowing direct access to data as if it were held locally, in much the same way that high-level services like classical FTP facilitate interaction with remote data as though it were a local asset, blind to the intermediate networking.
 
 We consider the scenario where Alice (or a set of Alice's) has some state, which she wishes to communicate to Bob (Bob's), with the aim of optimising some arbitrary cost measure. Bob is no guru and doesn't want to concern himself with how the state got from Alice to himself. His only concern is that he receives it and that it satisfies quality constraints he and Alice have agreed upon.
@@ -1662,6 +1672,10 @@ The {\sc Costs} and {\sc Attributes} fields within the {\sc Header} are very pow
 
 \comment{To do}
 
+\comment{Are there any scenarios where we'd make QTCP mimic a channel-switched network?}
+
+\comment{Discuss connectionless vs connection-oriented service)}
+
 \comment{Protocol changes depending on scale. How does strategy change over different scales.}
 
 %
@@ -1922,6 +1936,16 @@ One solution is for a central authority to be responsible for maintaining a ledg
 Another approach, which does not require a reliable central authority, is for users to implement network exploration algorithms each time they wish to perform a shortest-path calculation. This facilitates truly ad hoc networking, but incurs the cost overhead associated with nodes frequently implementing network exploration. However, network exploration is a purely classical algorithm, which may run entirely over the classical network, and therefore incurs no cost in quantum resources.
 
 With this approach, a new node can join the network, without having to know anything about the topology of the network. Similarly, upon leaving the network, it needn't notify anyone, since a future interrogation by a neighbour will be detected as a non-existent node. The BFS is therefore highly suited to ad hoc operation.
+
+%
+% Single-Source Shortest Path
+%
+
+\subsection{Single-source shortest path}
+
+\comment{To do}
+Bellman-Ford algorithm
+Worst-case runtime $O(|V|\cdot |E|)$.
 
 %
 % Minimum Spanning Tree
@@ -2192,6 +2216,10 @@ Classical random number generators are actually deterministic, but so difficult 
 This can be achieved in many different ways quantum mechanically. Ultimately, they are all based on the Heisenberg uncertainty principle, that certain quantum mechanical measurements yield uncertainty. Most trivially, we can prepare a photon with diagonal polarisation -- i.e \mbox{$\ket{+} = (\ket{H}+\ket{V})/\sqrt{2}$} -- and then measure it in the horizontal/vertical polarisation basis. Assuming the device is perfectly implementing this procedure, we will measure a perfect random 50/50 distribution between $\ket{H}$ and $\ket{V}$.
 
 The cynics amongst us might question the non-determinism of the laws of Nature, and ask whether quantum random numbers really are truly random (in the sense of non-determinism), or whether they also are just too hard to predict that we treat them as effectively random. The answer to this is that it has been proven that quantum mechanics is inconsistent with `hidden variable theories' \cite{Bell}, i.e that there is an underlying, but inaccessible determinism in the world, which is guiding quantum measurements in a completely deterministic manner. This disproof effectively validates the notion of quantum mechanical perfect random number generation.
+
+Consider the scenario where a client needs a stream of true random numbers for use in her Monte-Carlo simulation algorithm or as a secret key for her email encryption. She has limited quantum resources herself, so she outsources it to her better-equipped mate. Depending on her own resource limitations and potential security considerations, her friend could either: (1) implement the full protocol described above, providing her with a classical random bitstream; or (2), only takes care of photon generation, providing her with a perpetual source of high-quality photons. (1) would be suitable if the intention was to apply the source of randomness to a Monte-Carlo simulation. But in a cryptographic scenario, where the randomness is being used for key generation, clearly Alice could not outsource the measurement stage without revealing her secret key. In this instance, Bob can act as the provider of photons, while Alice does the measurements herself so as to keep her random bit-string secret.
+
+This scenario is perhaps the only obvious example of where a UDP-like send-and-forget protocol may be viable. Unlike most other applications, Bob is broadcasting a stream of identical, pure quantum states, that are not entangled with any peripheral system, and are easily replicated. Thus, if any particular photon fails to reach Alice, it matters not, as she can simply await the next one emanating from Bob's bombardment of photons.
 
 %
 % Memory
