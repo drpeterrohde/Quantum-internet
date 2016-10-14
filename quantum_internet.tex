@@ -54,6 +54,9 @@
 \affiliation{Hefei National Laboratory for Physical Sciences at Microscale and Department of Modern Physics,
 University of Science \& Technology of China, Hefei, Anhui 230026, China}
 
+\author{Samuel I. Marks}
+\affiliation{Sydney Medical School, University of Sydney, Australia}
+
 \author{William J. Munro}
 \affiliation{NTT Basic Research Laboratories, 3-1 Morinosato-Wakamiya, Atsugi, Kanagawa 243-0198, Japan}
 \affiliation{National Institute of Informatics, 2-1-2 Hitotsubashi, Chiyoda-ku, Tokyo 101-8430, Japan}
@@ -87,17 +90,19 @@ Large ad hoc networks, such as the internet, require well-constructed protocols 
 
 \section{Foreword}
 
-Quantum technologies are not just of interest to quantum physicists, but will have transformative effects across countless areas -- the next technological revolution. For this reason, this paper is directed at a general audience of not only quantum computer scientists, but also classical computer scientists, physicists, and computer, software and network engineers. More broadly, we hope this paper will be of interest to those who recognise the future significance of quantum technologies, and the implications (or even just curiosities) that networking them might have.
+Quantum technologies are not just of interest to quantum physicists, but will have transformative effects across countless areas -- the next technological revolution. For this reason, this paper is directed at a general audience of not only quantum computer scientists, but also classical computer scientists, physicists, and computer, software and network engineers. More broadly, we hope this paper will be of interest to those who recognise the future significance of quantum technologies, and the implications (or even just curiosities) that globally networking them might have.
 
 A basic understanding of both quantum mechanics and classical networking are helpful, but not essential, to following our discussion. Some mathematical sections require a basic understanding of the mathematical notation of quantum mechanics. Although the reader without this background ought to be able to nonetheless follow the broader arguments.
 
-Our goal is to present a broadly accessible technical overview of how we foresee quantum technologies to operate in the era of quantum globalisation.
+The entirely technically disinterested reader may refer to just Secs.~\ref{sec:introduction}, \ref{sec:era_quant}, \ref{sec:economics} \& \ref{sec:vision_quant} -- essentially brief non-technical essays about the motivation, applications and implications of the quantum internet.
+
+Our goal is to present a broadly accessible technical overview of how we foresee quantum technologies to operate in the era of quantum globalisation, and the exciting possibilities that will emerge.
 
 %
 % Introduction
 %
 
-\section{Introduction}
+\section{Introduction} \label{sec:introduction}
 
 The internet is one of the key technological achievements of the 20th century, an enabling factor in every aspect of our everyday use of modern technology. While digital computing was the definitive technology of the 20th century, quantum technologies will be for the 21st \cite{bib:NielsenChuang00}. 
 
@@ -199,7 +204,7 @@ However, the enforced quality control and handshaking protocols incur a network 
 
 Ethernet is a networking protocol based on `broadcasting' on a shared network. This model is particularly suited to local area networks (LAN's), where all users share a single communications channel rather than dedicated point-to-point links.
 
-In the Ethernet protocol, every user is free to broadcast data onto the shared channel as they please -- all users transmit to, and receive from a single shared channel. However, clearly sometimes packet `collisions' will occur, resulting in packet corruption. To overcome this, Ethernet packets contain a checksum that can be used to verify upon arrival whether a packet has been corrupted by a collision. If a collision is detected, the respective users are able to re-broadcast, following a randomly chosen waiting period (known as `backoff'). Collisions therefore reduce network performance, and it follows that network bandwidth decreases with the number of users competing for bandwidth\footnote{Think of that awkward dinner table conversation, where two people start talking simultaneously. It's immediately obvious to them both that they are interfering with one another, and if they were to just talk over one another (packet collision), no one would understand either of them. So, they both awkwardly pause, before starting to speak again. In a \emph{really} awkward conversation, they will both start again simultaneously, after which there will be an even longer awkward pause before recommencing. Eventually, this self-regulating system will resolve itself probabilistically, with a sole victor controlling the airwaves, commanding the attention of the listeners. Provided that all dinner guests adhere to social etiquette and backoff appropriately, with repeated conversations, all guests will statistically receive an equitable share of attention.}.
+In the Ethernet protocol, every user is free to broadcast data onto the shared channel as they please -- all users transmit to, and receive from a single shared channel. However, clearly sometimes packet `collisions' will occur, resulting in packet corruption. To overcome this, Ethernet packets contain a checksum that can be used to verify upon arrival whether a packet has been corrupted by a collision. If a collision is detected, the respective users are able to re-broadcast, following a randomly chosen waiting period (known as `backoff'). Collisions therefore reduce network performance, and it follows that network bandwidth decreases with the number of users competing for bandwidth\footnote{Think of that awkward dinner table conversation, where two people start talking simultaneously. It's immediately obvious to them both that they are interfering with one another, and if they were to just talk over one another (packet collision), no one would understand either of them. So, they both awkwardly pause, before starting to speak again. In a \emph{really} awkward conversation, they will both start again simultaneously, after which there will be an even longer awkward pause before recommencing. Eventually, this self-regulating system will resolve itself probabilistically, with a sole victor controlling the airwaves, commanding the attention of the listeners. Provided that all dinner guests adhere to social etiquette and backoff appropriately, with repeated conversations, all guests will statistically receive an equitable share of attention, albeit with some wastage of conversation time owing to the periods of silence.}.
 
 From this protocol, any given packet will eventually be successfully transmitted uncorrupted, collision-free, albeit with uncertain timing that grows with the number of competing users. For this reason, the Ethernet protocol is not ideal for time-critical applications requiring hard guarantees on network latency.
 
@@ -2007,7 +2012,7 @@ Note that, using Grover's search algorithm \cite{bib:Grover96}, although not eff
 % Protocols for the Quantum Internet
 %
 
-\section{Protocols for the quantum internet}
+\section{Protocols for the quantum internet} \label{sec:protocols_quant_int}
 
 There are countless applications for the long-distance communication and processing of quantum data. We will outline some of the most notable examples. Broadly, we will begin with discussion of \emph{low-level protocols} that form the primitives upon which other protocols are built. We will then progressively move towards \emph{high-level protocols}, culminating with full \emph{cloud quantum computing}.
 
@@ -2098,9 +2103,16 @@ GHZ states are useful for various quantum information processing applications, i
 % Bell States
 %
 
-\subsubsection{Bell states}
+\subsubsection{Bell states} \label{sec:bell_state_res}
 
-Bell states (Eq.~\ref{eq:bell_basis}) (also known as Einstein-Podolsky-Rosen (EPR) pairs), maximally-entangled two-qubit states, are particularly useful for many applications, including quantum teleportation (Sec.~\ref{sec:teleport}), cluster state preparation (Sec.~\ref{sec:CSQC}), and entanglement swapping (Sec.~\ref{sec:repeater}). Bell states are the special case of two-qubit cluster states, or equivalently, two-qubit GHZ states. They may be directly prepared as the two-mode output from a type-II (\comment{Type-I or type-II???}) SPDC source, or using non-deterministic linear optics from single-photon sources.
+Bell states (Eq.~\ref{eq:bell_basis}) (also known as Einstein-Podolsky-Rosen (EPR) pairs), which are maximally-entangled two-qubit states, are particularly useful for many applications, including quantum teleportation (Sec.~\ref{sec:teleport}), cluster state preparation (Sec.~\ref{sec:CSQC}), and entanglement swapping (Sec.~\ref{sec:swapping}). Bell states are the special case of two-qubit cluster states, or equivalently, two-qubit GHZ states. They may be directly prepared as the two-mode output from a type-II (\comment{Type-I or type-II???}) SPDC source, or using non-deterministic linear optics from single-photon sources.
+
+There are four Bell states, defined as 
+\begin{align} \label{eq:bell_basis}
+\ket{\Phi^{\pm}} &= \frac{1}{\sqrt{2}} (\ket{0}_A\ket{0}_B \pm \ket{1}_A\ket{1}_B), \nonumber \\
+\ket{\Psi^{\pm}} &= \frac{1}{\sqrt{2}} (\ket{0}_A\ket{1}_B \pm \ket{1}_A\ket{0}_B),
+\end{align}
+which are locally equivalent to one another via the application of Pauli operators, and may therefore be transformed to one another without classical or quantum communication between the two parties.
 
 %
 % Cat States
@@ -2181,7 +2193,7 @@ A homodyne detector interferes a state with a coherent state on a beamsplitter, 
 
 \subsubsection{Bell state projection} \label{sec:bell_proj}
 
-For the purposes of which-path erasure, essential for optical cluster state (Sec.~\ref{sec:CSQC}) preparation and quantum teleportation (Sec.~\ref{sec:teleport}), Bell state measurements are important. To realise this, there are two primary options. The first is to use a controlled-NOT (CNOT) gate (the quantum equivalent of the classical XOR gate), for example an LOQC gate (Sec.~\ref{sec:KLM_univ}). The second is to perform a \emph{partial} Bell state projection using a polarising beamsplitter (PBS) -- a beamsplitter which completely transmits vertical polarisation, and completely reflects horizontal polarisation. The former can be implemented with arbitrarily high success probability in principle. However, in most scenarios of interest the latter succeeds with probability of $1/2$, since a PBS is only able to uniquely distinguish two of the four Bell states. To its advantage, partial Bell measurements only require high Hong-Ou-Mandel (HOM) visibility, avoiding the need for the interferometric stability internal to LOQC gates.
+For the purposes of which-path erasure, essential for optical cluster state (Sec.~\ref{sec:CSQC}) preparation and quantum teleportation (Sec.~\ref{sec:teleport}), Bell state measurements (i.e projections onto the Bell basis given in Eq.~\ref{eq:bell_basis}) are important. To realise this, there are two primary options. The first is to use a controlled-NOT (CNOT) gate (the quantum equivalent of the classical XOR gate), for example an LOQC gate (Sec.~\ref{sec:KLM_univ}). The second is to perform a \emph{partial} Bell state (Sec.~\ref{sec:bell_state_res}) projection using a polarising beamsplitter (PBS) -- a beamsplitter which completely transmits vertical polarisation, and completely reflects horizontal polarisation. The former can be implemented with arbitrarily high success probability in principle. However, in most scenarios of interest the latter succeeds with probability of $1/2$, since a PBS is only able to uniquely distinguish two of the four Bell states. To its advantage, partial Bell measurements only require high Hong-Ou-Mandel (HOM) visibility, avoiding the need for the interferometric stability internal to LOQC gates.
 
 LOQC gates, in particular, are very technologically challenging, particularly for high success probability. Thus, outsourcing them to the cloud may be very economically efficient.
 
@@ -2271,18 +2283,15 @@ where $\hat{a}$ ($\hat{a}^\dag$) is the photonic annihilation (creation) operato
 \caption{Light-matter interfacing between a single-photon state ($\hat{a}$, $\hat{a}^\dag$) and a two-level matter qubit ($\ket{g}$, $\ket{e}$). The absorption (emission) of a photon is associated with the excitation (relaxation) of the matter qubit ($\hat\sigma^\pm$).} \label{fig:opt_int}
 \end{figure}
 
+Alternately, one can easily optically interface with a $\lambda$-configuration system, as described in Fig.~\ref{fig:barrett_kok}. 
+
 %
 % Entanglement Purification
 %
 
 \subsection{Entanglement purification} \label{sec:ent_purif}
 
-Entangled states, most notably Bell-pairs \cite{???},
-\begin{align} \label{eq:bell_basis}
-\ket{\Phi^{\pm}} &= \frac{1}{\sqrt{2}} (\ket{0}_A\ket{0}_B \pm \ket{1}_A\ket{1}_B), \nonumber \\
-\ket{\Psi^{\pm}} &= \frac{1}{\sqrt{2}} (\ket{0}_A\ket{1}_B \pm \ket{1}_A\ket{0}_B),
-\end{align}
-play a central role in many quantum technologies. These maximally entangled states are easily represented optically using polarisation encoding of single photons, and can be non-deterministically prepared directly using SPDC (Sec.~\ref{sec:single_phot_src}), or postselected linear optics \cite{???}.
+Entangled states, most notably Bell-pairs (Sec.~\ref{sec:bell_state_res}), play a central role in many quantum technologies. These maximally entangled states are easily represented optically using polarisation encoding of single photons, and can be non-deterministically prepared directly using SPDC (Sec.~\ref{sec:single_phot_src}), or postselected linear optics \cite{???}.
 
 Bell pairs are the basis for building cluster states (Sec.~\ref{sec:CSQC}), some quantum cryptography protocols (Sec.~\ref{sec:QKD}), and quantum teleportation (Sec.~\ref{sec:teleport}), to name just a few applications. Therefore distributing entangled states with the highest entanglement metrics is extremely important. In short, entanglement can be considered a valuable quantum resource, upon which many other protocols may be built.
 
@@ -2386,7 +2395,7 @@ The Bell state measurement can be implemented either using a CNOT gate, or as a 
 % Entanglement Swapping
 %
 
-\subsection{Entanglement swapping} \label{sec:repeater}
+\subsection{Entanglement swapping} \label{sec:swapping}
 
 The obvious approach to sending a qubit from Alice to Bob is to send a qubit from Alice to Bob. However, over long distances this may accrue impractical error rates, particularly losses. The other alternative is to employ the quantum teleportation protocol to teleport the state between the two parties. However, this requires that Alice and Bob first share an entangled Bell pair, which must itself be distributed across the same distances. Entanglement swapping is the process of taking two Bell pairs, one held by each party, and swapping the entanglement between them such that the two parties share an entangled state. This procedure can be bootstrapped to progressively swap the entanglement over longer and longer distances, yielding \emph{quantum repeater networks} (Sec.~\ref{sec:rep_net}).
 
@@ -2829,10 +2838,10 @@ Homomorphic and blind quantum computing have been described natively to the clus
 \comment{To do}
 
 %
-% Modularised Computation
+% Modularised Quantum Computation
 %
 
-\subsection{Modularisation} \label{sec:module}
+\subsection{Modularised quantum computation} \label{sec:module}
 
 How does one build a large-scale quantum computer, given the extremely daunting technological requirements and high costs? In any industry, economies of scale allow the mass production, and rapid reduction in the price of technology. To achieve this, we must find a way to make quantum technologies commodity items, which avoid all the hassle of customised cutting-edge labs. What we really desire is production-line `Lego for Adults', allowing ad hoc connection of \emph{modules}, which implement small subsections of a large computation \cite{bib:FowlerPrivate}.
 
@@ -2886,6 +2895,46 @@ Let us assume that we have a `primary' linear topology of modules, which we will
 This is just a very primitive model for preparing linear cluster states, using an equally primitive strategy for constructing them using non-determinisitic gates. As discussed in Sec.~\ref{sec:CSQC}, much further work has been performed on the resource scaling of efficiently preparing cluster states of different graph topologies using different non-deterministic bonding strategies.
 
 Of course, we have used the most simple model for modules, where each accommodates a single logical qubit. In due course, we would expect commodity modules to become far more capable, and resource scaling to improve. We might envisage that each module houses a small rectangular lattice of logical qubits, and the interconnects between them glue them together, patchwork-style.
+
+%
+% Entanglement - The Ultimate Quantum Resource
+%
+
+\section{Entanglement -- the ultimate quantum resource}
+
+As we have seen, the diversity of quantum states that may be communicated, and quantum protocols that may be implemented over the quantum internet is extremely diverse, encompassing many different types of encodings and communications protocols.
+
+Considering just the protocols that may be implemented over quantum networks discussed in detail in Sec.~\ref{sec:protocols_quant_int}, one might ask whether there is a single primitive resource that might be applicable to all, or at least most of these quantum protocols, thereby reducing the technological requirements of the quantum channels forming the network.
+
+It turns out that there is one particularly useful quantum resource, that finds applicability in most of these protocols -- entanglement, specifically in the form of Bell pairs (Sec.~\ref{sec:bell_state_res}).
+
+In brief, Bell pairs find applicability in, amongst many others, the following protocols:
+\begin{itemize}
+\item Cluster states (Sec.~\ref{sec:CSQC}): A Bell pair is also a two-qubit cluster state, a supply of which can be employed in fusion strategies to prepare larger cluster states, enabling measurement based quantum computation.
+\item Quantum teleportation (Sec.~\ref{sec:teleport}): A shared Bell pair between Alice and Bob forms the elementary quantum resource upon which the teleportation protocol is constructed.
+\item QKD (Sec.~\ref{sec:QKD}): The E91 protocol in built upon a reliable source of distributed Bell pairs.
+\item Modularised quantum computation (Sec.~\ref{sec:module}): Using Bell pairs, entanglement swapping (Sec.~\ref{sec:swapping}) can be employed to fuse neighbouring modules together using operations local to each module.
+\end{itemize}
+
+Thus, we see that Bell pairs form a ubiquitous resource, covering the most significant quantum protocols -- quantum computation, distributed quantum computation, and quantum cryptography. This warrants special treatment of entanglement distribution, as a fundamental building block for the quantum internet.
+
+One might envisage a quantum internet in which a central server, who specialises in Bell state preparation, serves the sole role of pumping out Bell pairs across the internet to whichever users request them, who subsequently use them for protocols such as those mentioned above. This could be in the form of a server transmitting over fibre networks, or a satellite in orbit, transmitting at an intercontinental level.
+
+What's the advantage of this approach to quantum networking? There are several:
+\begin{itemize}
+\item Dedicated servers can specialise in this one particular task, as can be the transmission infrastructure. The server needn't concern itself with the nitty-gritty of the protocols implemented by the end user.
+\item Unlike generic quantum states, Bell pairs are known states that can be infinitely reproduced, without having to worry about no-cloning limitations.
+\item Photonic Bell pairs are easily prepared via SPDC at very high repetition rates, enabling rapid state preparation.
+\item Importantly, QoS is a lesser issue in most scenarios. We can employ a {\sc Send and Forget} protocol for the distribution of entanglement (much like classical UDP). Since every Bell pair is identical, we needn't be concerned about missing one. Instead we can simply wait for the next. We call this the {\sc Shotgun} approach -- keep firing away until we hit something.
+\end{itemize}
+
+These observations lead us to naturally conclude that a quantum network specialised to this one particular task -- entanglement distribution -- would already be immensely useful, and on its own already enable many key quantum protocols.
+
+%
+% Quantum Repeater Networks
+%
+
+\subsection{Quantum repeater networks}
 
 %
 % State of the Art
@@ -2947,7 +2996,7 @@ When will we have the quantum internet? This is a question with as many answers 
 % The Era of Quantum Technology
 %
 
-\section{The era of quantum technology}
+\section{The era of quantum technology} \label{sec:era_quant}
 
 \comment{Can we estimate the Quantum Moore's Law curve using existing or predicted data? Put into new section.}
 
@@ -2990,7 +3039,7 @@ While the power of classical computers scales roughly linearly with the number o
 % The Vision of the Global Quantum Internet
 %
 
-\section{The vision of the global quantum internet}
+\section{The vision of the global quantum internet} \label{sec:vision_quant}
 
 Quantum technologies, particularly quantum computing, will truly revolutionise countless industries. With early demonstrations of key quantum technologies -- such as QKD, long distance quantum teleportation, and quantum computing -- becoming a reality, it is of utmost importance that networking protocols be pursued.
 
