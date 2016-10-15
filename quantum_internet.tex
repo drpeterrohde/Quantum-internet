@@ -579,7 +579,7 @@ While photon-number encoding can be useful for communications purposes, it is no
 % Spatio-Temporal Qudit Encoding
 %
 
-\subsubsection{Spatio-temporal}
+\subsubsection{Spatio-temporal} \label{sec:spatio_temporal}
 
 Completely independent of the photon-number degree of freedom, are the spatio-temporal degrees of freedom, which encode the spatial, temporal, and spectral structure of photons. In the temporal domain, for example, we could define the temporal structure of a single photon as,
 \begin{align}
@@ -2092,6 +2092,8 @@ Specifically, a two-mode SPDC state takes the form,
 \end{align}
 where $\chi$ is the squeezing parameter. Applying the single-photon projector, \mbox{$\ket{1}\bra{1}$}, to the first mode yields the single-photon state in the other, up to normalisation, which reflects the inherent non-determinism.
 
+This description is purely in the photon-number basis. However, as discussed in Sec.~\ref{sec:spatio_temporal}, photons also have spatio-temporal characteristics. This strongly affects state preparation when using heralded SPDC, particularly state purity, and much effort has been invested into engineering the spectral structure of SPDC states so as to maximise purity and indistinguishability \cite{bib:Aichele02, more???}.
+
 This process is relatively cheap, and widely used, but nonetheless might be out of reach for many end-users. SPDC is is quickly being superseded by superior technologies in cutting-edge labs, such as quantum dot sources, which have deterministic, push-button potential \cite{bib:Santori01, bib:Kiraz04}. Techniques based on cavity quantum electrodynamics (QED) \cite{bib:Brattke01} and molecular fluorescence \cite{bib:Brunel99} have also been demonstrated. However, such sources are very much in their developmental stages, and relatively expensive.
 
 %
@@ -2670,9 +2672,11 @@ There are several cluster state identities we will utilise later, summarised in 
 
 \subsection{Universal linear optics} \label{sec:KLM_univ}
 
-With single-photon encoding of qubits in the quantum network, the obvious architecture to implement quantum computation is linear optics quantum computing (LOQC) \cite{bib:KLM01, bib:Kok05, bib:KokLovettBook} (KLM), since the states being processed by the computer are of the same form as the states traversing the network.
+With single-photon encoding of qubits in the quantum network, the obvious architecture to implement quantum computation is linear optics quantum computing (LOQC) \cite{bib:KLM01} (KLM), since the states being processed by the computer are of the same form as the states traversing the network. See \cite{bib:Kok05, bib:KokLovettBook} for excellent introductions to this what has become a very broad field.
 
-LOQC allows universal quantum computing to be implemented using single-photon polarisation or dual-rail encoding, using only linear optics interactions, i.e beamsplitter networks \cite{bib:Reck94}, with the addition of quantum memory, and fast-feedforward, whereby some photons are measured, and the remaining part of the optical circuit is dynamically reconfigured based on the measurement outcomes. The former is readily available technology today, and elementary demonstrations have been performed \cite{bib:OBrien03, bib:UniversalLOOBrien}, but the latter two have proven to be somewhat more challenging. A sketch of the general KLM formalism is shown in Fig.~\ref{fig:KLM_protocol}.
+Originally it was believed that universal optical quantum computation, specifically the implementation of two-qubit entangling gates (such as controlled-NOT gates), would require extremely (and unrealistically) strong optical non-linearities. The breakthrough result by KLM demonstrated that this is in fact not the case at all.
+
+LOQC allows universal quantum computing to be implemented using single-photon polarisation or dual-rail encoding, with only linear optics interactions, i.e beamsplitter/phase-shifter networks \cite{bib:Reck94}, with the addition of quantum memory, and fast-feedforward, whereby some photons are measured, and the remaining part of the optical circuit is dynamically reconfigured based on the measurement outcomes. The former is readily available technology today, and elementary demonstrations have been performed \cite{bib:OBrien03, bib:UniversalLOOBrien}, but the latter two have proven to be somewhat more challenging. A sketch of the general KLM formalism is shown in Fig.~\ref{fig:KLM_protocol}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.5\columnwidth]{KLM}
@@ -2685,9 +2689,13 @@ The unitary linear optics networks implement linear maps of the form,
 \end{align}
 where $\hat{a}^\dag_i$ is the photonic creation operator on the $i$th of the $m$ modes, and $U$ may be any $\mathrm{SU}(m)$ matrix. The measurements are implemented simply by number-resolved photodetectors, implementing measurement projectors of the form \mbox{$\hat\Pi_n=\ket{n}\bra{n}$}, for the measurement outcome of $n$ photons.
 
-Although the original scheme by KLM is universal for quantum computation, resource usage can be reduced by orders of magnitude by combining concepts from LOQC with the cluster state formalism \cite{bib:Nielsen04, bib:BrowneRudolph05}.
+Since the original presentation of a universal LOQC gate set by KLM, numerous alternate implementations have been presented and experimentally demonstrated, with various pros and cons \cite{bib:Ralph01, bib:Pittman01, bib:Ralph02, bib:Knill02, bib:Pittman03}.
+
+Although the original KLM scheme is universal for quantum computation, resource usage can be reduced by orders of magnitude by combining concepts from LOQC with the cluster state formalism or related concepts \cite{bib:YoranReznik03, bib:Nielsen04, bib:BrowneRudolph05, bib:GilchristHayes05}.
 
 Significant progress is being made on reconfigurable, integrated LOQC devices \cite{bib:UniversalLOOBrien}, but switching times remain orders of magnitude slower than required for fast-feedforward. The resource overhead associated with overcoming the non-determinism of entangling gates is substantial in the original KLM proposal. But despite being improved upon by cluster state approaches, resource scaling remains daunting. It therefore seems most likely that certain elements from LOQC might be combined into hybrid architectures, to be discussed in detail in Sec.~\ref{sec:hybrid}.
+
+More recently, it was shown that by introducing strong coherent states, the strength of a cross-Kerr optical non-linearity can be effectively amplified, allowing even very weak non-linearities to be employed for deterministic entangling gate operation \cite{bib:Munro05}. However, such schemes are particularly sensitive to loss, and LOQC appears more technologically viable.
 
 %
 % Passive Linear Optics
@@ -2926,7 +2934,7 @@ Now, for simplicity we will consider the preparation of linear cluster states, a
 
 Let us assume that we have a `primary' linear topology of modules, which we will incrementally attempt to `grow' by tacking on new modules to the end. When we do so, with probability $p_\mathrm{success}$ we grow the length of the primary by 1, otherwise we decrement it by 1. This proceeds as a random walk, with on average \mbox{$2p_\mathrm{success}-1$} new qubits added to the primary per time-step. Provided this number is positive, i.e \mbox{$p_\mathrm{success}>1/2$}, which can always be achieved with sufficient $n_\mathrm{ancilla}$, the length of the primary grows linearly over time, allowing efficient state preparation.
 
-This is just a very primitive model for preparing linear cluster states, using an equally primitive strategy for constructing them using non-determinisitic gates. As discussed in Sec.~\ref{sec:CSQC}, much further work has been performed on the resource scaling of efficiently preparing cluster states of different graph topologies using different non-deterministic bonding strategies.
+This is just a very primitive model for preparing linear cluster states, using an equally primitive strategy for constructing them using non-deterministic gates. As discussed in Sec.~\ref{sec:CSQC}, much further work has been performed on the resource scaling of efficiently preparing cluster states of different graph topologies using different non-deterministic bonding strategies.
 
 Of course, we have used the most simple model for modules, where each accommodates a single logical qubit. In due course, we would expect commodity modules to become far more capable, and resource scaling to improve. We might envisage that each module houses a small rectangular lattice of logical qubits, and the interconnects between them glue them together, patchwork-style.
 
