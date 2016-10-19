@@ -42,7 +42,7 @@
 \author{Peter P. Rohde}
 \email[To whom correspondence should be addressed: ]{dr.rohde@gmail.com}
 \homepage{http://www.peterrohde.org}
-\affiliation{Centre for Quantum Software \& Information (CQSI), Faculty of Engineering \& Information Technology, University of Technology Sydney, NSW 2007, Australia}
+\affiliation{Centre for Quantum Software \& Information (QSI), Faculty of Engineering \& Information Technology, University of Technology Sydney, NSW 2007, Australia}
 
 \author{Zu-En Su}
 \affiliation{Hefei National Laboratory for Physical Sciences at Microscale and Department of Modern Physics, University of Science and Technology of China, Hefei, Anhui 230026, China}
@@ -58,7 +58,7 @@
 \affiliation{Sydney Medical School, University of Sydney, Australia}
 
 \author{Ryan L. Mann}
-\affiliation{Centre for Quantum Software \& Information (CQSI), Faculty of Engineering \& Information Technology, University of Technology Sydney, NSW 2007, Australia}
+\affiliation{Centre for Quantum Software \& Information (QSI), Faculty of Engineering \& Information Technology, University of Technology Sydney, NSW 2007, Australia}
 
 \author{Jonathan P. Olson}
 \affiliation{Department of Chemistry \& Chemical Biology, Harvard University, Cambridge MA 02138, USA}
@@ -68,7 +68,7 @@
 \affiliation{National Institute of Informatics, 2-1-2 Hitotsubashi, Chiyoda-ku, Tokyo 101-8430, Japan}
 
 \author{Michael J. Bremner}
-\affiliation{Centre for Quantum Software \& Information (CQSI), Faculty of Engineering \& Information Technology, University of Technology Sydney, NSW 2007, Australia}
+\affiliation{Centre for Quantum Software \& Information (QSI), Faculty of Engineering \& Information Technology, University of Technology Sydney, NSW 2007, Australia}
 
 \author{Chao-Yang Lu}
 \affiliation{Hefei National Laboratory for Physical Sciences at Microscale and Department of Modern Physics, University of Science and Technology of China, Hefei, Anhui 230026, China}
@@ -84,7 +84,7 @@
 %
 
 \begin{abstract}
-Large ad hoc networks, such as the internet, require well-constructed protocols to efficiently and reliably facilitate communication between arbitrary distant parties. In the classical world, the Transmission Control Protocol (TCP) is the standard framework for achieving this, upon which other higher-level protocols are built. TCP is based upon certain expectations and goals for classical networks. When dealing with quantum networks, however, the expectations are entirely different, and TCP requires a complete revamp. We discuss quantum networking, and introduce the Quantum Transmission Control Protocol (QTCP), its operation and implementation, including a presentation of the low-level algorithms underpinning it, and consider its application to various quantum protocols to which networking will foreseeably be applied in the future. The end goal is to facilitate the construction of the \emph{global quantum internet}, allowing future quantum networks to communicate quantum resources, implement full global networking services, and enabling new models for the commercialisation and proliferation of quantum technologies. In particular, we examine \emph{cloud quantum computing}, whereby clients can license compute time on a host's quantum computer to process their data in the cloud. This is of great importance given the high expected initial cost of quantum computers. Finally we present a non-technical discussion of the economic implications of the quantum internet, and a vision for its future. While this work is only a first step in a rapidly developing field, still in its infancy, the central concepts we present will be highly relevant to future, more sophisticated protocols. \newpage
+Large ad hoc networks, such as the internet, require well-constructed protocols to efficiently and reliably facilitate communication between arbitrary distant parties. In the classical world, the Transmission Control Protocol (TCP) is the standard framework for achieving this, upon which other higher-level protocols are built. TCP is based upon certain expectations and goals for classical networks. When dealing with quantum networks, however, the expectations are entirely different, and TCP requires a complete revamp. We discuss quantum networking, and introduce the Quantum Transmission Control Protocol (QTCP), its operation and implementation, including a presentation of the low-level algorithms underpinning it, and consider its application to various quantum protocols to which networking will foreseeably be applied in the future. The end goal is to facilitate the construction of the \emph{global quantum internet}, allowing future quantum networks to communicate quantum resources, implement full global networking services, and enable new models for the commercialisation and proliferation of quantum technologies. In particular, we examine \emph{cloud quantum computing}, whereby clients can license compute time on a host's quantum computer to process their data in the cloud. This is of great importance given the high expected initial cost of quantum computers. Finally we present a non-technical discussion of the economic implications of the quantum internet, and a vision for its future. While this work is only a first step in a rapidly developing field, still in its infancy, the central concepts we present will be highly relevant to future, more sophisticated protocols. \newpage
 \end{abstract}
 
 \maketitle
@@ -103,7 +103,7 @@ A basic understanding of both quantum mechanics \cite{bib:Sakurai94} and classic
 
 The entirely technically disinterested reader may refer to just Secs.~\ref{sec:introduction}, \ref{sec:era_quant}, \ref{sec:economics} \& \ref{sec:vision_quant} -- essentially brief non-technical essays about the motivation, applications and implications of the quantum internet.
 
-Our goal is to present a broadly accessible technical overview of how we foresee quantum technologies to operate in the era of quantum globalisation, and the exciting possibilities that will emerge.
+This paper is partially a review of existing knowledge relevant to quantum networking, and partially original ideas, to a large extent based of adaptation of classical networking concepts to the quantum context. Our goal is to present a broadly accessible technical overview of how we foresee quantum technologies to operate in the era of quantum globalisation, and the exciting possibilities that will emerge.
 
 %
 % Introduction
@@ -600,10 +600,10 @@ we can encode a qudit of arbitrary dimension into the spatio-temporal degrees of
 \ket\psi_\mathrm{qudit} \equiv \sum_{i=0}^\infty \alpha_i \hat{A}^\dag_{\xi_i} \ket{0}.
 \end{align}
 
-This encoding allows a qudit of arbitrary dimension to be encoded into a single spatial mode. Again, however, summing to infinity is somewhat fanciful, given any physically realistic spatio-temporal error model, such as an imperfect frequency response in the channel, e.g a bandpass response of an optical fibre.
+This encoding allows a qudit of arbitrary dimension to be encoded into a single spatial mode. Again, however, summing to infinity is somewhat fanciful, given any physically realistic spatio-temporal error model, such as an imperfect frequency response in the channel, e.g a bandpass response of an optical fibre or photodetector.
 
 %
-% Time-bin qudit encoding
+% Time-Bins
 %
 
 \subsection{Time-bins} \label{sec:time_bin}
@@ -782,7 +782,7 @@ The dephasing error model describes the deterioration of quantum coherence in a 
 \begin{align} \label{eq:dephasing_channel}
 \mathcal{E}_p^\mathrm{dephasing}(\hat\rho) = p\cdot\hat\rho + (1-p)\cdot \hat{Z}\hat\rho\hat{Z},
 \end{align}
-where $\hat\rho$ is the state of a single qubit, and $\hat{Z}$ is the Pauli phase-flip operator. Intuitively this tells us that the dephasing channel creates a mixture of an input state with its phase-flipped self.
+where $\hat\rho$ is the state of a single qubit, and $\hat{Z}$ is the Pauli phase-flip operator\footnote{Bit-flip and bit-phase-flip channels may be represented similarly by replacing $\hat{Z}$ with $\hat{X}$ or $\hat{Y}$ respectively, although these don't arise as naturally as dephasing in many physical contexts.}. Intuitively this tells us that the dephasing channel creates a mixture of an input state with its phase-flipped self.
 
 An alternate interpretation for the dephasing channel is that it is equivalent to the outside environment measuring $\hat\rho$ in the logical ($\hat{Z}$) basis, but unknown to us, thereby projecting the state onto one basis state or another, yielding a mixture of the two.
 
@@ -870,7 +870,9 @@ The amplitude damping channel is easily represented in the quantum process forma
 \hat{K}_1 &= \ket{0}\bra{0} + \sqrt\eta\ket{1}\bra{1}, \nonumber \\
 \hat{K}_2 &= \sqrt{1-\eta}\ket{0}\bra{1}, 
 \end{align}
-where \mbox{$0\leq\eta\leq 1$} quantifies the degree of damping (\mbox{$\eta=0$} represents complete damping). The physical intuition is clear upon inspection of the structure of the projectors in the Kraus operators, with $\hat{K}_2$ representing relaxation from the excited state to the ground state, with probability \mbox{$1-\eta$}.
+where \mbox{$0\leq\eta\leq 1$} quantifies the degree of damping (\mbox{$\eta=0$} represents complete damping).
+
+The physical intuition is clear upon inspection of the structure of the projectors in the Kraus operators, with $\hat{K}_2$ representing relaxation from the excited state to the ground state, with probability \mbox{$1-\eta$}.
 
 The degree of amplitude damping is often quoted in terms of a channel's $T_1$-time, characterising the expected time for the excited state to undergo spontaneous emission and relax to the ground state.
 
@@ -1093,7 +1095,7 @@ since the eigenvalue spectrum of a density operator is invariant under unitary t
 
 The mutual information is defined as being between a particular known pair of states. Of course, in a quantum network we will seldom know what the states being communicated are and will therefore be unable to directly calculate the mutual information. To address this, the \emph{classical channel capacity} of a channel is defined as,
 \begin{align}
-\mathcal{C}(\mathcal{E}) = \max_{\hat\rho} I(\hat\rho,\mathcal{E}(\hat\rho)),
+\mathcal{C}(\mathcal{E}) = \max_{\hat\rho} [I(\hat\rho,\mathcal{E}(\hat\rho))],
 \end{align}
 with the intuitive interpretation as the maximum mutual information between input and output states that can be achieved for the channel. (Note: this definition of `capacity' is not to be confused with that which we referred to in flow networks).
 
