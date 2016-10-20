@@ -99,11 +99,13 @@ Large ad hoc networks, such as the internet, require well-constructed protocols 
 
 Quantum technologies are not just of interest to quantum physicists, but will have transformative effects across countless areas -- the next technological revolution. For this reason, this paper is directed at a general audience of not only quantum computer scientists, but also classical computer scientists, physicists, and computer, software and network engineers. More broadly, we hope this paper will be of interest to those who recognise the future significance of quantum technologies, and the implications (or even just curiosities) that globally networking them might have.
 
-A basic understanding of both quantum mechanics \cite{bib:Sakurai94} and classical networking are helpful, but not essential, to following our discussion. Some mathematical sections require a basic understanding of the mathematical notation of quantum mechanics. Although the reader without this background ought to be able to nonetheless follow the broader arguments.
+A basic understanding of both quantum mechanics \cite{bib:Sakurai94} and classical networking \cite{???} are helpful, but not essential, to following our discussion. Some mathematical sections require a basic understanding of the mathematical notation of quantum mechanics. Although the reader without this background ought to be able to nonetheless follow the broader arguments.
 
-The entirely technically disinterested reader may refer to just Secs.~\ref{sec:introduction}, \ref{sec:era_quant}, \ref{sec:economics} \& \ref{sec:vision_quant} -- essentially brief non-technical essays about the motivation, applications and implications of the quantum internet.
+The entirely technically disinterested or mathematically incompetent reader may refer to just Secs.~\ref{sec:introduction}, \ref{sec:era_quant}, \ref{sec:economics} \& \ref{sec:vision_quant} -- essentially brief non-technical essays about the motivation, applications and implications of the quantum internet.
 
-This paper is partially a review of existing knowledge relevant to quantum networking, and partially original ideas, to a large extent based of adaptation of classical networking concepts to the quantum context. Our goal is to present a broadly accessible technical overview of how we foresee quantum technologies to operate in the era of quantum globalisation, and the exciting possibilities that will emerge.
+This paper is partially a review of existing knowledge relevant to quantum networking, and partially original ideas, to a large extent based on the adaptation of classical networking concepts and quantum information theory to the context of quantum networking. A reader with an existing background in these areas could calmly skip the respective review sections.
+
+Our goal is to present a broadly accessible technical overview of how we foresee quantum technologies to operate in the era of quantum globalisation, and the exciting possibilities that will emerge.
 
 %
 % Introduction
@@ -483,8 +485,10 @@ Multiple processes may be composed using the notation,
 \end{align}
 In general, processes do not commute, i.e \mbox{$\mathcal{E}_1\circ \mathcal{E}_2 \neq \mathcal{E}_2\circ \mathcal{E}_1$}. Unless unitary, quantum processes are irreversible, meaning that errors accumulate and cannot be overcome without the overhead of some form of quantum error correction (QEC) \cite{bib:Shor95, bib:CalderbankShor96, bib:NielsenChuang00}.
 
-In general, the Kraus operator representation for quantum processes is not unique -- there may be multiple choices of Kraus operators that implement identical processes. But if the representation is not unique, how do we compare different quantum processes? To address this, it is common to choose a `standard' basis for representing quantum processes, such that they may be consistently and fairly compared. This requires choosing a basis which is complete for operations on the Hilbert space acted upon by the process. For example, for a single qubit, the Pauli operators -- $\hat\sigma_1$ (identity, $\mathbb{\hat{I}}$), $\hat\sigma_2$ (bit-flip, $\hat{X}$), $\hat\sigma_3$ (bit-phase-flip, $\hat{Y}$), and $\hat\sigma_4$ (phase-flip, $\hat{Z}$) -- are complete for single-qubit operations ($\mathbb{C}_2$). Therefore by decomposing our Kraus operators into linear combinations of these basis operators we have a standardised representation for single-qubit processes. Formally, for one qubit,
-\begin{align}
+In general, the Kraus operator representation for quantum processes is not unique -- there may be multiple choices of Kraus operators that implement identical processes. But if the representation is not unique, how do we compare different quantum processes? To address this, it is common to choose a `standard' basis for representing quantum processes, such that they may be consistently and fairly compared. This requires choosing a basis which is complete for operations on the Hilbert space acted upon by the process.
+
+For example, for a single qubit, the Pauli operators -- $\hat\sigma_1$ (identity, $\mathbb{\hat{I}}$), $\hat\sigma_2$ (bit-flip, $\hat{X}$), $\hat\sigma_3$ (bit-phase-flip, $\hat{Y}$), and $\hat\sigma_4$ (phase-flip, $\hat{Z}$) -- are complete for single-qubit operations ($\mathbb{C}_2$). Therefore by decomposing our Kraus operators into linear combinations of these basis operators we have a standardised representation for single-qubit processes. Formally, for one qubit,
+\begin{align} \label{eq:process_matrix}
 \mathcal{E}(\hat\rho) = \sum_{i,j=1}^4 \chi_{i,j} \hat{\sigma}_i\hat\rho\,\hat{\sigma}_j^\dag.
 \end{align}
 
@@ -521,13 +525,58 @@ In general, both nodes and links in a quantum network may implement quantum proc
 % Characterising Quantum Channels
 %
 
-\subsection{Characterising quantum channels}
+\subsection{Characterising quantum channels} \label{sec:QPT}
 
 Given a link implementing some arbitrary quantum process, it is essential that it can be experimentally determined such that network performance may be characterised. For example, if an optical channel is lossy, what is the loss rate? This is crucial when attempting to choose routing strategies that optimise certain cost metrics.
 
 Treating a link or node as an unknown black box, \emph{quantum process tomography} (QPT) \cite{bib:ChuangNielsen97, ???} is a technique that may be applied to fully characterise the quantum process it implements, reproducing its complete process matrix. QPT has become a standard procedure, demonstrated in numerous architectures, most notably in optics \cite{bib:OBrien04, bib:RohdeGateChar05}.
 
-QPT works in general for processes in any degree of freedom, e.g the qubit degree of freedom. However, it is important to note that full QPT requires statistics across the entire basis over which measurements are defined, which typically grows exponentially with the size of the system. For example, the number of measurement bases required to perform full QPT on $n$ qubits grows exponentially with $n$. However, often full process characterisation is not necessary. Instead, knowing particular metrics of interest may suffice. Some of the more noteworthy such metrics will be discussed in Sec.~\ref{sec:quantum_meas_cost}. In this instance, much work has been done in the field of \emph{compressed sensing} \cite{??? compressed_sensing}, in which process metrics of interest can be experimentally determined using far fewer physical resources than via a full reconstruction of the process matrix using QPT.
+QPT works in general for processes in any degree of freedom, e.g the qubit degree of freedom. However, it is important to note that full QPT requires statistics across the entire basis over which measurements are defined, which typically grows exponentially with the size of the system. For example, the number of measurement bases required to perform full QPT on $n$ qubits grows exponentially with $n$.
+
+However, often full process characterisation is not necessary. Instead, knowing particular metrics of interest may suffice. Some of the more noteworthy such metrics will be discussed in Sec.~\ref{sec:quantum_meas_cost}. In this instance, much work has been done in the field of \emph{compressed sensing} or \emph{compressed quantum process tomography} \cite{??? compressed_sensing}, in which some process metrics of interest can be experimentally determined using far fewer physical resources (with efficient scaling!) than via a full reconstruction of the process matrix using QPT. As a most trivial example, if the loss associated with a fibre-optic channel is the metric of interest, this can be much more easily determined than by performing full QPT.
+
+On the other hand, however, most quantum channels are designed to accommodate systems with very limited Hilbert space dimensionality per clock-cycle -- e.g a fibre-optic link might transmit just one photon at a time -- in which case there is no exponentiality to be terribly concerned about (QPT of a single-photon channel is trivial).
+
+Importantly, it is often the case that the quantum process associated with a channel will remain constant over time -- the efficiency of a length of fibre, for example, does not change. In this instance, characterising the channel need only be performed once in advance, without requiring ongoing dynamic updating.
+
+We will now explain QPT in the archetypal context of single-qubit channels, which logically generalises to multiple qubits, and can similarly be generalised to non-qubit systems also.
+
+The first stage in QPT is \emph{quantum state tomography} (QST), where the goal is to reconstruct and unknown density matrix via measurements upon multiple copies of the state. QST is based upon the simple observation that the completeness relation for an arbitrary state can be expressed,
+\begin{align}
+\hat\rho = \sum_i \mathrm{tr}(\hat{E}_i\hat\rho)\cdot\hat{E}_i,
+\end{align}
+where $\{\hat{E}_i\}$ forms a complete basis for the space of $\hat\rho$. For a single-qubit this decomposition is most often performed in the Pauli basis, 
+\begin{align}
+\hat\rho = \mathrm{tr}(\hat\rho)\cdot\hat{\mathbb{I}} + \mathrm{tr}(\hat{X}\hat\rho)\cdot\hat{X} + \mathrm{tr}(\hat{Y}\hat\rho)\cdot\hat{Y} +\mathrm{tr}(\hat{Z}\hat\rho)\cdot\hat{Z}.
+\end{align}
+Of course, \mbox{$\mathrm{tr}(\hat{E}\hat\rho) = P(\hat{E}|\hat\rho)$} is just the expectation value of the measurement operator $\hat{E}$ when measuring $\hat\rho$. Thus, measuring the expectation values in each of the four Pauli bases reconstructs $\hat\rho$.
+
+This generalises straightforwardly to multi-qubit systems, where we measure all combinations of tensor products of the Pauli operators, the number of which grows exponentially with the number of qubits $n$, as $4^n$. This introduces scalability issues for systems comprising a large number of qubits.
+
+In the case of optical systems, entirely alternate, but equivalent, approaches may be used, such a probing the Wigner function directly using homodyne detection.
+
+Now to perform QPT we apply the unknown process to a complete basis of input states $\{\hat\rho_i\}$, and perform QST on the output state for each. This yields,
+\begin{align}
+\mathcal{E}(\hat\rho_j) = \sum_{i} c_{i,j} \hat\rho_i,
+\end{align}
+where the sum runs over the basis of states. From QST, all the coefficients $c_{i,j}$ may be determined. Next we define the following decomposition for each of terms in the sum of Eq.~\ref{eq:process_matrix},
+\begin{align}
+\hat{E}_m \hat\rho_j \hat{E}_n^\dag = \sum_k B^{m,n}_{j,k} \hat\rho_k,
+\end{align}
+where $B$ defines a decomposition in the chosen basis, not dependent on any measurement results. Then we can write,
+\begin{align}
+\mathrcal{E}(\hat\rho_j) &= \sum_{m,n} \chi_{m,n} \hat{E}_m\hat\rho_j\hat{E}_n^\dag \nonumber \\
+&= \sum_{m,n} \sum_k \chi_{m,n} B^{m,n}_{j,k} \hat\rho_k.
+\end{align}
+Because $\hat\rho_k$ form a linearly independent basis, we can write the decomposition,
+\begin{align}
+c_{j,k} = \sum_{m,n} \chi_{m,n} B_{j,k}^{m,n},
+\end{align}
+for all \mbox{$j,k$}. From this, standard linear algebra inversion techniques allow an inversion to obtain,
+\begin{align}
+\chi_{m,n} = \sum_{j,k} (B_{j,k}^{m,n})^{-1} c_{j,k},
+\end{align}
+thereby obtaining the full process matrix $\chi$.
 
 %
 % Optical Encoding of Quantum Information
@@ -2176,9 +2225,13 @@ This is useful when matter-based architectures are more scalable or technologica
 
 As a last (and possibility also intermediate) step in any quantum protocol is the measurement of quantum states. State measurement is, in the most general context, essentially state preparation in reverse, and brings with it many of the same challenges.
 
-Different detection schemes bring with them their own (potentially substantial) costs and technological challenges. State of the art micropillar photodetectors \cite{???}, at the time of writing, cost on the order of hundreds of thousands of dollars, and require a sophisticated laboratory setup. Clearly this type of infrastructure is inaccessible to many players, and borrowing or licensing access to such equipment over a quantum network would pave the way for broader accessibility to state of the art technology. However, each type of state being measured, in combination with the nature of the detection scheme, bring with it their own limitations. For example, number-resolved photodetectors exhibit dead-time, are too slow to enable fast-feedforward, have spectral filtering characteristics, and mode-matching requirements. All of these challenges make outsourcing of the use of the technology to well-equiped hosts highly desirable.
+Different detection schemes bring with them their own (potentially substantial) costs and technological challenges. State of the art micropillar photodetectors \cite{???}, at the time of writing, cost on the order of hundreds of thousands of dollars, and require a sophisticated laboratory setup. Clearly this type of infrastructure is inaccessible to many players, and borrowing or licensing access to such equipment over a quantum network would pave the way for broader accessibility to state of the art technology.
 
-These represent significant technological challenges, which are costly to overcome, necessitating outsourcing over the quantum internet to be economically viable on a large scale. However, the QTCP protocol is able to accommodate error metrics and attributes covering all the above error models, enabling reliable, predictable QoS for outsourced quantum measurement.
+Each type of state being measured, in combination with the nature of the detection scheme, brings with it their own limitations. For example, number-resolved photodetectors exhibit dead-time, are too slow to enable fast-feedforward, have spectral filtering characteristics, and mode-matching requirements. 
+
+These represent significant technological challenges, which are costly to overcome, necessitating outsourcing over the quantum internet to become economically viable on a large scale. However, the QTCP protocol is able to accommodate error metrics and attributes covering all the above error models, enabling reliable, predictable QoS for outsourced quantum measurement.
+
+With the ability to perform measurements over a complete basis for the respective system, QST, and consequently QPT (Sec.~\ref{sec:QPT}), can also be outsourced, as both these protocols are built entirely upon determining measurement expectation values in some known basis.
 
 %
 % Photodetection
@@ -2221,9 +2274,17 @@ A homodyne detector interferes a state with a coherent state on a beamsplitter, 
 
 \subsubsection{Bell state projection} \label{sec:bell_proj}
 
-For the purposes of which-path erasure, essential for optical cluster state (Sec.~\ref{sec:CSQC}) preparation and quantum teleportation (Sec.~\ref{sec:teleport}), Bell state measurements (i.e projections onto the Bell basis given in Eq.~\ref{eq:bell_basis}) are important. To realise this, there are two primary options. The first is to use a controlled-NOT (CNOT) gate (the quantum equivalent of the classical XOR gate), for example an LOQC gate (Sec.~\ref{sec:KLM_univ}). The second is to perform a \emph{partial} Bell state (Sec.~\ref{sec:bell_state_res}) projection using a polarising beamsplitter (PBS) -- a beamsplitter which completely transmits vertical polarisation, and completely reflects horizontal polarisation \cite{bib:BraunsteinMann95}. The former can be implemented with arbitrarily high success probability in principle. However, in most scenarios of interest the latter succeeds with probability of $1/2$, since a PBS is only able to uniquely distinguish two of the four Bell states. To its advantage, partial Bell measurements only require high HOM visibility, avoiding the need for the interferometric stability internal to LOQC gates.
+For the purposes of which-path erasure, essential for optical cluster state (Sec.~\ref{sec:CSQC}) preparation and quantum teleportation (Sec.~\ref{sec:teleport}), Bell state measurements (i.e projections onto the Bell basis given in Eq.~\ref{eq:bell_basis}) are important. To realise this, there are two primary options. The first is to use a controlled-NOT (CNOT) gate (the quantum equivalent of the classical XOR gate), for example an LOQC gate (Sec.~\ref{sec:KLM_univ}). The second is to perform a \emph{partial} Bell state projection using a polarising beamsplitter (PBS) -- a beamsplitter which completely transmits vertical polarisation, and completely reflects horizontal polarisation \cite{bib:BraunsteinMann95}. This approach is described in Fig.~\ref{fig:partial_bell}.
 
-LOQC gates, in particular, are very technologically challenging, particularly for high success probability. Thus, outsourcing them to the cloud may be very economically efficient.
+The former can be implemented with arbitrarily high success probability in principle. However, in most scenarios of interest (such as cluster state preparation and entanglement purification) the latter succeeds with probability of $1/2$, since a PBS is only able to uniquely distinguish two of the four Bell states. To its advantage, partial Bell measurements only require high HOM visibility, avoiding the need for the interferometric stability inherent to LOQC gates.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.75\columnwidth]{partial_bell}
+\caption{Partial Bell state projection using a polarising beamsplitter (PBS). The PBS completely transmits horizontally polarised light, whilst completely reflecting vertically polarised light. Shown are the four possible two-photon input states, and the respective trajectories followed by the photons. To complete the partial Bell projection we measure the output modes in the diagonal basis, \mbox{$\ket{\pm} = (\ket{0}\pm\ket{1})/\sqrt{2}$}, such that horizontally and vertically polarised photons cannot be distinguished. If the input state was $\ket{H,H}$ or $\ket{V,V}$, we would measure one photon in each output mode (both transmitted or both reflected). Since the detectors cannot distinguish $\ket{H}$ from $\ket{V}$, this effectively projects us onto the coherent superposition of both possibilities, implementing the measurement projector \mbox{$\ket{H,H}\bra{H,H}\pm\ket{V,V}\bra{V,V}$}. If, on the other hand, we measure two photons at one output mode, we know with certainty what the polarisations of both incident photons were and we probabilisitically implement one of the projectors $\ket{H,V}\bra{H,V}$ or $\ket{V,H}\bra{V,H}$, effectively performing polarisation-resolved detection upon both modes.} \label{fig:partial_bell}
+\end{figure}
+
+
+While partial Bell state projection using a PBS is relatively straightforward, LOQC CNOT gates are very technologically challenging, with drastic resource overheads, particularly for high success probability. Thus, outsourcing them to the cloud may be very economically efficient.
 
 %
 % Detector Banks
@@ -2251,9 +2312,9 @@ The attractive feature of this, is that although the matter qubit is stationary,
 
 \subsection{Evolution}
 
-The evolution of optical states represents an extremely broad category of quantum operations, including passive linear optics, postselected linear optics, non-linear optics, light-matter interactions, amongst many others. Clearly even this restricted list presents technological challenges, inaccessible to many users. However, the fundamental error mechanisms are essentially the same as for the measurement errors listed above.
+The evolution of optical states represents an extremely broad category of quantum operations, including passive linear optics, postselected linear optics, non-linear optics, and light-matter interactions, amongst many others. Clearly even this restricted list presents technological challenges, inaccessible to many users. However, the fundamental error mechanisms are essentially the same as for the measurement errors listed above.
 
-The notable exception is non-linear optics, whereby additional errors in the photon-number degree of freedom or phase-space are possible, since, unlike linear optics, photon-number needn't be conserved in general. This additional degree of freedom in error mechanisms can be accommodated for by introducing an error measure capturing confusion in photon-number or unwanted phase-space transformations. For example, for a given non-linear interaction, error metrics quantifying error bounds on phase-space transformations, such as fluctuation in squeezing or displacement operations, could be employed, which can be represented as metrics, and are therefore compatible with the error metric formalism upon which QTCP is based.
+The notable exception is non-linear optics, whereby additional errors in the photon-number degree of freedom or phase-space are possible, since, unlike linear optics, photon-number needn't be conserved in general. This additional degree of freedom in error mechanisms may be accommodated for by introducing an error measure capturing confusion in photon-number or unwanted phase-space transformations. For example, for a given non-linear interaction, error metrics quantifying error bounds on phase-space transformations, such as fluctuation in squeezing or displacement operations, could be employed, which can be represented as metrics, and are therefore compatible with the error metric formalism upon which QTCP is based\footnote{For example, consider unwanted phase-space displacements as an error model. The coherent amplitudes of displacements accumulate additively, and therefore satisfy our notion of an error metric.}.
 
 %
 % Random Number Generation
@@ -2358,7 +2419,7 @@ This input/output relationship is shown in Fig.~\ref{fig:ent_purif}.
 
 Note that there is a break-even point, above which the protocol strictly increases fidelity, and below which strictly decreases it. This occurs at \mbox{$F_\mathrm{in}=1/2$}. Provided pairs can be communicated above this fidelity threshold, bootstrapped application of the protocol could be employed to boost entanglement fidelity asymptotically close to unity (but with exponential resource overhead, since each operation consumes two pairs to produce one). But below this threshold it is impossible to recover any more entanglement than we started with. This provides an example of an application where the protocol being implemented dictates strict requirements on network cost metrics. Specifically, assuming perfect Bell pairs to begin with, the routes by which they are communicated must ensure entanglement fidelities of at least \mbox{$F=1/2$} upon reaching destination. Here a type of {\sc All or Nothing} networking strategy would be applicable -- if the fidelity requirement is not met, the state cannot be purified and might as well be thrown away to make way for other traffic.
 
-A theoretical analysis of this protocol has been performed, accounting for mode-mismatch in the protocol \cite{bib:RohdeOptEntPur06}, where it was found than mode-mismatch shifts the break-even point upwards, and lowers the maximum value of $F_\mathrm{out}$ -- with more mode-mismatch, a higher starting fidelity is required to break even, and we achieve a lower output fidelity. In this case, a cost function that combines the dephasing and mode-mismatch metrics of the network will be required.
+A theoretical analysis of this protocol has been performed, accounting for mode-mismatch in the protocol \cite{bib:RohdeOptEntPur06}, where it was found than mode-mismatch shifts the break-even point upwards, and lowers the maximum value of $F_\mathrm{out}$ -- with more mode-mismatch, a higher starting fidelity is required to break even, and we achieve a lower, subunity output fidelity. In this case, a cost function that combines the dephasing and mode-mismatch metrics of the network will be required.
 
 Importantly, this protocol is based on partial Bell state measurement, and therefore does not require interferometric stability, only high HOM visibility, thus making stabilisation comparatively easy over long distances.
 
@@ -2887,7 +2948,7 @@ The modules forming a particular computation could either be all owned by a sing
 
 In Sec.~\ref{sec:dist_QC} we introduced the notion of distributed quantum computation. There the motivation was to enable a computation to be distributed across multiple servers, which either parallelise computation or process it as a pipeline in series.
 
-An alternate direction, for economic reasons, is that it is unviable for a single server to host an entire computation. Rather, hosts will have limited capability, and to perform a large-scale computation will require employing a potentially large number of hosts cooperating with one another\footnote{Even some present-day massive-scale data processing and storage protocols are implemented virtually across multiple large-scale data-centres, which, for example, automatically handle data redundancy. The key is for the underlying protocol to abstract this away from the user, such that they interface with the data as though it were a local asset.}. This can be regarded as the most general incarnation of distributed computation.
+An alternate direction, for economic reasons, is that it is unviable for a single server to host an entire computation. Rather, hosts will have limited capability, and to perform a large-scale computation will require employing a potentially large number of hosts cooperating and sharing resources with one another\footnote{Even some present-day massive-scale data processing and storage protocols are implemented virtually across multiple large-scale data-centres, which, for example, automatically handle geographically decentralised data redundancy. The key is for the underlying protocol to abstract this away from the user, such that they interface with the data as though it were a local asset.}. This can be regarded as the most general incarnation of distributed computation.
 
 This is not the same motivation as for in-series computation, where different servers in the pipeline have different proprietary algorithms as subroutines of a larger computation. And it also differs from in-parallel computation, where multiple servers implement the same algorithm on different data, which is subsequently merged by a root node, as per, for example, a {\sc MapReduce}-style protocol.
 
@@ -3115,7 +3176,7 @@ It is essential for the adoption of quantum technology, that quantum networking 
 %
 
 \begin{acknowledgments}
-\emph{--- Ad astra per alas porci. Im Wandel der Zeiten. Scientia potentia est.}
+\emph{--- Ad astra per alas porci. Scientia potentia est, im Wandel der Zeiten.}
 \end{acknowledgments}
 
 %
