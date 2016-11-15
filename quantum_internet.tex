@@ -2527,9 +2527,10 @@ Thus, in terms of Pauli errors, no special treatment is required by the QTCP pro
 The total resources required to teleport a single-qubit state are:
 \begin{enumerate}
 \item The qubit to be teleported.
-\item A single shared Bell-pair.
+\item A shared Bell-pair.
 \item A two-qubit measurement in the Bell basis.
 \item The transmission of two classical bits.
+\item Two classically controlled Pauli gates.
 \end{enumerate}
 
 This is more costly than sending the qubit directly over a quantum channel, but may be the only approach if a direct link is not available. In the context of an internet where entanglement distribution is treated as the fundamental resource (Sec.~\ref{sec:ent_ultimate}), state teleportation is the natural approach for communicating quantum states, since no quantum communication of any kind is required once the two parties have a shared Bell-pair between them.
@@ -2553,7 +2554,7 @@ The general outline of the derivation of the protocol for teleporting a CNOT gat
 \begin{enumerate}
 \item We wish to apply a CNOT gate to the two-qubit state \mbox{$\ket\psi_\mathrm{A}\ket\phi_\mathrm{B}$} to obtain \mbox{$\mathrm{CNOT}_\mathrm{A,B} \ket\psi_\mathrm{A}\ket\phi_\mathrm{B}$}.
 \item We introduce two additional qubits, $C$ and $D$, and use state teleportation to teleport $\ket\psi_\mathrm{A}$ onto $C$, and $\ket\psi_\mathrm{B}$ onto $D$, preparing $\ket\psi_\mathrm{C}\ket\phi_\mathrm{D}$.
-\item Apply the CNOT between qubits $C$ and $D$, which now encode the desired operation albeit in qubits $C$ and $D$, instead of $A$ and $B$.
+\item Apply the CNOT between qubits $C$ and $D$, which now encode the desired operation, albeit in qubits $C$ and $D$, instead of $A$ and $B$.
 \item Qubits $C$ and $D$ are now acted upon first by some measurement-outcome-dependent combination of Pauli operators (inherited from the state teleportation procedures), followed by the CNOT.
 \item The CNOT is a Clifford gate and can therefore be commuted to the front of the Pauli operators to yield a CNOT followed by some different configuration of Pauli operators.
 \item The CNOT now acts jointly upon the EPR pairs that were acting as a resource for the state teleportation, independent of \mbox{$\ket\psi_\mathrm{A}\ket\phi_\mathrm{B}$}.
@@ -2564,12 +2565,12 @@ The general outline of the derivation of the protocol for teleporting a CNOT gat
 \item The output state is \mbox{$\mathrm{CNOT}_\mathrm{C,D} \ket\psi_\mathrm{C}\ket\phi_\mathrm{D}$}.
 \item $\Box$
 \end{enumerate}}}
-\caption{Sketch of the derivation for the gate teleportation protocol for teleporting a CNOT gate onto a two-qubit state. The key observation is that at the end of the circuit manipulations, the CNOT is not acting directly on the target qubits, only on EPR pairs. Thus, the CNOT gate and EPR pairs can be grouped together and treated as an offline resource state preparation stage, for which non-determinism is easily accommodated via {\sc Repeat Until Success}, unlike direct application of the CNOT to the target qubits $A$ and $B$, which would corrupt them upon gate failure, potentially ruining an entire computation.} \label{tab:gate_teleport}
+\caption{Sketch of the derivation for the gate teleportation protocol for teleporting a CNOT gate onto a two-qubit state. The key observation is that at the end of the circuit manipulations, the CNOT is not acting directly on the target qubits, only on EPR pairs. Thus, the CNOT gate and EPR pairs can be grouped together and treated as an offline resource state preparation stage, for which non-determinism is easily accommodated via {\sc Repeat Until Success}, unlike direct application of the CNOT to the target qubits, which would corrupt them upon gate failure, potentially ruining an entire computation.} \label{tab:gate_teleport}
 \end{table}
 
 Most notably, gate teleportation is useful when attempting to apply two-qubit entangling operations using non-deterministic gates, in which case gate teleportation allows the non-deterministic elements to be performed offline as a resource state preparation stage, overcoming the non-determinism during the gate application stage. Specifically, when a CNOT gate acting directly upon two qubits fails, it corrupts those qubits, whereas if it fails during a state preparation stage, it can simply be reattempted until a success occurs, without corrupting the target qubits. A concatenated version of the gate teleportation protocol forms the basis for constructing near-deterministic entangling gates in linear optics, to be explained in detail in Sec.~\ref{sec:KLM_univ}.
 
-The gate teleportation idea is conceptually interesting as it converts the problem of `gate application' to that of `state preparation'\footnote{The resource state is prepared from two Bell-pairs and a single CNOT gate. In the absence of a direct source of Bell-pairs, they can be prepared using separable single-qubit states and a CNOT gate. Thus, the full resource state may be prepared from single qubits via three CNOT gates.}, by commuting all the entangling operations to the beginning of the protocol. Cluster state quantum computing (Sec.~\ref{sec:CSQC}) is actually the extremity of this logic, whereby an entire quantum computation is transformed into a sequence of state and gate teleportations. One may interpret this to mean that teleportation is a universal resource for quantum computation.
+The gate teleportation idea is conceptually interesting as it converts the problem of `gate application' to that of `state preparation'\footnote{The resource state is prepared from two Bell-pairs and a single CNOT gate. In the absence of a direct source of Bell-pairs, they can be prepared using separable single-qubit states and a CNOT gate. Thus, the full resource state may be prepared from separable single qubits via three CNOT gates.}, by commuting all the entangling operations to the beginning of the protocol. Cluster state quantum computing (Sec.~\ref{sec:CSQC}) is actually the extremity of this logic, whereby an entire quantum computation is transformed into a sequence of state and gate teleportations. One may interpret this to mean that teleportation is a universal resource for quantum computation \cite{bib:GottesmanChuang99}.
 
 The resource states required for gate teleportation are highly-entangled 4-qubit states, which are challenging to prepare, especially in the optical context. Thus, as with cluster states, if the preparation of these resource states were to be outsourced to a specialised provider, they could be in high demand.
 
@@ -2635,11 +2636,38 @@ This reduces the problem of perfect secrecy of arbitrary messages to the secrecy
 
 The two original QKD protocols, known as the \emph{BB84} \cite{bib:BennetBrassard84}, and \emph{E91} \cite{bib:Ekert91} protocols, are based on polarisation encoding in photons. BB84 requires only the transmission of a sequence of single photons, polarisation encoded with random data. E91, on the other hand, requires a server that distributes entangled Bell-pairs between Alice and Bob. Since then, numerous other protocols for QKD have been proposed, for example, using CV states.
 
-Let us briefly consider the BB84 protocol. Alice first chooses a random basis, either $\hat{X}$ or $\hat{Z}$, in which to encode one of two randomly chosen basis states, either \mbox{$\{\ket{H},\ket{V}\}$} or \mbox{$\{\ket{+}=(\ket{H}+\ket{V})/\sqrt{2},\ket{-}=(\ket{H}-\ket{V})/\sqrt{2}\}$} respectively. She sends this state to Bob, without announcing either the choice of basis or basis state. Bob subsequently measures the photon in one of the two bases, chosen randomly also. This is repeated as many times as is necessary. Finally, Bob confirms to Alice that he has received her photons, at which point she announces to him the choice of basis for each of the sent photons (this does not require secrecy). In the instances where Alice and Bob's basis choices matched, Bob has measured the same state that Alice sent, and he records the value. Otherwise he discards that sample, as it will be completely decorrelated from Alice's state, since the two measurement bases are non-commuting. What remains is approximately half as many random bits, which are guaranteed to be the same for Alice and Bob.
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\tt
+BB84():
+\begin{enumerate}
+\item Alice chooses a random bit $0$ or $1$.
+\item Alice randomly chooses a basis, $X$ or $Z$.
+\item Depending on the choice of basis, she defines her logical qubit states as:
+\begin{align}
+\ket{0}_Z &\equiv \ket{H}, \nonumber \\
+\ket{1}_Z &\equiv \ket{V}, \nonumber
+\end{align}
+or
+\begin{align}
+\ket{0}_X &\equiv (\ket{H}+\ket{V})/\sqrt{2}, \nonumber \\
+\ket{1}_X &\equiv (\ket{H}-\ket{V})/\sqrt{2}. \nonumber
+\end{align}
+\item Encoding into the randomly chosen basis, she transmits the randomly chosen bit to Bob.
+\item She does not announce the choice of bit or basis.
+\item Bob measures the bit in a randomly chosen basis, $X$ or $Z$.
+\item The above is repeated as many times as is necessary.
+\item Upon receipt of all qubits, Alice (publicly) announces the basis used for each qubit sent.
+\item Qubits where Bob measured in the opposite basis to which Alice encoded are discarded, as they will be decorrelated from Alice.
+\item The remaining measurement outcomes are guaranteed to yield identical bits between Alice and Bob.
+\item Remaining is roughly half as many bits as were sent, which are random, but guaranteed to be identical between Alice and Bob.
+\item Alice and Bob sacrifice some of their bits by publicly communicating them to check for consistency. This rules out intercept-resent attacks.
+\end{enumerate}}}
+\caption{BB84 QKD protocol using polarisation-encoded photons (or equivalently any other qubit encoding). Upon completion of the protocol, Alice and Bob share a random bit-string. Suppose an eavesdropper, Eve, were to perform an intercept-resend attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of bases, and Eve will not know the bases in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. Thus, by sacrificing a small fraction of their shared bits, via openly communicating them to one another for comparison, such an intercept-resend attack will quickly be detected by Alice and Bob, with success probability exponentially asymptoting to unity. Thus, Alice and Bob have great confidence that they have a shared, secret, random bit-string, which may subsequently be employed in a one-time-pad.} \label{tab:bb84}
+\end{table}
 
-Suppose an eavesdropper, Eve, were to perform an intercept-resend attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of bases, and Eve will not know the bases in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. Thus, by sacrificing a small fraction of their shared bits, via openly communicating them to one another for comparison, such an intercept-resend attack will quickly be detected by Alice and Bob, with success probability exponentially asymptoting to unity. Thus, Alice and Bob have great confidence that they have a shared, secret, random bit-string, which may subsequently be employed in a one-time-pad.
+%Let us briefly consider the BB84 protocol. Alice first chooses a random basis, either $\hat{X}$ or $\hat{Z}$, in which to encode one of two randomly chosen basis states, either \mbox{$\{\ket{H},\ket{V}\}$} or \mbox{$\{\ket{+}=(\ket{H}+\ket{V})/\sqrt{2},\ket{-}=(\ket{H}-\ket{V})/\sqrt{2}\}$} respectively. She sends this state to Bob, without announcing either the choice of basis or basis state. Bob subsequently measures the photon in one of the two bases, chosen randomly also. This is repeated as many times as is necessary. Finally, Bob confirms to Alice that he has received her photons, at which point she announces to him the choice of basis for each of the sent photons (this does not require secrecy). In the instances where Alice and Bob's basis choices matched, Bob has measured the same state that Alice sent, and he records the value. Otherwise he discards that sample, as it will be completely decorrelated from Alice's state, since the two measurement bases are non-commuting. What remains is approximately half as many random bits, which are guaranteed to be the same for Alice and Bob.
 
-A key observation in the BB84 protocol is that it requires no entanglement, no mode-matching, no interference, and no interferometric stability. It can be realised using nothing more than a single-photon source, wave-plates, and photo-detectors. For these reasons, QKD is a technology that is entirely viable on a large scale using present-day technology.
+The BB84 protocol is described in Alg.~\ref{tab:bb84}. A key observation is that it requires no entanglement, no mode-matching, no interference, and no interferometric stability. It can be realised using nothing more than a single-photon source, wave-plates, and photo-detectors. For these reasons, QKD is a technology that is entirely viable on a large scale using present-day technology.
 
 E91 is slightly different. Here Alice and Bob share an entangled Bell-pair provided by a central authority. Then both Alice \emph{and} Bob measure their qubits in random bases. As with BB84, after measuring all qubits, they compare their choices of random bases. When they coincide, they have a shared bit. When they don't, they discard their result. From here the remainder of the protocol is the same as for BB84.
 
