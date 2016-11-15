@@ -2619,16 +2619,16 @@ Each Bell measurement can be implemented non-deterministically using a PBS, miti
 \comment{For early gen repeater networks, need to know exact route - for higher level networks the route can be invisible to user.}
 
 %
-% Quantum Key Distribution
+% Quantum Key Distribution (QKD)
 %
 
-\subsection{Quantum key distribution} \label{sec:QKD}
+\subsection{Quantum key distribution (QKD)} \label{sec:QKD}
 
-Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. There is only a single provably secure encryption protocol, the \emph{one-time-pad} \cite{bib:Schneier96}. This protocol requires Alice and Bob to share a random bit-string as long as the message (plaintext) being communicated between them. The two bit-strings undergo bit-wise XOR operations to form the ciphertext. Mathematically,
+Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. There is only a single provably secure encryption protocol -- the \emph{one-time-pad} \cite{bib:Schneier96}. This protocol requires Alice and Bob to share a random bit-string as long as the message (plaintext) being communicated between them. The two bit-strings undergo bit-wise XOR operations to form the ciphertext. Mathematically,
 \begin{align}
 s_\mathrm{ciphertext} = s_\mathrm{plaintext} \oplus s_\mathrm{key},
 \end{align}
-where $\oplus$ is the bitiwise XOR operation (equivalently addition modulo 2) and the $s$ represent the different bit-strings.
+where $\oplus$ is the bitwise XOR operation (equivalently addition modulo 2) and $s$ represent the different bit-strings.
 
 The security of this protocol is easy to see intuitively -- with an appropriate choice of key, \emph{any} plaintext of the same length could be inferred from the ciphertext. This means that there is no possibility of performing any kind of frequency analysis, as the ciphertext string has maximum entropy and thus no correlations. Alternately, suppose we were to try and crack this code by expressing the decryption as an oracle, where the input is a key bit-string. Then we use brute-force (or Grover's algorithm) to query the oracle for tagged elements, where by `tagged' we mean that it satisfies an appropriate test (e.g an English language test) to decide whether a decrypted message is valid. Since every possible valid plaintext can be recovered using an appropriate key, the protocol is unable to find a unique plaintext matching the ciphertext.
 
@@ -2642,25 +2642,25 @@ BB84():
 \begin{enumerate}
 \item Alice chooses a random bit $0$ or $1$.
 \item Alice randomly chooses a basis, $X$ or $Z$.
-\item Depending on the choice of basis, she defines her logical qubit states as:
+\item Depending on the choice of basis, she encodes her bit as:
 \begin{align}
 \ket{0}_Z &\equiv \ket{H}, \nonumber \\
 \ket{1}_Z &\equiv \ket{V}, \nonumber
 \end{align}
 or
 \begin{align}
-\ket{0}_X &\equiv (\ket{H}+\ket{V})/\sqrt{2}, \nonumber \\
-\ket{1}_X &\equiv (\ket{H}-\ket{V})/\sqrt{2}. \nonumber
+\ket{0}_X &\equiv \frac{1}{\sqrt{2}}(\ket{H}+\ket{V}), \nonumber \\
+\ket{1}_X &\equiv \frac{1}{\sqrt{2}}(\ket{H}-\ket{V}). \nonumber
 \end{align}
 \item Encoding into the randomly chosen basis, she transmits the randomly chosen bit to Bob.
 \item She does not announce the choice of bit or basis.
 \item Bob measures the bit in a randomly chosen basis, $X$ or $Z$.
-\item The above is repeated as many times as is necessary.
-\item Upon receipt of all qubits, Alice (publicly) announces the basis used for each qubit sent.
+\item The above is repeated many times.
+\item Upon receipt of all qubits, Alice (publicly) announces the basis used for encoding each bit sent.
 \item Qubits where Bob measured in the opposite basis to which Alice encoded are discarded, as they will be decorrelated from Alice.
 \item The remaining measurement outcomes are guaranteed to yield identical bits between Alice and Bob.
 \item Remaining is roughly half as many bits as were sent, which are random, but guaranteed to be identical between Alice and Bob.
-\item Alice and Bob sacrifice some of their bits by publicly communicating them to check for consistency. This rules out intercept-resent attacks.
+\item Alice and Bob sacrifice some of their bits by publicly communicating them to check for consistency. This rules out intercept-resend attacks.
 \end{enumerate}}}
 \caption{BB84 QKD protocol using polarisation-encoded photons (or equivalently any other qubit encoding). Upon completion of the protocol, Alice and Bob share a random bit-string. Suppose an eavesdropper, Eve, were to perform an intercept-resend attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of bases, and Eve will not know the bases in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. Thus, by sacrificing a small fraction of their shared bits, via openly communicating them to one another for comparison, such an intercept-resend attack will quickly be detected by Alice and Bob, with success probability exponentially asymptoting to unity. Thus, Alice and Bob have great confidence that they have a shared, secret, random bit-string, which may subsequently be employed in a one-time-pad.} \label{tab:bb84}
 \end{table}
@@ -3610,7 +3610,7 @@ Quantum technologies, particularly quantum computing, will truly revolutionise c
 
 We have presented an early formulation and analysis of quantum networking protocols with the vision of enabling a future quantum internet, where quantum resources can be shared and communicated in much the same way as is presently done with digital assets. Whilst it is hard to foresee exactly how future quantum networks will be implemented, many of the central ideas presented here will be applicable across architectures and implementations on an ad hoc basis.
 
-There are a number of schools of thought one might subscribe to when quantum networking. One might demand perfect data integrity and best-case network performance. But that would come at the expense of necessitating an all-powerful central authority to oversee all communications and ensure that scheduling was absolutely perfect -- a potentially very challenging optimisation problem. Or one might tolerate lost data packets or suboptimal performance, but at the expense of limiting the applicability of the network. Or maybe some arbitrary compromise between different metrics and attributes is best. These are open questions that needn't have concrete, one-size-fits-all answers.
+There are a number of schools of thought one might subscribe to when quantum networking. One might demand perfect data integrity and best-case network performance. But that would come at the expense of necessitating an all-powerful central authority to oversee all communications, ensuring that scheduling was absolutely perfect -- a potentially very challenging optimisation problem. Or one might tolerate lost data packets or suboptimal performance, but at the expense of limiting the applicability of the network. Or maybe some arbitrary compromise between different metrics and attributes is best. These are open questions that needn't have concrete, one-size-fits-all answers.
 
 The QTCP framework we presented is sufficiently flexible and extensible that these questions can be answered and enforced independently by different subnets, depending on their individual characteristics and requirements, in much the same way that every organisation connected to the classical internet today is free to structure their own LAN as they please, enforcing their own network policies.
 
