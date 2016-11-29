@@ -1170,7 +1170,7 @@ Equivalently, for density operators,
 \begin{align}
 I(\hat\rho_A;\hat\rho_B) = S(\hat\rho_A) + S(\hat\rho_B) - S(\hat\rho_A,\hat\rho_B),
 \end{align}
-The mutual information between two quantum states is invariant under local unitary transformations,
+using the von Neuman entropy. The mutual information between two quantum states is invariant under local unitary transformations,
 \begin{align}
 I(\hat\rho_A;\hat\rho_B) = I(\hat{U}_A\hat\rho_A \hat{U}_A^\dag; \hat{U}_B\hat\rho_B \hat{U}_B^\dag),
 \end{align}
@@ -1194,6 +1194,8 @@ The quantum coherent information exhibits much of the same mathematical structur
 \end{align}
 
 Analytic solutions to $\mathcal{C}(\mathcal{E})$ and $\mathcal{Q}(\mathcal{E})$ are not known even for simple Pauli error channels such as dephasing and depolarisation. However, once net dephasing or depolarisation rates have been calculated across a route, the channel capacities can easily be solved numerically, which is sufficient for the numerical algorithms we will rely upon.
+
+\comment{Add stuff on channel capacities of different channels, like Pauli error channels etc.}
 
 %
 % Latency
@@ -1947,8 +1949,9 @@ The calculation of MST's is most likely to come into consideration when actually
 Of course, all the topological structures described until now are in-principle constructs. Of most relevance is the \emph{Webgraph}, the graph of the actual internet. Fig.~\ref{fig:webgraph} illustrates the Webgraph via the Internet Mapping Project. The combination of random, densely and sparsely connected, and tree structures, and clear hierarchical structure are all evident. This encourages our intuition of the different types of structures present in realistic networks.
 
 \begin{figure}[!htb]
-\includegraphics[width=\columnwidth]{webgraph}
-\caption{The real-world webgraph, capturing the high-level structure of the global internet. A random tree structure is visually apparent. \comment{CITE THE SOURCE! Is it open source?}} \label{fig:webgraph}
+\includegraphics[width=\columnwidth]{webgraph_1} \\
+\includegraphics[width=\columnwidth]{webgraph_2}
+\caption{Examples of real-world webgraphs, capturing their high-level random tree-like structure. Graphics attributed to the Center for Applied Internet Data Analysis (CAIDA), {\tt \href{http://www.caida.org}{http://www.caida.org}}.} \label{fig:webgraph}
 \end{figure}
 
 %
@@ -2387,7 +2390,7 @@ Perhaps the simplest quantum information processing task is that of perfect rand
 
 Classical random number generators are actually deterministic, but so difficult to predict that we accept them to be as good as random. But for some applications this isn't enough, and we must make sure that no correlations of any type exist between different random numbers, or between the random numbers and their environment.
 
-This can be achieved in many different ways quantum mechanically. Ultimately, they are all based on the Heisenberg uncertainty principle, that certain quantum mechanical measurements yield uncertainty. Most trivially, we can prepare a photon with diagonal polarisation, \mbox{$\ket{+} = (\ket{H}+\ket{V})/\sqrt{2}$}, and then measure it in the horizontal/vertical polarisation basis (given by measurement projectors \mbox{$\ket{H}\bra{H}$} and \mbox{$\ket{V}\bra{V}$}). Assuming the device is perfectly implementing this procedure, we will measure a perfect random 50/50 distribution between $\ket{H}$ and $\ket{V}$.
+This can be achieved in many different ways quantum mechanically. Ultimately, they are all based on the Heisenberg uncertainty principle, that certain quantum mechanical measurements yield uncertainty. Most trivially, we can prepare a photon with diagonal polarisation, \mbox{$\ket{+} = (\ket{H}+\ket{V})/\sqrt{2}$}, and then measure it in the horizontal/vertical polarisation basis (given by measurement projectors \mbox{$\ket{H}\bra{H}$} and \mbox{$\ket{V}\bra{V}$}). Assuming the device is perfectly implementing this procedure, we will measure a perfect random 50/50 distribution between $\ket{H}$ and $\ket{V}$. Equivalently, measuring one half of a polarisation-entangled photon-pair, \mbox{$(\ket{H}\ket{H}+\ket{V}\ket{V})/\sqrt{2}$}, yields the same outcome.
 
 The cynics amongst us might question the non-determinism of the laws of Nature, and ask whether quantum random numbers really are truly random (in the sense of non-determinism), or whether they also are just too hard to predict that we treat them as effectively random. The answer to this is that it has been proven that quantum mechanics is inconsistent with `hidden variable theories' \cite{Bell}, i.e that there is an underlying, but inaccessible determinism in the world, which is guiding quantum measurements in a completely deterministic manner. This disproof effectively validates the notion of quantum mechanical perfect random number generation.
 
@@ -2649,7 +2652,7 @@ where $\oplus$ is the bitwise XOR operation (equivalently addition modulo 2) and
 
 The security of this protocol is easy to see intuitively -- with an appropriate choice of key, \emph{any} plaintext of the same length could be inferred from the ciphertext. This means that there is no possibility of performing any kind of frequency analysis, as the ciphertext string has maximum entropy and thus no correlations. Alternately, suppose we were to try and crack this code by expressing the decryption as an oracle, where the input is a key bit-string. Then we use brute-force (or Grover's algorithm) to query the oracle for tagged elements, where by `tagged' we mean that it satisfies an appropriate test (e.g an English language test) to decide whether a decrypted message is valid. Since every possible valid plaintext can be recovered using an appropriate key, the protocol is unable to find a unique plaintext matching the ciphertext.
 
-Importantly, the secrecy of the one-time-pad strictly requires that a key never be reused. A fresh key must be generated for each message sent, otherwise trivial frequency analysis techniques can be employed to compromise security\footnote{If the same key $k$ is used to encode two messages $s_1$ and $s_2$, yielding ciphertexts $c_1$ and $c_2$, then we trivially obtain \mbox{$c_1 \oplus c_2 = s_1 \oplus k \oplus s_2 \oplus k = s_1 \oplus s_2$}. Now a frequency analysis on the bitwise XOR of two plaintexts can be applied.}.
+Importantly, the secrecy of the one-time-pad strictly requires that a key never be reused. A fresh key must be generated for each message sent, otherwise trivial frequency analysis techniques can be employed to compromise security\footnote{If the same key $k$ is used to encode two messages $s_1$ and $s_2$, yielding ciphertexts $c_1$ and $c_2$, then we trivially obtain \mbox{$c_1 \oplus c_2 = s_1 \oplus k \oplus s_2 \oplus k = s_1 \oplus s_2$}. Now a frequency analysis on the bitwise XOR of two plaintexts can be applied, without requiring any knowledge of the key whatsoever.}.
 
 This reduces the problem of perfect secrecy of arbitrary messages to the secrecy of shared randomness. Quantum key distribution (QKD) protocols enable this by providing a shared source of randomness between Alice and Bob, where any intercept-resend attack may be detected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle and no-cloning theorem).
 
@@ -3465,11 +3468,12 @@ There are a variety of single photon detectors, detailed description of which ca
 
 \emph{Single photon avalanche diodes (SPAD)} -- They are the most compact and common single-photon detectors in the world. SPADs are avalanche diodes operated in Geiger mode (above breakdown voltage) to obtain a high gain. There are several commercially SPADs, with detection efficiency around 60\% at 780nm, maximum count rate of 25MHz and dark count rate as low as 25Hz. Several remarks are listed as following:
 
-(i) Even higher detection efficiency is available. However, on account of the significance trade-off between detection efficiency, dark noise and dead-time, it is often at the expense of a lower maximum count rate (typical dead-time is 1$\mu$s, leading to 1MHz count rate) and a bigger dark noise.
+\begin{itemize}
+    \item Even higher detection efficiency is available. However, on account of the significance trade-off between detection efficiency, dark noise and dead-time, it is often at the expense of a lower maximum count rate (typical dead-time is 1$\mu$s, leading to 1MHz count rate) and a bigger dark noise.
 
-(ii) Telecom band SAPDs are usually based on InGaAs/InP, which, however, suffer from low efficiency about 25\% and long dead-time on the order of microsecond. Another more efficient method is up-conversion detection. The idea is to convert the telecom photons into the near infrared ones by up-conversion, and then detect them with a Silicon SAPD. In this method, up-conversion usually utilises sum-frequency generation in periodically poled lithium niobate (PPLN) waveguides or bulk crystals. The detection efficiency can be as high as \mbox{$30\sim 40\%$} for PPLN waveguide-based up-conversion detectors \cite{shentu2013ultralow}.
-
-(iii) SPADs are also commercially available in a multi-channel (e.g., 4-channel) array format with single power supply and individual inputs and outputs. They are different from the multi-element SAPD arrays, which have either only one input or one output, and can be used to achieving photon number resolution or high-speed single photon sensors.
+    \item Telecom band SAPDs are usually based on InGaAs/InP, which, however, suffer from low efficiency about 25\% and long dead-time on the order of microsecond. Another more efficient method is up-conversion detection. The idea is to convert the telecom photons into the near infrared ones by up-conversion, and then detect them with a Silicon SAPD. In this method, up-conversion usually utilises sum-frequency generation in periodically poled lithium niobate (PPLN) waveguides or bulk crystals. The detection efficiency can be as high as \mbox{$30\sim 40\%$} for PPLN waveguide-based up-conversion detectors \cite{shentu2013ultralow}.
+    \item SPADs are also commercially available in a multi-channel (e.g., 4-channel) array format with single power supply and individual inputs and outputs. They are different from the multi-element SAPD arrays, which have either only one input or one output, and can be used to achieving photon number resolution or high-speed single photon sensors.
+\end{itemize}
 
 \emph{Superconducting nanowire single photon detectors (SNSPD)} -- They are more efficient, but larger and more expensive than SPADs. Up until now, the highest detection efficiency of SNSPDs is 93\% at 1550nm, demonstrated in 2014 \cite{marsili2013}. SNSPDs are also commercially available. There are companies specialising in best-performance SNSPDs with high detection efficiency. They have achieved specifications with peak detection efficiencies higher than 80\% around 800nm, maximum dark-count rates of \mbox{$100\sim 300$Hz}, and a dead-time ranging from \mbox{$10\sim 70$ns}. Similar performance is expected for optimised SNSPD at other wavelengths (\mbox{$780\sim 1550$nm}). However, SNSPDs must be operated at cryogenic temperatures of a few Kelvin to maintain the superconducting state in the sensing material. This is the main reason why SNSPDs are much more cumbersome and expensive than SPADs.
 
@@ -3497,11 +3501,13 @@ The speed of many quantum information protocols (e.g., Continuous-variable QKD) 
 
 They can be integrated onto a small chip, which is free of alignment, space-saving and phase-stable.
 
-(i) Silica-on-silicon planar light-wave circuit (PLC) \cite{hibino2003silica}. For the state-of-the-art technique, PLCs can achieve ultra-low propagation loss ($<$0.01dB/cm) and coupling loss ($<$0.1dB/facet). Nowadays, small-scale quantum circuits have reached coupling loss $\sim$0.4dB/facet and each directional coupler (DC) loss $\sim$0.1dB \cite{carolan2015universal}. PLCs are micrometer waveguides due to its low index contrast $\sim$1.5\%. Usually, the bending radius is larger than 2 mm, allowing for DC length reached several millimetres at least \cite{carolan2015universal}. Therefore, PLC is thought as unacceptable for large scale circuit containing hundreds of DCs.
+\begin{itemize}
+    \item Silica-on-silicon planar light-wave circuit (PLC) \cite{hibino2003silica}. For the state-of-the-art technique, PLCs can achieve ultra-low propagation loss ($<$0.01dB/cm) and coupling loss ($<$0.1dB/facet). Nowadays, small-scale quantum circuits have reached coupling loss $\sim$0.4dB/facet and each directional coupler (DC) loss $\sim$0.1dB \cite{carolan2015universal}. PLCs are micrometer waveguides due to its low index contrast $\sim$1.5\%. Usually, the bending radius is larger than 2 mm, allowing for DC length reached several millimetres at least \cite{carolan2015universal}. Therefore, PLC is thought as unacceptable for large scale circuit containing hundreds of DCs.
 
-(ii) Fused silica waveguides written by femtosecond laser direct written (FLDW) technology. Unlike PLC fabrication, the FLDW is a powerful and flexible technique for 3D rapid fabrication, requiring no masking procedure or cleanroom environment. FLDW waveguides exhibit lowest losses on the order of 0.1dB/cm \cite{sakuma2003ultra}. Besides, the maximum refractive index contrast achieved so far is only 1\%, which makes such waveguide larger than PLCs.
+    \item Fused silica waveguides written by femtosecond laser direct written (FLDW) technology. Unlike PLC fabrication, the FLDW is a powerful and flexible technique for 3D rapid fabrication, requiring no masking procedure or cleanroom environment. FLDW waveguides exhibit lowest losses on the order of 0.1dB/cm \cite{sakuma2003ultra}. Besides, the maximum refractive index contrast achieved so far is only 1\%, which makes such waveguide larger than PLCs.
 
-(iii) Telecom silicon waveguides. They have higher refractive index, thus allowing a dramatic reduction in the size. For example, a \mbox{$2\times 2$} MMI coupler in silicon (27$\mu$m) \cite{bonneau2012quantum} is 40 times shorter than the one in silica (1.1mm) \cite{peruzzo2011}. The best propagation losses can reach 0.1dB/cm \cite{lee2000, gnan2008} and coupling losses of 0.5dB/facet is possible by using spot-size converters (SSC) \cite{almeida2003, mcnab2003}.
+    \item Telecom silicon waveguides. They have higher refractive index, thus allowing a dramatic reduction in the size. For example, a \mbox{$2\times 2$} MMI coupler in silicon (27$\mu$m) \cite{bonneau2012quantum} is 40 times shorter than the one in silica (1.1mm) \cite{peruzzo2011}. The best propagation losses can reach 0.1dB/cm \cite{lee2000, gnan2008} and coupling losses of 0.5dB/facet is possible by using spot-size converters (SSC) \cite{almeida2003, mcnab2003}.
+\end{itemize}
 
 %
 % Fibre-Loops
