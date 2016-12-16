@@ -9,6 +9,8 @@
 \usepackage[colorlinks]{hyperref}
 \usepackage{url}
 \usepackage[dvipsnames]{xcolor}
+\usepackage[]{qcircuit}
+
 \newcommand{\comment}[1]{{\color{blue}{\textbf{#1}}}}
 
 \newcommand{\bra}[1]{\langle#1|}
@@ -1479,6 +1481,46 @@ As an alternative to checksums, we could borrow the notion of fault-tolerance fr
 Different error correcting codes have different error correcting power, and different resource overheads, which must be taken into consideration. The appropriate choice of code will largely be determined by the final {\sc Services \& Applications} layer. For some simple quantum communications protocols, simple error correction (or even no error correction) may suffice. A full-fledged quantum computation on the other hand will require error rates within a fault-tolerance thresholds.
 
 The field of fault-tolerance is already extremely well developed and could be applied directly to QTCP as an abstraction layer directly below the {\sc Services \& Application} layer of the protocol stack, abstracting it away from the end-user.
+
+\comment{TO DO! Cite Shor}
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\tt
+function ThreeQubitCode($\ket\psi$):
+\begin{enumerate}
+\item Using two CNOT gates, redundantly encode the state 
+\begin{align}
+\ket\psi=\alpha\ket{0}+\beta\ket{1}
+\end{align}
+into
+\begin{align}
+\ket\psi_R=\alpha\ket{000}+\beta\ket{111}.
+\end{align}
+\item Independently apply bit-flip channels $\mathcal{E}_X$ to each of the three encoded qubits.
+\item If exactly one bit-flip operation was applied in total, the three possible erroneous encoded states are,
+\begin{align}
+\ket\psi_1 &= \alpha\ket{001}+\beta\ket{110}, \nonumber \\
+\ket\psi_2 &= \alpha\ket{010}+\beta\ket{101}, \nonumber \\
+\ket\psi_3 &= \alpha\ket{000}+\beta\ket{011}.
+\end{align}
+\item Using three pairs of CNOT operations and $\hat{Z}$-basis measurements, apply parity measurements between each of the three pairs of encoded qubits.
+\item Assuming at most a single bit-flip operation has occurred on the encoded state, the three parity outcomes uniquely determine which encoded qubit the bit-flip was applied to.
+\item Apply classically-controlled bit-flip operations to correct the encoded state, recovering $\ket\psi_R$.
+\end{enumerate}
+The circuit model description for the procedure is:
+\begin{align}
+\Qcircuit @C=1.3em @R=.6em {
+  & \lstick{\ket{\psi}} & \ctrl{2} & \gate{\mathcal{E}_X}  & \qw & \qw              & \ctrl{3}  & \qw       & \ctrl{4} & \qw & \multigate{2}{\ \mathcal{R}\ } & \qw \\
+  & \lstick{\ket{0}}    & \targ    & \gate{\mathcal{E}_X}  & \qw & \qw              & \ctrl{2}  & \ctrl{2}  & \qw      & \qw & \ghost{\ \mathcal{R}\ } \qw & \qw \\
+  & \lstick{\ket{0}}    & \targ    & \gate{\mathcal{E}_X}  & \qw & \qw              & \qw       & \ctrl{2}  & \ctrl{3} & \qw & \ghost{\ \mathcal{R}\ } \qw & \qw \\
+  &          &          &          & & \lstick{\ket{0}} & \targ \qw & \qw       & \qw      & \meter & \control \cw \cwx \\
+  &          &          &          & & \lstick{\ket{0}} & \qw       & \targ \qw & \qw      & \meter & \control \cw \cwx \\
+  &          &          &          & & \lstick{\ket{0}} & \qw       & \qw       & \targ    & \meter & \control \cw \cwx
+} \nonumber
+\end{align}
+}}
+\caption{Three-qubit code for protecting against at most a single logical bit-flip error.} \label{tab:three_QEC}
+\end{table}
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\tt
