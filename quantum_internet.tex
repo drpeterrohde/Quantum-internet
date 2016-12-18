@@ -1494,7 +1494,8 @@ function ThreeQubitCode($\ket\psi$):
 \end{align}
 into
 \begin{align}
-\ket\psi_R=\alpha\ket{000}+\beta\ket{111}.
+\ket\psi_R &= \hat{\mathrm{CNOT}}_{1,2}\hat{\mathrm{CNOT}}_{1,3}\ket\psi\ket{00} \nonumber \\
+&= \alpha\ket{000}+\beta\ket{111}.
 \end{align}
 \item Independently apply bit-flip channels $\mathcal{E}_X$ to each of the three encoded qubits.
 \item If exactly one bit-flip operation was applied in total, the three possible erroneous encoded states are,
@@ -1506,6 +1507,7 @@ into
 \item Using three pairs of CNOT operations and $\hat{Z}$-basis measurements, apply parity measurements between each of the three pairs of encoded qubits.
 \item Assuming at most a single bit-flip operation has occurred on the encoded state, the three parity outcomes uniquely determine which encoded qubit the bit-flip was applied to.
 \item Apply classically-controlled bit-flip operations to correct the encoded state, recovering $\ket\psi_R$.
+\item Apply the inverse of the encoding operation to recover $\ket\psi$.
 \end{enumerate}
 The circuit model description for the procedure is:
 \begin{align}
@@ -2886,13 +2888,9 @@ The \emph{circuit model} is the conventional and intuitive approach for expressi
 
 In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \emph{cluster state} or \emph{graph state}. The state is associated with a graph of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation. That is, they act as a \emph{substrate} for implementing arbitrary computations.
 
-In the graph, vertices represent qubits initialised into the \mbox{$\ket{+}=\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$} state, and edges represent the application of maximally entangling controlled-phase (CZ) gates between vertices, given by,
+In the graph, vertices represent qubits initialised into the \mbox{$\ket{+}=\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$} state, and edges represent the application of maximally entangling controlled-phase (CZ) gates, $\hat{\mathrm{CZ}}=\mathrm{diag}(1,1,1,-1)$, between vertices,
 \begin{align}
-\hat{U}_\mathrm{CZ} = \left(\begin{array}{cccc}
-1 & 0 & 0 & 0 \\
-0 & 1 & 0 & 0 \\
-0 & 0 & 1 & 0 \\
-0 & 0 & 0 & -1 \end{array}\right).
+\ket\psi_\mathrm{cluster} = \prod_{e\in E} \hat{\mathrm{CZ}}_e \cdot \bigotimes_{v\in V}\ket{+}_v.
 \end{align}
 An example is presented in Fig.~\ref{fig:cluster_state}. Cluster states are easily encoded optically using photonic polarisation encoding (Sec.~\ref{sec:single_phot_enc}), and therefore readily lend themselves to optical networking.
 
