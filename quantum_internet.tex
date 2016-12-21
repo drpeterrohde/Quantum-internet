@@ -1476,13 +1476,11 @@ Classically, error detection is typically performed using checksums (hash functi
 
 In the quantum context the elegant notion of checksums is complicated by the fact that calculating a hash function of a quantum state would necessarily entangle the state with the hash function. This would have the undesired effect of causing measurement of the checksum to collapse the quantum state of the data, thereby altering it in an uncontrollable way.
 
-As an alternative to checksums, we could borrow the notion of fault-tolerance from quantum computing theory \cite{???}. Here we encode a quantum state into a (polynomially) larger Hilbert space. \emph{Syndrome measurements} on some of the states in this larger space allow us to both detect and correct universal error models, such as depolarisation or dephasing, provided that error rates are within the fault-tolerance threshold of the code being employed.
+As an alternative to checksums, we could borrow the notion of quantum error correction (QEC) and fault-tolerance from quantum computing theory \cite{???}. Here we encode a quantum state into a (polynomially) larger Hilbert space. \emph{Syndrome measurements} on some of the states in this larger space allow us to both detect and correct universal error models, such as depolarisation or dephasing, provided that error rates are within the fault-tolerance threshold of the code being employed.
 
-Different error correcting codes have different error correcting power, and different resource overheads, which must be taken into consideration. The appropriate choice of code will largely be determined by the final {\sc Services \& Applications} layer. For some simple quantum communications protocols, simple error correction (or even no error correction) may suffice. A full-fledged quantum computation on the other hand will require error rates within a fault-tolerance thresholds.
+The first described QEC code was the three-qubit code by \cite{bib:Shor95} for redundantly encoding a single logical qubit into three encoded qubits, allowing the detection and correction of at most a single bit-flip error between the encoded qubits. This protocol is shown in Alg.~\ref{tab:three_QEC}. By switching into a Hadamard-rotated basis, the same code could equivalently correct against at most a single phase-flip error. And by concatenating these two codes a 9-qubit code correcting against a single depolarising error may be implemented.
 
-The field of fault-tolerance is already extremely well developed and could be applied directly to QTCP as an abstraction layer directly below the {\sc Services \& Application} layer of the protocol stack, abstracting it away from the end-user.
-
-\comment{TO DO! Cite Shor}
+Since these original ideas into QEC, countless further codes have been described, able to correct against larger numbers of errors, with far more efficient resource overheads. Currently, topological codes \cite{topologicalCodes} are considered the most favourable codes in terms of their elegance, simplicity, high error-correction thresholds, and efficiency in resource overhead. Some such topological codes are particularly enticing, as they can be readily prepared from cluster states (introduced in Sec.~\ref{sec:CSQC}), which lend themselves naturally to certain networking methods, such as distributed state preparation.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\tt
@@ -1523,6 +1521,10 @@ The circuit model description for the procedure is:
 }}
 \caption{Three-qubit code for protecting against at most a single logical bit-flip error.} \label{tab:three_QEC}
 \end{table}
+
+Different error correcting codes have different error correcting power, and different resource overheads, which must be taken into consideration. The appropriate choice of code will largely be determined by the final {\sc Services \& Applications} layer. For some simple quantum communications protocols, simple error correction (or even no error correction) may suffice. A full-fledged quantum computation on the other hand will require error rates within a fault-tolerance thresholds.
+
+The field of fault-tolerance is already extremely well developed and could be applied directly to QTCP as an abstraction layer directly below the {\sc Services \& Application} layer of the protocol stack, abstracting it away from the end-user. The transport layer protocol for applying it to the QTCP stack in Alg.~\ref{tab:qos}.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\tt
@@ -2690,9 +2692,9 @@ Each Bell measurement can be implemented non-deterministically using a PBS, miti
 
 Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. There is only a single provably secure encryption protocol -- the \emph{one-time-pad} \cite{bib:Schneier96}. This protocol requires Alice and Bob to share a random bit-string as long as the message (plaintext) being communicated between them. The two bit-strings undergo bit-wise XOR operations to form the ciphertext. Mathematically,
 \begin{align}
-s_\mathrm{ciphertext} = s_\mathrm{plaintext} \oplus s_\mathrm{key},
+c = s \oplus k,
 \end{align}
-where $\oplus$ is the bitwise XOR operation (equivalently addition modulo 2) and $s$ represent the different bit-strings.
+where $\oplus$ is the bitwise XOR operation (equivalently addition modulo 2), and $c$, $s$ and $k$ are the ciphertext, plaintext and key strings respectively, all of which are of the same length, \mbox{$|c|=|s|=|k|$}.
 
 The security of this protocol is easy to see intuitively -- with an appropriate choice of key, \emph{any} plaintext of the same length could be inferred from the ciphertext. This means that there is no possibility of performing any kind of frequency analysis, as the ciphertext string has maximum entropy and thus no correlations. Alternately, suppose we were to try and crack this code by expressing the decryption as an oracle, where the input is a key bit-string. Then we use brute-force (or Grover's algorithm) to query the oracle for tagged elements, where by `tagged' we mean that it satisfies an appropriate test (e.g an English language test) to decide whether a decrypted message is valid. Since every possible valid plaintext can be recovered using an appropriate key, the protocol is unable to find a unique plaintext matching the ciphertext.
 
@@ -2886,7 +2888,7 @@ Such delegated protocols will be very useful in quantum networks, where differen
 
 The \emph{circuit model} is the conventional and intuitive approach for expressing quantum algorithms, decomposing algorithm into a sequence of elementary gates from a universal gate set. However, the \emph{cluster state model} for quantum computation \cite{bib:Raussendorf01, bib:Raussendorf03, bib:Nielsen06} (also referred to as the \emph{one-way}, \emph{measurement-based}, or \emph{graph state} models for quantum computation) is an extremely powerful, yet conceptually distinct paradigm, that warrants treatment of its own, owing to its significant distinction from the more familiar circuit model.
 
-In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \emph{cluster state} or \emph{graph state}. The state is associated with a graph of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation. That is, they act as a \emph{substrate} for implementing arbitrary computations.
+In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \emph{cluster state} or \emph{graph state}. The state is associated with a graph, $G=(V,E)$, of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation\footnote{Note that the graph upon which a cluster state resides is not to be confused with the network graph. Rather it is just a graphical representation of a multi-qubit state.}. That is, they act as a \emph{substrate} for implementing arbitrary computations.
 
 In the graph, vertices represent qubits initialised into the \mbox{$\ket{+}=\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$} state, and edges represent the application of maximally entangling controlled-phase (CZ) gates, $\hat{\mathrm{CZ}}=\mathrm{diag}(1,1,1,-1)$, between vertices,
 \begin{align}
