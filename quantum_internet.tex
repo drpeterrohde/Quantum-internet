@@ -504,6 +504,12 @@ Multiple processes may be composed using the notation,
 \end{align}
 In general, processes do not commute, i.e \mbox{$\mathcal{E}_1\circ \mathcal{E}_2 \neq \mathcal{E}_2\circ \mathcal{E}_1$}. Unless unitary, quantum processes are irreversible, meaning that errors accumulate and cannot be overcome without the overhead of some form of quantum error correction (QEC) \cite{bib:Shor95, bib:CalderbankShor96, bib:NielsenChuang00}.
 
+%
+% Quantum Process Matrices
+%
+
+\subsection{Quantum process matrices}
+
 In general, the Kraus operator representation for quantum processes is not unique -- there may be multiple choices of Kraus operators that implement identical processes. But if the representation is not unique, how do we compare different quantum processes? To address this, it is common to choose a `standard' basis for representing quantum processes, such that they may be consistently and fairly compared. This requires choosing a basis which is complete for operations on the Hilbert space acted upon by the process.
 
 For example, for a single qubit, the Pauli operators -- $\hat\sigma_1$ (identity, $\mathbb{\hat{I}}$), $\hat\sigma_2$ (bit-flip, $\hat{X}$), $\hat\sigma_3$ (bit-phase-flip, $\hat{Y}$), and $\hat\sigma_4$ (phase-flip, $\hat{Z}$) -- are complete for single-qubit operations ($\mathbb{C}_2$). Therefore by decomposing our Kraus operators into linear combinations of these basis operators we have a standardised representation for single-qubit processes. Formally, for one qubit,
@@ -515,6 +521,8 @@ The Hermitian matrix $\chi$ is known as the \emph{process matrix}, from which ma
 \begin{align}
 \mathrm{tr}(\chi) = 1.
 \end{align}
+
+\comment{Insert example for CNOT process}
 
 %
 % Quantum Processes in Quantum Networks
@@ -660,7 +668,7 @@ Alternately, we can define \emph{mode operators} \cite{bib:RohdeMauererSilberhor
 \ket\psi_\mathrm{temporal} &= \hat{A}^\dag_\psi \ket{0}.
 \end{align}
 Now by defining an orthonormal basis of temporal distribution functions, $\{\xi_i\}$, such that,
-\begin{align}
+\begin{align} \label{eq:spec_orth_def}
 \bra{0} \hat{A}_{\xi_i} \hat{A}^\dag_{\xi_j}\ket{0} = \delta_{i,j},
 \end{align}
 we can encode a qudit of arbitrary dimension into the spatio-temporal degrees of freedom,
@@ -680,7 +688,7 @@ In time-bin encoding we define our basis of modes (whether it be qubits or highe
 \begin{align}
 \xi_{j}(t) = \xi_0(t-j\tau),
 \end{align}
-as well as the usual orthonormality constraints. Here $\tau$ is sufficiently large, and $\xi_i(t)$ sufficiently temporally localised, that the temporal modes are orthogonal.
+as well as the usual orthonormality constraints. Here $\tau$ is sufficiently large, and $\xi_i(t)$ sufficiently temporally localised, that the temporal modes are orthogonal as per Eq.~\ref{eq:spec_orth_def}.
 
 Time-bin encoding arises naturally in architectures where the photon source driving the system is operating at a high repetition rate, $R$, in which case \mbox{$\tau=1/R$}. Architectures for optical quantum computing have been described \cite{bib:RohdeLoop15, bib:RohdeUnivLoop15}, and experimentally demonstrated \cite{???}, based entirely on time-bin encoding.
 
@@ -1478,7 +1486,14 @@ In the quantum context the elegant notion of checksums is complicated by the fac
 
 As an alternative to checksums, we could borrow the notion of quantum error correction (QEC) and fault-tolerance from quantum computing theory \cite{???}. Here we encode a quantum state into a (polynomially) larger Hilbert space. \emph{Syndrome measurements} on some of the states in this larger space allow us to both detect and correct universal error models, such as depolarisation or dephasing, provided that error rates are within the fault-tolerance threshold of the code being employed.
 
-The first described QEC code was the three-qubit code by \cite{bib:Shor95} for redundantly encoding a single logical qubit into three encoded qubits, allowing the detection and correction of at most a single bit-flip error between the encoded qubits. This protocol is shown in Alg.~\ref{tab:three_QEC}. By switching into a Hadamard-rotated basis, the same code could equivalently correct against at most a single phase-flip error. And by concatenating these two codes a 9-qubit code correcting against a single depolarising error may be implemented.
+QEC codes have been described for protecting against universal error models, including:
+\begin{itemize}
+\item Pauli errors -- Encompassing dephasing, depolarising and amplitude damping error channels.
+\item Qubit loss -- Particularly useful in the optical context where photons are easily lost.
+\item Gate failure -- Essential when gates are non-deterministic, necessarily the case when dealing with maximally entangling two-qubit photonic quantum gates.
+\end{itemize}
+
+The first described QEC code was the three-qubit code by \cite{bib:Shor95} for redundantly encoding a single logical qubit into three encoded qubits, allowing the detection and correction of at most a single bit-flip error between the encoded qubits. This protocol is shown in Alg.~\ref{tab:three_QEC}. By switching into a Hadamard-rotated basis, the same code could equivalently correct against at most a single phase-flip error (since \mbox{$\hat{H}\hat{X}\hat{H}=\hat{Z}$}). By concatenating these two codes a 9-qubit code correcting against a single depolarising error may be implemented.
 
 Since these original ideas into QEC, countless further codes have been described, able to correct against larger numbers of errors, with far more efficient resource overheads. Currently, topological codes \cite{topologicalCodes} are considered the most favourable codes in terms of their elegance, simplicity, high error-correction thresholds, and efficiency in resource overhead. Some such topological codes are particularly enticing, as they can be readily prepared from cluster states (introduced in Sec.~\ref{sec:CSQC}), which lend themselves naturally to certain networking methods, such as distributed state preparation.
 
@@ -1524,7 +1539,7 @@ The circuit model description for the procedure is:
 
 Different error correcting codes have different error correcting power, and different resource overheads, which must be taken into consideration. The appropriate choice of code will largely be determined by the final {\sc Services \& Applications} layer. For some simple quantum communications protocols, simple error correction (or even no error correction) may suffice. A full-fledged quantum computation on the other hand will require error rates within a fault-tolerance thresholds.
 
-The field of fault-tolerance is already extremely well developed and could be applied directly to QTCP as an abstraction layer directly below the {\sc Services \& Application} layer of the protocol stack, abstracting it away from the end-user. The transport layer protocol for applying it to the QTCP stack in Alg.~\ref{tab:qos}.
+The field of fault-tolerance is already extremely well developed and could be applied directly to QTCP as an abstraction layer directly below the {\sc Services \& Application} layer of the protocol stack -- the {\sc QoS} layer -- abstracting it away from the end-user. The transport layer protocol for applying it to the QTCP stack in Alg.~\ref{tab:qos}.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\tt
@@ -2617,6 +2632,7 @@ The general outline of the derivation of the protocol for teleporting a CNOT gat
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\tt
+function GateTeleportation($\ket\psi_A\ket\psi_B$):\
 \begin{enumerate}
 \item We wish to apply a CNOT gate to the two-qubit state \mbox{$\ket\psi_\mathrm{A}\ket\phi_\mathrm{B}$} to obtain \mbox{$\mathrm{CNOT}_\mathrm{A,B} \ket\psi_\mathrm{A}\ket\phi_\mathrm{B}$}.
 \item We introduce two additional qubits, $C$ and $D$, and use state teleportation to teleport $\ket\psi_\mathrm{A}$ onto $C$, and $\ket\psi_\mathrm{B}$ onto $D$, preparing $\ket\psi_\mathrm{C}\ket\phi_\mathrm{D}$.
