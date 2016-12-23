@@ -276,7 +276,7 @@ We consider a classical network to be a weighted, directed graph \mbox{$G=(V,E)$
 
 A node could be, for example, data storage, a classical computer implementing a computation, a router that switches the connections between incoming and outgoing links, or an end-user. A link on the other hand is any arbitrary means of communication between nodes, such as optical fibre, satellite, radio, electrical, smoke signals, tin cans connected by a taut piece of string, or well-trained carrier pigeon. In the protocols to be described here, it is completely irrelevant what the specific mediums for communication are. Rather what matters are \emph{costs}, quantifying the relative performance of different links.
 
-A key feature of the global internet is redundancy. In a packet-switched environment, sending identical packets twice might each follow entirely different routes to their common destination. Node-to-node redundancy is easily accommodated for in the graph-theoretic model by allowing multiple distinct edges between nodes. It is extremely important to accommodate multiple edges in network graphs, since redundant routes provide a direct means by which to load-balance a route. So, for example, a hub in Australia might connect to a sister hub in New Zealand using both a fibre-optic undersea cable, and simultaneously via a satellite uplink. If the faster of the two connections is running out of capacity, a proportion of the packets can simply be switched to the other link, thereby balancing the load.
+A key feature of the global internet is redundancy. In a packet-switched environment, sending identical packets twice might each follow entirely different routes to their common destination. Node-to-node redundancy is easily accommodated for in the graph-theoretic model by allowing multiple distinct edges between nodes. It is extremely important to accommodate multiple edges in network graphs, since redundant routes provide a direct means by which to load-balance a route. So, for example, a hub in Australia might connect to a sister hub in New Zealand using both a fibre-optic undersea cable, and simultaneously via a satellite uplink. If the faster of the two connections is running out of capacity, a proportion of the packets can simply be switched to the other link, thereby balancing the load. For this reason we abstain from using an adjacency matrix representation for network graphs, as they do not accommodate redundancy.
 
 %
 % Network Costs & Attributes
@@ -917,11 +917,11 @@ where $\hat{\Phi}(\omega)$ is a phase-shift operator with phase $\omega$, obeyin
 \begin{align}
 \hat\Phi(\omega) = e^{i\omega\hat{n}},
 \end{align}
-in the photon-number basis, where $\hat{n}=\hat{a}^\dag\hat{a}$ is the photon-number operator. With no dephasing, \mbox{$\phi(\omega)=\delta(\omega)$} and $\mathcal{E}$ reduces to the identity channel. Otherwise, the off-diagonal (coherence) terms in the density operator begin to cancel out, leaving the diagonal (amplitude) terms unchanged. Thus, a perfect dephasing channel acting on a coherent state yields a thermal state of equal amplitude.
+in the photon-number basis, where $\hat{n}=\hat{a}^\dag\hat{a}$ is the photon-number operator, satisfying \mbox{$\hat{n}\ket{n}=n\ket{n}$}. With no dephasing, \mbox{$\phi(\omega)=\delta(\omega)$} and $\mathcal{E}$ reduces to the identity channel. Otherwise, the off-diagonal (coherence) terms in the density operator begin to cancel out, leaving the diagonal (amplitude) terms unchanged. Thus, a perfect dephasing channel acting on a coherent state yields a thermal state of equal amplitude.
 
 From this definition it can be seen that susceptibility to dephasing increases with photon-number, since the number operator adds a multiplicative factor to the acquired phase-shift,
 \begin{align}
-\hat\Phi(\omega) \ket{m} = e^{i\omega m}\ket{m}.
+\hat\Phi(\omega) \ket{n} = e^{i\omega n}\ket{n}.
 \end{align}
 For number states not in superposition, this corresponds to a simple unimportant global phase, since number states are phase-invariant. However, in superposition this adds relative phases, thereby destroying coherences upon applying the integral from Eq.~\ref{eq:deph_int}.
 
@@ -1501,11 +1501,11 @@ Since these original ideas into QEC, countless further codes have been described
 \fbox{\parbox{0.965\columnwidth}{\tt
 function ThreeQubitCode($\ket\psi$):
 \begin{enumerate}
-\item Using two CNOT gates, redundantly encode the state 
+\item Using two CNOT gates, redundantly encode the logical single-qubit state,
 \begin{align}
-\ket\psi=\alpha\ket{0}+\beta\ket{1}
+\ket\psi=\alpha\ket{0}+\beta\ket{1},
 \end{align}
-into
+into the three-qubit state,
 \begin{align}
 \ket\psi_R &= \hat{\mathrm{CNOT}}_{1,2}\hat{\mathrm{CNOT}}_{1,3}\ket\psi\ket{00} \nonumber \\
 &= \alpha\ket{000}+\beta\ket{111}.
@@ -1513,13 +1513,13 @@ into
 \item Independently apply bit-flip channels $\mathcal{E}_X$ to each of the three encoded qubits.
 \item If exactly one bit-flip operation was applied in total, the three possible erroneous encoded states are,
 \begin{align}
-\ket\psi_1 &= \alpha\ket{001}+\beta\ket{110}, \nonumber \\
-\ket\psi_2 &= \alpha\ket{010}+\beta\ket{101}, \nonumber \\
-\ket\psi_3 &= \alpha\ket{000}+\beta\ket{011}.
+\ket\psi_1 &= \hat{X}_1 \ket\psi_R = \alpha\ket{001}+\beta\ket{110}, \nonumber \\
+\ket\psi_2 &= \hat{X}_2 \ket\psi_R = \alpha\ket{010}+\beta\ket{101}, \nonumber \\
+\ket\psi_3 &= \hat{X}_3 \ket\psi_R = \alpha\ket{100}+\beta\ket{011}.
 \end{align}
 \item Using three pairs of CNOT operations and $\hat{Z}$-basis measurements, apply parity measurements between each of the three pairs of encoded qubits.
 \item Assuming at most a single bit-flip operation has occurred on the encoded state, the three parity outcomes uniquely determine which encoded qubit the bit-flip was applied to.
-\item Apply classically-controlled bit-flip operations to correct the encoded state, recovering $\ket\psi_R$.
+\item Apply classically-controlled bit-flip recovery operations, $\mathcal{R}$, to correct the encoded state, recovering $\ket\psi_R$.
 \item Apply the inverse of the encoding operation to recover $\ket\psi$.
 \end{enumerate}
 The circuit model description for the procedure is:
