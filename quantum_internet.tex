@@ -2958,6 +2958,14 @@ In the graph, vertices represent qubits initialised into the \mbox{$\ket{+}=\fra
 \begin{align}
 \ket\psi_\mathrm{cluster} = \prod_{e\in E} \hat{\mathrm{CZ}}_e \cdot \bigotimes_{v\in V}\ket{+}_v.
 \end{align}
+Alternately, but equivalently, cluster states may be defined in the stabiliser formalism. Specifically, a cluster state is defined to be the joint +1 eigenstate of all the stabilisers,
+\begin{align}
+\hat{S}_v = \hat{X}_v \prod_{i\in n(v)} \hat{Z}_i,
+\end{align}
+where there is one stabiliser $\hat{S}_v$ per vertex $v$, and $n(v)$ is the set of vertices neighbouring $v$. The cluster state therefore satisfies,
+\begin{align}
+\hat{S}_v\ket\psi_\mathrm{cluster} = \ket\psi_\mathrm{cluster}\,\forall\, v.
+\end{align}
 An example is presented in Fig.~\ref{fig:cluster_state}. Cluster states are easily encoded optically using photonic polarisation encoding (Sec.~\ref{sec:single_phot_enc}), and therefore readily lend themselves to optical networking.
 
 \begin{figure}[!htb]
@@ -2989,16 +2997,37 @@ There are several cluster state identities we will utilise later, summarised in 
 \end{figure}
 
 %
-% Topological Quantum Computing
+% Quantum Computing Using Topological Codes
 %
 
-\subsection{Topological quantum computing}
+\subsection{Quantum computing using topological codes}
 
 If the intention is to perform quantum computations using cluster states shared over a network, QEC and fault-tolerance \emph{must} be taken into consideration, or catastrophic algorithmic failure will inevitably follow -- the cluster state model is no different from the circuit model in this respect. Fault-tolerance theory places hard thresholds on the amount of noise (typically depolarising errors and loss) qubits may be subject to in order for fault-tolerance to be possible and computations to succeed. This places strict QoS constraints on the network, which can be accommodated for by using the usual depolarising and efficiency cost metrics when developing networking strategies and link performance requirements.
 
 It has been shown that fault-tolerance is possible within the cluster state model \cite{bib:NielsenDawson04, bib:Dawson06} using variations of conventional QEC codes. However, more importantly, from cluster states certain \emph{topological QEC codes} \cite{???} can be readily constructed. This implements a form of QEC-encoded measurement-based quantum computing protocol, where the computation proceeds in a measurement-based fashion, but is `natively' fault-tolerant. These codes have been shown to have very favourable fault-tolerance thresholds in terms of both depolarising noise and loss \cite{bib:StaceBarrettDohertyLoss, bib:BarrettStaceFT}, as well as frugal resource overhead compared to traditional concatenated codes. Additionally, loss- and gate-failure-tolerant codes, uniquely applicable to the cluster state model, have been described, with very favourable loss thresholds \cite{bib:Varnava05, bib:RalphHayes05, bib:Duan05}. Importantly, topological codes do not require joint measurements across the entire graph state, instead requiring only operations localised to small regions within the graph. Thanks to this, computation using such topological codes can remain distributed, without requiring the entire state to be held locally by a particular host, or requiring full access to the entire state by any particular user.
 
+The most common topological code, which we will use here as an example, is the toric code, which resides on a lattice graph over the surface of a torus. As with cluster states (Sec.~\ref{sec:CSQC}), the toric code is most easily visualised in the stabiliser formalism. Consider a rectangular sub-graph of the torus. We place a qubit on each edge (not vertex) of the graph. Now we define two sets of stabiliser operators: \emph{star} and \emph{plaquette} operators,
+\begin{align}
+\hat{S}_\mathrm{star}(v) &= \prod_{i\in e(v)} \hat{X}_i, \nonumber \\
+\hat{S}_\mathrm{plaquette}(p) &= \prod_{i\in e(p)} \hat{Z}_i,
+\end{align}
+where $e(v)$ are the edges neighbouring vertex $v$, and $e(p)$ are the edges surrounding plaquette $p$. By definition, the toric code state $\ket\psi_\mathrm{toric}$ satisfies the stabiliser relation,
+\begin{align}
+\hat{S}_\mathrm{star}(v) \ket\psi_\mathrm{toric} &= \ket\psi_\mathrm{toric} \,\forall\, v, \nonumber \\
+\hat{S}_\mathrm{plaquette}(p) \ket\psi_\mathrm{toric} &= \ket\psi_\mathrm{toric} \,\forall\, p.
+\end{align}
+This is all summarised in Fig.~\ref{fig:toric_code}.
+
+\begin{figure}[!htb]
+%\includegraphics[width=\columnwidth]{toric_code_stab}
+\caption{\comment{TO DO} Graph representation of the toric code, and its associated stabilisers.} \label{fig:toric_code}
+\end{figure}
+
 \comment{How to convert cluster states to topological codes. Add pic of surface code stabilisers, showing localisation of operations.}
+
+Having defined the toric code as such, QEC proceeds in a similar manner to any other stabiliser code -- we measure all the stabilisers, yielding a syndrome, from which we can determine geometrically where errors took place in the graph, which can subsequently be corrected (if below threshold). Importantly, the stabilisers are all defined over geometrically localised neighbourhood regions, and do not require long-range measurements, making this type of code suitable to distributed models for quantum computation.
+
+\comment{What about the actual computation? Can this still be distributed when we do the topological gates etc?}
 
 %
 % Universal Linear Optics Quantum Computing
