@@ -801,13 +801,13 @@ These representations, whilst entirely equivalent to a photon-number basis repre
 
 \subsection{Non-optical encoding}
 
-In a non-optical context, the elementary unit of quantum information -- the qubit -- can be naturally encoded into any system with a natural or engineered two-level structure. This actually encompasses a broad range of possibilities, including, amongst others:
+In a non-optical context, the elementary unit of quantum information -- the qubit -- can be naturally encoded into any system with a natural or engineered two-level structure. This actually encompasses a broad range of possibilities, including, amongst many others:
 \begin{itemize}
 \item Two-level atoms: Let two distinct electron energy levels, with long lifetimes, represent the logical $\ket{0}$ and $\ket{1}$ basis states.
 \item Quantum dots: Can be engineered with custom band-structures, allowing two- or higher-level qudits to be easily fabricated.
 \item Nitrogen-vacancy (NV) centres: Are a type of point defect in diamond, which has a very well defined energy level structure that may be utilised to represent qubits.
-\item Atomic ensembles: Encode quantum information similarly to a single atom, except that the excitation is a \emph{collective} excitation, in superposition across all the atoms in the ensemble. Atomic ensembles have been demonstrated with extremely long coherence lifetimes.
-\item Superconducting rings: A superposition of current direction in a superconducting ring represents the two logical basis states.
+\item Atomic ensembles: Encode quantum information similarly to a single atom, except that the excitation is a \emph{collective} excitation, in superposition across all the atoms in the ensemble. Atomic ensembles have been demonstrated with extremely long coherence lifetimes, operating at room temperatures.
+\item Superconducting rings: A superposition of current flow direction in a superconducting ring represents the two logical basis states.
 \end{itemize}
 
 Clearly the non-optical elements in a quantum network must somehow interface with optical states, such that communication is facilitated. This is discussed later in Sec.~\ref{sec:opt_inter}.
@@ -1237,7 +1237,7 @@ The quantum coherent information exhibits much of the same mathematical structur
 \mathcal{Q}(\mathcal{E}) = \max_{\hat\rho} I(\hat\rho,\mathcal{E}).
 \end{align}
 
-Analytic solutions to $\mathcal{C}(\mathcal{E})$ and $\mathcal{Q}(\mathcal{E})$ are not known even for simple Pauli error channels such as dephasing and depolarisation. However, once net dephasing or depolarisation rates have been calculated across a route, the channel capacities can easily be solved numerically, which is sufficient for the numerical algorithms we will rely upon.
+Analytic solutions to $\mathcal{C}(\mathcal{E})$ and $\mathcal{Q}(\mathcal{E})$ are not known even for simple Pauli error channels such as dephasing and depolarisation. However, once net dephasing or depolarisation rates have been calculated across a route, the channel capacities can easily be solved numerically, which is sufficient for the numerical algorithms we will rely upon, where a number representing \emph{cost}, rather than an analytic solution, is all we need.
 
 \comment{Add stuff on channel capacities of different channels, like Pauli error channels etc.}
 
@@ -2903,6 +2903,8 @@ Thus, $k$-fold quantum parallelisation corresponds to a $k$th-order exponential 
 
 The alternate scenario is in-series distributed computation, in which a computation proceeds through a pipeline of different stages, potentially performed by different hosts. This model allows a complex algorithm comprising smaller sub-algorithms, each of which may be proprietary with different owners, to be delegated across the network. The different stages may communicate classical and/or quantum data. As with the simple single-host model, if the different stages of the processing pipeline are sharing quantum data, distributed QEC will generally be necessary to protect the computation. This necessarily introduces an (efficient) overhead in the number of physical qubits being communicated across the network, introducing additional bandwidth costs, which must be accommodated for in networking strategies.
 
+The cluster state (Sec.~\ref{sec:CSQC}) and quantum random walk (Sec.~\ref{sec:BS}) models for quantum computation may find themselves to be particularly well-suited to distributed implementation, since they naturally reside on graphs, whose nodes needn't be held locally by a single user, but could instead be shared across multiple hosts with the ability for graph nodes to intercommunicate.
+
 %
 % Delegated Quantum Computation
 %
@@ -2939,7 +2941,7 @@ Such delegated protocols will be very useful in quantum networks, where differen
 
 The \emph{circuit model} is the conventional and intuitive approach for expressing quantum algorithms, decomposing algorithm into a sequence of elementary gates from a universal gate set. However, the \emph{cluster state model} for quantum computation \cite{bib:Raussendorf01, bib:Raussendorf03, bib:Nielsen06} (also referred to as the \emph{one-way}, \emph{measurement-based}, or \emph{graph state} models for quantum computation) is an extremely powerful, yet conceptually distinct paradigm, that warrants treatment of its own, owing to its significant distinction from the more familiar circuit model.
 
-In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \emph{cluster state} or \emph{graph state}. The state is associated with a graph, $G=(V,E)$, of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation\footnote{Note that the graph upon which a cluster state resides is not to be confused with the network graph. Rather it is just a graphical representation of a multi-qubit state.}. That is, they act as a \emph{substrate} for implementing arbitrary computations.
+In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \emph{cluster state} or \emph{graph state}. The state is associated with a graph, $G=(V,E)$, of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation\footnote{Note that the graph upon which a cluster state resides is not to be confused with the network graph. Rather it is just a convenient graphical representation for a class of multi-qubit states.}. That is, they act as a \emph{substrate} for implementing arbitrary computations.
 
 In the graph, vertices represent qubits initialised into the \mbox{$\ket{+}=\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$} state, and edges represent the application of maximally entangling controlled-phase (CZ) gates, $\hat{\mathrm{CZ}}=\mathrm{diag}(1,1,1,-1)$, between vertices,
 \begin{align}
@@ -3026,7 +3028,7 @@ Optically, the two main contenders for this are multi-photon quantum walks \cite
 
 These protocols involve nothing more than evolving multiple single-photon states through beamsplitter networks and measuring the output photo-statistics. This is equivalent to just taking the first stage of the KLM protocol shown in Fig.~\ref{fig:KLM_protocol}.
 
-The computational hardness of these models for computation relate to the fact that the amplitudes in the output superpositions are proportional to matrix permanents, which are known to be \#P-hard in general. This is believed to be a classically hard complexity class, even harder than \textbf{NP}-hard in the complexity hierarchy, requiring exponential classical time to evaluate. This yields computationally complex sampling problems.
+The computational hardness of these models for computation relate to the fact that the amplitudes in the output superpositions are proportional to matrix permanents, which are known to be \#\textbf{P}-hard in general. This is believed to be a classically hard complexity class, even harder than \textbf{NP}-hard in the complexity hierarchy, requiring exponential classical time to evaluate. In the case of {\sc BosonSampling} this yields computationally complex sampling problems.
 
 Specifically, for an $m$-mode interferometer, and input state,
 \begin{align}
@@ -3074,7 +3076,7 @@ Gaussian states
 
 It is unlikely that future, large-scale quantum computers will be purely optical. Some other technologies have a more favourable outlook in terms of scalability. Nonetheless, when it comes to networking quantum computers, optics is the natural approach, motivating investigation of hybrid architectures, where qubits are represented using some non-optical system, but entangling operations between them are mediated by optical states \cite{bib:Duan06, bib:Beugnon06}.
 
-The natural example is qubits which couple to single-photon states, whereupon which-path erasure between coupled optical modes teleports entanglement onto the physical qubits. Similarly, measurement of the qubits may be performed by stimulating the emission of photons from the physical qubits. This idea has been applied to $\lambda$-configuration atomic qubits \cite{bib:BarrettKok05}, shown in Fig.~\ref{fig:barrett_kok}, and atomic ensemble qubits \cite{bib:RohdeAtEns10}. A novel `double heralding' technique, introduced in \cite{bib:BarrettKok05} allows loss to be overcome \comment{Check this, is this what the double heralding does?}. Similarly, quantum states of light can be coupled to two-level quantum systems using Hamiltonians of the form shown in Eq.~\ref{eq:two_level_hamil}. The preparation of long-distance entanglement between atomic systems has been demonstrated \cite{bib:Matsukevich05, bib:Matsukevich05b}
+The natural example is qubits which couple to single-photon states, whereupon which-path erasure between coupled optical modes teleports entanglement onto the physical qubits. Similarly, measurement of the qubits may be performed by stimulating the emission of photons from the physical qubits. This idea has been applied to $\lambda$-configuration atomic qubits \cite{bib:BarrettKok05}, shown in Fig.~\ref{fig:barrett_kok}, and atomic ensemble qubits \cite{bib:RohdeAtEns10}. Optically-mediated atomic ensemble quantum computing architectures are particularly attractive as they exhibit extremely long coherence lifetimes (hundreds of milliseconds have been reported \comment{CHECK!}), may be operated at room temperatures, and importantly, a phenomenon known as \emph{collective enhancement} significantly increases the effective light-matter coupling rate as a function of the number of atoms in the ensemble. A novel `double heralding' technique, introduced in \cite{bib:BarrettKok05}, allows loss to be overcome during which-path erasure \comment{Check this, is this what the double heralding does?}. Similarly, quantum states of light can be coupled to two-level quantum systems using Hamiltonians of the form shown in Eq.~\ref{eq:two_level_hamil}. The preparation of long-distance entanglement between atomic systems has been demonstrated \cite{bib:Matsukevich05, bib:Matsukevich05b}
 
 \begin{figure}[!htb]
 \includegraphics[width=0.75\columnwidth]{barrett_kok}
@@ -3259,7 +3261,7 @@ Of course, we have used the most simple model for modules, where each accommodat
 % Entanglement - The Ultimate Quantum Resource
 %
 
-\section{Entanglement -- the ultimate quantum resource} \label{sec:ent_ultimate}
+\section{Entanglement -- The ultimate quantum resource} \label{sec:ent_ultimate}
 
 As we have seen, the diversity of quantum states that may be communicated, and quantum protocols that may be implemented over the quantum internet is extremely diverse, encompassing many different types of encodings and communications protocols.
 
