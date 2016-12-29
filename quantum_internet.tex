@@ -472,8 +472,6 @@ Like classical channels, quantum channels are inevitably subject to errors. Thes
 
 To quantify the operation of nodes and links within our network, we must characterise the evolution they impose upon quantum states passing through them. Quantum processes, also known as \emph{trace-preserving, completely positive maps} (CP-maps) are able to capture all the physical processes relevant to quantum networking, such as: unitary evolution; decoherence; measurement; quantum memory; state preparation; switching; and, indeed entire quantum computations. And they are able to capture physical processes in any degree of freedom, most commonly in the qubit basis, but also, for photons, in the spatio-temporal, photon-number, or polarisation degrees of freedom.
 
-The only limitation faced by quantum processes is that they are described over discrete-time only. To consider continuous-time evolution, master equations can be used. However, here we will only make use of discrete-time quantum processes, since they naturally correspond to the evolution of states between discrete points within a network.
-
 Quantum processes are most easily represented using \emph{Kraus operators}, $\{\hat{K}_i\}$,
 \begin{align}
 \mathcal{E}(\hat\rho) = \sum_i \hat{K}_i \hat\rho \hat{K}_i^\dag,
@@ -508,6 +506,12 @@ Multiple processes may be composed using the notation,
 \mathcal{E}_n(\dots \mathcal{E}_2(\mathcal{E}_1(\hat\rho)))=(\mathcal{E}_n \circ \dots \circ \mathcal{E}_2\circ\mathcal{E}_1)(\hat\rho).
 \end{align}
 In general, processes do not commute, i.e \mbox{$\mathcal{E}_1\circ \mathcal{E}_2 \neq \mathcal{E}_2\circ \mathcal{E}_1$}. Unless unitary, quantum processes are irreversible, meaning that errors accumulate and cannot be overcome without the overhead of some form of quantum error correction (QEC) \cite{bib:Shor95, bib:CalderbankShor96, bib:NielsenChuang00}.
+
+The only limitation faced by the quantum process formalism is that it is described over discrete-time only. To consider continuous-time evolution, master equations can be used. These represent the continuous-time evolution of a quantum state as a differential equation, combining a usual Hamiltonian term as well as decoherence terms,
+\begin{align}
+\frac{d\hat\rho}{dt} = -\frac{i}{\hbar}[\hat{H},\hat\rho] + \sum_j [2\hat{L}_j\hat\rho\hat{L}_j^\dag - \{\hat{L}_j^\dag\hat{L}_j,\hat\rho\}],
+\end{align}
+where $\hat{H}$ is the Hamiltonian of the isolated system undergoing coherent evolution, and $\hat{L}_j$ are the \emph{Lindblat operators}, capturing the incoherent component of the dynamics (i.e environmental couplings). However, in this work we will only make use of discrete-time quantum processes, since they naturally correspond to the evolution of states between discrete points within a network -- we are typically only interested in the process undergone by a state across a link or within a node, not the continuous-time dynamics of what takes place within them.
 
 %
 % Quantum Process Matrices
@@ -980,15 +984,27 @@ The degree of amplitude damping is often quoted in terms of a channel's $T_1$-ti
 
 \subsection{Mode-mismatch} \label{sec:MM_error}
 
-Mode-mismatch is an error model unique to optical implementations. For perfect interference to take place between two optical modes, which is necessary to entangle them, the photons in those modes must be perfectly indistinguishable, i.e they must exhibit identical spatio-temporal structure \cite{bib:RohdeMauererSilberhorn07}. The Hong-Ou-Mandel (HOM) \cite{bib:HOM87} \emph{visibility} is a direct measure of the indistinguishability of two photons based on their interference fringes. Specifically, interference fringes are reduced as the photons become more distinguishable. Once completely distinguishable, they obey classical statistics.
+Mode-mismatch is an error model unique to optical implementations. For perfect interference to take place between two optical modes, which is necessary to entangle them or perform ideal which-path erasure, the photons in those modes must be perfectly indistinguishable, i.e they must exhibit identical spatio-temporal structure \cite{bib:RohdeMauererSilberhorn07} and must be pure states. The Hong-Ou-Mandel (HOM) \cite{bib:HOM87} \emph{visibility} is a direct measure of the indistinguishability of two photons based on their interference fringes. Specifically, interference fringes are reduced as the photons become more distinguishable. Once completely distinguishable, they obey classical statistics.
+
+This phenomenon arises very naturally whenever optical path-lengths are not perfectly aligned, or there is imperfect spatial mode-overlap between optical modes interfering at beamsplitters. Furthermore, even if optical networks are perfect, photon distinguishability may arise during state preparation, since no two photon sources are absolutely identical -- engineering photon sources is a precise business and no two are ever exactly alike.
 
 In real-world experiments, the most common form of mode-mismatch is temporal mode-mismatch, whereby the timing of different photons are not perfectly synchronised, yielding temporal distinguishability, thereby reduced quantum interference. This type of error is easily introduced via mismatched path lengths in an experiment, or incorrectly accounted for changes in refractive index. This is easily represented mathematically via translations in the temporal distribution functions of photons,
-\begin{align}
-\psi(t) \to \psi(t-\tau),
+\begin{align} \label{eq:mode_mismatch_shift}
+\psi(t) \to \psi(t-\Delta_t),
 \end{align}
-for temporal mismatch $\tau$.
+for temporal mismatch $\Delta_t$. Of course, this logically generalises to other degrees of freedom, such as spatial mode-mismatch, in which case a translation of the following form would take place,
+\begin{align}
+\psi(x,y) \to \psi(x-\Delta_x,y-\Delta_y),
+\end{align}
+where $x$ and $y$ are the two spatial dimensions perpendicular to the direction of propagation.
 
-When considering mode-mismatch, there are two general regimes for how it manifests itself in an optical system. The first is when the interference taking place is between distinct, independent photons, i.e HOM interference, or its equivalent generalisations to higher-photon-number systems. The second is when multiple paths followed by a given photon interfere it with themselves, i.e MZ interference. The former only requires mode-matching on the scale of the photons' wave-packets, whereas the latter requires interferometric stability on the order of the photons' wavelength, a far more demanding requirement.
+In the above representation of mode-mismatch as a temporal or spatial translation, the process is entirely coherent, and could in principle be reversed if the displacement were known (which might easily be established using tomographic charactersation techniques). Of course, such translations could occur incoherently also. In particular, `time-jitter' is where this process occurs incoherently, and the the photons are subject to probabilistic displacements. In this instance, a pure single-photon state would evolve into a mixture of states subject to different displacements. Since the mode-mismatch is now probabilisitic, it is not reversible. The state of a single photon subject to time-jitter would be of the form,
+\begin{align}
+\hat\rho_\mathrm{jitter} = \int_{-\infty}^\infty p_\mathrm{jitter}(\Delta_t) \ket{\psi-\Delta_t}\bra{\psi-\Delta_t}d\Delta_t,
+\end{align}
+where $p_\mathrm{jitter}(\Delta_t)$ characterises the classical probability distribution of the temporal displacement. Time-jitter is particularly natural in heralded spontaneous parametric down-conversion (Sec.~\ref{sec:single_phot_src}) sources, where imprecision in the measurement time of the heralding mode projects that temporal uncertainty onto the heralded state. Time-jitter is a major consideration in all present-day single-photon source technologies.
+
+When considering mode-mismatch, there are two general regimes for how it manifests itself in an optical system. The first is when the interference taking place is between distinct, independent photons, i.e HOM interference (or its equivalent generalisations to higher-photon-number systems). The second is when multiple paths followed by a given photon interfere it with themselves, i.e MZ interference. The former only requires mode-matching on the scale of the photons' wave-packets, whereas the latter requires interferometric stability on the order of the photons' wavelength, a far more demanding requirement.
 
 Mode-mismatch has been studied extensively in the context of linear optics quantum computing (LOQC), introduced in Sec.~\ref{sec:KLM_univ}. In particular, it was shown that in the cluster state formalism (Sec.~\ref{sec:CSQC}), mode-mismatch is equivalent to a dephasing error model, where the dephasing rate is related to the degree of photon distinguishability (i.e visibility) \cite{bib:RohdeRalph06}. More generally, the operation of entangling gates \cite{bib:RohdeFreqTemp05, bib:RohdeGateChar05, bib:RohdeOptPhot05, bib:RohdeTimeRes11} and {\sc BosonSampling} \cite{bib:RohdeArbSpec15, bib:RohdeArbLow12} have been considered, and explicit error models derived.
 
@@ -1027,6 +1043,19 @@ The dephasing and depolarising channels, given by Eqs.~\ref{eq:dephasing_channel
 p_\mathrm{net}=\prod_i p_i,
 \end{align}
 exhibiting the same multiplicative behaviour as the loss channel.
+
+%
+% Mode-Mismatch
+%
+
+\subsection{Mode-mismatch}
+
+In Sec.~\ref{sec:MM_error} we introduced a simple model for temporal mode-mismatch as a displacement in the temporal wave-function of photons propagating through a channel. Clearly, such a process is cumulative -- a temporal displacement of $\Delta_1$ followed by another of $\Delta_2$ yields a net displacement of \mbox{$\Delta_1+\Delta_2$}. Thus, for a chain of such channels we simply accumulate a net temporal displacement of,
+\begin{align}
+\Delta_\mathrm{net} = \sum_i \Delta_i.
+\end{align}
+
+For an incoherent mode-mismatching process, such as time-jitter, an upper bound on the accumulated mismatch may be obtained by summing the maximum temporal displacements at each step.
 
 %
 % Fidelity
@@ -1261,11 +1290,11 @@ We have assumed that \mbox{$0\leq m \leq 1$}, where \mbox{$m=0$} represents comp
 
 With these properties, the costs in our graph have an elegant interpretation. In the case of perfect operation, \mbox{$m=1$}, the cost is \mbox{$c=0$}, creating an ideal direct link between neighbouring nodes at no cost. On the other hand for complete failure, \mbox{$m=0$}, the cost metric is \mbox{$c=\infty$}, effectively removing the link from the network and prohibiting pathfinding algorithms from following that route altogether.
 
-Such a logarithmic scale is particularly convenient when a cost metric over links accumulates on a per physical distance basis, in which case the cost metric is simply the physical length of the link times the metric per unit distance. For example, if a fibre channel implements loss at 3dB/km, the loss over 10km is 10$\times$3dB.
+Such a logarithmic scale is particularly convenient when a cost metric over links accumulates on a per physical distance basis, in which case the cost metric is simply the physical length of the link multiplied by the metric per unit distance. For example, if a fibre channel implements loss at 3dB/km, the loss over 10km is 10$\times$3dB.
 
 Note that lower bounds on fidelity, purity, efficiency and dephasing are all multiplicative on a scale of 0 to 1, and thus their logarithms may be regarded as cost metrics.
 
-Latency and dollar cost are clearly metrics as they are additive.
+Temporal mismatch, latency and dollar cost are clearly automatically metrics as they are additive.
 
 In the case of mutual information, which is not a metric, one can use it to define the \emph{variation of information} metric,
 \begin{align}
@@ -1276,6 +1305,7 @@ or for a channel,
 \begin{align}
 d_\mathrm{VI}(\hat\rho,\mathcal{E}) &= S(\hat\rho,\mathcal{E}(\hat\rho)) - I(\hat\rho;\mathcal{E}(\hat\rho)),
 \end{align}
+which obeys the metric properties.
 
 %
 % Non-Trivial Node Operations
