@@ -507,11 +507,13 @@ Multiple processes may be composed using the notation,
 \end{align}
 In general, processes do not commute, i.e \mbox{$\mathcal{E}_1\circ \mathcal{E}_2 \neq \mathcal{E}_2\circ \mathcal{E}_1$}. Unless unitary, quantum processes are irreversible, meaning that errors accumulate and cannot be overcome without the overhead of some form of quantum error correction (QEC) \cite{bib:Shor95, bib:CalderbankShor96, bib:NielsenChuang00}.
 
-The only limitation faced by the quantum process formalism is that it is described over discrete-time only. To consider continuous-time evolution, master equations can be used. These represent the continuous-time evolution of a quantum state as a differential equation, combining a usual Hamiltonian term as well as decoherence terms,
+The only limitation faced by the quantum process formalism is that it is described over discrete-time only. To consider continuous-time evolution, master equations can be used. These represent the continuous-time evolution of a quantum state as a differential equation in time, combining a usual Hamiltonian term as well as decoherence terms,
 \begin{align}
 \frac{d\hat\rho}{dt} = -\frac{i}{\hbar}[\hat{H},\hat\rho] + \sum_j [2\hat{L}_j\hat\rho\hat{L}_j^\dag - \{\hat{L}_j^\dag\hat{L}_j,\hat\rho\}],
 \end{align}
-where $\hat{H}$ is the Hamiltonian of the isolated system undergoing coherent evolution, and $\hat{L}_j$ are the \emph{Lindblat operators}, capturing the incoherent component of the dynamics (i.e environmental couplings). However, in this work we will only make use of discrete-time quantum processes, since they naturally correspond to the evolution of states between discrete points within a network -- we are typically only interested in the process undergone by a state across a link or within a node, not the continuous-time dynamics of what takes place within them.
+where $\hat{H}$ is the Hamiltonian of the isolated system undergoing coherent evolution, and $\hat{L}_j$ are the \emph{Lindblat operators}, capturing the incoherent component of the dynamics (i.e environmental couplings).
+
+In this work we will only make use of discrete-time quantum processes, since they naturally correspond to the evolution of states between discrete points within a network -- we are typically only interested in the process undergone by a state from one end of a link to another, not the continuous-time dynamics of what takes place within them.
 
 %
 % Quantum Process Matrices
@@ -531,7 +533,16 @@ The Hermitian matrix $\chi$ is known as the \emph{process matrix}, from which ma
 \mathrm{tr}(\chi) = 1.
 \end{align}
 
-\comment{Insert example for CNOT process}
+As an illustrative example of the interpretation of process matrices, in Fig.~\ref{fig:CNOT_proc_matrix} we show the process matrix for the CNOT gate, represented in the Pauli basis. The CNOT operator can be expressed in the Pauli operator basis as,
+\begin{align}
+\hat{U}_\mathrm{CNOT} = \frac{1}{2}(\hat{\mathbb{I}}\otimes \hat{\mathbb{I}} + \hat{\mathbb{I}} \otimes \hat{X} + \hat{Z}\otimes \hat{\mathbb{I}} - \hat{Z}\otimes \hat{X}).
+\end{align}
+Then, some density operator evolved under the CNOT gate is simply \mbox{$\hat{U}_\mathrm{CNOT}\hat\rho \,\hat{U}_\mathrm{CNOT}^\dag$}. Expanding this out, we obtain a new state comprising 16 terms, each representing the action of some combination of Pauli operators from the left and from the right. The amplitudes of these terms exactly correspond to the 16 non-zero elements of the process matrix in Fig.~\ref{fig:CNOT_proc_matrix}.
+
+\begin{figure}[!htb]
+\includegraphics[width=\columnwidth]{CNOT_process}
+\caption{Process matrix for the CNOT gate, expressed in the Pauli basis.} \label{fig:CNOT_proc_matrix}
+\end{figure}
 
 %
 % Quantum Processes in Quantum Networks
