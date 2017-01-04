@@ -654,7 +654,7 @@ We can encode a single qubit into a single photon in the polarisation basis usin
 
 Note that polarisation encoding requires a single spatial mode per qubit, whereas dual-rail encoding requires two. Polarisation encoding brings with it the advantage that arbitrary single-qubit operations may be implemented using wave-plates, which maintain coherence between the basis states extraordinarily well. In dual-rail encoding, on the other hand, single-qubit operations are implemented using beamsplitter operations between the two spatial modes, which must be interferometrically stable, since consecutive single-qubit operations yields Mach-Zehnder (MZ) interference \cite{bib:Zehnder1, bib:Zehnder2}.
 
-Single-photon encodings are extremely important, as they form the basis for universal linear optics quantum computing (Sec.~\ref{sec:KLM_univ}), {\sc BosonSampling} and quantum walks (Sec.~\ref{sec:BS}). They are also the simplest optical states for representing single qubits.
+Single-photon encodings are extremely important, as they form the basis for universal linear optics quantum computing (Sec.~\ref{sec:KLM_univ}), {\sc BosonSampling} (Sec.~\ref{sec:BS}) and quantum walks (Sec.~\ref{sec:QW}). They are also the simplest optical states for representing single qubits.
 
 %
 % Photon-number
@@ -2407,7 +2407,7 @@ With the ability to perform measurements over a complete basis for the respectiv
 % Photo-detection
 %
 
-\subsubsection{Photo-detection}
+\subsubsection{Photo-detection} \label{sec:photo_detection}
 
 Perhaps the most useful, and ubiquitous, type of optical state measurement is photo-detection \cite{RohdePDReview}, where we would like to count photon-number. Broadly, there are two main classes of photo-detectors -- \emph{number-resolved} and \emph{non-number-resolved} (or `bucket' detectors). These behave exactly as the names suggest, with the latter typically being more expensive and technologically demanding than the former. The most common form of photo-detection is using is via avalanche photo-detectors, which are cheap but non-number-resolving.
 
@@ -2914,7 +2914,7 @@ Thus, $k$-fold quantum parallelisation corresponds to a $k$th-order exponential 
 
 The alternate scenario is in-series distributed computation, in which a computation proceeds through a pipeline of different stages, potentially performed by different hosts. This model allows a complex algorithm comprising smaller sub-algorithms, each of which may be proprietary with different owners, to be delegated across the network. The different stages may communicate classical and/or quantum data. As with the simple single-host model, if the different stages of the processing pipeline are sharing quantum data, distributed QEC will generally be necessary to protect the computation. This necessarily introduces an (efficient) overhead in the number of physical qubits being communicated across the network, introducing additional bandwidth costs, which must be accommodated for in networking strategies.
 
-The cluster state (Sec.~\ref{sec:CSQC}) and quantum random walk (Sec.~\ref{sec:BS}) models for quantum computation may find themselves to be particularly well-suited to distributed implementation, since they naturally reside on graphs, whose nodes needn't be held locally by a single user, but could instead be shared across multiple hosts with the ability for graph nodes to intercommunicate.
+The cluster state (Sec.~\ref{sec:CSQC}) and quantum random walk (Sec.~\ref{sec:QW}) models for quantum computation may find themselves to be particularly well-suited to distributed implementation, since they naturally reside on graphs, whose nodes needn't be held locally by a single user, but could instead be shared across multiple hosts with the ability for graph nodes to intercommunicate.
 
 %
 % Delegated Quantum Computation
@@ -2959,13 +2959,15 @@ In the graph, vertices represent qubits initialised into the \mbox{$\ket{+}=\fra
 \ket\psi_\mathrm{cluster} = \prod_{e\in E} \hat{\mathrm{CZ}}_e \cdot \bigotimes_{v\in V}\ket{+}_v.
 \end{align}
 Alternately, but equivalently, cluster states may be defined in the stabiliser formalism. Specifically, a cluster state is defined to be the joint +1 eigenstate of all the stabilisers,
-\begin{align}
+\begin{align} \label{eq:CS_stab}
 \hat{S}_v = \hat{X}_v \prod_{i\in n(v)} \hat{Z}_i,
 \end{align}
 where there is one stabiliser $\hat{S}_v$ per vertex $v$, and $n(v)$ is the set of vertices neighbouring $v$. The cluster state therefore satisfies,
 \begin{align}
-\hat{S}_v\ket\psi_\mathrm{cluster} = \ket\psi_\mathrm{cluster}\,\forall\, v.
+\hat{S}_v\ket\psi_\mathrm{cluster} = \ket\psi_\mathrm{cluster}\,\forall\, v,
 \end{align}
+and the full set of stabilisers $\hat{S}_v$ over all vertices $v$ is sufficient to fully characterise the cluster state $\ket{\psi}_\mathrm{cluster}$.
+
 An example is presented in Fig.~\ref{fig:cluster_state}. Cluster states are easily encoded optically using photonic polarisation encoding (Sec.~\ref{sec:single_phot_enc}), and therefore readily lend themselves to optical networking.
 
 \begin{figure}[!htb]
@@ -3016,13 +3018,15 @@ where $e(v)$ are the edges neighbouring vertex $v$, and $e(p)$ are the edges sur
 \hat{S}_\mathrm{star}(v) \ket\psi_\mathrm{toric} &= \ket\psi_\mathrm{toric} \,\forall\, v, \nonumber \\
 \hat{S}_\mathrm{plaquette}(p) \ket\psi_\mathrm{toric} &= \ket\psi_\mathrm{toric} \,\forall\, p.
 \end{align}
+Unlike the cluster state stabilisers from Eq.~\ref{eq:CS_stab}, these stabilisers are insufficient to fully characterise a unique quantum state. Rather, there are two unspecified degrees of freedom, which allows for a single qubit to be represented. Modifications of the topology, in the form of holes in the lattice (the genus of the topology), allow larger numbers of qubits to be encoded. Logical operations are implemented by performing gates and measurements across topologies over the surface.
+
+The important feature to note is that logical qubits encoded into the toric code do not reside locally at any of the physical qubits in the code. Rather, they reside jointly across the entire graph, which, like cluster states, might be partitioned across multiple hosts, enabling distributed computation.
+
 This is all summarised in Fig.~\ref{fig:toric_code}.
 
-The important feature to note is that the logical qubits encoded into the toric code do not reside locally at any of the physical qubits in the code. Rather, they reside jointly across the entire graph, which, like cluster states, might be divided across multiple hosts.
-
 \begin{figure}[!htb]
-%\includegraphics[width=\columnwidth]{toric_code_stab}
-\caption{\comment{TO DO} Graph representation of the toric code, and its associated stabilisers.} \label{fig:toric_code}
+\includegraphics[width=\columnwidth]{toric_code}
+\caption{Graph representation of the toric QEC code, and its associated stabilisers. The star and plaquette stabilisers across all vertices, jointly specify the state of the graph up to two missing degrees of freedom, which encode a single logical qubit. Thus, a logical qubit is encoded jointly across the entire graph, not at any specific vertex. Logical operations are performed by performing operations following topological paths through the lattice (not shown). The graph may be distributed across multiple hosts for distributed quantum computation.} \label{fig:toric_code}
 \end{figure}
 
 \comment{How to convert cluster states to topological codes. Add pic of surface code stabilisers, showing localisation of operations.}
@@ -3039,11 +3043,24 @@ Having defined the toric code as such, QEC proceeds in a similar manner to any o
 
 With single-photon encoding of qubits in the quantum network, the obvious architecture to implement quantum computation is linear optics quantum computing (LOQC) \cite{bib:KLM01} (KLM), since the states being processed by the computer are of the same form as the states traversing the network. See \cite{bib:Kok05, bib:KokLovettBook} for excellent introductions to this what has become a very broad and exciting field.
 
-Originally it was believed that universal optical quantum computation, specifically the implementation of two-qubit entangling gates (such as CNOT or CZ gates), would require extremely (and unrealistically) strong optical non-linearities. The breakthrough result by KLM demonstrated that this is in fact not the case at all.
-
 LOQC allows universal quantum computing to be implemented using single-photon polarisation or dual-rail encoding, with only linear optics interactions, i.e beamsplitter/phase-shifter networks \cite{bib:Reck94}, with the addition of quantum memory, and fast-feedforward, whereby some photons are measured, and the remaining part of the optical circuit is dynamically reconfigured based on the measurement outcomes. The former is readily available technology today, and elementary demonstrations have been performed \cite{bib:OBrien03, bib:UniversalLOOBrien}, but the latter two have proven to be somewhat more challenging.
 
-In short, KLM demonstrated that CNOT gates can be implemented (highly) non-deterministically using post-selected linear optics. Clearly this is of immediate concern, since concatenating multiple gates would have exponentially decreasing success probability, making the protocol inefficient. The first key observation then is that gate teleportation can be used to shift this non-determinism to a resource state preparation stage, as described in detail in Sec.~\ref{sec:teleport_gate}. However, this is not the end of the story, since gate teleportation requires Bell state projections, which are themselves non-deterministic using purely linear optics. The final insight provided by KLM is that by concatenating these non-deterministic CNOT gates, we can inductively build up higher-level CNOT gates with ever increasing success probabilities, asymptoting to unity with high-depth concatenation. By combining these key insights, KLM were able to show that near-deterministic CNOT gates can be constructed using an efficient resource overhead, thereby enabling efficient universal quantum computation\footnote{Note that all single-qubit gates are trivially and deterministically implemented using wave-plates or beamsplitters, for polarisation or dual-rail encoding respectively. Thus, we need only concern ourselves with the challenges associated with implementing two-qubit entangling gates.}. A sketch of the general KLM formalism is shown in Fig.~\ref{fig:KLM_protocol}.
+Originally it was believed that universal optical quantum computation, specifically the implementation of two-qubit entangling gates (such as CNOT or CZ gates), would require extremely (and unrealistically) strong optical non-linearities that implement a non-linear sign-shift (NS) gate,
+\begin{align} \label{eq:NS_trans}
+NS: \alpha\ket{0}+\beta\ket{1}+\gamma\ket{2}\to\alpha\ket{0}+\beta\ket{1}-\gamma\ket{2},
+\end{align}
+in the photon-number basis. That is, it applies a $\pi$ phase-shift to only the $\ket{2}$ component of a photon-number superposition. The breakthrough result by KLM demonstrated that this is in fact not the case at all. Instead, the NS gate can be implemented non-deterministically using post-selected linear optics. Two such NS gates allow the construction of a single CZ gate. The construction of the KLM NS and CZ gates are shown in Fig.~\ref{fig:KLM_gate}.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.8\columnwidth]{KLM_gate}
+\caption{(a) A KLM CZ gate, employing dual-rail encoding, constructed from two non-linear sign-shift (NS) gates, which apply a $\pi$ phase-shift to only $\ket{2}$ terms in the photon-number basis. NS gates could be constructed using extremely (impractically) strong non-linearities. However, they can be implemented non-deterministically using two beamsplitters, two ancillary states, and two photo-detectors, post-selecting upon detecting $\ket{1}\bra{1}$ and $\ket{0}\bra{0}$ respectively. (b) Construction of the non-deterministic linear optics NS gate. Two ancillary states -- one $\ket{1}$ and one $\ket{0}$ -- are employed, and two photo-detectors post-select upon detecting $\ket{1}\bra{1}$ and $\ket{0}\bra{0}$ respectively. The beamsplitter reflectivities are chosen such that the amplitudes obey Eq.~\ref{eq:NS_trans}}. \label{fig:KLM_gate}
+\end{figure}
+
+Clearly this non-determinism is of immediate concern, since concatenating multiple gates would have exponentially decreasing success probability, making the protocol inefficient -- if the probability of a single gate succeeding is $p$, and we require that a circuit comprising $n$ of them all succeed, the success probability is clearly $p^n$.
+
+The first key observation then is that gate teleportation can be used to shift this non-determinism to a resource state preparation stage, as described in detail in Sec.~\ref{sec:teleport_gate}. However, this is not the end of the story, since gate teleportation requires Bell state projections, which are themselves non-deterministic using purely linear optics.
+
+The final insight provided by KLM is that by concatenating these non-deterministic CNOT gates, we can inductively build up higher-level CNOT gates with ever increasing success probabilities, asymptoting to unity with high-depth (but polynomial) concatenation. By combining these key insights, KLM were able to show that near-deterministic CNOT gates can be constructed using an efficient resource overhead, thereby enabling efficient universal quantum computation\footnote{Note that all single-qubit gates are trivially and deterministically implemented using wave-plates or beamsplitters, for polarisation or dual-rail encoding respectively. Thus, we need only concern ourselves with the challenges associated with implementing two-qubit entangling gates.}. A sketch of the general KLM formalism is shown in Fig.~\ref{fig:KLM_protocol}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.5\columnwidth]{KLM}
@@ -3051,10 +3068,18 @@ In short, KLM demonstrated that CNOT gates can be implemented (highly) non-deter
 \end{figure}
 
 The unitary linear optics networks implement linear maps of the form,
-\begin{align}
+\begin{align} \label{sec:LO_unitary_map}
 \hat{U}\hat{a}_i^\dag \hat{U}^\dag \to \sum_{j=1}^m U_{i,j} \hat{a}^\dag_j,
 \end{align}
-where $\hat{a}^\dag_i$ is the photonic creation operator on the $i$th of the $m$ modes, and $U$ may be any $\mathrm{SU}(m)$ matrix. The measurements are implemented simply by number-resolved photo-detectors, implementing measurement projectors of the form \mbox{$\hat\Pi_n=\ket{n}\bra{n}$}, for the measurement outcome of $n$ photons.
+where $\hat{a}^\dag_i$ is the photonic creation operator on the $i$th of the $m$ modes, and $U$ may be any $\mathrm{SU}(m)$ matrix. These linear optics evolutions are most commonly implemented using either:
+\begin{itemize}
+\item Bulk optics: where discrete optical elements are arranged on an optical table.
+\item Integrated waveguides: where all passive components are etched into a chip.
+\item Time-bin architectures: where time-bin encoded qubits (Sec.~\ref{sec:time_bin}) evolve through delay lines and interfere at a single central optical component.
+\end{itemize}
+These are described in more detail in Sec.~\ref{sec:LO_evolution}.
+
+The measurements are implemented simply by number-resolved photo-detectors, implementing measurement projectors of the form \mbox{$\hat\Pi_n=\ket{n}\bra{n}$}, for the measurement outcome of $n$ photons (Sec.~\ref{sec:photo_detection}).
 
 Since the original presentation of a universal LOQC gate set by KLM, numerous alternate implementations have been presented and experimentally demonstrated, with various pros and cons \cite{bib:Ralph01, bib:Pittman01, bib:Ralph02, bib:Knill02, bib:Pittman03, bib:MorYoran06}.
 
@@ -3068,9 +3093,9 @@ More recently, it was shown that by introducing strong coherent states, the stre
 % Passive Linear Optics
 %
 
-\subsection{Passive linear optics} \label{sec:BS}
+\subsection{Passive linear optics} \label{sec:passive_LO}
 
-While the KLM protocol (and subsequent improvements, e.g using cluster states) are universal for quantum computing, some of the key technological requirements are very challenging, and unlikely to be achieved in the short-term. However, simplified yet non-universal models for optical quantum computing can abandon some of the more challenging requirements, nonetheless implementing a restricted set of post-classical quantum computations.
+While the KLM protocol (and subsequent improvements, e.g using cluster states) are universal for quantum computing, some of the key technological requirements are very challenging, and unlikely to be achieved in the short-term. However, simplified yet non-universal models for optical quantum computing can abandon some of the more challenging requirements, nonetheless implementing a restricted set of post-classical quantum computations. In particular, we consider protocols requiring only photon-number state preparation, passive linear optics evolution (as per Eq.~\ref{sec:LO_unitary_map}), and photo-detection.
 
 Optically, the two main contenders for this are multi-photon quantum walks \cite{bib:Aharonov93, bib:Aharonov01, bib:Kempe03, bib:Salvador12, bib:RohdeMultiWalk11} and {\sc BosonSampling} \cite{bib:AaronsonArkhipov10, bib:RohdeIntroBS15}, both closely related in that they require only passive linear optics and single-photon states, whilst mitigating the need for active switching, quantum memory and dynamic fast-feedforward. Since, evidence has been presented that similar passive linear optics protocols may implement computationally hard problems using states of light other than photon-number states \cite{bib:RandBS, bib:RohdePhotAdd15, bib:RohdeDisp15, bib:RohdeCat15}.
 
@@ -3084,7 +3109,7 @@ Because these models are entirely passive, they can be made cloud-based very tri
 % Boson-Sampling
 %
 
-\subsubsection{Boson-sampling}
+\subsubsection{Boson-sampling} \label{sec:BS}
 
 {\sc BosonSampling} is the problem of sampling the output photon-number statistics of a linear optics interferometer fed with single-photon inputs. While not universal for quantum computing (in fact no one has any idea what to use it for at all!), there is strong evidence that it is a classically hard problem.
 
@@ -3115,7 +3140,7 @@ In the case of {\sc BosonSampling}, the unitary is chosen randomly from the Haar
 % Quantum Walks
 %
 
-\subsubsection{Quantum walks}
+\subsubsection{Quantum walks} \label{sec:QW}
 
 Photonic quantum walks (QW's) are the other contender for implementing restricted quantum computation, without requiring the full spectrum of challenging LOQC operations. The resource requirements are the same as for {\sc BosonSampling}, the difference being that now instead of choosing a Haar-random unitary matrix for the interferometer, we choose one which encodes a graph. The photons are now referred to as `walkers', and they evolve by following edges within the graph, `hopping' between neighbouring vertices.
 
@@ -3337,7 +3362,7 @@ Of course, we have used the most simple model for modules, where each accommodat
 
 \begin{figure}[!htb]
 \includegraphics[width=0.7\columnwidth]{larger_module}
-\caption{A larger cluster state module comprising a \mbox{$3\times 3$} lattice of logical qubits (grey), and dangling arms of ancillary qubits (white) in each direction for joining them to neighbouring modules.} \label{fig:larger_module}
+\caption{A larger cluster state module comprising a \mbox{$3\times 3$} lattice of logical qubits (grey), and dangling arms of ancillary qubits (white) in each direction for joining them to neighbouring modules. Fusing these modules enables the `patchwork' preparation of large, distributed lattices.} \label{fig:larger_module}
 \end{figure}
 
 %
@@ -3389,6 +3414,8 @@ These observations lead us to naturally conclude that a quantum network speciali
 %
 
 \section{State of the art} \label{sec:state_of_the_art}
+
+\comment{PROOF READ THIS SECTION AND CORRECT!}
 
 When will we have the quantum internet? This is a question with as many answers as there are people one asks. And the developments of the different components of such an internet will be staggered and under continual development -- a quantum internet with the capacity for long-distance QKD will likely arrive far sooner than one supporting fully distributed, blind quantum computation.
 
@@ -3671,7 +3698,7 @@ The speed of many quantum information protocols (e.g., Continuous-variable QKD) 
 % Evolution of Optical States
 %
 
-\subsection{Evolution of optical states}
+\subsection{Evolution of optical states} \label{sec:LO_evolution}
 
 %
 % Optical Waveguides
