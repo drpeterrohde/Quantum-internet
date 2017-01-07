@@ -2708,25 +2708,37 @@ The resource states required for gate teleportation are highly-entangled 4-qubit
 
 \subsection{Entanglement swapping} \label{sec:swapping}
 
-The obvious approach to sending a qubit from Alice to Bob is to send a qubit from Alice to Bob. However, over long distances this may accrue impractical error rates, particularly losses. The other alternative is to employ the quantum teleportation protocol to teleport the state between the two parties. However, this requires that Alice and Bob first share an entangled Bell-pair, which must itself be distributed across the same distances. Entanglement swapping \cite{???, bib:PRL_71_4287} is the process of taking two Bell-pairs, one held by each party, and swapping the entanglement between them such that the two parties share an entangled state. This procedure can be bootstrapped to progressively swap the entanglement over longer and longer distances, yielding \emph{quantum repeater networks} (Sec.~\ref{sec:rep_net}).
+The obvious approach to sending a qubit from Alice to Bob is to send a qubit from Alice to Bob (duh!). However, over long distances this may accrue impractical error rates, particularly losses. The other alternative is to employ the quantum teleportation protocol to teleport the state between the two parties. However, this requires that Alice and Bob first share an entangled Bell-pair, which must itself be distributed across the same distances. Entanglement swapping \cite{???, bib:PRL_71_4287} is the process of taking two Bell-pairs, one held by each party, and swapping the entanglement between them such that the two parties share an entangled state. This procedure can be bootstrapped to progressively swap the entanglement over longer and longer distances, yielding \emph{quantum repeater networks} (Sec.~\ref{sec:rep_net}). The procedure for this protocol is shown in Alg.~\ref{tab:ent_swap} and Fig.~\ref{fig:ent_swap}
 
-In a sense, entanglement swapping can be regarded as `indirect' entanglement distribution, whereby entanglement is created between two distant parties who do not directly exchange any quantum information.
-
-Specifically, suppose Alice and Bob possess the entangled states $\ket{\Phi^+}_{A_1,A_2}$ and $\ket{\Phi^+}_{B_1,B_2}$. That is, their entanglement is held locally and none is shared between them. Now let each of them transmit one of their qubits to a node that performs an entangling Bell measurement on them. Now Alice and Bob will share the two-qubit state $\ket{\Phi^+}_{A,B}$ -- the entanglement has been swapped from one set of qubits to another. For example, for the input state,
-\begin{align}
-\ket\psi_\mathrm{in} = \ket{\Phi^+}_{A_1,A_2} \ket{\Phi^+}_{B_1,B_2},
-\end{align}
-the state following a Bell projection onto $\bra{\Phi^+}_{A_1,B_1}$ is,
-\begin{align}
-\bra{\Phi^+}_{A_1,B_1} \ket\psi_\mathrm{in} = \ket{\Phi^+}_{A_2,B_2}.
-\end{align}
-
-Now if instead of Alice and Bob we have a long chain of these operations in series, then the entanglement can be swapped across the entire length of the chain, enabling the preparation of end-to-end entangled pairs, which can be employed for state teleportation. The protocol is shown in Fig.~\ref{fig:ent_swap}.
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\tt
+function EntanglementSwapping($\ket{\Phi^+}_{A_1,A_2}, \ket{\Phi^+}_{B_1,B_2}$):
+\begin{enumerate}
+    \item Alice locally prepares the Bell-pair, \\
+    $\ket{\Phi^+}_{A_1,A_2}$.
+    \item Bob locally prepares the Bell-pair, \\
+    $\ket{\Phi^+}_{B_1,B_2}$.
+    \item The net initial state is, \\
+    $\ket\psi_\mathrm{in} = \ket{\Phi^+}_{A_1,A_2} \ket{\Phi^+}_{B_1,B_2}.$
+    \item Alice sends qubit $A_1$ to third party Eve.
+    \item Bob Sends qubit $B_1$ to third party Eve.
+    \item Eve performs a Bell projection between $A_1$ and $B_1$, yielding, \\
+    $\bra{\Phi^+}_{A_1,B_1} \ket\psi_\mathrm{in} = \ket{\Phi^+}_{A_2,B_2}$.
+    \item Alice and Bob now possess a joint Bell-pair between qubits $A_2$ and $B_2$, \\
+    $\ket\psi_\mathrm{out} = \ket{\Phi^+}_{A_2,B_2}$.
+    \item $\Box$
+\end{enumerate}}}
+\caption{Entanglement swapping protocol between two parties.} \label{tab:ent_swap}
+\end{table}
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{ent_swap}
 \caption{Entanglement swapping between two nodes. Each node initially holds a Bell-pair (dotted ellipses) comprising two qubits (grey circles). One qubit from each pair is sent to the repeater between them, which measures them in the Bell basis. After local unitary corrections, the two nodes share an entangled pair.} \label{fig:ent_swap}
 \end{figure}
+
+In a sense, entanglement swapping can be regarded as `indirect' entanglement distribution, whereby entanglement is created between two distant parties who do not directly exchange any quantum information.
+
+Now if instead of Alice and Bob we have a long chain of these operations in series, then the entanglement can be swapped across the entire length of the chain, enabling the preparation of end-to-end entangled pairs, which can be employed for state teleportation.
 
 The advantage to this approach is that the range of each repeater can be much smaller than the entire length of the channel, easing constraints imposed by errors, notably loss. Furthermore, the entanglement swapping needn't be actually performed in any chronologically linear sequence. The operations could be arbitrarily ordered, since the measurements are independent and commute. Thus, if some segments are detected as failing (e.g qubits are lost), just those segments can be performed again without requiring the entire protocol to start from scratch, unlike the na{\" i}ve direct communication technique. This `divide and conquer' approach can drastically improve performance of the network in terms of channel capacity, improving the exponential dependence of loss on distance. 
 
@@ -2999,6 +3011,8 @@ There are several cluster state identities we will utilise later, summarised in 
 \includegraphics[width=\columnwidth]{cluster_identities}
 \caption{Several cluster state identities. (a) a CZ gate between two qubits creates an edge between them in the graph. (b) Measurement of a qubit in the Pauli $\hat{Y}$ basis removes that qubit from the graph, while creating new edges between the neighbouring qubits. (c) Measurement of a qubit in the Pauli $\hat{Z}$ basis removes that qubit and any neighbouring edges.} \label{fig:cluster_ident} 
 \end{figure}
+
+When using non-deterministic gates to prepare cluster states, there are approaches to preparing ideal cluster states. This is discussed in more detail in Sec.~\ref{sec:module}. Alternately, we can borrow ideas from percolation theory to simply tolerate defects in a cluster state lattice by working around them. Specifically, if the defect probability (i.e probability of a missing vertex) is below some \emph{percolation threshold}, \mbox{$p_\mathrm{defect}\leq \epsilon_\mathrm{threshold}$}, in the asymptotic limit we are guaranteed that routes exist through the lattice. This allows defective graphs to be employed for quantum computation.
 
 %
 % Quantum Computing Using Topological Codes
@@ -3367,7 +3381,7 @@ This is just a very primitive model for preparing linear cluster states, using a
 Of course, we have used the most simple model for modules, where each accommodates a single logical qubit. In due course, we would expect commodity modules to become far more capable, and resource scaling to improve. We might envisage that each module houses a small square lattice of logical qubits, as shown in Fig.~\ref{fig:larger_module}, and the interconnects between them glue them together like a patchwork quilt.
 
 \begin{figure}[!htb]
-\includegraphics[width=0.7\columnwidth]{larger_module}
+\includegraphics[width=0.6\columnwidth]{larger_module}
 \caption{A larger cluster state module comprising a \mbox{$3\times 3$} lattice of logical qubits (grey), and dangling arms of ancillary qubits (white) in each direction for joining them to neighbouring modules. Fusing these modules enables the `patchwork' preparation of large, distributed lattices.} \label{fig:larger_module}
 \end{figure}
 
