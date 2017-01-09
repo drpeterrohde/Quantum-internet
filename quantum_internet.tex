@@ -2636,12 +2636,27 @@ which is Alice's initial state. For all four possible Bell measurement outcomes 
 \ket\psi_\mathrm{proj}^{\Phi^-} &= \frac{1}{2} (\alpha \ket{1}_B - \beta \ket{0}_B) \nonumber \\
 &= \frac{1}{2} \hat{X}\hat{Z}\ket\phi_B,
 \end{align}
-which are all locally equivalent to $\ket\phi$ under Pauli gates, and can be corrected by Bob, given communication of the classical Bell measurement outcome provided by Alice. The protocol is shown in Fig.~\ref{fig:teleport}.
+which are all locally equivalent to $\ket\phi$ under Pauli gates, and can be corrected by Bob, given communication of the classical Bell measurement outcome provided by Alice. The full protocol is described in Alg.~\ref{alg:state_teleport}.
 
-\begin{figure}[!htb]
-\includegraphics[width=0.9\columnwidth]{teleportation}
-\caption{Teleportation of a single qubit. Alice holds a single qubit (top grey circle), which she would like to teleport to Bob. Bob holds a Bell-pair (dotted ellipse), and shares one of its qubits with Alice, who performs a Bell measurement on in and her qubit. Depending on the measurement outcome, one of four combinations of local operations is applied to Bob's qubit, after which he has Alice's qubit.} \label{fig:teleport}
-\end{figure}
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\tt
+function StateTeleportation($\ket\phi_{A_1}$, $\ket{\Phi^+}_{A_2,B}$):
+\begin{enumerate}
+    \item Alice prepares the state $\ket\phi_{A_1}$, which she would like to teleport to Bob.
+    \item Alice and Bob share the Bell-pair $\ket{\Phi^+}_{A_2,B}$.
+    \item Alice performs a Bell state projection between qubits $A_1$ and $A_2$.
+    \item Alice communicates the classical measurement outcome to Bob - one of four outcomes.
+    \item Bob applies an appropriate local correction to his qubit - some combination of the Pauli operators $\hat{X}$ and $\hat{Z}$ - according to the classical measurement outcome.
+    \item Bob is left with the state $\ket\phi_B$.
+    \item $\Box$
+\end{enumerate}
+The circuit model description for the procedure is:
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {    \lstick{\ket\phi} & \qw & \multimeasureD{1}{\text{Bell}} & \cw  & \control \cw \\    \lstick{} & \qw & \ghost{\text{Bell}} & \control \cw & \cwx \\    \lstick{} & \qw & \qw & \gate{X} \cwx & \gate{Z} \cwx & \qw & \qw & \ket\phi    \inputgroupv{2}{3}{.8em}{.8em}{\ket{\Phi^+}}} \nonumber
+\end{align}
+}}
+\caption{Quantum state teleportation of a single qubit.} \label{alg:state_teleport}
+\end{table}
 
 In general, the protocol is deterministic, although using PBS's to perform partial Bell measurements, the success probability is $1/2$.
 
@@ -2662,6 +2677,8 @@ The total resources required to teleport a single-qubit state are:
 
 This is more costly than sending the qubit directly over a quantum channel, but may be the only approach if a direct link is not available. In the context of an internet where entanglement distribution is treated as the fundamental resource (Sec.~\ref{sec:ent_ultimate}), state teleportation is the natural approach for communicating quantum states, since no quantum communication of any kind is required once the two parties have a shared Bell-pair between them.
 
+The important feature of this protocol to note is that there is no direct quantum communication between Alice and Bob, only a classical communications channel. Rather, the Bell-pair mediates the transfer of quantum information, despite there being no direct quantum channel between Alice and Bob.
+
 Relying on teleportation rather than direct quantum communication makes frugal use of quantum channels, since there is no need for direct quantum routes between every pair of nodes in the network. Instead, each node need only have a direct one-way quantum link with the central authority responsible for entanglement distribution, thereby significantly reducing the complexity of the topology of the quantum network.
 
 The Bell state measurement can be implemented either using a CNOT gate, or as a non-deterministic partial Bell state measurement using a PBS (Sec.~\ref{sec:bell_proj}).
@@ -2678,22 +2695,22 @@ The general outline of the derivation of the protocol for teleporting a CNOT gat
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\tt
-function GateTeleportation($\ket\psi_A\ket\psi_B$):\
+function GateTeleportation($\ket\psi_A\ket\phi_B$):\
 \begin{enumerate}
-\item We wish to apply a CNOT gate to the two-qubit state \mbox{$\ket\psi_\mathrm{A}\ket\phi_\mathrm{B}$} to obtain \mbox{$\mathrm{CNOT}_\mathrm{A,B} \ket\psi_\mathrm{A}\ket\phi_\mathrm{B}$}.
-\item We introduce two additional qubits, $C$ and $D$, and use state teleportation to teleport $\ket\psi_\mathrm{A}$ onto $C$, and $\ket\psi_\mathrm{B}$ onto $D$, preparing $\ket\psi_\mathrm{C}\ket\phi_\mathrm{D}$.
+\item We wish to apply a CNOT gate to the two-qubit state \mbox{$\ket\psi_{A}\ket\phi_{B}$} to obtain \mbox{$\hat{\mathrm{CNOT}}_{A,B} \ket\psi_{A}\ket\phi_{B}$}.
+\item We introduce two additional qubits, $C$ and $D$, and use state teleportation to teleport $\ket\psi_\mathrm{A}$ onto $C$, and $\ket\psi_{B}$ onto $D$, preparing $\ket\psi_{C}\ket\phi_{D}$.
 \item Apply the CNOT between qubits $C$ and $D$, which now encode the desired operation, albeit in qubits $C$ and $D$, instead of $A$ and $B$.
 \item Qubits $C$ and $D$ are now acted upon first by some measurement-outcome-dependent combination of Pauli operators (inherited from the state teleportation procedures), followed by the CNOT.
 \item The CNOT is a Clifford gate and can therefore be commuted to the front of the Pauli operators to yield a CNOT followed by some different configuration of Pauli operators.
-\item The CNOT now acts jointly upon the EPR pairs that were acting as a resource for the state teleportation, independent of \mbox{$\ket\psi_\mathrm{A}\ket\phi_\mathrm{B}$}.
-\item Group the CNOT gate and EPR pairs together, and treat them as a 4-qubit resource state preparation stage, which does not depend on \mbox{$\ket\psi_\mathrm{A}\ket\phi_\mathrm{B}$}, and can therefore be prepared offline in advance.
-\item The 4-qubit resource state is of the form \mbox{$\mathrm{CNOT}_{2,3}\ket{\Psi^+}_{1,2}\ket{\Psi^+}_{3,4}$}.
+\item The CNOT now acts jointly upon the EPR pairs that were acting as a resource for the state teleportation, independent of \mbox{$\ket\psi_{A}\ket\phi_{B}$}.
+\item Group the CNOT gate and EPR pairs together, and treat them as a 4-qubit resource state preparation stage, which does not depend on \mbox{$\ket\psi_{A}\ket\phi_{B}$}, and can therefore be prepared offline in advance.
+\item The 4-qubit resource state is of the form \mbox{$\hat{\mathrm{CNOT}}_{2,3}\ket{\Psi^+}_{1,2}\ket{\Psi^+}_{3,4}$}.
 \item If the CNOT is non-deterministic, employ a trivial {\sc Repeat Until Success} approach for resource state preparation.
-\item Now implementing $\mathrm{CNOT}_\mathrm{A,B} \ket\psi_\mathrm{A}\ket\phi_\mathrm{B}$ is reduced to the problem of: (1) offline preparation of highly-entangled 4-qubit resource states; (2) two Bell measurements (inherited from the state teleportation protocol); and, (3) some configuration of Pauli operators, dependent upon the Bell measurement outcomes.
-\item The output state is \mbox{$\mathrm{CNOT}_\mathrm{C,D} \ket\psi_\mathrm{C}\ket\phi_\mathrm{D}$}.
+\item Now implementing $\hat{\mathrm{CNOT}}_{A,B} \ket\psi_{A}\ket\phi_{B}$ is reduced to the problem of: (1) offline preparation of highly-entangled 4-qubit resource states; (2) two Bell measurements (inherited from the state teleportation protocol); and, (3) some configuration of Pauli operators, dependent upon the Bell measurement outcomes.
+\item The output state is \mbox{$\hat{\mathrm{CNOT}}_{C,D} \ket\psi_{C}\ket\phi_{D}$}.
 \item $\Box$
 \end{enumerate}}}
-\caption{Sketch of the derivation for the gate teleportation protocol for teleporting a CNOT gate onto a two-qubit state. The key observation is that at the end of the circuit manipulations, the CNOT is not acting directly on the target qubits, only on EPR pairs. Thus, the CNOT gate and EPR pairs can be grouped together and treated as an offline resource state preparation stage, for which non-determinism is easily accommodated via {\sc Repeat Until Success}, unlike direct application of the CNOT to the target qubits, which would corrupt them upon gate failure, potentially ruining an entire computation.} \label{tab:gate_teleport}
+\caption{Teleporting a CNOT gate onto a two-qubit state. The key observation is that at the end of the circuit manipulations, the CNOT is not acting directly on the target qubits, only on Bell-pairs. Thus, the CNOT gate and Bell-pairs can be grouped together and treated as an offline resource state preparation stage, for which non-determinism is easily accommodated via {\sc Repeat Until Success}, unlike direct application of the CNOT to the target qubits, which would corrupt them upon gate failure, potentially ruining an entire computation.} \label{tab:gate_teleport}
 \end{table}
 
 Most notably, gate teleportation is useful when attempting to apply two-qubit entangling operations using non-deterministic gates, in which case gate teleportation allows the non-deterministic elements to be performed offline as a resource state preparation stage, overcoming the non-determinism during the gate application stage. Specifically, when a CNOT gate acting directly upon two qubits fails, it corrupts those qubits, whereas if it fails during a state preparation stage, it can simply be reattempted until a success occurs, without corrupting the target qubits. A concatenated version of the gate teleportation protocol forms the basis for constructing near-deterministic entangling gates in linear optics, to be explained in detail in Sec.~\ref{sec:KLM_univ}.
@@ -2724,6 +2741,13 @@ function EntanglementSwapping($\ket{\Phi^+}_{A_1,A_2}, \ket{\Phi^+}_{B_1,B_2}$):
     \item Bob Sends qubit $B_1$ to third party Eve.
     \item Eve performs a Bell projection between $A_1$ and $B_1$, yielding, \\
     $\bra{\Phi^+}_{A_1,B_1} \ket\psi_\mathrm{in} = \ket{\Phi^+}_{A_2,B_2}$.
+    \item In the case of the other Bell projection outcomes ($\bra{\Phi^-}_{A_1,B_1}$, $\bra{\Psi^+}_{A_1,B_1}$ or $\bra{\Psi^-}_{A_1,B_1}$), local corrections (Pauli operators) are made by Alice and/or Bob, as dictated by classical communication from Eve,
+    \begin{align}
+    \bra{\Phi^+}_{A_1,B_1} \ket\psi_\mathrm{in} &= \ket{\Phi^+}_{A_2,B_2}, \nonumber \\
+    \bra{\Phi^-}_{A_1,B_1} \ket\psi_\mathrm{in} &= \hat{Z}_{B_2} \ket{\Phi^+}_{A_2,B_2}, \nonumber \\
+    \bra{\Psi^+}_{A_1,B_1} \ket\psi_\mathrm{in} &= \hat{X}_{B_2} \ket{\Phi^+}_{A_2,B_2}, \nonumber \\
+    \bra{\Psi^-}_{A_1,B_1} \ket\psi_\mathrm{in} &= \hat{X}_{B_2} \hat{Z}_{B_2} \ket{\Phi^+}_{A_2,B_2}.
+    \end{align}
     \item Alice and Bob now possess a joint Bell-pair between qubits $A_2$ and $B_2$, \\
     $\ket\psi_\mathrm{out} = \ket{\Phi^+}_{A_2,B_2}$.
     \item $\Box$
@@ -3065,11 +3089,11 @@ Originally it was believed that universal optical quantum computation, specifica
 \begin{align} \label{eq:NS_trans}
 NS: \alpha\ket{0}+\beta\ket{1}+\gamma\ket{2}\to\alpha\ket{0}+\beta\ket{1}-\gamma\ket{2},
 \end{align}
-in the photon-number basis. That is, it applies a $\pi$ phase-shift to only the $\ket{2}$ component of a photon-number superposition. The breakthrough result by KLM demonstrated that this is in fact not the case at all. Instead, the NS gate can be implemented non-deterministically using post-selected linear optics. Two such NS gates allow the construction of a single CZ gate. The construction of the KLM NS and CZ gates are shown in Fig.~\ref{fig:KLM_gate}.
+in the photon-number basis, up to normalisation (which is determined by the post-selection success probability). That is, it applies a $\pi$ phase-shift to only the $\ket{2}$ component of a photon-number superposition. The breakthrough result by KLM demonstrated that this is in fact not the case at all. Instead, the NS gate can be implemented non-deterministically using post-selected linear optics. Two such NS gates allow the construction of a single CZ gate. The construction of the KLM NS and CZ gates are shown in Fig.~\ref{fig:KLM_gate}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.8\columnwidth]{KLM_gate}
-\caption{(a) A KLM CZ gate, employing dual-rail encoding, constructed from two non-linear sign-shift (NS) gates, which apply a $\pi$ phase-shift to only $\ket{2}$ terms in the photon-number basis. NS gates could be constructed using extremely (impractically) strong non-linearities. However, they can be implemented non-deterministically using two beamsplitters, two ancillary states, and two photo-detectors, post-selecting upon detecting $\ket{1}\bra{1}$ and $\ket{0}\bra{0}$ respectively. (b) Construction of the non-deterministic linear optics NS gate. Two ancillary states -- one $\ket{1}$ and one $\ket{0}$ -- are employed, and two photo-detectors post-select upon detecting $\ket{1}\bra{1}$ and $\ket{0}\bra{0}$ respectively. The beamsplitter reflectivities are chosen such that the amplitudes obey Eq.~\ref{eq:NS_trans}.}. \label{fig:KLM_gate}
+\caption{(a) A KLM CZ gate, employing dual-rail encoding, constructed from two non-linear sign-shift (NS) gates, which apply a $\pi$ phase-shift to only $\ket{2}$ terms in the photon-number basis. NS gates could be constructed using extremely (impractically) strong non-linearities. However, they can be implemented non-deterministically using two beamsplitters, two ancillary states, and two photo-detectors, post-selecting upon detecting $\ket{1}\bra{1}$ and $\ket{0}\bra{0}$ respectively. (b) Construction of the non-deterministic linear optics NS gate. Two ancillary states -- one $\ket{1}$ and one $\ket{0}$ -- are employed, and two photo-detectors post-select upon detecting $\ket{1}\bra{1}$ and $\ket{0}\bra{0}$ respectively. The beamsplitter reflectivities in (a) are 50:50, and in (b) are chosen such that the amplitudes obey Eq.~\ref{eq:NS_trans}.}. \label{fig:KLM_gate}
 \end{figure}
 
 Clearly this non-determinism is of immediate concern, since concatenating multiple gates would have exponentially decreasing success probability, making the protocol inefficient -- if the probability of a single gate succeeding is $p$, and we require that a circuit comprising $n$ of them all succeed, the success probability is clearly $p^n$.
@@ -3866,11 +3890,11 @@ There are a number of schools of thought one might subscribe to when quantum net
 
 The QTCP framework we presented is sufficiently flexible and extensible that these questions can be answered and enforced independently by different subnets, depending on their individual characteristics and requirements, in much the same way that every organisation connected to the classical internet today is free to structure their own LAN as they please, enforcing their own network policies.
 
-The quantum internet will allow quantum computation to become distributed, not just outsourced. In the same way that many present-day classical algorithms are heavily parallelised and distributed across large clusters, CUDA cores, or even across the internet itself (e.g the SETI project), quantum networks will allow the distribution of quantum computation across many nodes, either in parallel, in series, or in a modularised fashion. This will be pivotal to achieving scalability. Keeping in mind that the classical-equivalent power of a quantum computer grows exponentially with the number of qubits, it is highly desirable to squeeze out every last available qubit for our computations -- every qubit is worth more than the last.
+The quantum internet will allow quantum computation to become distributed, not just outsourced. In the same way that many present-day classical algorithms are heavily parallelised and distributed across large clusters, CUDA cores, or even across the internet itself (e.g the SETI project), quantum networks will allow the distribution of quantum computation across many nodes, either in parallel, in series, or in a modularised fashion. This will be pivotal to achieving scalability. Keeping in mind that the classical-equivalent power of a quantum computer may grow exponentially with the number of qubits, it is highly desirable to squeeze out every last available qubit for our computations -- every qubit is worth more than the last.
 
 Combined with recent advances in homomorphic encryption and blind quantum computation, commercial models for the distribution of quantum computation will emerge, allowing computational power to be outsourced, with both client and server confident in the security of their data and proprietary algorithms. This is a notion that is challenging on classical computers, but will be of utmost importance in quantum computing, where it is expected sensitive data and algorithms will often be at stake.
 
-From the security perspective, the global quantum internet will enable an international QKD communications network with perfect secrecy, guaranteed to be information-theoretically secure by the laws of physics. This will be of immense economic and strategic benefit to commercial enterprises, governments, and individuals. Classical cryptography is already a multi-billion dollar industry worldwide. Quantum cryptography will supersede it, and be of especial importance in the era of quantum computers, which compromise some essential classical cryptographic protocols, such as RSA, which forms the basis of most current internet encryption, digital signatures, and the Blockchain/Bitcoin protocol. Not only is quantum cryptography being pursued optically, but even credit cards with embedded quantum circuitry are being actively developed to prevent fraud. Inevitably, this will require the communication between bank automats and servers to be mediated by a quantum network.
+From the security perspective, the global quantum internet will enable an international QKD communications network with perfect secrecy, guaranteed to be information-theoretically secure by the laws of physics. This will be of immense economic and strategic benefit to commercial enterprises, governments, and individuals. Classical cryptography is already a multi-billion dollar industry worldwide. Quantum cryptography will supersede it, and be of especial importance in the era of quantum computers, which compromise some essential classical cryptographic protocols, such as RSA, which forms the basis of most current internet encryption, digital signatures, and the Blockchain/Bitcoin protocols. Not only is quantum cryptography being pursued optically, but even credit cards with embedded quantum circuitry are being actively developed to prevent fraud. Inevitably, this will require the communication between bank automats and servers to be mediated by a quantum network.
 
 Already, off-the-shelf QKD systems are available as commodity items, from vendors such as MagiQ and ID Quantique, which may be simply interconnected via an optical fibre link, thereby implementing end-to-end quantum cryptography. This is of a similar flavour to, and first technological step towards, modularised quantum computing, which would greatly enhance the economic viability and scalability of general purpose quantum computing by paving the way for the mass production of elementary interconnectable modules as commodity items.
 
