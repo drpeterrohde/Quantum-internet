@@ -1567,8 +1567,8 @@ into the three-qubit state,
 \item Assuming at most a single bit-flip operation has occurred on the encoded state, the three parity outcomes uniquely determine which encoded qubit the bit-flip was applied to.
 \item Apply classically-controlled bit-flip recovery operations, $\mathcal{R}$, to correct the encoded state, recovering $\ket\psi_R$.
 \item Apply the inverse of the encoding operation to recover $\ket\psi$.
+\item $\Box$
 \end{enumerate}
-The circuit model description for the procedure is:
 \begin{align}
 \Qcircuit @C=1.3em @R=.6em {
   & \lstick{\ket{\psi}} & \ctrl{2} & \gate{\mathcal{E}_X}  & \qw & \qw              & \ctrl{3}  & \qw       & \ctrl{4} & \qw & \multigate{2}{\ \mathcal{R}\ } & \qw \\
@@ -2650,7 +2650,6 @@ function StateTeleportation($\ket\phi_{A_1}$, $\ket{\Phi^+}_{A_2,B}$):
     \item Bob is left with the state $\ket\phi_B$.
     \item $\Box$
 \end{enumerate}
-The circuit model description for the procedure is:
 \begin{align}
 \Qcircuit @C=1em @R=1.6em {    \lstick{\ket\phi} & \qw & \multimeasureD{1}{\text{Bell}} & \cw  & \control \cw \\    \lstick{} & \qw & \ghost{\text{Bell}} & \control \cw & \cwx \\    \lstick{} & \qw & \qw & \gate{X} \cwx & \gate{Z} \cwx & \qw & \qw & \ket\phi    \inputgroupv{2}{3}{.8em}{.8em}{\ket{\Phi^+}}} \nonumber
 \end{align}
@@ -2697,23 +2696,51 @@ The general outline of the derivation of the protocol for teleporting a CNOT gat
 \fbox{\parbox{0.965\columnwidth}{\tt
 function GateTeleportation($\ket\psi_A\ket\phi_B$):\
 \begin{enumerate}
-\item We wish to apply a CNOT gate to the two-qubit state \mbox{$\ket\psi_{A}\ket\phi_{B}$} to obtain \mbox{$\hat{\mathrm{CNOT}}_{A,B} \ket\psi_{A}\ket\phi_{B}$}.
-\item We introduce two additional qubits, $C$ and $D$, and use state teleportation to teleport $\ket\psi_\mathrm{A}$ onto $C$, and $\ket\psi_{B}$ onto $D$, preparing $\ket\psi_{C}\ket\phi_{D}$.
-\item Apply the CNOT between qubits $C$ and $D$, which now encode the desired operation, albeit in qubits $C$ and $D$, instead of $A$ and $B$.
-\item Qubits $C$ and $D$ are now acted upon first by some measurement-outcome-dependent combination of Pauli operators (inherited from the state teleportation procedures), followed by the CNOT.
+\item We wish to apply a CNOT gate to \mbox{$\ket\psi_{A}\ket\phi_{B}$}.
+\item Introduce two additional qubits, $C$ and $D$.
+\item Teleport states \mbox{$\ket\psi_{A}\to\ket\psi_C$}, \mbox{$\ket\psi_{B}\to\ket\psi_D$}.
+\item Apply \mbox{$\hat{\mathrm{CNOT}} \ket \psi_C \ket\phi_D$}.
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {
+\lstick{\ket\psi} & \qw & \multimeasureD{1}{\text{Bell}} & \cw  & \control \cw \\
+\lstick{} & \qw & \ghost{\text{Bell}} & \control \cw & \cwx \\
+\lstick{} & \qw & \qw & \gate{X} \cwx & \gate{Z} \cwx & \ctrl{1} & \qw & \qw & \qw \inputgroupv{2}{3}{.8em}{.8em}{\ket{\Phi^+}} \\
+\lstick{} & \qw & \qw & \gate{X} & \gate{Z} & \targ & \qw & \qw & \qw \inputgroupv{4}{5}{.8em}{.8em}{\ket{\Phi^+}} \\
+\lstick{} & \qw & \multimeasureD{1}{\text{Bell}} & \control \cw \cwx & \cwx \\
+\lstick{\ket\phi} & \qw & \ghost{\text{Bell}} & \cw  & \control \cw \cwx
+} \nonumber
+\end{align}
 \item The CNOT is a Clifford gate and can therefore be commuted to the front of the Pauli operators to yield a CNOT followed by some different configuration of Pauli operators.
-\item The CNOT now acts jointly upon the EPR pairs that were acting as a resource for the state teleportation, independent of \mbox{$\ket\psi_{A}\ket\phi_{B}$}.
-\item Group the CNOT gate and EPR pairs together, and treat them as a 4-qubit resource state preparation stage, which does not depend on \mbox{$\ket\psi_{A}\ket\phi_{B}$}, and can therefore be prepared offline in advance.
-\item The 4-qubit resource state is of the form \mbox{$\hat{\mathrm{CNOT}}_{2,3}\ket{\Psi^+}_{1,2}\ket{\Psi^+}_{3,4}$}.
-\item If the CNOT is non-deterministic, employ a trivial {\sc Repeat Until Success} approach for resource state preparation.
-\item Now implementing $\hat{\mathrm{CNOT}}_{A,B} \ket\psi_{A}\ket\phi_{B}$ is reduced to the problem of: (1) offline preparation of highly-entangled 4-qubit resource states; (2) two Bell measurements (inherited from the state teleportation protocol); and, (3) some configuration of Pauli operators, dependent upon the Bell measurement outcomes.
+\item The CNOT now acts jointly upon the Bell-pairs that were acting as a resource for the state teleportation, independent of \mbox{$\ket\psi_{A}\ket\phi_{B}$}.
+\item Group the CNOT gate and Bell-pairs together, and treat them as a 4-qubit resource state preparation stage, which does not depend on \mbox{$\ket\psi_{A}\ket\phi_{B}$}. 
+\item Prepare this 4-qubit resource state - \mbox{$\ket\chi=\hat{\mathrm{CNOT}}_{2,3}\ket{\Psi^+}_{1,2}\ket{\Psi^+}_{3,4}$} - offline in advance.
+\item If the CNOT is non-deterministic, employ {\sc Repeat Until Success} to prepare $\ket\chi$.
 \item The output state is \mbox{$\hat{\mathrm{CNOT}}_{C,D} \ket\psi_{C}\ket\phi_{D}$}.
 \item $\Box$
-\end{enumerate}}}
-\caption{Teleporting a CNOT gate onto a two-qubit state. The key observation is that at the end of the circuit manipulations, the CNOT is not acting directly on the target qubits, only on Bell-pairs. Thus, the CNOT gate and Bell-pairs can be grouped together and treated as an offline resource state preparation stage, for which non-determinism is easily accommodated via {\sc Repeat Until Success}, unlike direct application of the CNOT to the target qubits, which would corrupt them upon gate failure, potentially ruining an entire computation.} \label{tab:gate_teleport}
+\end{enumerate}
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {
+\lstick{\ket\alpha} & \qw & \multimeasureD{1}{\text{Bell}} & \cw & \cw & \control \cw \\
+\lstick{} & \qw & \ghost{\text{Bell}} & \cw & \cw & \cw \cwx & \control \cw \\
+\lstick{} & \qw & \qw & \gate{X} & \gate{Z} & \qw \cwx & \gate{Z} \cwx & \qw & \qw & \qw \\
+\lstick{} & \qw & \qw & \gate{X} \cwx & \qw \cwx & \gate{X} \cwx & \gate{Z} \cwx & \qw & \qw & \qw \\
+\lstick{} & \qw & \multimeasureD{1}{\text{Bell}} & \control \cw \cwx & \cwx \inputgroupv{2}{5}{0.8em}{4.1em}{\ket{\chi}} \\
+\lstick{\ket\beta} & \qw & \ghost{\text{Bell}} & \cw  & \control \cw \cwx
+} \nonumber
+\end{align}
+}}
+\caption{Teleporting a CNOT gate onto a two-qubit state.} \label{tab:gate_teleport}
 \end{table}
 
 Most notably, gate teleportation is useful when attempting to apply two-qubit entangling operations using non-deterministic gates, in which case gate teleportation allows the non-deterministic elements to be performed offline as a resource state preparation stage, overcoming the non-determinism during the gate application stage. Specifically, when a CNOT gate acting directly upon two qubits fails, it corrupts those qubits, whereas if it fails during a state preparation stage, it can simply be reattempted until a success occurs, without corrupting the target qubits. A concatenated version of the gate teleportation protocol forms the basis for constructing near-deterministic entangling gates in linear optics, to be explained in detail in Sec.~\ref{sec:KLM_univ}.
+
+Quantum gate teleportation effectively reduces the problem of implementing CNOT gates to:
+\begin{itemize}
+\item Offline preparation of highly-entangled 4-qubit resource states. This needn't be deterministic, since the resource state does not depend on the state to which the CNOT gate ought to be applied.
+\item Two Bell measurements.
+\item Some configuration of local Pauli operators, dependent upon the Bell measurement outcomes.
+\end{itemize}
+Importantly, like quantum state teleportation, there is no need for a quantum communications channel between the two parties holding the qubits to which the gate is applied -- classical communication is sufficient.
 
 The gate teleportation idea is conceptually interesting as it converts the problem of `gate application' to that of `state preparation'\footnote{The resource state is prepared from two Bell-pairs and a single CNOT gate. In the absence of a direct source of Bell-pairs, they can be prepared using separable single-qubit states and a CNOT gate. Thus, the full resource state may be prepared from separable single qubits via three CNOT gates.}, by commuting all the entangling operations to the beginning of the protocol. Cluster state quantum computing (Sec.~\ref{sec:CSQC}) is actually the extremity of this logic, whereby an entire quantum computation is transformed into a sequence of state and gate teleportations. One may interpret this to mean that teleportation is a universal resource for quantum computation \cite{bib:GottesmanChuang99}.
 
@@ -2750,8 +2777,15 @@ function EntanglementSwapping($\ket{\Phi^+}_{A_1,A_2}, \ket{\Phi^+}_{B_1,B_2}$):
     \end{align}
     \item Alice and Bob now possess a joint Bell-pair between qubits $A_2$ and $B_2$, \\
     $\ket\psi_\mathrm{out} = \ket{\Phi^+}_{A_2,B_2}$.
-    \item $\Box$
-\end{enumerate}}}
+    \item $\Box$ \\
+\end{enumerate}
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {
+    \lstick{} & \qw & \qw & \qw & \qw & \qw & \qw \\    \lstick{} & \qw & \multimeasureD{1}{\text{Bell}} & \cw  & \control \cw
+    \inputgroupv{1}{2}{.8em}{.8em}{\ket{\Phi^+}} \\    \lstick{} & \qw & \ghost{\text{Bell}} & \control \cw & \cwx \\    \lstick{} & \qw & \qw & \gate{X} \cwx & \gate{Z} \cwx & \qw & \qw    \inputgroupv{3}{4}{.8em}{.8em}{\ket{\Phi^+}}
+} \nonumber
+\end{align}
+}}
 \caption{Entanglement swapping protocol between two parties.} \label{tab:ent_swap}
 \end{table}
 
