@@ -2612,8 +2612,8 @@ In the standard teleportation protocol, Alice begins with a single qubit,
 \end{align}
 which she would like to teleport to Bob. Importantly, no quantum communication between the two is allowed, since obviously this would make the problem trivial. However, classical communication is allowed (and turns out to be necessary), and furthermore they share an entangled Bell-pair. Thus, Alice begins with two qubits, and Bob begins with one -- his half of the entangled pair onto which Alice's state ought to be teleported. The initial state is therefore,
 \begin{align}
-\ket\psi_\mathrm{in} &= \ket{\phi}_{A_1} \ket{\Psi^+}_{A_2,B} \nonumber \\
-&= \frac{1}{\sqrt{2}} (\alpha\ket{0}_{A_1}+\beta\ket{1}_{A_1}) (\ket{0}_{A_2}\ket{1}_B + \ket{1}_{A_2}\ket{0}_B).
+\ket\psi_\mathrm{in} &= \ket{\phi}_{A_1} \ket{\Psi^+}_{A_2,B} \\
+&= \frac{1}{\sqrt{2}} (\alpha\ket{0}_{A_1}+\beta\ket{1}_{A_1}) (\ket{0}_{A_2}\ket{1}_B + \ket{1}_{A_2}\ket{0}_B). \nonumber
 \end{align}
 
 The first step of the protocol is for Alice to perform a two-qubit entangling measurement on her two qubits, projecting onto the Bell basis (Eq.~\ref{eq:bell_basis}). She obtains one of four measurement outcomes. For illustration, suppose she measures the $\ket{\Psi^+}$ outcome. Then the projected state is,
@@ -2651,7 +2651,12 @@ function StateTeleportation($\ket\phi_{A_1}$, $\ket{\Phi^+}_{A_2,B}$):
     \item $\Box$
 \end{enumerate}
 \begin{align}
-\Qcircuit @C=1em @R=1.6em {    \lstick{\ket\phi} & \qw & \multimeasureD{1}{\text{Bell}} & \cw  & \control \cw \\    \lstick{} & \qw & \ghost{\text{Bell}} & \control \cw & \cwx \\    \lstick{} & \qw & \qw & \gate{X} \cwx & \gate{Z} \cwx & \qw & \qw & \ket\phi    \inputgroupv{2}{3}{.8em}{.8em}{\ket{\Phi^+}}} \nonumber
+\Qcircuit @C=1em @R=1.6em {
+    \lstick{\ket\phi} & \qw & \multimeasureD{1}{\text{Bell}} & \cw  & \control \cw \\
+    \lstick{} & \qw & \ghost{\text{Bell}} & \control \cw & \cwx \\
+    \lstick{} & \qw & \qw & \gate{X} \cwx & \gate{Z} \cwx & \qw & \qw & \ket\phi
+    \inputgroupv{2}{3}{.8em}{.8em}{\ket{\Phi^+}}
+} \nonumber
 \end{align}
 }}
 \caption{Quantum state teleportation of a single qubit.} \label{alg:state_teleport}
@@ -2713,19 +2718,19 @@ function GateTeleportation($\ket\psi_A\ket\phi_B$):\
 \item The CNOT is a Clifford gate and can therefore be commuted to the front of the Pauli operators to yield a CNOT followed by some different configuration of Pauli operators.
 \item The CNOT now acts jointly upon the Bell-pairs that were acting as a resource for the state teleportation, independent of \mbox{$\ket\psi_{A}\ket\phi_{B}$}.
 \item Group the CNOT gate and Bell-pairs together, and treat them as a 4-qubit resource state preparation stage, which does not depend on \mbox{$\ket\psi_{A}\ket\phi_{B}$}. 
-\item Prepare this 4-qubit resource state - \mbox{$\ket\chi=\hat{\mathrm{CNOT}}_{2,3}\ket{\Psi^+}_{1,2}\ket{\Psi^+}_{3,4}$} - offline in advance.
+\item Prepare the 4-qubit resource state, \mbox{$\ket\chi=\hat{\mathrm{CNOT}}_{2,3}\ket{\Psi^+}_{1,2}\ket{\Psi^+}_{3,4}$}, offline in advance.
 \item If the CNOT is non-deterministic, employ {\sc Repeat Until Success} to prepare $\ket\chi$.
 \item The output state is \mbox{$\hat{\mathrm{CNOT}}_{C,D} \ket\psi_{C}\ket\phi_{D}$}.
 \item $\Box$
 \end{enumerate}
 \begin{align}
 \Qcircuit @C=1em @R=1.6em {
-\lstick{\ket\alpha} & \qw & \multimeasureD{1}{\text{Bell}} & \cw & \cw & \control \cw \\
+\lstick{\ket\psi} & \qw & \multimeasureD{1}{\text{Bell}} & \cw & \cw & \control \cw \\
 \lstick{} & \qw & \ghost{\text{Bell}} & \cw & \cw & \cw \cwx & \control \cw \\
 \lstick{} & \qw & \qw & \gate{X} & \gate{Z} & \qw \cwx & \gate{Z} \cwx & \qw & \qw & \qw \\
 \lstick{} & \qw & \qw & \gate{X} \cwx & \qw \cwx & \gate{X} \cwx & \gate{Z} \cwx & \qw & \qw & \qw \\
 \lstick{} & \qw & \multimeasureD{1}{\text{Bell}} & \control \cw \cwx & \cwx \inputgroupv{2}{5}{0.8em}{4.1em}{\ket{\chi}} \\
-\lstick{\ket\beta} & \qw & \ghost{\text{Bell}} & \cw  & \control \cw \cwx
+\lstick{\ket\phi} & \qw & \ghost{\text{Bell}} & \cw  & \control \cw \cwx
 } \nonumber
 \end{align}
 }}
@@ -2758,16 +2763,24 @@ The obvious approach to sending a qubit from Alice to Bob is to send a qubit fro
 \fbox{\parbox{0.965\columnwidth}{\tt
 function EntanglementSwapping($\ket{\Phi^+}_{A_1,A_2}, \ket{\Phi^+}_{B_1,B_2}$):
 \begin{enumerate}
-    \item Alice locally prepares the Bell-pair, \\
-    $\ket{\Phi^+}_{A_1,A_2}$.
-    \item Bob locally prepares the Bell-pair, \\
-    $\ket{\Phi^+}_{B_1,B_2}$.
-    \item The net initial state is, \\
-    $\ket\psi_\mathrm{in} = \ket{\Phi^+}_{A_1,A_2} \ket{\Phi^+}_{B_1,B_2}.$
+    \item Alice locally prepares the Bell-pair,
+    \begin{align}
+    \ket{\Phi^+}_{A_1,A_2}.
+    \end{align}
+    \item Bob locally prepares the Bell-pair,
+    \begin{align}
+    \ket{\Phi^+}_{B_1,B_2}.
+    \end{align}
+    \item The net initial state is,
+    \begin{align}
+    \ket\psi_\mathrm{in} = \ket{\Phi^+}_{A_1,A_2} \ket{\Phi^+}_{B_1,B_2}.
+    \end{align}
     \item Alice sends qubit $A_1$ to third party Eve.
     \item Bob Sends qubit $B_1$ to third party Eve.
-    \item Eve performs a Bell projection between $A_1$ and $B_1$, yielding, \\
-    $\bra{\Phi^+}_{A_1,B_1} \ket\psi_\mathrm{in} = \ket{\Phi^+}_{A_2,B_2}$.
+    \item Eve performs a Bell projection between $A_1$ and $B_1$, yielding,
+    \begin{align}
+    \bra{\Phi^+}_{A_1,B_1} \ket\psi_\mathrm{in} = \ket{\Phi^+}_{A_2,B_2}.
+    \end{align}
     \item In the case of the other Bell projection outcomes ($\bra{\Phi^-}_{A_1,B_1}$, $\bra{\Psi^+}_{A_1,B_1}$ or $\bra{\Psi^-}_{A_1,B_1}$), local corrections (Pauli operators) are made by Alice and/or Bob, as dictated by classical communication from Eve,
     \begin{align}
     \bra{\Phi^+}_{A_1,B_1} \ket\psi_\mathrm{in} &= \ket{\Phi^+}_{A_2,B_2}, \nonumber \\
@@ -2775,14 +2788,20 @@ function EntanglementSwapping($\ket{\Phi^+}_{A_1,A_2}, \ket{\Phi^+}_{B_1,B_2}$):
     \bra{\Psi^+}_{A_1,B_1} \ket\psi_\mathrm{in} &= \hat{X}_{B_2} \ket{\Phi^+}_{A_2,B_2}, \nonumber \\
     \bra{\Psi^-}_{A_1,B_1} \ket\psi_\mathrm{in} &= \hat{X}_{B_2} \hat{Z}_{B_2} \ket{\Phi^+}_{A_2,B_2}.
     \end{align}
-    \item Alice and Bob now possess a joint Bell-pair between qubits $A_2$ and $B_2$, \\
-    $\ket\psi_\mathrm{out} = \ket{\Phi^+}_{A_2,B_2}$.
+    \item Alice and Bob now possess a joint Bell-pair between qubits $A_2$ and $B_2$,
+    \begin{align}
+    \ket\psi_\mathrm{out} = \ket{\Phi^+}_{A_2,B_2}.
+    \end{align}
     \item $\Box$ \\
 \end{enumerate}
 \begin{align}
 \Qcircuit @C=1em @R=1.6em {
-    \lstick{} & \qw & \qw & \qw & \qw & \qw & \qw \\    \lstick{} & \qw & \multimeasureD{1}{\text{Bell}} & \cw  & \control \cw
-    \inputgroupv{1}{2}{.8em}{.8em}{\ket{\Phi^+}} \\    \lstick{} & \qw & \ghost{\text{Bell}} & \control \cw & \cwx \\    \lstick{} & \qw & \qw & \gate{X} \cwx & \gate{Z} \cwx & \qw & \qw    \inputgroupv{3}{4}{.8em}{.8em}{\ket{\Phi^+}}
+    \lstick{} & \qw & \qw & \qw & \qw & \qw & \qw \\
+    \lstick{} & \qw & \multimeasureD{1}{\text{Bell}} & \cw  & \control \cw
+    \inputgroupv{1}{2}{.8em}{.8em}{\ket{\Phi^+}} \\
+    \lstick{} & \qw & \ghost{\text{Bell}} & \control \cw & \cwx \\
+    \lstick{} & \qw & \qw & \gate{X} \cwx & \gate{Z} \cwx & \qw & \qw
+    \inputgroupv{3}{4}{.8em}{.8em}{\ket{\Phi^+}}
 } \nonumber
 \end{align}
 }}
@@ -2845,12 +2864,12 @@ function BB84():
 \item Depending on the choice of basis, she encodes her bit into the polarisation of a single photon as:
 \begin{align}
 \ket{0}_Z &\equiv \ket{H}, \nonumber \\
-\ket{1}_Z &\equiv \ket{V}, \nonumber
+\ket{1}_Z &\equiv \ket{V},
 \end{align}
 or,
 \begin{align}
 \ket{0}_X &\equiv \frac{1}{\sqrt{2}}(\ket{H}+\ket{V}), \nonumber \\
-\ket{1}_X &\equiv \frac{1}{\sqrt{2}}(\ket{H}-\ket{V}). \nonumber
+\ket{1}_X &\equiv \frac{1}{\sqrt{2}}(\ket{H}-\ket{V}).
 \end{align}
 \item Encoding into the randomly chosen basis, she transmits the randomly chosen bit to Bob.
 \item She does not announce the choice of bit or basis.
@@ -3904,7 +3923,26 @@ Quantum computing also has dual-use potential. In fact, given their ability to c
 
 Much as the internet has eliminated national electronic borders, a quantum internet employed for distributed or outsourced computation, would make quantum computer technology available to hackers, criminals, terrorists, and strategically competing nations. And a distributed model for computation as unregulated as the classical internet would make it near impossible to prevent.
 
-Combined with encrypted quantum computing protocols, no one would even know what they were up to when using this awesome computing power, and what they learn, they could keep to themselves. A Russian bedroom hacker with no direct access to the required technology, could delegate a cracking algorithm to the cloud, where it is physically executed in the United States, and returned to our Russian comrade, who subsequently uses it to hack into Hillary's emails, to forward back to the Russians, for the Russians to leak during the next presidential election, thereby swinging the election in favour of Trump\texttrademark. The NSA and FBI wouldn't have a clue who was behind it, and would be powerless to prevent the next misuse of the technology, modulo shutting down the quantum internet entirely.
+Combined with encrypted quantum computing protocols, no one would even know what they were up to when using this awesome computing power, and what they learn, they could keep to themselves. Alg.~\ref{alg:russian} describes a typical protocol for a particularly nefarious application for this.
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\tt
+function MakeAmericaGreatAgain(Putin):
+\begin{enumerate}
+    \item A Russian bedroom hacker with no direct access to the required technology, delegates a factorisation algorithm to the cloud using homomorphic encryption.
+    \item The computation is physically executed on a server in the United States.
+    \item The result in returned to our Russian comrade.
+    \item The Russian uses the obtained private RSA key to hack Hillary's emails.
+    \item The emails are strategically leaked during the next Presidential election.
+    \item This swings the election in favour of Trump\texttrademark.
+    \item The NSA and FBI have no clue who was behind it, since it was homomorphically encrypted.
+    \item They'd kick themselves if they found out the algorithm was actually executed on US soil.
+    \item Unless they switch off the entire quantum internet, they can't prevent it from happening again in the subsequent election.
+    \item return(America is Great Again\texttrademark).
+    \item $\Box$
+\end{enumerate}}}
+\caption{A typical example of a nefarious use for cloud quantum computation.} \label{alg:russian}
+\end{table}
 
 These are all legitimate concerns. But they are very much the same ones that detractors expressed about the classical internet and strong encryption. Nonetheless, it can be said that encryption and the internet have on balance been overwhelmingly beneficial to mankind, enabling unprecedented rates of technological progress. Any attempts to eliminate or undermine them could be economically catastrophic.
 
