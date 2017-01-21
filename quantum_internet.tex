@@ -10,6 +10,7 @@
 \usepackage{url}
 \usepackage[dvipsnames]{xcolor}
 \usepackage[]{qcircuit}
+% Coffee \usepackage{coffee4}
 
 \newcommand{\comment}[1]{{\color{blue}{\textbf{#1}}}}
 
@@ -37,6 +38,8 @@
 %
 
 \title{The Quantum Internet -- A Vision for the Future}
+
+% Coffee \cofeAm{0.4}{1.0}{0}{5.5cm}{2cm}
 
 %
 % Authors
@@ -138,14 +141,14 @@ From a computational complexity theorist's perspective, it is believed that the 
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{complexity_classes}
-\caption{Believed relationships between the complexity classes most relevant to quantum computing. \textbf{BPP} is the class of polynomial-time probabilistic classical algorithms. \textbf{NP} is the class of problems verifiable in polynomial time using classical algorithms. \textbf{NP}-complete are the subset of \textbf{NP} problems polynomial-time reducible to any other problem in \textbf{NP}. \textbf{BQP} is the class of probabilistic algorithms solvable in polynomial time on universal quantum computers. $\#\mathbf{P}$ is the set of counting problems, that count satisfying solutions to \textbf{BPP} problems. \textbf{BPP} is regarded as the class of problems efficiently solvable on universal Turing machines (i.e classical computers), whereas \textbf{BQP} is that solvable on universal quantum computers. The computational superiority of quantum computers is based on the (strongly believed, yet unproven) assumption that \mbox{$\mathbf{BPP}\subset\mathbf{BQP}$}.} \label{fig:complexity_classes}
+\caption{Believed relationships between the complexity classes most relevant to quantum computing. \textbf{BPP} is the class of polynomial-time probabilistic classical algorithms. \textbf{NP} is the class of problems verifiable in polynomial time using classical algorithms. \textbf{NP}-complete are the subset of \textbf{NP} problems polynomial-time reducible to any other problem in \textbf{NP}. \textbf{BQP} is the class of probabilistic algorithms solvable in polynomial time on universal quantum computers. $\#\mathbf{P}$ is the set of counting problems, that count satisfying solutions to \textbf{P} problems (\textbf{P} is the same as \textbf{BPP}, but deterministic, rather than probabilisitic). \textbf{BPP} is regarded as the class of problems efficiently solvable on universal Turing machines (i.e classical computers), whereas \textbf{BQP} is that efficiently solvable on universal quantum computers. The computational superiority of quantum computers is based on the (strongly believed, yet unproven) assumption that \mbox{$\mathbf{BPP}\subset\mathbf{BQP}$}.} \label{fig:complexity_classes}
 \end{figure}
 
-Aside from quantum computing, quantum cryptography holds the promise of uncrackable cryptographic protocols, guaranteed not by the assumed complexity of solving certain mathematical problems like integer factorisation, but by the laws of quantum mechanics. That is, provided our understanding of quantum mechanics is correct, quantum cryptographic protocols exists which cannot be cracked, irrespective of the computational resources of an adversary.
+Aside from quantum computing, quantum cryptography holds the promise of uncrackable cryptographic protocols, guaranteed not by the assumed complexity of solving certain mathematical problems like integer factorisation, but by the laws of quantum mechanics. That is, provided our understanding of quantum mechanics is correct, quantum cryptographic protocols exist, which cannot be cracked, irrespective of the computational resources of an adversary.
 
 Already we are beginning to see elementary realisations of essential quantum technologies such as quantum computing, cryptography, and metrology. As these technologies become increasingly viable and more ubiquitous, the demand for networking them and sharing quantum resources between them will become a pressing issue. Most notably, quantum cryptography and \emph{cloud quantum computing} will be pivotal in the proliferation of quantum technology, which necessarily requires reliable quantum communications channels.
 
-The first demonstrations of digital computer networks were nothing more than simple two-party, point-to-point communication. However, the internet we have today extends far beyond this, allowing essentially arbitrary worldwide networking across completely ad hoc networks comprising many different mediums, with any number of parties, in an entirely plug-and-play fashion. Similarly, elementary demonstrations of quantum communication have been performed across a small number of parties, and much work has been done on analysing quantum channel capacities in this context \cite{??? channel_capacity}. But, as with digital computing, demand for a future \emph{quantum internet} is foreseeable, enabling the arbitrary communication of quantum resources, between any number of parties, over ad hoc networks.
+The first demonstrations of digital computer networks were nothing more than simple two-party, point-to-point (P2P) communication. However, the internet we have today extends far beyond this, allowing essentially arbitrary worldwide networking across completely ad hoc networks comprising many different mediums, with any number of parties, in an entirely plug-and-play fashion. Similarly, elementary demonstrations of quantum communication have been performed across a small number of parties, and much work has been done on analysing quantum channel capacities in this context \cite{??? channel_capacity}. But, as with digital computing, demand for a future \emph{quantum internet} is foreseeable, enabling the arbitrary communication of quantum resources, between any number of parties, over ad hoc networks.
 
 The digital internet may be considered a technology stack, such as TCP/IP (Transmission Control Protocol/Internet Protocol), comprising different levels of abstraction of digital information \cite{bib:TanenbaumNet}. At the lowest level we have raw digital data we wish to communicate across a physical medium. Above this, we decompose the data into packets. The packets are transmitted over a network, and TCP is responsible for routing the packets to their destination, and guaranteeing data integrity and Quality of Service ({\sc QoS}). Finally, the packets received by the recipient are combined and the raw data reconstructed.
 
@@ -173,7 +176,7 @@ It is hard to foresee the future of quantum technology, much as no one foresaw t
 
 To set the context for our upcoming treatment of quantum networks, we begin by discussing \emph{classical} networks, and some of the key protocols behind their operation.
 
-There have been numerous approaches employed in the past for sharing communications links between multiple users. This includes channel-switched networks, time- or frequency-multiplexed networks, and Code Division Multiple Access (CDMA). Nowadays packet-switched networks have become the norm in most digital networks, as they facilitate far greater efficiency in the use of network bandwidth, and are more easily scaled to greater numbers of users in a dynamic and ad hoc manner. It is foreseeable the same trend will continue with quantum technologies, especially given their initial high cost, where maximising network utility is paramount.
+There have been numerous approaches employed in the past for sharing communications links between multiple users. This includes: channel-switching; packet-switching; time- or frequency-multiplexing; and, Code Division Multiple Access (CDMA). Nowadays packet-switched networks have become the norm in most digital networks, as they facilitate far greater efficiency in the use of network bandwidth, and are more easily scaled to greater numbers of users in a dynamic and ad hoc manner. It is foreseeable the same trend will continue with quantum technologies, especially given their initial high cost, where maximising network utility is paramount.
 
 In this work we will focus on packet-switched networks when we later introduce our quantum networking protocols. However, with sufficient flexibility in the design of our upcoming quantum protocols, packet-switched networks can easily be made to effectively implement channel-switched, or time-/frequency-multiplexed communication.
 
@@ -185,7 +188,7 @@ The present-day internet is built on top of a protocol stack comprising primaril
 
 \subsection{Internet Protocol (IP)}
 
-IP is the standard protocol employed in the internet for communicating data packets point-to-point. It is a low-level protocol that encapsulates digital data into packets containing a header field, which specifies routing information, most notably the IP addresses of the source and destination. IP does not enforce any kind of quality control, which is instead delegated higher-level protocols like TCP (Sec.~\ref{sec:TCP}, a higher-level protocol built on top of IP (Sec.~\ref{sec:TCP}).
+IP is the standard protocol employed in the internet for P2P communication of data packets. It is a low-level protocol that encapsulates digital data into packets containing a header field, which specifies routing information, most notably the IP addresses of the source and destination. IP does not enforce any kind of quality control, which is instead delegated higher-level protocols like TCP (Sec.~\ref{sec:TCP}, a higher-level protocol built on top of IP (Sec.~\ref{sec:TCP}).
 
 Multiple packets with the same source and destination needn't follow the same route -- the routing is determined dynamically in realtime by routers, based on network characteristics such as load or latency. Thus, packets belonging to the same underlying data may arrive out of order, or some may go missing altogether. IP does not address these issues, instead engaging in only `best-effort' delivery. 
 
@@ -235,15 +238,15 @@ However, the enforced quality control and handshaking protocols incur a network 
 
 \subsection{Ethernet}
 
-Ethernet is a networking protocol based on `broadcasting' on a shared network. This model is particularly suited to local area networks (LAN's), where all users share a single communications channel rather than dedicated point-to-point links.
+Ethernet is a networking protocol based on `broadcasting' on a shared network. This model is particularly suited to local area networks (LAN's), where all users share a single communications channel rather than dedicated P2P links.
 
 In the Ethernet protocol, every user is free to broadcast data onto the shared channel as they please -- all users transmit to, and receive from a single shared channel. However, clearly sometimes packet `collisions' will occur, resulting in packet corruption. To overcome this, Ethernet packets contain a checksum that can be used to verify upon arrival whether a packet has been corrupted by a collision. If a collision is detected, the respective users are able to re-broadcast, following a randomly chosen waiting period (known as `backoff'). Collisions therefore reduce network performance, and it follows that network bandwidth decreases with the number of users competing for bandwidth\footnote{Think of that awkward dinner table conversation, where two people start talking simultaneously. It's immediately obvious to them both that they are interfering with one another, and if they were to just talk over one another (packet collision), no one would understand either of them. So, they both awkwardly pause, before starting to speak again. In a \emph{really} awkward conversation, they will both start again simultaneously, after which there will be an even longer awkward pause before recommencing. Eventually, this self-regulating system will resolve itself probabilistically, with a sole victor controlling the airwaves, commanding the attention of the listeners. Provided that all dinner guests adhere to social etiquette and backoff appropriately, with repeated conversations, all guests will statistically receive an equitable share of attention, albeit with some wastage of conversation time owing to the periods of silence. Clearly, the proportion of the time wasted due to collisions will scale up with the number of guests, limiting the protocol to not-too-large tables.}.
 
 From this protocol, any given packet will eventually be successfully transmitted uncorrupted, collision-free, albeit with uncertain timing that grows with the number of competing users. For this reason, the Ethernet protocol is not ideal for time-critical applications requiring hard guarantees on network latency.
 
-The beauty of this approach is that only a single channel is required for connecting all users. No dedicated point-to-point connections are required. As the number of users increases, the complexity of the network topology does not -- requiring only the addition of a node to the existing backbone. For small LAN's this is clearly reasonably functional. However, as the size of networks increases, the rate at which packet collisions occur increases, resulting in a reduction in network bandwidth. Thus, the Ethernet protocol is ideally suited to small LAN's, but is clearly not viable at a global level, where network competition is astronomical and the overhead from backoff would reduce network performance to a standstill, wasting most of the bandwidth.
+The beauty of this approach is that only a single channel is required for connecting all users. No dedicated P2P connections are required. As the number of users increases, the complexity of the network topology does not -- requiring only the addition of a node to the existing backbone. For small LAN's this is clearly reasonably functional. However, as the size of networks increases, the rate at which packet collisions occur increases, resulting in a reduction in network bandwidth. Thus, the Ethernet protocol is ideally suited to small LAN's, but is clearly not viable at a global level, where network competition is astronomical and the overhead from backoff would reduce network performance to a standstill, wasting most of the bandwidth.
 
-Another elegant feature of the Ethernet protocol is that bandwidth allocation is self-regulating, with bandwidth fairly and equitably allocated between users. This applies even in completely ad hoc networks, with users joining and leaving the network willy nilly. Provided all users are correctly and honestly implementing the `broadcast-and-backoff' protocol, network bandwidth is allocated evenly amongst users, and no mediating, overriding central authority is needed to oversee network resource allocation. This allows Ethernet networks to be truly `plug-and-play'.
+Another elegant feature of the Ethernet protocol is that bandwidth allocation is self-regulating, with bandwidth fairly and equitably allocated between users. This applies even in completely ad hoc networks, with users joining and leaving the network willy nilly. Provided all users are correctly and honestly implementing the {\sc Broadcast and Backoff} protocol, network bandwidth is allocated evenly amongst users, and no mediating, overriding central authority is needed to oversee network resource allocation. This allows Ethernet networks to be truly `plug-and-play'.
 
 %
 % Network Hierarchies
@@ -251,15 +254,15 @@ Another elegant feature of the Ethernet protocol is that bandwidth allocation is
 
 \subsection{Network hierarchies}
 
-The disadvantage of Ethernet's broadcast-and-backoff principle is that packets are often wasted -- whenever a collision occurs. Because there is no mediating central authority, packet collisions are a certainty in a heavily-utilised network, each time resulting in packet loss, and an associated reduction in usable network bandwidth.
+The disadvantage of Ethernet's {\sc Broadcast and Backoff} principle is that packets are often wasted -- whenever a collision occurs. Because there is no mediating central authority, packet collisions are a certainty in a heavily-utilised network, each time resulting in packet loss, and an associated reduction in usable network bandwidth.
 
-To the other extreme, we could have dedicated point-to-point channels between every pair of users. Then there would be guaranteed no packet collisions, and therefore maximum bandwidth efficiency, but the network would be extremely costly.
+To the other extreme, we could have dedicated P2P channels between every pair of users. Then there would be guaranteed no packet collisions, and therefore maximum bandwidth efficiency, but the network would be extremely costly.
 
 To address this dilemma, the topology and subdivision of networks need to be carefully designed. If we consider a large organisation, for example, potentially networking thousands of desktop PC's, the bandwidth wastage associated with packet collisions could grind the entire network to a halt, were all thousands of PC's to be communicating large amounts of data simultaneously. However, if a hierarchy of subnetworks could be implemented, rather than a single monolithic network, efficiency could be improved drastically.
 
-Suppose our hypothetical organisation had several different departments, and users had a tendency to communicate primarily with others users in the same department. By defining distinct departmental subnets, which individually implement Ethernet, but interconnect with one another using an alternate routing framework, we can easily see that many unnecessary packet collisions may be entirely avoided. That is, why broadcast data to users who we know don't want it?
+Suppose our hypothetical organisation had several different departments, and users had a tendency to communicate primarily with other users in the same department. By defining distinct departmental subnets, which individually implement Ethernet, but interconnect with one another using an alternate routing framework, we can easily see that many unnecessary packet collisions may be entirely avoided. That is, why broadcast data to users who we know don't want it?
 
-Extending upon this simple intuitive example, enormous amounts of research and development have been invested into the design of network hierarchies, and how to optimise their efficiency.
+Extending upon this simple intuitive example, enormous amounts of research and development have been invested into the design of network hierarchies, and how to optimise their efficiency. A pressing consideration in the design of network protocol stacks is therefore to accommodate for multiple routing protocols, and enabling their intercompatibility.
 
 \comment{To do}
 
@@ -269,7 +272,7 @@ Extending upon this simple intuitive example, enormous amounts of research and d
 
 \section{Mathematical representation of networks}
 
-We now turn our attention to defining a mathematical construction for the representation of (quantum \emph{and/or} classical) networks, that we will subsequently rely on heavily in our framework for quantum networks. This encompasses representing networks as graphs, representing the cost of communications within the network, and how to optimise network routing to minimise costs.  These notions will be essential in our treatment of quantum networks.
+We now turn our attention to defining a mathematical construction for the representation of (quantum and/or classical) networks, that we will subsequently rely on heavily in our framework for quantum networks. This encompasses representing networks as graphs, representing the cost of communications within the network, and how to optimise network routing to minimise costs.  These notions will be essential in our treatment of quantum networks.
 
 %
 % Graph-Theoretic Representation
@@ -383,10 +386,10 @@ This type of cost minimisation approach to routing is analogous to \emph{distanc
 Clearly the goal when choosing routing strategies is to minimise the total cost, Eq.~\ref{eq:net_cost_R}. That is, solving the optimisation problem,
 \begin{align}
 c_\mathrm{min} &= \min_\mathcal{S} (c_\mathrm{total}), \nonumber \\
-\mathcal{S}_\mathrm{opt} &= \mathrm{argmin}_\mathcal{S} (c_\mathrm{total}).
+\mathcal{S}_\mathrm{opt} &= \underset{\mathcal{S}}{\mathrm{argmin}} (c_\mathrm{total}).
 \end{align}
 
-Choosing optimal strategies is a challenging problem, potentially requiring complex, computationally inefficient optimisation techniques. Strategy optimisation is an example of resource allocation, whose optimal solutions are often notoriously difficult to solve, residing in complexity classes like \textbf{NP}-complete (or worse!). In general, the number of possible routes through a graph will grow exponentially with the number of vertices. Thus, explicitly enumerating each possible route is generally prohibitive for large networks, unless some known structure provides `shortcuts' to optimisation. Having said this, Dijkstra's shortest path algorithm (discussed in Sec.~\ref{sec:shortest_path}) is the perfect counterexample, demonstrating that although an exponential number of routes may exist between two points, an optimal one can be found in polynomial time.
+Choosing optimal strategies is a challenging problem, potentially requiring complex, computationally inefficient optimisation techniques. Strategy optimisation is an example of resource allocation, whose optimal solutions are often notoriously difficult to solve, residing in complexity classes like \textbf{NP}-complete (or worse!). In general, the number of possible routes through a graph will grow exponentially with the number of vertices. Thus, explicitly enumerating each possible route is generally prohibitive for large networks, unless some known structure provides `shortcuts' to optimisation. Having said this, Dijkstra's shortest path algorithm (discussed in Sec.~\ref{sec:shortest_path}) is the perfect counterexample, demonstrating that although an exponential number of routes may exist between two points, an optimal one can be found in \textbf{BPP}.
 
 %
 % Ad hoc Operation vs. Central Authorities
@@ -509,9 +512,9 @@ In general, processes do not commute, i.e \mbox{$\mathcal{E}_1\circ \mathcal{E}_
 
 The only limitation faced by the quantum process formalism is that it is described over discrete-time only. To consider continuous-time evolution, master equations can be used. These represent the continuous-time evolution of a quantum state as a differential equation in time, combining a usual Hamiltonian term as well as decoherence terms,
 \begin{align}
-\frac{d\hat\rho}{dt} = -\frac{i}{\hbar}[\hat{H},\hat\rho] + \sum_j [2\hat{L}_j\hat\rho\hat{L}_j^\dag - \{\hat{L}_j^\dag\hat{L}_j,\hat\rho\}],
+\frac{d\hat\rho}{dt} = -\frac{i}{\hbar}[\hat{H},\hat\rho] + \sum_j (2\hat{L}_j\hat\rho\hat{L}_j^\dag - \{\hat{L}_j^\dag\hat{L}_j,\hat\rho\}),
 \end{align}
-where $\hat{H}$ is the Hamiltonian of the isolated system undergoing coherent evolution, and $\hat{L}_j$ are the \emph{Lindblat operators}, capturing the incoherent component of the dynamics (i.e environmental couplings).
+where $\hat{H}$ is the Hamiltonian of the isolated system undergoing coherent evolution, and $\hat{L}_j$ are the \emph{Lindblat operators}, capturing the incoherent component of the dynamics (i.e environmental couplings). Here $[\cdot,\cdot]$ and $\{\cdot,\cdot\}$ are the commutator and anti-commutator respectively.
 
 In this work we will only make use of discrete-time quantum processes, since they naturally correspond to the evolution of states between discrete points within a network -- we are typically only interested in the process undergone by a state from one end of a link to another, not the continuous-time dynamics of what takes place within them.
 
@@ -528,7 +531,7 @@ For example, for a single qubit, the Pauli operators -- $\hat\sigma_1$ (identity
 \mathcal{E}(\hat\rho) = \sum_{i,j=1}^4 \chi_{i,j} \hat{\sigma}_i\hat\rho\,\hat{\sigma}_j^\dag.
 \end{align}
 
-The Hermitian matrix $\chi$ is known as the \emph{process matrix}, from which many other metrics of interest may be directly computed (some of which are discussed in Sec.~\ref{sec:quantum_meas_cost}). Process matrices share many properties and interpretations in common with density matrices. The diagonal elements can be regarded as the amplitudes associated with applying each of the four Pauli operators, while the off-diagonal elements represent the coherences between them, i.e whether the operations on the diagonal are being applied probabilistically or coherently. For the process to be trace preserving we require,
+The Hermitian matrix $\chi$ is known as the \emph{process matrix}, from which many other metrics of interest may be directly computed (some of which are discussed in Sec.~\ref{sec:quantum_meas_cost}). Process matrices share many properties and interpretations in common with density matrices. The diagonal elements can be regarded as the amplitudes associated with applying each of the four Pauli operators, all of which are non-negative, while the off-diagonal elements represent the coherences between them, i.e whether the operations on the diagonal are being applied probabilistically or coherently. For the process to be trace preserving we require,
 \begin{align}
 \mathrm{tr}(\chi) = 1.
 \end{align}
@@ -541,7 +544,7 @@ Then, some density operator evolved under the CNOT gate is simply \mbox{$\hat{U}
 
 \begin{figure}[!htb]
 \includegraphics[width=0.7\columnwidth]{CNOT_process}
-\caption{Process matrix for the CNOT gate, expressed in the Pauli basis.} \label{fig:CNOT_proc_matrix}
+\caption{Process matrix for the CNOT gate, expressed in the Pauli basis. Colour coding: grey=0, white=$+1/4$, black=$-1/4$.} \label{fig:CNOT_proc_matrix}
 \end{figure}
 
 %
@@ -779,7 +782,7 @@ Another, and even simpler option, is thermal states. These are obtained by fully
 \hat\rho_\mathrm{thermal} = e^{-|\alpha|^2} \sum_{n=0}^\infty \frac{|\alpha|^2}{n!}\ket{n}\bra{n}.
 \end{align}
 
-Thermal states can encode classical information into their amplitudes, polarisations, or time-bins, as before. The advantage of this type of encoding is that thermal states are trivial to prepare and measure (a normal incandescent lightbulb produces thermal states of light).
+Thermal states can encode classical information into their amplitudes, polarisations, or time-bins, as before. The advantage of this type of encoding is that thermal states are trivial to prepare and measure (a normal incandescent lightbulb produces thermal states of light). However, they do not undergo interference with one another, and are therefore useless for, for example, entangling qubits via which-path erasure.
 
 %
 % More Exotic States of Light
@@ -929,7 +932,7 @@ The notion of dephasing can be easily generalised to non-qubit states of light, 
 \begin{align}
 \mathcal{E}^\mathrm{dephasing}\left(\sum_i \alpha_i\ket{i} \cdot \sum_j \alpha_j^*\bra{j} \right) \to \sum_i |\alpha_i|^2 \ket{i}\bra{i},
 \end{align}
-for some arbitrary basis enumerated by $i$ and $j$. For partial dephasing, we can express the channel as creating a mixture over the input state with different phase rotations applied,
+for some arbitrary basis enumerated by $i$ and $j$. As an example, this process decoheres coherent states into thermal states. For partial dephasing, we can express the channel as creating a mixture over the input state with different phase rotations applied,
 \begin{align} \label{eq:deph_int}
 \mathcal{E}_{\phi}^\mathrm{dephasing}(\hat\rho) = \int_{0}^{2\pi} \phi(\omega) \hat{\Phi}(\omega)\hat\rho\,\hat{\Phi}(\omega)^\dag\,d\omega,
 \end{align}
@@ -1534,9 +1537,9 @@ As an alternative to checksums, we could borrow the notion of quantum error corr
 
 QEC codes have been described for protecting against universal error models, including:
 \begin{itemize}
-\item Pauli errors -- Encompassing dephasing, depolarising and amplitude damping error channels.
-\item Qubit loss -- Particularly useful in the optical context where photons are easily lost.
-\item Gate failure -- Essential when gates are non-deterministic, necessarily the case when dealing with maximally entangling two-qubit photonic quantum gates.
+\item Pauli errors: encompassing dephasing, depolarising and amplitude damping error channels.
+\item Qubit loss: particularly useful in the optical context where photons are easily lost.
+\item Gate failure: essential when gates are non-deterministic, necessarily the case when dealing with maximally entangling two-qubit photonic quantum gates.
 \end{itemize}
 
 The first described QEC code was the three-qubit code by \cite{bib:Shor95} for redundantly encoding a single logical qubit into three encoded qubits, allowing the detection and correction of at most a single bit-flip error between the encoded qubits. This protocol is shown in Alg.~\ref{tab:three_QEC}. By switching into a Hadamard-rotated basis, the same code could equivalently correct against at most a single phase-flip error (since \mbox{$\hat{H}\hat{X}\hat{H}=\hat{Z}$}). By concatenating these two codes a 9-qubit code correcting against a single depolarising error may be implemented.
@@ -1957,7 +1960,7 @@ We will now review some of the graph structures most likely to arise in quantum 
 
 \subsection{Complete}
 
-The complete graph, denoted $K_{|V|}$, is a $|V|$-vertex graph where every vertex has an undirected link to every other. From a networking point of view, this can be regarded as the extremity of Point-to-Point (P2P) networking, whereby every node has a direct link with every other. This type of topology could arise in large broadcast-type networks, like Ethernet, where everyone can speak directly with everyone else directly by shouting loud and often enough, so as to overcome collisions (see Sec.~\ref{sec:collision} for further details on collision handling). Fig.~\ref{fig:complete_graph} illustrates the $K_{15}$ graph. The number of edges scales as $O(n^2)$. Clearly route-finding is trivial, since there is always a direct link from sender to receiver, with no possibility of collisions with other packets, requiring $O(1)$ search time (assuming all users are communicating only via their direct links with one another, which may not strictly be the case when costs are factored into strategies).
+The complete graph, denoted $K_{|V|}$, is a $|V|$-vertex graph where every vertex has an undirected link to every other. From a networking point of view, this can be regarded as the extremity of P2P networking, whereby every node has a direct link with every other. This type of topology could arise in large broadcast-type networks, like Ethernet, where everyone can speak directly with everyone else directly by shouting loud and often enough, so as to overcome collisions (see Sec.~\ref{sec:collision} for further details on collision handling). Fig.~\ref{fig:complete_graph} illustrates the $K_{15}$ graph. The number of edges scales as $O(n^2)$. Clearly route-finding is trivial, since there is always a direct link from sender to receiver, with no possibility of collisions with other packets, requiring $O(1)$ search time (assuming all users are communicating only via their direct links with one another, which may not strictly be the case when costs are factored into strategies).
 
 Assuming packets always traverse the direct links to their destinations, the net cost of routes does not accumulate, but is limited to the cost of the single traversed link. This is the minimum possible cost, but comes at the expense of requiring the most elaborate and expensive network.
 
@@ -2277,11 +2280,11 @@ where $\hat{a}_\mathrm{p}$, $\hat{a}_\mathrm{s}$ and $\hat{a}_\mathrm{i}$ are th
 
 Specifically, a two-mode SPDC state takes the form,
 \begin{align}
-\ket\psi_\mathrm{SPDC} = \sqrt{1-\chi} \sum_{n=0}^\infty \chi^n \ket{n,n},
+\ket\psi_\mathrm{SPDC} = \sqrt{1-\chi^2} \sum_{n=0}^\infty \chi^n \ket{n,n},
 \end{align}
 where $\chi$ is the squeezing parameter, a function of the pump-power and properties of the crystal. Applying the single-photon projector, \mbox{$\ket{1}\bra{1}$}, to the first mode yields the single-photon state in the other, up to normalisation, which reflects the inherent non-determinism. The preparation success probability is derived from the amplitude of the \mbox{$n=1$} term as,
 \begin{align}
-P_\mathrm{prep}=\chi^2(1-\chi),
+P_\mathrm{prep}=\chi^2(1-\chi^2),
 \end{align}
 assuming ideal photo-detection. Thus, the perfect photon-number correlation enables heralded preparation of states with exactly one photon in principle.
 
@@ -2409,22 +2412,22 @@ With the ability to perform measurements over a complete basis for the respectiv
 
 \subsubsection{Photo-detection} \label{sec:photo_detection}
 
-Perhaps the most useful, and ubiquitous, type of optical state measurement is photo-detection \cite{RohdePDReview}, where we would like to count photon-number. Broadly, there are two main classes of photo-detectors -- \emph{number-resolved} and \emph{non-number-resolved} (or `bucket' detectors). These behave exactly as the names suggest, with the latter typically being more expensive and technologically demanding than the former. The most common form of photo-detection is using is via avalanche photo-detectors, which are cheap but non-number-resolving.
+Perhaps the most useful, and ubiquitous, type of optical state measurement is photo-detection \cite{RohdePDReview}, where we would like to count photon-number. Broadly, there are two main classes of photo-detectors -- \emph{number-resolved} and \emph{non-number-resolved} (or `bucket' detectors). These behave exactly as the names suggest, with the former typically being more expensive and technologically demanding than the latter. The most common form of photo-detection is using is via avalanche photo-detectors (APD's), which are cheap but non-number-resolving.
 
-The key parameter of interest in a photo-detector is its efficiency, $\eta$ -- the probability that a given incident photon will trigger the detector. For most applications, the goal is to maximise $\eta$. As one might expect, there is a direct tradeoff between $\eta$ and cost, with very high-efficiency detectors often economically out of reach for many experimentalists.
+The key parameter of interest in a photo-detector, in addition to whether or not it is number-resolving, is its efficiency, $\eta$ -- the probability that a given incident photon will trigger the detector. For most applications, the goal is to maximise $\eta$. As one might expect, there is a direct tradeoff between $\eta$ and cost, with very high-efficiency detectors often economically out of reach for many experimentalists.
 
 Mathematically, the measurement operators for number-resolved detection are,
 \begin{align}
 \hat\Pi_n = \eta^{n} \sum_{m=n}^\infty \binom{m}{n} (1-\eta)^{m-n} \ket{m}\bra{m},
 \end{align}
-for measurement outcome $n$. And for non-number-resolved detection,
+for measurement outcome $n$, in the photon-number basis. And for non-number-resolved detection,
 \begin{align}
 &\hat\Pi_0 = \sum_{m=0}^\infty (1-\eta)^{m} \ket{m}\bra{m}, \nonumber \\
 &\hat\Pi_{>0} = \mathbb{\hat{I}} - \hat\Pi_0.
 \end{align}
 Thus, inefficiency results in projection onto the wrong photon-number, making measurement outcomes incorrect.
 
-Number-resolved detectors are the more challenging ones to experimentally realise. However, using multiplexing techniques, non-number-resolved detectors can be used to closely approximate number-resolution \cite{bib:Fitch03, bib:Banaszek03, bib:Achilles04, bib:RohdeCompDet07}, at the expense of an overhead in the complexity of the experiment, which comes at a cost. Specifically, there is a direct tradeoff between the confidence in photon-number outcomes, and experimental overhead. The idea behind this is simple. We spread out an $n$-photon state evenly across a large number of modes, $m$, and detect each one independently using a non-number-resolved photo-detector. If \mbox{$m\gg n$}, it is unlikely that more than a single photon will reach any given detector. Thus, by summing the total number of clicks across all detectors, we closely approximate the true photon-number. This multiplexing can be performed in the spatial- or temporal-domains, and has been a widely employed technique in laboratories without access to expensive number-resolved detectors.
+Number-resolved detectors are the more challenging ones to experimentally realise. However, using multiplexing techniques, non-number-resolved detectors can be used to closely approximate number-resolution \cite{bib:Fitch03, bib:Banaszek03, bib:Achilles04, bib:RohdeCompDet07}, at the expense of an (efficient) overhead in the complexity of the experiment, which comes at a cost. Specifically, there is a direct tradeoff between the confidence in photon-number outcomes, and experimental overhead. The idea behind this is simple. We spread out an $n$-photon state evenly across a large number of modes, $m$, and detect each one independently using a non-number-resolved photo-detector. If \mbox{$m\gg n$}, it is unlikely that more than a single photon will reach any given detector. Thus, by summing the total number of clicks across all detectors, we closely approximate the true photon-number. This multiplexing can be performed in the spatial- or temporal-domains, and has been a widely employed technique in laboratories without access to expensive number-resolved detectors.
 
 In addition to their operation in the photon-number basis, photo-detectors exhibit spatio-temporal characteristics, which affect their operation in quantum information processing protocols \cite{RohdePDReview}. For example, imperfect spectral response can undermine photonic interference, affecting which-path erasure protocols, such as Bell state projection (Sec.~\ref{sec:bell_proj}). However, in many cases this can be improved upon using spectral filtering or time-gating techniques, also at the expense of experimental complexity and resource overhead.
 
@@ -2757,7 +2760,7 @@ The resource states required for gate teleportation are highly-entangled 4-qubit
 
 \subsection{Entanglement swapping} \label{sec:swapping}
 
-The obvious approach to sending a qubit from Alice to Bob is to send a qubit from Alice to Bob (duh!). However, over long distances this may accrue impractical error rates, particularly losses. The other alternative is to employ the quantum teleportation protocol to teleport the state between the two parties. However, this requires that Alice and Bob first share an entangled Bell-pair, which must itself be distributed across the same distances. Entanglement swapping \cite{???, bib:PRL_71_4287} is the process of taking two Bell-pairs, one held by each party, and swapping the entanglement between them such that the two parties share an entangled state. This procedure can be bootstrapped to progressively swap the entanglement over longer and longer distances, yielding \emph{quantum repeater networks} (Sec.~\ref{sec:rep_net}). The procedure for this protocol is shown in Alg.~\ref{tab:ent_swap} and Fig.~\ref{fig:ent_swap}
+The obvious approach to sending a qubit from Alice to Bob is to send a qubit from Alice to Bob (duh!). However, over long distances this may accrue impractical error rates, particularly losses. The other alternative is to employ the quantum state teleportation protocol (Sec.~\ref{sec:teleport}) to teleport the state between the two parties. However, this requires that Alice and Bob first share an entangled Bell-pair, which must itself be distributed across the same distances. Entanglement swapping \cite{???, bib:PRL_71_4287} is the process of taking two Bell-pairs, one held by each party, and swapping the entanglement between them such that the two parties share an entangled state. This procedure can be bootstrapped to progressively swap the entanglement over longer and longer distances, yielding \emph{quantum repeater networks} (Sec.~\ref{sec:rep_net}). The procedure for this protocol is shown in Alg.~\ref{tab:ent_swap} and Fig.~\ref{fig:ent_swap}
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\tt
@@ -2805,7 +2808,7 @@ function EntanglementSwapping($\ket{\Phi^+}_{A_1,A_2}, \ket{\Phi^+}_{B_1,B_2}$):
 } \nonumber
 \end{align}
 }}
-\caption{Entanglement swapping protocol between two parties.} \label{tab:ent_swap}
+\caption{Entanglement swapping protocol between two parties. Two Bell-pairs held locally by two users, \mbox{$\ket{\Phi^+}_{A_1,A_2}\ket{\Phi^+}_{B_1,B_2}$}, are converted to a single Bell-pair shared between the users, $\ket{\Phi^+}_{A_2,B_2}$.} \label{tab:ent_swap}
 \end{table}
 
 \begin{figure}[!htb]
@@ -2817,7 +2820,7 @@ In a sense, entanglement swapping can be regarded as `indirect' entanglement dis
 
 Now if instead of Alice and Bob we have a long chain of these operations in series, then the entanglement can be swapped across the entire length of the chain, enabling the preparation of end-to-end entangled pairs, which can be employed for state teleportation.
 
-The advantage to this approach is that the range of each repeater can be much smaller than the entire length of the channel, easing constraints imposed by errors, notably loss. Furthermore, the entanglement swapping needn't be actually performed in any chronologically linear sequence. The operations could be arbitrarily ordered, since the measurements are independent and commute. Thus, if some segments are detected as failing (e.g qubits are lost), just those segments can be performed again without requiring the entire protocol to start from scratch, unlike the na{\" i}ve direct communication technique. This `divide and conquer' approach can drastically improve performance of the network in terms of channel capacity, improving the exponential dependence of loss on distance. 
+The advantage to this approach is that the range of each repeater can be much smaller than the entire length of the channel, easing constraints imposed by errors, notably loss. Furthermore, the entanglement swapping needn't be actually performed in any chronologically linear sequence. The operations could be arbitrarily ordered, since the measurements are independent and commute. Thus, if some segments are detected as failing (e.g qubits are lost), just those segments can be performed again without requiring the entire protocol to start from scratch, unlike the na{\" i}ve direct communication technique. This {\sc Divide and Conquer} approach can drastically improve performance of the network in terms of channel capacity, improving the exponential dependence of loss on distance. 
 
 The protocol is conceptually very similar to teleportation, where instead of teleporting a qubit state, we are teleporting entanglement. Because of this similarity, it inherits similar error propagation characteristics as for teleportation discussed previously. That is, errors acting on the qubits upon which the Bell measurements are performed are effectively teleported onto the remaining qubits. Then, entanglement purification can be implemented as a higher-level layer on top of the repeaters, enabling high-fidelity entanglement distribution.
 
@@ -2883,8 +2886,6 @@ or,
 \end{enumerate}}}
 \caption{BB84 QKD protocol using polarisation-encoded photons (or equivalently any other qubit encoding). Upon completion of the protocol, Alice and Bob share a random bit-string. Suppose an eavesdropper, Eve, were to perform an intercept-resend attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of bases, and Eve will not know the bases in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. Thus, by sacrificing a small fraction of their shared bits, via openly communicating them to one another for comparison, such an intercept-resend attack will quickly be detected by Alice and Bob, with success probability exponentially asymptoting to unity. Thus, Alice and Bob have great confidence that they have a shared, secret, random bit-string, which may subsequently be employed in a one-time-pad.} \label{tab:bb84}
 \end{table}
-
-%Let us briefly consider the BB84 protocol. Alice first chooses a random basis, either $\hat{X}$ or $\hat{Z}$, in which to encode one of two randomly chosen basis states, either \mbox{$\{\ket{H},\ket{V}\}$} or \mbox{$\{\ket{+}=\frac{1}{\sqrt{2}}(\ket{H}+\ket{V}),\ket{-}=\frac{1}{\sqrt{2}}(\ket{H}-\ket{V})\}$} respectively. She sends this state to Bob, without announcing either the choice of basis or basis state. Bob subsequently measures the photon in one of the two bases, chosen randomly also. This is repeated as many times as is necessary. Finally, Bob confirms to Alice that he has received her photons, at which point she announces to him the choice of basis for each of the sent photons (this does not require secrecy). In the instances where Alice and Bob's basis choices matched, Bob has measured the same state that Alice sent, and he records the value. Otherwise he discards that sample, as it will be completely decorrelated from Alice's state, since the two measurement bases are non-commuting. What remains is approximately half as many random bits, which are guaranteed to be the same for Alice and Bob.
 
 The BB84 protocol is described in Alg.~\ref{tab:bb84}. A key observation is that it requires no entanglement, no mode-matching, no interference, and no interferometric stability. It can be realised using nothing more than a single-photon source, wave-plates, and photo-detectors. For these reasons, QKD is a technology that is entirely viable on a large scale using present-day technology.
 
@@ -3092,10 +3093,10 @@ There are several cluster state identities we will utilise later, summarised in 
 When using non-deterministic gates to prepare cluster states, there are approaches to preparing ideal cluster states. This is discussed in more detail in Sec.~\ref{sec:module}. Alternately, we can borrow ideas from percolation theory to simply tolerate defects in a cluster state lattice by working around them. Specifically, if the defect probability (i.e probability of a missing vertex) is below some \emph{percolation threshold}, \mbox{$p_\mathrm{defect}\leq \epsilon_\mathrm{threshold}$}, in the asymptotic limit we are guaranteed that routes exist through the lattice. This allows defective graphs to be employed for quantum computation.
 
 %
-% Quantum Computing Using Topological Codes
+% Quantum Computation Using Topological Codes
 %
 
-\subsection{Quantum computing using topological codes} \label{sec:topol_codes}
+\subsection{Quantum computation using topological codes} \label{sec:topol_codes}
 
 If the intention is to perform quantum computations using cluster states shared over a network, QEC and fault-tolerance \emph{must} be taken into consideration, or catastrophic algorithmic failure will inevitably follow -- the cluster state model is no different from the circuit model in this respect. Fault-tolerance theory places hard thresholds on the amount of noise (typically depolarising errors and loss) qubits may be subject to in order for fault-tolerance to be possible and computations to succeed. This places strict QoS (Sec.~\ref{sec:QOS}) constraints on the network, which can be accommodated for by using the usual depolarising and efficiency cost metrics when developing networking strategies and link performance requirements.
 
@@ -3264,11 +3265,11 @@ Gaussian states
 
 It is unlikely that future, large-scale quantum computers will be purely optical. Some other technologies have a more favourable outlook in terms of scalability. Nonetheless, when it comes to networking quantum computers, optics is the natural approach, motivating investigation of hybrid architectures, where qubits are represented using some non-optical system, but entangling operations between them are mediated by optical states \cite{bib:Duan06, bib:Beugnon06}.
 
-The natural example is qubits which couple to single-photon states, whereupon which-path erasure between coupled optical modes teleports entanglement onto the physical qubits. Similarly, measurement of the qubits may be performed by stimulating the emission of photons from the physical qubits. This idea has been applied to $\lambda$-configuration atomic qubits \cite{bib:BarrettKok05}, shown in Fig.~\ref{fig:barrett_kok}, and atomic ensemble qubits \cite{bib:RohdeAtEns10}. Optically-mediated atomic ensemble quantum computing architectures are particularly attractive as they exhibit extremely long coherence lifetimes (hundreds of milliseconds have been reported \comment{CHECK!}), may be operated at room temperatures, and importantly, a phenomenon known as \emph{collective enhancement} significantly increases the effective light-matter coupling rate as a function of the number of atoms in the ensemble. A novel `double heralding' technique, introduced in \cite{bib:BarrettKok05}, allows loss to be overcome during which-path erasure \comment{Check this, is this what the double heralding does?}. Similarly, quantum states of light can be coupled to two-level quantum systems using Hamiltonians of the form shown in Eq.~\ref{eq:two_level_hamil}. The preparation of long-distance entanglement between atomic systems has been demonstrated \cite{bib:Matsukevich05, bib:Matsukevich05b}
+The natural example is qubits which couple to single-photon states, whereupon which-path erasure between coupled optical modes teleports entanglement onto the physical qubits. Similarly, measurement of the qubits may be performed by stimulating the emission of photons from the physical qubits. This idea has been applied to $\lambda$-configuration atomic qubits \cite{bib:BarrettKok05}, shown in Fig.~\ref{fig:barrett_kok}, and atomic ensemble qubits \cite{bib:RohdeAtEns10}. The protocol is described in Alg.~\ref{tab:which_path}. Optically-mediated atomic ensemble quantum computing architectures are particularly attractive as they exhibit extremely long coherence lifetimes (hundreds of milliseconds have been reported \comment{CHECK!}), may be operated at room temperatures, and importantly, a phenomenon known as \emph{collective enhancement} significantly increases the effective light-matter coupling rate as a function of the number of atoms in the ensemble. A novel `double heralding' technique, introduced in \cite{bib:BarrettKok05}, allows loss to be overcome during which-path erasure \comment{Check this, is this what the double heralding does?}. Similarly, quantum states of light can be coupled to two-level quantum systems using Hamiltonians of the form shown in Eq.~\ref{eq:two_level_hamil}. The preparation of long-distance entanglement between atomic systems has been demonstrated \cite{bib:Matsukevich05, bib:Matsukevich05b}
 
 \begin{figure}[!htb]
 \includegraphics[width=0.75\columnwidth]{barrett_kok}
-\caption{Two atomic systems in $\lambda$-configurations, each coupled with an optical mode. An entangling operation between them is mediated via linear optics which-path erasure. Each system contains two degenerate ground states, which jointly encode a qubit ($\ket{\!\uparrow}$, $\ket{\!\downarrow}$), and an additional excited state ($\ket{e}$), which only couples to the $\ket{\!\downarrow}$ state. A $\pi$-pulse excites the electron from the $\ket{\!\downarrow}$ to the $\ket{e}$ state, after which emission of a photon is associated with a coherent relaxation back to $\ket{\!\downarrow}$. If the two optical modes are interfered on a 50:50 beamsplitter, and a single photon is detected between the two photo-detectors, $D_1$ and $D_2$, the two emission processes become indistinguishable, and which-path erasure entangles the two qubits into a maximally entangled Bell-pair. More complicated networks based on this entangling operation allow the preparation of cluster states, enabling universal quantum computation. In a quantum networking context, the matter qubits could be held by a client, and the optical interferometry implementing the computation outsourced to the cloud, i.e the PBS, $D_1$ and $D_2$ are implemented in the cloud.} \label{fig:barrett_kok}
+\caption{Two atomic systems in $\lambda$-configurations, each coupled with an optical mode. An entangling operation between them is mediated via linear optics which-path erasure. Each system contains two degenerate ground states, which jointly encode a qubit (\mbox{$\ket{0}\equiv\ket{\!\uparrow}$}, \mbox{$\ket{1}\equiv\ket{\!\downarrow}$}), and an additional excited state ($\ket{e}$), which only couples to the $\ket{\!\downarrow}$ state. A $\pi$-pulse excites the electron from the $\ket{\!\downarrow}$ to the $\ket{e}$ state, after which emission of a photon is associated with a coherent relaxation back to $\ket{\!\downarrow}$. If the two optical modes are interfered on a 50:50 beamsplitter, and a single photon is detected between the two photo-detectors, $D_1$ and $D_2$, the two emission processes become indistinguishable, and which-path erasure entangles the two qubits by projecting them onto a maximally entangled Bell-pair. More complicated networks based on this entangling operation allow the preparation of cluster states, enabling universal quantum computation. In a quantum networking context, the matter qubits could be held by a client, and the optical interferometry implementing the computation outsourced to the cloud, i.e the PBS, $D_1$ and $D_2$ are implemented in the cloud. This would also facilitate the preparation of shared entangled states, where different clients possess parts of an entangled state, potentially physically separated over long distances.} \label{fig:barrett_kok}
 \end{figure}
 
 The attractive feature of this type of approach is that the actual entanglement is generated using all-optical operations, despite the underlying logical qubits being stationary and potentially physically separated a long distance apart, mitigating the need for direct matter-matter interactions, and enabling distributed computation. Optical interfacing is discussed in Sec.~\ref{sec:opt_inter}. This allows the entangling operations to be performed remotely in the cloud, without physically moving the stationary qubits. Such hybrid systems present an interesting platform for cloud quantum computing -- despite the qubits being stationary, we are able to outsource the interactions between them to distant servers.
@@ -3276,6 +3277,41 @@ The attractive feature of this type of approach is that the actual entanglement 
 Importantly, the beamsplitter mediating the which-path erasure is based upon HOM interference, and therefore does not require interferometric stability, making the outsourcing process relatively robust.
 
 Expanding upon this idea, we can envisage distributed models for quantum computation, where the qubits needn't even be of the same physical medium. We could, for example, entangle quantum dot qubits, atomic qubits, and atomic ensemble qubits with one another by coupling them to optical modes and performing which-path erasure between them. This enables distributed quantum computation between hosts possessing quantum infrastructure comprising different physical mediums (provided the photons emitted by those systems may be made indistinguishable, such that HOM interference is possible).
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\tt
+function WhichPathErasure():
+\begin{enumerate}
+\item Alice and Bob each prepare an equal superposition of the two logical basis states,
+\begin{align}
+\ket\psi_\mathrm{in} = &\frac{1}{2}(\ket{\!\uparrow}_{A_1}+\ket{\!\downarrow}_{A_1})\ket{0}_{A_2}\nonumber \\
+&\cdot (\ket{\!\uparrow}_{B_1}+\ket{\!\downarrow}_{B_1})\ket{0}_{B_2},
+\end{align}
+where $A_1$ and $B_1$ denote the matter qubits, and $A_2$ and $B_2$ denote the coupled optical modes.
+\item Apply a $\pi$-pulse to each qubit, inducing a \mbox{$\ket{\!\downarrow}\to\ket{e}$} transition,
+\begin{align}
+\ket\psi_\pi = \hat{U}_\pi\ket\psi_\mathrm{in} = &\frac{1}{2}(\ket{\!\uparrow}_{A_1}+\ket{e}_{A_1})\ket{0}_{A_2}\nonumber \\
+&\cdot (\ket{\!\uparrow}_{B_1}+\ket{e}_{B_1})\ket{0}_{B_2}.
+\end{align}
+\item Wait for a coherent relaxation, inducing the transition \mbox{$\ket{e}\to\ket{\!\downarrow}\hat{a}^\dag$}, which emits a single photon,
+\begin{align}
+\ket\psi_\mathrm{relax} = \hat{U}_\mathrm{relax}\ket\psi_\pi = &\frac{1}{2}(\ket{\!\uparrow}_{A_1}+\ket{\!\downarrow}_{A_1}\hat{a}^\dag_{A_2})\ket{0}_{A_2}\nonumber \\
+&\cdot (\ket{\!\uparrow}_{B_1}+\ket{\!\downarrow}_{B_1}\hat{a}^\dag_{B_2})\ket{0}_{B_2}.
+\end{align}
+\item Apply a 50:50 beamsplitter between the two optical modes,
+\begin{align}
+\ket\psi_\mathrm{BS} = \hat{U}_\mathrm{BS} \ket\psi_\mathrm{relax} = &\frac{1}{2}(\ket{\!\uparrow}_{A_1}+\ket{\!\downarrow}_{A_1}[\hat{a}^\dag_{A_2}+\hat{a}^\dag_{B_2}])\ket{0}_{A_2}\nonumber \\
+&\cdot (\ket{\!\uparrow}_{B_1}+\ket{\!\downarrow}_{B_1}[\hat{a}^\dag_{A_2}-\hat{a}^\dag_{B_2}])\ket{0}_{B_2}.
+\end{align}
+\item Conditional upon detecting exactly one photon between the output optical modes, we obtain,
+\begin{align}
+\ket\psi_\mathrm{out}^{1,0} = \bra{1,0}_{A_2,B_2} \ket\psi_\mathrm{BS} = \frac{1}{2} (\ket{\!\uparrow,\downarrow}_{A_1,B_1} + \ket{\!\downarrow,\uparrow}_{A_1,B_1}), \nonumber \\
+\ket\psi_\mathrm{out}^{0,1} = \bra{0,1}_{A_2,B_2} \ket\psi_\mathrm{BS} = \frac{1}{2} (\ket{\!\uparrow,\downarrow}_{A_1,B_1} - \ket{\!\downarrow,\uparrow}_{A_1,B_1}),
+\end{align}
+which is a Bell-pair between the matter qubits.
+\end{enumerate}}}
+\caption{Using which-path erasure to entangle two $\lambda$-configuration matter qubits via post-selected linear optics.} \label{tab:which_path}
+\end{table}
 
 %
 % Encrypted Quantum Computation
@@ -3638,11 +3674,11 @@ The experiments listed above indicated that QKD protocols based on free-space en
 
 Fibre loss increases exponentially with distance. However, the loss of free-space transmission increases very little with distance,  mainly related to the thickness of the atmosphere. Therefore, it is a perfectly reasonable solution to construct the global quantum internet based on satellite communication. To verify the feasibility of a quantum channel between space and Earth, a European Union group successfully received weak light pulses emitted from a ground station and reflected by a mirror placed on a low-orbiting satellite with orbital altitude of 1485km in 2008 \cite{bib:NJP_10_033038}. In the context of rapidly moving platforms, \cite{bib:NP_7_382} realised QKD over 20km from an airplane to the ground in 2013. In the same year, \cite{bib:NP_7_387} successfully accomplished quantum communication with a hot-air balloon floating platform. The experiments on aeroplanes and hot-air balloon systems demonstrate the feasibility of quantum communication in the condition of rapid motion, vibration, and random movement of satellites. At present, many countries including America, Canada, the European Union, China and Japan pay great attention to and support for accelerating the development of satellite-to-ground quantum communication. The first quantum satellite was launched in August 2016 in China, and will open a platform for satellite-to-ground quantum communication at an intercontinental level \cite{bib:N_535_478}.
 
-In addition to the ongoing expansion in distance, QKD is also being developed for point-to-point communication with quantum networks, which may be multi-user and of various and diverse topological structures. There is much competition and cooperation in this area. The network of the American Defence Advanced Research Projects Agency (DARPA) connected the three nodes -- Harvard University, Boston University, and the BBN company -- in 2005, later increasing this to 10 nodes \cite{bib:QCC_2006_83}.
+In addition to the ongoing expansion in distance, QKD is also being developed for P2P communication with quantum networks, which may be multi-user and of various and diverse topological structures. There is much competition and cooperation in this area. The network of the American Defence Advanced Research Projects Agency (DARPA) connected the three nodes -- Harvard University, Boston University, and the BBN company -- in 2005, later increasing this to 10 nodes \cite{bib:QCC_2006_83}.
 
 Since 2006, the EU has established a `SECOQ' network, combining the efforts of 41 research and industrial organisations from 12 countries, including the UK, France, Germany, and Austria.
 
-A typical network employing a trusted repeater paradigm, with 6 nodes and 8 links was demonstrated in Vienna in 2008 \cite{bib:NJP_11_075001}. In 2010, the National Institute of Communication Technology, together with Nippon Telegraph \& Telephone Corporation (NTT), Nippon Electric Company, Mitsubishi Electric Corporation, Toshiba European company, Switzerland IDQ Company and an Austrian team constructed a Tokyo QKD network in a metropolitan area, demonstrating the world’s first secure TV conferencing over a distance of 45km \cite{bib:OExp_19_10387}. The maximum distance is 9km, and the point-to-point bit-rate can reach 65kHz using superconducting detectors over 45km. \comment{How is the max distance both 45km and 9km???}
+A typical network employing a trusted repeater paradigm, with 6 nodes and 8 links was demonstrated in Vienna in 2008 \cite{bib:NJP_11_075001}. In 2010, the National Institute of Communication Technology, together with Nippon Telegraph \& Telephone Corporation (NTT), Nippon Electric Company, Mitsubishi Electric Corporation, Toshiba European company, Switzerland IDQ Company and an Austrian team constructed a Tokyo QKD network in a metropolitan area, demonstrating the world’s first secure TV conferencing over a distance of 45km \cite{bib:OExp_19_10387}. The maximum distance is 9km, and the P2P bit-rate can reach 65kHz using superconducting detectors over 45km. \comment{How is the max distance both 45km and 9km???}
 
 In China, quantum networks are also developing rapidly. In 2009, \cite{bib:OpEx17_6540} designed and constructed a 3-node network with a chained architecture, which demonstrated a cryptographically secure real-time voice call. In the same year, \cite{bib:OpEx_18_27217} designed a metropolitan all-pass and intercity quantum communication network in field fibre \comment{What’s field fibre???} for four nodes. Any two nodes can be connected in the network, QKD between arbitrary pairs of users.
 
@@ -3770,12 +3806,12 @@ In superconductors, electrons are paired and condensed into a single macroscopic
 
 There are a variety of single photon detectors, detailed description of which can be found in several excellent review papers \cite{eisaman2011, hadfield2009}. Here we only introduce single-photon detectors that have good spectral response in the near-infrared region.
 
-\emph{Single photon avalanche diodes (SPAD)} -- They are the most compact and common single-photon detectors in the world. SPADs are avalanche diodes operated in Geiger mode (above breakdown voltage) to obtain a high gain. There are several commercially SPADs, with detection efficiency around 60\% at 780nm, maximum count rate of 25MHz and dark count rate as low as 25Hz. Several remarks are listed as following:
+\emph{Single photon avalanche diodes} (SPAD) -- They are the most compact and common single-photon detectors in the world. SPADs are avalanche diodes operated in Geiger mode (above breakdown voltage) to obtain a high gain. There are several commercially SPADs, with detection efficiency around 60\% at 780nm, maximum count rate of 25MHz and dark count rate as low as 25Hz. Several remarks are listed as following:
 
 \begin{itemize}
     \item Even higher detection efficiency is available. However, on account of the significance trade-off between detection efficiency, dark noise and dead-time, it is often at the expense of a lower maximum count rate (typical dead-time is 1$\mu$s, leading to 1MHz count rate) and a bigger dark noise.
 
-    \item Telecom band SAPDs are usually based on InGaAs/InP, which, however, suffer from low efficiency about 25\% and long dead-time on the order of microsecond. Another more efficient method is up-conversion detection. The idea is to convert the telecom photons into the near infrared ones by up-conversion, and then detect them with a Silicon SAPD. In this method, up-conversion usually utilises sum-frequency generation in periodically poled lithium niobate (PPLN) waveguides or bulk crystals. The detection efficiency can be as high as \mbox{$30\sim 40\%$} for PPLN waveguide-based up-conversion detectors \cite{shentu2013ultralow}.
+    \item Telecom band SAPDs are usually based on InGaAs/InP, which, however, suffer from low efficiency about 25\% and long dead-time on the order of microsecond. Another more efficient method is up-conversion detection. The idea is to convert the telecom photons into the near infrared ones by up-conversion, and then detect them with a silicon SPAD. In this method, up-conversion usually utilises sum-frequency generation in periodically poled lithium niobate (PPLN) waveguides or bulk crystals. The detection efficiency can be as high as \mbox{$30\sim 40\%$} for PPLN waveguide-based up-conversion detectors \cite{shentu2013ultralow}.
     \item SPADs are also commercially available in a multi-channel (e.g., 4-channel) array format with single power supply and individual inputs and outputs. They are different from the multi-element SAPD arrays, which have either only one input or one output, and can be used to achieving photon number resolution or high-speed single photon sensors.
 \end{itemize}
 
@@ -3931,7 +3967,7 @@ function MakeAmericaGreatAgain(Putin):
 \begin{enumerate}
     \item A Russian bedroom hacker with no direct access to quantum technology, delegates a factorisation algorithm to the cloud using homomorphic encryption.
     \item The computation is physically executed on a server in the United States.
-    \item The result in returned to our Russian comrade.
+    \item The result is returned to our Russian comrade.
     \item The Russian uses the obtained private RSA key to hack Hillary's emails.
     \item The emails are strategically leaked during the next Presidential election.
     \item This swings the election in favour of Trump\texttrademark.
@@ -3945,6 +3981,8 @@ function MakeAmericaGreatAgain(Putin):
 \end{enumerate}}}
 \caption{A typical example of a nefarious use for cloud quantum computation.} \label{alg:russian}
 \end{table}
+
+% Coffee \cofeDm{0.07}{0.5}{90}{0}{0}
 
 These are all legitimate concerns. But they are very much the same ones that detractors expressed about the classical internet and strong encryption. Nonetheless, it can be said that encryption and the internet have on balance been overwhelmingly beneficial to mankind, enabling unprecedented rates of technological progress. Any attempts to eliminate or undermine them could be economically catastrophic.
 
