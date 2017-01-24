@@ -389,7 +389,7 @@ c_\mathrm{min} &= \min_\mathcal{S} (c_\mathrm{total}), \nonumber \\
 \mathcal{S}_\mathrm{opt} &= \underset{\mathcal{S}}{\mathrm{argmin}} (c_\mathrm{total}).
 \end{align}
 
-Choosing optimal strategies is a challenging problem, potentially requiring complex, computationally inefficient optimisation techniques. Strategy optimisation is an example of resource allocation, whose optimal solutions are often notoriously difficult to solve, residing in complexity classes like \textbf{NP}-complete (or worse!). In general, the number of possible routes through a graph will grow exponentially with the number of vertices. Thus, explicitly enumerating each possible route is generally prohibitive for large networks, unless some known structure provides `shortcuts' to optimisation. Having said this, Dijkstra's shortest path algorithm (discussed in Sec.~\ref{sec:shortest_path}) is the perfect counterexample, demonstrating that although an exponential number of routes may exist between two points, an optimal one can be found in \textbf{BPP}.
+Choosing optimal strategies is a challenging problem, potentially requiring complex, computationally inefficient optimisation techniques. Strategy optimisation is an example of resource allocation, whose optimal solutions are often notoriously difficult to solve, residing in complexity classes like \textbf{NP}-complete (or worse!). In general, the number of possible routes through a graph will grow exponentially with the number of vertices. Thus, explicitly enumerating each possible route is generally prohibitive for large networks, unless some known structure provides `shortcuts' to optimisation. Having said this, Dijkstra's shortest path algorithm (discussed in Sec.~\ref{sec:shortest_path}) is the perfect counterexample, demonstrating that although an exponential number of routes may exist between two points, an optimal one can be found in \textbf{P}.
 
 %
 % Ad hoc Operation vs. Central Authorities
@@ -1010,7 +1010,7 @@ for temporal mismatch $\Delta_t$. Of course, this logically generalises to other
 \begin{align}
 \psi(x,y) \to \psi(x-\Delta_x,y-\Delta_y),
 \end{align}
-where $x$ and $y$ are the two spatial dimensions perpendicular to the direction of propagation.
+where $x$ and $y$ are the two transverse spatial dimensions perpendicular to the direction of propagation.
 
 In the above representation of mode-mismatch as a temporal or spatial translation, the process is entirely coherent, and could in principle be reversed if the displacement were known (which might easily be established using tomographic charactersation techniques). Of course, such translations could occur incoherently also. In particular, `time-jitter' is where this process occurs incoherently, and the the photons are subject to probabilistic displacements. In this instance, a pure single-photon state would evolve into a mixture of states subject to different displacements. Since the mode-mismatch is now probabilisitic, it is not reversible. The state of a single photon subject to time-jitter would be of the form,
 \begin{align}
@@ -1986,7 +1986,7 @@ A lattice graph is simply an \mbox{$n\times m$} lattice of vertices (of any geom
 
 A slightly distorted lattice graph, in which vertices have been dragged around geometrically to match, for example, cities within a country, closely resembles the topology of the network. Similarly, if the nodes represent houses in the street layout of a highly regular city like Manhattan, a lattice may be a good approximation.
 
-In the case of a balanced lattice, in which all edges are of equal weight, the cost of a route is the sum of the number of steps in the vertical, and number of steps in the horizontal directions, also known as the Manhattan, or $L_1$ distance,
+In the case of a balanced lattice, in which all edges are of equal weight, the cost of a route is the sum of the number of steps in the vertical, and number of steps in the horizontal directions, also known as the Manhattan or $L_1$ distance,
 \begin{align}
 L_1 = |x_\mathrm{start} - x_\mathrm{finish}| + |y_\mathrm{start} - y_\mathrm{finish}|.
 \end{align}
@@ -2180,7 +2180,7 @@ The shortest-path algorithm by Dijkstra presented above finds the shortest route
 
 Single-source shortest-path algorithms address this problem by calculating the shortest paths from the current node to \emph{every} other node in the network topology.
 
-The best-known algorithm for this problem is the Bellman-Ford (or Bellman–Ford–Moore) algorithm \cite{BF}, which requires worst-case runtime of $O(|V|\cdot |E|)$. Clearly this is more complex than Dijkstra's algorithm for finding a particular shortest-path. But it is more efficient than using brute-force to find the shortest-path between every pair of nodes in the network via repeated application of Dijkstra.
+The best-known algorithm for this problem is the Bellman-Ford (or Bellman-Ford-Moore) algorithm \cite{BF}, which requires worst-case runtime of $O(|V|\cdot |E|)$. Clearly this is more complex than Dijkstra's algorithm for finding a particular shortest-path. But it is more efficient than using brute-force to find the shortest-path between every pair of nodes in the network via repeated application of Dijkstra.
 
 %
 % Minimum Spanning Tree
@@ -2500,7 +2500,38 @@ Perhaps the simplest quantum information processing task is that of perfect rand
 
 Classical random number generators are actually deterministic, but so difficult to predict that we accept them to be as good as random. But for some applications this isn't enough, and we must make sure that no correlations of any type exist between different random numbers, or between the random numbers and their environment.
 
-This can be achieved in many different ways quantum mechanically. Ultimately, they are all based on the Heisenberg uncertainty principle, that certain quantum mechanical measurements yield uncertainty. Most trivially, we can prepare a photon with diagonal polarisation, \mbox{$\ket{+} = \frac{1}{\sqrt{2}}(\ket{H}+\ket{V})$}, and then measure it in the horizontal/vertical polarisation basis (given by measurement projectors \mbox{$\ket{H}\bra{H}$} and \mbox{$\ket{V}\bra{V}$}). Assuming the device is perfectly implementing this procedure, we will measure a perfect random 50/50 distribution between $\ket{H}$ and $\ket{V}$. Equivalently, measuring one half of a polarisation-entangled photon-pair, \mbox{$\frac{1}{\sqrt{2}}(\ket{H}\ket{H}+\ket{V}\ket{V})$}, yields the same outcome.
+This can be achieved in many different ways quantum mechanically. Ultimately, they are all based on the Heisenberg uncertainty principle, that certain quantum mechanical measurements yield uncertainty. The procedure is shown in Alg.~\ref{alg:random_number}.
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\tt
+function RandomBit():
+\begin{enumerate}
+    \item Prepare the equal superposition state,
+    \begin{align}
+    \ket\psi_\mathrm{in} = \frac{1}{\sqrt{2}}(\ket{0}+\ket{1}).
+    \end{align}
+    \item Most commonly this is in the polarisation basis,
+    \begin{align}
+    \ket{H}&\equiv\ket{0}, \nonumber \\
+    \ket{V}&\equiv\ket{1}.
+    \end{align}
+    \item Measure the state in the logical basis, with measurement projectors,
+    \begin{align}
+    \hat\Pi_0 &= \ket{0}\bra{0}, \nonumber \\
+    \hat\Pi_1 &= \ket{1}\bra{1}.
+    \end{align}
+    \item The measurement outcomes occur with probabilities,
+    \begin{align}
+    p_0&=\frac{1}{2}, \nonumber \\
+    p_1&=\frac{1}{2},
+    \end{align}
+    following a uniform random binary distribution.
+    \item Repeat for as many random bits as are required.
+    \item $\Box$
+\end{enumerate}
+}}
+\caption{Procedure for the generation of random bit-strings. Assuming the device is perfectly implementing this procedure, we will measure a perfect random 50/50 distribution between the two measurement outcomes. Note that the procedure requires no quantum interference, and no entanglement. Only single-qubit state preparation and measurement are required. Favourably, if the detector is inefficient it simply reduces the bit-rate, but does not compromise the randomness of the distribution.} \label{alg:random_number}
+\end{table}
 
 The cynics amongst us might question the non-determinism of the laws of Nature, and ask whether quantum random numbers really are truly random (in the sense of non-determinism), or whether they also are just too hard to predict that we treat them as effectively random. The answer to this is that it has been proven that quantum mechanics is inconsistent with `hidden variable theories' \cite{Bell}, i.e that there is an underlying, but inaccessible determinism in the world, which is guiding quantum measurements in a completely deterministic manner. This disproof effectively validates the notion of quantum mechanical perfect random number generation.
 
@@ -2831,6 +2862,8 @@ Each Bell measurement can be implemented non-deterministically using a PBS, miti
 %
 
 \subsection{Quantum repeater networks} \label{sec:rep_net}
+
+\comment{Move to dedicated repeater networks section}
 
 \emph{Quantum repeaters} are devices that allow entanglement to be shared between distant nodes using a bootstrapped \emph{entanglement swapping} protocol.
 
@@ -3276,6 +3309,8 @@ The attractive feature of this type of approach is that the actual entanglement 
 
 Importantly, the beamsplitter mediating the which-path erasure is based upon HOM interference, and therefore does not require interferometric stability, making the outsourcing process relatively robust.
 
+This protocol can be regarded as a variation on the entanglement swapping protocol (Sec.~\ref{sec:swapping}), whereby entanglement between matter qubits and optical modes is swapped onto entanglement between the distinct matter qubits.
+
 Expanding upon this idea, we can envisage distributed models for quantum computation, where the qubits needn't even be of the same physical medium. We could, for example, entangle quantum dot qubits, atomic qubits, and atomic ensemble qubits with one another by coupling them to optical modes and performing which-path erasure between them. This enables distributed quantum computation between hosts possessing quantum infrastructure comprising different physical mediums (provided the photons emitted by those systems may be made indistinguishable, such that HOM interference is possible).
 
 \begin{table}[!htb]
@@ -3287,7 +3322,7 @@ function WhichPathErasure():
 \ket\psi_\mathrm{in} = &\frac{1}{2}(\ket{\!\uparrow}_{A_1}+\ket{\!\downarrow}_{A_1})\ket{0}_{A_2}\nonumber \\
 &\cdot (\ket{\!\uparrow}_{B_1}+\ket{\!\downarrow}_{B_1})\ket{0}_{B_2},
 \end{align}
-where $A_1$ and $B_1$ denote the matter qubits, and $A_2$ and $B_2$ denote the coupled optical modes.
+where $A_1/B_1$ denote the matter qubits, and $A_2/B_2$ denote their coupled optical modes.
 \item Apply a $\pi$-pulse to each qubit, inducing a \mbox{$\ket{\!\downarrow}\to\ket{e}$} transition,
 \begin{align}
 \ket\psi_\pi = \hat{U}_\pi\ket\psi_\mathrm{in} = &\frac{1}{2}(\ket{\!\uparrow}_{A_1}+\ket{e}_{A_1})\ket{0}_{A_2}\nonumber \\
