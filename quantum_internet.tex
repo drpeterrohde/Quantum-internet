@@ -1544,7 +1544,7 @@ QEC codes have been described for protecting against universal error models, inc
 
 The first described QEC code was the three-qubit code by \cite{bib:Shor95} for redundantly encoding a single logical qubit into three encoded qubits, allowing the detection and correction of at most a single bit-flip error between the encoded qubits. This protocol is shown in Alg.~\ref{tab:three_QEC}. By switching into a Hadamard-rotated basis, the same code could equivalently correct against at most a single phase-flip error (since \mbox{$\hat{H}\hat{X}\hat{H}=\hat{Z}$}). By concatenating these two codes a 9-qubit code correcting against a single depolarising error may be implemented.
 
-Since these original ideas into QEC, countless further codes have been described, able to correct against larger numbers of errors, with far more efficient resource overheads. Currently, topological codes \cite{topologicalCodes} are considered the most favourable codes in terms of their elegance, simplicity, high error-correction thresholds, and efficiency in resource overhead. Some such topological codes are particularly enticing, as they can be readily prepared from cluster states (introduced in Sec.~\ref{sec:CSQC}), which lend themselves naturally to certain networking methods, such as distributed state preparation.
+Since these original ideas into QEC, countless further codes have been described, able to correct against larger numbers of errors, with far more efficient resource overheads. Currently, topological codes (Sec.~\ref{sec:topol_codes}) are considered the most favourable codes in terms of their elegance, simplicity, high error-correction thresholds, and efficiency in resource overhead. Some such topological codes are particularly enticing, as they can be readily prepared from cluster states (Sec.~\ref{sec:CSQC}), which lend themselves naturally to certain networking methods, such as distributed state preparation.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\tt
@@ -1843,7 +1843,7 @@ function Strategy.AllOrNothing(Packets, threshold):
 \begin{enumerate}
     \item foreach(packet in Packets) \{
         \setlength{\itemindent}{.2in}
-        \item cost = costFunction(packet)
+        \item cost = packet.costFunction()
         \item if(cost $\geq$ threshold) \{
         \setlength{\itemindent}{.4in}
             \item packet.Sender.Notify({\sc Failure})
@@ -2508,7 +2508,7 @@ function RandomBit():
 \begin{enumerate}
     \item Prepare the equal superposition state,
     \begin{align}
-    \ket\psi_\mathrm{in} = \frac{1}{\sqrt{2}}(\ket{0}+\ket{1}).
+    \ket\psi_\mathrm{in} = \ket{+} = \frac{1}{\sqrt{2}}(\ket{0}+\ket{1}).
     \end{align}
     \item Most commonly this is in the polarisation basis,
     \begin{align}
@@ -2522,15 +2522,15 @@ function RandomBit():
     \end{align}
     \item The measurement outcomes occur with probabilities,
     \begin{align}
-    p_0&=\frac{1}{2}, \nonumber \\
-    p_1&=\frac{1}{2},
+    P_0&=|\langle 0|+\rangle|^2 = \frac{1}{2}, \nonumber \\
+    P_1&=|\langle 1|+\rangle|^2 = \frac{1}{2},
     \end{align}
-    following a uniform random binary distribution.
+    following a uniform, random, binary distribution.
     \item Repeat for as many random bits as are required.
     \item $\Box$
 \end{enumerate}
 }}
-\caption{Procedure for the generation of random bit-strings. Assuming the device is perfectly implementing this procedure, we will measure a perfect random 50/50 distribution between the two measurement outcomes. Note that the procedure requires no quantum interference, and no entanglement. Only single-qubit state preparation and measurement are required. Favourably, if the detector is inefficient it simply reduces the bit-rate, but does not compromise the randomness of the distribution.} \label{alg:random_number}
+\caption{Procedure for the generation of random bit-strings. Assuming the device is perfectly implementing this procedure, we will measure a perfect random 50/50 distribution between the two measurement outcomes. Note that the procedure requires no quantum interference, and no entanglement. Only single-qubit state preparation and measurement are required. Thus, a single-photon source, wave-plate, polarisation filter, and photo-detector are sufficient for its realisation. Favourably, if the detector is inefficient it simply reduces the bit-rate, but does not compromise the randomness of the distribution.} \label{alg:random_number}
 \end{table}
 
 The cynics amongst us might question the non-determinism of the laws of Nature, and ask whether quantum random numbers really are truly random (in the sense of non-determinism), or whether they also are just too hard to predict that we treat them as effectively random. The answer to this is that it has been proven that quantum mechanics is inconsistent with `hidden variable theories' \cite{Bell}, i.e that there is an underlying, but inaccessible determinism in the world, which is guiding quantum measurements in a completely deterministic manner. This disproof effectively validates the notion of quantum mechanical perfect random number generation.
@@ -2680,7 +2680,13 @@ function StateTeleportation($\ket\phi_{A_1}$, $\ket{\Phi^+}_{A_2,B}$):
     \item Alice and Bob share the Bell-pair $\ket{\Phi^+}_{A_2,B}$.
     \item Alice performs a Bell state projection between qubits $A_1$ and $A_2$.
     \item Alice communicates the classical measurement outcome to Bob - one of four outcomes.
-    \item Bob applies an appropriate local correction to his qubit - some combination of the Pauli operators $\hat{X}$ and $\hat{Z}$ - according to the classical measurement outcome.
+    \item Bob applies an appropriate local correction to his qubit - some combination of the Pauli operators $\hat{X}$ and $\hat{Z}$ - according to the classical measurement outcome:
+    \begin{align}
+    \ket{\Psi^+}\bra{\Psi^+} &\to \hat{\mathbb{I}}, \nonumber \\
+    \ket{\Psi^-}\bra{\Psi^-} &\to \hat{Z}, \nonumber \\
+    \ket{\Phi^+}\bra{\Phi^+} &\to \hat{X}, \nonumber \\
+    \ket{\Phi^-}\bra{\Phi^-} &\to \hat{Z}\hat{X}.
+    \end{align}
     \item Bob is left with the state $\ket\phi_B$.
     \item $\Box$
 \end{enumerate}
@@ -3035,7 +3041,7 @@ t_c' &= O(\mathrm{exp}(t_q k)) \nonumber \\
 \end{align}
 Thus, $k$-fold quantum parallelisation corresponds to a $k$th-order exponential enhancement in the equivalent classical processing time, which clearly scales much more favourably than the linear $k$-fold enhancement offered by classical parallelisation.
 
-The alternate scenario is in-series distributed computation, in which a computation proceeds through a pipeline of different stages, potentially performed by different hosts. This model allows a complex algorithm comprising smaller sub-routines, each of which may be proprietary with different owners, to be delegated across the network. The different stages may communicate classical and/or quantum data. As with the simple single-host model, if the different stages of the processing pipeline are sharing quantum data, distributed QEC will generally be necessary to protect the computation. This necessarily introduces an (efficient) overhead in the number of physical qubits being communicated across the network, introducing additional bandwidth costs, which must be accommodated for in networking strategies.
+The alternate scenario is in-series distributed computation, in which a computation proceeds through a pipeline of different stages, potentially performed by different hosts. This model allows a complex algorithm comprising smaller subroutines, each of which may be proprietary with different owners, to be delegated across the network. The different stages may communicate classical and/or quantum data. As with the simple single-host model, if the different stages of the processing pipeline are sharing quantum data, distributed QEC will generally be necessary to protect the computation. This necessarily introduces an (efficient) overhead in the number of physical qubits being communicated across the network, introducing additional bandwidth costs, which must be accommodated for in networking strategies.
 
 The cluster state (Sec.~\ref{sec:CSQC}), topological code (Sec.~\ref{sec:topol_codes}) and quantum random walk (Sec.~\ref{sec:QW}) models for quantum computation may find themselves to be particularly well-suited to distributed implementation, since they naturally reside on graphs, whose nodes needn't be held locally by a single user, but could instead be shared across multiple hosts with the ability for graph nodes to intercommunicate.
 
@@ -3224,7 +3230,7 @@ More recently, it was shown that by introducing strong coherent states, the stre
 
 While the KLM protocol (and subsequent improvements, e.g using cluster states) are universal for quantum computing, some of the key technological requirements are very challenging, and unlikely to be achieved in the short-term. However, simplified yet non-universal models for optical quantum computing can abandon some of the more challenging requirements, nonetheless implementing a restricted set of post-classical quantum computations. In particular, we consider protocols requiring only photon-number state preparation, passive linear optics evolution (as per Eq.~\ref{sec:LO_unitary_map}), and photo-detection.
 
-Optically, the two main contenders for this are multi-photon quantum walks \cite{bib:Aharonov93, bib:Aharonov01, bib:Kempe03, bib:Salvador12, bib:RohdeMultiWalk11} and {\sc BosonSampling} \cite{bib:AaronsonArkhipov10, bib:RohdeIntroBS15}, both closely related in that they require only passive linear optics and single-photon states, whilst mitigating the need for active switching, quantum memory and dynamic fast-feedforward. Since, evidence has been presented that similar passive linear optics protocols may implement computationally hard problems using states of light other than photon-number states \cite{bib:RandBS, bib:RohdePhotAdd15, bib:RohdeDisp15, bib:RohdeCat15}.
+Optically, the two main contenders for this are multi-photon quantum walks \cite{bib:Aharonov93, bib:Aharonov01, bib:Kempe03, bib:Childs09, bib:Salvador12, bib:RohdeMultiWalk11} and {\sc BosonSampling} \cite{bib:AaronsonArkhipov10, bib:RohdeIntroBS15}, both closely related in that they require only passive linear optics and single-photon states, whilst mitigating the need for active switching, quantum memory and dynamic fast-feedforward. Since, evidence has been presented that similar passive linear optics protocols may implement computationally hard problems using states of light other than photon-number states \cite{bib:RandBS, bib:RohdePhotAdd15, bib:RohdeDisp15, bib:RohdeCat15}.
 
 These protocols involve nothing more than evolving multiple single-photon states through beamsplitter networks and measuring the output photo-statistics. This is equivalent to just taking the first stage of the KLM protocol shown in Fig.~\ref{fig:KLM_protocol}.
 
@@ -3271,11 +3277,51 @@ In the case of {\sc BosonSampling}, the unitary is chosen randomly from the Haar
 
 Photonic quantum walks (QW's) are the other contender for implementing restricted quantum computation, without requiring the full spectrum of challenging LOQC operations. The resource requirements are the same as for {\sc BosonSampling}, the difference being that now instead of choosing a Haar-random unitary matrix for the interferometer, we choose one which encodes a graph. The photons are now referred to as `walkers', and they evolve by following edges within the graph, `hopping' between neighbouring vertices.
 
-With only a single walker (photon), nothing computationally complex can occur in the system, since a single photon evolving under passive linear optics can be efficiently classically simulated. However, once multiple walkers are introduced we have a system with almost identical features to {\sc BosonSampling}, differing only in the structure of the linear optics unitary.
+With only a single walker (photon), nothing computationally complex can occur in the system, since a single photon evolving under passive linear optics can be efficiently classically simulated\footnote{Note that the literature has described QW schemes, both discrete-time \cite{bib:Lovett10} and continuous-time \cite{bib:Childs09}, that are universal for quantum computation. However, such universal schemes require an exponential number of vertices, which clearly does not lend itself to efficient optical representation.}. However, once multiple walkers are introduced we have a system with almost identical features to {\sc BosonSampling}, differing only in the structure of the linear optics unitary.
 
-There are two predominant varieties of quantum walks: discrete-time and continuous-time. In the discrete-time QW model, each walker has access to an ancillary `coin' Hilbert space, which is used to record the direction of the walker through the graph. At each discrete time-step the coin is used to update the position (vertex) of the walker, before applying a unitary `coin' operator to the coin Hilbert space. The addition of the coin space is necessary to enable such quantum walks to reside on arbitrary graph topologies, whilst retaining unitarity in their evolution. In the continuous-time QW model, on the other hand, there is no coin degree of freedom, and a Hamiltonian encoding the graph structure of the QW evolves the walker(s).
+There are two predominant varieties of quantum walks: discrete-time and continuous-time. In the discrete-time QW model, each walker has access to an ancillary `coin' Hilbert space, which is used to record the direction of the walker through the graph. At each discrete time-step the coin is used to update the position (vertex) of the walker, before applying a unitary `coin' operator to the coin Hilbert space. The addition of the coin space is necessary to enable such quantum walks to reside on arbitrary graph topologies, whilst retaining unitarity in their evolution. In the continuous-time QW model, on the other hand, there is no coin degree of freedom, and a Hamiltonian, $H_\mathrm{QW}$, encoding the (Hermitian) adjacency matrix of the QW's graph evolves the walker(s), generating a unitary evolution of the form \mbox{$\hat{U}_\mathrm{QW}(t) = e^{-iH_\mathrm{QW}t}$}. Algorithms have been described for both the discrete- and continuous-time QW models.
 
-Algorithms have been described for both the discrete- and continuous-time QW models.
+We will briefly summarise the discrete-time QW model, as it most readily lends itself to linear optics implementation, and illustrate the parallels with {\sc BosonSampling}. First, let us consider the standard simple example scenario of a single quantum walker, on a linear graph topology, using a Hadamard coin, which has been experimentally demonstrated using both bulk-optics \cite{bib:Broome10} and time-bin encoding \cite{bib:Schreiber10}. The walker is defined by two Hilbert spaces: the position $x$, and the coin {$c=\pm 1$}, where $+1$ ($-1$) indicates that the walker is moving to the right (left). The basis states are then $\ket{x,c}$, and the state of the walker takes the form,
+\begin{align}
+\ket\psi = \sum_{x,c} \lambda_{x,c} \ket{x,c}.
+\end{align}
+The evolution of the walk is given by the coin and step operators,
+\begin{align}
+\hat{C}\ket{x,\pm 1} &\to \frac{1}{\sqrt{2}}(\ket{x,+1}\pm \ket{x,-1}), \nonumber \\
+\hat{S}\ket{x,c} &\to \ket{x+c,c}.
+\end{align}
+The Hadamard coin operator could be replaced with any arbitrary $\mathrm{SU}(2)$ matrix. The total time-evolution of the walk is then given by,
+\begin{align}
+\ket{\psi(t)} = (\hat{S}\hat{C})^t\ket{\psi(0)}.
+\end{align}
+Upon measurement, the probability of the walker being at position $x$ is simply given by summing over the coins at a given position,
+\begin{align}
+P(x) = |\lambda_{x,-1}|^2 + |\lambda_{x,+1}|^2.
+\end{align}
+
+The single-walker walk on a linear graph is not of computational interest as it can be efficiently classically simulated. However, the formalism is easily logically generalised to multiple walkers on arbitrary graph topologies. We will illustrate this using the formalism of \cite{bib:RohdeMultiWalk11}, where \emph{walker operators}, rather than walker basis states are evolved under time-evolution (i.e we operate in the Heisenberg picture rather than the Schr{\" o}dinger picture). In an optical context, walker operators are identically photonic creation operators. The walker operators are of the form $\hat{w}(x,c)^\dag$, where $x$ denotes the vertex number currently occupied by the walker, and $c$ denotes the previous vertex occupied by the walker. The single-walker basis states are then of the form $\hat{w}(x,c)^\dag\ket{0}$, where $\ket{0}$ is the vacuum state containing no excitations. Notice the parallels to the previous example of a linear walk, where the coin degree of freedom specifies the direction the walker is following, which effectively acts as memory of the previous position.
+
+The coin and step operators now take the form,
+\begin{align}
+\hat{C}: \,\,\, &\hat{w}(x,c)^\dag \to \sum_{j\in n_x}A_{c,j}^{(x)} \hat{w}(x,j)^\dag, \nonumber \\
+\hat{S}: \,\,\, &\hat{w}(x,j)^\dag \to \hat{w}(j,x)^\dag.
+\end{align}
+Here $n_x$ denotes the set of vertices neighbouring $x$, and $A^{(x)}$ is a unitary matrix representing the weights of edges within this neighbourhood. The total time evolution is defined analogously to before,
+\begin{align}
+\hat{U}_\mathrm{QW}(t) = (\hat{S}\hat{C})^t.
+\end{align}
+
+With this formalism, multiple walkers are easily accommodated for simply with the addition of extra walker operators. Specifically, the $n$-walker basis states are of the form,
+\begin{align}
+\prod_{i=1}^n \hat{w}(x_i,c_i)^\dag \ket{0}.
+\end{align}
+Any graph topology can be represented, subject to the constraint that all $A^{(x)}$ are unitary. This implies that every vertex must have as many incoming as outgoing edges.
+
+Now the probabilities of measuring the walkers in different position configurations will be related to matrix permanents, in a similar manner to {\sc BosonSampling}. But now the permanents will be of matrices that are functions of the set of $A^{(x)}$ matrices characterising the graph, rather than a Haar-random matrix.
+
+It was shown by \cite{bib:RohdeMultiWalk11} that any such walk can be efficiently represented using a linear optics decomposition comprising at most $O(|V|^2)$ optical modes. 
+
+Because of the graph structure of the walk, it lends itself naturally to distributed implementation. We might imagine that different subgraphs (or `widgets') implement different computational primitives or subroutines. These widgets might be proprietary or expensive to implement, and are therefore best outsourced over a network.
 
 %
 % Continuous Variables
@@ -3335,8 +3381,8 @@ where $A_1/B_1$ denote the matter qubits, and $A_2/B_2$ denote their coupled opt
 \end{align}
 \item Apply a 50:50 beamsplitter between the two optical modes,
 \begin{align}
-\ket\psi_\mathrm{BS} = \hat{U}_\mathrm{BS} \ket\psi_\mathrm{relax} = &\frac{1}{2}(\ket{\!\uparrow}_{A_1}+\ket{\!\downarrow}_{A_1}[\hat{a}^\dag_{A_2}+\hat{a}^\dag_{B_2}])\ket{0}_{A_2}\nonumber \\
-&\cdot (\ket{\!\uparrow}_{B_1}+\ket{\!\downarrow}_{B_1}[\hat{a}^\dag_{A_2}-\hat{a}^\dag_{B_2}])\ket{0}_{B_2}.
+\ket\psi_\mathrm{BS} = \hat{U}_\mathrm{BS} \ket\psi_\mathrm{relax} = &\frac{1}{2}(\ket{\!\uparrow}_{A_1}+\ket{\!\downarrow}_{A_1}[\hat{a}^\dag_{A_2}+\hat{a}^\dag_{B_2}])\nonumber \\
+&\cdot (\ket{\!\uparrow}_{B_1}+\ket{\!\downarrow}_{B_1}[\hat{a}^\dag_{A_2}-\hat{a}^\dag_{B_2}])\ket{0}_{A_2}\ket{0}_{B_2}.
 \end{align}
 \item Conditional upon detecting exactly one photon between the output optical modes, we obtain,
 \begin{align}
