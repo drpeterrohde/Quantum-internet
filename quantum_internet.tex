@@ -866,7 +866,7 @@ In the special case of linear optics circuits, loss channels have the elegant pr
 \begin{align}
 (\mathcal{E}_{\eta}^\mathrm{loss})^{\otimes m} \circ \mathcal{E}_U = \mathcal{E}_U \circ (\mathcal{E}_{\eta}^\mathrm{loss})^{\otimes m},
 \end{align}
-where $\mathcal{E}_U$ is a unitary linear optics process. This simplifies the treatment of distinct system inefficiencies (such as source, network and detector inefficiencies) by allowing us to commute them to the beginning or end of the circuit and combine them together into a single net efficiency. In many scenarios, this allows the different system inefficiencies to be dealt with via post-selection.
+where $\mathcal{E}_U$ is a unitary linear optics process, implementing a photon-number-preserving map of the form of Eq.~\ref{eq:LO_unitary_map}. This simplifies the treatment of distinct system inefficiencies (such as source, network and detector inefficiencies) by allowing us to commute them to the beginning or end of the circuit and combine them together into a single net efficiency. In many scenarios, this allows the different system inefficiencies to be dealt with via post-selection.
 
 This process would apply equivalently to both horizontal and vertical polarisations. Therefore, via linearity, the loss channel acting on a polarisation-encoded qubit (Sec.~\ref{sec:single_phot_enc}) yields,
 \begin{align}
@@ -2304,9 +2304,15 @@ So-called NOON states, path-number entangled two-mode states of the form,
 \begin{align}
 \ket\psi_\mathrm{NOON} = \frac{1}{\sqrt{2}}(\ket{N,0}+\ket{0,N}),
 \end{align}
-may be exploited to perform Heisenberg-limited quantum metrology, allowing extremely precise phase measurement with large photon-number $N$ \cite{bib:Dowling08}. However, these states are notoriously difficult and technologically challenging to prepare, and can only be prepared non-deterministically using linear optics \cite{bib:Cable07}.
+may be exploited to perform Heisenberg-limited quantum metrology, allowing extremely precise phase measurement with large photon-number $N$ \cite{bib:Dowling08}. 
 
-If a remote server had the capacity to prepare such states, they would be in high demand across the globe. Hindering this, NOON states are very fragile creatures. First, they exhibit exponentially increased susceptibility to loss -- loss of just a single photon completely decoheres the state, rendering it useless for metrological purposes. Second, the large photon-number, $N$, amplifies dephasing by a factor of $N$, as discussed in Sec.~\ref{sec:dephasing_error}. These considerations can be readily accommodated for in the QTCP protocol by tracking dephasing and loss metrics of the packets encapsulating the NOON states.
+The extreme sensitivity of NOON states owes to the $N$-fold enhancement in phase-dependence associated with the $N$-photon component of the superposition. Specifically, if a phase $\phi$ is present in only the second mode, the state evolves to,
+\begin{align}
+e^{i\phi\hat{n}} \ket\psi_\mathrm{NOON} = \frac{1}{\sqrt{2}}(\ket{N,0}+e^{i\phi N}\ket{0,N}),
+\end{align}
+where $\hat{n}$ is the photon-number operator associated with the second mode. Then, a simple interferometric procedure is able to extract this enhanced phase-dependence as an observable.
+
+However, these states are notoriously difficult and technologically challenging to prepare, and can only be prepared non-deterministically using linear optics \cite{bib:Cable07}. If a remote server had the capacity to prepare such states, they would be in high demand across the globe. Hindering this, NOON states are very fragile creatures. First, they exhibit exponentially increased susceptibility to loss -- loss of just a single photon completely decoheres the state, rendering it useless for metrological purposes. Second, the large photon-number, $N$, amplifies dephasing by a factor of $N$, as discussed in Sec.~\ref{sec:dephasing_error}. These considerations can be readily accommodated for in the QTCP protocol by tracking dephasing and loss metrics of the packets encapsulating the NOON states.
 
 %
 % Cluster States
@@ -3201,7 +3207,7 @@ The final insight provided by KLM is that by concatenating these non-determinist
 \end{figure}
 
 The unitary linear optics networks implement linear maps of the form,
-\begin{align} \label{sec:LO_unitary_map}
+\begin{align} \label{eq:LO_unitary_map}
 \hat{U}\hat{a}_i^\dag \hat{U}^\dag \to \sum_{j=1}^m U_{i,j} \hat{a}^\dag_j,
 \end{align}
 where $\hat{a}^\dag_i$ is the photonic creation operator on the $i$th of the $m$ modes, and $U$ may be any $\mathrm{SU}(m)$ matrix. These linear optics evolutions are most commonly implemented using either:
@@ -3228,7 +3234,7 @@ More recently, it was shown that by introducing strong coherent states, the stre
 
 \subsection{Passive linear optics} \label{sec:passive_LO}
 
-While the KLM protocol (and subsequent improvements, e.g using cluster states) are universal for quantum computing, some of the key technological requirements are very challenging, and unlikely to be achieved in the short-term. However, simplified yet non-universal models for optical quantum computing can abandon some of the more challenging requirements, nonetheless implementing a restricted set of post-classical quantum computations. In particular, we consider protocols requiring only photon-number state preparation, passive linear optics evolution (as per Eq.~\ref{sec:LO_unitary_map}), and photo-detection.
+While the KLM protocol (and subsequent improvements, e.g using cluster states) are universal for quantum computing, some of the key technological requirements are very challenging, and unlikely to be achieved in the short-term. However, simplified yet non-universal models for optical quantum computing can abandon some of the more challenging requirements, nonetheless implementing a restricted set of post-classical quantum computations. In particular, we consider protocols requiring only photon-number state preparation, passive linear optics evolution (as per Eq.~\ref{eq:LO_unitary_map}), and photo-detection.
 
 Optically, the two main contenders for this are multi-photon quantum walks \cite{bib:Aharonov93, bib:Aharonov01, bib:Kempe03, bib:Childs09, bib:Salvador12, bib:RohdeMultiWalk11} and {\sc BosonSampling} \cite{bib:AaronsonArkhipov10, bib:RohdeIntroBS15}, both closely related in that they require only passive linear optics and single-photon states, whilst mitigating the need for active switching, quantum memory and dynamic fast-feedforward. Since, evidence has been presented that similar passive linear optics protocols may implement computationally hard problems using states of light other than photon-number states \cite{bib:RandBS, bib:RohdePhotAdd15, bib:RohdeDisp15, bib:RohdeCat15}.
 
