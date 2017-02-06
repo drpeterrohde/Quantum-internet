@@ -2304,15 +2304,15 @@ So-called NOON states, path-number entangled two-mode states of the form,
 \begin{align}
 \ket\psi_\mathrm{NOON} = \frac{1}{\sqrt{2}}(\ket{N,0}+\ket{0,N}),
 \end{align}
-may be exploited to perform Heisenberg-limited quantum metrology, allowing extremely precise phase measurement with large photon-number $N$ \cite{bib:Dowling08}. 
+may be exploited to perform Heisenberg-limited quantum metrology (Sec.~\ref{sec:metrology}), allowing extremely precise phase measurement with large photon-number $N$ \cite{bib:Dowling08}. 
 
 The extreme sensitivity of NOON states owes to the $N$-fold enhancement in phase-dependence associated with the $N$-photon component of the superposition. Specifically, if a phase $\phi$ is present in only the second mode, the state evolves to,
 \begin{align}
 e^{i\phi\hat{n}} \ket\psi_\mathrm{NOON} = \frac{1}{\sqrt{2}}(\ket{N,0}+e^{i\phi N}\ket{0,N}),
 \end{align}
-where $\hat{n}$ is the photon-number operator associated with the second mode. Then, a simple interferometric procedure is able to extract this enhanced phase-dependence as an observable.
+where \mbox{$\hat{n}=\hat{a}^\dag\hat{a}$} is the photon-number operator associated with the second mode. The phase enhancement arises because \mbox{$\hat{n}\ket{N}=N\ket{N}$}. Then, a simple interferometric procedure is able to extract this enhanced phase-dependence as an observable.
 
-However, these states are notoriously difficult and technologically challenging to prepare, and can only be prepared non-deterministically using linear optics \cite{bib:Cable07}. If a remote server had the capacity to prepare such states, they would be in high demand across the globe. Hindering this, NOON states are very fragile creatures. First, they exhibit exponentially increased susceptibility to loss -- loss of just a single photon completely decoheres the state, rendering it useless for metrological purposes. Second, the large photon-number, $N$, amplifies dephasing by a factor of $N$, as discussed in Sec.~\ref{sec:dephasing_error}. These considerations can be readily accommodated for in the QTCP protocol by tracking dephasing and loss metrics of the packets encapsulating the NOON states.
+However, these states are notoriously difficult and technologically challenging to prepare, and can only be prepared non-deterministically using linear optics \cite{bib:Cable07}. If a remote server had the capacity to prepare such states, they would be in high demand across the globe. Hindering this, NOON states are very fragile creatures. First, they exhibit exponentially increased susceptibility to loss -- loss of just a single photon completely decoheres the state, rendering it useless for metrological purposes. Second, the large photon-number, $N$, amplifies unwanted dephasing by a factor of $N$, as discussed in Sec.~\ref{sec:dephasing_error}. These considerations can be readily accommodated for in the QTCP protocol by tracking dephasing and loss metrics of the packets encapsulating the NOON states.
 
 %
 % Cluster States
@@ -2366,7 +2366,7 @@ Cat states (Sec.~\ref{sec:cat_enc}) are extremely difficult to prepare, most eas
 
 \subsubsection{Squeezed states}
 
-Of particular interest to metrology in particular, are squeezed states, states which have been longitudinally distorted in phase-space. In the metrological context, squeezed states enable sub-shotnoise limited metrology \cite{???}, thereby outperforming any classical protocol, using, for example, coherent states or single photons.
+Of particular interest to metrology in particular, are squeezed states, states which have been longitudinally distorted in phase-space. In the metrological context, squeezed states enable sub-shotnoise limited metrology \cite{???}, thereby outperforming any classical protocol, using, for example, coherent states.
 
 Mathematically, squeezing is represented using the squeezing operator,
 \begin{align}
@@ -2970,7 +2970,7 @@ QKD has been widely experimentally demonstrated over long distances \cite{bib:Mu
 
 \subsection{Quantum metrology} \label{sec:metrology}
 
-The goal of quantum metrology is to estimate and unknown phase with the greatest degree of precision. This finds many applications, perhaps most notably the recent gravity wave measurement protocols \cite{???}. The shot-noise limit (SNL) represents the maximum achievable precision using classical states, whereas the Heisenberg limit (HL) is the best that can be achieved using quantum resources. The goal of quantum metrology is to beat the SNL and achieve the HL.
+The goal of quantum metrology is to estimate and unknown phase with the greatest degree of precision. This finds many applications, perhaps most notably the recent gravity wave measurement protocols \cite{???}. The shot-noise limit (SNL) represents the maximum achievable precision using classical states, whereas the Heisenberg limit (HL) is the best that can be achieved using quantum resources. The goal of quantum metrology is to beat the SNL, ideally saturating the HL.
 
 Achieving the SNL is easily done using coherent states (Sec.~\ref{sec:coherent_states}), which are not true quantum states. However, HL metrology can be achieved using NOON states (Sec.~\ref{sec:NOON}) \cite{bib:Dowling08}. An alternate recent proposal (known as the MORDOR protocol, after the authors), employs only single-photon states (Sec.~\ref{sec:single_phot_src}) and passive linear optics, which, although not saturating the HL, significantly beats the SNL \cite{MORDOR, MORDOR2}.
 
@@ -3264,8 +3264,9 @@ where there are $T_i$ photons in the $i$th input mode, the output superposition 
 \end{align}
 where $S$ sums over all possible photon-number configurations at the output, of which there are,
 \begin{align}
-|S| = \binom{n+m-1}{n}.
+|S| = \binom{n+m-1}{n},
 \end{align}
+where there are $n$ photons in total, and it is assumed that \mbox{$m=O(n^2)$}. In the case of a large number of optical modes, the \mbox{$m=O(n^2)$} condition effectively ensures photon anti-bunching with high probability\footnote{That is, we are unlikely to observe more than a single photon in any given output mode, placing us into a binary photo-detection regime.}, rendering non-number-resolved photo-detectors sufficient for physical implementation.
 
 The amplitudes $\gamma_{S,T}$ are given by,
 \begin{align}
@@ -3273,7 +3274,7 @@ The amplitudes $\gamma_{S,T}$ are given by,
 \end{align}
 where $\mathrm{Per}(\cdot)$ denotes the matrix permanent, and $U_{S,T}$ is a sub-matrix of $U$, obtained by taking $S_i$ copies of the $i$th row, and $T_j$ copies of the $j$th column of the linear optics unitary matrix $U$. The probability of measuring a given configuration is obviously \mbox{$P_{S,T} = |\gamma_{S,T}|^2$}.
 
-In the case of {\sc BosonSampling}, the unitary is chosen randomly from the Haar-measure\footnote{The Haar-measure generalises the notion of a uniform distribution to higher-dimensional topologies than the real numbers, in this case to the $\mathrm{SU}(n)$ group.}.
+In the case of {\sc BosonSampling}, the unitary is chosen randomly from the Haar-measure\footnote{The Haar-measure generalises the notion of a uniform distribution to higher-dimensional topologies than the real numbers, in this instance to the $\mathrm{SU}(n)$ group.}.
 
 %
 % Quantum Walks
@@ -3312,7 +3313,14 @@ The coin and step operators now take the form,
 \hat{C}: \,\,\, &\hat{w}(x,c)^\dag \to \sum_{j\in n_x}A_{c,j}^{(x)} \hat{w}(x,j)^\dag, \nonumber \\
 \hat{S}: \,\,\, &\hat{w}(x,j)^\dag \to \hat{w}(j,x)^\dag.
 \end{align}
-Here $n_x$ denotes the set of vertices neighbouring $x$, and $A^{(x)}$ is a unitary matrix representing the weights of edges within this neighbourhood. The total time evolution is defined analogously to before,
+Here $n_x$ denotes the set of vertices neighbouring $x$. The coin operators $A^{(x)}$ are \mbox{$\mathrm{SU}(|n_x|)$} unitary matrices representing the weights of edges within this neighbourhood. The step operator, on the other hand, is simply a permutation. A simple example is shown in Fig.~\ref{fig:QW_arbitrary_graph}.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.5\columnwidth]{QW_arbitrary_graph}
+\caption{A simple example of a quantum walk on an irregular graph structure. Associated with each vertex $x$ is a coin operator $A^{(x)}$ of dimension \mbox{$|n_x|\times |n_x|$}, where $|n_x|$ is the number of neighbours to $x$.} \label{fig:QW_arbitrary_graph}
+\end{figure}
+
+The total time evolution is defined analogously to before,
 \begin{align}
 \hat{U}_\mathrm{QW}(t) = (\hat{S}\hat{C})^t.
 \end{align}
@@ -3325,7 +3333,12 @@ Any graph topology can be represented, subject to the constraint that all $A^{(x
 
 Now the probabilities of measuring the walkers in different position configurations will be related to matrix permanents, in a similar manner to {\sc BosonSampling}. But now the permanents will be of matrices that are functions of the set of $A^{(x)}$ matrices characterising the graph, rather than a Haar-random matrix.
 
-It was shown by \cite{bib:RohdeMultiWalk11} that any such walk can be efficiently represented using a linear optics decomposition comprising at most $O(|V|^2)$ optical modes. 
+It was shown by \cite{bib:RohdeMultiWalk11} that any such walk can be efficiently represented using a linear optics decomposition comprising at most $O(|V|^2)$ optical modes. Such a decomposition for \mbox{$|V|=3$} is shown in Fig.~\ref{fig:QW_LO_representation}.
+
+\begin{figure}[!htb]
+\includegraphics[width=\columnwidth]{QW_LO_representation}
+\caption{The linear optics decomposition for an arbitrary 3-vertex discrete-time quantum walk. The coin operators, $A^{(x)}$, may be arbitrary $\mathrm{SU}(3)$ matrices, whereas the step operator is simply a permutation of the optical modes.} \label{fig:QW_LO_representation}
+\end{figure}
 
 Because of the graph structure of the walk, it lends itself naturally to distributed implementation. We might imagine that different subgraphs -- or `widgets' \cite{bib:Lovett10, bib:Childs09} -- implement different computational primitives or subroutines. These widgets might be proprietary or expensive to implement, and are therefore best outsourced over a network.
 
@@ -3397,7 +3410,7 @@ where $A_1/B_1$ denote the matter qubits, and $A_2/B_2$ denote their coupled opt
 \end{align}
 which is a Bell-pair between the matter qubits.
 \end{enumerate}}}
-\caption{Using which-path erasure to entangle two $\lambda$-configuration matter qubits via post-selected linear optics.} \label{tab:which_path}
+\caption{Using which-path erasure to entangle two $\lambda$-configuration matter qubits via post-selected linear optics. Note that the two matter qubits could in principle be arbitrarily physically separated. Only the emitted photons need be brought together locally for the implementation of a beamsplitter operation. This lends such entanglement generation protocols to distributed implementation.} \label{tab:which_path}
 \end{table}
 
 %
