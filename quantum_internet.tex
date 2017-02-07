@@ -1583,7 +1583,7 @@ into the three-qubit state,
 } \nonumber
 \end{align}
 }}
-\caption{Three-qubit code for protecting against at most a single logical bit-flip error.} \label{tab:three_QEC}
+\caption{Three-qubit code for protecting against at most a single logical bit-flip error. In a Hadamard-rotated basis, the same circuit may be employed to protect against a single phase-flip error. And by concatenating the two we obtain a 9-qubit code protecting against a single depolarising error, which is a universal error model.} \label{tab:three_QEC}
 \end{table}
 
 Different error correcting codes have different error correcting power, and different resource overheads, which must be taken into consideration. The appropriate choice of code will largely be determined by the final {\sc Services \& Applications} layer. For some simple quantum communications protocols, simple error correction (or even no error correction) may suffice. A full-fledged quantum computation on the other hand will require error rates within a fault-tolerance thresholds.
@@ -2445,7 +2445,13 @@ Furthermore, photo-detectors are subject to `dead-time', which renders them inac
 
 \subsubsection{Homodyning} \label{sec:homodyne}
 
-A homodyne detector interferes a state with a coherent state on a beamsplitter, which acts as a phase-reference, before photo-detecting both output modes. By sweeping through the amplitude and phase of the reference beam, we are able to directly sample points in phase-space, allowing the Wigner function of an unknown state to be fully reconstructed. This measurement technique is typically applied to CV states rather than photon-number states. While conceptually straightforward, preparing the reference beam requires a coherent source, which can become costly (Sec.~\ref{sec:coherent_states}).
+A homodyne detector interferes a state with a coherent state on a beamsplitter, which acts as a phase-reference, before photo-detecting both output modes and taking the difference in the photon count-rates (Fig.~\ref{fig:homodyne}). By sweeping through the amplitude and phase of the reference beam, we are able to directly sample points in phase-space, allowing the Wigner function -- which is isomorphic to the density operator -- of an unknown state to be fully reconstructed. This measurement technique is typically applied to CV states rather than photon-number states. While conceptually straightforward, preparing the reference beam requires a coherent source, which can become costly (Sec.~\ref{sec:coherent_states}).
+
+\begin{figure}[!htb]
+\includegraphics[width=0.6\columnwidth]{homodyne}
+\caption{Homodyne detection of an unknown optical states $\hat\rho_\mathrm{in}$, by mixing it with a reference coherent state $\ket\alpha$ on a 50:50 beamsplitter, and taking the difference in the photo-detection rates at the output modes. By sweeping through the phase and amplitude of $\ket\alpha$, we can directly sample the Wigner function of $\hat\rho_\mathrm{in}$, allowing its full reconstruction.} \label{fig:homodyne}
+\end{figure}
+
 
 %
 % Bell state projection
@@ -3316,7 +3322,7 @@ The coin and step operators now take the form,
 Here $n_x$ denotes the set of vertices neighbouring $x$. The coin operators $A^{(x)}$ are \mbox{$\mathrm{SU}(|n_x|)$} unitary matrices representing the weights of edges within this neighbourhood. The step operator, on the other hand, is simply a permutation. A simple example is shown in Fig.~\ref{fig:QW_arbitrary_graph}.
 
 \begin{figure}[!htb]
-\includegraphics[width=0.5\columnwidth]{QW_arbitrary_graph}
+\includegraphics[width=0.4\columnwidth]{QW_arbitrary_graph}
 \caption{A simple example of a quantum walk on an irregular graph structure. Associated with each vertex $x$ is a coin operator $A^{(x)}$ of dimension \mbox{$|n_x|\times |n_x|$}, where $|n_x|$ is the number of neighbours to $x$.} \label{fig:QW_arbitrary_graph}
 \end{figure}
 
@@ -3435,7 +3441,7 @@ These encryption protocols induce a resource overhead in circuit size and number
 
 \subsubsection{Passive linear optics}
 
-It was recently shown that processing photonic states using passive linear optics may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}. This encryption does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy.
+It was recently shown that processing photonic states using passive linear optics may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}. This encryption does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy. Furthermore, it does not impose an overhead in circuit complexity, only in the number of input photons.
 
 For $m$ modes, the resource requirements are:
 \begin{itemize}
@@ -3443,6 +3449,7 @@ For $m$ modes, the resource requirements are:
 \item $m$ classically controlled wave-plates, able to implement arbitrary polarisation rotations.
 \item $m$ polarisation filters.
 \item $m$ photo-detectors.
+\item An \mbox{$m\times m$} linear optics network.
 \end{itemize}
 The full protocol is given in Alg.~\ref{tab:homo_LO}.
 
