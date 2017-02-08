@@ -2792,11 +2792,11 @@ function GateTeleportation($\ket\psi_A\ket\phi_B$):\
 Most notably, gate teleportation is useful when attempting to apply two-qubit entangling operations using non-deterministic gates, in which case gate teleportation allows the non-deterministic elements to be performed offline as a resource state preparation stage, overcoming the non-determinism during the gate application stage. Specifically, when a CNOT gate acting directly upon two qubits fails, it corrupts those qubits, whereas if it fails during a state preparation stage, it can simply be reattempted until a success occurs, without corrupting the target qubits. A concatenated version of the gate teleportation protocol forms the basis for constructing near-deterministic entangling gates in linear optics, to be explained in detail in Sec.~\ref{sec:KLM_univ}.
 
 Quantum gate teleportation effectively reduces the problem of implementing CNOT gates to:
-\begin{itemize}
+\begin{enumerate}
 \item Offline preparation of highly-entangled 4-qubit resource states. This needn't be deterministic, since the resource state does not depend on the state to which the CNOT gate ought to be applied.
 \item Two Bell measurements.
 \item Some configuration of local Pauli operators, dependent upon the Bell measurement outcomes.
-\end{itemize}
+\end{enumerate}
 Importantly, like quantum state teleportation, there is no need for a quantum communications channel between the two parties holding the qubits to which the gate is applied -- classical communication is sufficient.
 
 The gate teleportation idea is conceptually interesting as it converts the problem of `gate application' to that of `state preparation'\footnote{The resource state is prepared from two Bell-pairs and a single CNOT gate. In the absence of a direct source of Bell-pairs, they can be prepared using separable single-qubit states and a CNOT gate. Thus, the full resource state may be prepared from separable single qubits via three CNOT gates.}, by commuting all the entangling operations to the beginning of the protocol. Cluster state quantum computing (Sec.~\ref{sec:CSQC}) is actually the extremity of this logic, whereby an entire quantum computation is transformed into a sequence of state and gate teleportations. One may interpret this to mean that teleportation is a universal resource for quantum computation \cite{bib:GottesmanChuang99}.
@@ -2959,6 +2959,8 @@ QKD has been widely experimentally demonstrated over long distances \cite{bib:Mu
 \cite{Wehner}
 
 \comment{Ryan TO DO}
+
+\comment{Talk about Wehner scheme, as well as Brennen/Menicucci toric code scheme.}
 
 %
 % Superdense Coding
@@ -3343,7 +3345,7 @@ It was shown by \cite{bib:RohdeMultiWalk11} that any such walk can be efficientl
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{QW_LO_representation}
-\caption{The linear optics decomposition for an arbitrary 3-vertex discrete-time quantum walk. The coin operators, $A^{(x)}$, may be arbitrary $\mathrm{SU}(3)$ matrices, whereas the step operator is simply a permutation of the optical modes.} \label{fig:QW_LO_representation}
+\caption{Linear optics decomposition for a single step of an arbitrary 3-vertex discrete-time quantum walk. The coin operators, $A^{(x)}$, may be arbitrary $\mathrm{SU}(3)$ matrices, whereas the step operator is simply a permutation of the optical modes. $O(|V|^2)$ optical modes are required, which scales efficiently.} \label{fig:QW_LO_representation}
 \end{figure}
 
 Because of the graph structure of the walk, it lends itself naturally to distributed implementation. We might imagine that different subgraphs -- or `widgets' \cite{bib:Lovett10, bib:Childs09} -- implement different computational primitives or subroutines. These widgets might be proprietary or expensive to implement, and are therefore best outsourced over a network.
@@ -3444,13 +3446,13 @@ These encryption protocols induce a resource overhead in circuit size and number
 It was recently shown that processing photonic states using passive linear optics may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}. This encryption does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy. Furthermore, it does not impose an overhead in circuit complexity, only in the number of input photons.
 
 For $m$ modes, the resource requirements are:
-\begin{itemize}
+\begin{enumerate}
 \item $m$ single-photons -- one per input mode.
 \item $m$ classically controlled wave-plates, able to implement arbitrary polarisation rotations.
 \item $m$ polarisation filters.
 \item $m$ photo-detectors.
 \item An \mbox{$m\times m$} linear optics network.
-\end{itemize}
+\end{enumerate}
 The full protocol is given in Alg.~\ref{tab:homo_LO}.
 
 \begin{table}[!htb]
@@ -3571,6 +3573,8 @@ Let us first assume that we wish to construct a cluster state with $n_\mathrm{lo
 We arrange the modules to internally represent a $+$-topology where each node has neighbouring branches in each of the up/down/left/right directions. But we imagine the situation whereby each logical qubit, along with its respective ancillary branches, is held by a different server. Thus, the final cluster state is truly decentralised across all the servers, and in general entire computations cannot be performed locally.
 
 Using the ancillary states in the respective directions, we attempt to fuse neighbouring clusters using entangling operations (EO's), such as CZ gates (e.g a KLM CZ gate), linear optics \emph{fusion gates} (i.e rotated polarising beamsplitters followed by photo-detection) \cite{bib:BrowneRudolph05}, or atoms with a $\lambda$-configuration coupled to photons \cite{bib:BarrettKok05}, which undergo which-path erasure (Sec.~\ref{sec:hybrid}). Importantly, using the fusion gate and which-path erasure approaches, only a single beamsplitter is required to perform the EO, which only necessitates high-visibility HOM interference, mitigating the need for far more challenging interferometric (MZ) stability. This is delightful, as current leading quantum optics experiments routinely achieve HOM visibilities well in excess of 99\% \cite{???}.
+
+An alternate fusion strategy is not to directly communicate qubits to be bonded, but instead rely off Bell pairs provided by a central authority. Each party then applies an EO between their half of the Bell pair and their target module qubit, which swaps the Bell-pair entanglement onto the two respective module qubits (Sec.~\ref{sec:swapping}).
 
 When an EO is successful, we have fused two modules together, albeit potentially with some leftover ancillary states between the logical qubits. When it fails, we have lost the respective ancillary states, and we attempt again using the next ancillary qubits in each of the the respective branches -- a kind of {\sc `Repeat Until Success'} strategy. The bonding only fails if all $n_\mathrm{ancilla}$ EO's fail.
 
