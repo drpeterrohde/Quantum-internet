@@ -544,7 +544,7 @@ Then, some density operator evolved under the CNOT gate is simply \mbox{$\hat{U}
 
 \begin{figure}[!htb]
 \includegraphics[width=0.7\columnwidth]{CNOT_process}
-\caption{Process matrix for the CNOT gate, expressed in the Pauli basis. Colour coding: grey=0, white=$+1/4$, black=$-1/4$.} \label{fig:CNOT_proc_matrix}
+\caption{Process matrix for the CNOT gate, expressed in the Pauli basis. Colour coding: grey=0, white=$1/4$, black=$-1/4$.} \label{fig:CNOT_proc_matrix}
 \end{figure}
 
 %
@@ -1882,7 +1882,8 @@ function Strategy.OptimalFlow(Packets):
         \setlength{\itemindent}{.2in}
                 \item packet.RoutingQueue.Flush()
                 \item packet.RoutingQueue.Push(routes[packet])
-    \setlength{\itemindent}{0in} \}
+                \setlength{\itemindent}{0in} 
+    \item \}
     \item $\Box$
 \end{enumerate}}}
 \caption{A generic optimal flow routing strategy. {\sc Packets} is the array of all packets that ought to be transmitted simultaneously, which are collectively optimised using some flow optimisation algorithm before undergoing transport.} \label{tab:opt_flow}
@@ -3143,7 +3144,7 @@ There are several cluster state identities we will utilise later, summarised in 
 \caption{Several cluster state identities. (a) a CZ gate between two qubits creates an edge between them in the graph. (b) Measurement of a qubit in the Pauli $\hat{Y}$ basis removes that qubit from the graph, while creating new edges between the neighbouring qubits. (c) Measurement of a qubit in the Pauli $\hat{Z}$ basis removes that qubit and any neighbouring edges.} \label{fig:cluster_ident} 
 \end{figure}
 
-When using non-deterministic gates to prepare cluster states, there are approaches to preparing ideal cluster states. This is discussed in more detail in Sec.~\ref{sec:module}. Alternately, we can borrow ideas from percolation theory to simply tolerate defects in a cluster state lattice by working around them. Specifically, if the defect probability (i.e probability of a missing vertex) is below some \emph{percolation threshold}, \mbox{$p_\mathrm{defect}\leq \epsilon_\mathrm{threshold}$}, in the asymptotic limit we are guaranteed that routes exist through the lattice. This allows defective graphs to be employed for quantum computation.
+When using non-deterministic gates to prepare cluster states, there are approaches to preparing ideal cluster states. This is discussed in more detail in Sec.~\ref{sec:module}. Alternately, we can borrow ideas from percolation theory to simply tolerate defects in a cluster state lattice by working around them. Specifically, if the defect probability (i.e probability of a missing vertex or edge) is below some \emph{percolation threshold}, \mbox{$p_\mathrm{defect}\leq \epsilon_\mathrm{threshold}$}, in the asymptotic limit we are guaranteed that routes exist through the lattice. This allows defective graphs to be employed for quantum computation.
 
 %
 % Quantum Computation Using Topological Codes
@@ -3258,9 +3259,9 @@ Because these models are entirely passive, they can be made cloud-based very tri
 
 \subsubsection{Boson-sampling} \label{sec:BS}
 
-{\sc BosonSampling} is the problem of sampling the output photon-number statistics of a linear optics interferometer fed with single-photon inputs. While not universal for quantum computing (in fact no one has any idea what to use it for at all!), there is strong evidence that it is a classically hard problem \cite{bib:AaronsonArkhipov10}.
+{\sc BosonSampling} is the problem of sampling the output photon-number statistics of a linear optics interferometer fed with single-photon inputs. While not universal for quantum computing (in fact no one has any idea what to use it for at all!), there is strong evidence that it is a classically hard problem \cite{bib:AaronsonArkhipov10, bib:RohdeIntroBS15}.
 
-The computational hardness of {\sc BosonSampling} relates to the fact that the amplitudes in the output superpositions are proportional to matrix permanents, which are known to be \#\textbf{P}-hard in general. This is believed to be a classically hard complexity class, even harder than \textbf{NP}-complete in the complexity hierarchy, requiring exponential classical time to evaluate. This yields computationally complex sampling problems.
+The computational hardness of {\sc BosonSampling} relates to the fact that the amplitudes in the output superpositions are proportional to matrix permanents, which are known to be \#\textbf{P}-hard in general. This is believed to be a classically hard complexity class, even harder than \textbf{NP}-complete in the complexity hierarchy, requiring exponential classical time to evaluate (see Fig.~\ref{fig:complexity_classes} for the believed complexity relationships). This yields computationally complex sampling problems.
 
 Specifically, for an $m$-mode interferometer, and input state,
 \begin{align}
@@ -3274,15 +3275,22 @@ where $S$ sums over all possible photon-number configurations at the output, of 
 \begin{align}
 |S| = \binom{n+m-1}{n},
 \end{align}
-where there are $n$ photons in total, and it is assumed that \mbox{$m=O(n^2)$}. In the case of a large number of optical modes, the \mbox{$m=O(n^2)$} condition effectively ensures photon anti-bunching with high probability\footnote{That is, we are unlikely to observe more than a single photon in any given output mode, placing us into a binary photo-detection regime.}, rendering non-number-resolved photo-detectors sufficient for physical implementation.
+where there are $n$ photons in total, and it is assumed that \mbox{$m=O(n^2)$}. In the case of a large number of optical modes, the \mbox{$m=O(n^2)$} condition effectively ensures photon anti-bunching with high probability\footnote{That is, we are unlikely to observe more than a single photon in any given output mode, placing us into a binary photo-detection regime. This condition has become known as the `bosonic birthday paradox'.}, rendering non-number-resolved photo-detectors sufficient for physical implementation.
 
 The amplitudes $\gamma_{S,T}$ are given by,
 \begin{align}
 \gamma_{S,T} = \frac{\mathrm{Per}(U_{S,T})}{\sqrt{S_1!\dots S_m! T_1!\dots T_m!}},
 \end{align}
-where $\mathrm{Per}(\cdot)$ denotes the matrix permanent, and $U_{S,T}$ is a sub-matrix of $U$, obtained by taking $S_i$ copies of the $i$th row, and $T_j$ copies of the $j$th column of the linear optics unitary matrix $U$. The probability of measuring a given configuration is obviously \mbox{$P_{S,T} = |\gamma_{S,T}|^2$}.
+where $\mathrm{Per}(\cdot)$ denotes the matrix permanent, and $U_{S,T}$ is a sub-matrix of $U$, obtained by taking $S_i$ copies of the $i$th row, and $T_j$ copies of the $j$th column of the linear optics unitary matrix $U$. The probability of measuring a given configuration is obviously \mbox{$P_{S,T} = |\gamma_{S,T}|^2$}. The unitary is chosen randomly from the Haar-measure\footnote{The Haar-measure generalises the notion of a uniform distribution to higher-dimensional topologies than the real numbers, in this instance to the $\mathrm{SU}(n)$ group.}.
 
-In the case of {\sc BosonSampling}, the unitary is chosen randomly from the Haar-measure\footnote{The Haar-measure generalises the notion of a uniform distribution to higher-dimensional topologies than the real numbers, in this instance to the $\mathrm{SU}(n)$ group.}.
+The full model is shown in Fig.~\ref{fig:bs_model}.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.7\columnwidth]{bs_model}
+\caption{The {\sc BosonSampling} model for non-universal linear optics quantum computing. $S$ (output) and $T$ (input) are represented in the photon-number basis. After application of the Haar-random linear optics unitary to the input multi-mode Fock state, the output superposition is sampled with coincidence photo-detection.} \label{fig:bs_model}
+\end{figure}
+
+{\sc BosonSampling} in the presence of various error models, such as loss, source non-determinism and mode-mismatch, has been extensively investigated \cite{bib:RohdeErrBS12, bib:RohdeSPDC13, bib:ScottLost16, bib:RohdeArbSpec15, bib:RandBS}.
 
 %
 % Quantum Walks
@@ -3296,7 +3304,7 @@ With only a single walker (photon), nothing computationally complex can occur in
 
 There are two predominant varieties of quantum walks: discrete-time and continuous-time. In the discrete-time QW model, each walker has access to an ancillary `coin' Hilbert space, which is used to record the direction of the walker through the graph. At each discrete time-step the coin is used to update the position (vertex) of the walker, before applying a unitary `coin' operator to the coin Hilbert space. The addition of the coin space is necessary to enable such quantum walks to reside on arbitrary graph topologies, whilst retaining unitarity in their evolution. In the continuous-time QW model, on the other hand, there is no coin degree of freedom, and a Hamiltonian, $H_\mathrm{QW}$, encoding the (Hermitian) adjacency matrix of the QW's graph evolves the walker(s), generating a unitary evolution of the form \mbox{$\hat{U}_\mathrm{QW}(t) = e^{-iH_\mathrm{QW}t}$}. Algorithms have been described for both the discrete- and continuous-time QW models.
 
-We will briefly summarise the discrete-time QW model, as it most readily lends itself to linear optics implementation, and illustrate the parallels with {\sc BosonSampling}. First, let us consider the standard simple example scenario of a single quantum walker, on a linear graph topology, using a Hadamard coin, which has been experimentally demonstrated using both bulk-optics \cite{bib:Broome10} and time-bin encoding \cite{bib:Schreiber10}. The walker is defined by two Hilbert spaces: the position $x$, and the coin {$c=\pm 1$}, where $+1$ ($-1$) indicates that the walker is moving to the right (left). The basis states are then $\ket{x,c}$, and the state of the walker takes the form,
+We will briefly summarise the discrete-time QW model, as it most readily lends itself to linear optics implementation, and illustrate the parallels with {\sc BosonSampling}. First, let us consider the standard simple example scenario of a single quantum walker, on a linear graph topology, using a Hadamard coin, which has been experimentally demonstrated using both bulk-optics \cite{bib:Broome10} and time-bin encoding \cite{bib:Schreiber10, bib:RohdeQWExp12}. The walker is defined by two Hilbert spaces: the position $x$, and the coin {$c=\pm 1$}, where $+1$ ($-1$) indicates that the walker is moving to the right (left). The basis states are then $\ket{x,c}$, and the state of the walker takes the form,
 \begin{align}
 \ket\psi = \sum_{x,c} \lambda_{x,c} \ket{x,c}.
 \end{align}
@@ -3325,7 +3333,7 @@ Here $n_x$ denotes the set of vertices neighbouring $x$. The coin operators $A^{
 
 \begin{figure}[!htb]
 \includegraphics[width=0.4\columnwidth]{QW_arbitrary_graph}
-\caption{A simple example of a quantum walk on an irregular graph structure. Associated with each vertex $x$ is a coin operator $A^{(x)}$ of dimension \mbox{$|n_x|\times |n_x|$}, where $|n_x|$ is the number of neighbours to $x$.} \label{fig:QW_arbitrary_graph}
+\caption{A simple example of a quantum walk on an irregular graph structure. Associated with each vertex $x$ is an $\mathrm{SU}(|n_x|)$ coin operator $A^{(x)}$, where $|n_x|$ is the number of neighbours to $x$.} \label{fig:QW_arbitrary_graph}
 \end{figure}
 
 The total time evolution is defined analogously to before,
