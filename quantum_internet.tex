@@ -183,9 +183,9 @@ There have been numerous approaches employed in the past for sharing communicati
 \begin{itemize}
 \item Channel-switching: An entire communications channel is designated for exclusive use by a given user.
 \item Packet-switching: Data is divided into packets, which are routed independently by the network, being reconstructed by the recipient once all packets have been received.
-\item Time- or frequency-multiplexing: Each user is designated a particular frequency spectrum or series of time-bins exclusively for their use.
-\item Code Division Multiple Access (CDMA): All users can broadcast over a channel simultaneously, and the construction of the coding technique enables demultiplexing of the distinct signals.
-\item Ethernet: All users are free to broadcast over a shared channel at will, and \emph{collision detection} identifies when packets interfere, after which they are rebroadcast following a random waiting period.
+\item Time- or frequency-multiplexing: Each user is designated a particular frequency spectrum or series of time-slots exclusively for their use.
+\item Code Division Multiple Access (CDMA): All users can broadcast over a channel simultaneously, and the construction of the coding technique enables demultiplexing of the distinct signals, despite their interference with one another.
+\item Ethernet: All users are free to broadcast over a shared channel at will, and \emph{collision detection} identifies when packets interfere, after which they are rebroadcast following a random waiting period, repeating until success.
 \end{itemize}
 
 Nowadays packet-switched networks have become the norm in most digital networks, as they facilitate far greater efficiency in the use of network bandwidth, and are more easily scaled to greater numbers of users in a dynamic and ad hoc manner. It is foreseeable the same trend will continue with quantum technologies, especially given their initial high cost, where maximising network utility is paramount.
@@ -275,8 +275,6 @@ To address this dilemma, the topology and subdivision of networks need to be car
 Suppose our hypothetical organisation had several different departments, and users had a tendency to communicate primarily with other users in the same department. By defining distinct departmental subnets, which individually implement Ethernet, but interconnect with one another using an alternate routing framework, we can easily see that many unnecessary packet collisions may be entirely avoided. That is, why broadcast data to users who we know don't want it?
 
 Extending upon this simple intuitive example, enormous amounts of research and development have been invested into the design of network hierarchies, and how to optimise their efficiency. A pressing consideration in the design of network protocol stacks is therefore to accommodate for multiple routing protocols, and enabling their intercompatibility.
-
-\comment{To do}
 
 %
 % Mathematical Representation of Networks
@@ -2241,7 +2239,7 @@ The \emph{multi-commodity flow problem} \cite{???} generalises the previous algo
 
 Unfortunately the computational complexity of solving this problem is much harder than the previous algorithms in general. Specifically, solving the problem exactly is \textbf{NP}-complete in general. However, in specific circumstances it can be approached using linear programming or polynomial-time approximation schemes.
 
-Note that, using Grover's search algorithm, although not efficient, quantum computers offer a quadratic improvement in the runtime of \textbf{NP}-complete problems, which is pertinent to consider in the upcoming quantum era -- if quantum computers are available as a resource, we may be able to improve network resource allocation.
+Note that, using Grover's search algorithm, although not efficient, quantum computers offer a quadratic improvement in the runtime of \textbf{NP}-complete problems, which is pertinent to consider in the upcoming quantum era -- if quantum computers are available as a resource, we may be able to improve network resource allocation substantially.
 
 %
 % Vehicle Routing Problem
@@ -2265,7 +2263,7 @@ A multitude of variations on the VRP exist, accommodating for different types of
 
 \subsection{Vehicle rescheduling problem} \label{sec:VRSP}
 
-The vehicle rescheduling problem (VRSP) generalises the VRP to the case where properties of the network undergo changes dynamically within the course of transmissions over the network. To use the analogy of transport networks, this could entail, for example, a truck breaking down en route to its destination, requiring real-time updating of vehicle scheduling.
+The vehicle rescheduling problem (VRSP) generalises the VRP to the case where properties of the network undergo changes dynamically within the course of transmissions over the network. To use the analogy of transport networks, this could entail, for example, a truck breaking down en route to its destination, requiring real-time rescheduling.
 
 Solving the VRSP exactly is \textbf{NP}-complete in general, but as with the VRP, heuristic methods can often be applied, which efficiently find approximate solutions.
 
@@ -2310,7 +2308,7 @@ We see that even the most basic primitive in quantum technologies -- state prepa
 Coherent states (Sec.~\ref{sec:coherent_state_enc}), although not strictly quantum states, nonetheless find broad applications in quantum protocols, for example as the pump for spontaneous parametric down-conversion (SPDC) sources (Sec.~\ref{sec:single_phot_src}), or as a phase-reference for homodyne detection (Sec.~\ref{sec:homodyne}). Coherent states are rather trivial prepare, as they are closely approximated by laser sources. Despite their triviality, high quality lasers can nonetheless become very expensive, large, and inaccessible to the not-so-well-resourced end-user.
 
 %
-% Single-photons
+% Single-Photons
 %
 
 \subsubsection{Single-photons} \label{sec:single_phot_src}
@@ -2333,11 +2331,31 @@ P_\mathrm{prep}=\chi^2(1-\chi^2),
 \end{align}
 assuming ideal photo-detection. Thus, the perfect photon-number correlation enables heralded preparation of states with exactly one photon in principle.
 
+Transitioning from heralded state preparation to quasi-deterministic state preparation may then be achieved by operating a bank of such sources in parallel, and multiplexing their outputs, such that when all sources are triggered simultaneously, if any one succeeds, the respective single photon is routed to the desired output mode \cite{???}, as shown in Fig.~\ref{fig:SPDC_multiplexing_arch}.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.75\columnwidth]{SPDC_multiplexing_arch}
+\caption{Quasi-deterministic single photon state preparation using $N$-fold multiplexing of heralded SPDC sources (or any other non-deterministic, but heralded source). All $N$ SPDC sources are triggered simultaneously. The heralding detectors feedforward to the multiplexer, which routes a successfully heralded single photon state (if there is one) to the output mode. With a sufficiently large bank of sources in parallel, the probability of successfully preparing a single photon state approaches unity.} \label{fig:SPDC_multiplexing_arch}
+\end{figure}
+
+The success probability of the multiplexed source exponentially asymptotes to unity as the number of in-parallel sources increases,
+\begin{align}
+P_\mathrm{success} = 1 - (1-P_\mathrm{prep})^N,
+\end{align}
+where there are $N$ sources in parallel. This relationship is shown in Fig.~\ref{fig:SPDC_multiplexing_plot} for sources with varying heralding probabilities. This principle could also obviously be applied to any other type of non-deterministic, but heralded source.
+
+\begin{figure}[!htb]
+\includegraphics[width=\columnwidth]{SPDC_multiplexing_plot}
+\caption{Single photon state preparation probability, $P_\mathrm{success}$, using $N$-fold multiplexing, where the individual heralded sources have heralding probability $P_\mathrm{prep}$. $P_\mathrm{success}$ always exponentially asymptotes to unity with increasing $N$, for any \mbox{$P_\mathrm{prep}>0$}.} \label{fig:SPDC_multiplexing_plot}
+\end{figure}
+
+Of course, operating a large bank of sources in parallel, along with the associated multiplexing, which requires nanosecond-scale fast-feedforward, is experimentally costly (both in physical size, complexity and dollars), making outsourcing of this technology potentially highly desirable.
+
 This description is purely in the photon-number basis. However, as discussed in Sec.~\ref{sec:spatio_temporal}, photons also have spatio-temporal characteristics. This strongly affects state preparation when using heralded SPDC, particularly state purity, and much effort has been invested into engineering the spectral structure of SPDC states so as to maximise purity and indistinguishability \cite{bib:Aichele02, bib:Branning00}.
 
-This process is relatively cheap, and widely used, but nonetheless might be out of reach for many end-users. SPDC is is quickly being superseded by superior technologies in cutting-edge labs, such as quantum dot sources, which have deterministic, push-button potential \cite{bib:Santori01, bib:Kiraz04}. Techniques based on cavity quantum electrodynamics (QED) \cite{bib:Brattke01} and molecular fluorescence \cite{bib:Brunel99} have also been demonstrated. However, such sources are very much in their developmental stages, and relatively expensive.
+SPDC is relatively cheap, and widely used, but nonetheless might be out of reach for many end-users, particularly when the previously discussed multiplexing techniques are employed to boost heralding efficiencies. It is quickly being superseded by superior technologies in cutting-edge labs, such as quantum dot sources, which have deterministic, push-button potential \cite{bib:Santori01, bib:Kiraz04}. Techniques based on cavity quantum electrodynamics (QED) \cite{bib:Brattke01} and molecular fluorescence \cite{bib:Brunel99} have also been demonstrated. However, such sources are very much in their developmental stages, and relatively expensive.
 
-Generally speaking, a push-button photon source could be constructed from any two-level system, comprising a ground state ($\ket{g}$) and an excited state ($\ket{e}$) with short lifetime, whereby relaxation via the \mbox{$\ket{e}\to\ket{g}$} transition emits a photon. Then, pumping the system to excite it to the $\ket{e}$ state, and waiting for spontaneous decay yields a single photon.
+Generally speaking, a push-button photon source could be constructed from any two-level system, comprising a ground state, $\ket{g}$, and an excited state, $\ket{e}$, with short lifetime, whereby relaxation via the \mbox{$\ket{e}\to\ket{g}$} transition emits a photon. Then, pumping the system to excite it to the $\ket{e}$ state, and waiting for spontaneous decay yields a single photon.
 
 %
 % NOON States
@@ -2388,7 +2406,7 @@ GHZ states are useful for various quantum information processing applications, i
 
 \subsubsection{Bell states} \label{sec:bell_state_res}
 
-Bell states (Eq.~\ref{eq:bell_basis}), also known as Einstein-Podolsky-Rosen (EPR) pairs \cite{bib:EPR35}, which are maximally-entangled two-qubit states, are particularly useful for many applications, including quantum teleportation (Sec.~\ref{sec:teleport}), cluster state preparation (Sec.~\ref{sec:CSQC}), and entanglement swapping (Sec.~\ref{sec:swapping}). Bell states are the special case of two-qubit cluster states, or equivalently, two-qubit GHZ states. They may be directly prepared as the two-mode output from a type-II\footnote{In type-II SPDC the photon-pair is polarisation-entangled, directly preparing a Bell pair in the polarisation basis. In type-I SPDC both photons have the same polarisation, yielding only photon-number correlation, but no polarisation entanglement.} SPDC source, or using non-deterministic linear optics from single-photon sources.
+Bell states (Eq.~\ref{eq:bell_basis}), also known as Einstein-Podolsky-Rosen (EPR) pairs \cite{bib:EPR35}, which are maximally-entangled two-qubit states, are particularly useful for many applications, including quantum teleportation (Sec.~\ref{sec:teleport}), cluster state preparation (Sec.~\ref{sec:CSQC}), and entanglement swapping (Sec.~\ref{sec:swapping}). Bell states are the special case of two-qubit cluster states, or equivalently, two-qubit GHZ states. They may be directly prepared as the two-mode output from a type-II\footnote{In type-II SPDC the photon-pair is polarisation-entangled, directly preparing a Bell-pair in the polarisation basis. In type-I SPDC both photons have the same polarisation, yielding only photon-number correlation, but no polarisation entanglement.} SPDC source, or using non-deterministic linear optics from single-photon sources.
 
 There are four Bell states, defined as, 
 \begin{align} \label{eq:bell_basis}
@@ -2409,7 +2427,7 @@ Cat states (Sec.~\ref{sec:cat_enc}) are extremely difficult to prepare, most eas
 % Squeezed States
 %
 
-\subsubsection{Squeezed states}
+\subsubsection{Squeezed states} \label{sec:squeezed}
 
 Of particular interest to metrology in particular, are squeezed states, states which have been longitudinally distorted in phase-space. In the metrological context, squeezed states enable sub-shotnoise limited metrology \cite{???}, thereby outperforming any classical protocol, using, for example, coherent states.
 
@@ -2417,11 +2435,9 @@ Mathematically, squeezing is represented using the squeezing operator,
 \begin{align}
 \hat{S}(\xi) = \mathrm{exp}\left[ \frac{1}{2}(\xi^*\hat{a}^2 - \xi{\hat{a}^{\dag 2}})\right],
 \end{align}
-where $\hat{a}$ is the photonic creation operator. Experimentally, such states are prepared using non-linear crystals. It is intuitively obvious that linear optics cannot prepare such states, owing to the non-linear terms in the squeezing operator, which does not preserve photon-number.
+where $\hat{a}$ is the photonic creation operator. Experimentally, such states are prepared using non-linear crystals. It is intuitively obvious that linear optics cannot prepare such states, owing to the non-linear terms in the squeezing operator, which does not preserve photon-number, and therefore cannot be passive.
 
-Of particular interest are squeezed coherent states, $\hat{S}(\xi) \ket{\alpha}$, which are minimum uncertainty states, saturating the Heisenberg uncertainty relation. 
-
-\comment{To do}
+Of particular interest are squeezed coherent states, $\hat{S}(\xi) \ket{\alpha}$, which are minimum uncertainty states, saturating the Heisenberg uncertainty relation. A special case of this is squeezed vacuum states, $\hat{S}(\xi) \ket{0}$, which are even-parity states (i.e they contain strictly even photon-number terms).
 
 %
 % More Exotic States of Light
@@ -3025,9 +3041,9 @@ QKD has been widely experimentally demonstrated over long distances \cite{bib:Mu
 
 The goal of quantum metrology is to estimate and unknown phase with the greatest degree of precision. This finds many applications, perhaps most notably the recent gravity wave measurement protocols \cite{???}. The shot-noise limit (SNL) represents the maximum achievable precision using classical states, whereas the Heisenberg limit (HL) is the best that can be achieved using quantum resources. The goal of quantum metrology is to beat the SNL, ideally saturating the HL.
 
-Achieving the SNL is easily done using coherent states (Sec.~\ref{sec:coherent_states}), which are not true quantum states. However, HL metrology can be achieved using NOON states (Sec.~\ref{sec:NOON}) \cite{bib:Dowling08}. An alternate recent proposal (known as the MORDOR protocol, after the authors), employs only single-photon states (Sec.~\ref{sec:single_phot_src}) and passive linear optics, which, although not saturating the HL, significantly beats the SNL \cite{MORDOR, MORDOR2}.
+Achieving the SNL is easily done using coherent states (Sec.~\ref{sec:coherent_states}), which are not true quantum states. However, HL metrology can be achieved using NOON states (Sec.~\ref{sec:NOON}) \cite{bib:Dowling08}. An alternate recent proposal (known as the MORDOR protocol, after the authors), employs only single-photon states (Sec.~\ref{sec:single_phot_src}) and passive linear optics, which, although not saturating the HL, significantly beats the SNL \cite{bib:MORDOR15, bib:MORDOR2}. Squeezed states (Sec.~\ref{sec:squeezed}) have also been shown to beat the SNL.
 
-Both of these types of state have their difficulties to prepare, but especially NOON states, as they cannot be deterministically prepared using linear optics, and no current source natively prepares them directly. Thus, outsourcing these state preparation stages could be of great value to end-users of metrology.
+NOON states in particular are difficult to prepare, as they cannot be deterministically prepared using linear optics, and no current source natively prepares them directly. Thus, outsourcing these state preparation stages could be of great value to end-users of metrology.
 
 \cite{DomBerry}
 
@@ -3696,7 +3712,7 @@ What's the advantage of this approach to quantum networking? There are several:
 \item Unlike generic quantum states, Bell-pairs are known states that can be infinitely reproduced, without having to worry about no-cloning limitations.
 \item Photonic Bell-pairs are easily prepared via SPDC at very high repetition rates (\mbox{$\sim 100$MHz}), enabling rapid state preparation.
 \item Importantly, QoS is a lesser issue in most scenarios. We can employ a {\sc Send and Forget} protocol for the distribution of entanglement (much like classical UDP). Since every Bell-pair is identical, we needn't be concerned about missing ones, and there are no constraints imposed by the no-cloning theorem. Instead we can simply wait for the next one, knowing it will be exactly the same. We call this the {\sc Shotgun} approach -- keep firing away until we hit something.
-\item Rather than transmitting quantum states between distant parties directly, if the communications channel fails (e.g via loss), the state to be transmitted is not corrupted. Instead we can wait for the next successfully transmitted Bell-pair until we are ready to teleport the state, which then proceeds without utilising the quantum communications channel.
+\item Rather than transmitting quantum states between distant parties directly, if the communications channel fails (e.g via loss), the state to be transmitted is not corrupted. Instead we can wait for the next successfully transmitted Bell-pair until we are ready to teleport the state, which then proceeds without utilising the quantum communications channel and its associated costs.
 \end{itemize}
 
 In addition to entanglement distribution, entangling measurements, e.g Bell state projections (Sec.~\ref{sec:bell_proj}), may be used as a primitive for many protocols. This is effectively entangled state distribution in reverse, whereby two clients transmit states to a host, who performs a joint entangling measurement upon them. For example, in the modularised model for cluster state quantum computing (Sec.~\ref{sec:module}), two adjacent modules might transmit optical qubits to a satellite, which projects them into the Bell basis, thereby creating a link between the respective modules, potentially far apart. This isn't as powerful as entangled state distribution, since it cannot be used for, for example, E91 QKD, but nonetheless remains a powerful primitive for many protocols.
