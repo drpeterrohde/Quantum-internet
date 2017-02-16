@@ -792,7 +792,7 @@ Another, and even simpler option, is thermal states. These are obtained by fully
 \hat\rho_\mathrm{thermal} = e^{-|\alpha|^2} \sum_{n=0}^\infty \frac{|\alpha|^2}{n!}\ket{n}\bra{n}.
 \end{align}
 
-Thermal states can encode classical information into their amplitudes, polarisations, or time-bins, as before. The advantage of this type of encoding is that thermal states are trivial to prepare and measure (a normal incandescent lightbulb produces thermal states of light). However, they do not undergo interference with one another, and are therefore useless for, for example, entangling qubits via which-path erasure.
+Thermal states can encode classical information into their amplitudes, polarisations, or time-bins, as before. The advantage of this type of encoding is that thermal states are trivial to prepare and measure (a normal incandescent lightbulb produces thermal states of light). However, they are purely classical states, do not undergo interference with one another, and are therefore useless for, for example, entangling qubits via which-path erasure, any other type of coherent interferometric process, or for representing quantum information such as qubits.
 
 %
 % More Exotic States of Light
@@ -2937,20 +2937,6 @@ The protocol is conceptually very similar to teleportation, where instead of tel
 Each Bell measurement can be implemented non-deterministically using a PBS, mitigating the need for interferometric stability, as before, but therefore introducing non-determinism into the protocol.
 
 %
-% Quantum Repeater Networks
-%
-
-\subsection{Quantum repeater networks} \label{sec:rep_net}
-
-\comment{Move to dedicated repeater networks section}
-
-\emph{Quantum repeaters} are devices that allow entanglement to be shared between distant nodes using a bootstrapped \emph{entanglement swapping} protocol.
-
-\comment{Say something about the scalability of quantum repeater networks under different strategies. I believe with appropriate strategies it's possible to achieve poly rather than exp scaling. Is that right? Show details.}
-
-\comment{For early gen repeater networks, need to know exact route - for higher level networks the route can be invisible to user.}
-
-%
 % Quantum Key Distribution (QKD)
 %
 
@@ -3697,7 +3683,8 @@ It turns out that there is one particularly useful quantum resource, that finds 
 In brief, Bell-pairs find applicability in, amongst many others, the following protocols:
 \begin{itemize}
 \item Cluster states (Sec.~\ref{sec:CSQC}): A Bell-pair is also a two-qubit cluster state, a supply of which can be employed in fusion strategies to prepare larger cluster states, enabling measurement based quantum computation.
-\item Quantum teleportation (Sec.~\ref{sec:teleport}): A shared Bell-pair between Alice and Bob forms the elementary quantum resource upon which the state teleportation protocol is constructed.
+\item Quantum state teleportation (Sec.~\ref{sec:teleport}): A shared Bell-pair between Alice and Bob forms the elementary quantum resource upon which the state teleportation protocol is constructed.
+\item Quantum gate teleportation (Sec.~\ref{sec:teleport_gate}): A shared 4-qubit entangled state allows the teleportation of a CNOT gate.
 \item QKD (Sec.~\ref{sec:QKD}): The E91 protocol in built upon a reliable stream of distributed Bell-pairs.
 \item Modularised quantum computation (Sec.~\ref{sec:module}): Using Bell-pairs, entanglement swapping (Sec.~\ref{sec:swapping}) can be employed to fuse neighbouring modules together using operations local to each module.
 \end{itemize}
@@ -3713,6 +3700,7 @@ What's the advantage of this approach to quantum networking? There are several:
 \item Photonic Bell-pairs are easily prepared via SPDC at very high repetition rates (\mbox{$\sim 100$MHz}), enabling rapid state preparation.
 \item Importantly, QoS is a lesser issue in most scenarios. We can employ a {\sc Send and Forget} protocol for the distribution of entanglement (much like classical UDP). Since every Bell-pair is identical, we needn't be concerned about missing ones, and there are no constraints imposed by the no-cloning theorem. Instead we can simply wait for the next one, knowing it will be exactly the same. We call this the {\sc Shotgun} approach -- keep firing away until we hit something.
 \item Rather than transmitting quantum states between distant parties directly, if the communications channel fails (e.g via loss), the state to be transmitted is not corrupted. Instead we can wait for the next successfully transmitted Bell-pair until we are ready to teleport the state, which then proceeds without utilising the quantum communications channel and its associated costs.
+\item Entanglement purification could be employed by the two parties to improve the cost metrics associated with their shared entanglement, thereby partially overcoming the limitations of the quantum communication channels.
 \end{itemize}
 
 In addition to entanglement distribution, entangling measurements, e.g Bell state projections (Sec.~\ref{sec:bell_proj}), may be used as a primitive for many protocols. This is effectively entangled state distribution in reverse, whereby two clients transmit states to a host, who performs a joint entangling measurement upon them. For example, in the modularised model for cluster state quantum computing (Sec.~\ref{sec:module}), two adjacent modules might transmit optical qubits to a satellite, which projects them into the Bell basis, thereby creating a link between the respective modules, potentially far apart. This isn't as powerful as entangled state distribution, since it cannot be used for, for example, E91 QKD, but nonetheless remains a powerful primitive for many protocols.
@@ -3723,7 +3711,13 @@ These observations lead us to naturally conclude that a quantum network speciali
 % Quantum Repeater Networks
 %
 
-\subsection{Quantum repeater networks}
+\subsection{Quantum repeater networks} \label{sec:rep_net}
+
+\emph{Quantum repeaters} are devices that allow entanglement to be shared between distant nodes using a bootstrapped \emph{entanglement swapping} protocol.
+
+\comment{Describe different architectures}
+
+\comment{Say something about the scalability of quantum repeater networks under different strategies. I believe with appropriate strategies it's possible to achieve poly rather than exp scaling. Is that right? Show details.}
 
 \cite{bib:DurBriegel999}
 
