@@ -754,7 +754,11 @@ Note, however, that this representation for qubits is only approximate, since th
 \end{align}
 which is non-zero for any finite $\alpha$, whereas for ideal qubits we require \mbox{$\langle 0|1\rangle = 0$}. However, for large $\alpha$, $\ket{\pm\alpha}$ closely approximate orthogonality.
 
-This representation for qubits using coherent states is easily generalised to qudits by considering coherent states orbiting the origin of phase-space at equal angular intervals of \mbox{$2\pi/d$}, for a $d$-level qudit.
+This representation for qubits using coherent states is easily generalised to qudits by considering coherent states orbiting the origin of phase-space at equal angular intervals of \mbox{$2\pi/d$}, for a $d$-level qudit. The $k$th qudit basis state is then,
+\begin{align}
+\ket{k}_d = \ket{e^{ik/d}\alpha},
+\end{align}
+for \mbox{$k=0,\dots,d-1$}, where again the basis states are non-orthogonal, but closely approximate orthogonality for large $\alpha$.
 
 Note that despite being pure states, with well-defined coherence, coherent states are considered classical, as they are unable to encode quantum information. That is, the coherence relationships cannot be exploited for the encoding of qubits or qudits.
 
@@ -773,7 +777,7 @@ Another type of CV state, which can in fact encode quantum information, is super
 \ket{1} &\equiv \frac{1}{\sqrt{2(1-e^{-2|\alpha|^2})}}(\ket{\alpha}-\ket{-\alpha}) \nonumber \\
 &= \ket{\mathrm{cat_-(\alpha)}}.
 \end{align}
-These two basis states contain strictly even or odd photon-number terms respectively (i.e they have well-defined parity), implying they are always orthogonal, regardless of amplitude,
+These two basis states contain strictly even or odd photon-number terms respectively (i.e they have well-defined parity), implying that, unlike coherent states, they are always orthogonal, regardless of amplitude,
 \begin{align}
 \langle\mathrm{cat}_+(\alpha)|\mathrm{cat}_-(\alpha)\rangle = 0 \,\,\forall\,\alpha,
 \end{align}
@@ -789,7 +793,7 @@ In some quantum protocols, although the inner workings may be quantum mechanical
 
 Another, and even simpler option, is thermal states. These are obtained by fully dephasing a coherent state, retaining the amplitudes, while nullifying all the coherence terms,
 \begin{align}
-\hat\rho_\mathrm{thermal} = e^{-|\alpha|^2} \sum_{n=0}^\infty \frac{|\alpha|^2}{n!}\ket{n}\bra{n}.
+\hat\rho_\mathrm{thermal}(\alpha) = e^{-|\alpha|^2} \sum_{n=0}^\infty \frac{|\alpha|^2}{n!}\ket{n}\bra{n}.
 \end{align}
 
 Thermal states can encode classical information into their amplitudes, polarisations, or time-bins, as before. The advantage of this type of encoding is that thermal states are trivial to prepare and measure (a normal incandescent lightbulb produces thermal states of light). However, they are purely classical states, do not undergo interference with one another, and are therefore useless for, for example, entangling qubits via which-path erasure, any other type of coherent interferometric process, or for representing quantum information such as qubits.
@@ -832,6 +836,7 @@ In a non-optical context, the elementary unit of quantum information -- the qubi
 \item Nitrogen-vacancy (NV) centres: Are a type of point defect in diamond, which has a very well defined energy level structure that may be utilised to represent qubits.
 \item Atomic ensembles: Encode quantum information similarly to a single atom, except that the excitation is a \emph{collective} excitation, in superposition across all the atoms in the ensemble. Atomic ensembles have been demonstrated with extremely long coherence lifetimes, operating at room temperatures.
 \item Superconducting rings: A superposition of current flow direction in a superconducting ring represents the two logical basis states.
+\item Trapped ions: Qubits are encoded into stable electronic states of electromagnetically trapped ions.
 \end{itemize}
 
 Clearly the non-optical elements in a quantum network must somehow interface with optical states, such that communication is facilitated. This is discussed later in Sec.~\ref{sec:opt_inter}.
@@ -842,7 +847,7 @@ Clearly the non-optical elements in a quantum network must somehow interface wit
 
 \section{Errors in quantum networks} \label{sec:errors_in_nets}
 
-As with classical data, quantum data is susceptible to corruption during transmission. However, in addition to all the usual classical error models, quantum information is subject to further uniquely quantum errors. These errors can be represented using the quantum process formalism and fully characterised using QPT. We now briefly discuss several of the dominant errors arising in quantum systems, paying especial attention to error models acting on qubits and optical states, as these are the most relevant in a quantum networking context.
+As with classical data, quantum data is susceptible to corruption during transmission. However, in addition to all the usual classical error models, quantum information is subject to further uniquely quantum errors. These errors can be represented using the quantum process formalism and fully characterised using QPT (Sec.~\ref{sec:QPT}). We now briefly discuss several of the dominant errors arising in quantum systems, paying especial attention to error models acting on qubits and optical states, as these are the most relevant in a quantum networking context.
 
 %
 % Known Unitaries
@@ -892,7 +897,7 @@ Coherent states are the one example of states, which are in a sense robust again
 \end{align}
 This arises because coherent states are eigenstates of the photonic annihilation operator, \mbox{$\hat{a}\ket{\alpha}=\alpha\ket{\alpha}$}.
 
-However, although coherence is maintained under the loss channel, the process is irreversible, since noise-free amplitude amplification is not possible in general \cite{???}. Thermal states exhibit the same property, that a loss channel simply yields another thermal state with reduced amplitude.
+However, although coherence is maintained under the loss channel, the process is irreversible, since noise-free amplitude amplification is not possible in general \cite{???}. Thermal states exhibit the same property, that a loss channel simply yields another thermal state with reduced amplitude, although these exhibit no coherence.
 
 To the contrary, while cat states (Sec.~\ref{sec:cat_enc}) are simple superpositions of coherent states, they are extremely sensitive to loss. This is because cat states have well-defined photon-number parity (strictly even or odd photon-number), and therefore the loss of just a single photon will flip a cat state to an orthogonal one. Since the probability of photon loss occurring increases exponentially with photon-number, large amplitude cat states are exponentially sensitive to loss channels.
 
@@ -996,7 +1001,7 @@ The amplitude damping channel is easily represented in the quantum process forma
 \hat{K}_1 &= \ket{0}\bra{0} + \sqrt\eta\ket{1}\bra{1}, \nonumber \\
 \hat{K}_2 &= \sqrt{1-\eta}\ket{0}\bra{1}, 
 \end{align}
-where \mbox{$0\leq\eta\leq 1$} quantifies the degree of damping (\mbox{$\eta=0$} represents complete damping).
+where \mbox{$0\leq\eta\leq 1$} quantifies the degree of damping (\mbox{$\eta=0$} represents complete damping, and \mbox{$\eta=1$} represents the identity channel).
 
 The physical intuition is clear upon inspection of the structure of the projectors in the Kraus operators, with $\hat{K}_2$ representing relaxation from the excited state to the ground state, with probability \mbox{$1-\eta$}.
 
@@ -1008,7 +1013,7 @@ The degree of amplitude damping is often quoted in terms of a channel's $T_1$-ti
 
 \subsection{Mode-mismatch} \label{sec:MM_error}
 
-Mode-mismatch is an error model unique to optical implementations. For perfect interference to take place between two optical modes, which is necessary to entangle them or perform ideal `which-path erasure'\footnote{Which-path erasure is the phenomenon whereby a beamsplitter interaction between two modes makes processes associated with those two modes indistinguishable, thereby projecting them into a superposition state of both possibilities. This is most commonly used to entangle distinct photon-emitting systems}, the photons in those modes must be perfectly indistinguishable, i.e they must exhibit identical spatio-temporal structure \cite{bib:RohdeMauererSilberhorn07} and must be pure states. The Hong-Ou-Mandel (HOM) \cite{bib:HOM87} \emph{visibility} is a direct measure of the indistinguishability of two photons based on their interference fringes. Specifically, interference fringes are reduced as the photons become more distinguishable. Once completely distinguishable, they obey classical statistics.
+Mode-mismatch is an error model unique to optical implementations. For perfect interference to take place between two optical modes, which is necessary to entangle them or perform ideal `which-path erasure'\footnote{Which-path erasure is the phenomenon whereby a beamsplitter interaction between two modes makes processes associated with those two modes indistinguishable, thereby projecting them into a superposition state of both possibilities. This is most commonly used to entangle distinct photon-emitting systems. This is discussed in detail in Sec.~\ref{sec:hybrid}.}, the photons in those modes must be perfectly indistinguishable, i.e they must exhibit identical spatio-temporal structure \cite{bib:RohdeMauererSilberhorn07} and must be pure states. The Hong-Ou-Mandel (HOM) \cite{bib:HOM87} \emph{visibility} is a direct measure of the indistinguishability of two photons based on their interference fringes. Specifically, interference fringes are reduced as the photons become more distinguishable. Once completely distinguishable, they obey classical statistics.
 
 This phenomenon arises very naturally whenever optical path-lengths are not perfectly aligned, or there is imperfect spatial mode-overlap between optical modes interfering at beamsplitters. Furthermore, even if optical networks are perfect, photon distinguishability may arise during state preparation, since no two photon sources are absolutely identical -- engineering photon sources is a precise business and no two are ever exactly alike.
 
@@ -1729,7 +1734,7 @@ Generalising this to any number of users is a straightforward extension to the r
 
 In the upcoming sections we discuss multi-user strategies in more detail. None of these are true {\sc Global} strategies, but nonetheless address some of the problems facing {\sc Local} strategies mentioned above.
 
-Truly {\sc Global} strategies could employ, for example, the vehicle routing problem (Sec.~\ref{sec:VRP}) or vehicle rescheduling problem (Sec.~\ref{sec:VRSP}) algorithms. However, both of these are \textbf{NP}-hard in general. Thus, the approximation techniques to be discussed in the following sections are highly applicable.
+Truly {\sc Global} strategies could employ, for example, the vehicle routing problem (Sec.~\ref{sec:VRP}) or vehicle rescheduling problem (Sec.~\ref{sec:VRSP}) algorithms. However, both of these are \textbf{NP}-hard in general. Thus, the approximation heuristics to be discussed in the following sections are highly applicable.
 
 %
 % Round Robin
@@ -2952,7 +2957,7 @@ The security of this protocol is easy to see intuitively -- with an appropriate 
 
 Importantly, the secrecy of the one-time-pad strictly requires that a key never be reused. A fresh key must be generated for each message sent, otherwise trivial frequency analysis techniques can be employed to compromise security\footnote{If the same key $k$ is used to encode two messages $s_1$ and $s_2$, yielding ciphertexts \mbox{$c_1=s_1\oplus k$} and \mbox{$c_2=s_2\oplus k$}, then we trivially obtain \mbox{$c_1 \oplus c_2 = s_1 \oplus k \oplus s_2 \oplus k = s_1 \oplus s_2$}. Now a frequency analysis on the bitwise XOR of two plaintexts can be applied, without requiring any knowledge of the key whatsoever.}.
 
-This reduces the problem of perfect secrecy of arbitrary messages to the secrecy of shared randomness. Quantum key distribution (QKD) protocols enable this by providing a shared source of randomness between Alice and Bob, where any intercept-resend attack may be detected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle and no-cloning theorem).
+Needless to say, the requirement for keys of the same length as the plaintexts, which cannot be reused, raises the obvious criticism that now secret key-sharing is as difficult as sharing a secret message in the first place. This reduces the problem of perfect secrecy of arbitrary messages to the secrecy of shared randomness. Quantum key distribution (QKD) protocols enable this by providing a shared source of randomness between Alice and Bob, where any intercept-resend attack may be detected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle and no-cloning theorem).
 
 The two original QKD protocols, known as the \emph{BB84} \cite{bib:BennetBrassard84}, and \emph{E91} \cite{bib:Ekert91} protocols, are based on polarisation encoding in photons. BB84 requires only the transmission of a sequence of single photons, polarisation encoded with random data. E91, on the other hand, requires a server that distributes entangled Bell-pairs between Alice and Bob. Since then, numerous other protocols for QKD have been proposed, for example, using CV states.
 
@@ -2985,7 +2990,7 @@ or,
 \caption{BB84 QKD protocol using polarisation-encoded photons (or equivalently any other qubit encoding). Upon completion of the protocol, Alice and Bob share a random bit-string. Suppose an eavesdropper, Eve, were to perform an intercept-resend attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of bases, and Eve will not know the bases in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. Thus, by sacrificing a small fraction of their shared bits, via openly communicating them to one another for comparison, such an intercept-resend attack will quickly be detected by Alice and Bob, with success probability exponentially asymptoting to unity. Thus, Alice and Bob have great confidence that they have a shared, secret, random bit-string, which may subsequently be employed in a one-time-pad.} \label{tab:bb84}
 \end{table}
 
-The BB84 protocol is described in Alg.~\ref{tab:bb84}. A key observation is that it requires no entanglement, no mode-matching, no interference, and no interferometric stability. It can be realised using nothing more than a single-photon source, wave-plates, and photo-detectors. For these reasons, QKD is a technology that is entirely viable on a large scale using present-day technology.
+The BB84 protocol is described in Alg.~\ref{tab:bb84}. A key observation is that it requires no entanglement, no mode-matching, no interference, and no interferometric stability. It can be realised using nothing more than a single-photon source, wave-plates, and a photo-detector. For these reasons, QKD is a technology that is entirely viable on a large scale using present-day technology.
 
 E91 is slightly different. Here Alice and Bob share an entangled Bell-pair provided by a central authority. Then both Alice \emph{and} Bob measure their qubits in random bases. As with BB84, after measuring all qubits, they compare their choices of random bases. When they coincide, they have a shared bit. When they don't, they discard their result. From here the remainder of the protocol is the same as for BB84.
 
@@ -3626,7 +3631,7 @@ Let us first assume that we wish to construct a cluster state with $n_\mathrm{lo
 
 \begin{figure}[!htb]
 \includegraphics[width=0.9\columnwidth]{cluster_ident}
-\caption{Several cluster state identities for modularised quantum computation. (a) Two cluster states with a $+$-topology are fused together using an EO (dashed). (b) Upon success, an edge is created between the respective qubits. (c) Upon failure, both qubits are effectively measured in the $\hat{Z}$ basis, thereby removing them, and any associated edges, from the graph. (d) Following a successful EO, the unwanted ancillary qubits may be eliminated using measurements in the $\hat{Y}$ basis, creating edges between their neighbours. If the grey qubits represent the desired logical qubits, this can be used to remove the remainder of the branches emanating from them.} \label{fig:plus_cluster_ident}
+\caption{Several cluster state identities for modularised quantum computation. (a) Two cluster states with a $+$-topology are fused together using an EO (dashed). (b) Upon success, an edge is created between the respective qubits. (c) Upon failure, both qubits are effectively measured in the $\hat{Z}$ basis, thereby removing them, and any associated edges, from the graph. (d) Following a successful EO, the unwanted ancillary qubits may be eliminated using measurements in the $\hat{Y}$ basis, creating edges between their neighbours. If the grey qubits represent the desired logical qubits, this can be used to remove the remainder of the branches emanating from them, thereby distilling the irregular graph down to a regular lattice.} \label{fig:plus_cluster_ident}
 \end{figure}
 
 We arrange the modules to internally represent a $+$-topology where each node has neighbouring branches in each of the up/down/left/right directions. But we imagine the situation whereby each logical qubit, along with its respective ancillary branches, is held by a different server. Thus, the final cluster state is truly decentralised across all the servers, and in general entire computations cannot be performed locally.
@@ -3697,10 +3702,10 @@ What's the advantage of this approach to quantum networking? There are several:
 \begin{itemize}
 \item Dedicated servers can specialise in this one particular task, as can be the transmission infrastructure. The server needn't concern itself with the nitty-gritty of the protocols implemented by the end user.
 \item Unlike generic quantum states, Bell-pairs are known states that can be infinitely reproduced, without having to worry about no-cloning limitations.
-\item Photonic Bell-pairs are easily prepared via SPDC at very high repetition rates (\mbox{$\sim 100$MHz}), enabling rapid state preparation.
-\item Importantly, QoS is a lesser issue in most scenarios. We can employ a {\sc Send and Forget} protocol for the distribution of entanglement (much like classical UDP). Since every Bell-pair is identical, we needn't be concerned about missing ones, and there are no constraints imposed by the no-cloning theorem. Instead we can simply wait for the next one, knowing it will be exactly the same. We call this the {\sc Shotgun} approach -- keep firing away until we hit something.
-\item Rather than transmitting quantum states between distant parties directly, if the communications channel fails (e.g via loss), the state to be transmitted is not corrupted. Instead we can wait for the next successfully transmitted Bell-pair until we are ready to teleport the state, which then proceeds without utilising the quantum communications channel and its associated costs.
-\item Entanglement purification could be employed by the two parties to improve the cost metrics associated with their shared entanglement, thereby partially overcoming the limitations of the quantum communication channels.
+\item Photonic Bell-pairs are easily prepared via type-II SPDC at very high repetition rates (\mbox{$\sim 100$MHz}), enabling rapid state preparation.
+\item QoS is a lesser issue in most scenarios. We can employ a {\sc Send and Forget} protocol for the distribution of entanglement (much like classical UDP). Since every Bell-pair is identical, we needn't be concerned about missing ones, and there are no constraints imposed by the no-cloning theorem. Instead we can simply wait for the next one, knowing it will be exactly the same. We call this the {\sc Shotgun} approach -- keep firing away until we hit something.
+\item Rather than transmitting quantum states between distant parties directly, if we instead use state teleportation the state to be transmitted will not be corrupted if the communications channel fails (e.g via loss). Instead we can wait for the next successfully transmitted Bell-pair until we are ready to teleport the state, which then proceeds without directly utilising the quantum communications channel and its associated costs.
+\item Entanglement purification may be employed by the two parties to improve the cost metrics associated with their shared entanglement, thereby partially overcoming the limitations of the quantum communication channels.
 \end{itemize}
 
 In addition to entanglement distribution, entangling measurements, e.g Bell state projections (Sec.~\ref{sec:bell_proj}), may be used as a primitive for many protocols. This is effectively entangled state distribution in reverse, whereby two clients transmit states to a host, who performs a joint entangling measurement upon them. For example, in the modularised model for cluster state quantum computing (Sec.~\ref{sec:module}), two adjacent modules might transmit optical qubits to a satellite, which projects them into the Bell basis, thereby creating a link between the respective modules, potentially far apart. This isn't as powerful as entangled state distribution, since it cannot be used for, for example, E91 QKD, but nonetheless remains a powerful primitive for many protocols.
@@ -3717,7 +3722,13 @@ These observations lead us to naturally conclude that a quantum network speciali
 
 \comment{Describe different architectures}
 
+\comment{What resources are required?}
+
 \comment{Say something about the scalability of quantum repeater networks under different strategies. I believe with appropriate strategies it's possible to achieve poly rather than exp scaling. Is that right? Show details.}
+
+\comment{What sort of states are shared? Just Bell-pairs? Or are there more elaborate schemes?}
+
+\comment{construct more complex things from bell pairs}
 
 \cite{bib:DurBriegel999}
 
@@ -4116,13 +4127,15 @@ Technology should benefit humanity, not only an elite few. In light of this, who
 
 Already today, even before the advent of useful post-classical quantum computers, we are seeing the emergence of the outsourced model for computation. IBM recently made an elementary 5-qubit quantum computer freely available for use via the cloud. Interested users can log in online, upload a circuit description for a quantum protocol, and have it executed remotely, with the results relayed back in real-time. Although still very primitive, this simple development already makes experimentation with elementary quantum protocols accessible to the poor layman, undergrad, or PhD student in a developing country, people who just last year would never have dreamt of being able to run their own quantum computing experiments! This effectively opens up research opportunities to people who otherwise would have been priced out of the market entirely, unable to compete with established, well-resourced labs. Evidently, the market already recognises the importance of outsourced models for quantum computation. We encourage the impatiently curious reader to log onto the `IBM Quantum Experience' ({\tt \href{http://www.research.ibm.com/quantum/}{http://www.research.ibm.com/quantum/}}) and take a shot at designing a 5-qubit quantum protocol, without even seeing the quantum computer.
 
-The quantum internet will facilitate the communication and trade of quantum assets beyond just quantum computation and cryptography. There are many uses for various hard-to-prepare quantum states, for example in metrology, lithography, or research, where outsourcing state preparation would be valuable. Alternately, performing some quantum measurements can be technologically challenging, and the ability to delegate them to someone better-equipped would be desirable. The quantum internet goes beyond just quantum computing. Rather, it extends to a full range of quantum resources and protocols.
+The quantum internet will facilitate the communication and trade of quantum assets beyond just quantum computation and cryptography. There are many uses for various hard-to-prepare quantum states, for example in metrology, lithography, or research, where outsourcing complicated state preparation would be valuable. Alternately, performing some quantum measurements can be technologically challenging, and the ability to delegate them to someone better-equipped would be desirable. The quantum internet goes beyond just quantum computing. Rather, it extends to a full range of quantum resources and protocols.
 
 To commodify quantum computing, if constructing large-scale quantum computers were a simple matter of plug-and-play, where QuantumLego\texttrademark \,building blocks are available off-the-shelf and straightforward to assemble even for monkeys, mass production would rapidly force down prices. By arbitrarily interconnecting these boxes, large-scale quantum computers could be scaled up with demand, with a trajectory following a new Quantum Moore's Law, and a price scaling linearly with the number of qubits. We envisage that each of these commodity items is a black box, within which a relatively small number of qubits are held captive. Then, to build a larger quantum computer, we don't need to upgrade our boxes. Rather, we simply purchase more boxes to interconnect over the network. This notion is tailored to cluster states in particular -- because a cluster state can be realised by nearest neighbour interactions alone, and since all preparation stages commute with one another, they naturally lend themselves to modularised, distributed preparation.
 
-On the other hand, if quantum computers were only ever sold as specialised, room-sized, all-in-one solutions (think D-Wave), such mass production would not experience the driving force of commodified, off-the-shelf building blocks, each of which is cheap, yet frugal in its computational power alone.
+Such an approach lends itself naturally to distributed computation, where modules may be shared across multiple users, with the economic benefit of maximising resource utilisation, and the practical benefit of the end-user effectively having a much larger quantum computer at their disposal.
 
-Taking the concept of distributed computation to the logical extreme, modularised quantum computation mitigates the need to purchase large-scale quantum computers outright, allowing them to be gradually scaled up as demand increases and production costs diminish. Additionally, they can be shared across multiple users, with the economic benefit of maximising resource utilisation, and the practical benefit of the end-user effectively having a much larger quantum computer at their disposal. By having a standardised architecture for optically interconnecting modules, we also somewhat `future-proof' our hardware investment -- if interfacing modules is standardised, existing hardware can be fully compatible with newer, more capable module versions. 
+By having a standardised architecture for optically interconnecting modules, we also somewhat `future-proof' our hardware investment -- if interfacing modules is standardised, existing hardware can be fully compatible with newer, more capable module versions. We might envision the emergence of open standards on optical interconnects.
+
+On the other hand, if quantum computers were only ever sold as specialised, room-sized, all-in-one solutions (think D-Wave), such mass production would not experience the driving force of commodified, off-the-shelf building blocks, each of which is cheap, yet frugal in its computational power alone.
 
 %
 % Security Implications of the Global Quantum Internet
@@ -4191,7 +4204,7 @@ Already, off-the-shelf QKD systems are available as commodity items, from vendor
 
 We have focussed our attention thus far on the application of quantum networking to quantum information processing applications, such as quantum computing and quantum cryptography. However, with plug-and-play quantum resources available over a network, one might envisage far greater applicability than just these.
 
-Of particular interest is the implications of quantum networking to basic science research. Presently, experimental quantum physics research is limited to well-resourced labs with access to state of the art equipment. With the ability to license these assets over a network, and interconnect them on an ad hoc basis, the ability to construct all manner of quantum experiments could be extended to all. An undergraduate laboratory would now have the ability to approach a host to politely borrow their state engineering technologies, send it to another with the ability to perform some evolution to that system, and to yet another to perform measurement and analysis of the output -- all from an undergrad lab equipped with nothing more than desktop computers. This has broad implications for basic science research, opening it up to aspiring researchers across the globe, regardless of their direct access to cutting-edge tools. This will greatly expand the intellectual base for conducting quantum experimentation to the entire global scientific community, destroying the scientific monopolies controlled by a handful of world-leading experimental groups.
+Of particular interest is the implications of quantum networking to basic science research. Presently, experimental quantum physics research is limited to well-resourced labs with access to state of the art equipment. With the ability to license these assets over a network, and dynamically interconnect them on an ad hoc basis, the ability to construct all manner of quantum experiments could be extended to all. An undergraduate laboratory would now have the ability to approach a host to politely borrow their state engineering technologies, send it to another with the ability to perform some evolution to that system, and to yet another to perform measurement and analysis of the output -- all from an undergrad lab equipped with nothing more than desktop PC's. This has broad implications for basic science research, opening it up to aspiring researchers across the globe, regardless of their direct access to cutting-edge tools. This will greatly expand the intellectual base for conducting quantum experimentation to the entire global scientific community, destroying the scientific monopolies controlled by a handful of world-leading experimental groups.
 
 The reality is that we are only just beginning to understand the full potential for quantum technologies, and as we learn more we will inevitably find new uses for networking them.
 
@@ -4218,7 +4231,7 @@ We acknowledge Charlotte Bridault for helpful discussions. P.P.R. is funded by a
 \textbf{Statement of contributions}
 \\
 \\
-P.P.R conceived and directed this project, developed the original ideas, and prepared most of the manuscript. Z.E.S and H.L.H prepared Sec.~\ref{sec:state_of_the_art}. S.I.M contributed to Sec.~\ref{sec:classical_nets}. R.L.M contributed to Sec.~\ref{sec:protocols_quant_int}. All authors played active roles in the discussions that developed this work.
+P.P.R conceived and directed this project, developed the original ideas, and prepared most of the manuscript. Z.E.S and H.L.H prepared Sec.~\ref{sec:state_of_the_art}. W.J.M prepared Sec.~\ref{sec:rep_net}. S.I.M contributed to Sec.~\ref{sec:classical_nets}. R.L.M contributed to Sec.~\ref{sec:protocols_quant_int}. All authors played active roles in the discussions that developed this work.
 \end{acknowledgments}
 
 %
