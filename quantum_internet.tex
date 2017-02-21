@@ -12,8 +12,6 @@
 \usepackage[]{qcircuit}
 % Coffee \usepackage{coffee4}
 
-\newcommand{\comment}[1]{{\color{blue}{\textbf{#1}}}}
-
 \newcommand{\bra}[1]{\langle#1|}
 \newcommand{\ket}[1]{|#1\rangle}
 
@@ -129,9 +127,9 @@ Perhaps the most exciting prospect in the quantum age is the development of quan
 \item Searching unstructured databases (Grover's algorithm \cite{bib:Grover96} -- quadratic speedup).
 \item Satisfiability problems\footnote{A satisfiability problem is one where we search a function's input space for a solution(s) satisfying a given output constraint. The hardest such problems, like the archetypal {\sc 3-SAT} problem, are \textbf{NP}-complete.} (Grover's algorithm -- quadratic speedup). This includes solving \textbf{NP}-complete problems, and brute-force cracking of private encryption keys\footnote{Note that when performing a brute-force attack against a private encryption key, a quadratic speedup effectively halves the key length in terms of algorithmic runtime. Thus, in the quantum era private key lengths will need to be doubled.}. 
 \item Period finding and integer factorisation (Shor's algorithm \cite{bib:ShorFactor} -- exponential speedup). This compromises Rivest, Shamir \& Adleman (RSA) public-key crytography \cite{bib:RSA}, the most widely used cryptographic protocol on the internet today.
-\item Simulation of quantum systems \cite{bib:lloyd1996universal}. This includes simulation of: molecular and atomic interactions in the study of quantum chemistry or nuclear physics; interactions between drug molecules and organic molecules for drug design; genetic interactions for the study of genetics and genetic medicine; nanoscale semiconductor physics for integrated circuit design.
-\item Simulation of quantum field theories \cite{bib:JLP, bib:RohdeWavelet15}, a key area of fundamental physics research.
-\item Topological big-data analysis \cite{bib:lloyd2016quantum, USTCexperiment}, with broad applications including: social media network analysis; consumer behaviour; behavioural dynamics; neuroscience; and higher-dimensional signal processing.
+\item Simulation of quantum systems (\cite{bib:lloyd1996universal} - exponential speedup). This includes simulation of: molecular and atomic interactions in the study of quantum chemistry or nuclear physics; interactions between drug molecules and organic molecules for drug design; genetic interactions for the study of genetics and genetic medicine; nanoscale semiconductor physics for integrated circuit design.
+\item Simulation of quantum field theories (\cite{bib:JLP, bib:RohdeWavelet15} - exponential speedup), a key area of fundamental physics research.
+\item Topological big-data analysis (\cite{bib:lloyd2016quantum, USTCexperiment} - exponential speedup), with broad applications including: social media network analysis; consumer behaviour; behavioural dynamics; neuroscience; and higher-dimensional signal processing.
 \item Solving linear systems of equations \cite{bib:harrow2009quantum, bib:BerryLinear}, with widespread applications in linear algebra and calculus.
 \item Quantum machine learning \cite{bib:lloyd2013quantum}. This includes putting an end to humanity.
 \end{itemize}
@@ -522,7 +520,7 @@ Multiple processes may be composed using the notation,
 \end{align}
 In general, processes do not commute, i.e \mbox{$\mathcal{E}_1\circ \mathcal{E}_2 \neq \mathcal{E}_2\circ \mathcal{E}_1$}. Unless unitary, quantum processes are irreversible, meaning that errors accumulate and cannot be overcome without the overhead of some form of quantum error correction (QEC) \cite{bib:Shor95, bib:CalderbankShor96, bib:NielsenChuang00}.
 
-The only limitation faced by the quantum process formalism is that it is described over discrete-time only. To consider continuous-time evolution, master equations can be used. These represent the continuous-time evolution of a quantum state as a differential equation in time, combining a usual Hamiltonian term as well as decoherence terms,
+The only limitation faced by the quantum process formalism is that it is described over discrete-time only. To consider continuous-time evolution, \emph{master equations} can be used. These represent the continuous-time evolution of a quantum state as a differential equation in time, combining a usual Hamiltonian term as well as decoherence terms,
 \begin{align}
 \frac{d\hat\rho}{dt} = -\frac{i}{\hbar}[\hat{H},\hat\rho] + \sum_j (2\hat{L}_j\hat\rho\hat{L}_j^\dag - \{\hat{L}_j^\dag\hat{L}_j,\hat\rho\}),
 \end{align}
@@ -587,7 +585,7 @@ In general, both nodes and links in a quantum network may implement quantum proc
 % Characterising Quantum Channels
 %
 
-\subsection{Characterising quantum channels} \label{sec:QPT}
+\subsection{Characterising quantum states and channels} \label{sec:QPT}
 
 Given a link implementing some arbitrary quantum process, it is essential that it can be experimentally determined such that network performance may be characterised. For example, if an optical channel is lossy, what is the loss rate? This is crucial when attempting to choose routing strategies that optimise certain cost metrics.
 
@@ -646,17 +644,17 @@ thereby obtaining the full process matrix $\chi$, in the chosen basis.
 
 \section{Optical encoding of quantum information} \label{sec:opt_enc_of_qi}
 
-While all-optical quantum computing is an unlikely architecture for future scalable quantum computers, it is all but inevitable that optics will play a central role in quantum communications networks. Foremost, this is because photons are `flying' by their very nature and can very easily be transmitted across large distances -- it's quite challenging to transmit a superconducting circuit containing information from Australia to the United States in the blink of an eye! Additionally, optical states are, in many cases, relatively easy to prepare, manipulate and measure, and can also be readily interfaced with other physical quantum systems (Sec.~\ref{sec:opt_inter}), allowing the transfer of quantum information from optical communications systems to some other architecture better suited to a given task.
+While all-optical quantum computing is an unlikely architecture for future scalable quantum computers, it is all but inevitable that optics will play a central role in quantum communications networks. Foremost, this is because photons are `flying' by their very nature and can very easily be transmitted across large distances -- it's quite challenging to transmit a superconducting circuit containing information from Australia to Mozambique in the blink of an eye! Additionally, optical states are, in many cases, relatively easy to prepare, manipulate and measure, and can also be readily interfaced with other physical quantum systems (Sec.~\ref{sec:opt_inter}), allowing the transfer of quantum information from optical communications systems to some other architecture better suited to a given task.
 
 Optical systems are very versatile, allowing quantum information to be optically encoded in a number of ways -- into single photons, many photons, or even an indeterminate number of photons, and in both discrete or continuous degrees of freedom. Different types of encodings may have very different properties in terms of the errors they are susceptible to (Sec.~\ref{sec:errors_in_nets}).
 
 When dealing with single photons, information can be encoded in a number of ways. Most obviously, it can be encoded into the polarisation basis, allowing one qubit of information per photon (i.e horizontal and vertical polarisation represent the logical 0 and 1 states). Or it could be directly encoded into the photon-number basis. However, other degrees of freedom, such as the spectral/temporal degrees of freedom could be employed, encoding information into time- or frequency-bins, with potentially far more levels than a simple polarisation qubit \cite{bib:RohdeInfCap13}.
 
 %
-% Single-Photons
+% Single Photons
 %
 
-\subsection{Single-photons} \label{sec:single_phot_enc}
+\subsection{Single photons} \label{sec:single_phot_enc}
 
 A very attractive feature of single photons is that they undergo very little decoherence, even over large distances -- dephasing (Sec.~\ref{sec:dephasing_error}) in the polarisation degree of freedom, for example, is negligible in free-space. They are, however, very susceptible to loss, and protocols relying on many single-photon states suffer exponential decay in their success rates as the number of photons is increased (Sec.~\ref{sec:eff_err}).
 
@@ -702,6 +700,11 @@ Alternately, we can define \emph{mode operators} \cite{bib:RohdeMauererSilberhor
 \hat{A}^\dag_\psi &= \int_{-\infty}^\infty \psi(t) \hat{a}^\dag(t)\,dt, \nonumber \\
 \ket\psi_\mathrm{temporal} &= \hat{A}^\dag_\psi \ket{0}.
 \end{align}
+Mode operators commute, inheriting this property directly from photonic creation operators,
+\begin{align}
+\left[\hat{A}^\dag_{\psi_1},\hat{A}^\dag_{\psi_2}\right]=0.
+\end{align}
+
 Now by defining an orthonormal basis of temporal distribution functions, $\{\xi_i\}$, such that,
 \begin{align} \label{eq:spec_orth_def}
 \bra{0} \hat{A}_{\xi_i} \hat{A}^\dag_{\xi_j}\ket{0} = \delta_{i,j},
@@ -2324,13 +2327,13 @@ Single-photon sources (Sec.~\ref{sec:single_phot_enc}) \cite{bib:Oxborrow05} are
 
 The most common approach to preparing single-photon states is via heralded SPDC \cite{bib:URen03, bib:URen05}, whereby a coherent pump source is down-converted into two-mode photon-pairs via a second-order non-linear crystal with interaction Hamiltonian of the form,
 \begin{align}
-\hat{H}_\mathrm{SPDC} = \xi(\hat{a}_\mathrm{p}\hat{a}_\mathrm{s}^\dag\hat{a}_\mathrm{i}^\dag + \hat{a}_\mathrm{p}^\dag\hat{a}_\mathrm{s}\hat{a}_\mathrm{i}),
+\hat{H}_\mathrm{SPDC} = \xi(\hat{a}_p\hat{a}_s^\dag\hat{a}_i^\dag + \hat{a}_p^\dag\hat{a}_s\hat{a}_i),
 \end{align}
-where $\hat{a}_\mathrm{p}$, $\hat{a}_\mathrm{s}$ and $\hat{a}_\mathrm{i}$ are the photonic annihilation operators for the pump (input), and \emph{signal} and \emph{idler} (output) modes respectively. This has the clear intuitive interpretation as the coherent exchange of photon-pairs in the output modes with photons in the coherent pump.
+where $\hat{a}_p$, $\hat{a}_s$ and $\hat{a}_i$ are the photonic annihilation operators for the pump (input), and \emph{signal} and \emph{idler} (output) modes respectively. This has the clear intuitive interpretation as the coherent exchange of photon-pairs in the output modes with photons in the coherent pump.
 
 Specifically, a two-mode SPDC state takes the form,
 \begin{align}
-\ket\psi_\mathrm{SPDC} = \sqrt{1-\chi^2} \sum_{n=0}^\infty \chi^n \ket{n}_\mathrm{s}\ket{n}_\mathrm{i},
+\ket\psi_\mathrm{SPDC} = \sqrt{1-\chi^2} \sum_{n=0}^\infty \chi^n \ket{n}_s\ket{n}_i,
 \end{align}
 where $\chi$ is the squeezing parameter, a function of the pump-power and properties of the crystal. Applying the single-photon projector, \mbox{$\ket{1}\bra{1}$}, to the first mode yields the single-photon state in the other, up to normalisation, which reflects the inherent non-determinism. The preparation success probability is derived from the amplitude of the \mbox{$n=1$} term as,
 \begin{align}
