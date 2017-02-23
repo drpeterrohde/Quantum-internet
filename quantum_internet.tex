@@ -2597,7 +2597,7 @@ Linear optics networks implement unitary linear maps on the photonic creation op
 \begin{align} \label{eq:LO_unitary_map}
 \hat{U}\hat{a}_i^\dag \hat{U}^\dag \to \sum_{j=1}^m U_{i,j} \hat{a}^\dag_j,
 \end{align}
-where $\hat{a}^\dag_i$ is the photonic creation operator on the $i$th of the $m$ modes, and $U$ may be any $\mathrm{SU}(m)$ matrix. It was shown by \cite{bib:Reck94} that arbitrary transformations of this form may be decomposed into $O(n^2)$ linear optical elements, enabling efficient construction of arbitrary linear transformations.
+where $\hat{a}^\dag_i$ is the photonic creation operator on the $i$th of the $m$ modes, and $U$ may be any $\mathrm{SU}(m)$ matrix. It was shown by \cite{bib:Reck94} that arbitrary transformations of this form may be decomposed into $O(m^2)$ linear optical elements (beamsplitters and phase-shifters), enabling efficient construction of arbitrary linear transformations. Furthermore, the algorithm for determining the decomposition of some linear transformation has polynomial classical runtime (i.e residing in \textbf{P}).
 
 These linear optics evolutions are most commonly implemented using either:
 \begin{itemize}
@@ -2618,7 +2618,29 @@ These three main contenders are illustrated in Fig.~\ref{fig:LO_archs}, and desc
 
 \subsubsection{Non-linear optics}
 
-\comment{To do!}
+Aside from the linear transformations described above, which are passive and photon-number-preserving, various active, non-linear interactions are also of interest to optical quantum information processing. The most prominent of these are primarily considered as transformations in phase-space (Sec.~\ref{sec:exotic}), such as the Wigner function representation.
+
+The most well-known non-linear transformation is the displacement operation, which translates the Wigner function by some arbitrary amplitude in phase-space, whilst preserving all other features of the phase-space representation. This is described by the unitary operator,
+\begin{align}
+\hat{D}(\alpha) = \mathrm{exp}\left[\alpha\hat{a}^\dag - \alpha^*\hat{a}\right],
+\end{align}
+where $\alpha$ is the displacement amplitude. This transformation is easily implemented by mixing a state on a low-reflectivity beamsplitter with a coherent state of some arbitrary complex amplitude, which determines the displacement amplitude.
+
+Another common non-linear transformation is squeezing, discussed in Sec.~\ref{sec:squeezed}. This implements the unitary operator,
+\begin{align}
+\hat{S}(\xi) = \mathrm{exp}\left[ \frac{1}{2}(\xi^*\hat{a}^2 - \xi{\hat{a}^{\dag 2}})\right],
+\end{align}
+where $\xi$ is the squeezing parameter, which has the effect of applying a dilation of some arbitrary factor in phase-space.
+
+Thus, jointly, the displacement and squeezing operators enable arbitrary translations and dilations in phase-space. These operations form the basis for CV quantum computing schemes, to be discussed in more detail in Sec.~\ref{sec:CV_QC}.
+
+%
+% Non-Optical Systems
+%
+
+\subsubsection{Non-optical systems}
+
+There are countless non-optical systems applicable to quantum information processing applications. For example, quantum computing schemes have been described using: $\lambda$-configuration atoms; superconducting rings; ion traps; atomic ensembles; and countless more. From a networking perspective, we are not terribly interested in the inner workings of all these schemes, as we are reasonably confident that optics will be mediating networking, even if other aspects of the protocol are non-optical. Thus, we will not go into great detail about the evolution of non-optical systems. Instead, for our purposes, the relevant issue is interfacing between optical and non-optical systems, such that networking protocols between them may be implemented. Optical interfacing is discussed in detail in Sec.~\ref{sec:opt_inter}.
 
 %
 % Random Number Generation
@@ -3456,7 +3478,7 @@ Because of the graph structure of the walk, it lends itself naturally to distrib
 % Continuous Variables
 %
 
-\subsection{Continuous variables}
+\subsection{Continuous variables} \label{sec:CV_QC}
 
 \comment{TO DO}
 
