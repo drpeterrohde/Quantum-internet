@@ -2597,7 +2597,7 @@ Linear optics networks implement unitary linear maps on the photonic creation op
 \begin{align} \label{eq:LO_unitary_map}
 \hat{U}\hat{a}_i^\dag \hat{U}^\dag \to \sum_{j=1}^m U_{i,j} \hat{a}^\dag_j,
 \end{align}
-where $\hat{a}^\dag_i$ is the photonic creation operator on the $i$th of the $m$ modes, and $U$ may be any $\mathrm{SU}(m)$ matrix. It was shown by \cite{bib:Reck94} that arbitrary transformations of this form may be decomposed into $O(m^2)$ linear optical elements (beamsplitters and phase-shifters), enabling efficient construction of arbitrary linear transformations. Furthermore, the algorithm for determining the decomposition of some linear transformation has polynomial classical runtime (i.e residing in \textbf{P}).
+where $\hat{a}^\dag_i$ is the photonic creation operator on the $i$th of the $m$ modes, and $U$ may be any $\mathrm{SU}(m)$ matrix. It was shown by \cite{bib:Reck94} that arbitrary transformations of this form may be decomposed into $O(m^2)$ linear optical elements (beamsplitters and phase-shifters), enabling efficient construction of arbitrary linear transformations. Furthermore, the algorithm for determining the decomposition of some linear transformation has polynomial classical runtime (i.e residing in \textbf{P}). Each individual beamsplitter in such a decomposition is an arbitrary $\mathrm{SU}(2)$ matrix acting on the photonic creation operators, while the phase-shifters implement the operation $\hat\Phi(\phi)=e^{i\phi\hat{n}}$, for phase-shift $\phi$.
 
 These linear optics evolutions are most commonly implemented using either:
 \begin{itemize}
@@ -3369,6 +3369,8 @@ Both quantum walks and {\sc BosonSampling} have been subject to extensive experi
 
 Because these models are entirely passive, they can be made cloud-based very trivially: Alice prepares her permutation of single photons as the input state, sends it to Bob over the quantum network, who applies the passive operations before returning the state to Alice. In this case, no intermediate client/server interaction is required. Alternately, she could classically communicate a bit-string to Bob indicating the input photon-number configuration, in case she is unable to prepare it herself.
 
+The {\sc BosonSampling} and quantum walk models are based on single-photon encoding. However, passive linear optics could also be applied to other states of light. In particular, passive linear optics acting upon multi-mode coherent states implements the \emph{classical} computation of matrix multiplication.
+
 %
 % Boson-Sampling
 %
@@ -3475,6 +3477,39 @@ It was shown by \cite{bib:RohdeMultiWalk11} that any such walk can be efficientl
 Because of the graph structure of the walk, it lends itself naturally to distributed implementation. We might imagine that different subgraphs -- or `widgets' \cite{bib:Lovett10, bib:Childs09} -- implement different computational primitives or subroutines. These widgets might be proprietary or expensive to implement, and are therefore best outsourced over a network.
 
 %
+% Coherent States
+%
+
+\subsubsection{Coherent states} \label{sec:coherent_state_QC}
+
+A linear optics network acting on a tensor product of coherent state inputs implements simple matrix multiplication on the vector of coherent amplitudes. Specifically, Eq.~\ref{eq:LO_unitary_map} implies that for the input multi-mode coherent state,
+\begin{align}
+\ket{\psi}_\mathrm{in} = \ket{\alpha_1,\dots,\alpha_m},
+\end{align}
+the linear map now takes the form,
+\begin{align}
+\beta_i = \sum_{j=1}^m U_{i,j} \alpha_j,
+\end{align}
+where the output state is the separable multi-mode coherent state,
+\begin{align}
+\ket{\psi}_\mathrm{out} = \ket{\beta_1,\dots,\beta_m}.
+\end{align}
+Equivalently, this could simply be expressed as the matrix equation,
+\begin{align}
+\vec{\beta} = U\cdot\vec{\alpha}.
+\end{align}
+
+Of course this is not strictly a \emph{quantum} computation, since:
+\begin{itemize}
+\item It can be efficiently classically computed using $O(m^2)$ operations\footnote{Using the na\"ive element-wise approach, which can be further improved upon using more sophisticated algorithms.}, thus residing in \textbf{P}.
+\item Coherent states are considered classical states (i.e laser light).
+\item There is no entanglement between modes.
+\item The algorithm offers no quantum speedup.
+\end{itemize}
+
+Despite offering no direct quantum advantage, we introduce this model for restricted computation, since it lends itself very elegantly to a form of homomorphic encryption, to be described in detail in Sec.~\ref{sec:homo_coherent_state}. The applications for matrix multiplication needn't be stated, as it forms such an elementary primitive throughout linear algebra and in solving systems of differential equations, with countless applications.
+
+%
 % Continuous Variables
 %
 
@@ -3562,10 +3597,10 @@ In the usual circuit model, blind quantum computation has been shown to be viabl
 These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver information-theoretically secure data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
 
 %
-% Passive Linear Optics
+% Passive Photonic Linear Optics
 %
 
-\subsubsection{Passive linear optics}
+\subsubsection{Passive photonic linear optics}
 
 It was recently shown that processing photonic states using passive linear optics may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}. This encryption does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy. Furthermore, it does not impose an overhead in circuit complexity, only in the number of input photons.
 
@@ -3581,7 +3616,7 @@ The full protocol is given in Alg.~\ref{tab:homo_LO} and shown in Fig.~\ref{fig:
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\tt
-function HomomorphicLinearOptics($S$):
+function HomomorphicPhotonicLinearOptics($S$):
 \begin{enumerate}
     \item Alice meditates upon, but needn't actually prepare the state,
     \begin{align}
@@ -3615,7 +3650,7 @@ is the photon-number of the $i$th mode.
     \item Alice sends $\ket\psi_\mathrm{enc}$ to Bob.
     \item Bob applies processing using his linear optics computer, to obtain,
     \begin{align}
-    \ket\psi_\mathrm{enc\,comp} = \hat{U} \ket\psi_\mathrm{enc},
+    \ket\psi_\mathrm{enc\,comp} = \hat{U} \ket\psi_\mathrm{enc}.
     \end{align}
     \item Bob returns $\ket\psi_\mathrm{enc\,comp}$ to Alice.
     \item Alice applies the inverse of the encoding operation,
@@ -3626,29 +3661,105 @@ is the photon-number of the $i$th mode.
     \item The remaining vertically polarised state is Alice's unencrypted output of the computation.
     \item $\Box$
 \end{enumerate}}}
-\caption{Protocol for implementing homomorphic encryption on photonic, passive linear optics.} \label{tab:homo_LO}
+\caption{Protocol for implementing homomorphic encryption on photonic passive linear optics.} \label{tab:homo_LO}
 \end{table}
 
 \begin{figure}[!htb]
 \includegraphics[width=0.85\columnwidth]{BS_homo}
-\caption{Protocol for implementing homomorphic encryption on photonic, passive linear optics. Horizontal bars are wave-plates, implementing polarisation rotations $\hat{R}(\theta)$ -- the encryption and decryption operations. $\ket\psi_\mathrm{in}$ contains one photon per mode, polarisation-encoded such that vertically polarised photons belong to the desired computation, whilst the remaining horizontally polarised ones are dummies. The polarisation rotation angle, $k$, acts as Alice's private key. The photo-detectors are polarisation-resolving, discarding all dummy horizontally polarised photons at the output. The algorithm is described in detail in Alg.~\ref{tab:homo_LO}.} \label{fig:BS_homo}
+\caption{Protocol for implementing homomorphic encryption on photonic passive linear optics. Horizontal bars are wave-plates, implementing polarisation rotations $\hat{R}(\theta)$ -- the encryption and decryption operations. $\ket\psi_\mathrm{in}$ contains one photon per mode, polarisation-encoded such that vertically polarised photons belong to the desired computation, whilst the remaining horizontally polarised ones are dummies. The polarisation rotation angle, $k$, acts as Alice's private key. The photo-detectors are polarisation-resolving, discarding all dummy horizontally polarised photons at the output. The algorithm is described in detail in Alg.~\ref{tab:homo_LO}.} \label{fig:BS_homo}
 \end{figure}
 
-The key idea here is that orthogonal polarisations do not interfere with one another under linear optics evolution. Thus, by inserting additional orthogonal `dummy' photons, and applying random polarisation rotations, we can confuse any eavesdropper as to which photons belong to the computation, thereby hiding the secret data from them.
-
-Using this protocol, it was shown that the probability of Bob correctly guessing Alice's input string approaches\footnote{This is in the asymptotic limit where the key $k$ is chosen with infinite precision. In practise, one will have to suffice with some limited precision in the choice of $k$, since an infinite-precision real number is effectively an infinitely long private key. Practically, one could choose $k$ as some integer multiple of \mbox{$2\pi/d$}, where $d$ is the number of distinct keys. In this case, the information security of the protocol increases with $d$. This relationship is provided by \cite{bib:RohdeQWEnc12}.},
-\begin{align}
-P_\mathrm{guess} = \sqrt{\frac{8}{\pi m}},
+The key idea here is that orthogonal polarisations do not interfere with one another under linear optics evolution. Thus, by inserting additional orthogonal `dummy' photons, and applying uniform, random polarisation rotations, we can confuse any eavesdropper as to which photons belong to the computation, thereby hiding the secret data from them. Note that the encryption protocol does not affect the computation, since uniform polarisation rotations commute through linear optics circuits,
+\begin{align} \label{eq:LO_key_commute}
+\hat{R}(k)^{\otimes m} \hat{U} \hat{R}(-k)^{\otimes m} = \hat{R}(k)^{\otimes m} \hat{R}(-k)^{\otimes m} \hat{U} = \hat{U}.
 \end{align}
-for sufficiently large $m$, which asymptotically (but unfortunately only polynomially) approaches 0. Furthermore, because a single computation requires Alice to perform only a single call to Bob's algorithm, which we treat as a black box, Alice gains minimum knowledge about Bob's secret algorithm.
+
+Practically, $k$ could be chosen as some integer multiple of \mbox{$2\pi/d$}, where $d$ is the number of distinct keys, since an infinite precision key would be equivalent to an infinitely long key, were it represented as a bit-string. In this case, the information security of the protocol increases with $d$.
+
+\cite{bib:RohdeQWEnc12} provided two relationships for the security of the protocol. First, the probability of Bob guessing Alice's input string approaches,
+\begin{align}
+P_\mathrm{guess} \leq \sqrt{\frac{8}{\pi m}},
+\end{align}
+for sufficiently large $m$ and $d$, which asymptotically (but unfortunately only polynomially) approaches 0. Alternately, the mutual information between Alice and Bob can be upper-bounded using the Holevo quantity $\chi(m)$, which was shown to scale as,
+\begin{align}
+\chi(m) = m - \frac{1}{2}\mathrm{log}_2\left(\frac{\pi e m}{2}\right) + O\left(\frac{1}{m}\right),
+\end{align}
+for sufficiently large $d$. This implies that the protocol hides,
+\begin{align}
+\frac{1}{2}\mathrm{log}_2\left(\frac{\pi e m}{2}\right) + O\left(\frac{1}{m}\right),
+\end{align}
+bits of information from Bob, for suitably large $d$.
+
+Furthermore, because a single computation requires Alice to perform only a single call to Bob's algorithm, which we treat as a black box, Alice gains minimum knowledge about Bob's secret algorithm.
 
 %
-% Coherent State Computation
+% Passive Coherent State Linear Optics
 %
 
-\subsubsection{Coherent state computation}
+\subsubsection{Passive coherent state linear optics} \label{sec:homo_coherent_state}
 
-\comment{To do}
+As discussed in Sec.~\ref{sec:coherent_state_QC}, although not a \emph{quantum} computation, a system comprising multi-mode coherent state inputs, evolved via passive linear optics, implements simple matrix multiplication on the vector of input coherent state amplitudes,
+\begin{align}
+\vec\beta = U\cdot\vec\alpha,
+\end{align}
+for input $\vec\alpha$ and output $\vec\beta$. However, despite this being a classically efficient algorithm, it can experimentally be easily homomorphically encrypted with no computational resource overhead. This is in contrast to classical homomorphic encryption techniques, which incur a computational overhead.
+
+The idea behind homomorphic encryption of coherent state linear optics is conceptually almost identical to the polarisation-space protocol for photonic linear optics. The key difference is that the random rotations are no longer applied in polarisation-space, but in phase-space as phase-rotations. Specifically, the encryption/decryption operations are now given by the phase-shift operators, 
+\begin{align}
+\hat{R}(\phi) = \hat\Phi(\phi)=e^{i\phi\hat{n}}.
+\end{align}
+
+Like polarisation rotations, uniform phase-shifts commute through linear optics networks, as per Eq.~\ref{eq:LO_key_commute}, and thus the protocol has similar mathematical structure to the photonic case. Now the phase-shift angle, $\phi$, acts as Alice's private key, which she applies uniformly to all input modes, applying inverse uniform phase-shifts after the computation to decrypt the state. The full algorithm is given in Alg.~\ref{tab:homo_coherent_LO}.
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\tt
+function HomomorphicCoherentStateLinearOptics($\vec\alpha$):
+\begin{enumerate}
+    \item Alice prepares the input multi-mode coherent state,
+    \begin{align}
+    \ket\psi_\mathrm{in} = \ket{\vec\alpha} = \ket{\alpha_1,\dots,\alpha_m}.
+    \end{align}
+    \item Alice chooses a random private key $k$ as a real number from the uniform distribution,
+    \begin{align}
+    k\in (0,2\pi).
+    \end{align}
+    \item Alice prepares the encoded state by applying the same phase-shift, of angle $k$, to each mode,
+    \begin{align}
+    \ket\psi_\mathrm{enc} = \hat\Phi(k)^{\otimes m}\ket\psi_\mathrm{in},
+    \end{align}
+    where,
+    \begin{align}
+    \hat\Phi(\phi) = e^{i\phi\hat{n}},
+    \end{align}
+    is the phase-shift operator.
+    \item Alice sends $\ket\psi_\mathrm{enc}$ to Bob.
+    \item Bob applies processing using his linear optics computer, to obtain,
+    \begin{align}
+    \ket\psi_\mathrm{enc\,comp} = \hat{U}\ket\psi_\mathrm{enc}.
+    \end{align}
+    \item Bob returns $\ket\psi_\mathrm{enc\,comp}$ to Alice.
+    \item Alice applies the inverse of the encoding operation,
+    \begin{align}
+    \ket\psi_\mathrm{comp} = \hat\Phi(-k)^{\otimes m}\ket\psi_\mathrm{enc\,comp}.
+    \end{align}
+    \item The resulting state is,
+    \begin{align}
+    \ket\psi_\mathrm{comp} = \ket{\vec\beta} = \ket{\beta_1,\dots,\beta_m},
+    \end{align}
+    where,
+    \begin{align}
+    \vec\beta = U\cdot\vec\alpha.
+    \end{align}
+    \item $\Box$
+\end{enumerate}}}
+\caption{Protocol for implementing homomorphic encryption on coherent state passive linear optics.} \label{tab:homo_coherent_LO}
+\end{table}
+
+It seems plausible that this approach to homomorphic encryption in phase-space could be extended to other quantum states of light. However, as is typically the case, performing entropic security proofs is a notoriously difficult problem, and this remains an open question. It should be noted, however, that this approach will definitely \emph{not} work for any class of input states which are invariant under phase-shifts. This explicitly rules out employing this technique for, for example, photon-number states.
+
+This protocol demonstrates that a simple optical system is able to homomorphically encrypt the classical computation of matrix multiplication, without incurring the computational resource overhead imposed by conventional classical homomorphic encryption techniques.
+
+\comment{To do! Mathematical details!}
 
 %
 % Cluster States
