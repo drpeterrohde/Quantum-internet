@@ -2597,7 +2597,24 @@ Linear optics networks implement unitary linear maps on the photonic creation op
 \begin{align} \label{eq:LO_unitary_map}
 \hat{U}\hat{a}_i^\dag \hat{U}^\dag \to \sum_{j=1}^m U_{i,j} \hat{a}^\dag_j,
 \end{align}
-where $\hat{a}^\dag_i$ is the photonic creation operator on the $i$th of the $m$ modes, and $U$ may be any $\mathrm{SU}(m)$ matrix. It was shown by \cite{bib:Reck94} that arbitrary transformations of this form may be decomposed into $O(m^2)$ linear optical elements (beamsplitters and phase-shifters), enabling efficient construction of arbitrary linear transformations. Furthermore, the algorithm for determining the decomposition of some such transformation has polynomial classical runtime (i.e residing in \textbf{P}). Each individual beamsplitter in such a decomposition is an arbitrary $\mathrm{SU}(2)$ matrix acting on the photonic creation operators, while the phase-shifters implement the operation $\hat\Phi(\phi)=e^{i\phi\hat{n}}$, for phase-shift $\phi$.
+where $\hat{a}^\dag_i$ is the photonic creation operator on the $i$th of the $m$ modes, and $U$ may be any $\mathrm{SU}(m)$ matrix. It was shown by \cite{bib:Reck94} that arbitrary transformations of this form may be decomposed into $O(m^2)$ linear optical elements (beamsplitters and phase-shifters), enabling efficient construction of arbitrary linear transformations. Furthermore, the algorithm for determining the decomposition of some such transformation has polynomial classical runtime (i.e residing in \textbf{P}). Each individual beamsplitter in such a decomposition is an arbitrary $\mathrm{SU}(2)$ matrix acting on two photonic creation operators,
+\begin{align}
+\begin{pmatrix}
+\hat{a}^\dag_\mathrm{out} \\
+\hat{b}^\dag_\mathrm{out}
+\end{pmatrix}=\begin{pmatrix}
+U_{11} & U_{12} \\
+U_{21} & U_{22}
+\end{pmatrix}\begin{pmatrix}
+\hat{a}^\dag_\mathrm{in} \\
+\hat{b}^\dag_\mathrm{in}
+\end{pmatrix},
+\end{align}
+while the phase-shifters implement the operation
+\begin{align}
+\hat\Phi(\phi)=e^{i\phi\hat{n}},
+\end{align}
+for phase-shift $\phi$.
 
 These linear optics evolutions are most commonly implemented using either:
 \begin{itemize}
@@ -3759,7 +3776,7 @@ function HomomorphicCoherentStateLinearOptics($\vec\alpha$):
 \caption{Protocol for implementing homomorphic encryption on coherent state passive linear optics.} \label{tab:homo_coherent_LO}
 \end{table}
 
-It seems plausible that this approach to homomorphic encryption in phase-space could be extended to other quantum states of light. However, as is typically the case, performing entropic security proofs is notoriously difficult, and this remains an open problem. It should be noted, however, that this approach will definitely \emph{not} work for any class of input states which are invariant under phase-shifts. This explicitly rules out employing this technique for, for example, photon-number states.
+It seems plausible that this approach to homomorphic encryption in phase-space could be extended to other quantum states of light. However, as is typically the case, performing entropic security proofs is notoriously difficult, and this remains an open problem. It should be noted, however, that this approach will definitely \emph{not} work for any class of input states which are invariant under phase-shifts. This explicitly rules out employing this technique for, for example, photon-number states, which have no phase.
 
 This protocol demonstrates that a simple optical system is able to homomorphically encrypt the classical computation of matrix multiplication, without incurring the computational resource overhead imposed by conventional classical homomorphic encryption techniques.
 
