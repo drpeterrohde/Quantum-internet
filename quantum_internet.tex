@@ -1043,6 +1043,18 @@ When considering mode-mismatch, there are two general regimes for how it manifes
 Mode-mismatch has been studied extensively in the context of linear optics quantum computing (LOQC), introduced in Sec.~\ref{sec:KLM_univ}. In particular, it was shown that in the cluster state formalism (Sec.~\ref{sec:CSQC}), mode-mismatch is equivalent to a dephasing error model, where the dephasing rate is related to the degree of photon distinguishability (i.e visibility) \cite{bib:RohdeRalph06}. More generally, the operation of entangling gates \cite{bib:RohdeFreqTemp05, bib:RohdeGateChar05, bib:RohdeOptPhot05, bib:RohdeTimeRes11} and {\sc BosonSampling} \cite{bib:RohdeArbSpec15, bib:RohdeArbLow12} have been considered, and explicit error models derived.
 
 %
+% Phase-Space
+%
+
+\subsection{Phase-space}
+
+In Sec.~\ref{sec:non_lin_opt} we introduce the displacement and squeezing operations, two non-linear operations which are important ingredients in CV quantum information processing schemes. Of course, such processes are subject to errors.
+
+In the case of the displacement operation, which is implemented by mixing a state with a coherent state on a beamsplitter, errors in the amplitude of the coherent state or in the beamsplitter reflectivity will introduce an offset in the displacement amplitude. Thus, instead of implementing $\hat{D}(\alpha)$, we might over- or under-displace the state, implementing \mbox{$\hat{D}(\Delta)\hat{D}(\alpha)\propto \hat{D}(\alpha+\Delta)$}, for some error $\Delta$.
+
+In the case of the squeezing operation, we might similarly have uncertainty in the squeezing parameter, thus implementing $\hat{S}(\xi+\Delta)$ instead of $\hat{S}(\xi)$.
+
+%
 % Quantum Cost Metrics
 %
 
@@ -1216,10 +1228,22 @@ The entanglement between two systems in invariant under local unitaries,
 \comment{What about for processes?}
 
 %
+% Phase-Space
+%
+
+\subsection{Phase-space}
+
+Displacements in phase-space accumulate additively, up to a phase-factor. Specifically, the composition of two displacements is given by,
+\begin{align}
+\hat{D}(\alpha)\hat{D}(\beta) = e^{\frac{1}{2}(\alpha\beta^*-\alpha^*\beta)}\hat{D}(\alpha+\beta).
+\end{align}
+Thus, the composition of a chain of unwanted displacements yields, up to phase, a displacement with amplitude given by the sum of the individual displacement amplitudes.
+
+%
 % Channel Capacity
 %
 
-\subsection{Channel capacity}
+\subsection{Channel capacity} \label{sec:channel_cap}
 
 The measures considered until now have quantified the preservation of quantum states. Alternately, one might consider information theoretic measures, which quantify the number of bits/qubits transmitted by a link, i.e the number of bits/qubits in common before and after the channel. This is an extremely powerful tool as it upper bounds the amount of information the receiver can extract from the transmitter under \emph{any} measurement scheme, very useful in a cryptographic context, where we want security to be independent of attack protocols.
 
@@ -1328,7 +1352,7 @@ Such a logarithmic scale is particularly convenient when a cost metric over link
 
 Note that lower bounds on fidelity, purity, efficiency and dephasing are all multiplicative on a scale of 0 to 1, and thus their logarithms may be regarded as cost metrics.
 
-Temporal mismatch, latency and dollar cost are clearly automatically metrics as they are additive.
+Spatio-temporal mode-mismatch, latency, dollar cost and displacements are clearly automatically metrics as they are additive.
 
 In the case of mutual information, which is not a metric, one can use it to define the \emph{variation of information} metric,
 \begin{align}
@@ -2363,7 +2387,7 @@ where there are $N$ sources in parallel. This relationship is shown in Fig.~\ref
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{SPDC_multiplexing_plot}
-\caption{Single photon state preparation probability, $P_\mathrm{success}$, using $N$-fold multiplexing, where the individual heralded sources have heralding probability $P_\mathrm{prep}$. $P_\mathrm{success}$ always exponentially asymptotes to unity with increasing $N$, for any \mbox{$P_\mathrm{prep}>0$}.} \label{fig:SPDC_multiplexing_plot}
+\caption{Single-photon state preparation probability, $P_\mathrm{success}$, using $N$-fold multiplexing, where the individual heralded sources have heralding probability $P_\mathrm{prep}$. $P_\mathrm{success}$ always exponentially asymptotes to unity with increasing $N$, for any \mbox{$P_\mathrm{prep}>0$}.} \label{fig:SPDC_multiplexing_plot}
 \end{figure}
 
 Of course, operating a large bank of sources in parallel, along with the associated multiplexing, which requires nanosecond-scale fast-feedforward, is experimentally costly (both in physical size, complexity and dollars), making outsourcing of this technology potentially highly desirable.
@@ -2463,6 +2487,10 @@ Of particular interest are squeezed coherent states, $\hat{S}(\xi) \ket{\alpha}$
 \subsubsection{More exotic states of light}
 
 As discussed in Sec.~\ref{sec:exotic}, many other far more elaborate states are very difficult to prepare, and it would be highly desirable if they could be obtained/purchased over a quantum network. This includes certain CV states, which have utility in alternate models for quantum computing \cite{bib:Menicucci06, Ralph, Lund}, and squeezed states, which can be useful for sub-shotnoise limited metrology \cite{???}.
+
+\comment{To do!}
+
+\comment{Add hyperlinks to other relevant sections}
 
 %
 % Matter Qubits
@@ -2583,9 +2611,9 @@ The attractive feature of this, is that although the matter qubit is stationary,
 
 \subsection{Evolution}
 
-The evolution of optical states represents an extremely broad category of quantum operations, including passive linear optics, post-selected linear optics, non-linear optics, and light-matter interactions, amongst many others. Clearly even this restricted list presents technological challenges, inaccessible to many users. However, the fundamental error mechanisms are essentially the same as for the measurement errors listed above.
+The evolution of optical states represents an extremely broad category of quantum operations, including passive linear optics, post-selected linear optics, non-linear optics, and light-matter interactions. Clearly, the items in this list present technological challenges, inaccessible to many users.
 
-The notable exception is non-linear optics, whereby additional errors in the photon-number degree of freedom or phase-space are possible, since, unlike linear optics, photon-number needn't be conserved in general. This additional degree of freedom in error mechanisms may be accommodated for by introducing an error measure capturing confusion in photon-number or unwanted phase-space transformations. For example, for a given non-linear interaction, error metrics quantifying error bounds on phase-space transformations, such as fluctuation in squeezing or displacement operations, could be employed, which can be represented as metrics, and are therefore compatible with the error metric formalism upon which QTCP is based\footnote{For example, consider unwanted phase-space displacements as an error model. The coherent amplitudes of displacements accumulate additively, and therefore satisfy our notion of an error metric.}.
+The error models in the evolution of optical states are largely accounted for by those discussed in Sec.~\ref{sec:errors_in_nets}. The notable exception is non-linear optics, whereby additional errors in the photon-number degree of freedom or phase-space are possible, since, unlike linear optics, photon-number needn't be conserved in general. This additional degree of freedom in error mechanisms may be accommodated for by introducing an error measure capturing confusion in photon-number or unwanted phase-space transformations. For example, for a given non-linear interaction, error metrics quantifying error bounds on phase-space transformations, such as fluctuation in squeezing or displacement operations, could be employed, which can be represented as metrics, and are therefore compatible with the error metric formalism upon which QTCP is based\footnote{For example, consider unwanted phase-space displacements as an error model. The coherent amplitudes of displacements accumulate additively, and therefore satisfy our notion of an error metric. Similarly, error metrics may be applied to squeezing.}.
 
 %
 % Linear Optics
@@ -2597,7 +2625,7 @@ Linear optics networks implement unitary linear maps on the photonic creation op
 \begin{align} \label{eq:LO_unitary_map}
 \hat{U}\hat{a}_i^\dag \hat{U}^\dag \to \sum_{j=1}^m U_{i,j} \hat{a}^\dag_j,
 \end{align}
-where $\hat{a}^\dag_i$ is the photonic creation operator on the $i$th of the $m$ modes, and $U$ may be any $\mathrm{SU}(m)$ matrix. It was shown by \cite{bib:Reck94} that arbitrary transformations of this form may be decomposed into $O(m^2)$ linear optical elements (beamsplitters and phase-shifters), enabling efficient construction of arbitrary linear transformations. Furthermore, the algorithm for determining the decomposition of some such transformation has polynomial classical runtime (i.e residing in \textbf{P}). Each individual beamsplitter in such a decomposition is an arbitrary $\mathrm{SU}(2)$ matrix acting on two photonic creation operators,
+where $\hat{a}^\dag_i$ is the photonic creation operator on the $i$th of the $m$ modes, and $U$ may be any $\mathrm{SU}(m)$ matrix. It was shown by \cite{bib:Reck94} that arbitrary transformations of this form may be decomposed into $O(m^2)$ linear optical elements (beamsplitters and phase-shifters), enabling efficient construction of arbitrary linear transformations. Furthermore, the algorithm for determining the decomposition of some such transformation has polynomial classical runtime (i.e residing in \textbf{P}). Each individual beamsplitter in such a decomposition is an arbitrary $\mathrm{SU}(2)$ matrix acting on two photonic creation operators, $\hat{a}^\dag$ and $\hat{b}^\dag$,
 \begin{align}
 \begin{pmatrix}
 \hat{a}^\dag_\mathrm{out} \\
@@ -2614,6 +2642,10 @@ while the phase-shifters implement the operation
 \begin{align}
 \hat\Phi(\phi)=e^{i\phi\hat{n}},
 \end{align}
+or equivalently,
+\begin{align}
+\hat{U}\hat{a}^\dag\hat{U}^\dag \to e^{i\phi}\hat{a}^\dag,
+\end{align}
 for phase-shift $\phi$.
 
 These linear optics evolutions are most commonly implemented using either:
@@ -2626,14 +2658,14 @@ These three main contenders are illustrated in Fig.~\ref{fig:LO_archs}, and desc
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{LO_archs}
-\caption{The three primary approaches for implementing linear optics transformations. (a) Bulk optics, where each optical mode is spatially encoded, and the linear transformation is decomposed into an array of beamsplitters and phase-shifters, an appropriate choice of which enables arbitrary linear optics transformations to be implemented. (b) Time-bin encoding, where each optical mode is designated a distinct time-bin. Fibre-loops meeting at dynamically reconfigurable beamsplitters enables arbitrary linear transformations to be implemented. (c) Integrated wave-guide chips, where evanescent coupling between neighbouring wave-guides within a chip facilitates interference between modes (graphic courtesy of Alberto Peruzzo).} \label{fig:LO_archs}
+\caption{The three primary approaches for implementing linear optics transformations. (a) Bulk optics, where each optical mode is spatially encoded, and the linear transformation is decomposed into a discrete array of beamsplitters and phase-shifters, an appropriate choice of which enables arbitrary linear optics transformations to be implemented. (b) Time-bin encoding, where each optical mode is designated a distinct time-bin. Fibre-loops meeting at dynamically reconfigurable beamsplitters enables arbitrary linear transformations to be implemented. (c) Integrated wave-guide chips, where evanescent coupling between neighbouring wave-guides within a chip facilitates interference between modes (graphic courtesy of Alberto Peruzzo).} \label{fig:LO_archs}
 \end{figure}
 
 %
 % Non-Linear Optics
 %
 
-\subsubsection{Non-linear optics}
+\subsubsection{Non-linear optics} \label{sec:non_lin_opt}
 
 Aside from the linear transformations described above, which are passive and photon-number-preserving, various active, non-linear interactions are also of interest to optical quantum information processing. The most prominent of these are primarily considered as transformations in phase-space (Sec.~\ref{sec:exotic}), such as the Wigner function representation.
 
@@ -3430,6 +3462,22 @@ The full model is shown in Fig.~\ref{fig:bs_model}.
 {\sc BosonSampling} in the presence of various error models, such as loss, source non-determinism and mode-mismatch, has been extensively investigated \cite{bib:RohdeErrBS12, bib:RohdeSPDC13, bib:ScottLost16, bib:RohdeArbSpec15, bib:RandBS}.
 
 %
+% Other Linear Optics Sampling Problems
+%
+
+\subsubsection{Other linear optics sampling problems}
+
+In addition to photonic {\sc BosonSampling}, several authors have presented strong evidence that other classes of quantum states of light exist, which yield computationally complex sampling problems. Most notably, such evidence has been provided for the following:
+\begin{itemize}
+\item \cite{bib:RandBS} considered two-mode squeezed vacuum states, a type of Gaussian state with strictly positive Wigner function.
+\item \cite{bib:RohdeDisp15} considered photon-added coherent states and displaced single-photon states.
+\item \cite{bib:RohdePhotAdd15} considered photon-added or -subtracted squeezed vacuum states.
+\item \cite{bib:RohdeCat15} considered `cat' states -- superpositions of coherent states.
+\end{itemize}
+
+Preparation of all of these classes of quantum states of light present their own technological challenges, some very daunting, and all much harder to prepare than single-photons. Thus, the ability to outsource their preparation would be a useful application for the quantum cloud.
+
+%
 % Quantum Walks
 %
 
@@ -3505,7 +3553,7 @@ A linear optics network acting on a tensor product of coherent state inputs impl
 \begin{align}
 \ket{\psi}_\mathrm{in} = \ket{\alpha_1,\dots,\alpha_m},
 \end{align}
-the linear map now takes the form,
+where $\alpha_i$ is the coherent amplitude of the $i$th mode, the linear map now takes the form,
 \begin{align}
 \beta_i = \sum_{j=1}^m U_{i,j} \alpha_j,
 \end{align}
@@ -3609,9 +3657,11 @@ which is a Bell-pair between the matter qubits.
 
 Extremely important to many high-performance data-processing applications is security, as proprietary or sensitive data may be being dealt with. To address this, two models for outsourced quantum computation exist for addressing this -- \emph{homomorphic encryption} \cite{???, gentry2009fully, van2010fully} and \emph{blind quantum computation} \cite{???, bib:blind2, bib:blind3, bib:blind1, PhysRevLett.108.200502, bib:Morimae3486, bib:Morimae5460, bib:Morimae3966}.
 
-In both cases, Alice has secret data, and wishes to not only ensure that an interceptor is unable to read it, but that the server performing the computation isn't able to either -- she trusts no one. That is, she wishes the data to be processed in encrypted form, without first requiring decryption.
+In both cases, Alice has secret data, and wishes to not only ensure that an interceptor is unable to read it, but that even the server performing the computation isn't able to either -- she trusts no one. That is, she wishes the data to be processed in encrypted form, without first requiring decryption.
 
-The difference between the two protocols lies in the treatment of algorithms. In homomorphic encryption, Alice provides only the data, whereas Bob provides the processing and the algorithm it implements (which he would also like to keep to himself). In blind computing, Alice provides both the algorithm \emph{and} the data, and wishes \emph{both} to remain secret. Both of these protocols seem like very challenging goals, yet significant developments have been made on both fronts. Classical homomorphic encryption has only been described very recently \cite{bib:gentry2009fully, bib:van2010fully}. \comment{What is the overhead in classical resources. What about classical blind computation?}
+The difference between the two protocols lies in the treatment of algorithms. In homomorphic encryption, Alice provides only the data, whereas Bob provides the processing and the algorithm it implements (which he would also like to keep to himself). In blind computing, Alice provides both the algorithm \emph{and} the data, and wishes \emph{both} to remain secret. Both of these protocols seem like very challenging goals, yet significant developments have been made on both fronts.
+
+Classical homomorphic encryption has only been described very recently \cite{bib:gentry2009fully, bib:van2010fully}. \comment{What is the overhead in classical resources? What about classical blind computation -- impossible? Brief outline of how classical approach works.}
 
 In the usual circuit model, blind quantum computation has been shown to be viable, and optimal bounds derived. Equivalently, such protocols have been described in the cluster state model (Sec.~\ref{sec:CSQC}). For universal computation, such protocols necessarily require classical interaction between the client and host. However, it was shown that in some restricted (i.e non-universal) models for optical quantum computation, specifically {\sc BosonSampling}, quantum walks and coherent state passive linear optics, non-interactive homomorphic encryption may be implemented almost optimally.
 
@@ -3621,7 +3671,7 @@ These encryption protocols induce a resource overhead in circuit size and number
 % Passive Photonic Linear Optics
 %
 
-\subsubsection{Passive photonic linear optics}
+\subsubsection{Passive photonic linear optics} \label{sec:phot_homo_enc}
 
 It was recently shown that processing photonic states using passive linear optics may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}. This encryption does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy. Furthermore, it does not impose an overhead in circuit complexity, only in the number of input photons.
 
@@ -3633,7 +3683,7 @@ For $m$ modes, the resource requirements are:
 \item $m$ photo-detectors.
 \item An \mbox{$m\times m$} linear optics network.
 \end{enumerate}
-The full protocol is given in Alg.~\ref{tab:homo_LO} and shown in Fig.~\ref{fig:BS_homo}.
+The full protocol is described in Alg.~\ref{tab:homo_LO} and shown in Fig.~\ref{fig:BS_homo}.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\tt
@@ -3641,7 +3691,7 @@ function HomomorphicPhotonicLinearOptics($S$):
 \begin{enumerate}
     \item Alice meditates upon, but needn't actually prepare the state,
     \begin{align}
-    \ket\psi_\mathrm{number} = \otimes_{i=1}^m \ket{S_i},    
+    \ket\psi_\mathrm{number} = \bigotimes_{i=1}^m \ket{S_i},    
     \end{align}
     where
     \begin{align}
@@ -3701,15 +3751,25 @@ Practically, $k$ could be chosen as some integer multiple of \mbox{$2\pi/d$}, wh
 \begin{align}
 P_\mathrm{guess} \leq \sqrt{\frac{8}{\pi m}},
 \end{align}
-for sufficiently large $m$ and $d$, which asymptotically (but unfortunately only polynomially) approaches 0. Alternately, the mutual information between Alice and Bob can be upper-bounded using the Holevo quantity $\chi(m)$, which was shown to scale as,
+for sufficiently large $m$ and $d$, which asymptotically (but unfortunately only polynomially) approaches 0.
+
+Alternately, the mutual information between Alice and Bob, \mbox{$I(A;B)$}, can be upper-bounded using the Holevo quantity, $\chi$ \cite{HolevoQuantity}. That is, \mbox{$I(A;B)\leq\chi$}. The Holevo quantity is defined as,
+\begin{align}
+\chi = S(\hat\rho) - \sum_i p_i S(\hat\rho_i),
+\end{align}
+where,
+\begin{align}
+\hat\rho = \sum_i p_i \hat\rho_i,
+\end{align}
+and $S(\cdot)$ denotes the von Neuman entropy (Sec.~\ref{sec:channel_cap}). Here $\hat\rho_i$ are the individual codewords, in our case the set of all polarisation-encoded basis states, and $p_i$ are their respective probabilities, which are uniform here. The upper-bound stipulated by the Holevo quantity is an information-theoretic bound, which holds under \emph{any} choice of measurement bases by Bob. Thus, it is impossible for Bob to extract more information about Alice's state than allowed by this bound. It was shown by \cite{bib:RohdeQWEnc12} that for this protocol the Holevo quantity scales as,
 \begin{align}
 \chi(m) = m - \frac{1}{2}\mathrm{log}_2\left(\frac{\pi e m}{2}\right) + O\left(\frac{1}{m}\right),
 \end{align}
-for sufficiently large $d$. This implies that the protocol hides,
+for sufficiently large $d$. This implies that the protocol hides at least,
 \begin{align}
 \frac{1}{2}\mathrm{log}_2\left(\frac{\pi e m}{2}\right) + O\left(\frac{1}{m}\right),
 \end{align}
-bits of information from Bob, for suitably large $d$.
+bits of information from Bob.
 
 Furthermore, because a single computation requires Alice to perform only a single call to Bob's algorithm, which we treat as a black box, Alice gains minimum knowledge about Bob's secret algorithm.
 
@@ -3725,7 +3785,7 @@ As discussed in Sec.~\ref{sec:coherent_state_QC}, although not a \emph{quantum} 
 \end{align}
 for input $\vec\alpha$ and output $\vec\beta$. However, despite this being a classically efficient algorithm, it can experimentally be easily homomorphically encrypted with no computational resource overhead. This is in contrast to classical homomorphic encryption techniques, which incur a computational overhead.
 
-The idea behind homomorphic encryption of coherent state linear optics is conceptually almost identical to the polarisation-space protocol for photonic linear optics. The key difference is that the random rotations are no longer applied in polarisation-space, but in phase-space as phase-rotations. Specifically, the encryption/decryption operations are now given by the phase-shift operators, 
+The idea behind homomorphic encryption of coherent state linear optics is conceptually almost identical to the polarisation-space protocol for photonic linear optics (Sec.~\ref{sec:phot_homo_enc}). The key difference is that the random rotations are no longer applied in polarisation-space, but in phase-space as phase-rotations. Specifically, the encryption/decryption operations are now given by the phase-shift operators, 
 \begin{align}
 \hat{R}(\phi) = \hat\Phi(\phi)=e^{i\phi\hat{n}}.
 \end{align}
@@ -3780,7 +3840,7 @@ It seems plausible that this approach to homomorphic encryption in phase-space c
 
 This protocol demonstrates that a simple optical system is able to homomorphically encrypt the classical computation of matrix multiplication, without incurring the computational resource overhead imposed by conventional classical homomorphic encryption techniques.
 
-\comment{To do! Mathematical details!}
+\comment{To do! Mathematical details! How does the secrecy of this scheme compare to the secrecy of a classical homomorphically encrypted matrix multiplication?}
 
 %
 % Cluster States
@@ -3788,11 +3848,11 @@ This protocol demonstrates that a simple optical system is able to homomorphical
 
 \subsubsection{Cluster states}
 
+Most simply, if Alice has the limited quantum resources required to perform single-qubit measurements, and she knows the algorithm she wishes to implement, then by outsourcing just the cluster state preparation stage, whilst performing the single-qubit measurements herself, she can obviously obtain \emph{perfect} secrecy of both her data and her algorithm, since no one else is involved in the processing stage.
+
+However, Alice may have access to no quantum resources whatsoever -- even single-qubit measurements -- requiring homomorphic encryption or blind quantum computing protocols that are native to the cluster state model. Both such protocols have been described, and in fact are conceptually more straightforward to understand in the cluster state formalism. 
+
 \comment{To do}
-
-Most simply, if Alice has the limited quantum resources required to perform single-qubit measurements, and she knows the algorithm she wishes to implement, then by outsourcing just the cluster state preparation stage, whilst performing the single-qubit measurements herself, she can obviously obtain \emph{perfect} secrecy of both her data and her algorithm.
-
-Homomorphic and blind quantum computing have been described natively to the cluster state model \cite{homoCS}, and in fact are conceptually more straightforward to understand in this formalism. 
 
 %
 % Universal Quantum Computation
