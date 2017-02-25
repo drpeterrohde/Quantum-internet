@@ -1018,7 +1018,7 @@ The degree of amplitude damping is often quoted in terms of a channel's $T_1$-ti
 
 \subsection{Mode-mismatch} \label{sec:MM_error}
 
-Mode-mismatch is an error model unique to optical implementations. For perfect interference to take place between two optical modes, which is necessary to entangle them or perform ideal `which-path erasure'\footnote{Which-path erasure is the phenomenon whereby a beamsplitter interaction between two modes makes processes associated with those two modes indistinguishable, thereby projecting them into a superposition state of both possibilities. This is most commonly used to entangle distinct photon-emitting systems. This is discussed in detail in Sec.~\ref{sec:hybrid}.}, the photons in those modes must be perfectly indistinguishable, i.e they must exhibit identical spatio-temporal structure \cite{bib:RohdeMauererSilberhorn07} and must be pure states. The Hong-Ou-Mandel (HOM) \cite{bib:HOM87} \emph{visibility} is a direct measure of the indistinguishability of two photons based on their interference fringes. Specifically, interference fringes are reduced as the photons become more distinguishable. Once completely distinguishable, they obey classical statistics.
+Mode-mismatch is an error model unique to optical implementations. For perfect interference to take place between two optical modes, which is necessary to entangle them or perform ideal `which-path erasure'\footnote{Which-path erasure is the phenomenon whereby a beamsplitter interaction between two modes makes processes associated with those two modes indistinguishable, thereby projecting them into a superposition state of both possibilities. This is most commonly used to entangle distinct photon-emitting systems. This is discussed in detail in Sec.~\ref{sec:hybrid}.}, the photons in those modes must be perfectly indistinguishable, i.e they must exhibit identical spatio-temporal structure \cite{bib:RohdeMauererSilberhorn07} and must be pure states.
 
 This phenomenon arises very naturally whenever optical path-lengths are not perfectly aligned, or there is imperfect spatial mode-overlap between optical modes interfering at beamsplitters. Furthermore, even if optical networks are perfect, photon distinguishability may arise during state preparation, since no two photon sources are absolutely identical -- engineering photon sources is a precise business and no two are ever exactly alike.
 
@@ -1032,7 +1032,47 @@ for temporal mismatch $\Delta_t$. Of course, this logically generalises to other
 \end{align}
 where $x$ and $y$ are the two transverse spatial dimensions perpendicular to the direction of propagation.
 
-In the above representation of mode-mismatch as a temporal or spatial translation, the process is entirely coherent, and could in principle be reversed if the displacement were known (which might easily be established using tomographic charactersation techniques). Of course, such translations could occur incoherently also. In particular, `time-jitter' is where this process occurs incoherently, and the the photons are subject to probabilistic displacements. In this instance, a pure single-photon state would evolve into a mixture of states subject to different displacements. Since the mode-mismatch is now probabilisitic, it is not reversible. The state of a single photon subject to time-jitter would be of the form,
+The Hong-Ou-Mandel (HOM) \cite{bib:HOM87} \emph{visibility} is a direct measure of the indistinguishability of two photons based on their interference fringes. Specifically, interference fringes are reduced as the photons become more distinguishable. Once completely distinguishable, they obey classical statistics.
+
+Let us consider this in detail. Consider the two-mode, two-photon state,
+\begin{align}
+\ket\psi_\mathrm{in} = \hat{A}^\dag_{\psi_1} \hat{B}^\dag_{\psi_2} \ket{0},
+\end{align}
+where $\hat{A}^\dag$ and $\hat{B}^\dag$ denote the mode operators for two spatial modes, with respective temporal distribution functions $\psi_1$ and $\psi_2$. Evolving this though a 50:50 (Hadamard) beamsplitter yields,
+\begin{align}
+\ket\psi_\mathrm{out} &= \hat{U} \ket\psi_\mathrm{in} \\
+&= \frac{1}{2} \left[\hat{A}^\dag_{\psi_1}+\hat{B}^\dag_{\psi_1}\right]\left[\hat{A}^\dag_{\psi_2}-\hat{B}^\dag_{\psi_2}\right] \ket{0} \nonumber \\
+&= \frac{1}{2} \left[\hat{A}^\dag_{\psi_1}\hat{A}^\dag_{\psi_2} - \hat{A}^\dag_{\psi_1}\hat{B}^\dag_{\psi_2} + \hat{A}^\dag_{\psi_2}\hat{B}^\dag_{\psi_1} - \hat{B}^\dag_{\psi_1}\hat{B}^\dag_{\psi_2}\right] \ket{0} \nonumber.
+\end{align}
+Post-selecting upon detecting a coincidence event (i.e one photon per mode), the conditional state is projected onto,
+\begin{align}
+\ket\psi_\mathrm{cond} = \frac{1}{2} \left[\hat{A}^\dag_{\psi_1}\hat{B}^\dag_{\psi_2} - \hat{A}^\dag_{\psi_2}\hat{B}^\dag_{\psi_1}\right] \ket{0}.
+\end{align}
+The probability of this coincidence event occurring is then given by the normalisation of the residual state,
+\begin{align}
+P_\mathrm{coincidence} &= \left| \bra\psi_\mathrm{cond} \ket\psi_\mathrm{cond} \right|^2 \nonumber \\
+&= \frac{1}{2} - \frac{1}{2} \left| \int^\infty_{-\infty} \psi_1(t)\psi_2^*(t)\,dt\right|^2.
+\end{align}
+Now if we let both input photons have identical temporal structure, $\psi$, but with a time-delay $\tau$ between them, this reduces to,
+\begin{align}
+P_\mathrm{coincidence} = \frac{1}{2} - \frac{1}{2} \left| \int^\infty_{-\infty} \psi(t)\psi^*(t-\tau)\,dt\right|^2.
+\end{align}
+It is now clear upon inspection that when \mbox{$\tau=0$}, the coincidence probability \mbox{$P_\mathrm{coincidence}=0$}, and we observe perfect photon bunching at the output (quantum statistics). On the other hand, as \mbox{$\tau\to\pm\infty$}, the photons become completely distinguishable, and we reduce to classical statistics, \mbox{$P_\mathrm{coincidence}=1/2$}. In the intermediate regime, there will be a monotonic tradeoff between distinguishability (determined by $|\tau|$) and the coincidence probability. As an example, if we let the temporal distribution function be a normal Gaussian distribution,
+\begin{align}
+\psi(t) = \frac{e^{-\frac{t^2}{4}}}{\sqrt[4]{2\pi}},
+\end{align}
+then,
+\begin{align}
+P_\mathrm{coincidence} = \frac{1}{2} - \frac{1}{2} e^{-\frac{\tau^2}{8}},
+\end{align}
+which is shown in Fig.~\ref{fig:HOM_dip}. Thus, experimentally measuring $P_\mathrm{coincidence}$ directly determines the degree of photon distinguishability.
+
+\begin{figure}[!htb]
+\includegraphics[width=\columnwidth]{HOM_dip}
+\caption{Hong-Ou-Mandel dip for two photons with normal Gaussian temporal distribution functions, and temporal offset $\tau$ between them. $\tau$ effectively characterises the degree of photon distinguishability, where \mbox{$\tau=0$} represents complete indistinguishability (quantum statistics), and \mbox{$\tau\to\pm\infty$} represents complete distinguishability (classical statistics). Thus, performing this experiment and measuring $P_\mathrm{coincidence}$ can be used to characterise the degree of photon distinguishability.} \label{fig:HOM_dip}
+\end{figure}
+
+In the above representation of mode-mismatch as a temporal or spatial translation, the process is entirely coherent, and could in principle be reversed if the displacement were known (which might easily be established using tomographic characterisation techniques). Of course, such translations could occur incoherently also. In particular, `time-jitter' is where this process occurs incoherently, and the the photons are subject to probabilistic displacements. In this instance, a pure single-photon state would evolve into a mixture of states subject to different displacements. Since the mode-mismatch is now probabilisitic, it is not reversible. The state of a single photon subject to time-jitter would be of the form,
 \begin{align}
 \hat\rho_\mathrm{jitter} = \int_{-\infty}^\infty p_\mathrm{jitter}(\Delta_t) \ket{\psi-\Delta_t}\bra{\psi-\Delta_t}d\Delta_t,
 \end{align}
@@ -1237,7 +1277,9 @@ Displacements in phase-space accumulate additively, up to a phase-factor. Specif
 \begin{align}
 \hat{D}(\alpha)\hat{D}(\beta) = e^{\frac{1}{2}(\alpha\beta^*-\alpha^*\beta)}\hat{D}(\alpha+\beta).
 \end{align}
-Thus, the composition of a chain of unwanted displacements yields, up to phase, a displacement with amplitude given by the sum of the individual displacement amplitudes.
+Thus, the composition of a chain of unwanted or uncertain displacements yields, up to phase, a displacement with amplitude given by the sum of the individual displacement amplitudes.
+
+\comment{To do! What is the composition of multiple squeezing operators? Multiplicative??}
 
 %
 % Channel Capacity
@@ -1267,7 +1309,6 @@ The \emph{mutual information} specifies the number of bits in common between two
 \begin{align}
 I(A;B) = H(A) + H(B) - H(A,B).
 \end{align}
-
 Equivalently, for density operators,
 \begin{align}
 I(\hat\rho_A;\hat\rho_B) = S(\hat\rho_A) + S(\hat\rho_B) - S(\hat\rho_A,\hat\rho_B),
@@ -2613,7 +2654,7 @@ The attractive feature of this, is that although the matter qubit is stationary,
 
 The evolution of optical states represents an extremely broad category of quantum operations, including passive linear optics, post-selected linear optics, non-linear optics, and light-matter interactions. Clearly, the items in this list present technological challenges, inaccessible to many users.
 
-The error models in the evolution of optical states are largely accounted for by those discussed in Sec.~\ref{sec:errors_in_nets}. The notable exception is non-linear optics, whereby additional errors in the photon-number degree of freedom or phase-space are possible, since, unlike linear optics, photon-number needn't be conserved in general. This additional degree of freedom in error mechanisms may be accommodated for by introducing an error measure capturing confusion in photon-number or unwanted phase-space transformations. For example, for a given non-linear interaction, error metrics quantifying error bounds on phase-space transformations, such as fluctuation in squeezing or displacement operations, could be employed, which can be represented as metrics, and are therefore compatible with the error metric formalism upon which QTCP is based\footnote{For example, consider unwanted phase-space displacements as an error model. The coherent amplitudes of displacements accumulate additively, and therefore satisfy our notion of an error metric. Similarly, error metrics may be applied to squeezing.}.
+The error models in the evolution of optical states are largely accounted for by those discussed in Sec.~\ref{sec:errors_in_nets}. 
 
 %
 % Linear Optics
@@ -2625,7 +2666,7 @@ Linear optics networks implement unitary linear maps on the photonic creation op
 \begin{align} \label{eq:LO_unitary_map}
 \hat{U}\hat{a}_i^\dag \hat{U}^\dag \to \sum_{j=1}^m U_{i,j} \hat{a}^\dag_j,
 \end{align}
-where $\hat{a}^\dag_i$ is the photonic creation operator on the $i$th of the $m$ modes, and $U$ may be any $\mathrm{SU}(m)$ matrix. It was shown by \cite{bib:Reck94} that arbitrary transformations of this form may be decomposed into $O(m^2)$ linear optical elements (beamsplitters and phase-shifters), enabling efficient construction of arbitrary linear transformations. Furthermore, the algorithm for determining the decomposition of some such transformation has polynomial classical runtime (i.e residing in \textbf{P}). Each individual beamsplitter in such a decomposition is an arbitrary $\mathrm{SU}(2)$ matrix acting on two photonic creation operators, $\hat{a}^\dag$ and $\hat{b}^\dag$,
+where $\hat{a}^\dag_i$ is the photonic creation operator on the $i$th of the $m$ modes, and $U$ may be any $\mathrm{SU}(m)$ matrix. It was shown by \cite{bib:Reck94} that arbitrary transformations of this form may be decomposed into $O(m^2)$ linear optical elements (beamsplitters and phase-shifters), enabling efficient construction of arbitrary linear transformations. Furthermore, the algorithm for determining the decomposition of such transformations has polynomial classical runtime (i.e residing in \textbf{P}). Each individual beamsplitter in such a decomposition is an arbitrary $\mathrm{SU}(2)$ matrix acting on two photonic creation operators, $\hat{a}^\dag$ and $\hat{b}^\dag$,
 \begin{align}
 \begin{pmatrix}
 \hat{a}^\dag_\mathrm{out} \\
@@ -2638,7 +2679,7 @@ U_{21} & U_{22}
 \hat{b}^\dag_\mathrm{in}
 \end{pmatrix},
 \end{align}
-while the phase-shifters implement the operation
+while the phase-shifters implement the unitary operation
 \begin{align}
 \hat\Phi(\phi)=e^{i\phi\hat{n}},
 \end{align}
@@ -2667,7 +2708,7 @@ These three main contenders are illustrated in Fig.~\ref{fig:LO_archs}, and desc
 
 \subsubsection{Non-linear optics} \label{sec:non_lin_opt}
 
-Aside from the linear transformations described above, which are passive and photon-number-preserving, various active, non-linear interactions are also of interest to optical quantum information processing. The most prominent of these are primarily considered as transformations in phase-space (Sec.~\ref{sec:exotic}), such as the Wigner function representation.
+Aside from the linear transformations described above, which are passive and photon-number-preserving, various active, non-linear interactions are also of interest to optical quantum information processing. The most prominent of these are primarily considered as transformations in phase-space (Sec.~\ref{sec:exotic}), using, for example, the Wigner function representation.
 
 The most well-known non-linear transformation is the displacement operation, which translates the Wigner function by some arbitrary amplitude in phase-space, whilst preserving all other features of the phase-space representation. This is described by the unitary operator,
 \begin{align}
@@ -2782,7 +2823,7 @@ where $\hat{a}$ ($\hat{a}^\dag$) is the photonic annihilation (creation) operato
 \caption{Light-matter interfacing between a single-photon state ($\hat{a}$, $\hat{a}^\dag$) and a two-level matter qubit ($\ket{g}$, $\ket{e}$). The absorption (emission) of a photon is associated with the excitation (relaxation) of the matter qubit ($\hat\sigma^\pm$).} \label{fig:opt_int}
 \end{figure}
 
-Alternately, one can easily optically interface with a $\lambda$-configuration system, as described in Fig.~\ref{fig:barrett_kok}. 
+Alternately, one can easily optically interface with a $\lambda$-configuration system, as described in Fig.~\ref{fig:barrett_kok}. Here there are two degenerate ground states representing the logical qubit basis states, one of which may undergo a transition to an excited state. By pumping the system to the excited state and waiting for a coherent relaxation, the emitted photon may be used to couple the qubit state of the $\lambda$-configuration to an optical mode, mapping the qubit value of the matter qubit to a photon-number representation.
 
 %
 % Entanglement Purification
@@ -3174,7 +3215,7 @@ In Sec.~\ref{sec:QPT} we introduced QST and QPT, as procedures by which to exper
 
 Consider the case where a node joins an existing ad hoc network. Before thinking about routing its packets through the network, it must understand the network's relevant cost metrics. Suppose that metric is one that is calculated directly from a channel's process matrix. Then, to characterise the channels in the network connecting the node to its new nearest neighbours, it could apply distributed QPT, whereby the new node is responsible for preparing the complete basis of input states required for QPT, which are transmitted to the chosen neighbour across the respective channel, after which the recipient performs all the necessary measurements in the required bases. Purely classical communication is obviously required to communicate measurement settings and outcomes.
 
-In this simple example scenario it is immediately clear that QPT of new links in a network is perfectly suited to distributed implementation. In fact, having a node attempt to characterise a channel from start to finish could be entirely unrealistic if the channel ran over long distances -- the owner of the node would never be able to reach the other end of the channel in time for the photons' arrival!
+In this simple example scenario it is immediately clear that QPT of new links in a network is perfectly suited to distributed implementation. In fact, having a node attempt to characterise a channel from start to finish could be entirely unrealistic if the channel ran over long distances -- the owner of the node would never be able to reach the other end of the channel in time for the photons' arrival! This necessitates a cooperative protocol.
 
 %
 % Cloud Quantum Computing
@@ -3467,7 +3508,7 @@ The full model is shown in Fig.~\ref{fig:bs_model}.
 
 \subsubsection{Other linear optics sampling problems}
 
-In addition to photonic {\sc BosonSampling}, several authors have presented strong evidence that other classes of quantum states of light exist, which yield computationally complex sampling problems. Most notably, such evidence has been provided for the following:
+In addition to photonic {\sc BosonSampling}, several authors have presented strong evidence that other classes of quantum states of light exist, which yield computationally complex sampling problems under the action of linear optics. Most notably, such evidence has been provided for the following:
 \begin{itemize}
 \item \cite{bib:RandBS} considered two-mode squeezed vacuum states, a type of Gaussian state with strictly positive Wigner function.
 \item \cite{bib:RohdeDisp15} considered photon-added coherent states and displaced single-photon states.
@@ -3487,7 +3528,7 @@ Photonic quantum walks (QW's) are the other contender for implementing restricte
 
 With only a single walker (photon), nothing computationally complex can occur in the system, since a single photon evolving under passive linear optics can be efficiently classically simulated\footnote{Note that the literature has described QW schemes, both discrete-time \cite{bib:Lovett10} and continuous-time \cite{bib:Childs09}, that are universal for quantum computation. However, such universal schemes require an exponential number of vertices, which clearly does not lend itself to efficient optical representation.}. However, once multiple walkers are introduced we have a system with almost identical features to {\sc BosonSampling}, differing only in the structure of the linear optics unitary.
 
-There are two predominant varieties of quantum walks: discrete-time and continuous-time. In the discrete-time QW model, each walker has access to an ancillary `coin' Hilbert space, which is used to record the direction of the walker through the graph. At each discrete time-step the coin is used to update the position (vertex) of the walker, before applying a unitary `coin' operator to the coin Hilbert space. The addition of the coin space is necessary to enable such quantum walks to reside on arbitrary graph topologies, whilst retaining unitarity in their evolution. In the continuous-time QW model, on the other hand, there is no coin degree of freedom, and a Hamiltonian, $H_\mathrm{QW}$, encoding the (Hermitian) adjacency matrix of the QW's graph evolves the walker(s), generating a unitary evolution of the form \mbox{$\hat{U}_\mathrm{QW}(t) = e^{-iH_\mathrm{QW}t}$}. Algorithms have been described for both the discrete- and continuous-time QW models.
+There are two predominant varieties of quantum walks: discrete- and continuous-time. In the discrete-time QW model, each walker has access to an ancillary `coin' Hilbert space, which is used to record the direction of the walker through the graph. At each discrete time-step the coin is used to update the position (vertex) of the walker, before applying a unitary `coin' operator to the coin Hilbert space. The addition of the coin space is necessary to enable such quantum walks to reside on arbitrary graph topologies, whilst retaining unitarity in their evolution. In the continuous-time QW model, on the other hand, there is no coin degree of freedom, and a Hamiltonian, $H_\mathrm{QW}$, encoding the (Hermitian) adjacency matrix of the QW's graph evolves the walker(s), generating a unitary evolution of the form \mbox{$\hat{U}_\mathrm{QW}(t) = e^{-iH_\mathrm{QW}t}$}. Algorithms have been described for both the discrete- and continuous-time QW models.
 
 We will briefly summarise the discrete-time QW model, as it most readily lends itself to linear optics implementation, and illustrate the parallels with {\sc BosonSampling}. First, let us consider the standard simple example scenario of a single quantum walker, on a linear graph topology, using a Hadamard coin, which has been experimentally demonstrated using both bulk-optics \cite{bib:Broome10} and time-bin encoding \cite{bib:Schreiber10, bib:RohdeQWExp12}. The walker is defined by two Hilbert spaces: the position $x$, and the coin {$c=\pm 1$}, where $+1$ ($-1$) indicates that the walker is moving to the right (left). The basis states are then $\ket{x,c}$, and the state of the walker takes the form,
 \begin{align}
@@ -3530,7 +3571,7 @@ With this formalism, multiple walkers are easily accommodated for simply with th
 \begin{align}
 \prod_{i=1}^n \hat{w}(x_i,c_i)^\dag \ket{0}.
 \end{align}
-Any graph topology can be represented, subject to the constraint that all $A^{(x)}$ are unitary. This implies that every vertex must have as many incoming as outgoing edges.
+Any graph topology can be represented, subject to the constraint that all $A^{(x)}$ are unitary. This implies that every vertex must have as many incoming as outgoing edges, which could be either directed or undirected, subject to this constraint.
 
 Now the probabilities of measuring the walkers in different position configurations will be related to matrix permanents, in a similar manner to {\sc BosonSampling}. But now the permanents will be of matrices that are functions of the set of $A^{(x)}$ matrices characterising the graph, rather than a Haar-random matrix.
 
@@ -3551,7 +3592,7 @@ Because of the graph structure of the walk, it lends itself naturally to distrib
 
 A linear optics network acting on a tensor product of coherent state inputs implements simple matrix multiplication on the vector of coherent amplitudes. Specifically, Eq.~\ref{eq:LO_unitary_map} implies that for the input multi-mode coherent state,
 \begin{align}
-\ket{\psi}_\mathrm{in} = \ket{\alpha_1,\dots,\alpha_m},
+\ket{\psi}_\mathrm{in} = \ket{\vec\alpha} = \ket{\alpha_1,\dots,\alpha_m},
 \end{align}
 where $\alpha_i$ is the coherent amplitude of the $i$th mode, the linear map now takes the form,
 \begin{align}
@@ -3559,7 +3600,7 @@ where $\alpha_i$ is the coherent amplitude of the $i$th mode, the linear map now
 \end{align}
 where the output state is the separable multi-mode coherent state,
 \begin{align}
-\ket{\psi}_\mathrm{out} = \ket{\beta_1,\dots,\beta_m}.
+\ket{\psi}_\mathrm{out} = \ket{\vec\beta} = \ket{\beta_1,\dots,\beta_m}.
 \end{align}
 Equivalently, this could simply be expressed as the matrix equation,
 \begin{align}
@@ -3576,7 +3617,7 @@ Of course this is not strictly a \emph{quantum} computation, since:
 
 Despite offering no direct quantum advantage, we introduce this model for restricted computation, since it lends itself very elegantly to a form of homomorphic encryption, to be described in detail in Sec.~\ref{sec:homo_coherent_state}.
 
-The applications for matrix multiplication needn't be stated, as it forms such an elementary primitive throughout linear algebra and in solving systems of differential equations, with countless applications.
+The applications for matrix multiplication needn't be stated, as it forms such a ubiquitous elementary primitive throughout linear algebra and in solving systems of differential equations, with countless applications.
 
 %
 % Continuous Variables
@@ -3771,7 +3812,7 @@ for sufficiently large $d$. This implies that the protocol hides at least,
 \end{align}
 bits of information from Bob.
 
-Furthermore, because a single computation requires Alice to perform only a single call to Bob's algorithm, which we treat as a black box, Alice gains minimum knowledge about Bob's secret algorithm.
+Furthermore, because a single computation requires Alice to perform only a single call to Bob's algorithm, which we treat as a black box, Alice gains minimum knowledge about Bob's secret algorithm, which is optimal for Bob.
 
 %
 % Passive Coherent State Linear Optics
@@ -3840,7 +3881,7 @@ It seems plausible that this approach to homomorphic encryption in phase-space c
 
 This protocol demonstrates that a simple optical system is able to homomorphically encrypt the classical computation of matrix multiplication, without incurring the computational resource overhead imposed by conventional classical homomorphic encryption techniques.
 
-\comment{To do! Mathematical details! How does the secrecy of this scheme compare to the secrecy of a classical homomorphically encrypted matrix multiplication?}
+\comment{To do! Mathematical details! How does the secrecy of this scheme compare to the secrecy of a classical homomorphically encrypted matrix multiplication? How many bits are hidden?}
 
 %
 % Cluster States
