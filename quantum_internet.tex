@@ -836,12 +836,13 @@ These representations, whilst entirely equivalent to a photon-number basis repre
 
 In a non-optical context, the elementary unit of quantum information -- the qubit -- can be naturally encoded into any system with a natural or engineered two-level structure. This actually encompasses a broad range of possibilities, including, amongst many others:
 \begin{itemize}
-\item Two-level atoms: Let two distinct electron energy levels, with long lifetimes, represent the logical $\ket{0}$ and $\ket{1}$ basis states.
-\item Quantum dots: Can be engineered with custom band-structures, allowing two- or higher-level qudits to be easily fabricated.
-\item Nitrogen-vacancy (NV) centres: Are a type of point defect in diamond, which has a very well defined energy level structure that may be utilised to represent qubits.
-\item Atomic ensembles: Encode quantum information similarly to a single atom, except that the excitation is a \emph{collective} excitation, in superposition across all the atoms in the ensemble. Atomic ensembles have been demonstrated with extremely long coherence lifetimes, operating at room temperatures.
-\item Superconducting rings: A superposition of current flow direction in a superconducting ring represents the two logical basis states.
-\item Trapped ions: Qubits are encoded into stable electronic states of electromagnetically trapped ions.
+\item Two-level atoms: let two distinct electron energy levels, with long lifetimes, represent the two logical basis states.
+\item $\lambda$-configuration atoms: atoms with two degenerate ground states, which encode the logical qubit, and an additional excited state, which may be transitioned to upon excitation from only one of the ground states. Relaxation from the excited state enables optical coupling via the emitted photon.
+\item Quantum dots: are essentially artificial atoms, which can be engineered with custom band-structures, allowing two- or higher-level qudits to be easily fabricated.
+\item Nitrogen-vacancy (NV) centres: are a type of point defect in diamond, which has a very well defined energy level structure that may be utilised to represent qubits.
+\item Atomic ensembles: encode quantum information similarly to a single atom, except that the excitation is a \emph{collective} one, in superposition across all the atoms in the ensemble.
+\item Superconducting rings: a superposition of current flow direction in a superconducting ring represents the two logical basis states.
+\item Trapped ions: qubits are encoded into stable electronic states of electromagnetically trapped ions.
 \end{itemize}
 
 Clearly the non-optical elements in a quantum network must somehow interface with optical states, such that communication is facilitated. This is discussed later in Sec.~\ref{sec:opt_inter}.
@@ -2699,7 +2700,7 @@ These three main contenders are illustrated in Fig.~\ref{fig:LO_archs}, and desc
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{LO_archs}
-\caption{The three primary approaches for implementing linear optics transformations. (a) Bulk optics, where each optical mode is spatially encoded, and the linear transformation is decomposed into a discrete array of beamsplitters and phase-shifters, an appropriate choice of which enables arbitrary linear optics transformations to be implemented. (b) Time-bin encoding, where each optical mode is designated a distinct time-bin. Fibre-loops meeting at dynamically reconfigurable beamsplitters enables arbitrary linear transformations to be implemented. (c) Integrated wave-guide chips, where evanescent coupling between neighbouring wave-guides within a chip facilitates interference between modes (graphic courtesy of Alberto Peruzzo).} \label{fig:LO_archs}
+\caption{The three primary approaches for implementing linear optics transformations. (a) Bulk optics, where each optical mode is spatially encoded, and the linear transformation is decomposed into a discrete array of beamsplitters and phase-shifters, an appropriate choice of which enables arbitrary linear optics transformations to be implemented. (b) Time-bin encoding, where each optical mode is designated a distinct time-bin. Fibre-loops meeting at dynamically reconfigurable beamsplitters enables arbitrary linear transformations to be implemented. (c) Integrated wave-guide chips, where evanescent coupling between neighbouring wave-guides within a chip facilitates interference between modes (graphic courtesy of Alberto Peruzzo \comment{Get permission!}).} \label{fig:LO_archs}
 \end{figure}
 
 %
@@ -2730,7 +2731,7 @@ Thus, jointly, the displacement and squeezing operators enable arbitrary transla
 
 \subsubsection{Non-optical systems}
 
-There are countless non-optical systems applicable to quantum information processing applications. For example, quantum computing schemes have been described using: $\lambda$-configuration atoms; superconducting rings; ion traps; atomic ensembles; and countless more.
+There are countless non-optical systems applicable to quantum information processing applications. For example, quantum computing schemes have been described using: two-level or $\lambda$-configuration atoms; superconducting rings; ion traps; atomic ensembles; and countless more.
 
 From a networking perspective, we are not terribly interested in the inner workings of all these schemes, as we are reasonably confident that optics will be mediating networking, even if other aspects of the protocol are non-optical. Thus, we will not go into great detail about the evolution of non-optical systems. Instead, for our purposes, the relevant issue is interfacing between optical and non-optical systems, such that networking protocols between them may be implemented. Optical interfacing is discussed in detail in Sec.~\ref{sec:opt_inter}.
 
@@ -2810,7 +2811,15 @@ The former is experimentally straightforward, but plagued by loss, and is only s
 
 \subsection{Optical interfacing} \label{sec:opt_inter}
 
-Unless the entire pipeline of quantum operations through the course of a protocol is all-optical, there will be a need to exchange information between physical systems, for example via light-matter interactions \cite{bib:Cohen-Tannoudji92}. The archetypal interface is that between a photonic qubit in the \mbox{$\{\ket{0},\ket{1}\}$} photon-number basis, and a two-level matter qubit in the $\ket{g}$ (ground) and $\ket{e}$ (excited) state basis. Examples include atoms in cavities, atomic ensembles \cite{bib:Chou05}, nitrogen-vacancy (NV) centres, and quantum dots.
+Unless the entire pipeline of quantum operations through the course of a protocol is all-optical, there will be a need to exchange information between physical systems, for example via light-matter interactions \cite{bib:Cohen-Tannoudji92}. We will now discuss optical interfacing with some of the significant types of matter systems.
+
+%
+% Two-Level Systems
+%
+
+\subsubsection{Two-level systems}
+
+The archetypal interface is that between a photonic qubit in the \mbox{$\{\ket{0},\ket{1}\}$} photon-number basis, and a two-level matter qubit in the $\ket{g}$ (ground) and $\ket{e}$ (excited) state basis. The logical qubit is defined as \mbox{$\ket{0}_L\equiv\ket{g}$}, \mbox{$\ket{1}_L\equiv\ket{e}$}. Examples include atoms in cavities, nitrogen-vacancy (NV) centres, and engineered quantum dots.
 
 In the case of a photon interacting with a two-level matter qubit, the interface can be expressed as an interaction Hamiltonian of the form,
 \begin{align} \label{eq:two_level_hamil}
@@ -2823,7 +2832,43 @@ where $\hat{a}$ ($\hat{a}^\dag$) is the photonic annihilation (creation) operato
 \caption{Light-matter interfacing between a single-photon state ($\hat{a}$, $\hat{a}^\dag$) and a two-level matter qubit ($\ket{g}$, $\ket{e}$). The absorption (emission) of a photon is associated with the excitation (relaxation) of the matter qubit ($\hat\sigma^\pm$).} \label{fig:opt_int}
 \end{figure}
 
-Alternately, one can easily optically interface with a $\lambda$-configuration system, as described in Fig.~\ref{fig:barrett_kok}. Here there are two degenerate ground states representing the logical qubit basis states, one of which may undergo a transition to an excited state. By pumping the system to the excited state and waiting for a coherent relaxation, the emitted photon may be used to couple the qubit state of the $\lambda$-configuration to an optical mode, mapping the qubit value of the matter qubit to a photon-number representation.
+%
+% Lambda-Configuration Systems
+%
+
+\subsubsection{$\lambda$-configuration systems}
+
+Alternately, one can easily optically interface with a $\lambda$-configuration system, as shown in Fig.~\ref{fig:lambda_atom}. Here there are two degenerate ground states representing the logical qubit basis states (\mbox{$\ket{0}_L\equiv\ket{\!\uparrow}$}, \mbox{$\ket{1}_L\equiv\ket{\!\downarrow}$}), one of which may undergo a transition to an excited state, $\ket{e}$. By pumping the system to the excited state and waiting for a coherent relaxation, the emitted photon may be used to couple the qubit state of the $\lambda$-configuration to an optical mode, mapping the qubit value of the matter qubit to a photon-number representation.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.3\columnwidth]{lambda_atom}
+\caption{Light-matter interfacing between an optical mode and a $\lambda$-configuration system. The two degenerate ground states represent the logical qubit (\mbox{$\ket{0}_L\equiv\ket{\!\uparrow}$}, \mbox{$\ket{1}_L\equiv\ket{\!\downarrow}$}), only one of which may undergo transition to the excited state $\ket{e}$. Upon pumping the \mbox{$\ket{\!\downarrow}\to\ket{e}$} transition with a $\pi$-pulse, a relaxation back to the ground state maps the logical qubit value to photon-number.} \label{fig:lambda_atom}
+\end{figure}
+
+%
+% Atomic Ensembles
+%
+
+\subsubsection{Atomic ensembles}
+
+In addition to single atoms with well-defined electronic structure, atomic ensembles \cite{bib:Chou05} can be used, whereby the absorption of a photon creates a \emph{collective excitation} -- a superposition of a single excitation across all the atoms in the ensemble. Specifically, excitations are represented using collective excitation operators,
+\begin{align}
+\hat{S}^\dag = \frac{1}{\sqrt{N}}\sum_{i=1}^N \hat{S}_i^\dag,
+\end{align}
+where \mbox{$\hat{S}_i^\dag=\ket{e}_i\bra{g}_i$} is the excitation operator for the $i$th atom in the ensemble, and there are $N$ atoms.
+
+Atomic ensembles are essentially well-engineered clouds of atomic gasses, trapped in a glass container, coupled to an optical mode. Atomic ensembles have been demonstrated with extremely long coherence lifetimes ($\sim$100ms \comment{Check this!}), operating at room temperatures (a very attractive feature on its own). They exhibit \emph{collective enhancement} in their coupling to the optical mode -- the optical coupling strength is amplified by a factor of $\sqrt{N}$ compared to single-atom optical coupling, mitigating the need for a cavity.
+
+The collective excitations exhibit the same general mathematical structure as single-atom excitations -- the absorption (emission) of a single photon is associated with a single collective excitation (relaxation), albeit with the favourable collective enhancement in the coupling strength.
+
+To couple with a polarisation-encoded photonic qubit, a PBS can be employed to spatially separate the horizontal and vertical modes, each of which couples to a separate atomic ensemble, which jointly represent the matter qubit, as shown in Fig.~\ref{fig:atomic_ensemble_qubit}.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.45\columnwidth]{atomic_ensemble_qubit}
+\caption{Coupling a polarisation-encoded photonic qubit to a pair of atomic ensembles. The horizontal and vertical components of the photonic qubit are spatially separated using a PBS, which subsequently independently interface with distinct atomic ensembles via collective excitation.} \label{fig:atomic_ensemble_qubit}
+\end{figure}
+
+\comment{Add atomic ensemble refs! Get from Barrett, Rohde, Stace paper}
 
 %
 % Entanglement Purification
