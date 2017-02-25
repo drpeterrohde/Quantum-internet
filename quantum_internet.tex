@@ -821,7 +821,7 @@ In phase-space, the most common representations of optical states are in terms o
 \begin{itemize}
 \item $P$-function:
 \begin{align}
-\hat\rho = \int\!\int P(\alpha) \ket{\alpha}\bra{\alpha} d^2\alpha.
+\hat\rho = \int\!\!\!\int P(\alpha) \ket{\alpha}\bra{\alpha} d^2\alpha.
 \end{align}
 \item $Q$-function:
 \begin{align}
@@ -1744,8 +1744,6 @@ In instances where corruption or loss of packets cannot be tolerated, a more pro
 
 In Sec.~\ref{sec:costs} we introduced the notion of network costs, strategies for allocating network resources in Sec.~\ref{sec:route_strats}, and a general formalism for optimising strategies so as to minimise costs in Sec.~\ref{sec:strat_opt}. In this section we present some meaningful example strategies and associated pseudo-code fragments, illustrating the implementation of various aspects of strategies of practical real-world interest.
 
-\comment{Up to here!}
-
 %
 % Single User (Shortest-Path)
 %
@@ -1779,7 +1777,7 @@ function Strategy.SingleUser(Packets):
 
 \subsection{Multiple users} \label{sec:two_user}
 
-Next consider the more complex network shown in Fig.~\ref{fig:conflict}. We consider two pairs of sender/receiver, \mbox{$A_1\to B_1$} and \mbox{$A_2\to B_2$}. The available routes connecting both pairs overlap, creating competition for network resources.
+Next consider the more complex network shown in Fig.~\ref{fig:conflict}. We consider two sender/receiver pairs, \mbox{$A_1\to B_1$} and \mbox{$A_2\to B_2$}. The available routes connecting both pairs overlap, creating competition for network resources.
 
 Let us assume there are just two properties of interest when deciding strategies -- cost in dollars (which may differ for different links), and availability (i.e how many states can the channel handle at once). Let $c_1$ be the dollar cost, and \mbox{$a_1$} be the amount of available channel capacity. Our network is very primitive and each channel can only accommodate one state at a time. Thus, we let \mbox{$a_1=1$} for all links, except for the one common to both $R_1$ and $R_3$, \mbox{($R_1\cap R_3$)}, which we invest more heavily into, since both routes are going to be wanting to use this link.
 
@@ -1797,6 +1795,7 @@ Next the cost metrics are updated by the strategy $\mathcal{S}$ following each c
 \begin{align}
 \mathcal{S} : a_1 \to a_1-1.
 \end{align}
+
 Suppose the strategy optimises the \mbox{$A_1\to B_1$} route first, yielding $R_3$, before moving onto the \mbox{$A_2\to D_2$} route. In this case, the reduction of the bandwidth attribute signals that the cheapest route $R_2$ is no longer available to be utilised simultaneously to $R_3$, and must therefore wait its turn on the following clock cycle. Alternately, the strategy could employ $R_1$ for \mbox{$A_2\to B_2$}, in which case their common link with capacity for two states would eliminate the competition between the two communications, allowing both to take place simultaneously. Thus, there is a tradeoff: for \mbox{$A_2\to B_2$}, we could achieve a net cost of \mbox{$c(A_2\to B_2)=5$}, requiring 2 clock cycles; or we could achieve simultaneous communication at the expense of increasing cost to \mbox{$c(A_2\to B_2)=6$}. This indicates that when choosing strategies, we must carefully define its goals.
 
 Suppose net cost, rather than clock cycles, was the key measure of interest. Then choosing the routes $R_1$ and $R_3$ would be the optimal choice. An optimal {\sc Global} optimisation would recognise this. However, a {\sc Local} optimisation, based on choosing shortest-paths one-by-by for each sender/receiver pair, may or may not choose the optimal routes, depending on the order in which the decisions were made.
@@ -1821,6 +1820,8 @@ Truly {\sc Global} strategies could employ, for example, the vehicle routing pro
 %
 
 \subsection{Round robin} \label{sec:round_robin}
+
+\comment{Up to here!}
 
 Perhaps the simplest and most elegant multi-user scheduling strategy is to borrow from the idea of time-division multiplexing for preemptive multitasking employed by UNIX operating systems. Here we simply put all live packets in a list, and go through the list, one-by-one, giving each packet an equal time-share of network resources, independent of costs. The algorithm for this is shown in Alg.~\ref{tab:round_robin}.
 
@@ -1992,6 +1993,8 @@ function Strategy.OptimalFlow(Packets):
 
 \section{Extensibility of QTCP} \label{sec:c_vs_a}
 
+\comment{Started here}
+
 In Sec.~\ref{sec:costs} we introduced the notion of the \emph{costs} and \emph{attributes} of links in a classical network, and in Sec.~\ref{sec:quantum_meas_cost} generalised these notions to the quantum case. In Sec.~\ref{sec:packet_header} we described the header format for quantum packets.
 
 The {\sc Costs} and {\sc Attributes} fields within the {\sc Header} are very powerful data structures, implemented as ordered sets of arbitrary dimension, comprising arbitrary data fields. The intention here is to allow QTCP to be extensible into the future, with the addition of new data structures into the protocol. These can be custom designed to, in conjunction with appropriate routing strategies and cost functions, influence the operation of QTCP completely arbitrarily, and easily implement entirely different quantum networking paradigms than presented here.
@@ -2031,7 +2034,7 @@ For example, the cost metrics and attributes employed at the intercontinental le
 Such interconnects will typically comprise a combination of:
 \begin{itemize}
 \item Packet switching: such that packets can be arbitrarily switched between the different levels of the network hierarchy.
-\item Physical interface: interconnect may be switching between different media. Such physical interfaces have costs associated with them. For example, coupling between free-space and fibre is typically very lossy. Sec.~\ref{sec:opt_inter} discusses optical interfacing with two-level matter qubits, and Sec.~\ref{sec:hybrid} discusses hybrid architectures, where optics mediates entanglement generation between matter qubits.
+\item Physical interface: interconnect may be switching between different media. Such physical interfaces have costs associated with them. For example, coupling between free-space and fibre is typically very lossy. Sec.~\ref{sec:opt_inter} discusses optical interfacing with matter qubits, and Sec.~\ref{sec:hybrid} discusses hybrid architectures, where optics mediates entanglement generation between matter qubits.
 \item Quantum memory: such that data can be buffered while it awaits its turn at being switched between networks, as different networks may have different loads and operate at different clock rates. This is discussed in Sec.~\ref{sec:memory}.
 \item Packet format conversion: different levels of the network hierarchy may be employing entirely different cost metrics, attributes, and cost functions, requiring packet headers to be reformatted upon switching between networks.
 \end{itemize}
@@ -2043,6 +2046,8 @@ The packet switching and quantum memory are implemented as quantum processes at 
 %
 
 \section{Network topologies}
+
+\comment{Up to here}
 
 As quantum (or classical) networks inherently reside on graphs, it is important to introduce some of the key graph structures of relevance to networking and some of their properties of relevance to quantum networking protocols.
 
@@ -2207,7 +2212,9 @@ Of course, all the topological structures described until now are in-principle c
 
 \section{Network algorithms} \label{sec:graph_theory}
 
-Having introduced some of the more relevant graph structures, we now introduce some of the key graph theory algorithms that are of direct relevance to networking theory \cite{bib:RivestAlgBook}. In graph theory, many fundamental problems are believed to be computationally hard to solve, often \textbf{NP}-complete. However, there are several important graph algorithms that are classically efficient to solve, and which are of great utility to us as network architects.
+\comment{Restarted here}
+
+Having introduced some of the more relevant graph structures, we now introduce some of the key graph theoretic algorithms that are of direct relevance to networking theory \cite{bib:RivestAlgBook}. In graph theory, many fundamental problems are believed to be computationally hard to solve, often \textbf{NP}-complete. However, there are several important graph algorithms that are classically efficient to solve, and which are of great utility to us as network architects.
 
 We will focus heavily on combinatorial optimisation techniques, where the goal is to allocate network resources so as to optimise some cost metric. This includes both single- and multi-user algorithms, the latter being the far more relevant ones in the context of shared networks.
 
@@ -2241,6 +2248,8 @@ Both BFS and DFS exhibit runtime \mbox{$O(|V|+|E|)$}, where $|V|$ and $|E|$ are 
 %
 
 \subsection{Shortest-path} \label{sec:shortest_path}
+
+\comment{Up to here}
 
 In graph theory, the shortest-path problem is that of finding a subgraph of a given graph $G$, connecting two vertices, \mbox{$A\to B \subset G$}, such that the sum of its edge weights is minimised. In the context of our application to route-finding, this amounts to finding a route that minimises cost.
 
@@ -4574,7 +4583,7 @@ It is essential for the adoption and development of quantum technology, that qua
 %
 
 \begin{acknowledgments}
-We acknowledge Charlotte Bridault for helpful discussions. P.P.R. is funded by an ARC Future Fellowship (project FT160100397). We thank 1,3,7-Trimethylxanthine for aiding in the motivation for this work.
+We acknowledge Charlotte Bridault and Darryl Veitch for helpful discussions. P.P.R. is funded by an ARC Future Fellowship (project FT160100397). We thank 1,3,7-Trimethylxanthine for aiding in the motivation for this work.
 \\
 \\
 
