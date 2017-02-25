@@ -2214,7 +2214,7 @@ Of course, all the topological structures described until now are in-principle c
 
 \comment{Restarted here}
 
-Having introduced some of the more relevant graph structures, we now introduce some of the key graph theoretic algorithms that are of direct relevance to networking theory \cite{bib:RivestAlgBook}. In graph theory, many fundamental problems are believed to be computationally hard to solve, often \textbf{NP}-complete. However, there are several important graph algorithms that are classically efficient to solve, and which are of great utility to us as network architects.
+Having introduced some of the more relevant graph structures, we now introduce some of the key graph-theoretic algorithms that are of direct relevance to networking theory \cite{bib:RivestAlgBook}. In graph theory, many fundamental problems are believed to be computationally hard to solve, often \textbf{NP}-complete. However, there are several important graph algorithms that are classically efficient to solve, and which are of great utility to us as network architects.
 
 We will focus heavily on combinatorial optimisation techniques, where the goal is to allocate network resources so as to optimise some cost metric. This includes both single- and multi-user algorithms, the latter being the far more relevant ones in the context of shared networks.
 
@@ -2249,8 +2249,6 @@ Both BFS and DFS exhibit runtime \mbox{$O(|V|+|E|)$}, where $|V|$ and $|E|$ are 
 
 \subsection{Shortest-path} \label{sec:shortest_path}
 
-\comment{Up to here}
-
 In graph theory, the shortest-path problem is that of finding a subgraph of a given graph $G$, connecting two vertices, \mbox{$A\to B \subset G$}, such that the sum of its edge weights is minimised. In the context of our application to route-finding, this amounts to finding a route that minimises cost.
 
 The first proven shortest-path algorithm was by Dijkstra \cite{bib:Dijkstra59}, which requires runtime $O(|V|^2)$, also residing in \textbf{P}. Subsequently, a number of improvements and variations on Dijkstra's algorithm have been proposed, most notably the $A^*$ algorithm \cite{???}, which has found widespread modern use.
@@ -2277,7 +2275,7 @@ One solution is for a central authority to be responsible for maintaining a ledg
 
 Another approach, which does not require a reliable central authority, is for users to implement network exploration algorithms each time they wish to perform a shortest-path calculation. This facilitates truly ad hoc networking, but incurs the cost overhead associated with nodes frequently implementing network exploration. However, network exploration is a purely classical algorithm, which may run entirely over the classical network, and therefore incurs no cost in quantum resources.
 
-With this approach, a new node can join the network, without having to know anything about the topology of the network. Similarly, upon leaving the network, it needn't notify anyone, since a future interrogation by a neighbour will be detected as a non-existent node. The BFS is therefore highly suited to ad hoc operation.
+With this approach, a new node can join the network, without having to know anything about the topology of the network. Similarly, upon leaving the network, it needn't notify anyone, since a future interrogation by a neighbour will be detected as a non-existent node. The BFS is therefore highly suited to ad hoc operation. In fact, present-day internet gateway protocols (Sec.~\ref{sec:gateway}) essentially implement a distributed version of BFS.
 
 %
 % Single-Source Shortest-Path
@@ -2319,7 +2317,7 @@ This problem can be efficiently solved using linear programming. Specifically, c
 
 \subsection{Maximum flow} \label{sec:max_flow_prob}
 
-The \emph{maximum flow problem} \cite{???} is the seemingly simple goal of -- as the name suggests -- maximising network flow, without consideration for any of the other costs metrics or attributes associated with the network. This type of problem is relevant when brute bandwidth is the dominant goal.
+The \emph{maximum flow problem} \cite{???} is the seemingly simple goal of -- as the name suggests -- maximising network flow, without consideration for any of the other cost metrics or attributes associated with the network. This type of problem is relevant when brute bandwidth is the dominant goal.
 
 This problem can be tackled using a number of techniques. In some circumstances, linear programming techniques can be employed. The best-known algorithm is the Ford-Fulkerson algorithm \cite{???}, which finds a solution in \mbox{$O(|E|\cdot c_\mathrm{max})$} runtime, where $|E|$ is the number of links in the network and $c_\mathrm{max}$ is the maximum cost present in the network. The algorithm behaves pathologically in some conditions, which can easily be overcome in the context we present here. Using Ford-Fulkerson as a starting point, numerous other more sophisticated algorithms have been developed.
 
@@ -2332,8 +2330,6 @@ This problem can be tackled using a number of techniques. In some circumstances,
 The \emph{multi-commodity flow problem} \cite{???} generalises the previous algorithms to be applicable to multi-user networks. The generalisation is that there may be a number of distinct senders, residing on different nodes, each transmitting to distinct recipients, residing on different nodes. This is the most realistic scenario we are likely to encounter in a real-world quantum internet, where networks will inevitably be shared by many users, residing at different nodes.
 
 Unfortunately the computational complexity of solving this problem is much harder than the previous algorithms in general. Specifically, solving the problem exactly is \textbf{NP}-complete in general. However, in specific circumstances it can be approached using linear programming or polynomial-time approximation schemes.
-
-Note that, using Grover's search algorithm, although not efficient, quantum computers offer a quadratic improvement in the runtime of \textbf{NP}-complete problems, which is pertinent to consider in the upcoming quantum era -- if quantum computers are available as a resource, we may be able to improve network resource allocation substantially.
 
 %
 % Vehicle Routing Problem
@@ -2357,11 +2353,25 @@ A multitude of variations on the VRP exist, accommodating for different types of
 
 \subsection{Vehicle rescheduling problem} \label{sec:VRSP}
 
-The vehicle rescheduling problem (VRSP) generalises the VRP to the case where properties of the network undergo changes dynamically within the course of transmissions over the network. To use the analogy of transport networks, this could entail, for example, a truck breaking down en route to its destination, requiring real-time rescheduling.
+The vehicle rescheduling problem (VRSP) generalises the VRP to the case where properties of the network undergo changes dynamically within the course of transmissions over the network. To use the analogy of transport networks, this could entail, for example, a truck breaking down en route to its destination, requiring real-time rescheduling of the other vehicles.
 
 Solving the VRSP exactly is \textbf{NP}-complete in general, but as with the VRP, heuristic methods can often be applied, which efficiently find approximate solutions.
 
 In the context of communications over networks, the VRSP has obvious applicability -- a quantum internet is likely going to be largely ad hoc in nature, with users coming and going, and many non-deterministic points of failure, requiring ongoing updating of routing decisions if resource allocation is to remain as efficient as possible.
+
+%
+% Improving Network Algorithms Using Quantum Computers
+%
+
+\subsection{Improving network algorithms using quantum computers}
+
+Given that we are directing this work at the upcoming quantum era, where quantum computing will become a reality, it is pertinent to ask whether quantum computers might improve the aforementioned network algorithms, some of which are computationally hard problems. Most notably, several of the discussed algorithms are \textbf{NP}-complete in general, a complexity class strongly believed to be exponentially complex on classical computers. Can quantum computers help us out here, and improve network resource allocation?
+
+While it is not believed that quantum computers can efficiently solve such \textbf{NP}-complete problems, it is known that they can offer a quadratic speedup using Grover's unstructured search algorithm. Specifically, \textbf{NP}-complete problems can be treated as satisfiability problems, where we are searching for an input to a classical algorithm that yields a particular output.
+
+To gain a quantum advantage, we treat the classical algorithm as an oracle whose input configurations form an unstructured search space. Then, Grover's algorithm can perform a search over the space of input configurations to find a satisfying solution, with quadratically enhanced runtime.
+
+While a quadratic improvement is far short of the exponential improvement we might hope for, Grover's algorithm is known to be optimal for the unstructured search problem \cite{?}. Nonetheless, despite only yielding a quadratic improvement, a quadratic speedup may already be sufficient to significantly improve network resource allocation.
 
 %
 % Protocols for the Quantum Internet
@@ -2375,7 +2385,7 @@ Much of the recent experimental progress in quantum technology has been in the a
 
 We keep in mind that although throughout this presentation we have been very quantum computing-centric, quantum computing is not the \emph{only} quantum resource worth communicating. In the same way that \emph{digital assets} encompass a broad range of digital systems and information, any aspect of a quantum system -- from a state, to an operation, storage, to a measurement, or anything else -- could be treated as a \emph{quantum asset}, which, for generality, we would like our quantum networks to be able to handle.
 
-At the lowest physical level, quantum protocols have in common that they involve state preparation, evolution, and measurement as the fundamental primitives upon which more complex protocols are constructed. We consider these primitive resources in detail, before building upon them to consider some of the major elementary quantum protocols that implement tasks of practical interest. All of those discussed here have been subject to extensive experimental investigation and demonstration.
+At the lowest physical level, quantum protocols have in common that they involve state preparation, evolution, and measurement as the fundamental primitives upon which more complex protocols are constructed. We consider these primitive resources in detail, before building upon them to consider some of the major elementary quantum protocols that implement tasks of practical interest. All of those discussed here have been subject to extensive experimental investigation and demonstration, which will be summarised in Sec.~\ref{sec:state_of_the_art}.
 
 %
 % State Preparation
@@ -2399,7 +2409,7 @@ We see that even the most basic primitive in quantum technologies -- state prepa
 
 \subsubsection{Coherent states} \label{sec:coherent_states}
 
-Coherent states (Sec.~\ref{sec:coherent_state_enc}), although not strictly quantum states, nonetheless find broad applications in quantum protocols, for example as the pump for spontaneous parametric down-conversion (SPDC) sources (Sec.~\ref{sec:single_phot_src}), or as a phase-reference for homodyne detection (Sec.~\ref{sec:homodyne}). Coherent states are rather trivial prepare, as they are closely approximated by laser sources. Despite their triviality, high quality lasers can nonetheless become very expensive, large, and inaccessible to the not-so-well-resourced end-user.
+Coherent states (Sec.~\ref{sec:coherent_state_enc}), although not strictly quantum states, nonetheless find broad applications in quantum protocols, for example as the pump for spontaneous parametric down-conversion (SPDC) sources (Sec.~\ref{sec:single_phot_src}), or as a phase-reference for homodyne detection (Sec.~\ref{sec:homodyne}). Coherent states are rather trivial to prepare, as they are closely approximated by laser sources. Despite their triviality, high quality lasers can nonetheless become very expensive, large, and inaccessible to the not-so-well-resourced end-user.
 
 %
 % Single-Photons
@@ -2413,13 +2423,13 @@ The most common approach to preparing single-photon states is via heralded SPDC 
 \begin{align}
 \hat{H}_\mathrm{SPDC} = \xi(\hat{a}_p\hat{a}_s^\dag\hat{a}_i^\dag + \hat{a}_p^\dag\hat{a}_s\hat{a}_i),
 \end{align}
-where $\hat{a}_p$, $\hat{a}_s$ and $\hat{a}_i$ are the photonic annihilation operators for the pump (input), and \emph{signal} and \emph{idler} (output) modes respectively. This has the clear intuitive interpretation as the coherent exchange of photon-pairs in the output modes with photons in the coherent pump.
+where $\xi$ is the interaction strength, and $\hat{a}_p$, $\hat{a}_s$ and $\hat{a}_i$ are the photonic annihilation operators for the pump (input), and \emph{signal} and \emph{idler} (output) modes respectively. This has the clear intuitive interpretation as the coherent exchange of photon-pairs in the output modes with photons in the coherent pump.
 
 Specifically, a two-mode SPDC state takes the form,
 \begin{align}
 \ket\psi_\mathrm{SPDC} = \sqrt{1-\chi^2} \sum_{n=0}^\infty \chi^n \ket{n}_s\ket{n}_i,
 \end{align}
-where $\chi$ is the squeezing parameter, a function of the pump-power and properties of the crystal. The layout is shown in Fig.~\ref{fig:SPDC_source}
+where $\chi$ is the squeezing parameter, a function of the pump-power and properties of the crystal. The layout is shown in Fig.~\ref{fig:SPDC_source}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.9\columnwidth]{SPDC_source}
@@ -2484,9 +2494,9 @@ However, these states are notoriously difficult and technologically challenging 
 
 \subsubsection{Cluster states}
 
-In addition to the simple single- or two-mode states discussed above, an entire universal quantum computation can be performed using the `cluster state' measurement-based model for quantum computation (Sec.~\ref{sec:CSQC}). Here state preparation can not only be outsourced, but distributed, with different hosts preparing different parts of the state, which are then `stitched together'.
+In addition to the simple single- or two-mode states discussed above, an entire universal quantum computation can be performed using the `cluster state' measurement-based model for quantum computation (explained in detail in Sec.~\ref{sec:CSQC}). Here state preparation can not only be outsourced, but distributed, with different hosts preparing different parts of the state, which are then `stitched together'.
 
-The beauty of this type of state is that there is a natural separation between state preparation and computation, with the preparation state being far more technologically challenging than the computation stage. Thus, Alice might ask better-resourced Bob to prepare a cluster state and send it to her, at which point she implements the computation herself using simple single-qubit measurement operations.
+The beauty of this type of state is that there is a natural separation between state preparation and computation, with the preparation stage being far more technologically challenging than the computation stage. Thus, Alice might ask better-resourced Bob to prepare a cluster state and send it to her, at which point she implements the computation herself using simple single-qubit measurement operations.
 
 %
 % Greenberger-Horne-Zeilinger States
@@ -2522,7 +2532,9 @@ which are locally equivalent to one another via the application of Pauli operato
 
 \subsubsection{Cat states}
 
-Cat states (Sec.~\ref{sec:cat_enc}) are extremely difficult to prepare, most easily via non-linear processes. However, they are very useful for optical quantum computation and for the study of macroscopic quantum systems, when using large coherent amplitudes. Because of the difficulty of their preparation, the ability to outsource it would be very valuable.
+Cat states (Sec.~\ref{sec:cat_enc}) -- superpositions of coherent states -- are extremely difficult to prepare, most easily via non-linear processes. However, they are very useful for optical quantum computation and for the study of macroscopic quantum systems, when using large coherent amplitudes. Because of the difficulty of their preparation, the ability to outsource it would be very valuable.
+
+However, it must be cautioned that cat states decohere very readily, since their well-defined parity implies decoherence upon loss of just a single photon. This makes QoS considerations particularly pertinent.
 
 %
 % Squeezed States
@@ -2536,9 +2548,9 @@ Mathematically, squeezing is represented using the squeezing operator,
 \begin{align}
 \hat{S}(\xi) = \mathrm{exp}\left[ \frac{1}{2}(\xi^*\hat{a}^2 - \xi{\hat{a}^{\dag 2}})\right],
 \end{align}
-where $\hat{a}$ is the photonic creation operator. Experimentally, such states are prepared using non-linear crystals. It is intuitively obvious that linear optics cannot prepare such states, owing to the non-linear terms in the squeezing operator, which does not preserve photon-number, and therefore cannot be passive.
+where $\hat{a}$ is the photonic creation operator, and $\xi$ is the squeezing parameter. Experimentally, such states are prepared using non-linear crystals. It is intuitively obvious that linear optics cannot prepare such states, owing to the non-linear terms in the squeezing operator, which does not preserve photon-number, and therefore cannot be passive.
 
-Of particular interest are squeezed coherent states, $\hat{S}(\xi) \ket{\alpha}$, which are minimum uncertainty states, saturating the Heisenberg uncertainty relation. A special case of this is squeezed vacuum states, $\hat{S}(\xi) \ket{0}$, which are even-parity states (i.e they contain strictly even photon-number terms).
+Of particular interest are squeezed coherent states, $\hat{S}(\xi) \ket{\alpha}$, which are minimum uncertainty states, saturating the Heisenberg uncertainty relation. A special case of this is squeezed vacuum states, $\hat{S}(\xi) \ket{0}$, which are even-parity states (i.e they contain strictly even photon-number terms). This implies that, like cat states, they are very vulnerable to decoherence for the same reason.
 
 %
 % More Exotic States of Light
@@ -2558,7 +2570,7 @@ As discussed in Sec.~\ref{sec:exotic}, many other far more elaborate states are 
 
 \subsubsection{Matter qubits}
 
-In addition to preparing optical states, they can be used to mediate the preparation of systems comprising matter qubits, using which-path erasure techniques (Sec.~\ref{sec:hybrid}, Fig.~\ref{fig:barrett_kok}) or light-matter interactions (Sec.~\ref{sec:opt_inter}, Fig.~\ref{fig:opt_int}). These techniques are very versatile, and apply to many different matter qubit systems, such as two-level atoms, nitrogen-vacancy centres, quantum dots, and atomic ensembles.
+In addition to preparing optical states, they can be used to mediate the preparation of systems comprising matter qubits, using which-path erasure techniques (Sec.~\ref{sec:hybrid} \& Fig.~\ref{fig:barrett_kok}) or light-matter interactions (Sec.~\ref{sec:opt_inter} \& Fig.~\ref{fig:opt_int}). These techniques are very versatile, and apply to many different matter qubit systems, such as two-level atoms, nitrogen-vacancy centres, quantum dots, and atomic ensembles.
 
 This is useful when matter-based architectures are more scalable or technologically simpler than all-optical architectures (Sec.~\ref{sec:KLM_univ}), and particularly for quantum memory (Sec.~\ref{sec:memory}), when using matter qubits with long lifetimes.
 
@@ -2572,7 +2584,7 @@ As a last (and possibility also intermediate) step in any quantum protocol is th
 
 Different detection schemes bring with them their own (potentially substantial) costs and technological challenges. State of the art micropillar photo-detectors \cite{???}, at the time of writing, cost on the order of hundreds of thousands of dollars, and require a sophisticated laboratory setup. Clearly this type of infrastructure is inaccessible to many players, and borrowing or licensing access to such equipment over a quantum network would pave the way for broader accessibility to state of the art technology.
 
-Each type of state being measured, in combination with the nature of the detection scheme, brings with it their own limitations. For example, number-resolved photo-detectors exhibit dead-time, are too slow to enable fast-feedforward, have spectral filtering characteristics, and mode-matching requirements. 
+Each type of state being measured, in combination with the nature of the detection scheme, brings with it their own limitations. For example, number-resolved photo-detectors exhibit dead-time, are too slow to enable fast-feedforward, have spectral filtering characteristics, and mode-matching requirements. \comment{Is this right?}
 
 These represent significant technological challenges, which are costly to overcome, necessitating outsourcing over the quantum internet to become economically viable on a large scale. However, the QTCP protocol is able to accommodate error metrics and attributes covering all the above error models, enabling reliable, predictable QoS for outsourced quantum measurement.
 
@@ -2586,7 +2598,14 @@ With the ability to perform measurements over a complete basis for the respectiv
 
 Perhaps the most useful, and ubiquitous, type of optical state measurement is photo-detection \cite{RohdePDReview}, where we would like to count photon-number. Broadly, there are two main classes of photo-detectors -- \emph{number-resolved} and \emph{non-number-resolved} (or `bucket' detectors). These behave exactly as the names suggest, with the former typically being more expensive and technologically demanding than the latter.
 
-The most common form of photo-detection is using avalanche photo-diodes (APD's), which are cheap but non-number-resolving. Here a single photon excites an electron into the conduction band at a semiconductor junction, enabling a detectable current flow. More recently, superconducting detectors have been adopted, as they have the potential for number-resolution. Here a superconductor is kept just below its critical temperature, and the absorption of a photon is enough to heat the superconductor above the critical temperature, creating a detectable change in resistance across the superconductor. Despite their superior performance, however, superconducting detectors are very expensive (for obvious reasons) and only accessible to well-resourced labs.
+The most common form of photo-detection is using avalanche photo-diodes (APD's), which are cheap but non-number-resolving. Here a single photon excites an electron into the conduction band at a semiconductor junction, enabling a detectable current flow.
+
+More recently, superconducting detectors have been adopted, as they have the potential for number-resolution. Here a superconductor is kept just below its critical temperature, and the absorption of a photon is enough to heat the superconductor above the critical temperature, creating a detectable change in resistance across the superconductor. This is shown in Fig.~\ref{fig:super_det}. Despite their superior performance, however, superconducting detectors are very expensive (for obvious reasons) and only accessible to well-resourced labs.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.5\columnwidth]{superconducting_detector}
+\caption{A superconducting photo-detector. A superconductor is held at just below its critical temperature. The absorption of a photon is sufficient to heat it above the critical temperature, yielding a detectable change in conductance across the device.} \label{fig:super_det}
+\end{figure}
 
 The key parameter of interest in a photo-detector, in addition to whether or not it is number-resolving, is its efficiency, $\eta$ -- the probability that a given incident photon will trigger the detector. For most applications, the goal is to maximise $\eta$. As one might expect, there is a direct tradeoff between $\eta$ and cost, with very high-efficiency detectors often economically out of reach for many experimentalists. Also of interest is the `dark-count' rate -- the rate at which the detector falsely clicks in the absence of photons. However, this is often ignored as modern detectors typically exhibit very low dark-count rates.
 
@@ -2622,7 +2641,7 @@ A homodyne detector interferes a state with a coherent state on a beamsplitter, 
 
 \begin{figure}[!htb]
 \includegraphics[width=0.6\columnwidth]{homodyne}
-\caption{Homodyne detection of an unknown optical states $\hat\rho_\mathrm{in}$, by mixing it with a reference coherent state $\ket\alpha$ on a 50:50 beamsplitter, and taking the difference in the photo-detection rates at the output modes. By sweeping through the phase and amplitude of $\ket\alpha$, we can directly sample the Wigner function of $\hat\rho_\mathrm{in}$, allowing its full reconstruction.} \label{fig:homodyne}
+\caption{Homodyne detection of an unknown optical state $\hat\rho_\mathrm{in}$, by mixing it with a reference coherent state $\ket\alpha$ on a 50:50 beamsplitter, and taking the difference in the photo-detection rates at the output modes. By sweeping through the phase and amplitude of $\ket\alpha$, we can directly sample the Wigner function of $\hat\rho_\mathrm{in}$, allowing its full reconstruction.} \label{fig:homodyne}
 \end{figure}
 
 
@@ -2634,7 +2653,7 @@ A homodyne detector interferes a state with a coherent state on a beamsplitter, 
 
 For the purposes of which-path erasure, essential for optical cluster state (Sec.~\ref{sec:CSQC}) preparation and quantum teleportation (Sec.~\ref{sec:teleport}), Bell state measurements (i.e projections onto the Bell basis given in Eq.~\ref{eq:bell_basis}) are important. To realise this, there are two primary options. The first is to use a controlled-NOT (CNOT) gate (the quantum equivalent of the classical XOR gate), for example an LOQC gate (Sec.~\ref{sec:KLM_univ}). The second is to perform a \emph{partial} Bell state projection using a polarising beamsplitter (PBS) -- a beamsplitter which completely transmits vertical polarisation, and completely reflects horizontal polarisation \cite{bib:BraunsteinMann95}. This approach is described in Fig.~\ref{fig:partial_bell}.
 
-The former can be implemented with arbitrarily high success probability in principle. However, in most scenarios of interest (such as cluster state preparation and entanglement purification) the latter succeeds with probability of $1/2$, since a PBS is only able to uniquely distinguish two of the four Bell states. To its advantage, partial Bell measurements only require high HOM visibility, avoiding the need for the interferometric stability inherent to LOQC gates.
+The former can be implemented with arbitrarily high success probability in principle. However, in most scenarios of interest (such as cluster state preparation and entanglement purification) the latter succeeds with probability of $1/2$, since a PBS is only able to uniquely distinguish two of the four Bell states. To its advantage, partial Bell measurements only require high HOM visibility, avoiding the need for the interferometric stability inherent to LOQC CNOT gates.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.75\columnwidth]{partial_bell}
@@ -2661,9 +2680,9 @@ In the case of an entire quantum computation, whether it be in the circuit model
 
 Many non-optical systems can be indirectly measured by first entangling optical states with the matter qubits and then measuring the optical state. Because of the entanglement, projective measurement on the optical state teleports the measurement onto the matter qubit.
 
-In Fig.~\ref{fig:barrett_kok} we illustrate a scheme for entangling two $\lambda$-configuration atoms using which-path erasure. Consider just one of these qubits in isolation. If a $\pi$-pulse is applied to the atom, the $\ket{\!\downarrow}$ state is excited to the $\ket{e}$ state, after which, upon relaxation, emits a photon. Thus, upon measurement, the presence or absence of a photon directly indicates whether the qubit was in the $\ket{\!\uparrow}$ or $\ket{\!\downarrow}$ state.
+In Fig.~\ref{fig:barrett_kok} we illustrate a scheme for entangling two $\lambda$-configuration atoms using which-path erasure. Consider just one of these qubits in isolation. If a $\pi$-pulse is applied to the atom, the $\ket{\!\downarrow}$ state is excited to the $\ket{e}$ state, after which, upon relaxation, it emits a photon. Thus, upon measurement, the presence or absence of a photon directly indicates whether the qubit was in the $\ket{\!\uparrow}$ or $\ket{\!\downarrow}$ state.
 
-The attractive feature of this, is that although the matter qubit is stationary, its indirect measurement via optical coupling may be performed over arbitrary distances across the optical network, allowing the measurement stage to be outsourced. This includes entangling measurements, useful for, for example, cluster state preparation (Sec.~\ref{sec:CSQC}).
+The attractive feature of this is that although the matter qubit is stationary, its indirect measurement via optical coupling may be performed over arbitrary distances across the optical network, allowing the measurement stage to be outsourced. This includes entangling measurements, useful for, for example, cluster state preparation (Sec.~\ref{sec:CSQC}).
 
 %
 % Evolution
@@ -2716,9 +2735,11 @@ These linear optics evolutions are most commonly implemented using either:
 \end{itemize}
 These three main contenders are illustrated in Fig.~\ref{fig:LO_archs}, and described in more detail in Sec.~\ref{sec:LO_evolution}.
 
+\comment{Up to here}
+
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{LO_archs}
-\caption{The three primary approaches for implementing linear optics transformations. (a) Bulk optics, where each optical mode is spatially encoded, and the linear transformation is decomposed into a discrete array of beamsplitters and phase-shifters, an appropriate choice of which enables arbitrary linear optics transformations to be implemented. (b) Time-bin encoding, where each optical mode is designated a distinct time-bin. Fibre-loops meeting at dynamically reconfigurable beamsplitters enables arbitrary linear transformations to be implemented. (c) Integrated wave-guide chips, where evanescent coupling between neighbouring wave-guides within a chip facilitates interference between modes (graphic courtesy of Alberto Peruzzo \comment{Get permission!}).} \label{fig:LO_archs}
+\caption{The three primary approaches for implementing linear optics transformations. (a) Bulk optics, where each optical mode is spatially encoded, and the linear transformation is decomposed into a discrete array of beamsplitters and phase-shifters, an appropriate choice of which enables arbitrary linear optics transformations to be implemented. (b) Time-bin encoding, where each optical mode is designated a distinct time-bin. Fibre-loops meeting at dynamically reconfigurable beamsplitters enable arbitrary linear transformations to be implemented. (c) Integrated wave-guide chips, where evanescent coupling between neighbouring wave-guides within a chip facilitates interference between modes (graphic courtesy of Alberto Peruzzo \comment{Get permission!}).} \label{fig:LO_archs}
 \end{figure}
 
 %
@@ -2823,8 +2844,6 @@ At the physical level, there are two main approaches we could use to put optical
 
 The former is experimentally straightforward, but plagued by loss, and is only suitable over short timescales, on the order of nanoseconds. The latter is more experimentally challenging, but can achieve longer storage times, limited by the lifetime ($T_1$- and $T_2$-times) of the non-optical system. For some physical systems, this can be very high, on the order of milliseconds for atomic ensemble qubits \cite{bib:Duan01, bib:Duan02, bib:LauratKimble07}, for example, which is typically adequate for the purposes of waiting out network bottlenecks.
 
-\comment{Need system with long coherence lifetime}
-
 %
 % Optical Interfacing
 %
@@ -2881,7 +2900,7 @@ Atomic ensembles are essentially well-engineered clouds of atomic gasses, trappe
 
 The collective excitations exhibit the same general mathematical structure as single-atom excitations -- the absorption (emission) of a single photon is associated with a single collective excitation (relaxation), albeit with the favourable collective enhancement in the coupling strength.
 
-To couple with a polarisation-encoded photonic qubit, a PBS can be employed to spatially separate the horizontal and vertical modes, each of which couples to a separate atomic ensemble, which jointly represent the matter qubit, as shown in Fig.~\ref{fig:atomic_ensemble_qubit}.
+To couple with a polarisation-encoded photonic qubit, a PBS can be employed to spatially separate the horizontal and vertical modes, each of which couples to a separate atomic ensemble, which jointly represent the logical qubit, as shown in Fig.~\ref{fig:atomic_ensemble_qubit}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.45\columnwidth]{atomic_ensemble_qubit}
@@ -2895,6 +2914,8 @@ To couple with a polarisation-encoded photonic qubit, a PBS can be employed to s
 %
 
 \subsection{Entanglement purification} \label{sec:ent_purif}
+
+\comment{Up to here}
 
 Entangled states, most notably Bell-pairs (Sec.~\ref{sec:bell_state_res}), play a central role in many quantum technologies. These maximally entangled states are easily represented optically using polarisation encoding of single photons, and can be non-deterministically prepared directly using SPDC (Sec.~\ref{sec:single_phot_src}), or post-selected linear optics \cite{???}.
 
