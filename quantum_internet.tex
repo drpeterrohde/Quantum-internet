@@ -58,8 +58,8 @@
 \affiliation{CAS Centre for Excellence and Synergetic Innovation Centre in Quantum Information and Quantum Physics, University of Science and Technology of China, Hefei, Anhui 230026, China}
 \affiliation{CAS-Alibaba Quantum Computing Laboratory, Shanghai 201315, China}
 
-\author{Samuel I. Marks}
-\affiliation{Sydney Medical School, University of Sydney, Australia}
+%\author{Samuel I. Marks}
+%\affiliation{Sydney Medical School, University of Sydney, Australia}
 
 \author{Ryan L. Mann}
 \affiliation{Centre for Quantum Software \& Information (QSI), Faculty of Engineering \& Information Technology, University of Technology Sydney, NSW 2007, Australia}
@@ -192,13 +192,19 @@ Nowadays packet-switched networks have become the norm in most digital networks,
 
 In this work we will focus on packet-switched networks when we later introduce our quantum networking protocols. However, with sufficient flexibility in the design of our upcoming quantum protocols, packet-switched networks can easily be made to effectively implement channel-switched, or time-/frequency-multiplexed communication.
 
+%
+% TCP/IP
+%
+
+\subsection{TCP/IP}
+
 The present-day internet is built on top of a protocol stack comprising primarily the Internet Protocol (IP), User Datagram Protocol (UDP), and Transmission Control Protocol (TCP). Most commonly, these are simply referred to as TCP/IP. These define a stack of different layers of abstraction for communicating data packets between nodes in a network, determining their routing, and enforcing any quality of service requirements.
 
 %
 % Internet Protocol (IP)
 %
 
-\subsection{Internet Protocol (IP)}
+\subsubsection{Internet Protocol (IP)}
 
 IP is the standard protocol employed in the internet for P2P communication of data packets. It is a low-level protocol that encapsulates digital data into packets containing a header field, which specifies routing information, most notably the IP addresses of the source and destination. IP does not enforce any kind of quality control, which is instead delegated to higher-level protocols like TCP (Sec.~\ref{sec:TCP}), a higher-level of abstraction built on top of IP (Sec.~\ref{sec:TCP}).
 
@@ -207,22 +213,10 @@ Multiple packets with the same source and destination needn't follow the same ro
 In IP there is no central authority with knowledge of the state of the entire network, which tells routers in the network how to best route packets. Thus, IP must be complemented with up-to-date routing tables, held by routers/nodes in the network, which make routing decisions on a per-packet basis. This is achieved using gateway protocols, discussed next.
 
 %
-% Routing Tables
-%
-
-\subsection{Gateway protocols \& routing tables} \label{sec:gateway}
-
-In the absence of a central mediating authority, routing decisions must be made by individual nodes in the network, upon receipt of packets. For routers to make sensible routing decisions, they must have some idea of the overall structure and state of the network. This is achieved using gateway protocols, which communicate information about the state of the network on a nearest-neighbour basis. There are various gateway protocols in use, with the Exterior Gateway Protocol (EGP) and Border Gateway Protocol (BGP) being very common.
-
-We let every node in the network have a routing table, initially empty, that will ultimately be populated with information on how to best route incoming packets further along the route to their destination.
-
-To mitigate the need for a central authority, nodes engage in only nearest neighbour communication, sharing their routing tables with one another, to query about the distance metrics (Sec.~\ref{sec:costs}) associated with routes to different destinations. This communication is taking place regularly, and as nodes' routing tables become populated, updating in real-time, they will (hopefully) reach a steady-state. From these tables, single-source shortest path algorithms (Sec.~\ref{sec:single_source_sp}) can be applied by nodes to construct a complete picture of costs to every point in the network.
-
-%
 % User Datagram Protocol (UDP)
 %
 
-\subsection{User Datagram Protocol (UDP)}
+\subsubsection{User Datagram Protocol (UDP)}
 
 The UDP is a simple protocol built on top of IP, based on a `send-and-forget' principle for sending data packets. That is, there is no quality of service guarantee, and no notifications are provided to the sender as to whether packets successfully reached their destination. However, a checksum (hash) forms a part of the packet headers to enable error detection by the recipient. The lack of quality control bypasses the associated latency, making it particularly useful in time-critical applications, where the late arrival of a packet is useless and therefore needn't be retransmitted.
 
@@ -236,7 +230,7 @@ Therefore, UDP prioritises latency over reliability, and is best suited to time-
 % Transmission Control Protocol (TCP)
 %
 
-\subsection{Transmission Control Protocol (TCP)} \label{sec:TCP}
+\subsubsection{Transmission Control Protocol (TCP)} \label{sec:TCP}
 
 TCP differs from UDP in that it intrinsically supports quality control. The protocol is able to determine whether a packet successfully reached its destination, and if not, retransmit it as often as necessary to guarantee packet delivery. A checksum is also included in packet headers to enable error detection. This quality control has made TCP the dominant protocol employed in the present-day internet, where, in most scenarios, we wish to guarantee that data has been correctly delivered -- if an email is missing random segments of its text, users will become irate very quickly!
 
@@ -254,7 +248,7 @@ Ethernet is a networking protocol based on `broadcasting' on a shared network. T
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{ethernet}
-\caption{The topology of an ethernet network, whereby all users share a common channel, which they can broadcast to at their leisure. If data packets collide, it is detected via the packets' checksums, and the corrupted packets may be re-broadcast after a random `backoff' waiting period, repeating this process until packet delivery is successful.} \label{fig:ethernet}
+\caption{The topology of an Ethernet network, whereby all users share a common channel, which they can broadcast to at their leisure. If data packets collide, it is detected via the packets' checksums, and the corrupted packets may be re-broadcast after a random `backoff' waiting period, repeating this process until packet delivery is successful. Obviously the chance of collisions occurring increases with the number of connected users, thus network performance is inversely related to the number of nodes.} \label{fig:ethernet}
 \end{figure}
 
 In the Ethernet protocol, every user is free to broadcast data onto the shared channel as they please -- all users transmit to, and receive from a single shared channel. However, clearly sometimes packet `collisions' will occur, resulting in packet corruption. To overcome this, Ethernet packets contain a checksum that can be used to verify upon arrival whether a packet has been corrupted by a collision. If a collision is detected, the respective users are able to re-broadcast, following a randomly chosen waiting period (known as `backoff'). Collisions therefore reduce network performance, and it follows that network bandwidth decreases with the number of users competing for bandwidth\footnote{Think of that awkward dinner table conversation, where two people start talking simultaneously. It's immediately obvious to them both that they are interfering with one another, and if they were to just talk over one another (packet collision), no one would understand either of them. So, they both awkwardly pause, before starting to speak again. In a \emph{really} awkward conversation, they will both start again simultaneously, after which there will be an even longer awkward pause before recommencing. Eventually, this self-regulating system will resolve itself probabilistically, with a sole victor controlling the airwaves, commanding the attention of the listeners. Provided that all dinner guests adhere to social etiquette and backoff appropriately, with repeated conversations, all guests will statistically receive an equitable share of attention, albeit with some wastage of conversation time owing to the periods of silence. Clearly, the proportion of the time wasted due to collisions will scale up with the number of guests, limiting the protocol to not-too-large tables.}.
@@ -264,6 +258,18 @@ From this protocol, any given packet will eventually be successfully transmitted
 The beauty of this approach is that only a single channel is required for connecting all users. No dedicated P2P connections are required. As the number of users increases, the complexity of the network topology does not -- requiring only the addition of a node to the existing backbone. For small LAN's this is clearly reasonably functional. However, as the size of networks increases, the rate at which packet collisions occur increases, resulting in a reduction in network bandwidth. Thus, the Ethernet protocol is ideally suited to small LAN's, but is clearly not viable at a global level, where network competition is astronomical and the overhead from backoff would reduce network performance to a standstill, wasting most of the bandwidth.
 
 Another elegant feature of the Ethernet protocol is that bandwidth allocation is self-regulating, with bandwidth fairly and equitably allocated between users, not prioritising any user over another. This applies even in completely ad hoc networks, with users joining and leaving the network willy nilly. Provided all users are correctly and honestly implementing the {\sc Broadcast and Backoff} protocol, network bandwidth is allocated evenly amongst users, and no mediating, overriding central authority is needed to oversee network resource allocation. This allows Ethernet networks to be truly `plug-and-play'.
+
+%
+% Gateway Protocols & Routing Tables
+%
+
+\subsection{Gateway protocols \& routing tables} \label{sec:gateway}
+
+In the absence of a central mediating authority, routing decisions must be made by individual nodes in the network, upon receipt of packets. For routers to make sensible routing decisions, they must have some idea of the overall structure and state of the network. This is achieved using gateway protocols, which communicate information about the state of the network on a nearest-neighbour basis. There are various gateway protocols in use, with the Exterior Gateway Protocol (EGP) and Border Gateway Protocol (BGP) being very common.
+
+We let every node in the network have a routing table, initially empty, that will ultimately be populated with information on how to best route incoming packets further along the route to their destination.
+
+To mitigate the need for a central authority, nodes engage in only nearest neighbour communication, sharing their routing tables with one another, to query about the distance metrics (Sec.~\ref{sec:costs}) associated with routes to different destinations. This communication is taking place regularly, and as nodes' routing tables become populated, updating in real-time, they will (hopefully) reach a steady-state. From these tables, single-source shortest path algorithms (Sec.~\ref{sec:single_source_sp}) can be applied by nodes to construct a complete picture of costs to every point in the network.
 
 %
 % Network Hierarchies
@@ -2766,10 +2772,39 @@ There are countless non-optical systems applicable to quantum information proces
 From a networking perspective, we are not terribly interested in the inner workings of all these schemes, as we are reasonably confident that optics will be mediating networking, even if other aspects of the protocol are non-optical. Thus, we will not go into great detail about the evolution of non-optical systems. Instead, for our purposes, the relevant issue is interfacing between optical and non-optical systems, such that networking protocols between them may be implemented. Optical interfacing is discussed in detail in Sec.~\ref{sec:opt_inter}.
 
 %
+% Quantum Memory
+%
+
+\subsection{Quantum memory} \label{sec:memory}
+
+A final building block, that will be essential in many networks, is quantum memory, which simply delays a packet by some fixed amount of time, ideally implementing an identity channel ($\hat{\mathbb{I}}$). This will be required when, for example, quantum data packets reach a network bottleneck, and face one of two options: wait, or be discarded. As discussed earlier, discarding quantum packets is often a highly undesirable enterprise, as they often cannot be easily recreated, most notably when entangled with other systems.
+
+Quantum memory is modelled in our network graph representation as per Fig.~\ref{fig:memory}, via a self-loop implementing a process that delays packets. Ideally, the associated process should implement the identity operation in all degrees of freedom, except the temporal one, affecting only the {\sc Lifetime} metric of the packets passing through it, incrementing it by the duration of the quantum memory.
+
+Note that this is not directly compatible with conventional shortest-path algorithms, which ignore self-loops. One approach is to modify our strategy optimisation algorithms to accommodate self-loops. Alternately, we could construct a `virtual' graph, obtained by adding additional nodes to the network, with connections determined by `unravelling' the self-loops. For example, in Fig.~\ref{fig:memory}, we could eliminate the self-loop, and instead replace $B$ with multiple redundant nodes in series between $A$ and $C$, each associated with their own latency cost.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.7\columnwidth]{memory}
+\caption{Simple model for a quantum memory via a self-loop that passes through a memory process, $\mathcal{E}_\mathrm{mem}$. Ideally, $\mathcal{E}_\mathrm{mem}$ does not affect any of the costs or attributes of states passing through the link, except for the {\sc Latency} cost, which is incremented according to the duration of the memory.} \label{fig:memory}
+\end{figure}
+
+At the physical level, there are two main approaches we could use to put optical states into memory. The first is simply to employ delay lines, either in free-space or in fibre. The second is to interface the state with a non-optical system with a long lifetime, which holds the information content until needed and out-coupled. This can be achieved using, for example, the light-matter interfacing techniques discussed in Sec.~\ref{sec:opt_inter}.
+
+The former is experimentally straightforward, but plagued by loss, and is only suitable over short timescales, on the order of nanoseconds. The latter is more experimentally challenging, but can achieve longer storage times, limited by the lifetime ($T_1$- and $T_2$-times) of the non-optical system. For some physical systems, this can be very high, on the order of milliseconds for atomic ensemble qubits \cite{bib:Duan01, bib:Duan02, bib:LauratKimble07}, for example, which is typically adequate for the purposes of waiting out network bottlenecks.
+
+%
+% High-Level Protocols
+%
+
+\subsection{High-level protocols}
+
+Building upon the aforementioned primitive protocols for quantum networking, we can construct a plethora of higher-level protocols that implement more powerful end-user applications. These high-level protocols are ubiquitous in quantum information processing and form building blocks for even more powerful architectures, such as full cloud quantum computing, to be discussed in Sec.~\ref{sec:cloud}.
+
+%
 % Random Number Generation
 %
 
-\subsection{Random number generation}
+\subsubsection{Random number generation}
 
 Perhaps the simplest quantum information processing task is that of perfect random number generation. True random numbers have widespread applications in cryptography, Monte-Carlo simulations, and any type of randomised (e.g \textbf{BPP}) algorithm.
 
@@ -2815,96 +2850,10 @@ Consider the scenario where a client needs a stream of true random numbers for u
 This scenario is an obvious example of where a UDP-like {\sc Send And Forget} protocol may be viable. Unlike most other applications, Bob is broadcasting a stream of identical, pure quantum states, that are not entangled with any peripheral system, and are easily replicated, with no correlations between distinct photons. Thus, if any particular photon fails to reach Alice, it matters not, as she can simply await the next one emanating from Bob's bombardment of photons. There are no QoS requirements.
 
 %
-% Memory
-%
-
-\subsection{Memory} \label{sec:memory}
-
-A final building block, that will be essential in many networks, is quantum memory, which simply delays a packet by some fixed amount of time, ideally implementing an identity channel ($\hat{\mathbb{I}}$). This will be required when, for example, quantum data packets reach a network bottleneck, and face one of two options: wait, or be discarded. As discussed earlier, discarding quantum packets is often a highly undesirable enterprise, as they often cannot be easily recreated, most notably when entangled with other systems.
-
-Quantum memory is modelled in our network graph representation as per Fig.~\ref{fig:memory}, via a self-loop implementing a process that delays packets. Ideally, the associated process should implement the identity operation in all degrees of freedom, except the temporal one, affecting only the {\sc Lifetime} metric of the packets passing through it, incrementing it by the duration of the quantum memory.
-
-Note that this is not directly compatible with conventional shortest-path algorithms, which ignore self-loops. One approach is to modify our strategy optimisation algorithms to accommodate self-loops. Alternately, we could construct a `virtual' graph, obtained by adding additional nodes to the network, with connections determined by `unravelling' the self-loops. For example, in Fig.~\ref{fig:memory}, we could eliminate the self-loop, and instead replace $B$ with multiple redundant nodes in series between $A$ and $C$, each associated with their own latency cost.
-
-\begin{figure}[!htb]
-\includegraphics[width=0.7\columnwidth]{memory}
-\caption{Simple model for a quantum memory via a self-loop that passes through a memory process, $\mathcal{E}_\mathrm{mem}$. Ideally, $\mathcal{E}_\mathrm{mem}$ does not affect any of the costs or attributes of states passing through the link, except for the {\sc Latency} cost, which is incremented according to the duration of the memory.} \label{fig:memory}
-\end{figure}
-
-At the physical level, there are two main approaches we could use to put optical states into memory. The first is simply to employ delay lines, either in free-space or in fibre. The second is to interface the state with a non-optical system with a long lifetime, which holds the information content until needed and out-coupled. This can be achieved using, for example, the light-matter interfacing techniques discussed in Sec.~\ref{sec:opt_inter}.
-
-The former is experimentally straightforward, but plagued by loss, and is only suitable over short timescales, on the order of nanoseconds. The latter is more experimentally challenging, but can achieve longer storage times, limited by the lifetime ($T_1$- and $T_2$-times) of the non-optical system. For some physical systems, this can be very high, on the order of milliseconds for atomic ensemble qubits \cite{bib:Duan01, bib:Duan02, bib:LauratKimble07}, for example, which is typically adequate for the purposes of waiting out network bottlenecks.
-
-%
-% Optical Interfacing
-%
-
-\subsection{Optical interfacing} \label{sec:opt_inter}
-
-Unless the entire pipeline of quantum operations through the course of a protocol is all-optical, there will be a need to exchange information between physical systems, for example via light-matter interactions \cite{bib:Cohen-Tannoudji92}. We will now discuss optical interfacing with some of the significant types of matter systems.
-
-%
-% Two-Level Systems
-%
-
-\subsubsection{Two-level systems}
-
-The archetypal interface is that between a photonic qubit in the \mbox{$\{\ket{0},\ket{1}\}$} photon-number basis, and a two-level matter qubit in the $\ket{g}$ (ground) and $\ket{e}$ (excited) state basis. The logical qubit is defined as \mbox{$\ket{0}_L\equiv\ket{g}$}, \mbox{$\ket{1}_L\equiv\ket{e}$}. Examples include atoms in cavities, nitrogen-vacancy (NV) centres, and engineered quantum dots.
-
-In the case of a photon interacting with a two-level matter qubit, the interface can be expressed as an interaction Hamiltonian of the form,
-\begin{align} \label{eq:two_level_hamil}
-\hat{H}_\mathrm{int} = \hbar \chi (\hat{a}\,\hat\sigma^+ + \hat{a}^\dag\hat\sigma^-),
-\end{align}
-where $\hat{a}$ ($\hat{a}^\dag$) is the photonic annihilation (creation) operator, $\hat\sigma^\pm$ are the Pauli spin-flip operators, and $\chi$ is the interaction strength. The interpretation of this Hamiltonian is very clear upon inspection -- the annihilation (creation) of a photon is associated with the excitation (relaxation) of the two-level matter system, thereby directly exchanging quantum information between the two systems, as shown in Fig.~\ref{fig:opt_int}.
-
-\begin{figure}[!htb]
-\includegraphics[width=0.6\columnwidth]{opt_inter}
-\caption{Light-matter interfacing between a single-photon state ($\hat{a}$, $\hat{a}^\dag$) and a two-level matter qubit ($\ket{g}$, $\ket{e}$). The absorption (emission) of a photon is associated with the excitation (relaxation) of the matter qubit ($\hat\sigma^\pm$).} \label{fig:opt_int}
-\end{figure}
-
-%
-% Lambda-Configuration Systems
-%
-
-\subsubsection{$\lambda$-configuration systems}
-
-Alternately, one can easily optically interface with a $\lambda$-configuration system, as shown in Fig.~\ref{fig:lambda_atom}. Here there are two degenerate ground states representing the logical qubit basis states (\mbox{$\ket{0}_L\equiv\ket{\!\uparrow}$}, \mbox{$\ket{1}_L\equiv\ket{\!\downarrow}$}), one of which may undergo a transition to an excited state, $\ket{e}$. By pumping the system to the excited state and waiting for a coherent relaxation, the emitted photon may be used to couple the qubit state of the $\lambda$-configuration to an optical mode, mapping the qubit value of the matter qubit to a photon-number representation.
-
-\begin{figure}[!htb]
-\includegraphics[width=0.3\columnwidth]{lambda_atom}
-\caption{Light-matter interfacing between an optical mode and a $\lambda$-configuration system. The two degenerate ground states represent the logical qubit (\mbox{$\ket{0}_L\equiv\ket{\!\uparrow}$}, \mbox{$\ket{1}_L\equiv\ket{\!\downarrow}$}), only one of which may undergo transition to the excited state $\ket{e}$. Upon pumping the \mbox{$\ket{\!\downarrow}\to\ket{e}$} transition with a $\pi$-pulse, a relaxation back to the ground state maps the logical qubit value to photon-number.} \label{fig:lambda_atom}
-\end{figure}
-
-%
-% Atomic Ensembles
-%
-
-\subsubsection{Atomic ensembles} \label{sec:atomic_ens}
-
-In addition to single atoms with well-defined electronic structure, atomic ensembles \cite{bib:Chou05} can be used, whereby the absorption of a photon creates a \emph{collective excitation} -- a superposition of a single excitation across all the atoms in the ensemble. Specifically, excitations are represented using collective excitation operators,
-\begin{align}
-\hat{S}^\dag = \frac{1}{\sqrt{N}}\sum_{i=1}^N \hat{S}_i^\dag,
-\end{align}
-where \mbox{$\hat{S}_i^\dag=\ket{e}_i\bra{g}_i$} is the excitation operator for the $i$th atom in the ensemble, and there are $N$ atoms.
-
-Atomic ensembles are essentially well-engineered clouds of atomic gasses, trapped in a glass container, coupled to an optical mode. Atomic ensembles have been demonstrated with extremely long coherence lifetimes ($\sim$100ms \comment{Check this!}), operating at room temperatures (a very attractive feature on its own). They exhibit \emph{collective enhancement} in their coupling to the optical mode -- the optical coupling strength is amplified by a factor of $\sqrt{N}$ compared to single-atom optical coupling, mitigating the need for a cavity.
-
-The collective excitations exhibit the same general mathematical structure as single-atom excitations -- the absorption (emission) of a single photon is associated with a single collective excitation (relaxation), albeit with the favourable collective enhancement in the coupling strength.
-
-To couple with a polarisation-encoded photonic qubit, a PBS can be employed to spatially separate the horizontal and vertical modes, each of which couples to a separate atomic ensemble, which jointly represent the logical qubit, as shown in Fig.~\ref{fig:atomic_ensemble_qubit}.
-
-\begin{figure}[!htb]
-\includegraphics[width=0.45\columnwidth]{atomic_ensemble_qubit}
-\caption{Coupling a polarisation-encoded photonic qubit to a pair of atomic ensembles. The horizontal and vertical components of the photonic qubit are spatially separated using a PBS, which subsequently independently interface with distinct atomic ensembles via collective excitation.} \label{fig:atomic_ensemble_qubit}
-\end{figure}
-
-\comment{Add atomic ensemble refs! Get from Barrett, Rohde, Stace paper}
-
-%
 % Entanglement Purification
 %
 
-\subsection{Entanglement purification} \label{sec:ent_purif}
+\subsubsection{Entanglement purification} \label{sec:ent_purif}
 
 Entangled states, most notably Bell-pairs (Sec.~\ref{sec:bell_state_res}), play a central role in many quantum technologies. These maximally entangled states are easily represented optically using polarisation encoding of single photons, and can be non-deterministically prepared directly using SPDC (Sec.~\ref{sec:single_phot_src}), or post-selected linear optics \cite{???}.
 
@@ -2955,7 +2904,7 @@ Entanglement purification can also be performed using physical encodings other t
 % Quantum State Teleportation
 %
 
-\subsection{Quantum state teleportation} \label{sec:teleport}
+\subsubsection{Quantum state teleportation} \label{sec:teleport}
 
 Quantum state teleportation \cite{???, bib:PRL_70_1895} is an essential ingredient in many higher-level protocols. It forms the basis of cluster state quantum computing (Sec.~\ref{sec:CSQC}), some QEC codes, the KLM linear optics quantum computing scheme (Sec.~\ref{sec:KLM_univ}), and can act as a mediator for long-range transmission of quantum states, amongst others.
 
@@ -3050,7 +2999,7 @@ The Bell state measurement can be implemented either using a CNOT gate, or as a 
 % Quantum Gate Teleportation
 %
 
-\subsection{Quantum gate teleportation} \label{sec:teleport_gate}
+\subsubsection{Quantum gate teleportation} \label{sec:teleport_gate}
 
 Using quantum \emph{state} teleportation as a primitive building block, quantum \emph{gate} teleportation may be implemented \cite{bib:GottesmanChuang99}. Here rather than teleporting a quantum state from one physical system to another, we teleport the action of a quantum gate onto a physical system (archetypically a maximally entangling two-qubit gate, such as a CNOT gate).
 
@@ -3116,7 +3065,7 @@ The resource states required for gate teleportation are highly-entangled 4-qubit
 % Entanglement Swapping
 %
 
-\subsection{Entanglement swapping} \label{sec:swapping}
+\subsubsection{Entanglement swapping} \label{sec:swapping}
 
 The obvious approach to sending a qubit from Alice to Bob is to send a qubit from Alice to Bob (duh!). However, over long distances this may accrue impractical error rates, particularly losses. The other alternative is to employ the quantum state teleportation protocol (Sec.~\ref{sec:teleport}) to teleport the state between the two parties. However, this requires that Alice and Bob first share an entangled Bell-pair, which must itself be distributed across the same distances. Entanglement swapping \cite{???, bib:PRL_71_4287} is the process of taking two Bell-pairs, one held by each party, and swapping the entanglement between them such that the two parties share an entangled state. This procedure can be bootstrapped to progressively swap the entanglement over longer and longer distances, yielding \emph{quantum repeater networks} (Sec.~\ref{sec:rep_net}). The procedure for this protocol is shown in Alg.~\ref{tab:ent_swap} and Fig.~\ref{fig:ent_swap}
 
@@ -3188,7 +3137,7 @@ Each Bell measurement can be implemented non-deterministically using a PBS, miti
 % Quantum Key Distribution (QKD)
 %
 
-\subsection{Quantum key distribution (QKD)} \label{sec:QKD}
+\subsubsection{Quantum key distribution (QKD)} \label{sec:QKD}
 
 Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. There is only a single provably secure encryption protocol -- the \emph{one-time-pad} \cite{bib:Schneier96}. This protocol requires Alice and Bob to share a random bit-string as long as the message (plaintext) being communicated between them. The two bit-strings undergo bit-wise XOR operations to form the ciphertext. Mathematically,
 \begin{align}
@@ -3250,7 +3199,7 @@ QKD has been widely experimentally demonstrated over long distances \cite{bib:Mu
 % Quantum Anonymous Broadcasting
 %
 
-\subsection{Quantum anonymous broadcasting} \label{sec:anon_broad}
+\subsubsection{Quantum anonymous broadcasting} \label{sec:anon_broad}
 
 \cite{Wehner}
 
@@ -3262,7 +3211,7 @@ QKD has been widely experimentally demonstrated over long distances \cite{bib:Mu
 % Superdense Coding
 %
 
-\subsection{Superdense coding}
+\subsubsection{Superdense coding}
 
 \cite{???}
 
@@ -3272,7 +3221,7 @@ QKD has been widely experimentally demonstrated over long distances \cite{bib:Mu
 % Quantum Metrology
 %
 
-\subsection{Quantum metrology} \label{sec:metrology}
+\subsubsection{Quantum metrology} \label{sec:metrology}
 
 The goal of quantum metrology is to estimate an unknown phase with the greatest degree of precision. This finds many applications, perhaps most notably the recent gravity wave measurement protocols \cite{???}. The shot-noise limit (SNL) represents the maximum achievable precision using classical states, whereas the Heisenberg limit (HL) is the best that can be achieved using quantum resources. The goal of quantum metrology is to beat the SNL, ideally saturating the HL.
 
@@ -3286,13 +3235,78 @@ NOON states in particular are difficult to prepare, as they cannot be determinis
 % Quantum State & Process Tomography
 %
 
-\subsection{Quantum state \& process tomography}
+\subsubsection{Quantum state \& process tomography}
 
 In Sec.~\ref{sec:QPT} we introduced QST and QPT, as procedures by which to experimentally reconstruct unknown density matrices or process matrices respectively. It is conceivable that these tomographic procedures might want to be performed over a quantum network in a distributed fashion.
 
 Consider the case where a node joins an existing ad hoc network. Before thinking about routing its packets through the network, it must understand the network's relevant cost metrics. Suppose that metric is one that is calculated directly from a channel's process matrix. Then, to characterise the channels in the network connecting the node to its new nearest neighbours, it could apply distributed QPT, whereby the new node is responsible for preparing the complete basis of input states required for QPT, which are transmitted to the chosen neighbour across the respective channel, after which the recipient performs all the necessary measurements in the required bases. Purely classical communication is obviously required to communicate measurement settings and outcomes.
 
 In this simple example scenario it is immediately clear that QPT of new links in a network is perfectly suited to distributed implementation. In fact, having a node attempt to characterise a channel from start to finish could be entirely unrealistic if the channel ran over long distances -- the owner of the node would never be able to reach the other end of the channel in time for the photons' arrival! This necessitates a cooperative protocol.
+
+%
+% Optical Interfacing
+%
+
+\subsection{Optical interfacing} \label{sec:opt_inter}
+
+Unless the entire pipeline of quantum operations through the course of a protocol is all-optical, there will be a need to exchange information between physical systems, for example via light-matter interactions \cite{bib:Cohen-Tannoudji92}. We will now discuss optical interfacing with some of the significant types of matter systems.
+
+%
+% Two-Level Systems
+%
+
+\subsubsection{Two-level systems}
+
+The archetypal interface is that between a photonic qubit in the \mbox{$\{\ket{0},\ket{1}\}$} photon-number basis, and a two-level matter qubit in the $\ket{g}$ (ground) and $\ket{e}$ (excited) state basis. The logical qubit is defined as \mbox{$\ket{0}_L\equiv\ket{g}$}, \mbox{$\ket{1}_L\equiv\ket{e}$}. Examples include atoms in cavities, nitrogen-vacancy (NV) centres, and engineered quantum dots.
+
+In the case of a photon interacting with a two-level matter qubit, the interface can be expressed as an interaction Hamiltonian of the form,
+\begin{align} \label{eq:two_level_hamil}
+\hat{H}_\mathrm{int} = \hbar \chi (\hat{a}\,\hat\sigma^+ + \hat{a}^\dag\hat\sigma^-),
+\end{align}
+where $\hat{a}$ ($\hat{a}^\dag$) is the photonic annihilation (creation) operator, $\hat\sigma^\pm$ are the Pauli spin-flip operators, and $\chi$ is the interaction strength. The interpretation of this Hamiltonian is very clear upon inspection -- the annihilation (creation) of a photon is associated with the excitation (relaxation) of the two-level matter system, thereby directly exchanging quantum information between the two systems, as shown in Fig.~\ref{fig:opt_int}.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.6\columnwidth]{opt_inter}
+\caption{Light-matter interfacing between a single-photon state ($\hat{a}$, $\hat{a}^\dag$) and a two-level matter qubit ($\ket{g}$, $\ket{e}$). The absorption (emission) of a photon is associated with the excitation (relaxation) of the matter qubit ($\hat\sigma^\pm$).} \label{fig:opt_int}
+\end{figure}
+
+%
+% Lambda-Configuration Systems
+%
+
+\subsubsection{$\lambda$-configuration systems}
+
+Alternately, one can easily optically interface with a $\lambda$-configuration system, as shown in Fig.~\ref{fig:lambda_atom}. Here there are two degenerate ground states representing the logical qubit basis states (\mbox{$\ket{0}_L\equiv\ket{\!\uparrow}$}, \mbox{$\ket{1}_L\equiv\ket{\!\downarrow}$}), one of which may undergo a transition to an excited state, $\ket{e}$. By pumping the system to the excited state and waiting for a coherent relaxation, the emitted photon may be used to couple the qubit state of the $\lambda$-configuration to an optical mode, mapping the qubit value of the matter qubit to a photon-number representation.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.3\columnwidth]{lambda_atom}
+\caption{Light-matter interfacing between an optical mode and a $\lambda$-configuration system. The two degenerate ground states represent the logical qubit (\mbox{$\ket{0}_L\equiv\ket{\!\uparrow}$}, \mbox{$\ket{1}_L\equiv\ket{\!\downarrow}$}), only one of which may undergo transition to the excited state $\ket{e}$. Upon pumping the \mbox{$\ket{\!\downarrow}\to\ket{e}$} transition with a $\pi$-pulse, a relaxation back to the ground state maps the logical qubit value to photon-number.} \label{fig:lambda_atom}
+\end{figure}
+
+%
+% Atomic Ensembles
+%
+
+\subsubsection{Atomic ensembles} \label{sec:atomic_ens}
+
+In addition to single atoms with well-defined electronic structure, atomic ensembles \cite{bib:Chou05} can be used, whereby the absorption of a photon creates a \emph{collective excitation} -- a superposition of a single excitation across all the atoms in the ensemble. Specifically, excitations are represented using collective excitation operators,
+\begin{align}
+\hat{S}^\dag = \frac{1}{\sqrt{N}}\sum_{i=1}^N \hat{S}_i^\dag,
+\end{align}
+where \mbox{$\hat{S}_i^\dag=\ket{e}_i\bra{g}_i$} is the excitation operator for the $i$th atom in the ensemble, and there are $N$ atoms.
+
+Atomic ensembles are essentially well-engineered clouds of atomic gasses, trapped in a glass container, coupled to an optical mode. Atomic ensembles have been demonstrated with extremely long coherence lifetimes ($\sim$100ms \comment{Check this!}), operating at room temperatures (a very attractive feature on its own). They exhibit \emph{collective enhancement} in their coupling to the optical mode -- the optical coupling strength is amplified by a factor of $\sqrt{N}$ compared to single-atom optical coupling, mitigating the need for a cavity.
+
+The collective excitations exhibit the same general mathematical structure as single-atom excitations -- the absorption (emission) of a single photon is associated with a single collective excitation (relaxation), albeit with the favourable collective enhancement in the coupling strength.
+
+To couple with a polarisation-encoded photonic qubit, a PBS can be employed to spatially separate the horizontal and vertical modes, each of which couples to a separate atomic ensemble, which jointly represent the logical qubit, as shown in Fig.~\ref{fig:atomic_ensemble_qubit}.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.45\columnwidth]{atomic_ensemble_qubit}
+\caption{Coupling a polarisation-encoded photonic qubit to a pair of atomic ensembles. The horizontal and vertical components of the photonic qubit are spatially separated using a PBS, which subsequently independently interface with distinct atomic ensembles via collective excitation.} \label{fig:atomic_ensemble_qubit}
+\end{figure}
+
+\comment{Add atomic ensemble refs! Get from Barrett, Rohde, Stace paper}
 
 %
 % Cloud Quantum Computing
@@ -3900,7 +3914,7 @@ Practically, $k$ could be chosen as some integer multiple of \mbox{$2\pi/d$}, wh
 \begin{align}
 P_\mathrm{guess} \leq \sqrt{\frac{8}{\pi m}},
 \end{align}
-for sufficiently large $m$ and $d$, which asymptotically (but unfortunately only polynomially\footnote{Note that an exponentially small bound is actually prohibited the no-go theorems for oblivious transfer and bit commitment \cite{bib:HKLo97, bib:SpekkensRudolphSecure}}) approaches 0.
+for sufficiently large $m$ and $d$, which asymptotically (but unfortunately only polynomially\footnote{Note that an exponentially small bound is actually prohibited by no-go theorems for oblivious transfer and bit commitment \cite{bib:HKLo97, bib:SpekkensRudolphSecure}}) approaches 0.
 
 Alternately, the mutual information between Alice and Bob, \mbox{$I(A;B)$}, can be upper-bounded using the Holevo quantity, $\chi$ \cite{HolevoQuantity}. That is, \mbox{$I(A;B)\leq\chi$}. The Holevo quantity is defined as,
 \begin{align}
