@@ -58,6 +58,9 @@
 \affiliation{CAS Centre for Excellence and Synergetic Innovation Centre in Quantum Information and Quantum Physics, University of Science and Technology of China, Hefei, Anhui 230026, China}
 \affiliation{CAS-Alibaba Quantum Computing Laboratory, Shanghai 201315, China}
 
+\author{Si-Hui Tan}
+\affiliation{Singapore University of Technology \& Design, 20 Dover Dr, Singapore 138682}
+
 %\author{Samuel I. Marks}
 %\affiliation{Sydney Medical School, University of Sydney, Australia}
 
@@ -2751,7 +2754,7 @@ The most well-known non-linear transformation is the displacement operation, whi
 \begin{align}
 \hat{D}(\alpha) = \mathrm{exp}\left[\alpha\hat{a}^\dag - \alpha^*\hat{a}\right],
 \end{align}
-where $\alpha$ is the displacement amplitude. This transformation is easily implemented by mixing a state on a low-reflectivity beamsplitter with a coherent state of some arbitrary complex amplitude, which determines the displacement amplitude.
+where $\alpha$ is the displacement amplitude. This transformation is easily implemented by mixing a state on a low-reflectivity beamsplitter with a coherent state of some arbitrary complex amplitude, which determines the displacement amplitude. In the special case of a displacement operator acting on the vacuum state, we obtain a coherent state of equal amplitude, \mbox{$\hat{D}(\alpha)\ket{0}=\ket\alpha$}.
 
 Another common non-linear transformation is squeezing, discussed in Sec.~\ref{sec:squeezed}. This implements the unitary operator,
 \begin{align}
@@ -3456,10 +3459,10 @@ There are several cluster state identities we will utilise later, summarised in 
 When using non-deterministic gates to prepare cluster states, there are approaches to nonetheless preparing ideal cluster states. This is discussed in more detail in Sec.~\ref{sec:module}. Alternately, we can borrow ideas from percolation theory to simply tolerate defects in a cluster state lattice by working around them. Specifically, if the defect probability (i.e probability of a missing vertex or edge) is below some \emph{percolation threshold}, \mbox{$p_\mathrm{defect}\leq \epsilon_\mathrm{threshold}$}, in the asymptotic limit we are guaranteed that routes exist through the lattice. This allows defective graphs to be employed for quantum computation.
 
 %
-% Quantum Computation Using Topological Codes
+% Topological Codes
 %
 
-\subsection{Quantum computation using topological codes} \label{sec:topol_codes}
+\subsection{Topological codes} \label{sec:topol_codes}
 
 If the intention is to perform quantum computations using cluster states shared over a network, QEC and fault-tolerance \emph{must} be taken into consideration, or catastrophic algorithmic failure will inevitably follow -- the cluster state model is no different from the circuit model in this respect. Fault-tolerance theory places hard thresholds on the amount of noise (typically depolarising errors and loss) qubits may be subject to in order for fault-tolerance to be possible and computations to succeed. This places strict QoS (Sec.~\ref{sec:QOS}) constraints on the network, which can be accommodated for using the usual depolarising and efficiency cost metrics when developing networking strategies and link performance requirements.
 
@@ -3613,7 +3616,7 @@ The full model is shown in Fig.~\ref{fig:bs_model}.
 % Other Linear Optics Sampling Problems
 %
 
-\subsubsection{Other linear optics sampling problems}
+\subsubsection{Other linear optics sampling problems} \label{sec:other_LO_samp_probs}
 
 In addition to photonic {\sc BosonSampling}, several authors have presented strong evidence that other classes of quantum states of light exist, which yield computationally complex sampling problems under the action of linear optics. Most notably, such evidence has been provided for the following:
 \begin{itemize}
@@ -3800,7 +3803,8 @@ where $A_1/B_1$ denote the matter qubits, and $A_2/B_2$ denote their coupled opt
 \item Apply a 50:50 beamsplitter between the two optical modes,
 \begin{align}
 \ket\psi_\mathrm{BS} = \hat{U}_\mathrm{BS} \ket\psi_\mathrm{relax} = &\frac{1}{2}(\ket{\!\uparrow}_{A_1}+\ket{\!\downarrow}_{A_1}[\hat{a}^\dag_{A_2}+\hat{a}^\dag_{B_2}])\nonumber \\
-&\cdot (\ket{\!\uparrow}_{B_1}+\ket{\!\downarrow}_{B_1}[\hat{a}^\dag_{A_2}-\hat{a}^\dag_{B_2}])\ket{0}_{A_2}\ket{0}_{B_2}.
+&\cdot (\ket{\!\uparrow}_{B_1}+\ket{\!\downarrow}_{B_1}[\hat{a}^\dag_{A_2}-\hat{a}^\dag_{B_2}])\nonumber \\
+&\cdot \ket{0}_{A_2}\ket{0}_{B_2}.
 \end{align}
 \item Conditional upon detecting exactly one photon between the output optical modes, we obtain,
 \begin{align}
@@ -3826,9 +3830,25 @@ The difference between the two protocols lies in the treatment of algorithms. In
 
 Classical homomorphic encryption has only been described very recently \cite{bib:gentry2009fully, bib:van2010fully}. \comment{What is the overhead in classical resources? What about classical blind computation -- impossible? Brief outline of how classical approach works.}
 
-In the usual circuit model, blind quantum computation has been shown to be viable, and optimal bounds derived. Equivalently, such protocols have been described in the cluster state model (Sec.~\ref{sec:CSQC}). For universal computation, such protocols necessarily require classical interaction between the client and host. However, it was shown that in some restricted (i.e non-universal) models for optical quantum computation, specifically {\sc BosonSampling}, quantum walks and coherent state passive linear optics, non-interactive homomorphic encryption may be implemented almost optimally.
+In the usual circuit model, blind quantum computation has been shown to be viable, and optimal bounds derived. Equivalently, such protocols have been described in the cluster state model (Sec.~\ref{sec:CSQC}). For universal computation, such protocols necessarily require classical interaction between the client and host. However, it was shown that in some restricted (i.e non-universal) models for optical quantum computation, specifically {\sc BosonSampling}, quantum walks and coherent state passive linear optics, non-interactive (partial) homomorphic encryption may be implemented.
 
 These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver information-theoretically secure data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
+
+%
+% Classical Encrypted Computation 
+%
+
+\subsubsection{Classical encrypted computation}
+
+To set the stage for our upcoming treatment of encrypted quantum computation protocols, we begin by reviewing recent developments in \emph{classical} encrypted computation, paying especial interest to resource scaling and information-theoretic security. We discuss both classical homomorphic encryption and blind classical computation.
+
+\comment{To do!}
+
+\comment{Summarise state of knowledge on homomorphic classical computation, and blind computation. How much do they hide? What is the scaling of computational resource overhead? What limitations do they face?}
+
+\comment{If not too complicated, sketch an outline of the protocol in an Alg. box.}
+
+\comment{A universal QC can implement any classical algorithm. So QCs with homo/BQC give us the means by which to perform encrypted classical computations, bypassing limitations imposed by purely classical protocols.}
 
 %
 % Passive Photonic Linear Optics
@@ -3836,7 +3856,7 @@ These encryption protocols induce a resource overhead in circuit size and number
 
 \subsubsection{Passive photonic linear optics} \label{sec:phot_homo_enc}
 
-It was recently shown that processing photonic states using passive linear optics -- i.e {\sc BosonSampling} or quantum walks (Secs.~\ref{sec:BS} \& \ref{sec:QW}) -- may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}, so-called `polarisation key encoding'. This encryption does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy. Furthermore, it does not impose an overhead in circuit complexity, only in the number of input photons.
+It was recently shown that processing photonic states using passive linear optics -- i.e {\sc BosonSampling} or quantum walks (Secs.~\ref{sec:BS} \& \ref{sec:QW}) -- may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}, so-called \emph{polarisation-key encoding}. This encryption does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy. Furthermore, it does not impose an overhead in circuit complexity, only in the number of input photons.
 
 For $m$ modes, the resource requirements are:
 \begin{enumerate}
@@ -3910,7 +3930,7 @@ The key idea here is that orthogonal polarisations do not interfere with one ano
 
 Practically, $k$ could be chosen as some integer multiple of \mbox{$2\pi/d$}, where $d$ is the number of distinct keys, since an infinite precision key would be equivalent to an infinitely long key, were it represented as a bit-string. In this case, the information security of the protocol increases with $d$.
 
-\cite{bib:RohdeQWEnc12} provided two relationships for the security of the protocol. First, the probability of Bob guessing Alice's input string approaches,
+\cite{bib:RohdeQWEnc12} provided two relationships for the security of this protocol. First, the probability of Bob guessing Alice's input string approaches,
 \begin{align}
 P_\mathrm{guess} \leq \sqrt{\frac{8}{\pi m}},
 \end{align}
@@ -3924,7 +3944,7 @@ where,
 \begin{align}
 \hat\rho = \sum_i p_i \hat\rho_i,
 \end{align}
-and $S(\cdot)$ denotes the von Neuman entropy (Sec.~\ref{sec:channel_cap}). Here $\hat\rho_i$ are the individual codewords, in our case the set of all polarisation-encoded basis states, and $p_i$ are their respective probabilities, which are uniform here. The upper-bound stipulated by the Holevo quantity is an information-theoretic bound, which holds under \emph{any} choice of measurement bases by Bob. Thus, it is impossible for Bob to extract more information about Alice's state than allowed by this bound. It was shown by \cite{bib:RohdeQWEnc12} that for this protocol the Holevo quantity scales as,
+and $S(\cdot)$ denotes the von Neuman entropy (Sec.~\ref{sec:channel_cap}). Here $\hat\rho_i$ are the individual codewords, in our case the set of all polarisation-encoded basis states, and $p_i$ are their respective probabilities, which are uniform here. The upper-bound stipulated by the Holevo quantity is an information-theoretic bound, which holds under \emph{any} choice of measurement bases by Bob. Thus, it is impossible for Bob to extract more information about Alice's state than allowed by this bound. For this protocol the Holevo quantity scales with the number of modes as,
 \begin{align}
 \chi(m) = m - \frac{1}{2}\mathrm{log}_2\left(\frac{\pi e m}{2}\right) + O\left(\frac{1}{m}\right),
 \end{align}
@@ -3946,9 +3966,9 @@ As discussed in Sec.~\ref{sec:coherent_state_QC}, although not a \emph{quantum} 
 \begin{align} \label{eq:betaUalpha}
 \vec\beta = U\cdot\vec\alpha,
 \end{align}
-for input $\vec\alpha$ and output $\vec\beta$. However, despite this being a classically efficient algorithm, it can experimentally be easily homomorphically encrypted with no computational resource overhead. This is in contrast to classical homomorphic encryption techniques, which incur a computational overhead.
+for input \mbox{$\ket{\vec\alpha}=\ket{\alpha_1,\dots,\alpha_m}$} and output \mbox{$\ket{\vec\beta}=\ket{\beta_1,\dots,\beta_m}$}. However, despite this being a classically efficient algorithm, it can experimentally be easily homomorphically encrypted with no computational resource overhead. This is in contrast to classical homomorphic encryption techniques, which incur a computational overhead.
 
-The idea behind homomorphic encryption of coherent state linear optics is conceptually almost identical to the polarisation-space protocol for photonic linear optics (Sec.~\ref{sec:phot_homo_enc}). The key difference is that the random rotations are no longer applied in polarisation-space, but in phase-space as phase-rotations (phase key encoding). Specifically, the encryption/decryption operations are now given by the phase-shift operators, 
+The idea behind homomorphic encryption of coherent state linear optics is conceptually almost identical to the polarisation-space protocol for photonic linear optics (Sec.~\ref{sec:phot_homo_enc}). The key difference is that the random rotations are no longer applied in polarisation-space, but in phase-space as phase-rotations (\emph{phase-key encoding}). Specifically, the encryption/decryption operations are now given by the phase-shift operators, 
 \begin{align}
 \hat{R}(\phi) = \hat\Phi(\phi)=e^{i\phi\hat{n}}.
 \end{align}
@@ -4003,7 +4023,7 @@ It seems plausible that this approach to homomorphic encryption in phase-space c
 
 This protocol demonstrates that a simple optical system is able to homomorphically encrypt the classical computation of matrix multiplication, without incurring the computational resource overhead imposed by conventional classical homomorphic encryption techniques.
 
-\comment{To do! Mathematical details! How does the secrecy of this scheme compare to the secrecy of a classical homomorphically encrypted matrix multiplication? How many bits are hidden?}
+\comment{To do! Mathematical details! How does the secrecy of this scheme compare to the secrecy of a classical homomorphically encrypted matrix multiplication? How many bits are hidden? What mathematical techniques are used for the derivation?}
 
 %
 % Other States With Passive Linear Optics
@@ -4011,27 +4031,31 @@ This protocol demonstrates that a simple optical system is able to homomorphical
 
 \subsubsection{Other states with passive linear optics}
 
-In the previous two sections we employed the encryption techniques of \emph{polarisation key encoding} and \emph{phase key encoding}. These are based on the observation that uniform polarisation- and phase-rotations commute through linear optics networks, as per Eq.~\ref{eq:LO_key_commute}. Are there any other types of encoding operations that observe this property?
+In the previous two sections we employed the encryption techniques of \emph{polarisation-key encoding} and \emph{phase-key encoding}. These are based on the observation that uniform polarisation- and phase-rotations commute through linear optics networks, as per Eq.~\ref{eq:LO_key_commute}. Are there any other types of encoding operations that observe this property?
 
-The other obvious candidate is \emph{displacement key encoding}, whereby random displacements in phase-space (Sec.~\ref{sec:non_lin_opt}) form the encoding operation. Displacement operators exhibit the property that a tensor product of displacement operators commute through linear optics circuits to yield a different combination of tensor products of displacement operators, where the displacement amplitudes obey the relationship from Eq.~\ref{eq:betaUalpha}. Specifically,
+The other obvious candidate is \emph{displacement-key encoding}, whereby random displacements (not necessarily uniform across all modes) in phase-space (Sec.~\ref{sec:non_lin_opt}) form the encoding operations. Displacement operators exhibit the property that a tensor product of displacements commutes through linear optics circuits to yield a different combination of tensor products of displacements, where the displacement amplitudes obey the relationship from Eq.~\ref{eq:betaUalpha}. Specifically,
 \begin{align}
 \hat{D}_i(\alpha_i) \to \prod_{i=1}^m \hat{D}_j(\beta_j),
 \end{align}
-where $\vec\alpha$ and $\vec\beta$ are related according to Eq.~\ref{eq:betaUalpha}.
+where $\hat{D}_i(\alpha_i)$ is the displacement operator for the $i$th mode, with displacement amplitude $\alpha_i$, and $\vec\alpha$ and $\vec\beta$ are related according to Eq.~\ref{eq:betaUalpha}.
 
-Based upon this observation, if the unitary $\hat{U}$ were known to Alice (i.e no secrecy for Bob's algorithm), she could efficiently encode and decode her state, since determining $\vec\beta$ from $\vec\alpha$ requires only classically-efficient matrix multiplication.
+Based upon this observation, if the unitary $\hat{U}$ were known to Alice (i.e no secrecy for Bob's algorithm, unfortunately), she could efficiently encode and decode her state, since determining $\vec\beta$ from $\vec\alpha$ requires only classically-efficient matrix multiplication (residing in \textbf{P}).
 
-Because performing the decoding operation requires solving the matrix multiplication problem to determine the decoding displacement amplitudes, this technique would obviously be inapplicable to encrypting, for example, coherent states, or other states which can be efficiently classically simulated. Instead, it would only be relevant to linear optics sampling problems, which offer an exponential quantum speedup -- if performing the classical computation required for decryption is just as hard as performing the computation, Alice might as well do the computation herself.
+Because performing the decoding operation requires solving the matrix multiplication problem to determine the decoding displacement amplitudes, this technique would obviously be inapplicable to encrypting, for example, coherent states, or other states which can be efficiently classically simulated. Instead, it would only be relevant to linear optics sampling problems, which offer an exponential quantum speedup -- if performing the classical computation required for decryption is just as hard as performing the computation, Alice might as well do the computation herself!
 
-Although no work has performed any security proofs for such an encoding, this is a candidate approach that warrants future work. Furthermore, it is plausible that this approach might apply to a broad class of optical states, since, unlike phase-rotations, no optical states are invariant under non-zero displacements.
+Although currently no work has performed any security proofs for displacement-key encoding, this is a candidate approach that warrants future investigation, as displacements exhibit the right kind of commutation relations with linear optics that we desire. Furthermore, it is plausible that this approach might apply to a broad class of optical states, since, unlike phase-rotations, no optical states are invariant under non-zero displacements.
 
-\comment{Does the Fitzsimons group mind me discussing this, given that we haven't fleshed it out yet?}
+To complicate any future efforts into providing security proofs for displacement-key encoding, it should be noted that the entropic security of such protocols is not only a function of the encryption operations, but also the class of states to which they are applied. The first step, therefore, is to decide upon what classes of quantum states of light, when evolved under passive linear optics, might yield interesting computational problems. In Sec.~\ref{sec:other_LO_samp_probs} we summarised some recent developments in this area, where several classes of states were shown to yield computationally complex linear optics sampling problems. However, it seems likely this list is not exhaustive, scratching only the surface, and there may very well be a far longer list of candidates.
+
+\comment{Does the Fitzsimons group mind me discussing this, given that we haven't fleshed it out yet? It's a highly speculative section, but a nice discussion to have I think, to lay the ground for motivating future work.}
+
+\comment{Anything else to say about this?}
 
 %
-% Cluster States
+% Cluster State Quantum Computation
 %
 
-\subsubsection{Cluster states}
+\subsubsection{Cluster state quantum computation}
 
 Most simply, if Alice has the limited quantum resources required to perform single-qubit measurements, and she knows the algorithm she wishes to implement, then by outsourcing just the cluster state preparation stage, whilst performing the single-qubit measurements herself, she can obviously obtain \emph{perfect} secrecy of both her data and her algorithm, since no one else is involved in the processing stage.
 
@@ -4039,13 +4063,17 @@ However, Alice may have access to no quantum resources whatsoever -- even single
 
 \comment{To do}
 
+\comment{Consider both BQC and homomorphic QC}
+
 %
-% Universal Quantum Computation
+% Circuit Model Quantum Computation
 %
 
-\subsubsection{Universal quantum computation}
+\subsubsection{Circuit model quantum computation}
 
 \comment{To do}
+
+\comment{Consider both BQC and homomorphic QC}
 
 %
 % Modularised Quantum Computation
