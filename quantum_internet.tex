@@ -17,7 +17,6 @@
 
 \newcommand{\comment}[1]{{\color{blue}{\textbf{#1}}}}
 \newcommand{\peter}[1]{{\color{Aquamarine}{#1}}}
-%\newcommand{\peter}[1]{{\color{black}{#1}}}
 \newcommand{\jonny}[1]{{\color{Orchid}{#1}}}
 \newcommand{\ryan}[1]{{\color{YellowGreen}{#1}}}
 \newcommand{\chaoyang}[1]{{\color{Apricot}{#1}}}
@@ -505,9 +504,9 @@ Quantum processes are most easily represented using \emph{Kraus operators}, $\{\
 \end{align}
 where,
 \begin{align}
-\sum_i \hat{K}_i^\dag \hat{K}_i = \hat{\mathbb{I}}.
+\sum_i \hat{K}_i^\dag \hat{K}_i = \hat{\mathbb{I}},
 \end{align}
-Here $\mathcal{E}$ is a super-operator, denoting the action of the process on state $\hat\rho$. This representation has the elegant interpretation as the probabilistic application of each of the Kraus operators, with probability,
+for normalisation. Here $\mathcal{E}$ is a super-operator, denoting the action of the process on state $\hat\rho$. This is also referred to as the \emph{operator-sum representation}. This representation has the elegant interpretation as the probabilistic application of each of the Kraus operators, with probability,
 \begin{align}
 p_i = \mathrm{tr}(\hat{K}_i \hat\rho \hat{K}_i^\dag).
 \end{align}
@@ -1116,7 +1115,13 @@ In the case of the squeezing operation, we might similarly have uncertainty in t
 
 \section{Quantum cost metrics} \label{sec:quantum_meas_cost}
 
-As with the classical case in Sec.~\ref{sec:costs}, there will be costs associated with the links and nodes in a network -- nothing is free! In the quantum case, all the usual classical costs are valid, but there are some very important additions of far greater relevance to most quantum applications. Classical digital data is discretised, resulting in data transmission highly robust against noise. In a quantum setting this is necessarily not the case, as the coefficients in quantum superpositions are continuous, meaning that errors accumulate during transmission and states will inevitably deteriorate. This requires a rethinking of appropriate cost metrics.
+As with the classical case in Sec.~\ref{sec:costs}, there will be costs associated with the links and nodes in a network -- nothing is free! In the quantum case, all the usual classical costs are valid, but there are some very important additions of far greater relevance to most quantum applications. Classical digital data is discretised, resulting in data transmission highly robust against noise. In a quantum setting this is necessarily not the case, as the coefficients in quantum superpositions are continuous, meaning that errors accumulate during transmission and states will inevitably deteriorate, unlike digital states. This requires a rethinking of appropriate cost metrics.
+
+%
+% Costs
+%
+
+\subsection{Costs}
 
 We now briefly introduce some of the key measures for quantifying the quality of quantum communications links, and how they may be expressed as metrics with meaningful operational interpretations. Many of the measures typically employed for characterising quantum systems are not true metrics (i.e costs), but in many cases can be converted to metrics, or used meaningfully as attributes instead.
 
@@ -1124,7 +1129,7 @@ We now briefly introduce some of the key measures for quantifying the quality of
 % Efficiency
 %
 
-\subsection{Efficiency}
+\subsubsection{Efficiency}
 
 The efficiency measure introduced previously is multiplicative, so for consecutive lossy channels the net efficiency is,
 \begin{align}
@@ -1138,7 +1143,7 @@ When employing single-photon encoding of qubits (e.g using the polarisation degr
 % Decoherence
 %
 
-\subsection{Decoherence}
+\subsubsection{Decoherence}
 
 The dephasing and depolarising channels, given by Eqs.~\ref{eq:dephasing_channel} \& \ref{eq:depolarizing_channel}, also behave multiplicatively. If $p_i$ is the probability that the state passing through the $i$th channel in series does not undergo the error process, then the probability of the state passing though the entire series without error is simply,
 \begin{align}
@@ -1150,7 +1155,7 @@ exhibiting the same multiplicative behaviour as the loss channel. The same obser
 % Mode-Mismatch
 %
 
-\subsection{Mode-mismatch}
+\subsubsection{Mode-mismatch}
 
 In Sec.~\ref{sec:MM_error} we introduced a simple model for temporal mode-mismatch as a displacement in the temporal wave-function of photons propagating through a channel. Clearly, such a process is cumulative -- a temporal displacement of $\Delta_1$ followed by another of $\Delta_2$ yields a net displacement of \mbox{$\Delta_1+\Delta_2$}. Thus, for a chain of such channels we simply accumulate a net temporal displacement of,
 \begin{align}
@@ -1163,7 +1168,7 @@ For an incoherent mode-mismatching process, such as time-jitter, an upper bound 
 % Fidelity
 %
 
-\subsection{Fidelity} \label{sec:fid_metric}
+\subsubsection{Fidelity} \label{sec:fid_metric}
 
 The fidelity of two states directly quantifies how close they are to one another in a geometric sense, i.e on the Bloch sphere \cite{???}, or, in the context of a state passing through a quantum channel, a measure of how well the state is preserved.
 
@@ -1226,7 +1231,7 @@ Generalising to a sequence of $n$ processes in series yields,
 % Purity
 %
 
-\subsection{Purity}
+\subsubsection{Purity}
 
 The purity of a state that was initially pure quantifies how well quantum coherence was maintained during evolution, equivalently how well superpositions are maintained. The purity is defined as,
 \begin{align}
@@ -1270,7 +1275,7 @@ Generalising to a sequence of $n$ processes in series yields,
 % Entanglement
 %
 
-\subsection{Entanglement} \label{sec:ent_meas}
+\subsubsection{Entanglement} \label{sec:ent_meas}
 
 When distributing entanglement between separate nodes, metrics quantifying bipartite entanglement are relevant. For pure bipartite states $\ket{\psi}_{A,B}$, the purity of one of the reduced subsystems directly quantifies the degree of entanglement between them,
 \begin{align}
@@ -1287,7 +1292,7 @@ The entanglement between two systems in invariant under local unitaries,
 % Phase-Space
 %
 
-\subsection{Phase-space}
+\subsubsection{Phase-space}
 
 Displacements in phase-space accumulate additively, up to a phase-factor. Specifically, the composition of two displacements is given by,
 \begin{align}
@@ -1301,7 +1306,7 @@ Thus, the composition of a chain of unwanted or uncertain displacements yields, 
 % Channel Capacity
 %
 
-\subsection{Channel capacity} \label{sec:channel_cap}
+\subsubsection{Channel capacity} \label{sec:channel_cap}
 
 The measures considered until now have quantified the preservation of quantum states. Alternately, one might consider information theoretic measures, which quantify the number of bits/qubits transmitted by a link, i.e the number of bits/qubits in common before and after the channel. This is an extremely powerful tool as it upper bounds the amount of information the receiver can extract from the transmitter under \emph{any} measurement scheme, very useful in a cryptographic context, where we want security to be independent of attack protocols.
 
@@ -1335,6 +1340,13 @@ I(\hat\rho_A;\hat\rho_B) = I(\hat{U}_A\hat\rho_A \hat{U}_A^\dag; \hat{U}_B\hat\r
 \end{align}
 since the eigenvalue spectrum of a density operator is invariant under unitary transformations. Therefore, the mutual information represents the maximum amount of information Bob can learn about Alice's state under \emph{any} local operations.
 
+A quantum process cannot increase the mutual information between two parties. This yields the \emph{data processing inequality} that, for a sequence of channels \mbox{$X\to Y\to Z$},
+\begin{align}
+I(X:Z)&\leq I(X:Y), \nonumber \\
+I(X:Z)&\leq I(Y:Z),
+\end{align}
+with equality only if one of the channels is the identity channel, i.e one of the links in the chain perfectly preserves information content.
+
 The mutual information is defined as being between a particular known pair of states. Of course, in a quantum network we will seldom know what the states being communicated are and will therefore be unable to directly calculate the mutual information. To address this, the \emph{classical channel capacity} of a channel is defined as,
 \begin{align}
 \mathcal{C}(\mathcal{E}) = \max_{\hat\rho} [I(\hat\rho,\mathcal{E}(\hat\rho))],
@@ -1360,7 +1372,7 @@ Analytic solutions to $\mathcal{C}(\mathcal{E})$ and $\mathcal{Q}(\mathcal{E})$ 
 % Latency
 %
 
-\subsection{Latency} \label{sec:latency_metric}
+\subsubsection{Latency} \label{sec:latency_metric}
 
 Aside from the actual information content of a transmitted quantum state, the latency associated with its transmission is a key consideration in many time-critical applications.
 
@@ -1374,7 +1386,7 @@ where $\mathcal{L}_i$ is the latency associated with the $i$th link in route $R$
 % Dollars
 %
 
-\subsection{Dollars} \label{sec:dollars}
+\subsubsection{Dollars} \label{sec:dollars}
 
 Not to be overlooked is the actual dollar cost of communicating information. It is unlikely that Alice and Bob outright own the entire infrastructure of particular routes. Rather, different links and nodes are likely to be owned by different operators (particularly in ad hoc networks), who are most likely going to charge users for bandwidth in their network (quantum networks won't be cheap). Clearly dollar costs are additive over the links and nodes within routes,
 \begin{align}
@@ -3497,7 +3509,7 @@ This is all summarised in Fig.~\ref{fig:toric_code}.
 
 Having defined the toric code as such, QEC proceeds in a similar manner to any other stabiliser code -- we measure all the stabilisers, yielding a syndrome, from which we can determine geometrically where errors took place in the graph, which can subsequently be corrected (if below threshold).
 
-The simplest example of error detection is the scenario where a single bit-flip ($\hat{X})$ error has occurred in the graph. Now exactly two plaquette stabilisers will yield the $-1$ measurement outcome, instead of the expected $+1$ outcome. These two stabilisers will necessarily be neighbouring ones, overlapping at the qubit where the error took place. Thus, using this geometric property, we are able to identify the location of the single $\hat{X}$ error and subsequently correct it. On the other hand, if there were too many errors, it is possible they could conspire against us to create ambiguity in the geometric argument for the location of the errors. \comment{Figure for both examples this -- under and over threshold!}
+The simplest example of error detection is the scenario where a single bit-flip ($\hat{X})$ error has occurred in the graph. Now exactly two plaquette stabilisers will yield the $-1$ measurement outcome, instead of the expected $+1$ outcome. These two stabilisers will necessarily be neighbouring ones, overlapping at the qubit where the error took place. Thus, using this geometric property, we are able to identify the location of the single $\hat{X}$ error and subsequently correct it. On the other hand, if there were too many errors, it is possible they could conspire against us to create ambiguity in the geometric argument for the location of the errors. \comment{Figure for both examples of this -- under and over threshold!}
 
 Importantly, the stabilisers are all defined over geometrically localised neighbourhood regions, and do not require long-range measurements, making this type of code suitable to distributed models for quantum computation.
 
@@ -3627,6 +3639,8 @@ In addition to photonic {\sc BosonSampling}, several authors have presented stro
 \end{itemize}
 
 Preparation of all of these classes of quantum states of light present their own technological challenges, some very daunting, and all much harder to prepare than single-photons. Thus, the ability to outsource their preparation would be a useful application for the quantum cloud.
+
+On the other hand, some classes of optical states are known to be efficiently classically simulable under linear optics evolution. This includes coherent states, thermal states, or any state with strictly positive $P$-function\footnote{A strictly positive $P$-function implies that the state can be considered a purely classical mixture of coherent states (each of which are classically efficient to simulate), according to some probability distribution.} (Sec.~\ref{sec:exotic}) \cite{bib:SalehQOCCC15, bib:SalehEffSim16}.
 
 %
 % Quantum Walks
@@ -3874,9 +3888,9 @@ function HomomorphicPhotonicLinearOptics($S$):
 \begin{enumerate}
     \item Alice meditates upon, but needn't actually prepare the state,
     \begin{align}
-    \ket\psi_\mathrm{number} = \bigotimes_{i=1}^m \ket{S_i},    
+    \ket\psi_\mathrm{number} = \ket{S_1,\dots,S_m},    
     \end{align}
-    where
+    where,
     \begin{align}
 S_i\in\{0,1\},
     \end{align}
@@ -3966,7 +3980,15 @@ As discussed in Sec.~\ref{sec:coherent_state_QC}, although not a \emph{quantum} 
 \begin{align} \label{eq:betaUalpha}
 \vec\beta = U\cdot\vec\alpha,
 \end{align}
-for input \mbox{$\ket{\vec\alpha}=\ket{\alpha_1,\dots,\alpha_m}$} and output \mbox{$\ket{\vec\beta}=\ket{\beta_1,\dots,\beta_m}$}. However, despite this being a classically efficient algorithm, it can experimentally be easily homomorphically encrypted with no computational resource overhead. This is in contrast to classical homomorphic encryption techniques, which incur a computational overhead.
+for input,
+\begin{align}
+\ket{\vec\alpha}=\ket{\alpha_1,\dots,\alpha_m},
+\end{align}
+and output,
+\begin{align}
+\ket{\vec\beta}=\ket{\beta_1,\dots,\beta_m}.
+\end{align}
+However, despite this being a classically efficient algorithm, it can experimentally be easily homomorphically encrypted with no computational resource overhead. This is in contrast to classical homomorphic encryption techniques, which incur a computational overhead.
 
 The idea behind homomorphic encryption of coherent state linear optics is conceptually almost identical to the polarisation-space protocol for photonic linear optics (Sec.~\ref{sec:phot_homo_enc}). The key difference is that the random rotations are no longer applied in polarisation-space, but in phase-space as phase-rotations (\emph{phase-key encoding}). Specifically, the encryption/decryption operations are now given by the phase-shift operators, 
 \begin{align}
@@ -4052,10 +4074,10 @@ To complicate any future efforts into providing security proofs for displacement
 \comment{Anything else to say about this?}
 
 %
-% Cluster State Quantum Computation
+% Cluster States
 %
 
-\subsubsection{Cluster state quantum computation}
+\subsubsection{Cluster states}
 
 Most simply, if Alice has the limited quantum resources required to perform single-qubit measurements, and she knows the algorithm she wishes to implement, then by outsourcing just the cluster state preparation stage, whilst performing the single-qubit measurements herself, she can obviously obtain \emph{perfect} secrecy of both her data and her algorithm, since no one else is involved in the processing stage.
 
@@ -4066,10 +4088,10 @@ However, Alice may have access to no quantum resources whatsoever -- even single
 \comment{Consider both BQC and homomorphic QC}
 
 %
-% Circuit Model Quantum Computation
+% Circuit Model
 %
 
-\subsubsection{Circuit model quantum computation}
+\subsubsection{Circuit model}
 
 \comment{To do}
 
@@ -4201,13 +4223,11 @@ These observations lead us to naturally conclude that a quantum network speciali
 
 \section{State of the art} \label{sec:state_of_the_art}
 
-\comment{PROOF READ THIS SECTION AND CORRECT!}
-
 When will we have the quantum internet? This is a question with as many answers as there are people one asks. And the developments of the different components of such an internet will be staggered and under continual development -- a quantum internet with the capacity for long-distance QKD will likely arrive far sooner than one supporting fully distributed, blind quantum computation.
 
-In this section we discuss recent developments in and the state of the art of some of the most important quantum technologies and protocols, with a view to understand trends in the development of the field, so as to gauge the rate of progress. With this we aim to shed light on what quantum networking services could be readily implemented today, using present-day technology, and what is likely to be viable in the near future. %We then venture into the world of the unknown, and discuss how far technology must develop in order to enable the basic building blocks for a scalable quantum internet, implementing protocols of practical use.
+In this section we discuss recent developments in and the state of the art of some of the most important quantum technologies and protocols, with a view to understand trends in the development of the field, so as to gauge the rate of progress. With this we aim to shed light on what quantum networking services could be readily implemented today, using present-day technology, and what is likely to be viable in the near future.
 
-We will very succinctly summarise a brief history of major recent developments in the field, without much elaboration. Rather our goal here is simply to very tersely summarise recent progress and the state of the art. The reader disinterested in a history lesson might skip this section.
+We will very succinctly summarise a brief history of major recent developments in the field, without much elaboration into the specific developments. Rather our goal here is simply to very tersely summarise recent progress and the state of the art. We provide detailed referencing so that the interested reader can follow up on the specifics of these important developments of interest. The reader disinterested in a history lesson might skip this section.
 
 %
 % Quantum Teleportation & Entanglement Distribution
@@ -4215,11 +4235,9 @@ We will very succinctly summarise a brief history of major recent developments i
 
 \subsection{Quantum teleportation \& entanglement distribution}
 
-Quantum state teleportation (Sec.~\ref{sec:teleport}) is useful in its own right, as a means by which to transmit quantum states, but also as a primitive in larger protocols, such as the gate teleportation (Sec.~\ref{sec:teleport_gate}) employed by LOQC (Sec.~\ref{sec:KLM_univ}).
+Quantum state teleportation (Sec.~\ref{sec:teleport}) is useful in its own right, as a means by which to transmit quantum states, but also as a primitive in larger protocols, such as the gate teleportation (Sec.~\ref{sec:teleport_gate}) employed by LOQC (Sec.~\ref{sec:KLM_univ}). It also forms the basis for quantum repeater networks (Sec.~\ref{sec:rep_net}).
 
-Since it was first proposed in 1993 \cite{bib:PRL_70_1895}, quantum state teleportation has attracted broad interest and been subject to widespread experimental demonstration across many physical architectures, becoming one of the most important protocols in quantum information science.
-
-Single-qubit teleportation requires a single Bell-pair as a resource, after which an entangling measurement, followed by classical communication of the measurement outcome, completes the protocol.
+Since it was first proposed in 1993 \cite{bib:PRL_70_1895}, quantum state teleportation has attracted broad interest and been subject to widespread experimental demonstration across many physical architectures, becoming one of the most well investigated protocols in experimental quantum information science.
 
 For the generation of quantum entanglement, a significant breakthrough was made in 1995 by \cite{kwiat1995new}, who demonstrated a technique for the generation of high-intensity polarisation-entangled photon pairs. For the partial Bell state projection of two polarisation-encoded qubits, a 50:50 beamsplitter \cite{bib:Euro_25_559} was employed (Sec.~\ref{sec:bell_proj}).
 
@@ -4231,7 +4249,7 @@ One major experimental achievement for optical quantum state teleportation has b
 
 In \cite{bib:Nat_430_849}, quantum teleportation over a distance of 600m across the River Danube in Vienna was implemented over fibre. Due to the relatively low photon detection efficiencies at telecom wavelengths, quantum teleportation over long-distance optical fibre became challenging. 
 
-In 2008, quantum state teleportation was demonstrated between photonic and atomic qubits \cite{bib:Chen08}, a first step towards hybrid architectures (Sec.~\ref{sec:hybrid}).
+In 2008, quantum state teleportation was demonstrated between photonic and atomic qubits \cite{bib:Chen08}, a first step towards hybrid architectures (Sec.~\ref{sec:hybrid}), an essential ingredient in interfacing optical and non-optical systems.
 
 In 2010, \cite{bib:Nat_Phot_4_376} demonstrated quantum teleportation over a 16km long, noisy, free-space channel between distant ground stations. This distance is of especial interest as it is significantly longer than the effective thickness of the atmosphere, equivalent to 5-10km of ground atmosphere \cite{bib:PRL_94_150501}. This is an exciting benchmark as it suggests that free-space ground-to-satellite teleportation may be viable.
 
@@ -4267,13 +4285,13 @@ Aside from `event-ready' mode, \cite{bib:JMO_47_2} proposed a delayed-choice mod
 
 In 2001, \cite{bib:PRL_88_017903} designed and realised delayed-choice entanglement swapping. This was performed by adding two 10m optical fibre delays of about 50ns for both outputs of the Bell state measurement. Subsequently, in 2002 \cite{bib:PRA_66_024309} realised a delayed-choice entanglement swapping experiment with vacuum and one-photon quantum states. However, none of these demonstrations were active, random or delayed choice, which are required to ensure that photons cannot know in advance the basis choices for future measurements.
 
-In 2012, \cite{bib:Nat_Phys_8_479} demonstrated an entanglement swapping experiment with active delayed choice. In their experiment, they designed a special interferometer to realise active switching between Bell state measurement and separation state measurement, and experimentally verified the entanglement-separability duality of the two photons. 
+In 2012, \cite{bib:Nat_Phys_8_479} demonstrated an entanglement swapping experiment with active delayed choice. In their experiment, they designed a special interferometer to realise active switching between Bell state measurement and separable state measurement, and experimentally verified the entanglement-separability duality of the two photons. 
 
 Subsequently, experimental demonstrations of entanglement swapping have evolved to become more complex and rigorous, finding uses in more sophisticated networking protocols.
 
 In 2008, \cite{bib:PRL_101_080403} used three pairs of polarisation-entangled photons, and conducted two Bell state measurements to realise multistage entanglement swapping. \cite{bib:PRL_103_020501} demonstrated multi-particle entanglement swapping using a three-photon GHZ state. In 2013, \cite{bib:PRL_110_210403} demonstrated entanglement swapping between photons that never coexisted. In their experiment, entangled photons are not only separated spatially, but also temporally. In 2015, \cite{bib:PRL_114_100501} experimentally realised hybrid entanglement swapping between discrete- and CV optical systems.
 
-To develop a practical quantum network, entanglement swapping between independent entangled photon sources is an important technique. In the past two decades, entanglement swapping has been demonstrated in a large number of experiments across many physical architectures. However, in most experiments, entangled photons are generated by using the same laser, and therefore do not meet the requirements for independence. Entanglement swapping based on independent entangled photon sources has been experimentally verified \cite{bib:PRL_96_110501, bib:Nat_Phys_3_692, bib:PRA_79_040302}, but the distinguishability caused by photon propagation in the channel is still a great obstacle to realising entanglement swapping using independent sources under realistic conditions.
+To develop a practical quantum network, entanglement swapping between independent entangled photon sources is a important. In the past two decades, entanglement swapping has been demonstrated in a large number of experiments across many physical architectures. However, in most experiments, entangled photons are generated by using the same laser, and therefore do not meet the requirements for independence. Entanglement swapping based on independent entangled photon sources has been experimentally verified \cite{bib:PRL_96_110501, bib:Nat_Phys_3_692, bib:PRA_79_040302}, but the distinguishability caused by photon propagation in the channel is still a great obstacle to realising entanglement swapping using independent sources under realistic conditions.
 
 In 2015, \cite{bib:Nat_526_682} for the first time achieved entanglement swapping using independent entangled photon sources separated by 1.3km in a real-world environment. However, the wavelength of the photons used in this experiment was 637nm (transmission loss \mbox{$\sim 15$dB/km}), which is not conducive to achieving long-distance entanglement swapping since it is far greater than the transmission loss of communication-band photons in fibre (\mbox{$\sim 0.2$dB/km}). Based on the techniques in \cite{bib:Nat_phot_10_671, bib:Nat_phot_10_676}, longer-distance entanglement swapping may be possible in the near future.
 
@@ -4300,6 +4318,8 @@ Aside from photonic systems, techniques based on other physical systems have als
 %
 
 \subsection{Quantum key distribution}
+
+\comment{Up to here}
 
 With the development of quantum technology, QKD will gradually become more and more practical and economically accessible. Bennett, one of the proposers of the BB84 protocol, firstly demonstrated the protocol on an optical platform with a distance of 30cm \cite{bib:JC_5_3}. Since then, experiments have developed rapidly from indoor to outdoors, and from short distance to long distance, with commercial QKD units even available as off-the-shelf products.
 
@@ -4544,6 +4564,20 @@ There are also other promising approaches to quantum memories, e.g., quantum dot
 
 \comment{What are the different physical architectures for QC? What are their records for the number of qubits they can implement? What kinds of fidelities do they exhibit?}
 
+\subsubsection{Linear optics}
+
+\subsubsection{Boson-sampling \& quantum walks}
+
+\subsubsection{Ion traps}
+
+\subsubsection{Superconducting circuits}
+
+\subsubsection{Nitrogen-vacancy centres}
+
+\subsubsection{Adiabatic quantum computing \& quantum annealing}
+
+\comment{What else? What other main architectures?}
+
 %
 % The Era of Quantum Supremacy
 %
@@ -4683,7 +4717,7 @@ It is essential for the adoption and development of quantum technology, that qua
 %
 
 \begin{acknowledgments}
-We acknowledge Charlotte Bridault and Darryl Veitch for helpful discussions. P.P.R. is funded by an ARC Future Fellowship (project FT160100397). We thank 1,3,7-Trimethylxanthine for aiding in the motivation for this work.
+We acknowledge Charlotte Bridault, Marco Tomamichel \& Darryl Veitch for helpful discussions. P.P.R. is funded by an ARC Future Fellowship (project FT160100397). We thank 1,3,7-Trimethylxanthine for aiding in the motivation for this work.
 \\
 \\
 
