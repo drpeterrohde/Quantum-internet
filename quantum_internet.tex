@@ -330,6 +330,8 @@ Attributes, on the other hand do not have a distance interpretation, and may hav
 
 The reason we demand costs have a distance interpretation is so that graph-theoretic pathfinding algorithms (Sec.~\ref{sec:shortest_path}) are applicable, allowing us to build upon the vast pre-existing understanding of graph theory. Ideally we would like equality in costs' triangle inequality, which yields an exact cost. But often this isn't possible and we are satisfied with the inequality, which simply dictates an upper bound on cost.
 
+A detailed discussion of some of the major costs and attributes that realistic quantum networks will be subject to is presented in Sec.~\ref{sec:quantum_meas_cost}.
+
 A \emph{route} between two nodes, Alice ($A$) and Bob ($B$), of the network, $G$, is an acyclic subgraph connecting those nodes, \mbox{$R_{A\to B}\subseteq G$}. In general ad hoc networks there will typically be multiple paths between two nodes \mbox{$A\to B$}. For a particular cost metric, the cost of an entire route is simply the sum of the costs of each of the constituent links,
 \begin{align}
 c(R_{A\to B}) = \sum_{i=1}^{|R_{A\to B}|-1} c(v_i \to v_{i+1}),
@@ -1110,10 +1112,10 @@ In the case of the displacement operation, which is implemented by mixing a stat
 In the case of the squeezing operation, we might similarly have uncertainty in the squeezing parameter, thus implementing $\hat{S}(\xi+\Delta)$ instead of $\hat{S}(\xi)$.
 
 %
-% Quantum Cost Metrics
+% Quantum Costs & Attributes
 %
 
-\section{Quantum cost metrics} \label{sec:quantum_meas_cost}
+\section{Quantum costs \& attributes} \label{sec:quantum_meas_cost}
 
 As with the classical case in Sec.~\ref{sec:costs}, there will be costs associated with the links and nodes in a network -- nothing is free! In the quantum case, all the usual classical costs are valid, but there are some very important additions of far greater relevance to most quantum applications. Classical digital data is discretised, resulting in data transmission highly robust against noise. In a quantum setting this is necessarily not the case, as the coefficients in quantum superpositions are continuous, meaning that errors accumulate during transmission and states will inevitably deteriorate, unlike digital states. This requires a rethinking of appropriate cost metrics.
 
@@ -1165,10 +1167,10 @@ In Sec.~\ref{sec:MM_error} we introduced a simple model for temporal mode-mismat
 For an incoherent mode-mismatching process, such as time-jitter, an upper bound on the accumulated mismatch may be obtained by summing the maximum temporal displacements at each step.
 
 %
-% Fidelity
+% Distance Measures
 %
 
-\subsubsection{Fidelity} \label{sec:fid_metric}
+\subsubsection{Distance measures} \label{sec:fid_metric}
 
 The fidelity of two states directly quantifies how close they are to one another in a geometric sense, i.e on the Bloch sphere \cite{???}, or, in the context of a state passing through a quantum channel, a measure of how well the state is preserved.
 
@@ -1226,6 +1228,22 @@ Generalising to a sequence of $n$ processes in series yields,
 \begin{align}
 \mathcal{F}(\mathcal{E}_n\circ\dots\circ\mathcal{E}_1) \geq \prod_{i=1}^n \mathcal{F}(\mathcal{E}_i).
 \end{align}
+
+An alternate measure for the distance between two quantum states is the trace-norm distance, defined as,
+\begin{align}
+D(\hat\rho_1,\hat\rho_2) &= \frac{1}{2}\|\hat\rho_1 - \hat\rho_2\|_1 \nonumber\\
+&= \frac{1}{2}\sum_i |\lambda_i|,
+\end{align}
+where $\lambda_i$ are the eigenvalues of \mbox{$\hat\rho_1-\hat\rho_2$}. Like the fidelity, the trace-norm distance is invariant under unitary transformation. Furthermore, it is contractive under the action of quantum processes,
+\begin{align}
+D(\mathcal{E}(\hat\rho_1),\mathcal{E}(\hat\rho_2)) \leq D(\hat\rho_1,\hat\rho_2).
+\end{align}
+The trace-norm distance relates to the fidelity according to the following bounds,
+\begin{align}
+1-F(\hat\rho_1,\hat\rho_2) \leq D(\hat\rho_1,\hat\rho_2) \leq \sqrt{1-F(\hat\rho_1,\hat\rho_2)^2}.
+\end{align}
+\comment{Add norm for channels}
+\comment{Algebraic properties}
 
 %
 % Purity
