@@ -616,6 +616,12 @@ Importantly, it is often the case that the quantum process associated with a cha
 
 We will now explain QPT in the archetypal context of single-qubit channels, which logically generalises to multiple qubits, and can similarly be generalised to non-qubit systems also.
 
+%
+% Quantum State Tomography
+%
+
+\subsubsection{Quantum state tomography}
+
 The first stage in QPT is \emph{quantum state tomography} (QST), where the goal is to reconstruct and unknown density matrix via measurements upon multiple copies of the state. QST is based upon the simple observation that the completeness relation for an arbitrary state can be expressed,
 \begin{align}
 \hat\rho = \sum_i \mathrm{tr}(\hat{E}_i\hat\rho)\cdot\hat{E}_i,
@@ -629,6 +635,12 @@ Of course, \mbox{$\mathrm{tr}(\hat{E}\hat\rho) = P(\hat{E}|\hat\rho)$} is just t
 This generalises straightforwardly to multi-qubit systems, where we measure all combinations of tensor products of the Pauli operators, the number of which grows exponentially with the number of qubits $n$, as $4^n$. This introduces scalability issues for systems comprising a large number of qubits.
 
 In the case of optical systems, entirely alternate, but equivalent, approaches may be used, such a probing the Wigner function directly using homodyne detection \cite{???}.
+
+%
+% Quantum Process Tomography
+%
+
+\subsubsection{Quantum process tomography}
 
 Now to perform QPT we apply the unknown process to a complete basis of input states $\{\hat\rho_i\}$, and perform QST on the output state for each. This yields,
 \begin{align}
@@ -1120,10 +1132,10 @@ In the case of the squeezing operation, we might similarly have uncertainty in t
 As with the classical case in Sec.~\ref{sec:costs}, there will be costs associated with the links and nodes in a network -- nothing is free! In the quantum case, all the usual classical costs are valid, but there are some very important additions of far greater relevance to most quantum applications. Classical digital data is discretised, resulting in data transmission highly robust against noise. In a quantum setting this is necessarily not the case, as the coefficients in quantum superpositions are continuous, meaning that errors accumulate during transmission and states will inevitably deteriorate, unlike digital states. This requires a rethinking of appropriate cost metrics.
 
 %
-% Costs
+% Examples
 %
 
-\subsection{Costs}
+\subsection{Examples}
 
 We now briefly introduce some of the key measures for quantifying the quality of quantum communications links, and how they may be expressed as metrics with meaningful operational interpretations. Many of the measures typically employed for characterising quantum systems are not true metrics (i.e costs), but in many cases can be converted to metrics, or used meaningfully as attributes instead.
 
@@ -3336,10 +3348,10 @@ To couple with a polarisation-encoded photonic qubit, a PBS can be employed to s
 
 \begin{figure}[!htb]
 \includegraphics[width=0.45\columnwidth]{atomic_ensemble_qubit}
-\caption{Coupling a polarisation-encoded photonic qubit to a pair of atomic ensembles. The horizontal and vertical components of the photonic qubit are spatially separated using a PBS, which subsequently independently interface with distinct atomic ensembles via collective excitation.} \label{fig:atomic_ensemble_qubit}
+\caption{Coupling a polarisation-encoded photonic qubit to a pair of atomic ensembles, each of which corresponds to one of the qubit's logical basis states ($\ket{0}$ or $\ket{1}$). The horizontal and vertical components of the photonic qubit are spatially separated using a PBS, which subsequently independently interface with distinct atomic ensembles via collective excitation.} \label{fig:atomic_ensemble_qubit}
 \end{figure}
 
-Atomic ensembles have been proposed as quantum memories, given their long coherence lifetime. Additionally, a protocol for universal cluster state quantum computation based upon atomic ensemble qubits has been described. \comment{Add atomic ensemble refs! Get from Barrett, Rohde, Stace paper}
+Atomic ensembles have been proposed as quantum memories, given their long coherence lifetime. Additionally, a protocol for universal cluster state quantum computation based upon atomic ensemble qubits has been described \cite{???}. \comment{Add atomic ensemble refs! Get from Barrett, Rohde, Stace paper}
 
 %
 % Cloud Quantum Computing
@@ -3650,7 +3662,7 @@ The full model is shown in Fig.~\ref{fig:bs_model}.
 
 In addition to photonic {\sc BosonSampling}, several authors have presented strong evidence that other classes of quantum states of light exist, which yield computationally complex sampling problems under the action of linear optics. Most notably, such evidence has been provided for the following:
 \begin{itemize}
-\item \cite{bib:RandBS} considered two-mode squeezed vacuum states, a type of Gaussian state with strictly positive Wigner function.
+\item \cite{bib:RandBS} considered two-mode squeezed vacuum (or SPDC) states, a type of Gaussian state with strictly positive Wigner function.
 \item \cite{bib:RohdeDisp15} considered photon-added coherent states and displaced single-photon states.
 \item \cite{bib:RohdePhotAdd15} considered photon-added or -subtracted squeezed vacuum states.
 \item \cite{bib:RohdeCat15} considered `cat' states -- superpositions of coherent states.
@@ -3658,7 +3670,9 @@ In addition to photonic {\sc BosonSampling}, several authors have presented stro
 
 Preparation of all of these classes of quantum states of light present their own technological challenges, some very daunting, and all much harder to prepare than single-photons. Thus, the ability to outsource their preparation would be a useful application for the quantum cloud.
 
-On the other hand, some classes of optical states are known to be efficiently classically simulable under linear optics evolution. This includes coherent states, thermal states, or any state with strictly positive $P$-function\footnote{A strictly positive $P$-function implies that the state can be considered a purely classical mixture of coherent states (each of which are classically efficient to simulate), according to some probability distribution.} (Sec.~\ref{sec:exotic}) \cite{bib:SalehQOCCC15, bib:SalehEffSim16}.
+On the other hand, some classes of optical states are known to be efficiently classically simulable under linear optics evolution and photo-detection. This includes coherent states, thermal states, or any state with strictly positive $P$-function\footnote{A strictly positive $P$-function implies that the state can be considered a purely classical mixture of coherent states (each of which are classically efficient to simulate), according to some probability distribution.} (Sec.~\ref{sec:exotic}) \cite{bib:SalehQOCCC15, bib:SalehEffSim16}. Furthermore, Gaussian states evolved via linear optics and measured using Gaussian measurements have been shown to be computationally easy to simulate \cite{bib:Bartlett02, bib:Bartlett02b}.
+
+\comment{Cite Saleh/Carlton paper on most optical states generating entanglement. Is it exponential entanglement? If so, is this a necessary but not sufficient condition for computational complexity.}
 
 %
 % Quantum Walks
@@ -4081,7 +4095,7 @@ where $\hat{D}_i(\alpha_i)$ is the displacement operator for the $i$th mode, wit
 
 Based upon this observation, if the unitary $\hat{U}$ were known to Alice (i.e no secrecy for Bob's algorithm, unfortunately), she could efficiently encode and decode her state, since determining $\vec\beta$ from $\vec\alpha$ requires only classically-efficient matrix multiplication (residing in \textbf{P}).
 
-Because performing the decoding operation requires solving the matrix multiplication problem to determine the decoding displacement amplitudes, this technique would obviously be inapplicable to encrypting, for example, coherent states, or other states which can be efficiently classically simulated. Instead, it would only be relevant to linear optics sampling problems, which offer an exponential quantum speedup -- if performing the classical computation required for decryption is just as hard as performing the computation, Alice might as well do the computation herself!
+Because performing the decoding operation requires solving the matrix multiplication problem to determine the decoding displacement amplitudes, this technique would obviously be inapplicable to encrypting, for example, coherent states, or other states which can be as efficiently classically simulated as matrix multiplication. Instead, it would only be relevant to linear optics sampling problems, which offer an exponential quantum speedup -- if performing the classical computation required for decryption is just as hard as performing the computation, Alice might as well do the computation herself!
 
 Although currently no work has performed any security proofs for displacement-key encoding, this is a candidate approach that warrants future investigation, as displacements exhibit the right kind of commutation relations with linear optics that we desire. Furthermore, it is plausible that this approach might apply to a broad class of optical states, since, unlike phase-rotations, no optical states are invariant under non-zero displacements.
 
@@ -4337,13 +4351,11 @@ Aside from photonic systems, techniques based on other physical systems have als
 
 \subsection{Quantum key distribution}
 
-\comment{Up to here}
-
-With the development of quantum technology, QKD will gradually become more and more practical and economically accessible. Bennett, one of the proposers of the BB84 protocol, firstly demonstrated the protocol on an optical platform with a distance of 30cm \cite{bib:JC_5_3}. Since then, experiments have developed rapidly from indoor to outdoors, and from short distance to long distance, with commercial QKD units even available as off-the-shelf products.
+With the development of quantum technology, QKD will gradually become more and more practical and economically accessible. Bennett, one of the proposers of the BB84 protocol, firstly demonstrated the protocol on an optical platform with a distance of 30cm \cite{bib:JC_5_3}. Since then, experiments have developed rapidly from indoors to outdoors, and from short distance to long distance, with commercial QKD units even available as off-the-shelf products.
 
 In 1993, \cite{bib:EL_23_383} experimentally demonstrated quantum cryptography using polarised photons in optical fibre over more than 1km. \cite{bib:EL_29_634} operated a QKD experiment over 10km using phase-encoding. In 1995, \cite{bib:Arx0203118} realised an outdoor experiment over 67km using a plug-and-play system to automatically maintain stabilisation.
 
-In 2007, \cite{bib:PRL_98_010505}, Los Alamos Nation Laboratory (LANL), \cite{bib:PRL_09_010503x} and \cite{bib:PRL_98_010504} demonstrated QKD experiments based on decoy-states over more than 100km almost simultaneously, marking the beginning of long-distance QKD.
+In 2007, \cite{bib:PRL_98_010505}, Los Alamos National Laboratory (LANL), \cite{bib:PRL_09_010503x} and \cite{bib:PRL_98_010504} demonstrated QKD experiments based on decoy-states over more than 100km almost simultaneously, marking the beginning of long-distance QKD.
 
 In 2010, \cite{bib:OptExp_18_8587} reported an implementation of decoy-state QKD over a 200km optical fibre cable through photon polarisation with a final key rate of 15Hz.
 
@@ -4353,15 +4365,17 @@ In 2012, \cite{bib:OL_37_1008} realised the DPS protocol over 50dB channel loss 
 
 In 2009, \cite{bib:NJP_11_075003} realised the coherent one way (COW) protocol QKD system with a maximum range of 250km at 42.6dB channel loss using ultra-low-loss fibre, with secret bit rates up to 15Hz.
  
-Apart from using the QKD scheme based on state preparation and measurement, schemes based on entanglement distribution, mainly the E91 \cite{bib:PRL_67_661} and BBM92 \cite{bib:PRL_68_557} protocols, have been demonstrated, which also undergoing extensive experimental investigation.
+Apart from using the QKD scheme based on state preparation and measurement, schemes based on entanglement distribution, mainly the E91 \cite{bib:PRL_67_661} and BBM92 \cite{bib:PRL_68_557} protocols, have been demonstrated, which are also undergoing extensive experimental investigation.
 
 In 2005, \cite{bib:OE_13_202} distributed entanglement and single photons through over a free-space quantum channel, demonstrating the viability of free-space quantum communication. 
 
 In 2006, \cite{bib:APL_89_101122} reported a complete experimental implementation of a QKD protocol over a free-space link using polarisation-entangled photon pairs.
 
-In 2007, \cite{bib:NP_3_481} realised the BBM92 protocol QKD based on polarisation encoding over 144km.
+In 2007, \cite{bib:NP_3_481} realised the BBM92 QKD protocol based on polarisation encoding over 144km.
 
-The experiments listed above indicated that QKD protocols based on free-space entanglement distribution have the advantage of being less affected by decoherence, which lay a solid foundation for global and satellite-to-ground quantum communication. 
+The experiments listed above indicate that QKD protocols based on free-space entanglement distribution have the advantage of being less affected by decoherence, which lay a solid foundation for global and satellite-to-ground quantum communication.
+
+\comment{Up to here}
 
 Fibre loss increases exponentially with distance. However, the loss of free-space transmission increases very little with distance,  mainly related to the thickness of the atmosphere. Therefore, it is a perfectly reasonable solution to construct the global quantum internet based on satellite communication. To verify the feasibility of a quantum channel between space and Earth, a European Union group successfully received weak light pulses emitted from a ground station and reflected by a mirror placed on a low-orbiting satellite with orbital altitude of 1485km in 2008 \cite{bib:NJP_10_033038}. In the context of rapidly moving platforms, \cite{bib:NP_7_382} realised QKD over 20km from an airplane to the ground in 2013. In the same year, \cite{bib:NP_7_387} successfully accomplished quantum communication with a hot-air balloon floating platform. The experiments on aeroplanes and hot-air balloon systems demonstrate the feasibility of quantum communication in the condition of rapid motion, vibration, and random movement of satellites. At present, many countries including America, Canada, the European Union, China and Japan pay great attention to and support for accelerating the development of satellite-to-ground quantum communication. The first quantum satellite was launched in August 2016 in China, and will open a platform for satellite-to-ground quantum communication at an intercontinental level \cite{bib:N_535_478}.
 
@@ -4557,10 +4571,10 @@ It is extremely resource-frugal, irrespective of the size of the desired interfe
 Single mode fibres can reach a ultra-low loss of 0.2dB/km at 1550nm. Bulk optical elements can be antireflection-coated to have a ultra-low reflection loss ($<0.01\%$).
 
 %
-% Memory
+% Quantum Memory
 %
 
-\subsection{Memory}
+\subsection{Quantum memory}
 
 Many review articles can give a much more detailed account such as \cite{lvovsky2009optical, simon2010quantum, sangouard2011quantum, bussieres2013prospective, reiserer2015cavity}.
 
@@ -4735,7 +4749,7 @@ It is essential for the adoption and development of quantum technology, that qua
 %
 
 \begin{acknowledgments}
-We acknowledge Charlotte Bridault, Marco Tomamichel \& Darryl Veitch for helpful discussions. P.P.R. is funded by an ARC Future Fellowship (project FT160100397). We thank 1,3,7-Trimethylxanthine for aiding in the motivation for this work.
+We acknowledge Charlotte Bridault, Marco Tomamichel \& Darryl Veitch for helpful discussions. P.P.R is funded by an ARC Future Fellowship (project FT160100397). We thank 1,3,7-Trimethylxanthine for aiding in the motivation for this work.
 \\
 \\
 
