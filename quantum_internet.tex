@@ -2107,18 +2107,38 @@ It is paramount that QTCP protocols have the capacity to deal with the diverse n
 We will now review some of the graph structures most likely to arise in quantum networks.
 
 %
+% Point-To-Point
+%
+
+\subsection{Point-to-point}
+
+The most trivial network topology, which also acts as the elementary primitive from which our other topologies will be constructed is a simple dedicated point-to-point (P2P) connection between two parties, where the sender and recipient of a packet reside on neighbouring nodes.
+
+Such P2P connections may be reserved exclusively for the two connected neighbouring nodes. In this instance, the packets' {\sc Routing Queue}s trivially specify just the recipient. Alternately, the P2P link may be an intermediate step between more distant sender/recipient pairs.
+
+In the case whereby the P2P connection is reserved exclusively for a particular sender/recipient pair, the link has the property that there is no competition between multiple users sharing the channel, and the QTCP stack needn't concern itself with dynamic routing strategies\footnote{Assuming the P2P channel has sufficient capacity to meet demand and exhibits better cost metrics than other potential redundant, indirect routes.}. This significantly simplifies network scheduling algorithms (Sec.~\ref{sec:strategies}), and a {\sc First-Come First-Served} (i.e chronologically ordered FIFO queue) strategy may be employed. Furthermore, packet collisions cannot occur, thereby improving network efficiency.
+
+In the case whereby the P2P connection is not reserved for exclusive use between a single sender/recipient pair, but shared between different competing routes in the network, the importance of network routing strategies manifests itself. Now competition for access to the channel will reduce network efficiency, scaling inversely against the number of network participants, and the priorities and costs of packets must be tallied for purpose of implementing routing strategies.
+
+%
 % Complete
 %
 
 \subsection{Complete}
 
-The complete graph, denoted $K_{|V|}$, is a $|V|$-vertex graph where every vertex has an undirected link to every other. From a networking point of view, this can be regarded as the extremity of P2P networking, whereby every node has a direct link with every other.
+The complete graph, denoted $K_{|V|}$, is a $|V|$-vertex graph where every vertex has an undirected link to every other. From a networking point of view, this can be regarded as the extremity of P2P networking, whereby every node has a direct link with every other. Thus, any sender can directly communicate with any receiver, via a dedicated direct channel, with no need to utilise any indirect routes. This topology has the favourable property that although any node can communicate with any other, by exclusively utilising direct P2P links we achieve several benefits:
+\begin{itemize}
+\item Packet collisions can be mitigated entirely, thereby maximising network efficiency.
+\item Competition for the use of links can be eliminated, minimising congestion and the need for buffering (i.e quantum memory).
+\item Network costs can typically be minimised, as every route only traverses a single link, and there will be no accumulation of costs.
+\item The network has maximal route redundancy, making it the most tolerant against link failures\footnote{To disconnect a given node from the network, all \mbox{$|V|-1$} links emanating from it must be broken, otherwise redundant routes to the remainder of the network will exist.}.
+\item A trivial {\sc First-Come First-Served} routing strategy can be employed, eliminating the need for any dynamic or computationally complex strategies.
+\end{itemize}
+However, these highly desirable benefits come at the expense of requiring the most elaborate and expensive network, with maximal interconnectedness.
 
-This type of topology could arise in, for example, international-scale networks, where links of very high bandwidth between nations or continents need to be maximally utilised, which would be undermined by sparse, shared network topologies.
+This type of topology could arise in, for example, international-scale networks, where links of very high bandwidth between nations or continents need to be maximally utilised, which would be undermined by sparse, shared network topologies. Additionally, in this instance route redundancy will be highly valued, as the isolation of one continent from another would be catastrophic to the functioning of the global network.
 
 Fig.~\ref{fig:complete_graph} illustrates the $K_{15}$ graph. The number of edges scales as $O(n^2)$. Clearly route-finding is trivial, since there is always a direct link from sender to receiver, with no possibility of collisions with other packets, requiring $O(1)$ search time (assuming all users are communicating only via their direct links with one another, which may not strictly be the case when costs are factored into strategies).
-
-Assuming packets always traverse the direct links to their destinations, the net cost of routes does not accumulate, but is limited to the cost of the single traversed link. This is the minimum possible cost, but comes at the expense of requiring the most elaborate and expensive network.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.7\columnwidth]{K_15}
@@ -2152,7 +2172,7 @@ In this case, route finding is simplified, since \emph{all} routes, which strict
 
 \subsection{Tree} \label{sec:tree_graph}
 
-A tree is a graph containing no cycles, only \emph{branches}. There are many uses for tree graphs, but one property is of particular convenience in many applications: because the graph is acyclic, there is always exactly one path from any vertex to any other. This mitigates the need for shortest-path algorithms designed for general graphs, and simplifies route-finding algorithms (to be discussed in Sec.~\ref{sec:path_exp}).
+A tree is a graph containing no cycles, only \emph{branches}. There are many uses for tree graphs, but one property is of particular convenience in many applications: because the graph is acyclic, there is always exactly one path from any vertex to any other. This mitigates the need for shortest-path algorithms designed for general graphs, and simplifies route-finding algorithms (to be discussed in Sec.~\ref{sec:path_exp}). However, this brings with it the drawback that the topology is most vulnerable to link failures, since the removal of any link from the tree will separate it into a bipartite graph, making communication between the two disjoint subgraphs (which are also trees) impossible, as there are no redundant routes.
 
 Trees are specified entirely by \emph{branching parameters} ($b_i$) -- the number of child nodes emanating from a given node, $i$. In general, branching parameters may be distinct for each node, although often trees with symmetries in their branching structures are considered, such as the balanced trees discussed in Sec.~\ref{sec:bal_tree}. A node terminates a branch if its branching parameter is zero (i.e it has no children). The \emph{depth} ($d$) of a tree is the maximum number of steps from the root node to a terminating node with no children. The depth scales between \mbox{$d=O(|V|)$}, for the trivial linear tree (\mbox{$b_i=1$}), and \mbox{$d=O(\mathrm{log}|V|)$} for non-trivial branching parameters (i.e \mbox{$b_i\neq 1$}). The worst-case number of edges that must be traversed to reach any vertex from any other is twice the depth, which implies that cost metrics scale as at most \mbox{$c=O(|V|)$}. Trees are the most frugal graphs in their number of edges, which are fixed at \mbox{$|E|=|V|-1$}, irrespective of the branching parameters, since because the graph is strictly acyclic, every addition of an edge requires the addition of exactly a single vertex.
 
@@ -3885,7 +3905,7 @@ Classical homomorphic encryption has only been described very recently \cite{bib
 
 In the usual circuit model, blind quantum computation has been shown to be viable, and optimal bounds derived. Equivalently, such protocols have been described in the cluster state model (Sec.~\ref{sec:CSQC}). For universal computation, such protocols necessarily require classical interaction between the client and host. However, it was shown that in some restricted (i.e non-universal) models for optical quantum computation, specifically {\sc BosonSampling}, quantum walks and coherent state passive linear optics, non-interactive (partial) homomorphic encryption may be implemented.
 
-These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver information-theoretically secure data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
+These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver information-theoretically secure\footnote{We differentiate between \emph{information theoretic security}, as opposed to \emph{computational security}. In the former, the laws of quantum information bound the amount of information that can be extracted from a system, irrespective of measurement or computational operations. Thus, such security can be regarded as attack-independent. In the latter, security is based on the assumption that an adversary's computational resources are insufficient to perform cryptanalysis or brute-force cracking. Clearly the former makes a far stronger statement about the security of a protocol than the latter. Classical public- and private-key encryption protocols are typically based upon the assumption of computational security (e.g the computational complexity of performing integer factorisation in the case RSA public-key encryption), whereas quantum encryption protocols are typically information theoretically secure (e.g the one-time-pad using QKD).} data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
 
 %
 % Classical Encrypted Computation 
@@ -4033,6 +4053,11 @@ The idea behind homomorphic encryption of coherent state linear optics is concep
 \begin{align}
 \hat{R}(\phi) = \hat\Phi(\phi)=e^{i\phi\hat{n}}.
 \end{align}
+Phase-shift operators acting on coherent states simply implement the transformation,
+\begin{align}
+\hat\Phi(\phi)\ket\alpha = \ket{e^{i\phi}\alpha},
+\end{align}
+a simple rotation about the origin in phase-space.
 
 Like polarisation rotations, uniform phase-shifts commute through linear optics networks, as per Eq.~\ref{eq:LO_key_commute}, and thus the protocol has similar mathematical structure to the photonic case. Now the phase-shift angle, $\phi$, acts as Alice's private key, which she applies uniformly to all input modes, applying inverse uniform phase-shifts after the computation to decrypt the state. The full algorithm is given in Alg.~\ref{tab:homo_coherent_LO}.
 
@@ -4094,7 +4119,7 @@ This protocol demonstrates that a simple optical system is able to homomorphical
 
 In the previous two sections we employed the encryption techniques of \emph{polarisation-key encoding} and \emph{phase-key encoding}. These are based on the observation that uniform polarisation- and phase-rotations commute through linear optics networks, as per Eq.~\ref{eq:LO_key_commute}. Are there any other types of encoding operations that observe this property?
 
-The other obvious candidate is \emph{displacement-key encoding}, whereby random displacements (not necessarily uniform across all modes) in phase-space (Sec.~\ref{sec:non_lin_opt}) form the encoding operations. Displacement operators exhibit the property that a tensor product of displacements commutes through linear optics circuits to yield a different combination of tensor products of displacements, where the displacement amplitudes obey the relationship from Eq.~\ref{eq:betaUalpha}. Specifically,
+The other obvious candidate is \emph{displacement-key encoding}, whereby random displacements (not necessarily uniform across all modes) in phase-space (Sec.~\ref{sec:non_lin_opt}) form the encoding operations. Displacement operators exhibit the property that a tensor product of displacements commutes through linear optics circuits to yield a different combination of tensor products of displacements, where the displacement amplitudes obey the same relationship as for coherent states from Eq.~\ref{eq:betaUalpha}. Specifically,
 \begin{align}
 \hat{D}_i(\alpha_i) \to \prod_{i=1}^m \hat{D}_j(\beta_j),
 \end{align}
@@ -4104,7 +4129,10 @@ Based upon this observation, if the unitary $\hat{U}$ were known to Alice (i.e n
 
 Because performing the decoding operation requires solving the matrix multiplication problem to determine the decoding displacement amplitudes, this technique would obviously be inapplicable to encrypting, for example, coherent states, or other states which can be as efficiently classically simulated as matrix multiplication. Instead, it would only be relevant to linear optics sampling problems, which offer an exponential quantum speedup -- if performing the classical computation required for decryption is just as hard as performing the computation, Alice might as well do the computation herself!
 
-Although currently no work has performed any security proofs for displacement-key encoding, this is a candidate approach that warrants future investigation, as displacements exhibit the right kind of commutation relations with linear optics that we desire. Furthermore, it is plausible that this approach might apply to a broad class of optical states, since, unlike phase-rotations, no optical states are invariant under non-zero displacements.
+Although currently no work has performed any security proofs for displacement-key encoding, this is a candidate approach that warrants future investigation, as displacements exhibit the right kind of commutation relations with linear optics that we desire. Furthermore, it is plausible that this approach might apply to a broad class of optical states, since, unlike phase-rotations, no optical states are invariant under non-zero displacements,
+\begin{align}
+\hat{D}(\alpha\neq 0)\ket\psi \neq \ket\psi\,\,\forall\,\ket\psi.
+\end{align}
 
 To complicate any future efforts into providing security proofs for displacement-key encoding, it should be noted that the entropic security of such protocols is not only a function of the encryption operations, but also the class of states to which they are applied. The first step, therefore, is to decide upon what classes of quantum states of light, when evolved under passive linear optics, might yield interesting computational problems. In Sec.~\ref{sec:other_LO_samp_probs} we summarised some recent developments in this area, where several classes of states were shown to yield computationally complex linear optics sampling problems. However, it seems likely this list is not exhaustive, scratching only the surface, and there may very well be a far longer list of candidates.
 
