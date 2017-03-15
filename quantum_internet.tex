@@ -991,13 +991,13 @@ for some arbitrary basis enumerated by $i$ and $j$. As an example, this process 
 \end{align}
 where $\hat{\Phi}(\omega)$ is a phase-shift operator with phase $\omega$, obeying \mbox{$\hat\Phi(\omega)^\dag = \hat\Phi(-\omega)$}, and $\phi(\omega)$ is a normalised probability density function characterising the distribution of phase-shifts. In the case of optical states, the phase-shift operators take the form,
 \begin{align}
-\hat\Phi(\omega) = e^{i\omega\hat{n}},
+\hat\Phi(\omega) = e^{-i\omega\hat{n}},
 \end{align}
 in the photon-number basis, where $\hat{n}=\hat{a}^\dag\hat{a}$ is the photon-number operator, satisfying \mbox{$\hat{n}\ket{n}=n\ket{n}$}. With no dephasing, \mbox{$\phi(\omega)=\delta(\omega)$} and $\mathcal{E}$ reduces to the identity channel. Otherwise, the off-diagonal (coherence) terms in the density operator begin to cancel out, leaving the diagonal (amplitude) terms unchanged. Thus, a perfect dephasing channel acting on a coherent state yields a thermal state of equal amplitude.
 
 From this definition it can be seen that susceptibility to dephasing increases with photon-number, since the number operator adds a multiplicative factor to the acquired phase-shift,
 \begin{align}
-\hat\Phi(\omega) \ket{n} = e^{i\omega n}\ket{n}.
+\hat\Phi(\omega) \ket{n} = e^{-i\omega n}\ket{n}.
 \end{align}
 For number states not in superposition, this corresponds to a simple unimportant global phase, since number states are phase-invariant. However, in superposition this adds relative phases, thereby destroying coherences upon applying the integral from Eq.~\ref{eq:deph_int}.
 
@@ -2792,11 +2792,11 @@ U_{21} & U_{22}
 \end{align}
 while the phase-shifters implement the unitary operation
 \begin{align}
-\hat\Phi(\phi)=e^{i\phi\hat{n}},
+\hat\Phi(\phi)=e^{-i\phi\hat{n}},
 \end{align}
 or equivalently,
 \begin{align}
-\hat{U}\hat{a}^\dag\hat{U}^\dag \to e^{i\phi}\hat{a}^\dag,
+\hat{U}\hat{a}^\dag\hat{U}^\dag \to e^{-i\phi}\hat{a}^\dag,
 \end{align}
 for phase-shift $\phi$.
 
@@ -3907,7 +3907,7 @@ Classical homomorphic encryption has only been described very recently \cite{bib
 
 In the usual circuit model, blind quantum computation has been shown to be viable, and optimal bounds derived. Equivalently, such protocols have been described in the cluster state model (Sec.~\ref{sec:CSQC}). For universal computation, such protocols necessarily require classical interaction between the client and host. However, it was shown that in some restricted (i.e non-universal) models for optical quantum computation, specifically {\sc BosonSampling}, quantum walks and coherent state passive linear optics, non-interactive (partial) homomorphic encryption may be implemented.
 
-These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver information-theoretically secure\footnote{We differentiate between \emph{information theoretic security}, as opposed to \emph{computational security}. In the former, the laws of quantum information bound the amount of information that can be extracted from a system, irrespective of measurement or computational operations. Thus, such security can be regarded as attack-independent. In the latter, security is based on the assumption that an adversary's computational resources are insufficient to perform cryptanalysis or brute-force cracking. Clearly the former makes a far stronger statement about the security of a protocol than the latter. Classical public- and private-key encryption protocols are typically based upon the assumption of computational security (e.g the computational complexity of performing integer factorisation in the case RSA public-key encryption), whereas quantum encryption protocols are typically information theoretically secure (e.g the one-time-pad using QKD).} data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
+These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver information-theoretically secure\footnote{We differentiate between \emph{information theoretic security}, as opposed to \emph{computational security}. In the former, the laws of quantum information bound the amount of information that can be extracted from a system, irrespective of measurement or computational operations. Thus, such security can be regarded as attack-independent. In the latter, security is based on the assumption that an adversary's computational resources are insufficient to perform cryptanalysis or brute-force cracking. Clearly the former makes a far stronger statement about the security of a protocol than the latter. Classical public- and private-key encryption protocols are typically based upon the assumption of computational security (e.g the computational complexity of performing integer factorisation in the case of RSA public-key encryption), whereas quantum encryption protocols are typically information theoretically secure (e.g the one-time-pad using QKD).} data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
 
 %
 % Classical Encrypted Computation 
@@ -3926,12 +3926,73 @@ To set the stage for our upcoming treatment of encrypted quantum computation pro
 \comment{A universal QC can implement any classical algorithm. So QCs with homo/BQC give us the means by which to perform encrypted classical computations, bypassing limitations imposed by purely classical protocols.}
 
 %
-% Passive Photonic Linear Optics
+% Cluster States
 %
 
-\subsubsection{Passive photonic linear optics} \label{sec:phot_homo_enc}
+\subsubsection{Cluster states}
 
-It was recently shown that processing photonic states using passive linear optics -- i.e {\sc BosonSampling} or quantum walks (Secs.~\ref{sec:BS} \& \ref{sec:QW}) -- may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}, so-called \emph{polarisation-key encoding}. This encryption does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy. Furthermore, it does not impose an overhead in circuit complexity, only in the number of input photons.
+Most simply, if Alice has the limited quantum resources required to perform single-qubit measurements, and she knows the algorithm she wishes to implement, then by outsourcing just the cluster state preparation stage, whilst performing the single-qubit measurements herself, she can obviously obtain \emph{perfect} secrecy of both her data and her algorithm, since no one else is involved in the processing stage.
+
+However, Alice may have access to no quantum resources whatsoever -- even single-qubit measurements -- requiring homomorphic encryption or blind quantum computing protocols that are native to the cluster state model. Both such protocols have been described, and in fact are conceptually more straightforward to understand in the cluster state formalism. 
+
+\comment{To do}
+
+\comment{Consider both BQC and homomorphic QC}
+
+%
+% Circuit Model
+%
+
+\subsubsection{Circuit model}
+
+\comment{To do}
+
+\comment{Consider both BQC and homomorphic QC}
+
+%
+% Passive Non-Interactive Optics
+%
+
+\subsubsection{Passive non-interactive optics}
+
+The previously discussed schemes for encrypted universal quantum computation required a degree of client/server interaction via classical communication. But perhaps there are some restricted (i.e non-universal) models for optical quantum computation, which lend themselves to non-interactive encryption? And perhaps these restrictions simplify the physical resource requirements for encryption?
+
+Let us formalise some reasonable requirements for such a scheme. We will require that:
+\begin{itemize}
+\item Alice's encoding and decoding operations are separable, single-mode operations (i.e she has no quantum power of entanglement at her disposal).
+\item Bob's computation is non-interactive, requiring no input from Alice beyond her input state.
+\item Bob's computation is passive, requiring no intermediate measurement and feedforward.
+\item Other than this, there are no constraints on the structure of the encoding/decoding operations, or the optical quantum computation being implemented (e.g it could encompass more than just linear optics).
+\end{itemize}
+
+We can express these requirements very generally and elegantly in terms of a commutation relation between the encoding ($\hat{E}$), decoding ($\hat{D}$), and computational ($\hat{U}$) operations,
+\begin{align} \label{eq:gen_pass_hom}
+\hat{U} \left[\bigotimes_{i=1}^m\hat{E}_i(k_i)\right] = \left[\bigotimes_{i=1}^m\hat{D}^\dag_i(\tilde k_i)\right] \hat{U},
+\end{align}
+where $\hat{E}_i(k_i)$ and $\hat{D}_i(\tilde k_i)$ are the encoding and decoding operations for the $i$th mode, and the key $k$ is partitioned into distinct blocks $\{k_i\}$, one for each mode, such that \mbox{$k=\{k_1,\dots,k_m\}$}. $\tilde k$ is a potentially transformed version of $k$, to accommodate that the encryption and decryption keys may be distinct.
+
+Intuitively, this simply says that a tensor product of single-mode encoding operations commutes through the passive computation to yield a (potentially different) tensor product of single-mode decoding operations. This way, Alice's operations are all separable, requiring no entangling gates (after all, if she had access to entangling gates she might be able to do quantum computations herself!). This relationship can be illustrated as shown in Fig.~\ref{fig:gen_pass_hom}. Importantly, note that devising a scheme satisfying this commutation relation does not automatically imply that it is secure -- it merely enforces the separability of Alice's encoding and decoding operations. An actual security proof is far more demanding, and will be highly state-dependent.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.85\columnwidth]{gen_pass_hom}
+\caption{General structure for the relationship between the encoding ($\hat{E}$), decoding ($\hat{D}$), and computational ($\hat{U}$) operations in a passive, non-interactive, optical quantum computation, where Alice is restricted to non-entangling, single-mode operations.} \label{fig:gen_pass_hom}
+\end{figure}
+
+In the following sections we introduce non-interactive techniques for passive optical quantum computation based upon this general formalism. As encoding techniques compatible with the commutation relation from Eq.~\ref{eq:gen_pass_hom}, we specifically introduce:
+\begin{itemize}
+\item \emph{Polarisation-key encoding} (Sec.~\ref{sec:phot_homo_enc}): a uniform random polarisation rotation is applied to each input mode, which we apply to photonic linear optics.
+\item \emph{Phase-key encoding} (Sec.~\ref{sec:homo_coherent_state}): a uniform random phase-shift is applied to each input mode, which we apply to the encryption of coherent states under evolution via linear optics and generalised non-linear phase-shift operations.
+\item \emph{Displacement-key encoding} (Sec.~\ref{sec:disp_key_enc}): an arbitrary configuration of random phase-space displacements is applied to the input modes, for which no security proofs have yet been performed.
+\end{itemize}
+However, we leave it as an open question for future work to fully characterise the set of compatible encoding, decoding and computational operations, and to evaluate their security for different choices of input states.
+
+%
+% Polarisation-Key Encoding
+%
+
+\subsubsection{Polarisation-key encoding} \label{sec:phot_homo_enc}
+
+It was recently shown that processing photonic states using passive linear optics -- i.e {\sc BosonSampling} or quantum walks (Secs.~\ref{sec:BS} \& \ref{sec:QW}) -- may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}, so-called \emph{polarisation-key encoding}. This encryption does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy, hiding $O(\mathrm{log}(m))$ bits of information in an $m$-mode interferometer. Furthermore, it does not impose an overhead in circuit complexity, only in the number of input photons.
 
 For $m$ modes, the resource requirements are:
 \begin{enumerate}
@@ -4031,11 +4092,13 @@ bits of information from Bob.
 
 Furthermore, because a single computation requires Alice to perform only a single call to Bob's algorithm, which we treat as a black box, Alice gains minimum knowledge about Bob's secret algorithm, which is optimal for Bob.
 
+Note that while we have considered linear optics in the above discussion, we could in fact expand the list of ingredients available to the computation to include anything generated by a Hamiltonian that is invariant under a polarisation rotation. This could include, for example, polarisation-independent non-linear operations.
+
 %
-% Passive Coherent State Linear Optics
+% Phase-Key Encoding
 %
 
-\subsubsection{Passive coherent state linear optics} \label{sec:homo_coherent_state}
+\subsubsection{Phase-key encoding} \label{sec:homo_coherent_state}
 
 As discussed in Sec.~\ref{sec:coherent_state_QC}, although not a \emph{quantum} computation, a system comprising multi-mode coherent state inputs, evolved via passive linear optics, implements simple matrix multiplication on the vector of input coherent state amplitudes,
 \begin{align} \label{eq:betaUalpha}
@@ -4053,11 +4116,11 @@ However, despite this being a classically efficient algorithm, it can experiment
 
 The idea behind homomorphic encryption of coherent state linear optics is conceptually almost identical to the polarisation-space protocol for photonic linear optics (Sec.~\ref{sec:phot_homo_enc}). The key difference is that the random rotations are no longer applied in polarisation-space, but in phase-space as phase-rotations (\emph{phase-key encoding}). Specifically, the encryption/decryption operations are now given by the phase-shift operators, 
 \begin{align}
-\hat{R}(\phi) = \hat\Phi(\phi)=e^{i\phi\hat{n}}.
+\hat{R}(\phi) = \hat\Phi(\phi)=e^{-i\phi\hat{n}}.
 \end{align}
 Phase-shift operators acting on coherent states simply implement the transformation,
 \begin{align}
-\hat\Phi(\phi)\ket\alpha = \ket{e^{i\phi}\alpha},
+\hat\Phi(\phi)\ket\alpha = \ket{e^{-i\phi}\alpha},
 \end{align}
 a simple rotation about the origin in phase-space.
 
@@ -4107,23 +4170,33 @@ function HomomorphicCoherentStateLinearOptics($\vec\alpha$):
 \caption{Protocol for implementing homomorphic encryption on coherent state passive linear optics.} \label{tab:homo_coherent_LO}
 \end{table}
 
+This encryption technique applies to more than just linear optics, but extends to also include generalised non-linear phase-shift operations, generated by Hamiltonians that are polynomials of the photon-number operator,
+\begin{align}
+\hat{H} = O(\mathrm{poly}(\hat{n})).
+\end{align}
+This observation follows trivially from the observation that the phase-shift encoding operations (which are generated by a Hamiltonian linear in the photon-number operator) commute with any polynomial in the photon-number operator,
+\begin{align}
+[\hat{n},\mathrm{poly}(\hat{n})] = 0.
+\end{align}
+This immediately significantly expands the class of operations available for the computation. In particular, while coherent states remain separable under linear optics evolution, the introduction of non-linear phase-shift operations enables entanglement, and presumably a more powerful class of computations than simple matrix multiplication.
+
 It seems plausible that this approach to homomorphic encryption in phase-space could be extended to other quantum states of light. However, as is typically the case, performing entropic security proofs is notoriously difficult, and this remains an open problem. It should be noted, however, that this approach will definitely \emph{not} work for any class of input states which are invariant under phase-shifts. This explicitly rules out employing this technique for, for example, photon-number states, which have no phase.
 
-This protocol demonstrates that a simple optical system is able to homomorphically encrypt the classical computation of matrix multiplication, without incurring the computational resource overhead imposed by conventional classical homomorphic encryption techniques.
+This protocol demonstrates that a simple optical system is able to homomorphically encrypt the classical computation of matrix multiplication, as well as the more general operations of non-linear phase-shifts, without incurring the computational resource overhead imposed by conventional classical homomorphic encryption techniques.
 
 \comment{To do! Mathematical details! How does the secrecy of this scheme compare to the secrecy of a classical homomorphically encrypted matrix multiplication? How many bits are hidden? What mathematical techniques are used for the derivation?}
 
 %
-% Other States With Passive Linear Optics
+% Displacement-Key Encoding
 %
 
-\subsubsection{Other states with passive linear optics}
+\subsubsection{Displacement-key encoding} \label{sec:disp_key_enc}
 
-In the previous two sections we employed the encryption techniques of \emph{polarisation-key encoding} and \emph{phase-key encoding}. These are based on the observation that uniform polarisation- and phase-rotations commute through linear optics networks, as per Eq.~\ref{eq:LO_key_commute}. Are there any other types of encoding operations that observe this property?
+In the previous two sections we employed the encryption techniques of polarisation-key encoding and phase-key encoding. These are based on the observation that uniform polarisation- and phase-rotations commute through linear optics networks, as per Eq.~\ref{eq:LO_key_commute}. Are there any other types of encoding operations that observe this property?
 
 The other obvious candidate is \emph{displacement-key encoding}, whereby random displacements (not necessarily uniform across all modes) in phase-space (Sec.~\ref{sec:non_lin_opt}) form the encoding operations. Displacement operators exhibit the property that a tensor product of displacements commutes through linear optics circuits to yield a different combination of tensor products of displacements, where the displacement amplitudes obey the same relationship as for coherent states from Eq.~\ref{eq:betaUalpha}. Specifically,
 \begin{align}
-\hat{D}_i(\alpha_i) \to \prod_{i=1}^m \hat{D}_j(\beta_j),
+\hat{D}_i(\alpha_i) \to \prod_{j=1}^m \hat{D}_j(\beta_j),
 \end{align}
 where $\hat{D}_i(\alpha_i)$ is the displacement operator for the $i$th mode, with displacement amplitude $\alpha_i$, and $\vec\alpha$ and $\vec\beta$ are related according to Eq.~\ref{eq:betaUalpha}.
 
@@ -4141,30 +4214,6 @@ To complicate any future efforts into providing security proofs for displacement
 \comment{Does the Fitzsimons group mind me discussing this, given that we haven't fleshed it out yet? It's a highly speculative section, but a nice discussion to have I think, to lay the ground for motivating future work.}
 
 \comment{Anything else to say about this?}
-
-%
-% Cluster States
-%
-
-\subsubsection{Cluster states}
-
-Most simply, if Alice has the limited quantum resources required to perform single-qubit measurements, and she knows the algorithm she wishes to implement, then by outsourcing just the cluster state preparation stage, whilst performing the single-qubit measurements herself, she can obviously obtain \emph{perfect} secrecy of both her data and her algorithm, since no one else is involved in the processing stage.
-
-However, Alice may have access to no quantum resources whatsoever -- even single-qubit measurements -- requiring homomorphic encryption or blind quantum computing protocols that are native to the cluster state model. Both such protocols have been described, and in fact are conceptually more straightforward to understand in the cluster state formalism. 
-
-\comment{To do}
-
-\comment{Consider both BQC and homomorphic QC}
-
-%
-% Circuit Model
-%
-
-\subsubsection{Circuit model}
-
-\comment{To do}
-
-\comment{Consider both BQC and homomorphic QC}
 
 %
 % Modularised Quantum Computation
