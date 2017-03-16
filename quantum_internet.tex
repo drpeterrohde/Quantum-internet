@@ -407,6 +407,8 @@ For example, the network might have bandwidth restrictions on some links, in whi
 
 This type of cost minimisation approach to routing is analogous to \emph{distance-vector routing protocols} in classical networking theory.
 
+A detailed exposition of routing strategies is provided in Sec.~\ref{sec:strategies}.
+
 %
 % Strategy Optimisation
 %
@@ -1380,7 +1382,7 @@ A quantum process cannot increase the mutual information between two parties. Th
 I(X:Z)&\leq I(X:Y), \nonumber \\
 I(X:Z)&\leq I(Y:Z),
 \end{align}
-with equality only if one of the channels is the identity channel, i.e one of the links in the chain perfectly preserves information content.
+with equality if and only if the channel not specified in the identity on the right hand side (\mbox{$Y\to Z$} or \mbox{$X\to Y$} respectively) is unitary, i.e one of the links in the chain perfectly preserves information content.
 
 The mutual information is defined as being between a particular known pair of states. Of course, in a quantum network we will seldom know what the states being communicated are and will therefore be unable to directly calculate the mutual information. To address this, the \emph{classical channel capacity} of a channel is defined as,
 \begin{align}
@@ -2176,7 +2178,11 @@ In this case, route finding is simplified, since \emph{all} routes, which strict
 
 A tree is a graph containing no cycles, only \emph{branches}. There are many uses for tree graphs, but one property is of particular convenience in many applications: because the graph is acyclic, there is always exactly one path from any vertex to any other. This mitigates the need for shortest-path algorithms designed for general graphs, and simplifies route-finding algorithms (to be discussed in Sec.~\ref{sec:path_exp}). However, this brings with it the drawback that the topology is most vulnerable to link failures, since the removal of any link from the tree will separate it into a bipartite graph, making communication between the two disjoint subgraphs (which are also trees) impossible, as there are no redundant routes. In a sense, tree graphs can be considered the polar opposites of complete graphs.
 
-Trees are specified entirely by \emph{branching parameters} ($b_i$) -- the number of child nodes emanating from a given node, $i$. In general, branching parameters may be distinct for each node, although often trees with symmetries in their branching structures are considered, such as the balanced trees discussed in Sec.~\ref{sec:bal_tree}. A node terminates a branch if its branching parameter is zero (i.e it has no children). The \emph{depth} ($d$) of a tree is the maximum number of steps from the root node to a terminating node with no children. The depth scales between \mbox{$d=O(|V|)$}, for the trivial linear tree (\mbox{$b_i=1$}), and \mbox{$d=O(\mathrm{log}|V|)$} for non-trivial branching parameters (i.e \mbox{$b_i\neq 1$}). The worst-case number of edges that must be traversed to reach any vertex from any other is $2d$, which implies that cost metrics scale as at most \mbox{$c=O(|V|)$}. Trees are the most frugal graphs in their number of edges, which are fixed at \mbox{$|E|=|V|-1$}, irrespective of the branching parameters, since because the graph is strictly acyclic, every addition of an edge requires the addition of exactly a single vertex. This makes tree graphs the cheapest to construct in terms of physical resource usage.
+Trees are specified entirely by \emph{branching parameters} ($b_i$) -- the number of child nodes emanating from a given node, $i$. In general, branching parameters may be distinct for each node, although often trees with symmetries in their branching structures are considered, such as the balanced trees discussed in Sec.~\ref{sec:bal_tree}. A node terminates a branch if its branching parameter is zero (i.e it has no children).
+
+The \emph{depth} ($d$) of a tree is the maximum number of steps from the root node to a terminating node with no children. The depth scales between \mbox{$d=O(|V|)$}, for the trivial linear tree (\mbox{$b_i=1$}), and \mbox{$d=O(\mathrm{log}|V|)$} for non-trivial branching parameters (i.e \mbox{$b_i\neq 1$}).
+
+The worst-case number of edges that must be traversed to reach any vertex from any other is $2d$, which implies that accumulated cost metrics scale as at most \mbox{$c=O(|V|)$}. Trees are the most frugal graphs in their number of edges, which are fixed at \mbox{$|E|=|V|-1$}, irrespective of the branching parameters, since because the graph is strictly acyclic, every addition of an edge requires the addition of exactly a single vertex. This makes tree graphs the cheapest to construct in terms of physical resource usage.
 
 %
 % Balanced Tree
@@ -2205,7 +2211,7 @@ A special case is when \mbox{$d=1$}, which we refer to as a \emph{star} graph. T
 
 While balanced trees accurately capture the hierarchical nature of realistic networks, they are somewhat contrived in their perfect symmetry. The subnetworks in a given network are not likely to actually all be identical. Random trees are perhaps more realistic, in that their tree structure captures the hierarchical nature of real-world networks, and also their highly ad hoc nature.
 
-To construct a random tree we simply randomly choose a branching parameter, up to some maximum, for every node. When a node has \mbox{$b_i=0$}, it terminates the lineage. Some examples of random trees are shown in Fig.~\ref{fig:random_tree}.
+To construct a random tree we simply randomly choose a branching parameter, according to some arbitrary distribution, for every node. When a node has \mbox{$b_i=0$}, it terminates the lineage. Some examples of random trees are shown in Fig.~\ref{fig:random_tree}.
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{random_tree_1} \\
@@ -2219,7 +2225,7 @@ To construct a random tree we simply randomly choose a branching parameter, up t
 
 \subsubsection{Minimum spanning tree} \label{sec:graph_MST}
 
-A \emph{spanning tree} $S$, of a graph $G$, is a tree subgraph \mbox{$S\subset G$}, containing every vertex of $G$. The \emph{weight} of a spanning tree is the sum of all its constituent edge weights. Thus, the \emph{minimum spanning tree} (MST) is a spanning tree that minimises weight. An example is shown in Fig.~\ref{fig:mst}. See Sec.~\ref{sec:min_tree} for a discussion on MST algorithms.
+A \emph{spanning tree} $S$, of a graph $G$, is a tree subgraph \mbox{$S\subset G$}, containing every vertex of $G$. The \emph{weight} of a spanning tree is the sum of all its constituent edge weights. Thus, the \emph{minimum spanning tree} (MST) is a spanning tree that minimises net weight. An example is shown in Fig.~\ref{fig:mst}. See Sec.~\ref{sec:min_tree} for a discussion on MST algorithms.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.8\columnwidth]{mst}
@@ -2265,7 +2271,7 @@ This hybrid network topology is the norm today in our classical internet, and it
 
 \subsection{The internet webgraph}
 
-Of course, all the topological structures described until now are in-principle constructs. Of most relevance is the \emph{Webgraph}, the graph of the actual internet. Fig.~\ref{fig:webgraph} illustrates some example webgraphs. The combination of random, densely and sparsely connected, and tree structures, and its clear hierarchy are all evident. This encourages our intuition of the different types of structures present in realistic networks.
+Of course, all the topological structures described until now are in-principle constructs. Of most relevance is the \emph{Webgraph}, the graph of the actual internet (or some other real-world network). Fig.~\ref{fig:webgraph} illustrates some example webgraphs. The combination of random, densely and sparsely connected, and tree structures, and its clear hierarchy are all evident. This encourages our intuition of the different types of structures present in realistic networks.
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{webgraph_1} \\
@@ -2380,7 +2386,7 @@ Fig.~\ref{fig:mst} shows an example of a graph with its MST.
 
 \subsection{Minimum cost flow} \label{sec:min_cost_flow_prob}
 
-The \emph{minimum cost flow problem} \cite{???} is that of minimising costs through a network for a specified amount of flow (i.e total bandwidth or throughput), which acts as a constraint on the problem. The definition of `cost' in this context is compatible with our earlier definition of cost metrics.
+The \emph{minimum cost flow problem} \cite{???} is that of minimising costs through a network for a specified amount of flow (i.e total bandwidth or throughput), which acts as a constraint on the problem. The definition of `cost' in this context is compatible with our earlier definition of cost metrics (Def.~\ref{def:metric}).
 
 This problem can be efficiently solved using linear programming. Specifically, cost metrics along links in series are given by linear combinations of individual link costs. If, in addition, we let our net cost function be linear in the constituent costs then the net cost will also be linear in all the edge weights. This lends itself directly to optimisation via linear programming techniques. Algorithms for linear programming, such as the \emph{simplex} algorithm, have polynomial-time solutions (i.e reside in \textbf{P}), and a plethora of software libraries are available for implementing them numerically.
 
@@ -3380,7 +3386,7 @@ To couple with a polarisation-encoded photonic qubit, a PBS can be employed to s
 \caption{Coupling a polarisation-encoded photonic qubit to a pair of atomic ensembles, each of which corresponds to one of the qubit's logical basis states ($\ket{0}$ or $\ket{1}$). The horizontal and vertical components of the photonic qubit are spatially separated using a PBS, which subsequently independently interface with distinct atomic ensembles via collective excitation.} \label{fig:atomic_ensemble_qubit}
 \end{figure}
 
-Atomic ensembles have been proposed as quantum memories, given their long coherence lifetime. Additionally, a protocol for universal cluster state quantum computation based upon atomic ensemble qubits has been described \cite{???}. \comment{Add atomic ensemble refs! Get from Barrett, Rohde, Stace paper}
+Atomic ensembles have been proposed as quantum memories, given their long coherence lifetime. Additionally, a protocol for universal cluster state quantum computation based upon atomic ensemble qubits has been described \cite{bib:RohdeAtEns10}. \comment{Add atomic ensemble refs! Get from Barrett, Rohde, Stace paper}
 
 %
 % Cloud Quantum Computing
@@ -3982,7 +3988,7 @@ Intuitively, this simply says that a tensor product of single-mode encoding oper
 
 \begin{figure}[!htb]
 \includegraphics[width=0.85\columnwidth]{gen_pass_hom}
-\caption{General structure for the relationship between the encoding ($\hat{E}$), decoding ($\hat{D}$), and computational ($\hat{U}$) operations in a passive, non-interactive, optical quantum computation, where Alice is restricted to non-entangling, single-mode operations.} \label{fig:gen_pass_hom}
+\caption{General structure for the relationship between the encoding ($\hat{E}$), decoding ($\hat{D}$), and computational ($\hat{U}$) operations in a passive, non-interactive, optical quantum computation, where Alice is restricted to non-entangling, single-mode encoding and decoding operations.} \label{fig:gen_pass_hom}
 \end{figure}
 
 In the following sections we introduce non-interactive techniques for passive optical quantum computation based upon this general formalism. As encoding techniques compatible with the commutation relation from Eq.~\ref{eq:gen_pass_hom}, we specifically introduce:
@@ -4191,7 +4197,7 @@ It seems plausible that this approach to homomorphic encryption in phase-space c
 
 This protocol demonstrates that a simple optical system is able to homomorphically encrypt the classical computation of matrix multiplication, as well as the more general operations of non-linear phase-shifts, without incurring the computational resource overhead imposed by conventional classical homomorphic encryption techniques.
 
-\comment{To do! Mathematical details! How does the secrecy of this scheme compare to the secrecy of a classical homomorphically encrypted matrix multiplication? How many bits are hidden? What mathematical techniques are used for the derivation?}
+\comment{To do! Mathematical details! How does the secrecy of this scheme compare to the secrecy of a classical homomorphically encrypted matrix multiplication? How many bits are hidden? What mathematical techniques are used for the derivation? Add figures for trace distance with and without encryption.}
 
 %
 % Displacement-Key Encoding
@@ -4338,7 +4344,7 @@ These observations lead us to naturally conclude that a quantum network speciali
 % Quantum Repeater Networks
 %
 
-\subsection{Quantum repeater networks} \label{sec:rep_net}
+\section{Quantum repeater networks} \label{sec:rep_net}
 
 \emph{Quantum repeaters} are devices that allow entanglement to be shared between distant nodes, when no direct line of communication is available from a server to its two clients. This is achieved using a bootstrapped entanglement swapping protocol (Sec.~\ref{sec:swapping}). Most commonly, this entanglement is in the form of Bell-pairs, which, as discussed previously in Sec.~\ref{sec:ent_ultimate}, form a ubiquitous resource for many essential quantum protocols. The actual physical encoding of the entangled states may vary, but is most commonly in the form of single-photons or CV states.
 
