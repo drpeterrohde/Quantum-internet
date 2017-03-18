@@ -63,20 +63,20 @@
 %\author{Samuel I. Marks}
 %\affiliation{Sydney Medical School, University of Sydney, Australia}
 
-\author{Ryan L. Mann}
-\affiliation{Centre for Quantum Software \& Information (QSI), Faculty of Engineering \& Information Technology, University of Technology Sydney, NSW 2007, Australia}
+%\author{Ryan L. Mann}
+%\affiliation{Centre for Quantum Software \& Information (QSI), Faculty of Engineering \& Information Technology, University of Technology Sydney, NSW 2007, Australia}
 
 \author{William J. Munro}
 \affiliation{NTT Basic Research Laboratories, 3-1 Morinosato-Wakamiya, Atsugi, Kanagawa 243-0198, Japan}
 \affiliation{National Institute of Informatics, 2-1-2 Hitotsubashi, Chiyoda-ku, Tokyo 101-8430, Japan}
 
-\author{Michael J. Bremner}
-\affiliation{Centre for Quantum Software \& Information (QSI), Faculty of Engineering \& Information Technology, University of Technology Sydney, NSW 2007, Australia}
+%\author{Michael J. Bremner}
+%\affiliation{Centre for Quantum Software \& Information (QSI), Faculty of Engineering \& Information Technology, University of Technology Sydney, NSW 2007, Australia}
 
-\author{Chao-Yang Lu}
-\affiliation{Hefei National Laboratory for Physical Sciences at Microscale and Department of Modern Physics, University of Science and Technology of China, Hefei, Anhui 230026, China}
-\affiliation{CAS Centre for Excellence and Synergetic Innovation Centre in Quantum Information and Quantum Physics, University of Science and Technology of China, Hefei, Anhui 230026, China}
-\affiliation{CAS-Alibaba Quantum Computing Laboratory, Shanghai 201315, China}
+%\author{Chao-Yang Lu}
+%\affiliation{Hefei National Laboratory for Physical Sciences at Microscale and Department of Modern Physics, University of Science and Technology of China, Hefei, Anhui 230026, China}
+%\affiliation{CAS Centre for Excellence and Synergetic Innovation Centre in Quantum Information and Quantum Physics, University of Science and Technology of China, Hefei, Anhui 230026, China}
+%\affiliation{CAS-Alibaba Quantum Computing Laboratory, Shanghai 201315, China}
 
 %\author{Christopher Altman}
 %\affiliation{???}
@@ -2488,7 +2488,7 @@ We see that even the most basic primitive in quantum technologies -- state prepa
 
 \subsubsection{Coherent states} \label{sec:coherent_states}
 
-Coherent states (Sec.~\ref{sec:coherent_state_enc}), although not strictly quantum states, nonetheless find broad applications in quantum protocols, for example as the pump for spontaneous parametric down-conversion (SPDC) sources (Sec.~\ref{sec:single_phot_src}), or as a phase-reference for homodyne detection (Sec.~\ref{sec:homodyne}). Coherent states are rather trivial to prepare, as they are closely approximated by laser sources. Despite their triviality, high quality lasers can nonetheless become very expensive, large, and inaccessible to the not-so-well-resourced end-user.
+Coherent states (Sec.~\ref{sec:coherent_state_enc}), although not strictly \emph{quantum} states, nonetheless find broad applications in quantum protocols, for example as the pump for spontaneous parametric down-conversion (SPDC) sources (Sec.~\ref{sec:single_phot_src}), or as a phase-reference for homodyne detection (Sec.~\ref{sec:homodyne}). Coherent states are rather trivial to prepare, as they are closely approximated by laser sources. Despite their triviality, high quality lasers can nonetheless become very expensive, large, and inaccessible to the not-so-well-resourced end-user. It is not uncommon for laser sources in contemporary labs to be valued in the \$100k's.
 
 %
 % Single-Photons
@@ -2567,6 +2567,8 @@ where \mbox{$\hat{n}=\hat{a}^\dag\hat{a}$} is the photon-number operator associa
 
 However, these states are notoriously difficult and technologically challenging to prepare, and can only be prepared non-deterministically using linear optics \cite{bib:Cable07}. If a remote server had the capacity to prepare such states, they would be in high demand across the globe. Hindering this, NOON states are very fragile creatures. First, they exhibit exponentially increased susceptibility to loss -- loss of just a single photon completely decoheres the state, rendering it useless for metrological purposes. Second, the large photon-number, $N$, amplifies unwanted dephasing by a factor of $N$, as discussed in Sec.~\ref{sec:dephasing_error}. These considerations can be readily accommodated for in the QTCP protocol by tracking dephasing and loss metrics of the packets encapsulating the NOON states.
 
+\comment{Talk more about how to make them}
+
 %
 % Cluster States
 %
@@ -2588,7 +2590,11 @@ Another class of states is Greenberger-Horne-Zeilinger (GHZ) states \cite{bib:GH
 \ket\psi_\mathrm{GHZ} = \frac{1}{\sqrt{2}}(\ket{0,\dots,0} + \ket{1,\dots,1}).
 \end{align}
 
-GHZ states are useful for various quantum information processing applications, including quantum anonymous broadcasting (Sec.~\ref{sec:anon_broad}). These states are particularly susceptible to loss, since the loss of a single qubit completely decoheres the state into a perfect mixture of the \mbox{$\ket{0,\dots,0}$} and \mbox{$\ket{1,\dots,1}$} states, with complete loss of entanglement and coherence.
+GHZ states are useful for various quantum information processing applications, including quantum anonymous broadcasting (Sec.~\ref{sec:anon_broad}). These states are particularly susceptible to loss, since the loss of a single qubit completely decoheres the state into a perfect mixture of the \mbox{$\ket{0,\dots,0}$} and \mbox{$\ket{1,\dots,1}$} states, with complete loss of entanglement and coherence,
+\begin{align}
+&\mathrm{tr}_A(\ket\psi_\mathrm{GHZ}\bra\psi_\mathrm{GHZ})\nonumber \\
+&= \frac{1}{2}(\ket{0,\dots,0}\bra{0,\dots,0}+\ket{1,\dots,1}\bra{1,\dots,1}).
+\end{align}
 
 %
 % Bell States
@@ -2604,6 +2610,8 @@ There are four Bell states, defined as,
 \ket{\Psi^{\pm}} &= \frac{1}{\sqrt{2}} (\ket{0}_A\ket{1}_B \pm \ket{1}_A\ket{0}_B),
 \end{align}
 which are locally equivalent to one another via the application of Pauli operators, and may therefore be transformed to one another without classical or quantum communication between the two parties.
+
+In Sec.~\ref{sec:ent_ultimate} we present the case that these states are so useful on their own that one might be justified in building entire quantum networks based purely upon the distribution of Bell-pairs. This is the basis for \emph{quantum repeater networks}, which will be discussed in Sec.~\ref{sec:rep_net}.
 
 %
 % Cat States
@@ -2627,7 +2635,7 @@ Mathematically, squeezing is represented using the squeezing operator,
 \begin{align}
 \hat{S}(\xi) = \mathrm{exp}\left[ \frac{1}{2}(\xi^*\hat{a}^2 - \xi{\hat{a}^{\dag 2}})\right],
 \end{align}
-where $\hat{a}$ is the photonic creation operator, and $\xi$ is the squeezing parameter. Experimentally, such states are prepared using non-linear crystals. It is intuitively obvious that linear optics cannot prepare such states, owing to the non-linear terms in the squeezing operator, which does not preserve photon-number, and therefore cannot be passive.
+where $\hat{a}$ is the photonic creation operator, and $\xi$ is the squeezing parameter. Experimentally, such states are prepared using non-linear crystals. It is intuitively obvious that linear optics alone cannot prepare such states, owing to the non-linear terms in the squeezing operator, which do not preserve photon-number, and therefore cannot be passive.
 
 Of particular interest are squeezed coherent states, $\hat{S}(\xi) \ket{\alpha}$, which are minimum uncertainty states, saturating the Heisenberg uncertainty relation. A special case of this is squeezed vacuum states, $\hat{S}(\xi) \ket{0}$, which are even-parity states (i.e they contain strictly even photon-number terms). This implies that, like cat states, they are very vulnerable to decoherence for the same reason.
 
@@ -2637,7 +2645,7 @@ Of particular interest are squeezed coherent states, $\hat{S}(\xi) \ket{\alpha}$
 
 \subsubsection{More exotic states of light}
 
-As discussed in Sec.~\ref{sec:exotic}, many other far more elaborate states are very difficult to prepare, and it would be highly desirable if they could be obtained/purchased over a quantum network. This includes certain CV states, which have utility in alternate models for quantum computing \cite{bib:Menicucci06, Ralph, Lund}, and squeezed states, which can be useful for sub-shotnoise limited metrology \cite{???}.
+As discussed in Sec.~\ref{sec:exotic}, many other far more elaborate states are very difficult to prepare, and it would be highly desirable if they could be obtained/purchased over a quantum network. This includes certain CV states, which have utility in alternate models for quantum computing \cite{bib:Menicucci06, Ralph, Lund}.
 
 \comment{To do!}
 
@@ -2661,7 +2669,7 @@ This is useful when matter-based architectures are more scalable or technologica
 
 As a last (and possibility also intermediate) step in any quantum protocol is the measurement of quantum states. State measurement is, in the most general context, essentially state preparation in reverse, and brings with it many of the same challenges.
 
-Different detection schemes bring with them their own (potentially substantial) costs and technological challenges. State of the art micropillar photo-detectors \cite{???}, at the time of writing, cost on the order of hundreds of thousands of dollars, and require a sophisticated laboratory setup. Clearly this type of infrastructure is inaccessible to many players, and borrowing or licensing access to such equipment over a quantum network would pave the way for broader accessibility to state of the art technology.
+Different detection schemes bring with them their own (potentially substantial) costs and technological challenges. State of the art micropillar photo-detectors \cite{???}, at the time of writing, cost on the order of \$100k's, and require a sophisticated laboratory setup. Clearly this type of infrastructure is inaccessible to many players, and borrowing or licensing access to such equipment over a quantum network would pave the way for broader accessibility to state of the art technology.
 
 Each type of state being measured, in combination with the nature of the detection scheme, brings with it their own limitations. For example, number-resolved photo-detectors exhibit dead-time, are too slow to enable fast-feedforward, have spectral filtering characteristics, and mode-matching requirements. \comment{Is this right?}
 
@@ -2769,7 +2777,7 @@ The attractive feature of this is that although the matter qubit is stationary, 
 
 \subsection{Evolution}
 
-The evolution of optical states represents an extremely broad category of quantum operations, including passive linear optics, post-selected linear optics, non-linear optics, and light-matter interactions. Clearly, the items in this list present technological challenges, inaccessible to many users.
+The evolution of optical states represents an extremely broad category of quantum operations, including: passive linear optics; post-selected linear optics; non-linear optics; and, light-matter interactions. Clearly, the items in this list present technological challenges, inaccessible to many users.
 
 The error models in the evolution of optical states are largely accounted for by those discussed in Sec.~\ref{sec:errors_in_nets}. 
 
@@ -2945,7 +2953,7 @@ Taking two polarisation-encoded photonic Bell-pairs, say $\ket{\Psi^+}$, and sub
 \begin{align}
 \hat\rho_\mathrm{in} = F\ket{\Psi^+}\bra{\Psi^+} + (1-F)\ket{\Psi^-}\bra{\Psi^-},
 \end{align}
-where $F$ is the entanglement fidelity, which is a function of the dephasing rate. Note that $\ket{\Psi^+}$ and $\ket{\Psi^-}$ are related by local phase-flip operations ($\hat{Z}$) applied to either qubit,
+where $F$ is the entanglement fidelity, which is a function of the dephasing rate. Note that $\ket{\Psi^+}$ and $\ket{\Psi^-}$ are related by local Pauli phase-flip operations ($\hat{Z}$) applied to either qubit,
 \begin{align} \label{eq:psi_minus}
 \ket{\Psi^-} = \hat{Z}_A \ket{\Psi^+} = \hat{Z}_B \ket{\Psi^+}.
 \end{align}
@@ -2978,7 +2986,7 @@ A theoretical analysis of this protocol has been performed, accounting for mode-
 
 Importantly, this protocol is based on partial Bell state measurement, and therefore does not require interferometric stability, only high HOM visibility, thus making stabilisation comparatively easy over long distances.
 
-Entanglement purification can also be performed using physical encodings other than single photons. For example, this has been demonstrated in Gaussian CV quantum states \cite{bib:Duan00}.
+Entanglement purification can also be performed using physical encodings other than single photons. For example, this has been demonstrated using Gaussian CV quantum states \cite{bib:Duan00}.
 
 %
 % Quantum State Teleportation
@@ -3071,7 +3079,7 @@ This is more costly than sending the qubit directly over a quantum channel, but 
 
 The important feature of this protocol to note is that there is no direct quantum communication between Alice and Bob, only a classical communications channel. Rather, the Bell-pair mediates the transfer of quantum information, despite there being no direct quantum channel between Alice and Bob.
 
-Relying on teleportation rather than direct quantum communication makes frugal use of quantum channels, since there is no need for direct quantum routes between every pair of nodes in the network. Instead, each node need only have a direct one-way quantum link with the central authority responsible for entanglement distribution, thereby significantly reducing the complexity of the topology of the quantum network.
+Relying on teleportation rather than direct quantum communication makes frugal use of quantum channels, since there is no need for direct quantum routes between every pair of nodes in the network. Instead, each node need only have a direct one-way quantum link with the central authority responsible for entanglement distribution, thereby significantly reducing the complexity of the topology of the quantum network. \comment{Repeating what I say in the `ultimate resource' section}
 
 The Bell state measurement can be implemented either using a CNOT gate, or as a non-deterministic partial Bell state measurement using a PBS (Sec.~\ref{sec:bell_proj}).
 
@@ -3980,8 +3988,25 @@ Let \mbox{$k=\{k_1,\dots,k_m\}$} be a partition of the key $k$ into sub-keys $\{
 \end{align}
 For the protocol to hide information, the plaintext basis states must not be invariant under the encoding operations,
 \begin{align}
-\left[\bigotimes_{i=1}^m\hat{E}_i(k_i)\right]\ket\psi \neq \ket\psi.
+\left[\bigotimes_{i=1}^m\hat{E}_i(k_i)\right]\ket\psi_\mathrm{plaintext} \neq \ket\psi_\mathrm{plaintext}.
 \end{align}
+More specifically, we would like to maximise the von Neuman entropy of the mixture over the encoding operations,
+\begin{align}
+\hat\rho_\mathrm{encoded} = \sum_k \hat{E}(k)\ket\psi_\mathrm{plaintext}\bra\psi_\mathrm{plaintext} \hat{E}^\dag(k),
+\end{align}
+where,
+\begin{align}
+\hat{E}(k) = \bigotimes_{i=1}^m\hat{E}_i(k_i).
+\end{align}
+For,
+\begin{align}
+S(\hat\rho_\mathrm{encoded})=0,
+\end{align}
+we have no secrecy, whereas for,
+\begin{align}
+S(\hat\rho_\mathrm{encoded})=1,
+\end{align}
+we have perfect secrecy (for the given plaintext basis state).
 \end{definition} 
 
 Intuitively, this simply says that a tensor product of single-mode encoding operations commutes through the passive computation to yield a (potentially different) tensor product of single-mode decoding operations. This way, Alice's operations are all separable, requiring no entangling gates (after all, if she had access to entangling gates she might be able to do quantum computations herself!). This relationship can be illustrated as shown in Fig.~\ref{fig:gen_pass_hom}. Importantly, note that devising a scheme satisfying this commutation relation does not automatically imply that it is secure -- it merely enforces the separability of Alice's encoding and decoding operations. An actual security proof is far more demanding, and will be highly state-dependent.
@@ -4183,13 +4208,13 @@ function HomomorphicCoherentStateLinearOptics($\vec\alpha$):
 \caption{Protocol for implementing homomorphic encryption on coherent state passive linear optics.} \label{tab:homo_coherent_LO}
 \end{table}
 
-This encryption technique applies to more than just linear optics, but extends to also include generalised non-linear phase-shift operations, generated by Hamiltonians that are polynomials of the photon-number operator,
+This encryption technique applies to more than just linear optics, but extends to also include generalised non-linear phase-shift operations, generated by Hamiltonians that are polynomials in the photon-number operators,
 \begin{align}
-\hat{H} = O(\mathrm{poly}(\hat{n})).
+\hat{H} = O(\mathrm{poly}(\hat{n}_1,\dots,\hat{n}_m)).
 \end{align}
-This observation follows trivially from the observation that the phase-shift encoding operations (which are generated by a Hamiltonian linear in the photon-number operator) commute with any polynomial in the photon-number operator,
+This observation follows trivially from the observation that the phase-shift encoding operations (which are generated by Hamiltonians linear in the photon-number operators) commute with any polynomial in the photon-number operators,
 \begin{align}
-[\hat{n},\mathrm{poly}(\hat{n})] = 0.
+[\hat{n}_i,\mathrm{poly}(\hat{n}_1,\dots,\hat{n}_m)] = 0\,\,\forall \, i.
 \end{align}
 This immediately significantly expands the class of operations available for the computation. In particular, while coherent states remain separable under linear optics evolution, the introduction of non-linear phase-shift operations enables quantum entanglement, and presumably a more powerful class of computations than simple matrix multiplication.
 
@@ -4326,19 +4351,19 @@ What's the advantage of this approach to quantum networking? There are several:
 \item Dedicated servers can specialise in this one particular task, as can be the transmission infrastructure. The server needn't concern itself with the nitty-gritty of the protocols implemented by the end-user.
 \item Because servers are providing a single standardised product, they can be commodified, enabling mass production of the hardware devices and the associated economy of scale.
 \item Unlike generic quantum states, Bell-pairs are known states that can be infinitely reproduced, without having to worry about no-cloning limitations.
-\item Photonic Bell-pairs are easily prepared via type-II SPDC at very high repetition rates (\mbox{$\sim 100$MHz}), enabling rapid state preparation.
+\item Photonic Bell-pairs are easily prepared via type-II SPDC at very high repetition rates (\mbox{$\sim 100$MHz-1GHz}), enabling rapid state preparation.
 \item Bell-pairs are relatively `cheap' to prepare, and can be readily manufactured using widely accessible, present-day technology.
 \item QoS is a lesser issue in most scenarios. We can employ a {\sc Send and Forget} protocol for the distribution of entanglement (much like classical UDP). Since every Bell-pair is identical, we needn't be concerned about missing ones. Instead, we can simply wait for the next one (a {\sc Repeat Until Success} strategy), knowing it will be exactly the same. We call this the {\sc Shotgun} approach -- keep firing away until we hit something.
 \item Rather than transmitting quantum states between distant parties directly, if we instead use state teleportation, the state to be transmitted will not be corrupted if the communications channel fails (e.g via loss). Instead we can wait for the next successfully transmitted Bell-pair until we are ready to teleport the state, which then proceeds without directly utilising the quantum communications channel, accumulating its associated costs, or risking losing the state altogether should link failure occur. Only classical communication is required to complete the protocol, which can be regarded as error-free for all intents and purposes.
 \item Entanglement purification may be employed by the two parties to improve the cost metrics associated with their shared entanglement, thereby partially overcoming the limitations imposed by the quantum communication channels.
-\item If no direct link exists between server and clients, bootstrapped entanglement swapping can be employed to concatenate servers to create longer-distance virtual links. This is the basis for \emph{quantum repeater networks}, to be discussed next in Sec.~\ref{sec:rep_net}.
+\item If no direct link exists between server and clients, bootstrapped entanglement swapping can be employed to concatenate servers to create longer-distance `virtual' links. This is the basis for \emph{quantum repeater networks}, to be discussed next in Sec.~\ref{sec:rep_net}.
 \end{itemize}
 
 \comment{Any other advantages?}
 
-In addition to entanglement distribution, entangling measurements, e.g Bell state projections (Sec.~\ref{sec:bell_proj}), may be used as a primitive for many protocols. This is effectively entangled state distribution in reverse, whereby two clients transmit states to a host, who performs a joint entangling measurement upon them. For example, in the modularised model for cluster state quantum computing, two adjacent but distant modules might transmit optical qubits to a satellite, which projects them into the Bell basis, thereby creating a link between the respective modules. This isn't as powerful as entangled state distribution, since it cannot be used for, for example, E91 QKD, but nonetheless remains a powerful primitive for many protocols. Note, however, that in many instances where entangling measurements are required, entanglement swapping can be used in its place to achieve the same outcome.
+In addition to entanglement distribution, entangling measurements, e.g Bell state projections (Sec.~\ref{sec:bell_proj}), may be used as a primitive for many protocols. This is effectively entangled state distribution in reverse, whereby two clients transmit states to a host, who performs a joint entangling measurement upon them. For example, in the modularised model for cluster state quantum computing, two adjacent but distant modules might transmit optical qubits to a satellite, which projects them into the Bell basis, thereby creating a link between the respective modules. This isn't as powerful as entangled state distribution, since it cannot be used for, for example, E91 QKD, but nonetheless remains a powerful primitive for many protocols. \comment{Note, however, that in many instances where entangling measurements are required, entanglement swapping can be used in its place to achieve the same outcome. What do I mean here!???}
 
-These observations lead us to naturally conclude that a quantum network specialised to this one particular task -- entanglement distribution -- would already be immensely useful, and on its own enable many key quantum protocols, such as the ones presented here in Sec.~\ref{sec:protocols_quant_int}.
+These observations lead us to naturally conclude that a quantum network specialised to this one particular task -- entanglement distribution -- would already be immensely useful, and on its own enable many key quantum protocols, such as many of the ones presented here in Sec.~\ref{sec:protocols_quant_int}.
 
 %
 % Quantum Repeater Networks
@@ -4347,6 +4372,8 @@ These observations lead us to naturally conclude that a quantum network speciali
 \section{Quantum repeater networks} \label{sec:rep_net}
 
 \emph{Quantum repeaters} are devices that allow entanglement to be shared between distant nodes, when no direct line of communication is available from a server to its two clients. This is achieved using a bootstrapped entanglement swapping protocol (Sec.~\ref{sec:swapping}). Most commonly, this entanglement is in the form of Bell-pairs, which, as discussed previously in Sec.~\ref{sec:ent_ultimate}, form a ubiquitous resource for many essential quantum protocols. The actual physical encoding of the entangled states may vary, but is most commonly in the form of single-photons or CV states.
+
+\comment{To do by Bill Munro}
 
 %
 % State of the Art
