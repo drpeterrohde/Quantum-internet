@@ -692,9 +692,9 @@ When dealing with single photons, information can be encoded in a number of ways
 
 A very attractive feature of single photons is that they undergo very little decoherence, even over large distances -- dephasing (Sec.~\ref{sec:dephasing_error}) in the polarisation degree of freedom, for example, is negligible in free-space. They are, however, very susceptible to loss, and protocols relying on many single-photon states suffer exponential decay in their success rates as the number of photons is increased (Sec.~\ref{sec:eff_err}).
 
-We can encode a single qubit into a single photon in the polarisation basis using the horizontal and vertical polarisation degrees of freedom. Equivalently, one can employ `dual rail' encoding, whereby a single photon is placed into a superposition across two spatial modes. This leads to the equivalent representations for qubits,
+We can encode a single qubit into a single photon in the polarisation basis using the horizontal and vertical polarisation degrees of freedom. Equivalently, one can employ `dual rail' encoding, whereby a single photon is placed into a superposition across two spatial modes. This leads to the equivalent representations for logical qubits ($L$),
 \begin{align} \label{eq:single_photon_enc}
-\ket{\psi}_\mathrm{qubit} &\equiv \alpha\ket{0} + \beta\ket{1}, \nonumber \\
+\ket{\psi}_\mathrm{qubit} &\equiv \alpha\ket{0}_L + \beta\ket{1}_L, \nonumber \\
 \ket{\psi}_\mathrm{pol} &\equiv \alpha\ket{H} + \beta\ket{V}, \nonumber \\
 \ket{\psi}_\mathrm{dual} &\equiv \alpha\ket{0,1} + \beta\ket{1,0}.
 \end{align}
@@ -4060,7 +4060,8 @@ For the protocol to hide information, the plaintext basis states must not be inv
 \end{align}
 The state observed by Bob is the mixture of Alice's plaintext over the complete set of encoding operations,
 \begin{align} \label{eq:mix_over_enc_ops}
-\hat\rho_\mathrm{encoded} = \sum_k \hat{E}(k)\ket\psi_\mathrm{plaintext}\bra\psi_\mathrm{plaintext} \hat{E}^\dag(k),
+\hat\rho_\mathrm{encoded} &= \mathcal{E}(\ket\psi_\mathrm{plaintext}\bra\psi_\mathrm{plaintext}) \nonumber \\
+&= \sum_k \hat{E}(k)\ket\psi_\mathrm{plaintext}\bra\psi_\mathrm{plaintext} \hat{E}^\dag(k),
 \end{align}
 where,
 \begin{align}
@@ -4313,7 +4314,7 @@ In the previous two sections we employed the encryption techniques of polarisati
 
 The other obvious candidate is \emph{displacement-key encoding}, whereby random displacements (not necessarily uniform across all modes) in phase-space (Sec.~\ref{sec:non_lin_opt}) form the encoding operations. Displacement operators exhibit the property that a tensor product of displacements commutes through linear optics circuits to yield a different combination of tensor products of displacements, where the displacement amplitudes obey the same relationship as for coherent states from Eq.~\ref{eq:betaUalpha}. Specifically,
 \begin{align}
-\hat{D}_i(\alpha_i) \to \prod_{j=1}^m \hat{D}_j(\beta_j),
+\hat{D}_i(\alpha_i) \to \bigotimes_{j=1}^m \hat{D}_j(\beta_j),
 \end{align}
 where $\hat{D}_i(\alpha_i)$ is the displacement operator for the $i$th mode, with displacement amplitude $\alpha_i$, and $\vec\alpha$ and $\vec\beta$ are related according to Eq.~\ref{eq:betaUalpha}.
 
@@ -4339,7 +4340,7 @@ function HomomorphicDisplacementKeyEncoding($\ket\psi$):
     \begin{align}
     \ket\psi_\mathrm{enc\, comp} = \hat{U}\ket\psi_\mathrm{enc}.
     \end{align}
-    \item Bob returns the computed state to Alice.
+    \item Bob returns the encrypted computed state to Alice.
     \item Alice calculates the inverse displacement amplitudes $\vec\beta$,
     \begin{align}
     \vec\beta = U\cdot\vec\alpha.
@@ -4349,7 +4350,7 @@ function HomomorphicDisplacementKeyEncoding($\ket\psi$):
     \ket\psi_\mathrm{comp} &= \left[\bigotimes_{i=1}^m \hat{D}^\dag_i(\beta_i)\right] \ket\psi_\mathrm{enc\, comp} \nonumber \\
     &= \hat{U}\ket\psi,
     \end{align}
-    \item $\ket\psi_\mathrm{comp}$ is the computed output state.
+    \item $\ket\psi_\mathrm{comp}$ is the unencrypted computed output state.
     \item $\Box$
 \end{enumerate}}}
 \caption{Protocol for implementing homomorphic encryption using displacement-key encoding.} \label{tab:homo_disp_LO}
