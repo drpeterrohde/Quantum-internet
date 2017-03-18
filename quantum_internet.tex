@@ -4050,7 +4050,7 @@ Let us formalise some reasonable requirements for such a scheme. We will require
 We can express these requirements very generally and elegantly in terms of a commutation relation between the encoding ($\hat{E}$), decoding ($\hat{D}$), and computational ($\hat{U}$) operations. Furthermore, for the protocol to hide information, the plaintext basis states must not be invariant under the encoding operations. This enforces the criteria,
 
 \begin{definition}[Encrypted passive optics] \label{def:enc_pass}
-Let \mbox{$k=\{k_1,\dots,k_m\}$} be a partition of the key $k$ into sub-keys $\{k_i\}$, one associated with each mode $i$. Let $\hat{E}_i(k_i)$ and $\hat{D}_i(\tilde k_i)$ be the encoding and decoding operations for the $i$th mode. $\tilde k$ is a potentially transformed version of $k$, to accommodate that the encryption and decryption keys may be asymmetric. Let $\hat{U}$ be the computation. Then, separability of the encoding and decoding operations requires the following commutation relation to hold,
+Let \mbox{$k=\{k_1,\dots,k_m\}$} be a partition of the key $k$ into sub-keys $\{k_i\}$, one associated with each mode $i$. Let $\hat{E}_i(k_i)$ and $\hat{D}_i(\tilde k_i)$ be the encoding and decoding operations for the $i$th mode. $\tilde k$ is a potentially transformed version of $k$, to accommodate that the encryption and decryption keys may be asymmetric, in which case we require that $\tilde{k}$ be efficiently computable from $k$. Let $\hat{U}$ be the computation. Then, separability of the encoding and decoding operations requires the following commutation relation to hold,
 \begin{align} \label{eq:gen_pass_hom}
 \hat{U} \left[\bigotimes_{i=1}^m\hat{E}_i(k_i)\right] = \left[\bigotimes_{i=1}^m\hat{D}^\dag_i(\tilde k_i)\right] \hat{U}.
 \end{align}
@@ -4066,7 +4066,7 @@ where,
 \begin{align}
 \hat{E}(k) = \bigotimes_{i=1}^m\hat{E}_i(k_i).
 \end{align}
-To minimise Bob's chances of guessing Alice's state, we would like to maximise the von Neuman entropy of Bob's state. For \mbox{$S(\hat\rho_\mathrm{encoded})=0$} we have no secrecy, whereas for maximal \mbox{$S(\hat\rho_\mathrm{encoded})$} we have perfect secrecy (for the given plaintext basis state).
+To minimise Bob's chances of guessing Alice's state, we would like to maximise the von Neuman entropy of Bob's state. For \mbox{$S(\hat\rho_\mathrm{encoded})=0$} we have no secrecy, whereas for maximal \mbox{$S(\hat\rho_\mathrm{encoded})$} we have maximal secrecy (for the given plaintext basis state).
 \end{definition} 
 
 Intuitively, this simply says that a tensor product of single-mode encoding operations commutes through the passive computation to yield a (potentially different) tensor product of single-mode decoding operations. This way, Alice's operations are all separable, requiring no entangling gates (after all, if she had access to entangling gates she might be able to do quantum computations herself!). This relationship can be illustrated as shown in Fig.~\ref{fig:gen_pass_hom}. Importantly, note that devising a scheme satisfying this commutation relation does not automatically imply that it is secure -- it merely enforces the separability of Alice's encoding and decoding operations. An actual security proof is far more demanding, and will be highly state-dependent.
@@ -4104,7 +4104,7 @@ The full protocol is described in Alg.~\ref{tab:homo_LO} and shown in Fig.~\ref{
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\tt
-function HomomorphicPhotonicLinearOptics($S$):
+function HomomorphicPolarisationKeyEncoding($S$):
 \begin{enumerate}
     \item Alice meditates upon, but needn't actually prepare the state,
     \begin{align}
@@ -4149,7 +4149,7 @@ is the photon-number of the $i$th mode.
     \item The remaining vertically polarised state is Alice's unencrypted output of the computation.
     \item $\Box$
 \end{enumerate}}}
-\caption{Protocol for implementing homomorphic encryption on photonic passive linear optics.} \label{tab:homo_LO}
+\caption{Protocol for implementing homomorphic encryption on photonic passive linear optics, using polarisation-key encoding.} \label{tab:homo_LO}
 \end{table}
 
 \begin{figure}[!htb]
@@ -4182,7 +4182,7 @@ and $S(\cdot)$ denotes the von Neuman entropy (Sec.~\ref{sec:channel_cap}). Here
 \begin{align}
 \chi(m) = m - \frac{1}{2}\mathrm{log}_2\left(\frac{\pi e m}{2}\right) + O\left(\frac{1}{m}\right),
 \end{align}
-for sufficiently large $d$. This implies that the protocol hides at least,
+for sufficiently large $d$. Since there are $m$ bits of information in Alice's input state, this implies that the protocol hides at least,
 \begin{align}
 \frac{1}{2}\mathrm{log}_2\left(\frac{\pi e m}{2}\right) + O\left(\frac{1}{m}\right),
 \end{align}
@@ -4226,7 +4226,7 @@ Like polarisation rotations, uniform phase-shifts commute through linear optics 
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\tt
-function HomomorphicCoherentStateLinearOptics($\vec\alpha$):
+function HomomorphicPhaseKeyEncoding($\vec\alpha$):
 \begin{enumerate}
     \item Alice prepares the input multi-mode coherent state,
     \begin{align}
@@ -4265,7 +4265,7 @@ function HomomorphicCoherentStateLinearOptics($\vec\alpha$):
     \end{align}
     \item $\Box$
 \end{enumerate}}}
-\caption{Protocol for implementing homomorphic encryption on coherent state passive linear optics.} \label{tab:homo_coherent_LO}
+\caption{Protocol for implementing homomorphic encryption on coherent state passive linear optics, using phase-key encoding.} \label{tab:homo_coherent_LO}
 \end{table}
 
 In fact, this encryption technique applies to more than just linear optics, but extends to also include generalised non-linear phase-shift operations, generated by Hamiltonians that are polynomials in the photon-number operators,
@@ -4278,7 +4278,7 @@ where $\hat{n}_i$ is the photon-number operator for the $i$th mode. This observa
 \end{align}
 This immediately significantly expands the class of operations available for the computation. In particular, while coherent states remain separable under linear optics evolution, the introduction of non-linear phase-shift operations enables quantum entanglement, and presumably a more powerful class of computations than simple matrix multiplication. It is unclear to us, however, exactly what this class of computations actually is.
 
-\cite{siHuiTan} evaluated the security of this protocol in the case where the basis states were restricted to the binary $\ket{\pm\alpha}$ states. Thus, each input mode encodes at most a single bit (approaching one bit for \mbox{$\alpha\to\infty$}). They were unable to calculate information-theoretic bounds (as is often the case), and instead resorted to the alternative approach of calculating the distinguishability of codewords under the trace distance. If the basis codeword states observed by Bob are indistinguishable, he cannot guess Alice's plaintext state, whereas if they are distinguishable, he can.
+\cite{siHuiTan} evaluated the security of this protocol in the case where the basis states were restricted to the binary $\ket{\pm\alpha}$ states. Thus, each input mode encodes at most a single bit (zero bits for \mbox{$|\alpha|=0$}, approaching one bit for \mbox{$|\alpha|\to\infty$}). They were unable to calculate information-theoretic bounds (as is often the case), and instead resorted to the alternative approach of calculating the distinguishability of codewords under the trace distance (Sec.~\ref{sec:fid_metric}). If the basis codeword states observed by Bob are indistinguishable, he cannot guess Alice's plaintext state, whereas if they are distinguishable, he can.
 
 Let $\vec{x}$ be the binary input string, and $\vec{0}$ be the special case of the all-zero string. Then, for unencrypted states, we have the trace distance,
 \begin{align}
@@ -4292,15 +4292,16 @@ where $\mathrm{wt}(\vec{x})$ is the Hamming weight (number of 1's in the bit-str
 \comment{What's the limit as $d\to\infty$?} where $\mathcal{E}$ denotes the mixture over encoding operations observed by Bob, as per Eq.~\ref{eq:mix_over_enc_ops}, and there are $d$ distinct keys. These relationships are illustrated in Fig.~\ref{fig:homo_coh_st_tr}. Clearly, the encoded basis states exhibit greater indistinguishability than the unencoded ones, demonstrating that information is hidden from Bob. Unfortunately, the trace distance does not have the elegant interpretation of `number of bits hidden' that the mutual information does. Nonetheless, this demonstrates partial hiding of information.
 
 \begin{figure}[!htb]
-%\includegraphics[width=\columnwidth]{}
-\caption{\comment{To do} Trace distance between encoded and unencoded basis states for coherent state computation using phase-key encoding. Each of the $m$ modes is inputted with one of two basis coherent states, $\ket{\pm\alpha}$. $\mathrm{wt}(\vec{x})$ denotes the Hamming weight of bit-string $\vec{x}$. Two states are indistinguishable if their trace distance is 0, and orthogonal if their trace distance is 1. Lower trace distance between encoded states implies a lower chance of Bob guessing Alice's plaintext input state.} \label{fig:homo_coh_st_tr}
+\includegraphics[width=\columnwidth]{coherent_state_homo_unenc} \\
+\includegraphics[width=\columnwidth]{coherent_state_homo_enc}
+\caption{Trace distance between unencoded (top) and encoded (bottom) basis states for coherent state computation using phase-key encoding, with \mbox{$d=50$} keys. Each of the \mbox{$m=10$} modes is inputted with one of two basis coherent states, $\ket{\pm\alpha}$. $\mathrm{wt}(\vec{x})$ denotes the Hamming weight of bit-string $\vec{x}$. Two states are indistinguishable if their trace distance is 0, and distinguishable if their trace distance is 1. Lower trace distance between encoded states implies a lower chance of Bob guessing Alice's plaintext input state.} \label{fig:homo_coh_st_tr}
 \end{figure}
 
 It seems plausible that this approach to homomorphic encryption in phase-space could be extended to other quantum states of light. However, as is typically the case, performing entropic security proofs is notoriously difficult, and this remains an open problem. It should be noted, however, that this approach will definitely \emph{not} work for any class of input states which are invariant under phase-shifts. This explicitly rules out employing this technique for, for example, photon-number states, which have no phase.
 
 This protocol demonstrates that a simple optical system is able to homomorphically encrypt the classical computation of matrix multiplication, as well as the more general operations of non-linear phase-shifts, without incurring the computational resource overhead imposed by conventional classical homomorphic encryption techniques.
 
-\comment{To do! Mathematical details! How does the secrecy of this scheme compare to the secrecy of a classical homomorphically encrypted matrix multiplication? How many bits are hidden? What mathematical techniques are used for the derivation? Add figures for trace distance with and without encryption. Show scaling against both $\alpha$ and $m$.}
+\comment{Include figures for asymptotics against m and d.}
 
 %
 % Displacement-Key Encoding
@@ -4317,6 +4318,42 @@ The other obvious candidate is \emph{displacement-key encoding}, whereby random 
 where $\hat{D}_i(\alpha_i)$ is the displacement operator for the $i$th mode, with displacement amplitude $\alpha_i$, and $\vec\alpha$ and $\vec\beta$ are related according to Eq.~\ref{eq:betaUalpha}.
 
 Based upon this observation, if the unitary $\hat{U}$ were known to Alice (i.e no secrecy for Bob's algorithm, unfortunately), she could efficiently encode and decode her state, since determining $\vec\beta$ from $\vec\alpha$ requires only classically-efficient matrix multiplication (residing in \textbf{P}).
+
+The algorithm for implementing displacement-key homomorphic encryption is shown in Alg.~\ref{tab:homo_disp_LO}.
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\tt
+function HomomorphicDisplacementKeyEncoding($\ket\psi$):
+\begin{enumerate}
+    \item Alice prepares the $m$-mode state $\ket\psi$.
+    \item Alice chooses a set of independent complex displacement amplitudes as her private key,
+    \begin{align}
+    k=\{\alpha_1,\dots,\alpha_m\}.
+    \end{align}
+    \item Alice applies the displacements to each mode, yielding her encrypted state,
+    \begin{align}
+    \ket\psi_\mathrm{enc} = \left[\bigotimes_{i=1}^m \hat{D}_i(\alpha_i)\right] \ket\psi.
+    \end{align}
+    \item Alice sends the encrypted state to Bob.
+    \item Bob applies the computation $\hat{U}$,
+    \begin{align}
+    \ket\psi_\mathrm{enc\, comp} = \hat{U}\ket\psi_\mathrm{enc}.
+    \end{align}
+    \item Bob returns the computed state to Alice.
+    \item Alice calculates the inverse displacement amplitudes $\vec\beta$,
+    \begin{align}
+    \vec\beta = U\cdot\vec\alpha.
+    \end{align}
+    \item Alice applies the inverse displacements to each mode,
+    \begin{align}
+    \ket\psi_\mathrm{comp} &= \left[\bigotimes_{i=1}^m \hat{D}^\dag_i(\beta_i)\right] \ket\psi_\mathrm{enc\, comp} \nonumber \\
+    &= \hat{U}\ket\psi,
+    \end{align}
+    \item $\ket\psi_\mathrm{comp}$ is the computed output state.
+    \item $\Box$
+\end{enumerate}}}
+\caption{Protocol for implementing homomorphic encryption using displacement-key encoding.} \label{tab:homo_disp_LO}
+\end{table}
 
 Because performing the decoding operation requires solving the matrix multiplication problem to determine the decoding displacement amplitudes, this technique would obviously be inapplicable to encrypting, for example, coherent states, or other states which can be as efficiently classically simulated as matrix multiplication. Instead, it would only be relevant to linear optics sampling problems, which offer an exponential quantum speedup -- if performing the classical computation required for decryption is just as hard as performing the computation, Alice might as well do the computation herself!
 
