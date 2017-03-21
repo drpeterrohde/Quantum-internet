@@ -110,7 +110,7 @@ Quantum technologies are not just of interest to quantum physicists, but will ha
 
 A basic understanding of quantum mechanics \cite{bib:Sakurai94}, quantum optics \cite{bib:GerryKnight05}, quantum computing and quantum information theory \cite{bib:NielsenChuang00}, and classical networking \cite{bib:TanenbaumNet} are helpful, but not essential, to following our discussion. Some mathematical sections require a basic understanding of the mathematical notation of quantum mechanics. Although the reader without this background ought to be able to nonetheless follow the broader arguments.
 
-The entirely technically disinterested or mathematically incompetent reader may refer to just Secs.~\ref{sec:introduction}, \ref{sec:era_quant}, \ref{sec:economics}, \ref{sec:sec_imp} \& \ref{sec:vision_quant} -- essentially brief non-technical essays about the motivation, applications and implications of the quantum internet.
+The entirely technically disinterested or mathematically incompetent reader may refer to just Secs.~\ref{sec:introduction} \& \ref{sec:era_quant}-\ref{sec:vision_quant} -- essentially brief non-technical essays about the motivation, applications and implications of the quantum internet.
 
 This work is partially a review of existing knowledge relevant to quantum networking, and partially original ideas, to a large extent based on the adaptation of classical networking concepts and quantum information theory to the context of quantum networking. A reader with an existing background in these areas could calmly skip the respective review sections.
 
@@ -3974,6 +3974,59 @@ Of course, we have used the most simple model for modules, where each accommodat
 \end{figure}
 
 %
+% The Global Virtual Quantum Computer
+%
+
+\subsection{The global virtual quantum computer} \label{sec:marketplace}
+
+Suppose Alice and Bob both possessed expensive classical Cray\texttrademark\, supercomputers, both identical. They're both connected to the internet, so does it make sense to unify their computational resources over the network to construct a more powerful \emph{virtual machine}, which they subsequently time-share between themselves, or are they better off just using their own computers? If there were an asymmetry in demand for computational resources, it would make perfect sense to unify computational resources, so as to mitigate wasting precious clock-cycles. However, if they were both heavy users, always consuming every last clock-cycle, it would make no difference: for a given computation, Alice and Bob could each be allocated half the processing time of the virtual supercomputer that is twice as powerful; or, each could exploit the full processing time of their half-as-fast computers. In either case, the dollar cost of the computation is the same. This simple observation follows trivially from the linear relationship between processing power and the number of CPU's in a classical computer.
+
+More generally, in a networked environment where time-sharing of classical computational resources is applied equitably, proportionate to users' contribution to the network, the dollar cost per computation is (roughly) unaffected by the rest of the network. Instead, the motivation for networking computational resources is to improve efficiency by ensuring that clock-cycles are not wasted, but instead distributed according to demand by a scheduling algorithm, which could be market-driven, for example.
+
+However, as discussed in Sec.~\ref{sec:dist_QC}, the computational power of a quantum computer does not scale linearly with its number of qubits, but exponentially. This completely changes the economics, and market dynamics of networked quantum computers. Intuitively, we expect equitable time-sharing of unified quantum computational resources to offer more performance to all users than if they were to exclusively use their own resources in isolation.
+
+In Secs.~\ref{sec:dist_QC} \& \ref{sec:module} we introduced distributed and modularised quantum computation. Using this as a toy model, we will now investigate the market dynamics of uniting the quantum computational resources of multiple market participants.
+
+Let $t_i$ be the classical-equivalent runtime of a quantum algorithm comprising $n_i$ qubits, where $i$ denotes the user. The users are running quantum algorithms with classical-equivalent processing time that grows exponentially with the number of qubits. Then, for each user,
+\begin{align}
+t_i &= \alpha^{n_i},
+\end{align}
+where \mbox{$\alpha>1$} is a constant specific to the algorithm being deployed, and the computational model (e.g cluster states vs the circuit model).
+
+If a network of quantum computers were combined into a single, larger virtual computer, it would exhibit scaling,
+\begin{align}
+t_\mathrm{joint} = \alpha^{\sum_j n_j},
+\end{align}
+where $t_\mathrm{joint}$ is the classical-equivalent runtime of the joint quantum computation. The $i$th user is contributing the fraction of the hardware,
+\begin{align}
+r_i=\frac{n_i}{\sum_j n_j},
+\end{align}
+and it is only fair that he receive a corresponding share of the quantum processing time (which would also be enforced by arbitrage in a competitive market), which increases his classical-equivalent processing time to,
+\begin{align}
+\tau_i &= \frac{t_\mathrm{joint}}{r_i} \nonumber \\
+&= \alpha^{\sum_j n_j} \left(\frac{\sum_j n_j}{n_i}\right).
+\end{align}
+
+We are now interested to know whether the individual users are better off under this model than they were individually. Let us define the \emph{economic leverage} of a user's quantum computer to be the ratio between their time-shared and individual classical-equivalent processing times,
+\begin{align}
+\lambda_i &= \frac{\tau_i}{t_i} \nonumber \\
+&= \alpha^{\sum_{j\neq i} n_j} \left(\frac{\sum_j n_j}{n_i}\right).
+\end{align}
+Note that the economic leverage is strictly greater than unity. Thus, for any user, irrespective of the size of their quantum computer, they are better off joining the distributed network and claiming a time-share, than utilising only their own hardware.
+
+As a special case, consider a single user's leverage when joining the global network. Then,
+\begin{align}
+\lambda_\mathrm{user} = \alpha^{n_\mathrm{global}} \left(1+\frac{n_\mathrm{global}}{n_\mathrm{user}}\right),
+\end{align}
+and we see that the user gains economic leverage exponential in the size of the global network he is joining. Needless to say, the global network will also benefit from him joining the network, albeit with a far smaller exponential factor,
+\begin{align}
+\lambda_\mathrm{global} \approx \alpha^{n_\mathrm{user}},	
+\end{align}
+assuming \mbox{$n_\mathrm{global}\gg n_\mathrm{user}$}.
+
+This observation leads to the natural conclusion that it is always in the best interests of quantum computer operators to contribute their resources to the distributed global network and participate in time-sharing, rather than go it alone. It follows that in the interests of economic efficiency, market forces will ensure that future quantum computers will \emph{all} be networked into a single \emph{global virtual quantum computer}, providing exponentially greater computational power to all users than what they could have afforded on their own.
+
+%
 % Encrypted Quantum Computation
 %
 
@@ -4822,6 +4875,8 @@ It is clear that humanity already sits at the precipice of harnessing quantum te
 
 \section{The economics of the quantum internet} \label{sec:economics}
 
+\comment{Add discussion of global virtual QC and quantum singularity!}
+
 Quantum computers are highly likely to, at least initially, be extremely expensive, and affordable outright by few. Thus, client/server economic models based on outsourcing of computations to servers on a network, will be essential to making quantum computing widely accessible. The protocols we have presented here pave the way for this type of economic model to emerge. It is paramount that the types of technologies introduced here be fully developed in time for the deployment of useful quantum computing hardware, such that they can be fully commercialised from day one of their availability, enabling widespread adoption, enhanced economy of scale, and rapid proliferation.
 
 A key question regarding the economics of the quantum internet is the extent to which it will be able to piggyback off existing optical communications infrastructure, given that networking will almost inevitably be optically mediated. We have an existing intercontinental fibre-optic backbone, as well as sophisticated satellite networks. To what extent will this existing infrastructure (or future telecom/satellite infrastructure) be able to be exploited so as to avoid having to rebuild the entire future quantum internet infrastructure from scratch? This is a question worth tens of billions of dollars. We also need to factor in that given the massive driving force behind telecom technology, its cost is following a Moore's Law-like trajectory, and what costs a billion dollars today might cost a million dollars in a decade's time. In light of this, telecom wavelength quantum optics is being hotly pursued. And at the time of writing this paragraph, a world-leading Chinese experimental team has just successfully launched a QKD satellite into low Earth orbit \cite{???}, enabling intercontinental entanglement distribution and QKD, with talk of the next space race being the one for quantum supremacy \cite{???}.
@@ -4839,6 +4894,20 @@ Such an approach lends itself naturally to distributed computation, where module
 By having a standardised architecture for optically interconnecting modules, we also somewhat `future-proof' our hardware investment -- if interfacing modules is standardised, existing hardware can be fully compatible with newer, more capable module versions. We might envision the emergence of open standards on optical interconnects.
 
 On the other hand, if quantum computers were only ever sold as specialised, room-sized, all-in-one solutions (think D-Wave), such mass production would not experience the driving force of commodified, off-the-shelf building blocks, each of which is cheap, yet frugal in its computational power alone.
+
+%
+% The Quantum Singularity
+%
+
+\section{The quantum singularity} \label{sec:singularity}
+
+Since there is positive economic leverage to all participating parties, this creates a self-reinforcing economic model, whereby all market participants are incentivised to continue contributing to the network, exponentially enhancing its collective power, with ever increasing returns over time.
+
+Once we reach the point at which the economic returns of the global virtual quantum computer outweigh the costs of maintaining the quantum internet and the participating quantum computers, we will have reached the \emph{quantum singularity} -- a point of no return with self-reinforcing exponential growth.
+
+\emph{--- Adiuva nos Deus.}
+
+\comment{To do!}
 
 %
 % Security Implications of the Global Quantum Internet
