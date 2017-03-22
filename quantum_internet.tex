@@ -2464,7 +2464,7 @@ Much of the recent experimental progress in quantum technology has been in the a
 
 We keep in mind that although throughout this presentation we have been very quantum computing-centric, quantum computing is not the \emph{only} quantum resource worth communicating. In the same way that \emph{digital assets} encompass a broad range of digital systems and information, any aspect of a quantum system -- from a state, to an operation, storage, to a measurement, or anything else -- could be treated as a \emph{quantum asset}, which, for generality, we would like our quantum networks to be able to handle.
 
-At the lowest physical level, quantum protocols have in common that they involve state preparation, evolution, and measurement as the fundamental primitives upon which more complex protocols are constructed. We consider these primitive resources in detail, before building upon them to consider some of the major elementary quantum protocols that implement tasks of practical interest. All of those discussed here have been subject to extensive experimental investigation and demonstration, which will be summarised in Sec.~\ref{sec:state_of_the_art}.
+At the lowest physical level, quantum protocols have in common that they involve state preparation, evolution, and measurement as the fundamental primitives upon which more complex protocols are constructed. We consider these primitive resources in detail, before building upon them to consider some of the major elementary quantum protocols that implement tasks of practical interest. All of those discussed here have been subject to extensive experimental investigation and demonstration, which will be summarised in Sec.~\ref{sec:state_of_the_art}. We treat full quantum computation separately in Secs.~\ref{sec:models_QC} \& \ref{sec:archs_QC}, as this is such an involved topic in its own right.
 
 %
 % State Preparation
@@ -3394,225 +3394,35 @@ To couple with a polarisation-encoded photonic qubit, a PBS can be employed to s
 \caption{Coupling a polarisation-encoded photonic qubit to a pair of atomic ensembles, each of which corresponds to one of the qubit's logical basis states ($\ket{0}$ or $\ket{1}$). The horizontal and vertical components of the photonic qubit are spatially separated using a PBS, which subsequently independently interface with distinct atomic ensembles via collective excitation.} \label{fig:atomic_ensemble_qubit}
 \end{figure}
 
-Atomic ensembles have been proposed as quantum memories, given their long coherence lifetime. Additionally, a protocol for universal cluster state quantum computation based upon atomic ensemble qubits has been described \cite{bib:RohdeAtEns10}. \comment{Add atomic ensemble refs! Get from Barrett, Rohde, Stace paper}
+Atomic ensembles have been proposed as quantum memories, given their long coherence lifetime. Additionally, a protocol for universal cluster state quantum computation (Sec.~\ref{sec:CSQC}) based upon atomic ensemble qubits has been described \cite{bib:RohdeAtEns10}. \comment{Add atomic ensemble refs! Get from Barrett, Rohde, Stace paper}
 
 %
-% Cloud Quantum Computing
+% Models For Quantum Computation
 %
 
-\section{Cloud quantum computing} \label{sec:cloud}
-
-From the perspective of quantum computing, by far the most pressing goal for quantum networking is to facilitate \emph{cloud quantum computing}, whereby computations can be performed over a network via a client/server model. This will be of immense importance economically, allowing very expensive quantum computers to be accessible to end-users, who otherwise would have been priced out of the market. This economic model is critical to the early widespread adoption of quantum computation.
-
-There are several protocols necessary to facilitate cloud quantum computing. First of all, we must have a means by which to remotely process data prepared by a host on a server(s). At the most basic level, this simply involves communicating quantum and/or classical data from a client to a single server for processing, which returns quantum or classical information to the client. In the most general case, a computation may be processed by multiple servers, each responsible for a different part of the computation -- \emph{distributed quantum computation}.
-
-Many real-world applications for quantum computing will involve sensitive data, in terms of both the information being processed and the algorithms being employed. This necessitates encryption protocols allowing computations to be performed securely over a network, such that intercept-resend attacks are unable to infer the client's data, and even the host itself is unable to do so -- \emph{homomorphic encryption} and \emph{blind quantum computing}. These form the basic building blocks from which a secure cloud-based model for quantum computing may be constructed, and economic models based on the outsourcing of computations may emerge.
+\section{Models for quantum computation} \label{sec:models_QC}
 
 %
-% Outsourced Computation
+% Circuit Model
 %
 
-\subsection{Outsourced quantum computation}
+\subsection{Circuit model}
 
-Most simply, an outsourced computation involves Alice preparing either a quantum or classical input state, which she would like processed on Bob's computer. Bob performs the computation and returns either a quantum or classical state to Alice.
+The \emph{circuit model} is the conventional and intuitive approach for expressing quantum algorithms, decomposing algorithms into sequences of elementary gates from a universal gate set.
 
-The algorithm, which Bob implements, could either be stipulated by Alice, in which case she is purely licensing Bob's hardware, or by Bob, in which case she is licensing his hardware and software. In the case of classical input and classical output, such an outsourced computation is trivial from a networking perspective, requiring no usage of the quantum network whatsoever. In the case of quantum input and/or output data, the quantum network will be required.
-
-Despite the model being very simple, there may still be stringent requirements on the costs in the network. When the result of the computation is returned to Alice, there may be fidelity requirements. An approximate solution to a problem, or a computation with any logical errors whatsoever, may be useless, particularly for algorithms, which are not efficiently verifiable. For example, if Alice is attempting to factorise a large number using Shor's algorithm, a number of incorrect digits may make the the correct solution effectively impossible to determine. Or if a large satisfiability problem is being solved, almost any classical bit-flip errors will invalidate the result, requiring additional computation by Alice to resolve (which may be exponentially complex to perform).
-
-In the case of classical communication of input and output data, we can reasonably assume error-free communication, owing to its digital nature. However, in the case of quantum communication it is inevitable that at least some degree of noise will be present. Depending on the application, this may require the client and host to jointly implement a distributed implementation of QEC (Secs.~\ref{sec:QOS} \& \ref{sec:topol_codes}), whereby Alice and Bob communicate encoded states with one another, to which syndrome measurement and error correction are applied upon receipt. This will necessitate a limited amount of quantum processing to be directly available to Alice. In the case where she is completely starved of any quantum processing resources whatsoever, this may be a limiting factor. Otherwise, this type of cooperative QEC may be plausible.
-
-%
-% Distributed Computation
-%
-
-\subsection{Distributed quantum computation} \label{sec:dist_QC}
-
-The elementary model described above is very limited, as many realistic data processing applications will require multiple stages of computations to be performed, potentially by different hosts. For example, a client may need data processed using multiple proprietary algorithms owned by different hosts, and the processing will need to be distributed across the network \cite{bib:Cirac99}.
-
-There are two main models for how a distributed computation may proceed -- in \emph{parallel}, or in \emph{series} -- whereby sub-algorithms are performed either side-by-side simultaneously, or one after another in a pipeline. The two models are illustrated in Fig.~\ref{fig:distributed}.
+\comment{To do} Fig.~\ref{fig:eg_circuit}
+\cite{bib:NielsenChuang00}
 
 \begin{figure}[!htb]
-\includegraphics[width=\columnwidth]{distributed}
-\caption{Models for distributed computation in parallel and in series. In parallel, a root node oversees the total computation, delegating tasks to child nodes, which process data independently of one another. In series the nodes sequentially process data in a pipeline of algorithmic stages.} \label{fig:distributed}
+\begin{align}
+\Qcircuit @C=.7em @R=.4em @! {
+\lstick{\ket{\psi_1}} & \qw & \qw & \ctrl{1} & \gate{Y} & \meter & \control \cw\\
+\lstick{\ket{\psi_2}} & \qw & \targ & \targ & \qw & \meter & \cwx\\
+\lstick{\ket{\psi_3}} & \gate{H} & \ctrl{-1} & \qw & \qw & \gate{X} \cwx & \gate{Z} \cwx & \rstick{\ket{\phi}} \qw
+} \nonumber
+\end{align}
+\caption{Simple example of a quantum circuit, comprising several quantum gates and measurements. Rows represent qubits, and time flows from left to right.} \label{fig:eg_circuit}
 \end{figure}
-
-Classical parallel processing typically involves a root node, which delegates tasks to be performed in parallel by a number of child nodes, and the results returned to the root node, which potentially applies an algorithm to merge the set of results, before returning a final result to the client. Classical models such as Google's {\sc MapReduce} protocol \cite{bib:MapReduce} are built on this idea.
-
-In classical computing, parallel processing is widely employed to shorten algorithmic runtimes. However, the increase in clock-cycles scales only linearly with the number of nodes in the network: $k$-fold parallelisation yields a \mbox{$\sim k$}-fold speedup. For time-critical applications, such a linear improvement may be already highly beneficial, albeit costly. The attractive feature of quantum computing, however, is the potentially exponential improvement in algorithmic performance of certain tasks over their classical counterparts. This exponential relationship implies that parallelisation in general no longer has a simple linear tradeoff.
-
-Let $t_c$ be the time required by a classical algorithm to solve a given problem, and $t_q$ the time required to solve the same problem using a quantum algorithm. In the case of algorithms exhibiting exponential quantum speedup, we will have,
-\begin{align}
-t_c = O(\mathrm{exp}(t_q)).
-\end{align}
-If we now increase the quantum processing power $k$-fold, the equivalent classical processing time is (in the best case),
-\begin{align}
-t_c' &= O(\mathrm{exp}(t_q k)) \nonumber \\
-&= O(\mathrm{exp}(t_q)^{k}) \nonumber \\
-&= O({t_c}^{k}).
-\end{align}
-Thus, $k$-fold quantum enhancement corresponds to a $k$th-order exponential enhancement in the equivalent classical processing time, which clearly scales much more favourably than the linear $k$-fold enhancement offered by classical parallelisation.
-
-The alternate scenario is in-series distributed computation, in which a computation proceeds through a pipeline of different stages, potentially performed by different hosts. This model allows a complex algorithm comprising smaller subroutines, each of which may be proprietary with different owners, to be delegated across the network. The different stages may communicate classical and/or quantum data. As with the simple single-host model, if the different stages of the processing pipeline are sharing quantum data, distributed QEC will generally be necessary to protect the computation in transit. This necessarily introduces an (efficient) overhead in the number of physical qubits being communicated across the network, introducing additional bandwidth costs, which must be accommodated for in networking strategies.
-
-The cluster state (Sec.~\ref{sec:CSQC}), topological code (Sec.~\ref{sec:topol_codes}) and quantum random walk (Sec.~\ref{sec:QW}) models for quantum computation may find themselves to be particularly well-suited to distributed implementation, since they naturally reside on graphs, whose nodes needn't be held locally by a single user, but could instead be shared across multiple hosts with the ability for graph nodes to intercommunicate.
-
-%
-% Delegated Quantum Computation
-%
-
-\subsection{Delegated quantum computation}
-
-Taking the notions of outsourced and distributed quantum computation to the logical extreme, we can envisage the situation where Alice has no quantum resources whatsoever (state preparation, evolution or measurement), but knows exactly what the processing pipeline should entail, and who on the network has the different required quantum resources. We refer to this as \emph{delegated} quantum computation, where the entire processing pipeline is outsourced to a series of hosts.
-
-To illustrate this, let us consider a simple example -- cat state quantum computation (Sec.~\ref{sec:cat_enc}). There are three main elements to the protocol:
-\begin{enumerate}
-\item Cat state preparation.
-\item Post-selected linear optics with feedforward.
-\item Continuous variable measurement.
-\end{enumerate}
-
-Each of these stages present their own technological challenges, sufficiently challenging that one might wish to outsource all three stages. However, suppose there is no single host on the network with the ability to perform all three, but rather there are three hosts ($B_1$, $B_2$ and $B_3$), each specialising in just one of those tasks. In this instance, it would be most resource savvy for the network to implement the pipeline \mbox{$A\to B_1\to B_2\to B_3\to A$}, without going back and forth to Alice after each step (\mbox{$A\to B_1\to A\to B_2 \to A\to B_3\to A$}). In fact, it may not even be technologically possible to implement back-and-forth to Alice if she has no capacity for handling quantum resources (i.e the \mbox{$A\leftrightarrow B$} stages are purely classical). An example of such a pipeline is shown in Fig.~\ref{fig:delegated}.
-
-\begin{figure}[!htb]
-\includegraphics[width=\columnwidth]{delegated}
-\caption{Delegated quantum computation, where each of the three computational stages (state preparation, evolution and measurement) are outsourced to the cloud without intermittent interaction with the client, $A$. $A$ provides only a classical description of the processing pipeline to be implemented, each stage of which is delegated to a server specialised in that particular task. Thus, the total processing pipeline takes the form \mbox{$A\to B_1\to B_2\to B_3\to A$}, where \mbox{$A\to B_1$} and \mbox{$B_3\to A$} are classical, and \mbox{$B_1\to B_2$} and \mbox{$B_2\to B_3$} are quantum channels.} \label{fig:delegated}
-\end{figure}
-
-This can be achieved by adding a {\sc Pipeline} field to the packet header prepared by Alice -- a FIFO queue describing the entire processing pipeline that Alice's packet (which initially contains only classical data) ought to follow through the network. Following completion of each stage of the pipeline we pop the stack and transmit the packet to the next specified host. \comment{That is, we add a line ??? to the transport layer algorithm (Alg.~\ref{???})}. Only at the very completion of the protocol is a packet (containing only classical data) returned to Alice.
-
-Another good case study is quantum metrology using NOON states (Secs.~\ref{sec:NOON} \& \ref{sec:metrology}) for Heisenberg limited metrology. Preparing NOON states is extremely challenging, and additionally Alice may not possess the unknown phase to be measured, but rather wishes a NOON state, prepared by $B_1$, to be provided to a third party, $B_2$, who applies the unknown phase, and passes the resulting state to $B_3$, who implements the required high-efficiency parity measurements required to complete the protocol. In this case, the pipeline would take the same form as above, again with no back-and-forth communication to Alice.
-
-Such delegated protocols will be very useful in quantum networks, where different hosts specialise in different tasks (which may be the most economically efficient model), but poor old Alice specialises in none of them, despite knowing exactly what needs to be done. This would allow an aspiring undergraduate student, who is poor (aren't they all?), to sit in his bedroom at his classical PC, and implement entire distributed quantum information processing protocols in the cloud, with no quantum resources or interactions whatsoever.
-
-%
-% Modularised Quantum Computation
-%
-
-\subsection{Modularised quantum computation} \label{sec:module}
-
-How does one build a large-scale quantum computer, given the extremely daunting technological requirements and high costs? In any industry, economies of scale allow the mass production, and rapid reduction in price of technology. To achieve this, we must find a way to make quantum technologies commodity items, which avoid all the hassle of customised cutting-edge labs. What we really desire is production-line `Lego for Adults{\texttrademark}', allowing ad hoc connection of \emph{modules}, which implement small subsections of a large computation \cite{bib:FowlerPrivate}.
-
-We envisage that physically, a module is a black box with optical interconnects, that may be interconnected to form an arbitrary topology. The user remains oblivious to the inner workings of the modules. The modules could all be identical, just patched together differently, paving the way for their mass production, and an associated quantum equivalent of Moore's Law, allowing them to become off-the-shelf commodity items over time. Then the cost of a quantum computer would simply scale linearly with its number of qubits.
-
-The modules forming a particular computation could either be all owned by a single well-resourced operator, or alternately might be shared across multiple hosts, who network them remotely using EO's between emitted photons.
-
-In Sec.~\ref{sec:dist_QC} we introduced the notion of distributed quantum computation. There the motivation was to enable a computation to be distributed across multiple servers, which either parallelise computation or process it as a pipeline in series.
-
-An alternate direction, for economic reasons, is that it is unviable for a single server to host an entire computation. Rather, hosts will have limited capability, and performing large-scale computations will require employing a potentially large number of hosts cooperating and sharing resources with one another\footnote{Even some present-day massive-scale data processing and storage protocols are implemented virtually across multiple large-scale data-centres, which, for example, automatically handle geographically decentralised data redundancy and processing. Google and Amazon, for example, provide cloud services for this purpose, employed both internally, and licensed out to third parties, and the Apache Cassandra project provides an open-source equivalent. The key is for the underlying protocol to abstract this away from the user, such that they interface with the data as though it were a local asset.}. This can be regarded as the most general incarnation of distributed computation.
-
-This is not the same motivation as for in-series computation, where different servers in the pipeline have different proprietary algorithms as subroutines of a larger computation. And it also differs from in-parallel computation, where multiple servers implement the same algorithm on different data, which is subsequently merged by a root node, as per, for example, a {\sc MapReduce}-style protocol.
-
-Instead, the motivation is one of economics. First, individual servers will have finite resources, but there may be many of them, which can be networked to implement a larger algorithm virtually. Second, because the modules in the architecture are identical and lend themselves to mass production, one can expect more favourable economics than that offered by a provider who sells full-fledged, customised quantum computers, which do not lend themselves to the same level of mass production.
-
-The concept of this model is best explained using the optical cluster state formalism (Sec.~\ref{sec:CSQC}), which lends itself naturally to this approach. A rectangular lattice graph is sufficient for universal quantum computation, even if the cluster state graph is not local (but classical communication between nodes is allowed).
-
-Let us first assume that we wish to construct a cluster state with $n_\mathrm{logical}$ logical qubits. We additionally allow each logical qubit to be the root node of a graph with a $+$-structure, where each branch comprises a chain of $n_\mathrm{ancilla}$ ancillary physical qubits. These are sometimes referred to as \emph{micro-clusters} \cite{bib:Nielsen04}. A single micro-cluster collectively forms a single \emph{module} in the topology. Our goal is to fuse modules via nearest neighbour entanglement to build up the desired distributed cluster state.
-
-\begin{figure}[!htb]
-\includegraphics[width=0.9\columnwidth]{cluster_ident}
-\caption{Several cluster state identities for modularised quantum computation. (a) Two cluster states with a $+$-topology are fused together using an EO (dashed). (b) Upon success, an edge is created between the respective qubits. (c) Upon failure, both qubits are effectively measured in the $\hat{Z}$ basis, thereby removing them, and any associated edges, from the graph. (d) Following a successful EO, the unwanted ancillary qubits may be eliminated using measurements in the $\hat{Y}$ basis, creating edges between their neighbours. If the grey qubits represent the desired logical qubits, this can be used to remove the remainder of the branches emanating from them, thereby distilling the irregular graph down to a regular lattice.} \label{fig:plus_cluster_ident}
-\end{figure}
-
-We arrange the modules to internally represent a $+$-topology where each node has neighbouring branches in each of the up/down/left/right directions. But we imagine the situation whereby each logical qubit, along with its respective ancillary branches, is held by a different server. Thus, the final cluster state is truly decentralised across all the servers, and in general entire computations cannot be performed locally.
-
-Using the ancillary states in the respective directions, we attempt to fuse neighbouring clusters using entangling operations (EO's), such as CZ gates (e.g a KLM CZ gate), linear optics \emph{fusion gates} (i.e rotated polarising beamsplitters followed by photo-detection) \cite{bib:BrowneRudolph05}, or atoms with a $\lambda$-configuration coupled to photons \cite{bib:BarrettKok05}, which undergo which-path erasure (Sec.~\ref{sec:hybrid}). Importantly, using the fusion gate and which-path erasure approaches, only a single beamsplitter is required to perform the EO, which only necessitates high-visibility HOM interference, mitigating the need for far more challenging interferometric (MZ) stability. This is delightful, as current leading quantum optics experiments routinely achieve HOM visibilities well in excess of 99\% \cite{???}.
-
-An alternate fusion strategy is not to directly communicate qubits to be bonded, but instead rely off Bell-pairs provided by a central authority. Each party then applies an EO between their half of the Bell-pair and their target module qubit, which swaps the Bell-pair entanglement onto the two respective module qubits (Sec.~\ref{sec:swapping}).
-
-When an EO is successful, we have fused two modules together, albeit potentially with some leftover ancillary states between the logical qubits. When it fails, we have lost the respective ancillary states, and we attempt again using the next ancillary qubits in each of the the respective branches -- a kind of {\sc Repeat Until Success} strategy. The bonding only fails if all $n_\mathrm{ancilla}$ EO's fail.
-
-Note, however, that longer ancillary arms provide more opportunity for errors to accumulate \cite{bib:RohdeRalphMunro07}. Thus, despite its tolerance against gate failure, it is nonetheless highly desirable for EO's to be as deterministic as possible, so as to minimise the required number of ancillary qubits.
-
-Upon successful bonding, any remaining ancillary qubits between the respective logical qubits are measured in the $\hat{Y}$ basis to remove them from the graph, whilst connecting their neighbours, leaving the two respective logical qubits as nearest neighbours in the graph. Now each module contains exactly one logical qubit, connected as desired to neighbouring modules. The relevant identities are shown in Fig.~\ref{fig:plus_cluster_ident}. Our goal is for the entire graph to have a lattice structure, once ancillary qubits have been measured out, as illustrated in Fig.~\ref{fig:module}.
-
-\begin{figure}[!htb]
-\includegraphics[width=0.8\columnwidth]{module}
-\caption{The modularised approach to scalable and economically efficient, distributed quantum computation using cluster states. The modules are all identical, and can be arbitrarily patched to one another, allowing the construction of arbitrary graph topologies. Because the modules are all identical, one might hope that mass production and economy of scale will drive down the cost of modules. We consider a simple \mbox{$2\times 2$} case where each module (rounded rectangles) comprises a single logical qubit (centre of each module in grey) and a number of ancillary qubits (white in each module), which facilitate bonding the logical qubits of nearest neighbours. The preparation of the modules is performed via nearest neighbour EO's (dashed ellipses), beginning at the end of branches, and working towards the root node upon each failure, until (hopefully) an EO is successful. (a) A \mbox{$2\times 2$} lattice of modules with their respective ancillary qubits. We attempt to bond the endpoints of chains using EO's. (b) Upon measuring the remaining ancillary qubits in the $\hat{Y}$ basis, only the logical qubits remain, with nearest neighbour bonds between adjacent modules, creating a distributed cluster state.} \label{fig:module}
-\end{figure}
-
-This approach has been shown to be resource-efficient \cite{bib:YoranReznik03, bib:Nielsen04}. Let us perform a rudimentary analysis of the resource scaling of this type of approach. The probability of successfully creating an edge between two modules is,
-\begin{align}
-p_\mathrm{success} = 1 - {p_\mathrm{failure}}^{n_\mathrm{ancilla}},
-\end{align}
-where $p_\mathrm{success}$ is the probability of joining two modules, $p_\mathrm{failure}$ is the probability that a single EO fails, and $n_\mathrm{ancilla}$ is the number of ancillary qubits per chain. $p_\mathrm{success}$ can be made arbitrarily close to unity with sufficiently long ancillary chains, the required length of whom scales as,
-\begin{align}
-n_\mathrm{ancilla} = \frac{\mathrm{log}(1-p_\mathrm{success})}{\mathrm{log}(p_\mathrm{failure})}.
-\end{align}
-
-Now, for simplicity we will consider the preparation of linear cluster states, although these ideas can easily be extended to more complex topologies, such as 2D lattice graphs.
-
-Let us assume we have a `primary' linear topology of modules, which we will incrementally attempt to `grow' by tacking on new modules to the end. When we do so, with probability $p_\mathrm{success}$ we grow the length of the primary by 1, otherwise we decrement it by 1. This proceeds as a random walk, with on average \mbox{$2p_\mathrm{success}-1$} new qubits added to the primary per time-step. Provided this number is positive, i.e \mbox{$p_\mathrm{success}>1/2$}, which can always be achieved with sufficient $n_\mathrm{ancilla}$, the length of the primary grows linearly over time, allowing efficient state preparation.
-
-This is just a very primitive model for preparing linear cluster states, using an equally primitive {\sc Incremental} strategy for constructing them using non-deterministic gates. As discussed in Sec.~\ref{sec:CSQC}, much further work has been performed on the resource scaling of efficiently preparing cluster states of different graph topologies using different non-deterministic bonding strategies.
-
-Of course, we have used the most simple model for modules, where each accommodates a single logical qubit. In due course, we would expect commodity modules to become far more capable, and resource scaling to improve. We might envisage that each module houses a small square lattice of logical qubits, as shown in Fig.~\ref{fig:larger_module}, and the interconnects between them glue them together like a patchwork quilt.
-
-\begin{figure}[!htb]
-\includegraphics[width=0.6\columnwidth]{larger_module}
-\caption{A larger cluster state module comprising a \mbox{$3\times 3$} lattice of logical qubits (grey), and dangling arms of ancillary qubits (white) in each direction for joining them to neighbouring modules. Fusing these modules enables the `patchwork' preparation of large, distributed lattices.} \label{fig:larger_module}
-\end{figure}
-
-%
-% The Global Virtual Quantum Computer
-%
-
-\subsection{The global virtual quantum computer} \label{sec:marketplace}
-
-Suppose Alice and Bob both possessed expensive classical Cray\texttrademark\, supercomputers, both identical. They're both connected to the internet, so does it make sense to unify their computational resources over the network to construct a more powerful \emph{virtual machine}, which they subsequently time-share between themselves, or are they better off just using their own computers? If there were an asymmetry in demand for computational resources, it would make perfect sense to unify computational resources, so as to mitigate wasting precious clock-cycles. However, if they were both heavy users, always consuming every last clock-cycle, it would make no difference: for a given computation, Alice and Bob could each be allocated half the processing time of the virtual supercomputer that is twice as powerful; or, each could exploit the full processing time of their half-as-fast computers. In either case, the dollar cost of the computation is the same. This simple observation follows trivially from the linear relationship between processing power and the number of CPU's in a classical computer.
-
-More generally, in a networked environment where time-sharing of classical computational resources is applied equitably, proportionate to users' contribution to the network, the dollar cost per computation is (roughly) unaffected by the rest of the network. Instead, the motivation for networking computational resources is to improve efficiency by ensuring that clock-cycles are not wasted, but instead distributed according to demand by a scheduling algorithm, which could be market-driven, for example.
-
-However, as discussed in Sec.~\ref{sec:dist_QC}, the computational power of a quantum computer does not scale linearly with its number of qubits, but exponentially. This completely changes the economics, and market dynamics of networked quantum computers. Intuitively, we expect equitable time-sharing of unified quantum computational resources to offer more performance to all users than if they were to exclusively use their own resources in isolation.
-
-In Secs.~\ref{sec:dist_QC} \& \ref{sec:module} we introduced distributed and modularised quantum computation. Using this as a toy model, we will now investigate the market dynamics of uniting the quantum computational resources of multiple market participants.
-
-Let $t_i$ be the classical-equivalent runtime of a quantum algorithm comprising $n_i$ qubits, where $i$ denotes the user. The users are running quantum algorithms with classical-equivalent processing time that grows exponentially with the number of qubits. Then, for each user,
-\begin{align}
-t_i &= \alpha^{n_i},
-\end{align}
-where \mbox{$\alpha>1$} is a constant specific to the algorithm being deployed, and the computational model (e.g cluster states vs the circuit model).
-
-If a network of quantum computers were combined into a single, larger virtual computer, it would exhibit scaling,
-\begin{align}
-t_\mathrm{joint} = \alpha^{\sum_j n_j},
-\end{align}
-where $t_\mathrm{joint}$ is the classical-equivalent runtime of the joint quantum computation. The $i$th user is contributing the fraction of the hardware,
-\begin{align}
-r_i=\frac{n_i}{\sum_j n_j},
-\end{align}
-and it is only fair that he receive a corresponding share of the quantum processing time (which would also be enforced by arbitrage in a competitive market), which increases his classical-equivalent processing time to,
-\begin{align}
-\tau_i &= \frac{t_\mathrm{joint}}{r_i} \nonumber \\
-&= \alpha^{\sum_j n_j} \left(\frac{\sum_j n_j}{n_i}\right).
-\end{align}
-
-We are now interested to know whether the individual users are better off under this model than they were individually. Let us define the \emph{economic leverage} of a user's quantum computer to be the ratio between their time-shared and individual classical-equivalent processing times,
-\begin{align}
-\lambda_i &= \frac{\tau_i}{t_i} \nonumber \\
-&= \alpha^{\sum_{j\neq i} n_j} \left(\frac{\sum_j n_j}{n_i}\right).
-\end{align}
-Note that the economic leverage is strictly greater than unity. Thus, for any user, irrespective of the size of their quantum computer, they are better off joining the distributed network and claiming a time-share, than utilising only their own hardware.
-
-As a special case, consider a single user's leverage when joining the global network. Then,
-\begin{align}
-\lambda_\mathrm{user} = \alpha^{n_\mathrm{global}} \left(1+\frac{n_\mathrm{global}}{n_\mathrm{user}}\right),
-\end{align}
-and we see that the user gains economic leverage exponential in the size of the global network he is joining. Needless to say, the global network will also benefit from him joining the network, albeit with a far smaller exponential factor,
-\begin{align}
-\lambda_\mathrm{global} \approx \alpha^{n_\mathrm{user}},	
-\end{align}
-assuming \mbox{$n_\mathrm{global}\gg n_\mathrm{user}$}.
-
-This observation leads to the natural conclusion that it is always in the best interests of quantum computer operators to contribute their resources to the distributed global network and participate in time-sharing, rather than go it alone. It follows that in the interests of economic efficiency, market forces will ensure that future quantum computers will \emph{all} be networked into a single \emph{global virtual quantum computer}, providing exponentially greater computational power to all users than what they could have afforded on their own.
-
-%
-% Architectures For Cloud Quantum Computing
-%
-
-\section{Architectures for cloud quantum computing}
-
-\comment{To do. We will focus on optical architectures and ones which can be optically interfaced for the purposes of networking.}
 
 %
 % Cluster States
@@ -3620,7 +3430,7 @@ This observation leads to the natural conclusion that it is always in the best i
 
 \subsection{Cluster states} \label{sec:CSQC}
 
-The \emph{circuit model} is the conventional and intuitive approach for expressing quantum algorithms, decomposing algorithms into sequences of elementary gates from a universal gate set. However, the \emph{cluster state} model for quantum computation \cite{bib:Raussendorf01, bib:Raussendorf03, bib:Nielsen06} (also referred to as the \emph{one-way}, \emph{measurement-based}, or \emph{graph state} models for quantum computation) is an extremely powerful, yet conceptually distinct paradigm, that warrants treatment of its own, owing to its significant distinction from the more familiar circuit model, and its applicability to distributed models for quantum computation.
+The \emph{cluster state} model for quantum computation \cite{bib:Raussendorf01, bib:Raussendorf03, bib:Nielsen06} (also referred to as the \emph{one-way}, \emph{measurement-based}, or \emph{graph state} models for quantum computation) is an extremely powerful paradigm that warrants treatment of its own, owing to its significant distinction from the more familiar circuit model, and its applicability to distributed models for quantum computation to be discussed in Sec.~\ref{sec:dist_QC}.
 
 In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \emph{cluster state} or \emph{graph state}. The state is associated with a graph, $G=(V,E)$, of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation\footnote{Note that the graph upon which a cluster state resides is not to be confused with the network graph. Rather it is just a convenient graphical representation for a class of multi-qubit states.}. That is, they act as a `substrate' for implementing arbitrary quantum computations.
 
@@ -3642,12 +3452,22 @@ An example is presented in Fig.~\ref{fig:cluster_state}. Cluster states are easi
 
 \begin{figure}[!htb]
 \includegraphics[width=0.6\columnwidth]{cluster_state}
-\caption{Example of a \mbox{$4\times 3$} rectangular lattice cluster state. Each vertex in the graph represents a qubit initialised into \mbox{$\ket{+}=\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$}. Edges represent the application of CZ gates between qubits (CZ gates commute, so the order is unimportant). Of sufficient dimension, states of this topology enable universal measurement-based quantum computation, whereby computation proceeds purely via single-qubit measurements, and all entangling operations have been commuted to the state preparation stage. Because CZ gates commute, the preparation of cluster states is time-independent, and easily implemented in a distributed or parallelised manner.} \label{fig:cluster_state}
+\caption{Example of a \mbox{$4\times 3$} rectangular lattice cluster state. Each vertex in the graph represents a qubit initialised into \mbox{$\ket{+}=\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$}. Edges represent the application of CZ gates between qubits (CZ gates commute, so the order is unimportant). Of sufficient dimension, states of this topology enable universal measurement-based quantum computation, whereby computation proceeds purely via single-qubit measurements, and all entangling operations have been commuted to the state preparation stage. Because CZ gates commute, the preparation of cluster states is time-independent, and easily implemented in a distributed or parallelised manner. The time-ordering of the single-qubit measurements is dependent on the structure of the graph and the algorithm.} \label{fig:cluster_state}
 \end{figure}
 
 Having prepared this state, the computation is implemented purely via a well-orchestrated routine of single-qubit measurements. The order and basis in which they are performed (which depends on previous measurement outcomes in general -- i.e we require fast-feedforward) then stipulates the computation. In the context of distributed computation, this requires classical communication between nodes.
 
 It is easily shown that this model may be directly mapped to the circuit model, and is therefore universal for quantum computation.
+
+\begin{figure}[!htb]
+\begin{align}
+\Qcircuit @C=.7em @R=.4em @! {
+\lstick{\ket{\psi}} & \ctrl{1} & \gate{H} & \meter & & \\
+\lstick{\ket{+}} & \ctrl{0} & \qw & \gate{X} \cwx & \gate{H} & \rstick{\ket\psi} \qw \\
+} \nonumber
+\end{align}
+\caption{The single-qubit teleporter, based upon a controlled-phase (CZ) gate, a single-qubit measurement, and classical feedforward. \comment{Check! Add to text!}} \label{fig:single_qubit_teleporter}
+\end{figure}
 
 The distinctive feature of this model is that all the entangling CZ gates are performed at the very beginning of the protocol, during the state preparation stage. The algorithm itself is purely measurement-based, requiring only single-qubit measurements (no entangling measurements).
 
@@ -3716,6 +3536,14 @@ The simplest example of error detection is the scenario where a single bit-flip 
 Importantly, the stabilisers are all defined over geometrically localised neighbourhood regions, and do not require long-range measurements, making this type of code suitable to distributed models for quantum computation.
 
 \comment{What about the actual computation? Can this still be distributed when we do the topological gates etc?}
+
+%
+% Physical Architectures For Quantum Computing
+%
+
+\section{Physical architectures for quantum computing} \label{sec:archs_QC}
+
+\comment{To do. We will focus on optical architectures and ones which can be optically interfaced for the purposes of networking.}
 
 %
 % Universal Linear Optics Quantum Computing
@@ -3950,7 +3778,7 @@ Equivalently, this could simply be expressed as the matrix equation,
 
 Of course this is not strictly a \emph{quantum} computation, since:
 \begin{itemize}
-\item It can be efficiently classically computed using $O(m^2)$ operations\footnote{Using the na\"ive element-wise approach, which can be further improved upon using more sophisticated algorithms.}, thus residing in \textbf{P}.
+\item It can be efficiently classically computed using $O(m^2)$ operations\footnote{Using the na\"ive element-wise approach, which can be further improved upon using more sophisticated contemporary algorithms.}, thus residing in \textbf{P}.
 \item Coherent states are considered classical states (i.e laser light).
 \item There is no entanglement between modes.
 \item The algorithm offers no quantum speedup.
@@ -4037,6 +3865,216 @@ which is a Bell-pair between the matter qubits.
 \end{table}
 
 %
+% Cloud Quantum Computing
+%
+
+\section{Cloud quantum computing} \label{sec:cloud}
+
+From the perspective of quantum computing, by far the most pressing goal for quantum networking is to facilitate \emph{cloud quantum computing}, whereby computations can be performed over a network via a client/server model. This will be of immense importance economically, allowing very expensive quantum computers to be accessible to end-users, who otherwise would have been priced out of the market. This economic model is critical to the early widespread adoption of quantum computation.
+
+There are several protocols necessary to facilitate cloud quantum computing. First of all, we must have a means by which to remotely process data prepared by a host on a server(s). At the most basic level, this simply involves communicating quantum and/or classical data from a client to a single server for processing, which returns quantum or classical information to the client. In the most general case, a computation may be processed by multiple servers, each responsible for a different part of the computation -- \emph{distributed quantum computation}.
+
+Many real-world applications for quantum computing will involve sensitive data, in terms of both the information being processed and the algorithms being employed. This necessitates encryption protocols allowing computations to be performed securely over a network, such that intercept-resend attacks are unable to infer the client's data, and even the host itself is unable to do so -- \emph{homomorphic encryption} and \emph{blind quantum computing}. These form the basic building blocks from which a secure cloud-based model for quantum computing may be constructed, and economic models based on the outsourcing of computations may emerge.
+
+%
+% Outsourced Quantum Computation
+%
+
+\subsection{Outsourced quantum computation}
+
+Most simply, an outsourced computation involves Alice preparing either a quantum or classical input state, which she would like processed on Bob's computer. Bob performs the computation and returns either a quantum or classical state to Alice.
+
+The algorithm, which Bob implements, could either be stipulated by Alice, in which case she is purely licensing Bob's hardware, or by Bob, in which case she is licensing his hardware and software. In the case of classical input and classical output, such an outsourced computation is trivial from a networking perspective, requiring no usage of the quantum network whatsoever. In the case of quantum input and/or output data, the quantum network will be required.
+
+Despite the model being very simple, there may still be stringent requirements on the costs in the network. When the result of the computation is returned to Alice, there may be fidelity requirements. An approximate solution to a problem, or a computation with any logical errors whatsoever, may be useless, particularly for algorithms, which are not efficiently verifiable. For example, if Alice is attempting to factorise a large number using Shor's algorithm, a number of incorrect digits may make the the correct solution effectively impossible to determine. Or if a large satisfiability problem is being solved, almost any classical bit-flip errors will invalidate the result, requiring additional computation by Alice to resolve (which may be exponentially complex to perform).
+
+In the case of classical communication of input and output data, we can reasonably assume error-free communication, owing to its digital nature. However, in the case of quantum communication it is inevitable that at least some degree of noise will be present. Depending on the application, this may require the client and host to jointly implement a distributed implementation of QEC (Secs.~\ref{sec:QOS} \& \ref{sec:topol_codes}), whereby Alice and Bob communicate encoded states with one another, to which syndrome measurement and error correction are applied upon receipt. This will necessitate a limited amount of quantum processing to be directly available to Alice. In the case where she is completely starved of any quantum processing resources whatsoever, this may be a limiting factor. Otherwise, this type of cooperative QEC may be plausible.
+
+%
+% Distributed Quantum Computation
+%
+
+\subsection{Distributed quantum computation} \label{sec:dist_QC}
+
+The elementary model described above is very limited, as many realistic data processing applications will require multiple stages of computations to be performed, potentially by different hosts. For example, a client may need data processed using multiple proprietary algorithms owned by different hosts, and the processing will need to be distributed across the network \cite{bib:Cirac99}.
+
+There are two main models for how a distributed computation may proceed -- in \emph{parallel}, or in \emph{series} -- whereby sub-algorithms are performed either side-by-side simultaneously, or one after another in a pipeline. The two models are illustrated in Fig.~\ref{fig:distributed}.
+
+\begin{figure}[!htb]
+\includegraphics[width=\columnwidth]{distributed}
+\caption{Models for distributed computation in parallel and in series. In parallel, a root node oversees the total computation, delegating tasks to child nodes, which process data independently of one another. In series the nodes sequentially process data in a pipeline of algorithmic stages.} \label{fig:distributed}
+\end{figure}
+
+Classical parallel processing typically involves a root node, which delegates tasks to be performed in parallel by a number of child nodes, and the results returned to the root node, which potentially applies an algorithm to merge the set of results, before returning a final result to the client. Classical models such as Google's {\sc MapReduce} protocol \cite{bib:MapReduce} are built on this idea.
+
+In classical computing, parallel processing is widely employed to shorten algorithmic runtimes. However, the increase in clock-cycles scales only linearly with the number of nodes in the network: $k$-fold parallelisation yields a \mbox{$\sim k$}-fold speedup. For time-critical applications, such a linear improvement may be already highly beneficial, albeit costly. The attractive feature of quantum computing, however, is the potentially exponential improvement in algorithmic performance of certain tasks over their classical counterparts. This exponential relationship implies that parallelisation in general no longer has a simple linear tradeoff.
+
+Let $t_c$ be the time required by a classical algorithm to solve a given problem, and $t_q$ the time required to solve the same problem using a quantum algorithm. In the case of algorithms exhibiting exponential quantum speedup, we will have,
+\begin{align}
+t_c = O(\mathrm{exp}(t_q)).
+\end{align}
+If we now increase the quantum processing power $k$-fold, the equivalent classical processing time is (in the best case),
+\begin{align}
+t_c' &= O(\mathrm{exp}(t_q k)) \nonumber \\
+&= O(\mathrm{exp}(t_q)^{k}) \nonumber \\
+&= O({t_c}^{k}).
+\end{align}
+Thus, $k$-fold quantum enhancement corresponds to a $k$th-order exponential enhancement in the equivalent classical processing time, which clearly scales much more favourably than the linear $k$-fold enhancement offered by classical parallelisation.
+
+The alternate scenario is in-series distributed computation, in which a computation proceeds through a pipeline of different stages, potentially performed by different hosts. This model allows a complex algorithm comprising smaller subroutines, each of which may be proprietary with different owners, to be delegated across the network. The different stages may communicate classical and/or quantum data. As with the simple single-host model, if the different stages of the processing pipeline are sharing quantum data, distributed QEC will generally be necessary to protect the computation in transit. This necessarily introduces an (efficient) overhead in the number of physical qubits being communicated across the network, introducing additional bandwidth costs, which must be accommodated for in networking strategies.
+
+The cluster state (Sec.~\ref{sec:CSQC}), topological code (Sec.~\ref{sec:topol_codes}) and quantum random walk (Sec.~\ref{sec:QW}) models for quantum computation may find themselves to be particularly well-suited to distributed implementation, since they naturally reside on graphs, whose nodes needn't be held locally by a single user, but could instead be shared across multiple hosts with the ability for graph nodes to intercommunicate.
+
+%
+% Delegated Quantum Computation
+%
+
+\subsection{Delegated quantum computation}
+
+Taking the notions of outsourced and distributed quantum computation to the logical extreme, we can envisage the situation where Alice has no quantum resources whatsoever (state preparation, evolution or measurement), but knows exactly what the processing pipeline should entail, and who on the network has the different required quantum resources. We refer to this as \emph{delegated} quantum computation, where the entire processing pipeline is outsourced to a series of hosts.
+
+To illustrate this, let us consider a simple example -- cat state quantum computation (Sec.~\ref{sec:cat_enc}). There are three main elements to the protocol:
+\begin{enumerate}
+\item Cat state preparation.
+\item Post-selected linear optics with feedforward.
+\item Continuous variable measurement.
+\end{enumerate}
+
+Each of these stages present their own technological challenges, sufficiently challenging that one might wish to outsource all three stages. However, suppose there is no single host on the network with the ability to perform all three, but rather there are three hosts ($B_1$, $B_2$ and $B_3$), each specialising in just one of those tasks. In this instance, it would be most resource savvy for the network to implement the pipeline \mbox{$A\to B_1\to B_2\to B_3\to A$}, without going back and forth to Alice after each step (\mbox{$A\to B_1\to A\to B_2 \to A\to B_3\to A$}). In fact, it may not even be technologically possible to implement back-and-forth to Alice if she has no capacity for handling quantum resources (i.e the \mbox{$A\leftrightarrow B$} stages are purely classical). An example of such a pipeline is shown in Fig.~\ref{fig:delegated}.
+
+\begin{figure}[!htb]
+\includegraphics[width=\columnwidth]{delegated}
+\caption{Delegated quantum computation, where each of the three computational stages (state preparation, evolution and measurement) are outsourced to the cloud without intermittent interaction with the client, $A$. $A$ provides only a classical description of the processing pipeline to be implemented, each stage of which is delegated to a server specialised in that particular task. Thus, the total processing pipeline takes the form \mbox{$A\to B_1\to B_2\to B_3\to A$}, where \mbox{$A\to B_1$} and \mbox{$B_3\to A$} are classical, and \mbox{$B_1\to B_2$} and \mbox{$B_2\to B_3$} are quantum channels.} \label{fig:delegated}
+\end{figure}
+
+This can be achieved by adding a {\sc Pipeline} field to the packet header prepared by Alice -- a FIFO queue describing the entire processing pipeline that Alice's packet (which initially contains only classical data) ought to follow through the network. Following completion of each stage of the pipeline we pop the stack and transmit the packet to the next specified host. \comment{That is, we add a line ??? to the transport layer algorithm (Alg.~\ref{???})}. Only at the very completion of the protocol is a packet (containing only classical data) returned to Alice.
+
+Another good case study is quantum metrology using NOON states (Secs.~\ref{sec:NOON} \& \ref{sec:metrology}) for Heisenberg limited metrology. Preparing NOON states is extremely challenging, and additionally Alice may not possess the unknown phase to be measured, but rather wishes a NOON state, prepared by $B_1$, to be provided to a third party, $B_2$, who applies the unknown phase, and passes the resulting state to $B_3$, who implements the required high-efficiency parity measurements required to complete the protocol. In this case, the pipeline would take the same form as above, again with no back-and-forth communication to Alice.
+
+Such delegated protocols will be very useful in quantum networks, where different hosts specialise in different tasks (which may be the most economically efficient model), but poor old Alice specialises in none of them, despite knowing exactly what needs to be done. This would allow an aspiring undergraduate student, who is poor (aren't they all?), to sit in his bedroom at his classical PC, and implement entire distributed quantum information processing protocols in the cloud, with no quantum resources or interactions whatsoever.
+
+%
+% Modularised Quantum Computation
+%
+
+\subsection{Modularised quantum computation} \label{sec:module}
+
+How does one build a large-scale quantum computer, given the extremely daunting technological requirements and high costs? In any industry, economies of scale allow the mass production, and rapid reduction in price of technology. To achieve this, we must find a way to make quantum technologies commodity items, which avoid all the hassle of customised cutting-edge labs. What we really desire is production-line `Lego for Adults{\texttrademark}', allowing ad hoc connection of \emph{modules}, which implement small subsections of a large computation \cite{bib:FowlerPrivate}.
+
+We envisage that physically, a module is a black box with optical interconnects, that may be interconnected to form an arbitrary topology. The user remains oblivious to the inner workings of the modules. The modules could all be identical, just patched together differently, paving the way for their mass production, and an associated quantum equivalent of Moore's Law, allowing them to become off-the-shelf commodity items over time. Then the cost of a quantum computer would simply scale linearly with its number of qubits.
+
+The modules forming a particular computation could either be all owned by a single well-resourced operator, or alternately might be shared across multiple hosts, who network them remotely using EO's between emitted photons.
+
+In Sec.~\ref{sec:dist_QC} we introduced the notion of distributed quantum computation. There the motivation was to enable a computation to be distributed across multiple servers, which either parallelise computation or process it as a pipeline in series.
+
+An alternate direction, for economic reasons, is that it is unviable for a single server to host an entire computation. Rather, hosts will have limited capability, and performing large-scale computations will require employing a potentially large number of hosts cooperating and sharing resources with one another\footnote{Even some present-day massive-scale data processing and storage protocols are implemented virtually across multiple large-scale data-centres, which, for example, automatically handle geographically decentralised data redundancy and processing. Google and Amazon, for example, provide cloud services for this purpose, employed both internally, and licensed out to third parties, and the Apache Cassandra project provides an open-source equivalent. The key is for the underlying protocol to abstract this away from the user, such that they interface with the data as though it were a local asset.}. This can be regarded as the most general incarnation of distributed computation.
+
+This is not the same motivation as for in-series computation, where different servers in the pipeline have different proprietary algorithms as subroutines of a larger computation. And it also differs from in-parallel computation, where multiple servers implement the same algorithm on different data, which is subsequently merged by a root node, as per, for example, a {\sc MapReduce}-style protocol.
+
+Instead, the motivation is one of economics. First, individual servers will have finite resources, but there may be many of them, which can be networked to implement a larger algorithm virtually. Second, because the modules in the architecture are identical and lend themselves to mass production, one can expect more favourable economics than that offered by a provider who sells full-fledged, customised quantum computers, which do not lend themselves to the same level of mass production.
+
+The concept of this model is best explained using the optical cluster state formalism (Sec.~\ref{sec:CSQC}), which lends itself naturally to this approach. A rectangular lattice graph is sufficient for universal quantum computation, even if the cluster state graph is not local (but classical communication between nodes is allowed).
+
+Let us first assume that we wish to construct a cluster state with $n_\mathrm{logical}$ logical qubits. We additionally allow each logical qubit to be the root node of a graph with a $+$-structure, where each branch comprises a chain of $n_\mathrm{ancilla}$ ancillary physical qubits. These are sometimes referred to as \emph{micro-clusters} \cite{bib:Nielsen04}. A single micro-cluster collectively forms a single \emph{module} in the topology. Our goal is to fuse modules via nearest neighbour entanglement to build up the desired distributed cluster state.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.9\columnwidth]{cluster_ident}
+\caption{Several cluster state identities for modularised quantum computation. (a) Two cluster states with a $+$-topology are fused together using an EO (dashed). (b) Upon success, an edge is created between the respective qubits. (c) Upon failure, both qubits are effectively measured in the $\hat{Z}$ basis, thereby removing them, and any associated edges, from the graph. (d) Following a successful EO, the unwanted ancillary qubits may be eliminated using measurements in the $\hat{Y}$ basis, creating edges between their neighbours. If the grey qubits represent the desired logical qubits, this can be used to remove the remainder of the branches emanating from them, thereby distilling the irregular graph down to a regular lattice.} \label{fig:plus_cluster_ident}
+\end{figure}
+
+We arrange the modules to internally represent a $+$-topology where each node has neighbouring branches in each of the up/down/left/right directions. But we imagine the situation whereby each logical qubit, along with its respective ancillary branches, is held by a different server. Thus, the final cluster state is truly decentralised across all the servers, and in general entire computations cannot be performed locally.
+
+Using the ancillary states in the respective directions, we attempt to fuse neighbouring clusters using entangling operations (EO's), such as CZ gates (e.g a KLM CZ gate), linear optics \emph{fusion gates} (i.e rotated polarising beamsplitters followed by photo-detection) \cite{bib:BrowneRudolph05}, or atoms with a $\lambda$-configuration coupled to photons \cite{bib:BarrettKok05}, which undergo which-path erasure (Sec.~\ref{sec:hybrid}). Importantly, using the fusion gate and which-path erasure approaches, only a single beamsplitter is required to perform the EO, which only necessitates high-visibility HOM interference, mitigating the need for far more challenging interferometric (MZ) stability. This is delightful, as current leading quantum optics experiments routinely achieve HOM visibilities well in excess of 99\% \cite{???}.
+
+An alternate fusion strategy is not to directly communicate qubits to be bonded, but instead rely off Bell-pairs provided by a central authority. Each party then applies an EO between their half of the Bell-pair and their target module qubit, which swaps the Bell-pair entanglement onto the two respective module qubits (Sec.~\ref{sec:swapping}).
+
+When an EO is successful, we have fused two modules together, albeit potentially with some leftover ancillary states between the logical qubits. When it fails, we have lost the respective ancillary states, and we attempt again using the next ancillary qubits in each of the the respective branches -- a kind of {\sc Repeat Until Success} strategy. The bonding only fails if all $n_\mathrm{ancilla}$ EO's fail.
+
+Note, however, that longer ancillary arms provide more opportunity for errors to accumulate \cite{bib:RohdeRalphMunro07}. Thus, despite its tolerance against gate failure, it is nonetheless highly desirable for EO's to be as deterministic as possible, so as to minimise the required number of ancillary qubits.
+
+Upon successful bonding, any remaining ancillary qubits between the respective logical qubits are measured in the $\hat{Y}$ basis to remove them from the graph, whilst connecting their neighbours, leaving the two respective logical qubits as nearest neighbours in the graph. Now each module contains exactly one logical qubit, connected as desired to neighbouring modules. The relevant identities are shown in Fig.~\ref{fig:plus_cluster_ident}. Our goal is for the entire graph to have a lattice structure, once ancillary qubits have been measured out, as illustrated in Fig.~\ref{fig:module}.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.8\columnwidth]{module}
+\caption{The modularised approach to scalable and economically efficient, distributed quantum computation using cluster states. The modules are all identical, and can be arbitrarily patched to one another, allowing the construction of arbitrary graph topologies. Because the modules are all identical, one might hope that mass production and economy of scale will drive down the cost of modules. We consider a simple \mbox{$2\times 2$} case where each module (rounded rectangles) comprises a single logical qubit (centre of each module in grey) and a number of ancillary qubits (white in each module), which facilitate bonding the logical qubits of nearest neighbours. The preparation of the modules is performed via nearest neighbour EO's (dashed ellipses), beginning at the end of branches, and working towards the root node upon each failure, until (hopefully) an EO is successful. (a) A \mbox{$2\times 2$} lattice of modules with their respective ancillary qubits. We attempt to bond the endpoints of chains using EO's. (b) Upon measuring the remaining ancillary qubits in the $\hat{Y}$ basis, only the logical qubits remain, with nearest neighbour bonds between adjacent modules, creating a distributed cluster state.} \label{fig:module}
+\end{figure}
+
+This approach has been shown to be resource-efficient \cite{bib:YoranReznik03, bib:Nielsen04}. Let us perform a rudimentary analysis of the resource scaling of this type of approach. The probability of successfully creating an edge between two modules is,
+\begin{align}
+p_\mathrm{success} = 1 - {p_\mathrm{failure}}^{n_\mathrm{ancilla}},
+\end{align}
+where $p_\mathrm{success}$ is the probability of joining two modules, $p_\mathrm{failure}$ is the probability that a single EO fails, and $n_\mathrm{ancilla}$ is the number of ancillary qubits per chain. $p_\mathrm{success}$ can be made arbitrarily close to unity with sufficiently long ancillary chains, the required length of whom scales as,
+\begin{align}
+n_\mathrm{ancilla} = \frac{\mathrm{log}(1-p_\mathrm{success})}{\mathrm{log}(p_\mathrm{failure})}.
+\end{align}
+
+Now, for simplicity we will consider the preparation of linear cluster states, although these ideas can easily be extended to more complex topologies, such as 2D lattice graphs.
+
+Let us assume we have a `primary' linear topology of modules, which we will incrementally attempt to `grow' by tacking on new modules to the end. When we do so, with probability $p_\mathrm{success}$ we grow the length of the primary by 1, otherwise we decrement it by 1. This proceeds as a random walk, with on average \mbox{$2p_\mathrm{success}-1$} new qubits added to the primary per time-step. Provided this number is positive, i.e \mbox{$p_\mathrm{success}>1/2$}, which can always be achieved with sufficient $n_\mathrm{ancilla}$, the length of the primary grows linearly over time, allowing efficient state preparation.
+
+This is just a very primitive model for preparing linear cluster states, using an equally primitive {\sc Incremental} strategy for constructing them using non-deterministic gates. As discussed in Sec.~\ref{sec:CSQC}, much further work has been performed on the resource scaling of efficiently preparing cluster states of different graph topologies using different non-deterministic bonding strategies.
+
+Of course, we have used the most simple model for modules, where each accommodates a single logical qubit. In due course, we would expect commodity modules to become far more capable, and resource scaling to improve. We might envisage that each module houses a small square lattice of logical qubits, as shown in Fig.~\ref{fig:larger_module}, and the interconnects between them glue them together like a patchwork quilt.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.6\columnwidth]{larger_module}
+\caption{A larger cluster state module comprising a \mbox{$3\times 3$} lattice of logical qubits (grey), and dangling arms of ancillary qubits (white) in each direction for joining them to neighbouring modules. Fusing these modules enables the `patchwork' preparation of large, distributed lattices.} \label{fig:larger_module}
+\end{figure}
+
+%
+% The Global Virtual Quantum Computer
+%
+
+\subsection{The global virtual quantum computer} \label{sec:marketplace}
+
+Suppose Alice and Bob both possessed expensive classical Cray\texttrademark\, supercomputers, both identical. They're both connected to the internet, so does it make sense to unify their computational resources over the network to construct a more powerful \emph{virtual machine}, which they subsequently time-share between themselves, or are they better off just using their own computers? If there were an asymmetry in demand for computational resources, it would make perfect sense to unify computational resources, so as to mitigate wasting precious clock-cycles. However, if they were both heavy users, always consuming every last clock-cycle, it would make no difference: for a given computation, Alice and Bob could each be allocated half the processing time of the virtual supercomputer that is twice as powerful; or, each could exploit the full processing time of their half-as-fast computers. In either case, the dollar cost of the computation is the same. This simple observation follows trivially from the linear relationship between processing power and the number of CPU's in a classical computer.
+
+More generally, in a networked environment where time-sharing of classical computational resources is applied equitably, proportionate to users' contribution to the network, the dollar cost per computation is (roughly) unaffected by the rest of the network. Instead, the motivation for networking computational resources is to improve efficiency by ensuring that clock-cycles are not wasted, but instead distributed according to demand by a scheduling algorithm, which could be market-driven, for example.
+
+However, as discussed in Sec.~\ref{sec:dist_QC}, the computational power of a quantum computer does not scale linearly with its number of qubits, but exponentially. This completely changes the economics, and market dynamics of networked quantum computers. Intuitively, we expect equitable time-sharing of unified quantum computational resources to offer more performance to all users than if they were to exclusively use their own resources in isolation. That is, the cost of a computation is reduced by resource-sharing, even after time-sharing.
+
+In Secs.~\ref{sec:dist_QC} \& \ref{sec:module} we introduced distributed and modularised quantum computation. Using this as a toy model, we will now investigate the market dynamics of uniting the quantum computational resources of multiple market participants.
+
+Let $t_i$ be the classical-equivalent runtime of a quantum algorithm comprising $n_i$ qubits, where $i$ denotes the user. The users are running quantum algorithms with classical-equivalent processing time that grows exponentially with the number of qubits. Then, for each user,
+\begin{align}
+t_i &= \beta^{n_i},
+\end{align}
+where \mbox{$\beta>1$} is a constant specific to the algorithm being deployed, and the computational model (e.g cluster states vs the circuit model).
+
+If a network of quantum computers were combined into a single, larger virtual computer, it would exhibit scaling,
+\begin{align}
+t_\mathrm{joint} = \beta^{\sum_j n_j},
+\end{align}
+where $t_\mathrm{joint}$ is the classical-equivalent runtime of the joint quantum computation, and $j$ sums over all the nodes in the network. The $i$th user is contributing the fraction of the hardware,
+\begin{align}
+r_i=\frac{n_i}{\sum_j n_j},
+\end{align}
+and it is only fair that he receive a corresponding share of the quantum processing time (which would also be enforced by arbitrage in a competitive market), which increases his classical-equivalent processing time to,
+\begin{align}
+\tau_i &= \frac{t_\mathrm{joint}}{r_i} \nonumber \\
+&= \beta^{\sum_j n_j} \left(\frac{\sum_j n_j}{n_i}\right).
+\end{align}
+
+We are now interested to know whether the individual users are better off under this model than they were individually. Let us define the \emph{economic leverage} of a user's quantum computer to be the ratio between their time-shared and individual classical-equivalent processing times,
+\begin{align}
+\lambda_i &= \frac{\tau_i}{t_i} \nonumber \\
+&= \beta^{\sum_{j\neq i} n_j} \left(\frac{\sum_j n_j}{n_i}\right).
+\end{align}
+Note that the economic leverage is strictly greater than unity, \mbox{$\lambda_i>1\,\forall\, i$}. Thus, for any user, irrespective of the size of their quantum computer, they are better off joining the distributed network and claiming a time-share, than utilising only their own hardware. Similarly, the distributed network is better off accepting them into the network.
+
+As a special case, consider a single user's leverage when joining the global network. Then,
+\begin{align}
+\lambda_\mathrm{user} = \beta^{n_\mathrm{global}} \left(1+\frac{n_\mathrm{global}}{n_\mathrm{user}}\right),
+\end{align}
+and we see that the user gains economic leverage exponential in the size of the global network he is joining. Needless to say, the global network will also benefit from him joining the network, albeit with a far smaller exponential factor,
+\begin{align}
+\lambda_\mathrm{global} \approx \beta^{n_\mathrm{user}},	
+\end{align}
+assuming \mbox{$n_\mathrm{global}\gg n_\mathrm{user}$}.
+
+This observation leads to the natural conclusion that it is always in the best interests of quantum computer operators to contribute their resources to the distributed global network and participate in time-sharing, rather than go it alone. It follows that in the interests of economic efficiency, market forces will ensure that future quantum computers will \emph{all} be networked into a single \emph{global virtual quantum computer}, providing exponentially greater computational power to all users than what they could have afforded on their own.
+
+%
 % Encrypted Quantum Computation
 %
 
@@ -4052,7 +4090,7 @@ Classical homomorphic encryption has only been described very recently \cite{bib
 
 In the usual circuit model, blind quantum computation has been shown to be viable, and optimal bounds derived. Equivalently, such protocols have been described in the cluster state model (Sec.~\ref{sec:CSQC}). For universal computation, such protocols necessarily require classical interaction between the client and host. However, it was shown that in some restricted (i.e non-universal) models for optical quantum computation, specifically {\sc BosonSampling}, quantum walks and coherent state passive linear optics, non-interactive (partial) homomorphic encryption may be implemented.
 
-These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver information-theoretically secure\footnote{We differentiate between \emph{information theoretic security}, as opposed to \emph{computational security}. In the former, the laws of quantum information bound the amount of information that can be extracted from a system, irrespective of measurement or computational operations. Thus, such security can be regarded as attack-independent. In the latter, security is based on the assumption that an adversary's computational resources are insufficient to perform cryptanalysis or brute-force cracking. Clearly the former makes a far stronger statement about the security of a protocol than the latter. Classical public- and private-key encryption protocols are typically based upon the assumption of computational security (e.g the computational complexity of performing integer factorisation in the case of RSA public-key encryption), whereas quantum encryption protocols are typically information theoretically secure (e.g the one-time-pad using QKD).} data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
+These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver information-theoretically secure\footnote{We differentiate between \emph{information theoretic security}, as opposed to \emph{computational security}. In the former, the laws of quantum information bound the amount of information that can be extracted from a system, irrespective of measurement or computational operations. Thus, such security can be regarded as attack-independent. In the latter, security is based on the assumption that an adversary's computational resources are insufficient to perform cryptanalysis or brute-force cracking. Clearly the former makes a far stronger statement about the security of a protocol than the latter. Classical public- and private-key encryption protocols are typically based upon the assumption of computational security (e.g the computational complexity of performing integer factorisation in the case of RSA public-key encryption, or solving a complex satisfiability problem in the case of private-key encryption), whereas quantum encryption protocols are typically information theoretically secure (e.g the one-time-pad using QKD).} data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
 
 %
 % Classical Encrypted Computation 
@@ -4425,6 +4463,8 @@ Although currently no work has performed any security proofs for displacement-ke
 \begin{align}
 \hat{D}(\alpha\neq 0)\ket\psi \neq \ket\psi\,\,\forall\,\ket\psi.
 \end{align}
+
+Intuitively we expect displacement-key encoding to potentially offer better security than phase-key encoding for two reasons. First, phase-keys are constrained in the range \mbox{$k=(0,2\pi)$}, whereas displacement amplitudes are effectively unbounded. Second, in phase-key encoding the encoding phase-rotation is uniform across all modes, yielding a mode-correlated encryption operation, which limits the entropy of Bob's perceived encoded state. On the other hand, for displacement-key encoding the encoding operations may be chosen independently for each mode, with no inter-mode correlations, potentially increasing the entropy of encoded codewords.
 
 To complicate any future efforts into providing security proofs for displacement-key encoding, it should be noted that the entropic security of such protocols is not only a function of the encryption operations, but also the class of states to which they are applied. The first step, therefore, is to decide upon what classes of quantum states of light, when evolved under passive linear optics, might yield interesting computational problems. In Sec.~\ref{sec:other_LO_samp_probs} we summarised some recent developments in this area, where several classes of states were shown to yield computationally complex linear optics sampling problems. However, it seems likely this list is not exhaustive, scratching only the surface, and there may very well be a far longer list of candidates.
 
@@ -4917,7 +4957,7 @@ Once we reach the point at which the economic returns of the global virtual quan
 
 \emph{--- Adiuva nos Deus.}
 
-\comment{To do!}
+\comment{To do! talk about machine learning}
 
 %
 % Security Implications of the Global Quantum Internet
@@ -5002,7 +5042,7 @@ It is essential for the adoption and development of quantum technology, that qua
 %
 
 \begin{acknowledgments}
-We acknowledge Charlotte Bridault, Marco Tomamichel \& Darryl Veitch for helpful discussions. P.P.R is funded by an ARC Future Fellowship (project FT160100397). We thank 1,3,7-Trimethylxanthine for aiding in the motivation for this work.
+We acknowledge Charlotte Bridault, Marco Tomamichel \& Darryl Veitch for helpful discussions. We thank the authors of QCircuit (\comment{Link!}) for providing this very helpful package. P.P.R is funded by an ARC Future Fellowship (project FT160100397). We thank 1,3,7-Trimethylxanthine for aiding in the motivation for this work.
 \\
 \\
 
