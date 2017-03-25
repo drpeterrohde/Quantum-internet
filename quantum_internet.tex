@@ -2466,6 +2466,8 @@ We keep in mind that although throughout this presentation we have been very qua
 
 At the lowest physical level, quantum protocols have in common that they involve state preparation, evolution, and measurement as the fundamental primitives upon which more complex protocols are constructed. We consider these primitive resources in detail, before building upon them to consider some of the major elementary quantum protocols that implement tasks of practical interest. All of those discussed here have been subject to extensive experimental investigation and demonstration, which will be summarised in Sec.~\ref{sec:state_of_the_art}. We treat full quantum computation separately in Secs.~\ref{sec:models_QC} \& \ref{sec:archs_QC}, as this is such an involved topic in its own right.
 
+We will employ circuit model diagrams when describing some protocols. The unfamiliar reader may refer forwards to Sec.~\ref{sec:circuit_model} for a very brief introduction to quantum circuits.
+
 %
 % State Preparation
 %
@@ -3417,29 +3419,41 @@ W-states are favourable from a decoherence perspective as tracing out a single m
 
 \section{Models for quantum computation} \label{sec:models_QC}
 
-\comment{Only discuss models relevant to optical interconnection. There are many other models that we will not describe in detail, such as adiabatic quantum computation and quantum simulated annealing.}
+There are various approaches to implementing and representing quantum computations. We now briefly introduce the ones most relevant to our discussions on networked quantum computation. Other formalisms, such as adiabatic quantum computation \cite{???} and quantum simulated annealing \cite{???}, which are not so applicable to networking, will not be introduced.
 
 %
 % Circuit Model
 %
 
-\subsection{Circuit model}
+\subsection{Circuit model} \label{sec:circuit_model}
 
-The \emph{circuit model} is the conventional and intuitive approach for expressing quantum algorithms, decomposing algorithms into sequences of elementary gates from a universal gate set.
+The \emph{circuit model} is the conventional and most intuitive approach for expressing quantum algorithms, decomposing them into sequences of elementary operations, comprising state preparation, single- and multi-qubit gates, measurement, and classical feedforward. We recommend referring to the introductory sections of \cite{bib:NielsenChuang00} for a far more comprehensive introduction to quantum circuits than is presented here.
 
-\comment{To do} Fig.~\ref{fig:eg_circuit}
-\cite{bib:NielsenChuang00}
+Fig.~\ref{fig:eg_circuit} illustrates a simple 3-qubit quantum circuit comprising all of these elements. The interpretation of this diagram is as follows:
+\begin{itemize}
+\item Horizontal lines represent individual qubits.
+\item Time flows from left to right.
+\item The three input qubits are labelled on the far-left as $\ket{\psi_1}$, $\ket{\psi_2}$ and $\ket{\psi_3}$.
+\item Single-qubit gates are denoted as boxes containing the name of the associated unitary operation (e.g the Hadamard ($H$), Pauli bit-flip ($X$), Pauli bit-phase-flip ($Y$), and Pauli phase-flip ($Z$) gates).
+\item Two-qubit gates are denoted by vertical lines between the respective qubits.
+\item The maximally-entangling two-qubit controlled-NOT (CNOT) gate is denoted via a control ($\bullet$) and a target ($\oplus$).
+\item The maximally-entangling two-qubit controlled-phase (CZ) gate is denoted by two targets ($\bullet$) (the gate operates symmetrically on its two qubits).
+\item The `meter' symbol represents a classical measurement in the Pauli $\hat{Z}$-basis.
+\item Double lines represent classical feedforward, controlling a subsequent gate.
+\end{itemize}
 
 \begin{figure}[!htb]
 \begin{align}
 \Qcircuit @C=.7em @R=.4em @! {
 \lstick{\ket{\psi_1}} & \qw & \qw & \ctrl{1} & \gate{Y} & \meter & \control \cw\\
-\lstick{\ket{\psi_2}} & \qw & \targ & \targ & \qw & \meter & \cwx\\
+\lstick{\ket{\psi_2}} & \qw & \targ & \ctrl{-1} & \qw & \meter & \cwx\\
 \lstick{\ket{\psi_3}} & \gate{H} & \ctrl{-1} & \qw & \qw & \gate{X} \cwx & \gate{Z} \cwx & \rstick{\ket{\phi}} \qw
 } \nonumber
 \end{align}
-\caption{Simple example of a quantum circuit, comprising several quantum gates and measurements. Rows represent qubits, and time flows from left to right.} \label{fig:eg_circuit}
+\caption{Simple example of a quantum circuit, comprising several single- and two-qubit quantum gates and measurements. Rows represent qubits, and time flows from left to right.} \label{fig:eg_circuit}
 \end{figure}
+
+Using the circuit model, arbitrary quantum computations can be elegantly and intuitively represented. To enable \emph{universal} quantum computation within this model, a \emph{universal gate set} must be available at our disposal. Most commonly, this is chosen to be the maximally-entangling two-qubit CZ or CNOT operation, in addition to arbitrary single-qubit gates. Any quantum algorithm may be efficiently decomposed into a circuit comprising elements from this universal gate set.
 
 %
 % Cluster States
@@ -3476,6 +3490,10 @@ Having prepared this state, the computation is implemented purely via a well-orc
 
 It is easily shown that this model may be directly mapped to the circuit model, and is therefore universal for quantum computation.
 
+The distinctive feature of this model is that all the entangling CZ gates are performed at the very beginning of the protocol, during the state preparation stage. The algorithm itself is purely measurement-based, requiring only single-qubit measurements (no entangling measurements).
+
+An alternate interpretation of the cluster state model is that it is a complicated network of state and gate teleportation protocols (Sec.~\ref{sec:teleport}). Specifically, a CZ gate with a $\ket{+}$ state as a resource, followed by measurement of one of the two qubits acts as a single-qubit teleporter, as shown in Fig.~\ref{fig:single_qubit_teleporter}. Thus, with a substrate state of CZ gates applied between $\ket{+}$ states, the single-qubit measurements progressively teleport the input state through the graph topology, at each stage accumulating the action of more gates, which are related to the choices of the previous single-qubit measurement bases, and the graph topology.
+
 \begin{figure}[!htb]
 \begin{align}
 \Qcircuit @C=.7em @R=.4em @! {
@@ -3483,12 +3501,8 @@ It is easily shown that this model may be directly mapped to the circuit model, 
 \lstick{\ket{+}} & \ctrl{0} & \qw & \gate{X} \cwx & \gate{H} & \rstick{\ket\psi} \qw \\
 } \nonumber
 \end{align}
-\caption{The single-qubit teleporter, based upon a controlled-phase (CZ) gate, a single-qubit measurement, and classical feedforward. \comment{Add to text!}} \label{fig:single_qubit_teleporter}
+\caption{The single-qubit teleporter, based upon a controlled-phase (CZ) gate, a single-qubit measurement, and classical feedforward.} \label{fig:single_qubit_teleporter}
 \end{figure}
-
-The distinctive feature of this model is that all the entangling CZ gates are performed at the very beginning of the protocol, during the state preparation stage. The algorithm itself is purely measurement-based, requiring only single-qubit measurements (no entangling measurements).
-
-An alternate interpretation of the cluster state model is that it is a complicated network of state and gate teleportation protocols (Sec.~\ref{sec:teleport}). Specifically, a CZ gate with a $\ket{+}$ state as a resource, followed by measurement of one of the two qubits acts as a single-qubit teleporter. Thus, the single-qubit measurements progressively teleport the input state through the graph topology, at each stage accumulating the action of more gates, which are related to the choices of the previous single-qubit measurement bases, and the graph topology. \comment{Add single-qubit teleporter figure!}
 
 The cluster state formalism has proven very useful, enabling the development of linear optics quantum computing (Sec.~\ref{sec:KLM_univ}) protocols, orders of magnitude more efficient than the original KLM protocol. It has been found that bonding strategies -- i.e the order in which smaller clusters are fused into larger ones when using non-deterministic gates -- plays a major role in resource overhead, and much work has been performed on efficient preparation strategies for various topologies \cite{bib:Nielsen04, bib:BarrettKok05, bib:BrowneRudolph05, bib:BenjaminEisert05, bib:Gross06, bib:RohdeStratCS07, bib:Kieling06, bib:KielingRudolphEisert06, bib:RohdeBarrett07, bib:Kieling07, bib:Campbell07, bib:Campbell07b}.
 
@@ -3560,15 +3574,15 @@ Importantly, the stabilisers are all defined over geometrically localised neighb
 
 \section{Physical architectures for quantum computing} \label{sec:archs_QC}
 
-\comment{To do. We will focus on optical architectures and ones which can be optically interfaced for the purposes of networking.}
+The models for quantum computation introduced in the previous section are abstractions of algorithms in terms of elementary operations. But elementary operations must ultimately be physically realised. There are countless physical architectures for realising quantum computations, far too many to describe here, each with their own advantages and disadvantages, and it is far from clear which physical architecture(s) will ultimately win the quantum race.
+
+Here we will summarise some of the physical architectures most applicable to networking. Since we reasonably anticipate that future quantum networking will be optically mediated, we focus on pure-optical and hybrid-optical architectures, on the basis that these will naturally lend themselves to optical interfacing.
 
 %
 % Universal Linear Optics Quantum Computing
 %
 
 \subsection{Universal linear optics} \label{sec:KLM_univ}
-
-\comment{To do! Discuss both circuit model and cluster states.}
 
 With single-photon encoding of qubits in the quantum network, the obvious architecture to implement quantum computation is linear optics quantum computing (LOQC) \cite{bib:KLM01} (KLM), since the states being processed by the computer are of the same form as the states traversing the network. See \cite{bib:Kok05, bib:KokLovettBook} for excellent introductions to this what has become a very broad and exciting field.
 
@@ -3602,7 +3616,7 @@ The measurements are implemented simply by number-resolved photo-detectors, impl
 
 Since the original presentation of a universal LOQC gate set by KLM, numerous alternate implementations have been presented and experimentally demonstrated, with various pros and cons \cite{bib:Ralph01, bib:Pittman01, bib:Ralph02, bib:Knill02, bib:Pittman03, bib:MorYoran06}.
 
-Although the original KLM scheme is universal, resource usage can be reduced by orders of magnitude by combining concepts from LOQC with the cluster state formalism (Sec.~\ref{sec:CSQC}) or related concepts \cite{bib:YoranReznik03, bib:Nielsen04, bib:BrowneRudolph05, bib:GilchristHayes05, bib:Lim05, bib:LimBarrett05}.
+Although the original KLM scheme is universal, resource usage can be reduced by orders of magnitude by combining concepts from LOQC with the cluster state formalism (Sec.~\ref{sec:CSQC}) or related concepts \cite{bib:YoranReznik03, bib:Nielsen04, bib:BrowneRudolph05, bib:GilchristHayes05, bib:Lim05, bib:LimBarrett05}. Specifically, instead of using our non-deterministic KLM CZ gates within the circuit model formalism, they could be employed for the preparation of cluster states. Cluster state preparation using non-deterministic entangling gates is discussed in more detail in Sec.~\ref{sec:module}.
 
 Significant progress is being made on reconfigurable, integrated LOQC devices \cite{bib:UniversalLOOBrien}, but switching times remain orders of magnitude slower than that required for fast-feedforward. The resource overhead associated with overcoming the non-determinism of entangling gates is substantial in the original KLM proposal. But despite being improved upon by cluster state approaches, resource scaling remains daunting. It therefore seems most likely that certain elements from LOQC might be combined into hybrid architectures, to be discussed in detail in Sec.~\ref{sec:hybrid}.
 
@@ -4079,7 +4093,7 @@ We are now interested to know whether the individual users are better off under 
 \lambda_i &= \frac{\tau_i}{t_i} \nonumber \\
 &= \beta^{\sum_{j\neq i} n_j} \left(\frac{\sum_j n_j}{n_i}\right).
 \end{align}
-Note that the leverage is strictly greater than unity, \mbox{$\lambda_i>1\,\forall\, i$}. Thus, for any user, irrespective of the size of their quantum computer, they are better off joining the distributed network and claiming a time-share, than utilising only their own hardware full-time. Similarly, the distributed network is better off accepting them into the network. This is in contrast to classical networks, where \mbox{$\lambda\approx 1$}, for any number of nodes in the network.
+Note that the leverage is strictly greater than unity, \mbox{$\lambda_i>1\,\forall\, i$}. Thus, for any user, irrespective of the size of their quantum computer, they are better off joining the distributed network and claiming a time-share, than utilising only their own hardware full-time. Similarly, the distributed network is better off accepting them into the network. This is in contrast to classical networks, where \mbox{$\lambda\approx 1$}, for any number of nodes in the network (i.e there is no leverage).
 
 As a special case, consider a single user's leverage when joining the global network. Then,
 \begin{align}
@@ -4091,9 +4105,9 @@ and we see that the user gains economic leverage exponential in the size of the 
 \end{align}
 assuming \mbox{$n_\mathrm{global}\gg n_\mathrm{user}$}.
 
-A case of particular interest is the \emph{single qubit leverage} -- the leverage on the investment into adding a single additional qubit to the global network. This is an indicator of the economic return on investment into expanding the network. This is simply given by,
+A case of particular interest is the \emph{single qubit leverage} -- the leverage on the investment into adding a single additional qubit to the global network. This is an indicator of the economic/computational ratio of return on investment into expanding the network incrementally. This is simply given by,
 \begin{align}
-\lambda_\mathrm{single} = \beta^{n_\mathrm{global}} (1+n_\mathrm{global}),
+\lambda_\mathrm{qubit} = \beta^{n_\mathrm{global}} (1+n_\mathrm{global}),
 \end{align}
 which clearly implies that as the global quantum network expands over time, the return on investment into network expansion grows exponentially, or equivalently, the cost per unit of additional classical-equivalent processing time decreases exponentially.
 
@@ -4184,7 +4198,7 @@ For the protocol to hide information, the plaintext basis states must not be inv
 \begin{align}
 \left[\bigotimes_{i=1}^m\hat{E}_i(k_i)\right]\ket\psi_\mathrm{plaintext} \neq \ket\psi_\mathrm{plaintext}.
 \end{align}
-The state observed by Bob is the mixture of Alice's plaintext over the complete set of encoding operations,
+The state observed by Bob is the mixture of Alice's plaintext over the complete set of encoding operations, implementing a quantum process $\mathcal{E}$ with Kraus operators $\hat{E}(k)$,
 \begin{align} \label{eq:mix_over_enc_ops}
 \hat\rho_\mathrm{encoded} &= \mathcal{E}(\ket\psi_\mathrm{plaintext}\bra\psi_\mathrm{plaintext}) \nonumber \\
 &= \sum_k \hat{E}(k)\ket\psi_\mathrm{plaintext}\bra\psi_\mathrm{plaintext} \hat{E}^\dag(k),
@@ -4307,7 +4321,11 @@ where,
 \begin{align}
 \hat\rho = \sum_i p_i \hat\rho_i,
 \end{align}
-and $S(\cdot)$ denotes the von Neuman entropy (Sec.~\ref{sec:channel_cap}). Here $\hat\rho_i$ are the individual codewords, in our case the set of all polarisation-encoded basis states, and $p_i$ are their respective probabilities, which are uniform here. The upper-bound stipulated by the Holevo quantity is an information-theoretic bound, which holds under \emph{any} choice of measurement bases by Bob. Thus, it is impossible for Bob to extract more information about Alice's state than allowed by this bound. For this protocol the Holevo quantity scales with the number of modes as,
+and $S(\cdot)$ denotes the von Neuman entropy (Sec.~\ref{sec:channel_cap}). Here $\hat\rho_i$ are the individual codewords, in our case the set of all polarisation-encoded basis states, and $p_i$ are their respective probabilities, which are uniform here.
+
+The upper-bound stipulated by the Holevo quantity is an information-theoretic bound, which holds under \emph{any} choice of measurement bases by Bob. Thus, it is impossible for Bob to extract more information about Alice's state than allowed by this bound.
+
+For this protocol the Holevo quantity scales with the number of modes as,
 \begin{align}
 \chi(m) = m - \frac{1}{2}\mathrm{log}_2\left(\frac{\pi e m}{2}\right) + O\left(\frac{1}{m}\right),
 \end{align}
@@ -4407,7 +4425,7 @@ where $\hat{n}_i$ is the photon-number operator for the $i$th mode. This observa
 \end{align}
 This immediately significantly expands the class of operations available for the computation. In particular, while coherent states remain separable under linear optics evolution, the introduction of non-linear phase-shift operations enables quantum entanglement, and presumably a more powerful class of computations than simple matrix multiplication. It is unclear to us, however, exactly what this class of computations actually is.
 
-\cite{siHuiTan} evaluated the security of this protocol in the case where the basis states were restricted to the binary $\ket{\pm\alpha}$ states. Thus, each input mode encodes at most a single bit (zero bits for \mbox{$|\alpha|=0$}, approaching one bit for \mbox{$|\alpha|\to\infty$}). They were unable to calculate information-theoretic bounds (as is often the case), instead resorting to the alternative approach of calculating the distinguishability of codewords under the trace distance (Sec.~\ref{sec:fid_metric}). If the basis codeword states observed by Bob are indistinguishable, he cannot guess Alice's plaintext state, whereas if they are distinguishable, he can.
+\cite{siHuiTan} evaluated the security of this protocol in the case where the basis states were restricted to the binary $\ket{\pm\alpha}$ states. Thus, each input mode encodes at most a single bit (zero bits for \mbox{$|\alpha|=0$}, approaching one bit for \mbox{$|\alpha|\to\infty$}). They were unable to calculate information-theoretic bounds (as is often the case), instead resorting to the alternative approach of calculating the distinguishability of codewords under the trace distance (Sec.~\ref{sec:fid_metric}). If the basis codeword states observed by Bob are indistinguishable, they are effectively decorrelated from the plaintext basis states, preventing him from guessing Alice's plaintext state, whereas if they are distinguishable, he can.
 
 Let $\vec{x}$ be the binary input string, and $\vec{0}$ be the special case of the all-zero string. Then, for unencrypted states, we have the trace distance,
 \begin{align}
@@ -4418,7 +4436,7 @@ where $\mathrm{wt}(\vec{x})$ is the Hamming weight (number of 1's in the bit-str
 &||\mathcal{E}(\hat\rho_{\vec{x}})-\mathcal{E}(\hat\rho_{\vec{0}})||_\mathrm{tr} \nonumber \\
 &= \sum_{k=0}^{d-1} e^{-m|\alpha|^2}\frac{(m|\alpha|^2)^k}{k!}\sqrt{1-\left(\frac{m-2\mathrm{wt}(\vec{x})}{m}\right)^{2k}}
 \end{align}
-\comment{What's the limit as $d\to\infty$?} where $\mathcal{E}$ denotes the mixture over encoding operations observed by Bob, as per Eq.~\ref{eq:mix_over_enc_ops}, and there are $d$ distinct keys. These relationships are illustrated in Fig.~\ref{fig:homo_coh_st_tr}. Clearly, the encoded basis states exhibit greater indistinguishability than the unencoded ones, demonstrating that information is hidden from Bob. Unfortunately, the trace distance does not have the elegant interpretation of `number of bits hidden' that the mutual information does. Nonetheless, this demonstrates partial hiding of information.
+\comment{What's the limit as $d\to\infty$?} where $\mathcal{E}$ denotes the mixture over encoding operations observed by Bob, as per Eq.~\ref{eq:mix_over_enc_ops}, and there are $d$ distinct keys. These relationships are illustrated in Fig.~\ref{fig:homo_coh_st_tr}\footnote{Note that the distance between any arbitrary pair of codewords may be obtained by replacing $\mathrm{wt}(\cdot)$ with their Hamming distance (in the simple case where one of the codewords is the $\vec{0}$ bit-string, the Hamming weight and Hamming distance are equivalent). \comment{Is this right?}}. Clearly, the encoded basis states exhibit greater indistinguishability than the unencoded ones, demonstrating that information is hidden from Bob. Unfortunately, the trace distance does not have the elegant interpretation of `number of bits hidden' that the mutual information does. Nonetheless, this demonstrates partial hiding of information.
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{coherent_state_homo_unenc} \\
@@ -4461,8 +4479,9 @@ function HomomorphicDisplacementKeyEncoding($\ket\psi$):
     \end{align}
     \item Alice applies the displacements to each mode, yielding her encrypted state,
     \begin{align}
-    \ket\psi_\mathrm{enc} = \left[\bigotimes_{i=1}^m \hat{D}_i(\alpha_i)\right] \ket\psi.
+    \ket\psi_\mathrm{enc} = \left[\bigotimes_{i=1}^m \hat{D}_i(\alpha_i)\right] \ket\psi,
     \end{align}
+    where $\hat{D}_i(\alpha_i)$ is the displacement operator for the $i$th mode, with displacement amplitude $\alpha_i$.
     \item Alice sends the encrypted state to Bob.
     \item Bob applies the computation $\hat{U}$,
     \begin{align}
@@ -4491,7 +4510,11 @@ Although currently no work has performed any security proofs for displacement-ke
 \hat{D}(\alpha\neq 0)\ket\psi \neq \ket\psi\,\,\forall\,\ket\psi.
 \end{align}
 
-Intuitively we expect displacement-key encoding to potentially offer better security than phase-key encoding for two reasons. First, phase-keys are constrained in the range \mbox{$k=(0,2\pi)$}, whereas displacement amplitudes are effectively unbounded. Second, in phase-key encoding the encoding phase-rotation is uniform across all modes, yielding a mode-correlated encryption operation, which limits the entropy of Bob's perceived encoded state. On the other hand, for displacement-key encoding the encoding operations may be chosen independently for each mode, with no inter-mode correlations, potentially increasing the entropy of encoded codewords.
+Intuitively we expect displacement-key encoding to potentially offer better security than phase-key encoding for two reasons:
+\begin{enumerate}
+\item Phase-keys are constrained in the range \mbox{$k=(0,2\pi)$}, whereas displacement amplitudes are effectively unbounded (nowadays we can make pretty big lasers).
+\item In phase-key encoding the encoding phase-rotation is uniform across all modes, yielding a mode-correlated encryption operation, which limits the entropy of Bob's perceived encoded state. On the other hand, for displacement-key encoding the encoding operations may be chosen independently for each mode, with no inter-mode correlations, potentially increasing the entropy of encoded codewords.
+\end{enumerate}
 
 To complicate any future efforts into providing security proofs for displacement-key encoding, it should be noted that the entropic security of such protocols is not only a function of the encryption operations, but also the class of states to which they are applied. The first step, therefore, is to decide upon what classes of quantum states of light, when evolved under passive linear optics, might yield interesting computational problems. In Sec.~\ref{sec:other_LO_samp_probs} we summarised some recent developments in this area, where several classes of states were shown to yield computationally complex linear optics sampling problems. However, it seems likely this list is not exhaustive, scratching only the surface, and there may very well be a far longer list of candidates.
 
