@@ -515,7 +515,7 @@ where,
 \begin{align}
 \sum_i \hat{K}_i^\dag \hat{K}_i = \hat{\mathbb{I}},
 \end{align}
-for normalisation. Here $\mathcal{E}$ is a super-operator, denoting the action of the process on state $\hat\rho$. This is also referred to as the \emph{operator-sum representation}. This representation has the elegant interpretation as the probabilistic application of each of the Kraus operators, with probability,
+for normalisation. Here $\mathcal{E}$ is a super-operator, denoting the action of the process on state $\hat\rho$. This is also referred to as the \emph{operator-sum representation}. This representation has the elegant interpretation as the probabilistic application of each of the Kraus operators $\hat{K}_i$, with probability,
 \begin{align}
 p_i = \mathrm{tr}(\hat{K}_i \hat\rho \hat{K}_i^\dag).
 \end{align}
@@ -536,7 +536,7 @@ and that our processes are \emph{trace preserving}. That is, they preserve norma
 \mathrm{tr}[\mathcal{E}(\hat\rho)] = 1.
 \end{align}
 
-Multiple processes may be composed using the notation,
+Multiple consecutive processes may be composed using the notation,
 \begin{align}
 \mathcal{E}_n(\dots \mathcal{E}_2(\mathcal{E}_1(\hat\rho)))=(\mathcal{E}_n \circ \dots \circ \mathcal{E}_2\circ\mathcal{E}_1)(\hat\rho).
 \end{align}
@@ -2810,7 +2810,7 @@ while the phase-shifters implement the unitary operation
 \begin{align}
 \hat\Phi(\phi)=e^{-i\phi\hat{n}},
 \end{align}
-or equivalently,
+or equivalently in the Heisenberg picture,
 \begin{align}
 \hat{U}\hat{a}^\dag\hat{U}^\dag \to e^{-i\phi}\hat{a}^\dag,
 \end{align}
@@ -3402,7 +3402,7 @@ To couple with a polarisation-encoded photonic qubit, a PBS can be employed to s
 
 Atomic ensembles have been proposed as quantum memories, given their long coherence lifetime. Additionally, a protocol for universal cluster state quantum computation (Sec.~\ref{sec:CSQC}) based upon atomic ensemble qubits has been described \cite{bib:RohdeAtEns10}.
 
-Essentially, the long coherence lifetimes of collective excitations owes to the fact that the excitation is effectively encoded as a W-state, an equal superposition of a single excitation across many atoms, of the form,
+Essentially, the long coherence lifetimes of collective excitations owes to the fact that the excitation is effectively encoded as a W-state \cite{???}, an equal superposition of a single excitation across many atoms, of the form,
 \begin{align}
 \ket{\psi_W} = \frac{1}{\sqrt{N}}(&\ket{1,0,0,\dots}\nonumber \\
 +&\ket{0,1,0,\dots}\nonumber \\
@@ -4066,17 +4066,17 @@ More generally, in a networked environment where time-sharing of classical compu
 
 However, as discussed in Sec.~\ref{sec:dist_QC}, the computational power of a quantum computer does not scale linearly with its number of qubits, but exponentially. This completely changes the economics, and market dynamics of networked quantum computers. Intuitively, we expect equitable time-sharing of unified quantum computational resources to offer more performance to all users than if they were to exclusively use their own resources in isolation. That is, the cost of a computation is reduced by resource-sharing, even after time-sharing.
 
-In Secs.~\ref{sec:dist_QC} \& \ref{sec:module} we introduced distributed and modularised quantum computation. Using this as a toy model, we will now investigate the market dynamics of uniting the quantum computational resources of multiple market participants.
+In Secs.~\ref{sec:dist_QC} \& \ref{sec:module} we introduced distributed and modularised quantum computation. Using this as a toy model, we will now investigate the market dynamics of uniting the quantum computational resources of multiple market participants. We envisage a model whereby network participants are contributing modules to the networked quantum computer, thereby unifying their computational power.
 
 Let $t_i$ be the classical-equivalent runtime of a quantum algorithm comprising $n_i$ qubits, where $i$ denotes the user. The users are running quantum algorithms with classical-equivalent processing time that grows exponentially with the number of qubits. Then, for each user,
 \begin{align}
-t_i &= \beta^{n_i},
+t_i &= \alpha \beta^{n_i},
 \end{align}
-where \mbox{$\beta>1$} is a constant specific to the algorithm being deployed, and the computational model (e.g cluster states vs the circuit model).
+where $\alpha$ and \mbox{$\beta>1$} are constants specific to the algorithm being deployed, and the computational model (e.g cluster states vs the circuit model).
 
 If a network of quantum computers were combined into a single, larger virtual computer, it would exhibit scaling,
 \begin{align}
-t_\mathrm{joint} = \beta^{\sum_j n_j},
+t_\mathrm{joint} = \alpha \beta^{\sum_j n_j},
 \end{align}
 where $t_\mathrm{joint}$ is the classical-equivalent runtime of the joint quantum computation, and $j$ sums over all the nodes in the network. The $i$th user is contributing the fraction of the hardware,
 \begin{align}
@@ -4105,13 +4105,15 @@ and we see that the user gains economic leverage exponential in the size of the 
 \end{align}
 assuming \mbox{$n_\mathrm{global}\gg n_\mathrm{user}$}.
 
-A case of particular interest is the \emph{single qubit leverage} -- the leverage on the investment into adding a single additional qubit to the global network. This is an indicator of the economic or computational ratio of return on investment into expanding the network incrementally. This is simply given by,
+A case of particular interest is the \emph{single qubit leverage} -- the leverage on the investment into adding a single additional qubit to the global network. This is an indicator of the economic or computational ratio of return on investment into expanding the network incrementally. This is simply given by letting \mbox{$n_\mathrm{user}=1$},
 \begin{align}
 \lambda_\mathrm{qubit} = \beta^{n_\mathrm{global}} (1+n_\mathrm{global}),
 \end{align}
 which clearly implies that as the global quantum network expands over time, the return on investment into network expansion grows exponentially, or equivalently, the cost per unit of additional classical-equivalent processing time decreases exponentially.
 
-This observation leads to the natural conclusion that it is always in the best interests of quantum computer operators to contribute their resources to the distributed global network and participate in time-sharing, rather than go it alone. It follows that in the interests of economic efficiency, market forces will ensure that future quantum computers will \emph{all} be networked into a single \emph{global virtual quantum computer}, providing exponentially greater computational power to all users than what they could have afforded on their own.
+Since exisiting network participants receive leverage upon other participants joining the network, an investment into contributing modules has exponentially increasing computational return over time as the network expands, even if that participant ceases making further investment into the network. This is in contrast to classical networks, whereby the computational return upon an investment is fixed over time.
+
+These observations lead to the natural conclusion that it is always in the best interests of quantum computer operators to contribute their resources to the distributed global network and participate in time-sharing, rather than go it alone. It follows that in the interests of economic efficiency, market forces will ensure that future quantum computers will \emph{all} be networked into a single \emph{global virtual quantum computer}, providing exponentially greater computational power to all users than what they could have afforded on their own.
 
 %
 % Encrypted Quantum Computation
