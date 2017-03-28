@@ -9,7 +9,7 @@
 \usepackage[colorlinks]{hyperref}
 \usepackage{url}
 \usepackage[dvipsnames]{xcolor}
-\usepackage[]{qcircuit}
+\usepackage{qcircuit}
 % Coffee \usepackage{coffee4}
 
 \newcommand{\bra}[1]{\langle#1|}
@@ -3427,19 +3427,19 @@ There are various approaches to implementing and representing quantum computatio
 
 \subsection{Circuit model} \label{sec:circuit_model}
 
-The \emph{circuit model} is the conventional and most intuitive approach for expressing quantum algorithms, decomposing them into sequences of elementary operations, comprising state preparation, single- and multi-qubit gates, measurement, and classical feedforward. We recommend referring to the introductory sections of \cite{bib:NielsenChuang00} for a far more comprehensive introduction to quantum circuits than is presented here.
+The \emph{circuit model} is the conventional and most intuitive approach for expressing quantum algorithms, decomposing them into chronological sequences of elementary operations, comprising state preparation, single- and multi-qubit gates, measurement, and classical feedforward. We recommend referring to the introductory sections of \cite{bib:NielsenChuang00} for a far more comprehensive introduction to quantum circuits than is presented here.
 
 Fig.~\ref{fig:eg_circuit} illustrates a simple 3-qubit quantum circuit comprising all of these elements. The interpretation of this diagram is as follows:
 \begin{itemize}
 \item Horizontal lines represent individual qubits.
 \item Time flows from left to right.
 \item The three input qubits are labelled on the far-left as $\ket{\psi_1}$, $\ket{\psi_2}$ and $\ket{\psi_3}$.
-\item Single-qubit gates are denoted as boxes containing the name of the associated unitary operation (e.g the Hadamard ($H$), Pauli bit-flip ($X$), Pauli bit-phase-flip ($Y$), and Pauli phase-flip ($Z$) gates).
+\item Single-qubit gates are denoted as boxes containing the name of the associated unitary operation (e.g the Hadamard ($\hat{H}$), Pauli bit-flip ($\hat{X}$), Pauli bit-phase-flip ($\hat{Y}$), and Pauli phase-flip ($\hat{Z}$) gates).
 \item Two-qubit gates are denoted by vertical lines between the respective qubits.
 \item The maximally-entangling two-qubit controlled-NOT (CNOT) gate is denoted via a control ($\bullet$) and a target ($\oplus$).
 \item The maximally-entangling two-qubit controlled-phase (CZ) gate is denoted by two targets ($\bullet$) (the gate operates symmetrically on its two qubits).
 \item The `meter' symbol represents a classical measurement in the Pauli $\hat{Z}$-basis.
-\item Double lines represent classical feedforward, controlling a subsequent gate.
+\item Double lines represent classical feedforward of measurement outcomes, controlling a subsequent gate.
 \end{itemize}
 
 \begin{figure}[!htb]
@@ -3453,7 +3453,14 @@ Fig.~\ref{fig:eg_circuit} illustrates a simple 3-qubit quantum circuit comprisin
 \caption{Simple example of a quantum circuit, comprising several single- and two-qubit quantum gates and measurements. Rows represent qubits, and time flows from left to right.} \label{fig:eg_circuit}
 \end{figure}
 
-Using the circuit model, arbitrary quantum computations can be elegantly and intuitively represented. To enable \emph{universal} quantum computation within this model, a \emph{universal gate set} must be available at our disposal. Most commonly, this is chosen to be the maximally-entangling two-qubit CZ or CNOT operation, in addition to arbitrary single-qubit gates. Any quantum algorithm may be efficiently decomposed into a circuit comprising elements from this universal gate set.
+The circuit in Fig.~\ref{fig:eg_circuit} can be interpreted mathematically as implementing the following operation,
+\begin{align}
+\ket\phi &= \hat{Z}_3^{m_1} \cdot \hat{X}^{m_2}_3 \cdot \hat{M}_2 \cdot \hat{M}_1 \cdot \hat{Y}_1 \nonumber \\
+&\cdot \hat{\mathrm{CZ}}_{1,2} \cdot \hat{\mathrm{CNOT}}_{3,2} \cdot \hat{H}_3 \cdot \ket{\psi_1}\otimes\ket{\psi_2}\otimes\ket{\psi_3},
+\end{align}
+where $m_1$ and $m_2$ are the binary measurement outcomes of the two single-qubit measurements, $\hat{M}_1$ and $\hat{M}_2$.
+
+Using the circuit model, arbitrary quantum computations can be elegantly and intuitively represented. To enable \emph{universal} quantum computation within this model, a \emph{universal gate set} must be available at our disposal. Most commonly, this is chosen to be the maximally-entangling two-qubit CZ or CNOT operation, in addition to arbitrary single-qubit gates. Any quantum (i.e \textbf{BQP}) algorithm may be efficiently decomposed into a circuit comprising elements from this universal gate set.
 
 %
 % Cluster States
@@ -4072,7 +4079,7 @@ Let $t_i$ be the classical-equivalent runtime of a quantum algorithm comprising 
 \begin{align}
 t_i &= \alpha \beta^{n_i},
 \end{align}
-where $\alpha$ and \mbox{$\beta>1$} are constants specific to the algorithm being deployed, and the computational model (e.g cluster states vs the circuit model).
+where \mbox{$\alpha>0$} and \mbox{$\beta>1$} are constants specific to the algorithm being deployed, and the computational model (e.g cluster states vs the circuit model).
 
 If a network of quantum computers were combined into a single, larger virtual computer, it would exhibit scaling,
 \begin{align}
@@ -4435,19 +4442,21 @@ This immediately significantly expands the class of operations available for the
 
 Let $\vec{x}$ be the binary input string, and $\vec{0}$ be the special case of the all-zero string. Then, for unencrypted states, we have the trace distance,
 \begin{align}
-||\hat\rho_{\vec{x}}-\hat\rho_{\vec{0}}||_\mathrm{tr} = \sqrt{1-e^{-4\mathrm{wt}(\vec{x})|\alpha|^2}},
+D_\mathrm{unenc} &= ||\hat\rho_{\vec{x}}-\hat\rho_{\vec{0}}||_\mathrm{tr} \nonumber \\
+&= \sqrt{1-e^{-4\mathrm{wt}(\vec{x})|\alpha|^2}},
 \end{align}
 where $\mathrm{wt}(\vec{x})$ is the Hamming weight (number of 1's in the bit-string) of $\vec{x}$. On the other hand, for the encoded states, we have,
 \begin{align}
-&||\mathcal{E}(\hat\rho_{\vec{x}})-\mathcal{E}(\hat\rho_{\vec{0}})||_\mathrm{tr} \nonumber \\
-&= \sum_{k=0}^{d-1} e^{-m|\alpha|^2}\frac{(m|\alpha|^2)^k}{k!}\sqrt{1-\left(\frac{m-2\mathrm{wt}(\vec{x})}{m}\right)^{2k}}
+D_\mathrm{enc} &= ||\mathcal{E}(\hat\rho_{\vec{x}})-\mathcal{E}(\hat\rho_{\vec{0}})||_\mathrm{tr} \\
+&= \sum_{k=0}^{d-1} e^{-m|\alpha|^2}\frac{(m|\alpha|^2)^k}{k!}\sqrt{1-\left(\frac{m-2\mathrm{wt}(\vec{x})}{m}\right)^{2k}}, \nonumber
 \end{align}
 \comment{What's the limit as $d\to\infty$?} where $\mathcal{E}$ denotes the mixture over encoding operations observed by Bob, as per Eq.~\ref{eq:mix_over_enc_ops}, and there are $d$ distinct keys. These relationships are illustrated in Fig.~\ref{fig:homo_coh_st_tr}\footnote{Note that the distance between any arbitrary pair of codewords may be obtained by replacing $\mathrm{wt}(\cdot)$ with their Hamming distance (in the simple case where one of the codewords is the $\vec{0}$ bit-string, the Hamming weight and Hamming distance are equivalent). \comment{Is this right?}}. Clearly, the encoded basis states exhibit greater indistinguishability than the unencoded ones, demonstrating that information is hidden from Bob. Unfortunately, the trace distance does not have the elegant interpretation of `number of bits hidden' that the mutual information does. Nonetheless, this demonstrates partial hiding of information.
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{coherent_state_homo_unenc} \\
-\includegraphics[width=\columnwidth]{coherent_state_homo_enc}
-\caption{Trace distance between unencoded (top) and encoded (bottom) basis states for coherent state computation using phase-key encoding, with \mbox{$d=50$} keys. Each of the \mbox{$m=10$} modes is inputted with one of two basis coherent states, $\ket{\pm\alpha}$. $\mathrm{wt}(\vec{x})$ denotes the Hamming weight of bit-string $\vec{x}$. Two states are indistinguishable if their trace distance is 0, and distinguishable if their trace distance is 1. Lower trace distance between encoded states implies a lower chance of Bob guessing Alice's plaintext input state.} \label{fig:homo_coh_st_tr}
+\includegraphics[width=\columnwidth]{coherent_state_homo_enc} \\
+\includegraphics[width=\columnwidth]{coherent_state_homo_ratio}
+\caption{Trace distance between unencoded (top) and encoded (middle) basis states for coherent state computation using phase-key encoding, and the ratio between them, \mbox{$R=D_\mathrm{enc}/D_\mathrm{unenc}$} (bottom), with \mbox{$d=50$} keys and \mbox{$m=10$} modes. Each mode is inputted with one of two basis coherent states, \mbox{$\ket{\pm\alpha}$}. \mbox{$\mathrm{wt}(\vec{x})$} denotes the Hamming weight of bit-string $\vec{x}$. Two states are indistinguishable if their trace distance is 0, and distinguishable if their trace distance is 1. Lower trace distance between encoded states implies a lower chance of Bob guessing Alice's plaintext input state. \mbox{$R<1$} implies information hiding from Bob.} \label{fig:homo_coh_st_tr}
 \end{figure}
 
 It seems plausible that this approach to homomorphic encryption in phase-space could be extended to other quantum states of light. However, as is typically the case, performing entropic security proofs is notoriously difficult, and this remains an open problem. It should be noted, however, that this approach will definitely \emph{not} work for any class of input states which are invariant under phase-shifts. This explicitly rules out employing this technique for, for example, photon-number states, which have no phase.
@@ -4518,7 +4527,7 @@ Although currently no work has performed any security proofs for displacement-ke
 
 Intuitively we expect displacement-key encoding to potentially offer better security than phase-key encoding for two reasons:
 \begin{enumerate}
-\item Phase-keys are constrained in the range \mbox{$k=(0,2\pi)$}, whereas displacement amplitudes are effectively unbounded (nowadays we can make pretty big lasers).
+\item Phase-keys are constrained in the range \mbox{$k=(0,2\pi)$}, whereas displacement amplitudes are effectively unbounded (nowadays we can make pretty big lasers!).
 \item In phase-key encoding the encoding phase-rotation is uniform across all modes, yielding a mode-correlated encryption operation, which limits the entropy of Bob's perceived encoded state. On the other hand, for displacement-key encoding the encoding operations may be chosen independently for each mode, with no inter-mode correlations, potentially increasing the entropy of encoded codewords.
 \end{enumerate}
 
