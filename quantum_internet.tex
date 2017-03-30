@@ -508,7 +508,7 @@ Like classical channels, quantum channels are inevitably subject to errors. Thes
 To quantify the operation of nodes and links within our network, we must characterise the evolution they impose upon quantum states passing through them. Quantum processes, also known as \emph{trace-preserving, completely positive maps} (CP-maps) are able to capture all the physical processes relevant to quantum networking, such as: unitary evolution; decoherence; measurement; quantum memory; state preparation; switching; and, indeed entire quantum computations. And they are able to capture physical processes in any degree of freedom, most commonly in the qubit basis, but also, for photons, in the spatio-temporal, photon-number, phase-space, or polarisation degrees of freedom.
 
 Quantum processes are most easily represented using \emph{Kraus operators}, $\{\hat{K}_i\}$,
-\begin{align}
+\begin{align} \label{eq:kraus_rep}
 \mathcal{E}(\hat\rho) = \sum_i \hat{K}_i \hat\rho \hat{K}_i^\dag,
 \end{align}
 where,
@@ -540,7 +540,10 @@ Multiple consecutive processes may be composed using the notation,
 \begin{align}
 \mathcal{E}_n(\dots \mathcal{E}_2(\mathcal{E}_1(\hat\rho)))=(\mathcal{E}_n \circ \dots \circ \mathcal{E}_2\circ\mathcal{E}_1)(\hat\rho).
 \end{align}
-In general, processes do not commute, i.e \mbox{$\mathcal{E}_1\circ \mathcal{E}_2 \neq \mathcal{E}_2\circ \mathcal{E}_1$}. Unless unitary, quantum processes are irreversible, meaning that errors accumulate and cannot be overcome without the overhead of some form of quantum error correction (QEC) \cite{bib:Shor95, bib:CalderbankShor96, bib:NielsenChuang00}.
+In general, processes do not commute, i.e \mbox{$\mathcal{E}_1\circ \mathcal{E}_2 \neq \mathcal{E}_2\circ \mathcal{E}_1$}. Unless unitary, quantum processes are irreversible, meaning that errors accumulate and cannot be overcome without the overhead of some form of quantum error correction (QEC) \cite{bib:Shor95, bib:CalderbankShor96, bib:NielsenChuang00}. The linearity of Eq.~\ref{eq:kraus_rep} implies that quantum processes are also linear,
+\begin{align}
+	\mathcal{E}(\hat\rho_1+\hat\rho_2) = \mathcal{E}(\hat\rho_1)+\mathcal{E}(\hat\rho_2).
+\end{align}
 
 The only limitation faced by the quantum process formalism is that it is described over discrete-time only. To consider continuous-time evolution, \emph{master equations} can be used. These represent the continuous-time evolution of a quantum state as a differential equation in time, combining a usual Hamiltonian term as well as decoherence terms,
 \begin{align}
@@ -1792,6 +1795,16 @@ As discussed, quantum collision detection is complicated by the fact that measur
 This algorithm could, depending upon implementation, be executed locally on the node currently hosting the {\sc Packet}, or it could be delegated to a central authority, but with the overhead of additional classical communication.
 
 In instances where corruption or loss of packets cannot be tolerated, a more proactive approach may be applied. To preempt the risk of packet collision, one could introduce \emph{probe packets} -- packets containing only classical data, that query a route ahead to negotiate channel usage for the following proper packet, thereby avoiding collisions. Of course, if an upcoming node is unable to guarantee channel capacity immediately, the packet may need to be stored in quantum memory until the channel is available. Thus, it is important to accommodate for this by ensuring that quantum memory is available in nodes preceding links/nodes where collisions are not guaranteed to be mitigated immediately. Quantum memory will be discussed in Sec.~\ref{sec:memory}.
+
+%
+% Packet Teleportation
+%
+
+\section{Packet teleportation}
+
+\comment{To do}
+
+\comment{Send source classical header/data to destination. Replace classical data. Merge headers (accumulate costs, run attribute update function, replace routing queue. Source header becomes target header, but with updated/merged costs and attributes). Add algorithm. Discard source packet.}
 
 %
 % Routing Strategies
@@ -4450,13 +4463,19 @@ where $\mathrm{wt}(\vec{x})$ is the Hamming weight (number of 1's in the bit-str
 D_\mathrm{enc} &= ||\mathcal{E}(\hat\rho_{\vec{x}})-\mathcal{E}(\hat\rho_{\vec{0}})||_\mathrm{tr} \\
 &= \sum_{k=0}^{d-1} e^{-m|\alpha|^2}\frac{(m|\alpha|^2)^k}{k!}\sqrt{1-\left(\frac{m-2\mathrm{wt}(\vec{x})}{m}\right)^{2k}}, \nonumber
 \end{align}
-\comment{What's the limit as $d\to\infty$?} where $\mathcal{E}$ denotes the mixture over encoding operations observed by Bob, as per Eq.~\ref{eq:mix_over_enc_ops}, and there are $d$ distinct keys. These relationships are illustrated in Fig.~\ref{fig:homo_coh_st_tr}\footnote{Note that the distance between any arbitrary pair of codewords may be obtained by replacing $\mathrm{wt}(\cdot)$ with their Hamming distance (in the simple case where one of the codewords is the $\vec{0}$ bit-string, the Hamming weight and Hamming distance are equivalent). \comment{Is this right?}}. Clearly, the encoded basis states exhibit greater indistinguishability than the unencoded ones, demonstrating that information is hidden from Bob. Unfortunately, the trace distance does not have the elegant interpretation of `number of bits hidden' that the mutual information does. Nonetheless, this demonstrates partial hiding of information.
+\comment{What's the limit as $d\to\infty$?} where $\mathcal{E}$ denotes the mixture over encoding operations observed by Bob, as per Eq.~\ref{eq:mix_over_enc_ops}, and there are $d$ distinct keys. We also define the ratio between these two distances,
+\begin{align}
+R=\frac{D_\mathrm{enc}}{D_\mathrm{unenc}	},
+\end{align}
+as an indicator of data-hiding. \mbox{$R<1$} is indicative that information is hidden from Bob.
+
+These relationships are illustrated in Fig.~\ref{fig:homo_coh_st_tr}\footnote{Note that the distance between any arbitrary pair of codewords may be obtained by replacing $\mathrm{wt}(\cdot)$ with their Hamming distance (in the simple case where one of the codewords is the $\vec{0}$ bit-string, the Hamming weight and Hamming distance are equivalent). \comment{Is this right?}}. Clearly, the encoded basis states exhibit greater indistinguishability than the unencoded ones, demonstrating that information is hidden from Bob. Unfortunately, the trace distance does not have the elegant interpretation of `number of bits hidden' that the mutual information does. Nonetheless, this demonstrates partial hiding of information.
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{coherent_state_homo_unenc} \\
 \includegraphics[width=\columnwidth]{coherent_state_homo_enc} \\
 \includegraphics[width=\columnwidth]{coherent_state_homo_ratio}
-\caption{Trace distance between unencoded (top) and encoded (middle) basis states for coherent state computation using phase-key encoding, and the ratio between them, \mbox{$R=D_\mathrm{enc}/D_\mathrm{unenc}$} (bottom), with \mbox{$d=50$} keys and \mbox{$m=10$} modes. Each mode is inputted with one of two basis coherent states, \mbox{$\ket{\pm\alpha}$}. \mbox{$\mathrm{wt}(\vec{x})$} denotes the Hamming weight of bit-string $\vec{x}$. Two states are indistinguishable if their trace distance is 0, and distinguishable if their trace distance is 1. Lower trace distance between encoded states implies a lower chance of Bob guessing Alice's plaintext input state. \mbox{$R<1$} implies information hiding from Bob.} \label{fig:homo_coh_st_tr}
+\caption{Trace distance between unencoded (top) and encoded (middle) basis states for coherent state computation using phase-key encoding, and the ratio between them (bottom), with \mbox{$d=50$} keys and \mbox{$m=10$} modes. Each mode is inputted with one of two basis coherent states, \mbox{$\ket{\pm\alpha}$}. \mbox{$\mathrm{wt}(\vec{x})$} denotes the Hamming weight of bit-string $\vec{x}$. Two states are indistinguishable if their trace distance is 0, and distinguishable if their trace distance is 1. Lower trace distance between encoded states implies a lower chance of Bob guessing Alice's plaintext input state. \mbox{$R<1$} implies information hiding from Bob.} \label{fig:homo_coh_st_tr}
 \end{figure}
 
 It seems plausible that this approach to homomorphic encryption in phase-space could be extended to other quantum states of light. However, as is typically the case, performing entropic security proofs is notoriously difficult, and this remains an open problem. It should be noted, however, that this approach will definitely \emph{not} work for any class of input states which are invariant under phase-shifts. This explicitly rules out employing this technique for, for example, photon-number states, which have no phase.
