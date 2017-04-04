@@ -110,7 +110,7 @@ Quantum technologies are not just of interest to quantum physicists, but will ha
 
 A basic understanding of quantum mechanics \cite{bib:Sakurai94}, quantum optics \cite{bib:GerryKnight05}, quantum computing and quantum information theory \cite{bib:NielsenChuang00}\footnote{Throughout this manuscript we use the Nielsen \& Chuang convention for the pronunciation of `zed'.}, and classical networking \cite{bib:TanenbaumNet} are helpful, but not essential, to following our discussion. Some mathematical sections require a basic understanding of the mathematical notation of quantum mechanics. Although the reader without this background ought to be able to nonetheless follow the broader arguments.
 
-The entirely technically disinterested or mathematically incompetent reader may refer to just Secs.~\ref{sec:introduction} \& \ref{sec:era_quant}-\ref{sec:vision_quant} -- essentially brief non-technical essays about the motivation, applications and implications of the quantum internet.
+The entirely technically disinterested or mathematically incompetent reader may refer to just Secs.~\ref{sec:introduction}, \ref{sec:outlook} \& \ref{sec:vision_quant} -- essentially brief non-technical essays about the motivation, applications and implications of the future quantum internet.
 
 This work is partially a review of existing knowledge relevant to quantum networking, and partially original ideas, to a large extent based on the adaptation of classical networking concepts and quantum information theory to the context of quantum networking. A reader with an existing background in these areas could calmly skip the respective review sections.
 
@@ -172,6 +172,168 @@ With the addition of recent advances in homomorphic encryption and blind quantum
 But quantum technologies extend far beyond computation. Many other exciting applications for controlled quantum systems exist, with new ones frequently emerging. Thus, the quantum internet will find utility beyond cloud quantum computing, enabling the global exchange of quantum resources and assets. This could include the networking of elementary quantum resources such as state preparation, entanglement sharing, teleportation and quantum measurements, or scale all the way up to massively distributed quantum computation or a global quantum cryptography network.
 
 It is hard to foresee the future trajectory of quantum technology, much as no one foresaw the advances digital technology has made over the last half century. But it is certain that as the internet transformed digital technology, the quantum internet will define the future of quantum technologies.
+
+%
+% Models For Quantum Computation
+%
+
+\section{Models for quantum computation} \label{sec:models_QC}
+
+There are various approaches to implementing and representing quantum computations. We now briefly introduce the ones most relevant to our discussions on networked quantum computation. Other formalisms, such as adiabatic quantum computation \cite{???} and quantum simulated annealing \cite{???}, which are not so applicable to networking, will not be introduced.
+
+%
+% Quantum Circuits
+%
+
+\subsection{Quantum circuits} \label{sec:circuit_model}
+
+The \emph{circuit model} is the conventional and most intuitive approach for expressing quantum algorithms, decomposing them into chronological sequences of elementary operations, comprising state preparation, single- and multi-qubit gates, measurement, and classical feedforward. We recommend referring to the introductory sections of \cite{bib:NielsenChuang00} for a far more comprehensive introduction to quantum circuits than is presented here.
+
+Fig.~\ref{fig:eg_circuit} illustrates a simple 3-qubit quantum circuit comprising all of these elements. The interpretation of this diagram is as follows:
+\begin{itemize}
+\item Horizontal lines represent individual qubits.
+\item Time flows from left to right.
+\item The three input qubits are labelled on the far-left as $\ket{\psi_1}$, $\ket{\psi_2}$ and $\ket{\psi_3}$.
+\item Single-qubit gates are denoted as boxes containing the name of the associated unitary operation (e.g the Hadamard ($\hat{H}$), Pauli bit-flip ($\hat{X}$), Pauli bit-phase-flip ($\hat{Y}$), and Pauli phase-flip ($\hat{Z}$) gates).
+\item Two-qubit gates are denoted by vertical lines between the respective qubits.
+\item The maximally-entangling two-qubit controlled-NOT (CNOT) gate is denoted via a control ($\bullet$) and a target ($\oplus$).
+\item The maximally-entangling two-qubit controlled-phase (CZ) gate is denoted by two targets ($\bullet$) (the gate operates symmetrically on its two qubits).
+\item The `meter' symbol represents a classical measurement in the Pauli $\hat{Z}$-basis.
+\item Double lines represent classical feedforward of measurement outcomes, controlling a subsequent gate.
+\end{itemize}
+
+\begin{figure}[!htb]
+\begin{align}
+\Qcircuit @C=.7em @R=.4em @! {
+\lstick{\ket{\psi_1}} & \qw & \qw & \ctrl{1} & \gate{Y} & \meter & \control \cw\\
+\lstick{\ket{\psi_2}} & \qw & \targ & \ctrl{-1} & \qw & \meter & \cwx\\
+\lstick{\ket{\psi_3}} & \gate{H} & \ctrl{-1} & \qw & \qw & \gate{X} \cwx & \gate{Z} \cwx & \rstick{\ket{\phi}} \qw
+} \nonumber
+\end{align}
+\caption{Simple example of a quantum circuit, comprising several single- and two-qubit quantum gates and measurements. Rows represent qubits, and time flows from left to right.} \label{fig:eg_circuit}
+\end{figure}
+
+The circuit in Fig.~\ref{fig:eg_circuit} can be interpreted mathematically as implementing the following operation,
+\begin{align}
+\ket\phi &= \hat{Z}_3^{m_1} \cdot \hat{X}^{m_2}_3 \cdot \hat{M}_2 \cdot \hat{M}_1 \cdot \hat{Y}_1 \nonumber \\
+&\cdot \hat{\mathrm{CZ}}_{1,2} \cdot \hat{\mathrm{CNOT}}_{3,2} \cdot \hat{H}_3 \cdot \ket{\psi_1}\otimes\ket{\psi_2}\otimes\ket{\psi_3},
+\end{align}
+where $m_1$ and $m_2$ are the binary measurement outcomes of the two single-qubit measurements, $\hat{M}_1$ and $\hat{M}_2$.
+
+Using the circuit model, arbitrary quantum computations can be elegantly and intuitively represented. To enable \emph{universal} quantum computation within this model, a \emph{universal gate set} must be available at our disposal. Most commonly, this is chosen to be the maximally-entangling two-qubit CZ or CNOT operation, in addition to arbitrary single-qubit gates. Any quantum (i.e \textbf{BQP}) algorithm may be efficiently decomposed into a circuit comprising elements from this universal gate set.
+
+%
+% Cluster States
+%
+
+\subsection{Cluster states} \label{sec:CSQC}
+
+The \emph{cluster state} model for quantum computation \cite{bib:Raussendorf01, bib:Raussendorf03, bib:Nielsen06} (also referred to as the \emph{one-way}, \emph{measurement-based}, or \emph{graph state} models for quantum computation) is an extremely powerful paradigm that warrants treatment of its own, owing to its significant distinction from the more familiar circuit model, and its applicability to distributed models for quantum computation to be discussed in Sec.~\ref{sec:dist_QC}.
+
+In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \emph{cluster state} or \emph{graph state}. The state is associated with a graph, $G=(V,E)$, of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation\footnote{Note that the graph upon which a cluster state resides is not to be confused with the network graph. Rather it is just a convenient graphical representation for a class of multi-qubit states.}. That is, they act as a `substrate' for implementing arbitrary quantum computations.
+
+In the graph, vertices represent qubits initialised into the \mbox{$\ket{+}=\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$} state, and edges represent the application of maximally entangling controlled-phase (CZ) gates, $\hat{\mathrm{CZ}}=\mathrm{diag}(1,1,1,-1)$, between vertices,
+\begin{align}
+\ket\psi_\mathrm{cluster} = \prod_{e\in E} \hat{\mathrm{CZ}}_e \cdot \bigotimes_{v\in V}\ket{+}_v.
+\end{align}
+Alternately, but equivalently, cluster states may be defined in the stabiliser formalism. Specifically, a cluster state is defined to be the joint +1 eigenstate of all the stabilisers,
+\begin{align} \label{eq:CS_stab}
+\hat{S}_v = \hat{X}_v \prod_{i\in n_v} \hat{Z}_i,
+\end{align}
+where there is one stabiliser $\hat{S}_v$ per vertex $v$, and $n_v$ is the set of vertices neighbouring $v$. The cluster state therefore satisfies,
+\begin{align}
+\hat{S}_v\ket\psi_\mathrm{cluster} = \ket\psi_\mathrm{cluster}\,\forall\, v,
+\end{align}
+and the full set of stabilisers $\hat{S}_v$ over all vertices $v$ is sufficient to fully characterise the cluster state, $\ket{\psi}_\mathrm{cluster}$.
+
+An example of a rectangular lattice cluster state is presented in Fig.~\ref{fig:cluster_state}. Cluster states are easily encoded optically using photonic polarisation encoding (Sec.~\ref{sec:single_phot_enc}), and therefore readily lend themselves to optical networking.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.6\columnwidth]{cluster_state}
+\caption{Example of a \mbox{$4\times 3$} rectangular lattice cluster state. Each vertex in the graph represents a qubit initialised into \mbox{$\ket{+}=\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$}. Edges represent the application of CZ gates between qubits (CZ gates commute, so the order is unimportant). Of sufficient dimension, states of this topology enable universal measurement-based quantum computation, whereby computation proceeds purely via single-qubit measurements, and all entangling operations have been commuted to the state preparation stage. Because CZ gates commute, the preparation of cluster states is time-independent, and easily implemented in a distributed or parallelised manner. The time-ordering of the single-qubit measurements is dependent on the structure of the graph and the algorithm.} \label{fig:cluster_state}
+\end{figure}
+
+Having prepared this state, the computation is implemented purely via a well-orchestrated routine of single-qubit measurements. The order and basis in which they are performed (which depends on previous measurement outcomes in general -- i.e we require fast-feedforward) then stipulates the computation. In the context of distributed computation, this requires classical communication between nodes.
+
+Mapping a circuit model computation to a cluster state topology can be most na{\" i}vely performed by taking a circuit acting on $n_\mathrm{qubits}$ qubits with depth $n_\mathrm{depth}$, preparing an \mbox{$n_\mathrm{qubits}\times n_\mathrm{depth}$} rectangular lattice cluster, and `etching' the circuit directly into the cluster state substrate. To perform this mapping we choose a universal gate set comprising CZ and single-qubit gates, retaining vertical edges where CZ gates ought to be present, eliminating the remaining vertical edges. Now we have a substrate that looks topologically very much like its equivalent circuit construction, and the computation proceeds chronologically in the same manner. The only conceptual distinction is that in the circuit model gates are directly applied chronologically to the set of qubits, whereas in the cluster state gate teleportation (Sec.~\ref{sec:teleport_gate}) is effectively implemented upon each measurement, with the action of gates accumulating as these teleportations are successively applied.
+
+The distinctive feature of this model is that all the entangling CZ gates are performed at the very beginning of the protocol, during the state preparation stage. The algorithm itself is purely measurement-based, requiring only single-qubit measurements (no entangling measurements).
+
+An alternate interpretation of the cluster state model is that it is a complicated network of state and gate teleportation protocols (Sec.~\ref{sec:teleport}). Specifically, a CZ gate with a $\ket{+}$ state as a resource, followed by measurement of one of the two qubits acts as a single-qubit teleporter, as shown in Fig.~\ref{fig:single_qubit_teleporter}. Thus, with a substrate state of CZ gates applied between $\ket{+}$ states, the single-qubit measurements progressively teleport the input state through the graph topology, at each stage accumulating the action of more gates, which are related to the choices of the previous single-qubit measurement bases, and the graph topology.
+
+\begin{figure}[!htb]
+\begin{align}
+\Qcircuit @C=.7em @R=.4em @! {
+\lstick{\ket{\psi}} & \ctrl{1} & \gate{H} & \meter & & \\
+\lstick{\ket{+}} & \ctrl{0} & \qw & \gate{X} \cwx & \gate{H} & \rstick{\ket\psi} \qw \\
+} \nonumber
+\end{align}
+\caption{The single-qubit teleporter, based upon a controlled-phase (CZ) gate, a single-qubit measurement, and classical feedforward.} \label{fig:single_qubit_teleporter}
+\end{figure}
+
+The cluster state formalism has proven very useful, enabling the development of linear optics quantum computing (Sec.~\ref{sec:KLM_univ}) protocols, orders of magnitude more efficient than the original KLM protocol. It has been found that bonding strategies -- i.e the order in which smaller clusters are fused into larger ones when using non-deterministic gates -- plays a major role in resource overhead, and much work has been performed on efficient preparation strategies for various topologies \cite{bib:Nielsen04, bib:BarrettKok05, bib:BrowneRudolph05, bib:BenjaminEisert05, bib:Gross06, bib:RohdeStratCS07, bib:Kieling06, bib:KielingRudolphEisert06, bib:RohdeBarrett07, bib:Kieling07, bib:Campbell07, bib:Campbell07b}.
+
+These cluster states are highly valuable, given their computational power, and the ability to communicate them from Alice, who is able to prepare them, to Bob, who lacks the technology, would be a boon for Bob.
+
+It would be most practical, economical, and resource efficient to have a single, well-equipped server with the ability to prepare such states, who does so on behalf of everyone else, and communicates the fresh cluster states to them over the quantum internet (for a price, perhaps).
+
+Importantly, the preparation of cluster states is readily parallelised. All the entangling CZ operations commute, the order in which they are applied is irrelevant, and a rectangular lattice cluster is completely uniform. Thus, the graphs representing smaller cluster states may be easily `fused' together to form larger cluster states using, for example, CZ gates. Several other types of entangling gates can also be employed, such as polarising beamsplitters -- so-called \emph{fusion gates} \cite{bib:BrowneRudolph05}. This allows the preparation of cluster states to be performed in a `patchwork quilt'-like manner -- a number of nodes each prepare small lattice clusters, they are all put side-by-side, and stitched together using CZ gates. This type of distributed state preparation is a perfect application for in-parallel distributed quantum processing.
+
+Consider the scenario whereby Alice requests a large cluster state from Bob, but, while she was unable to prepare the cluster state herself, she has the technological ability to perform the measurement-based computation on the state (i.e single-qubit measurements). This would effectively bypass the need for blind/homomorphic quantum computation on Bob's hardware altogether, enabling computation with \emph{perfect} secrecy, since no foreign parties would be involved in the computation stage, and no secret data is communicated -- only the \emph{substrate} for the computation is communicated, which could be used for any purpose whatsoever. By commuting all the technologically challenging aspects of a quantum computation to the state preparation stage, we can effectively mitigate the need for blind quantum computing entirely, since the `hard work' has been done in advance by the host, and Alice gets to fulfil the computation on her own, completely bypassing poor old Bob, who was just dying to read Alice's secret love letters before processing them into Hallmark cards.
+
+There are several cluster state identities we will utilise later, summarised in Fig.~\ref{fig:cluster_ident}.
+
+\begin{figure}[!htb]
+\includegraphics[width=\columnwidth]{cluster_identities}
+\caption{Several cluster state identities. (a) a CZ gate between two qubits creates an edge between them in the graph. (b) Measurement of a qubit in the Pauli $\hat{Y}$ basis removes that qubit from the graph, while creating new edges between the neighbouring qubits. (c) Measurement of a qubit in the Pauli $\hat{Z}$ basis removes that qubit and any neighbouring edges.} \label{fig:cluster_ident} 
+\end{figure}
+
+When using non-deterministic gates to prepare cluster states, there are approaches to nonetheless preparing ideal cluster states. This is discussed in more detail in Sec.~\ref{sec:module}. Alternately, we can borrow ideas from percolation theory to simply tolerate defects in a cluster state lattice by working around them. Specifically, if the defect probability (i.e probability of a missing vertex or edge) is below some \emph{percolation threshold}, \mbox{$p_\mathrm{defect}\leq \epsilon_\mathrm{threshold}$}, in the asymptotic limit we are guaranteed that routes exist through the lattice. This allows defective graphs to be employed for quantum computation.
+
+%
+% Topological Codes
+%
+
+\subsection{Topological codes} \label{sec:topol_codes}
+
+If the intention is to perform quantum computations using cluster states shared over a network, QEC and fault-tolerance \emph{must} be taken into consideration, or catastrophic algorithmic failure will inevitably follow -- the cluster state model is no different from the circuit model in this respect. Fault-tolerance theory places hard thresholds on the amount of noise (typically depolarising errors and loss) qubits may be subject to in order for fault-tolerance to be possible and computations to succeed. This places strict QoS (Sec.~\ref{sec:QOS}) constraints on the network, which can be accommodated for using the usual depolarising and efficiency cost metrics when developing networking strategies and link performance requirements.
+
+It has been shown that fault-tolerance is possible within the cluster state model \cite{bib:NielsenDawson04, bib:Dawson06} using variations of conventional QEC codes. However, more importantly, from cluster states certain \emph{topological QEC codes} \cite{???} can be readily constructed. This implements a form of QEC-encoded measurement-based quantum computing protocol, where the computation proceeds in a measurement-based fashion, but is `natively' fault-tolerant.
+
+These codes have been shown to have very favourable fault-tolerance thresholds in terms of both depolarising noise and loss \cite{bib:StaceBarrettDohertyLoss, bib:BarrettStaceFT}, as well as frugal resource overhead compared to traditional concatenated codes. Additionally, loss- and gate-failure-tolerant codes, uniquely applicable to the cluster state model, have been described, with very favourable loss thresholds \cite{bib:Varnava05, bib:RalphHayes05, bib:Duan05}. 
+
+Importantly, topological codes do not require joint measurements across the entire graph state, instead requiring only operations localised to small regions within the graph. Thanks to this, computation using such topological codes can remain distributed, without requiring the entire state to be held locally by a particular host, or requiring full access to the entire state by any particular user.
+
+The most common topological code, which we will use here as an example, is the toric code, which resides on a lattice graph over the surface of a torus\footnote{As with cluster states, this graph needn't (but could) correspond to the network graph.}. As with cluster states (Sec.~\ref{sec:CSQC}), the toric code is most easily visualised in the stabiliser formalism. Consider a rectangular sub-graph of the torus. We place a qubit on each edge (not vertex) of the graph. Now we define two sets of stabiliser operators: \emph{star} and \emph{plaquette} operators,
+\begin{align}
+\hat{S}_\mathrm{star}(v) &= \prod_{i\in e(v)} \hat{X}_i, \nonumber \\
+\hat{S}_\mathrm{plaquette}(p) &= \prod_{i\in e(p)} \hat{Z}_i,
+\end{align}
+where $e(v)$ are the edges neighbouring vertex $v$, and $e(p)$ are the edges surrounding plaquette $p$. By definition, the toric code state, $\ket\psi_\mathrm{toric}$, satisfies the stabiliser relations,
+\begin{align}
+\hat{S}_\mathrm{star}(v) \ket\psi_\mathrm{toric} &= \ket\psi_\mathrm{toric} \,\forall\, v, \nonumber \\
+\hat{S}_\mathrm{plaquette}(p) \ket\psi_\mathrm{toric} &= \ket\psi_\mathrm{toric} \,\forall\, p.
+\end{align}
+Unlike the cluster state stabilisers from Eq.~\ref{eq:CS_stab}, these stabilisers are insufficient to fully characterise a unique quantum state. Rather, there are two unspecified degrees of freedom, which allows for a single qubit to be represented. Modifications of the topology, in the form of holes in the lattice (the genus of the topology), allow larger numbers of qubits to be encoded. Logical operations are implemented by performing gates and measurements across topologies over the surface.
+
+The important feature to note is that logical qubits encoded into the toric code do not reside locally at any of the physical qubits in the topology. Rather, they reside jointly across the entire graph, which, like cluster states, might be partitioned across multiple hosts, enabling distributed computation.
+
+This is all summarised in Fig.~\ref{fig:toric_code}.
+
+\begin{figure}[!htb]
+\includegraphics[width=\columnwidth]{toric_code}
+\caption{Graph representation of the toric QEC code, and its associated stabilisers. The star and plaquette stabilisers across all vertices, jointly specify the state of the graph up to two missing degrees of freedom, which encode a single logical qubit. Thus, a logical qubit is encoded jointly across the entire graph, not at any specific vertex. Logical operations are performed via operations following topological paths through the lattice (not shown). The graph may be distributed across multiple hosts for distributed quantum computation.} \label{fig:toric_code}
+\end{figure}
+
+\comment{How to convert cluster states to topological codes. Add discussion of how to perform gates.}
+
+Having defined the toric code as such, QEC proceeds in a similar manner to any other stabiliser code -- we measure all the stabilisers, yielding a syndrome, from which we can determine geometrically where errors took place in the graph, which can subsequently be corrected (if below threshold).
+
+The simplest example of error detection is the scenario where a single bit-flip ($\hat{X})$ error has occurred in the graph. Now exactly two plaquette stabilisers will yield the $-1$ measurement outcome, instead of the expected $+1$ outcome. These two stabilisers will necessarily be neighbouring ones, overlapping at the qubit where the error took place. Thus, using this geometric property, we are able to identify the location of the single $\hat{X}$ error and subsequently correct it. On the other hand, if there were too many errors, it is possible they could conspire against us to create ambiguity in the geometric argument for the location of the errors. \comment{Figure for both examples of this -- under and over threshold!}
+
+Importantly, the stabilisers are all defined over geometrically localised neighbourhood regions, and do not require long-range measurements, making this type of code suitable to distributed models for quantum computation.
+
+\comment{What about the actual computation? Can this still be distributed when we do the topological gates etc?}
 
 %
 % Classical Networking Protocols
@@ -898,7 +1060,19 @@ As with classical data, quantum data is susceptible to corruption during transmi
 
 \subsection{Known unitaries}
 
-The most trivial error mechanism is when a unitary channel (e.g an identity channel) actually implements some unitary transformation, $\hat{U}$, that is not that which is desired. However, the unitary is constant, not varying from trial to trial, and is known, which can be easily determined by performing QPT on the channel. For example, an optical fibre might induce a polarisation rotation on transmitted photons, but the fibre isn't changing and neither is the rotation. If consistently implementing the same known unitary then reversing it is straightforward in most architectures, by applying $\hat{U}^\dag$, since $\hat{U}^\dag\hat{U}=\hat{\mathbb{I}}$.
+The most trivial error mechanism is when a (potentially multi-qubit) unitary channel (e.g an identity channel for the purposes of quantum memory) actually implements some unitary transformation, $\hat{U}$, that is not that which is desired. However, the unitary is constant, not varying from trial to trial, and is known, which can be easily determined by performing QPT on the channel. For example, an optical fibre might induce a polarisation rotation on transmitted photons, but the fibre isn't changing and neither is the rotation. If consistently implementing the same known unitary then reversing it is straightforward in most architectures, by applying $\hat{U}^\dag$, since $\hat{U}^\dag\hat{U}=\hat{\mathbb{I}}$.
+
+%
+% Unknown Unitaries
+%
+
+\subsection{Unknown imperfect unitaries}
+
+Alternate to known unitaries, the unitary operation implemented by a node/channel may deviate from that which is desired, in an unknown manner, thereby implementing a slightly different operation than that which we intended to engineer. Specifically, the effective unitary can be represented as the ideal unitary, augmented by some deviation matrix,
+\begin{align}
+	\hat{U}_\mathrm{effective} = \hat{U}_\mathrm{ideal} + \hat{\Delta}_\mathrm{error},
+\end{align}
+where the matrix elements of $\hat{\Delta}_\mathrm{error}$ are unknown, but hopefully small. Since the unknown deviation matrix needn't be constant, it will be a function of random variables, evaluated independently for each trial of the process. Furthermore, since the deviation matrix may vary from trial to trial, QPT cannot be employed to characterise it, unlike unitaries with fixed errors.
 
 %
 % Loss
@@ -1037,7 +1211,7 @@ Like the dephasing and loss channels, the error probability of multiple channels
 
 \subsection{Amplitude damping}
 
-An error not so much relevant to optics, but which arises very naturally in some other systems, such as atomic systems or quantum dots, is amplitude damping. Here the process models the relaxation of a higher energy level, $\ket{1}$, to a lower energy one, $\ket{0}$. The $\ket{0}$ state is assumed to be the ground state and cannot relax any further, but the $\ket{1}$ state can spontaneously relax to the ground state. After complete amplitude damping, any input state will be left in the ground state $\ket{0}$. This model can be thought of as energy dissipating from the qubit system and being measured by the environment, leading to a type of decoherence whereby the input state is probabilistically replaced by the ground state.
+An error not so much relevant to optics, but which arises very naturally in some other systems, such as atomic systems or quantum dots, is amplitude damping, also referred to as a \emph{relaxation channel}. Here the process models the relaxation of a higher energy level, $\ket{1}$, to a lower energy one, $\ket{0}$. The $\ket{0}$ state is assumed to be the ground state and cannot relax any further, but the $\ket{1}$ state can spontaneously relax to the ground state. After complete amplitude damping, any input state will be left in the ground state $\ket{0}$. This model can be thought of as energy dissipating from the qubit system and being measured by the environment, leading to a type of decoherence whereby the input state is probabilistically replaced by the ground state.
 
 The amplitude damping channel is easily represented in the quantum process formalism using two Kraus operators,
 \begin{align}
@@ -1134,10 +1308,10 @@ In the case of the displacement operation, which is implemented by mixing a stat
 In the case of the squeezing operation, we might similarly have uncertainty in the squeezing parameter, thus implementing $\hat{S}(\xi+\Delta)$ instead of $\hat{S}(\xi)$.
 
 %
-% Quantum Costs & Attributes
+% Costs & Attributes In Quantum Networks
 %
 
-\section{Quantum costs \& attributes} \label{sec:quantum_meas_cost}
+\section{Costs \& attributes in quantum networks} \label{sec:quantum_meas_cost}
 
 As with the classical case in Sec.~\ref{sec:costs}, there will be costs associated with the links and nodes in a network -- nothing is free! In the quantum case, all the usual classical costs are valid, but there are some very important additions of far greater relevance to most quantum applications. Classical digital data is discretised, resulting in data transmission highly robust against noise. In a quantum setting this is necessarily not the case, as the coefficients in quantum superpositions are continuous, meaning that errors accumulate during transmission and states will inevitably deteriorate, unlike digital states. This requires a rethinking of appropriate cost metrics.
 
@@ -1805,6 +1979,8 @@ In instances where corruption or loss of packets cannot be tolerated, a more pro
 \comment{To do}
 
 \comment{Send source classical header/data to destination. Replace classical data. Merge headers (accumulate costs, run attribute update function, replace routing queue. Source header becomes target header, but with updated/merged costs and attributes). Add algorithm. Discard source packet.}
+
+\comment{what happens to packet headers when teleporting the state? * merging packet costs and attributes * discard source packet * requires resource of Bell pairs, as many as there are data qubits}
 
 %
 % Routing Strategies
@@ -2753,7 +2929,14 @@ A homodyne detector interferes a state with a coherent state on a beamsplitter, 
 
 \subsubsection{Bell state projection} \label{sec:bell_proj}
 
-For the purposes of which-path erasure, essential for optical cluster state (Sec.~\ref{sec:CSQC}) preparation and quantum teleportation (Sec.~\ref{sec:teleport}), Bell state measurements (i.e projections onto the Bell basis given in Eq.~\ref{eq:bell_basis}) are important. To realise this, there are two primary options. The first is to use a controlled-NOT (CNOT) gate (the quantum equivalent of the classical XOR gate), for example an LOQC gate (Sec.~\ref{sec:KLM_univ}). The second is to perform a \emph{partial} Bell state projection using a polarising beamsplitter (PBS) -- a beamsplitter which completely transmits vertical polarisation, and completely reflects horizontal polarisation \cite{bib:BraunsteinMann95}. This approach is described in Fig.~\ref{fig:partial_bell}.
+For the purposes of which-path erasure, essential for optical cluster state (Sec.~\ref{sec:CSQC}) preparation and quantum teleportation (Sec.~\ref{sec:teleport}), Bell state measurements (i.e projections onto the Bell basis given in Eq.~\ref{eq:bell_basis}) are important. To realise this, there are two primary options. The first is to use a controlled-NOT (CNOT) gate (the quantum equivalent of the classical XOR gate), for example an LOQC gate (Sec.~\ref{sec:KLM_univ}). The second is to perform a \emph{partial} Bell state projection using a polarising beamsplitter (PBS) -- a beamsplitter which completely transmits vertical polarisation, and completely reflects horizontal polarisation \cite{bib:BraunsteinMann95}. In the Heisenberg picture, the transformation of the photonic creation operators is,
+\begin{align}
+\hat{h}_1^\dag &\to \hat{h}_2^\dag, \nonumber \\
+\hat{h}_2^\dag &\to \hat{h}_1^\dag, \nonumber \\
+\hat{v}_1^\dag &\to \hat{v}_1^\dag, \nonumber \\
+\hat{v}_2^\dag &\to \hat{v}_2^\dag,
+\end{align}
+where $\hat{h}_i^\dag$ ($\hat{v}_i^\dag$) are the horizontal (vertical) creation operators for the $i$th mode. This approach is described in Fig.~\ref{fig:partial_bell}.
 
 The former can be implemented with arbitrarily high success probability in principle. However, in most scenarios of interest (such as cluster state preparation and entanglement purification) the latter succeeds with probability of $1/2$, since a PBS is only able to uniquely distinguish two of the four Bell states. To its advantage, partial Bell measurements only require high HOM visibility, avoiding the need for the interferometric stability inherent to LOQC CNOT gates.
 
@@ -3400,7 +3583,10 @@ In addition to single atoms with well-defined electronic structure, atomic ensem
 \begin{align}
 \hat{S}^\dag = \frac{1}{\sqrt{N}}\sum_{i=1}^N \hat{S}_i^\dag,
 \end{align}
-where \mbox{$\hat{S}_i^\dag=\ket{e}_i\bra{g}_i$} is the excitation operator for the $i$th atom in the ensemble, and there are $N$ atoms.
+where \mbox{$\hat{S}_i^\dag=\ket{e}_i\bra{g}_i$} is the excitation operator for the $i$th atom in the ensemble, $\ket{g}_i$ and $\ket{e}_i$ are the ground and excited states for the $i$th particle, and there are $N$ atoms. The state of a single collective excitation is then given by,
+\begin{align}
+\ket{\psi_\mathrm{collective}} = \hat{S}^\dag \ket{g}^{\otimes N}.	
+\end{align}
 
 Atomic ensembles are essentially well-engineered clouds of atomic gasses, trapped in a glass container, coupled to an optical mode. Atomic ensembles have been demonstrated with extremely long coherence lifetimes ($\sim$100ms \comment{Check this!}), operating at room temperatures (a very attractive feature on its own). They exhibit \emph{collective enhancement} in their coupling to the optical mode -- the optical coupling strength is amplified by a factor of $\sqrt{N}$ compared to single-atom optical coupling, mitigating the need for a cavity.
 
@@ -3413,180 +3599,23 @@ To couple with a polarisation-encoded photonic qubit, a PBS can be employed to s
 \caption{Coupling a polarisation-encoded photonic qubit to a pair of atomic ensembles, each of which corresponds to one of the qubit's logical basis states ($\ket{0}$ or $\ket{1}$). The horizontal and vertical components of the photonic qubit are spatially separated using a PBS, which subsequently independently interface with distinct atomic ensembles via collective excitation.} \label{fig:atomic_ensemble_qubit}
 \end{figure}
 
-Atomic ensembles have been proposed as quantum memories, given their long coherence lifetime. Additionally, a protocol for universal cluster state quantum computation (Sec.~\ref{sec:CSQC}) based upon atomic ensemble qubits has been described \cite{bib:RohdeAtEns10}.
+Atomic ensembles have been proposed as quantum memories, given their long coherence lifetimes. Additionally, a protocol for universal cluster state quantum computation (Sec.~\ref{sec:CSQC}) based upon atomic ensemble qubits has been described \cite{bib:RohdeAtEns10}.
 
 Essentially, the long coherence lifetimes of collective excitations owes to the fact that the excitation is effectively encoded as a W-state \cite{???}, an equal superposition of a single excitation across many atoms, of the form,
 \begin{align}
-\ket{\psi_W} = \frac{1}{\sqrt{N}}(&\ket{1,0,0,\dots}\nonumber \\
-+&\ket{0,1,0,\dots}\nonumber \\
-+&\ket{0,0,1,\dots}\nonumber \\
-+&\dots).	
+\ket{\psi_W} = \frac{1}{\sqrt{N}}(&\ket{e,g,g,\dots}\nonumber \\
++&\ket{g,e,g,\dots}\nonumber \\
++&\ket{g,g,e,\dots}\nonumber \\
++&\dots).
 \end{align}
-W-states are favourable from a decoherence perspective as tracing out a single mode/particle has minimal impact on the coherence of the residual state, which preserves most entanglement, with this robustness growing with the number of modes/particles. This is in stark contrast to GHZ states, which completely decohere under the loss of just a single mode.
+W-states are favourable from a decoherence perspective as tracing out a single particle has minimal impact on the coherence of the residual state, which preserves most entanglement, with this robustness growing with the number of particles. This is in stark contrast to GHZ states, which completely decohere under the loss of just a single particle. Specifically, if $\ket{\psi_W^{(N)}}$ is the $N$-particle W-state (collective excitation), tracing out a single particle yields,
+\begin{align}
+\hat\rho_\mathrm{tr} &= \mathrm{tr}_1(\ket{\psi_W^{(N)}}\bra{\psi_W^{(N)}}) \\
+&= \left(1-\frac{1}{N}\right)\ket{\psi_W^{(N-1)}}\bra{\psi_W^{(N-1)}} + \frac{1}{N}(\ket{g}\bra{g})^{\otimes (N-1)}, \nonumber
+\end{align}
+which for \mbox{$N\gg 1$} approaches the pure state $\ket{\psi_W^{(N-1)}}$, i.e a W-state with one fewer particle.
 
 \comment{Add atomic ensemble refs! Get from Barrett, Rohde, Stace paper}
-
-%
-% Models For Quantum Computation
-%
-
-\section{Models for quantum computation} \label{sec:models_QC}
-
-There are various approaches to implementing and representing quantum computations. We now briefly introduce the ones most relevant to our discussions on networked quantum computation. Other formalisms, such as adiabatic quantum computation \cite{???} and quantum simulated annealing \cite{???}, which are not so applicable to networking, will not be introduced.
-
-%
-% Circuit Model
-%
-
-\subsection{Circuit model} \label{sec:circuit_model}
-
-The \emph{circuit model} is the conventional and most intuitive approach for expressing quantum algorithms, decomposing them into chronological sequences of elementary operations, comprising state preparation, single- and multi-qubit gates, measurement, and classical feedforward. We recommend referring to the introductory sections of \cite{bib:NielsenChuang00} for a far more comprehensive introduction to quantum circuits than is presented here.
-
-Fig.~\ref{fig:eg_circuit} illustrates a simple 3-qubit quantum circuit comprising all of these elements. The interpretation of this diagram is as follows:
-\begin{itemize}
-\item Horizontal lines represent individual qubits.
-\item Time flows from left to right.
-\item The three input qubits are labelled on the far-left as $\ket{\psi_1}$, $\ket{\psi_2}$ and $\ket{\psi_3}$.
-\item Single-qubit gates are denoted as boxes containing the name of the associated unitary operation (e.g the Hadamard ($\hat{H}$), Pauli bit-flip ($\hat{X}$), Pauli bit-phase-flip ($\hat{Y}$), and Pauli phase-flip ($\hat{Z}$) gates).
-\item Two-qubit gates are denoted by vertical lines between the respective qubits.
-\item The maximally-entangling two-qubit controlled-NOT (CNOT) gate is denoted via a control ($\bullet$) and a target ($\oplus$).
-\item The maximally-entangling two-qubit controlled-phase (CZ) gate is denoted by two targets ($\bullet$) (the gate operates symmetrically on its two qubits).
-\item The `meter' symbol represents a classical measurement in the Pauli $\hat{Z}$-basis.
-\item Double lines represent classical feedforward of measurement outcomes, controlling a subsequent gate.
-\end{itemize}
-
-\begin{figure}[!htb]
-\begin{align}
-\Qcircuit @C=.7em @R=.4em @! {
-\lstick{\ket{\psi_1}} & \qw & \qw & \ctrl{1} & \gate{Y} & \meter & \control \cw\\
-\lstick{\ket{\psi_2}} & \qw & \targ & \ctrl{-1} & \qw & \meter & \cwx\\
-\lstick{\ket{\psi_3}} & \gate{H} & \ctrl{-1} & \qw & \qw & \gate{X} \cwx & \gate{Z} \cwx & \rstick{\ket{\phi}} \qw
-} \nonumber
-\end{align}
-\caption{Simple example of a quantum circuit, comprising several single- and two-qubit quantum gates and measurements. Rows represent qubits, and time flows from left to right.} \label{fig:eg_circuit}
-\end{figure}
-
-The circuit in Fig.~\ref{fig:eg_circuit} can be interpreted mathematically as implementing the following operation,
-\begin{align}
-\ket\phi &= \hat{Z}_3^{m_1} \cdot \hat{X}^{m_2}_3 \cdot \hat{M}_2 \cdot \hat{M}_1 \cdot \hat{Y}_1 \nonumber \\
-&\cdot \hat{\mathrm{CZ}}_{1,2} \cdot \hat{\mathrm{CNOT}}_{3,2} \cdot \hat{H}_3 \cdot \ket{\psi_1}\otimes\ket{\psi_2}\otimes\ket{\psi_3},
-\end{align}
-where $m_1$ and $m_2$ are the binary measurement outcomes of the two single-qubit measurements, $\hat{M}_1$ and $\hat{M}_2$.
-
-Using the circuit model, arbitrary quantum computations can be elegantly and intuitively represented. To enable \emph{universal} quantum computation within this model, a \emph{universal gate set} must be available at our disposal. Most commonly, this is chosen to be the maximally-entangling two-qubit CZ or CNOT operation, in addition to arbitrary single-qubit gates. Any quantum (i.e \textbf{BQP}) algorithm may be efficiently decomposed into a circuit comprising elements from this universal gate set.
-
-%
-% Cluster States
-%
-
-\subsection{Cluster states} \label{sec:CSQC}
-
-The \emph{cluster state} model for quantum computation \cite{bib:Raussendorf01, bib:Raussendorf03, bib:Nielsen06} (also referred to as the \emph{one-way}, \emph{measurement-based}, or \emph{graph state} models for quantum computation) is an extremely powerful paradigm that warrants treatment of its own, owing to its significant distinction from the more familiar circuit model, and its applicability to distributed models for quantum computation to be discussed in Sec.~\ref{sec:dist_QC}.
-
-In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \emph{cluster state} or \emph{graph state}. The state is associated with a graph, $G=(V,E)$, of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation\footnote{Note that the graph upon which a cluster state resides is not to be confused with the network graph. Rather it is just a convenient graphical representation for a class of multi-qubit states.}. That is, they act as a `substrate' for implementing arbitrary quantum computations.
-
-In the graph, vertices represent qubits initialised into the \mbox{$\ket{+}=\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$} state, and edges represent the application of maximally entangling controlled-phase (CZ) gates, $\hat{\mathrm{CZ}}=\mathrm{diag}(1,1,1,-1)$, between vertices,
-\begin{align}
-\ket\psi_\mathrm{cluster} = \prod_{e\in E} \hat{\mathrm{CZ}}_e \cdot \bigotimes_{v\in V}\ket{+}_v.
-\end{align}
-Alternately, but equivalently, cluster states may be defined in the stabiliser formalism. Specifically, a cluster state is defined to be the joint +1 eigenstate of all the stabilisers,
-\begin{align} \label{eq:CS_stab}
-\hat{S}_v = \hat{X}_v \prod_{i\in n_v} \hat{Z}_i,
-\end{align}
-where there is one stabiliser $\hat{S}_v$ per vertex $v$, and $n_v$ is the set of vertices neighbouring $v$. The cluster state therefore satisfies,
-\begin{align}
-\hat{S}_v\ket\psi_\mathrm{cluster} = \ket\psi_\mathrm{cluster}\,\forall\, v,
-\end{align}
-and the full set of stabilisers $\hat{S}_v$ over all vertices $v$ is sufficient to fully characterise the cluster state, $\ket{\psi}_\mathrm{cluster}$.
-
-An example is presented in Fig.~\ref{fig:cluster_state}. Cluster states are easily encoded optically using photonic polarisation encoding (Sec.~\ref{sec:single_phot_enc}), and therefore readily lend themselves to optical networking.
-
-\begin{figure}[!htb]
-\includegraphics[width=0.6\columnwidth]{cluster_state}
-\caption{Example of a \mbox{$4\times 3$} rectangular lattice cluster state. Each vertex in the graph represents a qubit initialised into \mbox{$\ket{+}=\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$}. Edges represent the application of CZ gates between qubits (CZ gates commute, so the order is unimportant). Of sufficient dimension, states of this topology enable universal measurement-based quantum computation, whereby computation proceeds purely via single-qubit measurements, and all entangling operations have been commuted to the state preparation stage. Because CZ gates commute, the preparation of cluster states is time-independent, and easily implemented in a distributed or parallelised manner. The time-ordering of the single-qubit measurements is dependent on the structure of the graph and the algorithm.} \label{fig:cluster_state}
-\end{figure}
-
-Having prepared this state, the computation is implemented purely via a well-orchestrated routine of single-qubit measurements. The order and basis in which they are performed (which depends on previous measurement outcomes in general -- i.e we require fast-feedforward) then stipulates the computation. In the context of distributed computation, this requires classical communication between nodes.
-
-It is easily shown that this model may be directly mapped to the circuit model, and is therefore universal for quantum computation.
-
-The distinctive feature of this model is that all the entangling CZ gates are performed at the very beginning of the protocol, during the state preparation stage. The algorithm itself is purely measurement-based, requiring only single-qubit measurements (no entangling measurements).
-
-An alternate interpretation of the cluster state model is that it is a complicated network of state and gate teleportation protocols (Sec.~\ref{sec:teleport}). Specifically, a CZ gate with a $\ket{+}$ state as a resource, followed by measurement of one of the two qubits acts as a single-qubit teleporter, as shown in Fig.~\ref{fig:single_qubit_teleporter}. Thus, with a substrate state of CZ gates applied between $\ket{+}$ states, the single-qubit measurements progressively teleport the input state through the graph topology, at each stage accumulating the action of more gates, which are related to the choices of the previous single-qubit measurement bases, and the graph topology.
-
-\begin{figure}[!htb]
-\begin{align}
-\Qcircuit @C=.7em @R=.4em @! {
-\lstick{\ket{\psi}} & \ctrl{1} & \gate{H} & \meter & & \\
-\lstick{\ket{+}} & \ctrl{0} & \qw & \gate{X} \cwx & \gate{H} & \rstick{\ket\psi} \qw \\
-} \nonumber
-\end{align}
-\caption{The single-qubit teleporter, based upon a controlled-phase (CZ) gate, a single-qubit measurement, and classical feedforward.} \label{fig:single_qubit_teleporter}
-\end{figure}
-
-The cluster state formalism has proven very useful, enabling the development of linear optics quantum computing (Sec.~\ref{sec:KLM_univ}) protocols, orders of magnitude more efficient than the original KLM protocol. It has been found that bonding strategies -- i.e the order in which smaller clusters are fused into larger ones when using non-deterministic gates -- plays a major role in resource overhead, and much work has been performed on efficient preparation strategies for various topologies \cite{bib:Nielsen04, bib:BarrettKok05, bib:BrowneRudolph05, bib:BenjaminEisert05, bib:Gross06, bib:RohdeStratCS07, bib:Kieling06, bib:KielingRudolphEisert06, bib:RohdeBarrett07, bib:Kieling07, bib:Campbell07, bib:Campbell07b}.
-
-These cluster states are highly valuable, given their computational power, and the ability to communicate them from Alice, who is able to prepare them, to Bob, who lacks the technology, would be a boon for Bob.
-
-It would be most practical, economical, and resource efficient to have a single, well-equipped server with the ability to prepare such states, who does so on behalf of everyone else, and communicates the fresh cluster states to them over the quantum internet (for a price, perhaps).
-
-Importantly, the preparation of cluster states is readily parallelised. All the entangling CZ operations commute, the order in which they are applied is irrelevant, and a rectangular lattice cluster is completely uniform. Thus, the graphs representing smaller cluster states may be easily `fused' together to form larger cluster states using, for example, CZ gates. Several other types of entangling gates can also be employed, such as polarising beamsplitters -- so-called \emph{fusion gates} \cite{bib:BrowneRudolph05}. This allows the preparation of cluster states to be performed in a `patchwork quilt'-like manner -- a number of nodes each prepare small lattice clusters, they are all put side-by-side, and stitched together using CZ gates. This type of distributed state preparation is a perfect application for in-parallel distributed quantum processing.
-
-Consider the scenario whereby Alice requests a large cluster state from Bob, but, while she was unable to prepare the cluster state herself, she has the technological ability to perform the measurement-based computation on the state (i.e single-qubit measurements). This would effectively bypass the need for blind/homomorphic quantum computation on Bob's hardware altogether, enabling computation with \emph{perfect} secrecy, since no foreign parties would be involved in the computation stage, and no secret data is communicated -- only the \emph{substrate} for the computation is communicated, which could be used for any purpose whatsoever. By commuting all the technologically challenging aspects of a quantum computation to the state preparation stage, we can effectively mitigate the need for blind quantum computing entirely, since the `hard work' has been done in advance by the host, and Alice gets to fulfil the computation on her own, completely bypassing poor old Bob, who was just dying to read Alice's secret love letters before processing them into Hallmark cards.
-
-There are several cluster state identities we will utilise later, summarised in Fig.~\ref{fig:cluster_ident}.
-
-\begin{figure}[!htb]
-\includegraphics[width=\columnwidth]{cluster_identities}
-\caption{Several cluster state identities. (a) a CZ gate between two qubits creates an edge between them in the graph. (b) Measurement of a qubit in the Pauli $\hat{Y}$ basis removes that qubit from the graph, while creating new edges between the neighbouring qubits. (c) Measurement of a qubit in the Pauli $\hat{Z}$ basis removes that qubit and any neighbouring edges.} \label{fig:cluster_ident} 
-\end{figure}
-
-When using non-deterministic gates to prepare cluster states, there are approaches to nonetheless preparing ideal cluster states. This is discussed in more detail in Sec.~\ref{sec:module}. Alternately, we can borrow ideas from percolation theory to simply tolerate defects in a cluster state lattice by working around them. Specifically, if the defect probability (i.e probability of a missing vertex or edge) is below some \emph{percolation threshold}, \mbox{$p_\mathrm{defect}\leq \epsilon_\mathrm{threshold}$}, in the asymptotic limit we are guaranteed that routes exist through the lattice. This allows defective graphs to be employed for quantum computation.
-
-%
-% Topological Codes
-%
-
-\subsection{Topological codes} \label{sec:topol_codes}
-
-If the intention is to perform quantum computations using cluster states shared over a network, QEC and fault-tolerance \emph{must} be taken into consideration, or catastrophic algorithmic failure will inevitably follow -- the cluster state model is no different from the circuit model in this respect. Fault-tolerance theory places hard thresholds on the amount of noise (typically depolarising errors and loss) qubits may be subject to in order for fault-tolerance to be possible and computations to succeed. This places strict QoS (Sec.~\ref{sec:QOS}) constraints on the network, which can be accommodated for using the usual depolarising and efficiency cost metrics when developing networking strategies and link performance requirements.
-
-It has been shown that fault-tolerance is possible within the cluster state model \cite{bib:NielsenDawson04, bib:Dawson06} using variations of conventional QEC codes. However, more importantly, from cluster states certain \emph{topological QEC codes} \cite{???} can be readily constructed. This implements a form of QEC-encoded measurement-based quantum computing protocol, where the computation proceeds in a measurement-based fashion, but is `natively' fault-tolerant.
-
-These codes have been shown to have very favourable fault-tolerance thresholds in terms of both depolarising noise and loss \cite{bib:StaceBarrettDohertyLoss, bib:BarrettStaceFT}, as well as frugal resource overhead compared to traditional concatenated codes. Additionally, loss- and gate-failure-tolerant codes, uniquely applicable to the cluster state model, have been described, with very favourable loss thresholds \cite{bib:Varnava05, bib:RalphHayes05, bib:Duan05}. 
-
-Importantly, topological codes do not require joint measurements across the entire graph state, instead requiring only operations localised to small regions within the graph. Thanks to this, computation using such topological codes can remain distributed, without requiring the entire state to be held locally by a particular host, or requiring full access to the entire state by any particular user.
-
-The most common topological code, which we will use here as an example, is the toric code, which resides on a lattice graph over the surface of a torus\footnote{As with cluster states, this graph needn't (but could) correspond to the network graph.}. As with cluster states (Sec.~\ref{sec:CSQC}), the toric code is most easily visualised in the stabiliser formalism. Consider a rectangular sub-graph of the torus. We place a qubit on each edge (not vertex) of the graph. Now we define two sets of stabiliser operators: \emph{star} and \emph{plaquette} operators,
-\begin{align}
-\hat{S}_\mathrm{star}(v) &= \prod_{i\in e(v)} \hat{X}_i, \nonumber \\
-\hat{S}_\mathrm{plaquette}(p) &= \prod_{i\in e(p)} \hat{Z}_i,
-\end{align}
-where $e(v)$ are the edges neighbouring vertex $v$, and $e(p)$ are the edges surrounding plaquette $p$. By definition, the toric code state, $\ket\psi_\mathrm{toric}$, satisfies the stabiliser relations,
-\begin{align}
-\hat{S}_\mathrm{star}(v) \ket\psi_\mathrm{toric} &= \ket\psi_\mathrm{toric} \,\forall\, v, \nonumber \\
-\hat{S}_\mathrm{plaquette}(p) \ket\psi_\mathrm{toric} &= \ket\psi_\mathrm{toric} \,\forall\, p.
-\end{align}
-Unlike the cluster state stabilisers from Eq.~\ref{eq:CS_stab}, these stabilisers are insufficient to fully characterise a unique quantum state. Rather, there are two unspecified degrees of freedom, which allows for a single qubit to be represented. Modifications of the topology, in the form of holes in the lattice (the genus of the topology), allow larger numbers of qubits to be encoded. Logical operations are implemented by performing gates and measurements across topologies over the surface.
-
-The important feature to note is that logical qubits encoded into the toric code do not reside locally at any of the physical qubits in the topology. Rather, they reside jointly across the entire graph, which, like cluster states, might be partitioned across multiple hosts, enabling distributed computation.
-
-This is all summarised in Fig.~\ref{fig:toric_code}.
-
-\begin{figure}[!htb]
-\includegraphics[width=\columnwidth]{toric_code}
-\caption{Graph representation of the toric QEC code, and its associated stabilisers. The star and plaquette stabilisers across all vertices, jointly specify the state of the graph up to two missing degrees of freedom, which encode a single logical qubit. Thus, a logical qubit is encoded jointly across the entire graph, not at any specific vertex. Logical operations are performed via operations following topological paths through the lattice (not shown). The graph may be distributed across multiple hosts for distributed quantum computation.} \label{fig:toric_code}
-\end{figure}
-
-\comment{How to convert cluster states to topological codes. Add discussion of how to perform gates.}
-
-Having defined the toric code as such, QEC proceeds in a similar manner to any other stabiliser code -- we measure all the stabilisers, yielding a syndrome, from which we can determine geometrically where errors took place in the graph, which can subsequently be corrected (if below threshold).
-
-The simplest example of error detection is the scenario where a single bit-flip ($\hat{X})$ error has occurred in the graph. Now exactly two plaquette stabilisers will yield the $-1$ measurement outcome, instead of the expected $+1$ outcome. These two stabilisers will necessarily be neighbouring ones, overlapping at the qubit where the error took place. Thus, using this geometric property, we are able to identify the location of the single $\hat{X}$ error and subsequently correct it. On the other hand, if there were too many errors, it is possible they could conspire against us to create ambiguity in the geometric argument for the location of the errors. \comment{Figure for both examples of this -- under and over threshold!}
-
-Importantly, the stabilisers are all defined over geometrically localised neighbourhood regions, and do not require long-range measurements, making this type of code suitable to distributed models for quantum computation.
-
-\comment{What about the actual computation? Can this still be distributed when we do the topological gates etc?}
 
 %
 % Physical Architectures For Quantum Computing
@@ -4170,6 +4199,22 @@ To set the stage for our upcoming treatment of encrypted quantum computation pro
 \comment{A universal QC can implement any classical algorithm. So QCs with homo/BQC give us the means by which to perform encrypted classical computations, bypassing limitations imposed by purely classical protocols.}
 
 %
+% Homomorphic Encryption
+%
+
+\subsubsection{Homomorphic encryption}
+
+\comment{To do!}
+
+%
+% Blind Computation
+%
+
+\subsubsection{Blind computation}
+
+\comment{To do!}
+
+%
 % Cluster States
 %
 
@@ -4184,6 +4229,22 @@ However, Alice may have access to no quantum resources whatsoever -- even single
 \comment{Consider both BQC and homomorphic QC}
 
 %
+% Homomorphic Encryption
+%
+
+\subsubsection{Homomorphic encryption}
+
+\comment{To do!}
+
+%
+% Blind Quantum Computation
+%
+
+\subsubsection{Blind quantum computation}
+
+\comment{To do!}
+
+%
 % Circuit Model
 %
 
@@ -4191,13 +4252,27 @@ However, Alice may have access to no quantum resources whatsoever -- even single
 
 \comment{To do}
 
-\comment{Consider both BQC and homomorphic QC}
-
 %
-% Passive Non-Interactive Optics
+% Homomorphic Encryption
 %
 
-\subsection{Passive non-interactive optics}
+\subsubsection{Homomorphic encryption}
+
+\comment{To do!}
+
+%
+% Blind Quantum Computation
+%
+
+\subsubsection{Blind quantum computation}
+
+\comment{To do!}
+
+%
+% Homomorphic Encryption Of Passive Non-Interactive Optics
+%
+
+\subsection{Homomorphic encryption of passive non-interactive optics}
 
 The previously discussed schemes for encrypted universal quantum computation required a degree of client/server interaction via classical communication. But perhaps there are some restricted (i.e non-universal) models for optical quantum computation, which lend themselves to passive, non-interactive encryption? And perhaps these restrictions simplify the physical resource requirements for encryption?
 
@@ -4469,13 +4544,17 @@ R=\frac{D_\mathrm{enc}}{D_\mathrm{unenc}	},
 \end{align}
 as an indicator of data-hiding. \mbox{$R<1$} is indicative that information is hidden from Bob.
 
-These relationships are illustrated in Fig.~\ref{fig:homo_coh_st_tr}\footnote{Note that the distance between any arbitrary pair of codewords may be obtained by replacing $\mathrm{wt}(\cdot)$ with their Hamming distance (in the simple case where one of the codewords is the $\vec{0}$ bit-string, the Hamming weight and Hamming distance are equivalent). \comment{Is this right?}}. Clearly, the encoded basis states exhibit greater indistinguishability than the unencoded ones, demonstrating that information is hidden from Bob. Unfortunately, the trace distance does not have the elegant interpretation of `number of bits hidden' that the mutual information does. Nonetheless, this demonstrates partial hiding of information.
+These relationships are illustrated in Figs.~\ref{fig:homo_coh_st_tr} \& \ref{fig:homo_coh_st_ratio}\footnote{Note that the distance between any arbitrary pair of codewords may be obtained by replacing $\mathrm{wt}(\cdot)$ with their Hamming distance (in the simple case where one of the codewords is the $\vec{0}$ bit-string, the Hamming weight and Hamming distance are equivalent). \comment{Is this right?}}. Clearly, the encoded basis states exhibit greater indistinguishability than the unencoded ones, demonstrating that information is hidden from Bob. The trace distance does not have the elegant interpretation of `number of bits hidden' that the mutual information does. Rather, it gives us the probability of Bob correctly guessing Alice's state, demonstrating the degree of partial hiding of information.
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{coherent_state_homo_unenc} \\
-\includegraphics[width=\columnwidth]{coherent_state_homo_enc} \\
+\includegraphics[width=\columnwidth]{coherent_state_homo_enc}
+\caption{Trace distance between unencoded (top) and encoded (bottom) basis states for coherent state computation using phase-key encoding, with \mbox{$d=50$} keys and \mbox{$m=10$} modes. Each mode is inputted with one of two basis coherent states, \mbox{$\ket{\pm\alpha}$}. \mbox{$\mathrm{wt}(\vec{x})$} denotes the Hamming weight of bit-string $\vec{x}$. Two states are indistinguishable if their trace distance is 0, and distinguishable (orthogonal) if their trace distance is 1. Lower trace distance between encoded states implies a lower chance of Bob guessing Alice's plaintext input state.} \label{fig:homo_coh_st_tr}
+\end{figure}
+
+\begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{coherent_state_homo_ratio}
-\caption{Trace distance between unencoded (top) and encoded (middle) basis states for coherent state computation using phase-key encoding, and the ratio between them (bottom), with \mbox{$d=50$} keys and \mbox{$m=10$} modes. Each mode is inputted with one of two basis coherent states, \mbox{$\ket{\pm\alpha}$}. \mbox{$\mathrm{wt}(\vec{x})$} denotes the Hamming weight of bit-string $\vec{x}$. Two states are indistinguishable if their trace distance is 0, and distinguishable if their trace distance is 1. Lower trace distance between encoded states implies a lower chance of Bob guessing Alice's plaintext input state. \mbox{$R<1$} implies information hiding from Bob.} \label{fig:homo_coh_st_tr}
+\caption{Ratio of the trace distance between unencoded and encoded basis states for coherent state computation using phase-key encoding, with \mbox{$d=50$} keys and \mbox{$m=10$} modes. \mbox{$R<1$} implies information hiding from Bob.} \label{fig:homo_coh_st_ratio}
 \end{figure}
 
 It seems plausible that this approach to homomorphic encryption in phase-space could be extended to other quantum states of light. However, as is typically the case, performing entropic security proofs is notoriously difficult, and this remains an open problem. It should be noted, however, that this approach will definitely \emph{not} work for any class of input states which are invariant under phase-shifts. This explicitly rules out employing this technique for, for example, photon-number states, which have no phase.
@@ -4555,6 +4634,14 @@ To complicate any future efforts into providing security proofs for displacement
 \comment{Does the Fitzsimons group mind me discussing this, given that we haven't fleshed it out yet? It's a highly speculative section, but a nice discussion to have I think, to lay the ground for motivating future work.}
 
 \comment{Anything else to say about this?}
+
+%
+% One-Time Quantum Programs
+%
+
+\subsection{One-time quantum programs}
+
+\comment{To do! Si-Hui?}
 
 %
 % Entanglement - The Ultimate Quantum Resource
@@ -4972,10 +5059,18 @@ There are also other promising approaches to quantum memories, e.g., quantum dot
 \comment{What else? What other main architectures?}
 
 %
+% Outlook
+%
+
+\section{Outlook} \label{sec:outlook}
+
+In this section we provide a non-technical outlook on the future quantum internet and its implications, for the benefit of the technically disinterested reader. This section is in the form of several short essays, requiring no background knowledge in quantum computation, quantum mechanics, or mathematics.
+
+%
 % The Era of Quantum Supremacy
 %
 
-\section{The era of quantum supremacy} \label{sec:era_quant}
+\subsection{The era of quantum supremacy} \label{sec:era_quant}
 
 A pertinent question to ask is `What is the timescale for useful quantum technologies? When will they be viable?'. The correct answer is likely very soon.
 
@@ -5007,7 +5102,7 @@ It is clear that humanity already sits at the precipice of harnessing quantum te
 % The Economics of the Quantum Internet
 %
 
-\section{The economics of the quantum internet} \label{sec:economics}
+\subsection{The economics of the quantum internet} \label{sec:economics}
 
 \comment{Add discussion of global virtual QC and quantum singularity!}
 
@@ -5033,7 +5128,7 @@ On the other hand, if quantum computers were only ever sold as specialised, room
 % The Quantum Singularity
 %
 
-\section{The quantum singularity} \label{sec:singularity}
+\subsection{The quantum singularity} \label{sec:singularity}
 
 Since there is positive economic leverage to all participating parties, this creates a self-reinforcing economic model, whereby all market participants are incentivised to continue contributing to the network, exponentially enhancing its collective power, with ever increasing returns over time.
 
@@ -5047,7 +5142,7 @@ Once we reach the point at which the economic returns of the global virtual quan
 % Security Implications of the Global Quantum Internet
 %
 
-\section{Security implications of the global quantum internet} \label{sec:sec_imp}
+\subsection{Security implications of the global quantum internet} \label{sec:sec_imp}
 
 With any new technology comes ethical considerations. Who will have access to it, and how do they plan to use it? For this reason, many developed nations have export bans or restrictions in place on `dual-use' technologies -- those which have clearly legitimate and morally justifiable uses, but also nefarious ones by competitors and criminals. Nuclear technology is the obvious archetype. Quantum technologies (in particular quantum computing and quantum cryptography) are particularly vulnerable to dual-use, and for this reason are becoming subject to dual-use technology legislation, such as export controls, in some nations. In Australia, for example, legislation is being introduced criminalising the transfer of knowledge on certain quantum and cryptographic technologies to foreign nationals of certain target countries.
 
@@ -5087,10 +5182,10 @@ These are all legitimate concerns. But they are very much the same ones that det
 We take the view that the same ethical stance ought to be applied in the quantum era. While quantum technologies clearly have dual-use potential, the magnitude of the implications they will have for scientific and technological progress overwhelms the discussed proliferation issues. No doubt, politicians will nonetheless attempt to regulate and restrict the quantum internet -- that's what governments like to do. But this will inevitably fail for the same underlying reasons that it failed for the classical internet -- no tech-savvy Chinese person can actually say they are hindered by the Great Firewall of China\texttrademark.
 
 %
-% The Vision of the Global Quantum Internet
+% Conclusion - The Vision of the Quantum Internet
 %
 
-\section{The vision of the global quantum internet} \label{sec:vision_quant}
+\section{Conclusion -- The vision of the quantum internet} \label{sec:vision_quant}
 
 Quantum technologies, particularly quantum computing, will truly revolutionise countless industries. With early demonstrations of key quantum technologies -- such as QKD, long distance quantum teleportation, and quantum computing -- becoming a reality, it is of utmost importance that networking protocols be pursued.
 
