@@ -134,7 +134,7 @@ The internet is one of the key technological achievements of the 20th century, a
 Perhaps the most exciting prospect in the quantum age is the development of quantum computers\index{Quantum computing}. Richard Feynman \cite{bib:Feynman85} was the first to ask the question `If quantum systems are so exponentially complex that we are unable to simulate them on our classical computers, can those same quantum systems be exploited in a controlled way to exponentially outperform our classical computers?'. Subsequently, the Deutsch-Jozsa algorithm \cite{bib:DeutschJozsa92} demonstrated for the first time that algorithms can run on a quantum computer, exponentially outperforming any classical algorithm. Since then, an enormous amount of research has been dedicated to finding new quantum algorithms, and the search has indeed been a very fruitful one\footnote{See the Quantum Algorithm Zoo for a comprehensive summary of the current state of knowledge on quantum algorithms ({\tt \href{http://math.nist.gov/quantum/zoo/}{http://math.nist.gov/quantum/zoo/}}).}, with many important applications having been found, including, amongst many others\index{Quantum algorithms}:
 \begin{itemize}
 \item Searching unstructured databases (Grover's algorithm \cite{bib:Grover96} -- quadratic speedup).\index{Grover's algorithm}
-\item Satisfiability problems\footnote{A satisfiability problem is one where we search a function's input space for a solution(s) satisfying a given output constraint. The hardest such problems, like the archetypal {\sc 3-SAT} problem, are \textbf{NP}-complete.}\index{Speeding up \textbf{NP}-complete problems} (Grover's algorithm -- quadratic speedup). This includes solving \textbf{NP}-complete problems, and brute-force cracking of private encryption keys\footnote{Note that when performing a brute-force attack against a private encryption key, a quadratic speedup effectively halves the key length in terms of algorithmic runtime. Thus, in the quantum era private key lengths will need to be doubled.}. 
+\item Satisfiability problems\footnote{A satisfiability problem is one where we search a function's input space for a solution(s) satisfying a given output constraint. The hardest such problems, like the archetypal {\sc 3-SAT} problem, are \textbf{NP}-complete.}\index{NP-complete problems} (Grover's algorithm -- quadratic speedup). This includes solving \textbf{NP}-complete problems, and brute-force cracking of private encryption keys\footnote{Note that when performing a brute-force attack against a private encryption key, a quadratic speedup effectively halves the key length in terms of algorithmic runtime. Thus, in the quantum era private key lengths will need to be doubled.}. 
 \item Period finding and integer factorisation\index{Shor's algorithm} (Shor's algorithm \cite{bib:ShorFactor} -- exponential speedup). This compromises Rivest, Shamir \& Adleman (RSA) public-key cryptography \cite{bib:RSA}, the most widely used cryptographic protocol on the internet today.
 \item Simulation of quantum systems\index{Quantum simulation} (\cite{bib:lloyd1996universal} - exponential speedup). This includes simulation of: molecular and atomic interactions in the study of quantum chemistry or nuclear physics; interactions between drug molecules and organic molecules for drug design; genetic interactions for the study of genetics and genetic medicine; nanoscale semiconductor physics for integrated circuit design; and much more.
 \item Simulation of quantum field theories\index{Simulating quantum field theories} (\cite{bib:JLP, bib:RohdeWavelet15} - exponential speedup), a key area of fundamental physics research.
@@ -160,7 +160,7 @@ Already we are beginning to see elementary realisations of essential quantum tec
 
 The first demonstrations of digital computer networks were nothing more than simple two-party, point-to-point (P2P) communication. However, the internet we have today extends far beyond this, allowing essentially arbitrary worldwide networking across completely ad hoc networks comprising many different mediums, with any number of parties, in an entirely plug-and-play fashion. Similarly, elementary demonstrations of quantum communication\index{Quantum communication} have been performed across a small number of parties, and much work has been done on analysing quantum channel capacities in this context \cite{??? channel_capacity}. But, as with digital computing, demand for a future \emph{quantum internet} is foreseeable, enabling the arbitrary communication of quantum resources, between any number of parties, over ad hoc networks.
 
-The digital internet may be considered a technology stack, such as TCP/IP\index{TCP/IP} (Transmission Control Protocol/Internet Protocol)\index{Transmission Control Protocol/Internet Protocol (TCP/IP)}, comprising different levels of abstraction of digital information \cite{bib:TanenbaumNet}. At the lowest level we have raw digital data we wish to communicate across a physical medium. Above this, we decompose the data into packets. The packets are transmitted over a network, and TCP is responsible for routing the packets to their destination, and guaranteeing data integrity and Quality of Service ({\sc QoS}). Finally, the packets received by the recipient are combined and the raw data reconstructed.
+The digital internet may be considered a technology stack, such as TCP/IP (Transmission Control Protocol/Internet Protocol)\index{Transmission Control Protocol/Internet Protocol (TCP/IP)}, comprising different levels of abstraction of digital information \cite{bib:TanenbaumNet}. At the lowest level we have raw digital data we wish to communicate across a physical medium. Above this, we decompose the data into packets. The packets are transmitted over a network, and TCP is responsible for routing the packets to their destination, and guaranteeing data integrity and Quality of Service ({\sc QoS}). Finally, the packets received by the recipient are combined and the raw data reconstructed.
 
 The TCP layer remains largely transparent to the end-user, enabling virtual software interfaces to remote digital assets that behave as though they were local. This allows high-level services such as the File Transfer Protocol (FTP), the worldwide web, video and audio streaming, and outsourced computation on supercomputers, as though everything was taking place locally, with the end-user oblivious to the underlying networking protocols. To the user, YouTube videos or Spotify tracks behave as though they were held as local copies. And FTP or DropBox allow storage on a distant data centre to be mounted as though it were a local volume. We foresee a demand for these same criteria in the quantum era.
 
@@ -201,10 +201,45 @@ Fig.~\ref{fig:eg_circuit} illustrates a simple 3-qubit quantum circuit comprisin
 \item Horizontal lines represent individual qubits.
 \item Time flows from left to right.
 \item The three input qubits are labelled on the far-left as $\ket{\psi_1}$, $\ket{\psi_2}$ and $\ket{\psi_3}$.
-\item Single-qubit gates are denoted as boxes containing the name of the associated unitary operation (e.g the Hadamard ($\hat{H}$), Pauli bit-flip ($\hat{X}$), Pauli bit-phase-flip ($\hat{Y}$), and Pauli phase-flip ($\hat{Z}$) gates).
+\item Single-qubit gates are denoted as boxes containing the name of the associated unitary operation. Here, the examples are the Hadamard ($\hat{H}$), Pauli bit-flip ($\hat{X}$), Pauli bit-phase-flip ($\hat{Y}$), and Pauli phase-flip ($\hat{Z}$) gates\index{Pauli gates},
+\begin{align}
+	\hat{H} &= \frac{1}{\sqrt{2}}\begin{pmatrix}
+1 & 1 \\
+1 & -1
+\end{pmatrix},\nonumber \\
+\hat{X} &= \begin{pmatrix}
+0 & 1 \\
+1 & 0
+\end{pmatrix},\nonumber \\
+\hat{Y} &= \frac{1}{\sqrt{2}}\begin{pmatrix}
+0 & -i \\
+i & 0
+\end{pmatrix},\nonumber \\
+\hat{Z} &= \begin{pmatrix}
+1 & 0 \\
+0 & -1
+\end{pmatrix}.
+\end{align}
 \item Two-qubit gates are denoted by vertical lines between the respective qubits.
-\item The maximally-entangling two-qubit controlled-NOT (CNOT) gate is denoted via a control ($\bullet$) and a target ($\oplus$).
-\item The maximally-entangling two-qubit controlled-phase (CZ) gate is denoted by two targets ($\bullet$) (the gate operates symmetrically on its two qubits).
+\item The maximally-entangling two-qubit controlled-NOT (CNOT) gate is denoted via a control ($\bullet$) and a target ($\oplus$),
+\begin{align}
+	\hat{\mathrm{CNOT}}=\begin{pmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 1 \\
+0 & 0 & 1 & 0
+\end{pmatrix}.
+\end{align}
+This is the quantum equivalent of the classical XOR gate.
+\item The maximally-entangling two-qubit controlled-phase (CZ) gate is denoted by two targets ($\bullet$) (the gate operates symmetrically on its two qubits),
+\begin{align}
+	\hat{\mathrm{CZ}}=\begin{pmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & -1
+\end{pmatrix}.
+\end{align}
 \item The `meter' symbol represents a classical measurement in the Pauli $\hat{Z}$-basis.
 \item Double lines represent classical feedforward of measurement outcomes, controlling a subsequent gate.
 \end{itemize}
@@ -233,18 +268,22 @@ Using the circuit model, arbitrary quantum computations can be elegantly and int
 % Cluster States
 %
 
-\subsection{Cluster states} \label{sec:CSQC} \index{Cluster states}
+\subsection{Cluster states} \label{sec:CSQC} \index{Cluster state model}
 
-The \emph{cluster state} model for quantum computation \cite{bib:Raussendorf01, bib:Raussendorf03, bib:Nielsen06} (also referred to as the \emph{one-way}, \emph{measurement-based}, or \emph{graph state} models for quantum computation) is an extremely powerful paradigm that warrants treatment of its own, owing to its significant distinction from the more familiar circuit model, and its applicability to distributed models for quantum computation to be discussed in Sec.~\ref{sec:dist_QC}.
+The \emph{cluster state} model for quantum computation \cite{bib:Raussendorf01, bib:Raussendorf03, bib:Nielsen06} (also referred to as the \emph{one-way}, \emph{measurement-based}\index{Measurement-based quantum computation}, or \emph{graph state} models for quantum computation) is an extremely powerful paradigm that warrants treatment of its own, owing to its significant distinction from the more familiar circuit model, and its applicability to distributed models for quantum computation to be discussed in Sec.~\ref{sec:dist_QC}.
 
-In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \emph{cluster state} or \emph{graph state}. The state is associated with a graph, $G=(V,E)$, of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation\footnote{Note that the graph upon which a cluster state resides is not to be confused with the network graph. Rather it is just a convenient graphical representation for a class of multi-qubit states.}. That is, they act as a `substrate' for implementing arbitrary quantum computations.
+In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \emph{cluster state} or \emph{graph state}\index{Graph states}. The state is associated with a graph, $G=(V,E)$, of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation\footnote{Note that the graph upon which a cluster state resides is not to be confused with the network graph. Rather it is just a convenient graphical representation for a class of multi-qubit states.}. That is, they act as a `substrate' for implementing arbitrary quantum computations.
 
-In the graph, vertices represent qubits initialised into the \mbox{$\ket{+}=\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$} state, and edges represent the application of maximally entangling controlled-phase (CZ) gates, $\hat{\mathrm{CZ}}=\mathrm{diag}(1,1,1,-1)$, between vertices,
+In the graph, vertices represent qubits initialised into the,
+\begin{align}
+	\ket{+}=\frac{1}{\sqrt{2}}(\ket{0}+\ket{1}),
+\end{align}
+state, and edges represent the application of maximally entangling CZ gates between vertices,
 \begin{align}
 \ket\psi_\mathrm{cluster} = \prod_{e\in E} \hat{\mathrm{CZ}}_e \cdot \bigotimes_{v\in V}\ket{+}_v.
 \end{align}
 Alternately, but equivalently, cluster states may be defined in the stabiliser formalism. Specifically, a cluster state is defined to be the joint +1 eigenstate of all the stabilisers,
-\begin{align} \label{eq:CS_stab}
+\begin{align} \label{eq:CS_stab} \index{Cluster state stabilisers}
 \hat{S}_v = \hat{X}_v \prod_{i\in n_v} \hat{Z}_i,
 \end{align}
 where there is one stabiliser $\hat{S}_v$ per vertex $v$, and $n_v$ is the set of vertices neighbouring $v$. The cluster state therefore satisfies,
@@ -275,7 +314,7 @@ An alternate interpretation of the cluster state model is that it is a complicat
 \lstick{\ket{+}} & \ctrl{0} & \qw & \gate{X} \cwx & \gate{H} & \rstick{\ket\psi} \qw \\
 } \nonumber
 \end{align}
-\caption{The single-qubit teleporter, based upon a controlled-phase (CZ) gate, a single-qubit measurement, and classical feedforward.} \label{fig:single_qubit_teleporter}
+\caption{The single-qubit teleporter, based upon a CZ gate, a single-qubit measurement, and classical feedforward.} \label{fig:single_qubit_teleporter} \index{Single-qubit teleporter}
 \end{figure}
 
 The cluster state formalism has proven very useful, enabling the development of linear optics quantum computing (Sec.~\ref{sec:KLM_univ}), orders of magnitude more efficient than the original KLM protocol. It has been found that bonding strategies -- i.e the order in which smaller clusters are fused into larger ones when using non-deterministic gates -- plays a major role in resource overhead, and much work has been performed on efficient preparation strategies for various topologies \cite{bib:Nielsen04, bib:BarrettKok05, bib:BrowneRudolph05, bib:BenjaminEisert05, bib:Gross06, bib:RohdeStratCS07, bib:Kieling06, bib:KielingRudolphEisert06, bib:RohdeBarrett07, bib:Kieling07, bib:Campbell07, bib:Campbell07b}.
@@ -312,7 +351,7 @@ These codes have been shown to have very favourable fault-tolerance thresholds i
 Importantly, topological codes do not require joint measurements across the entire graph state, instead requiring only operations localised to small regions within the graph. Thanks to this, computation using such topological codes can remain distributed, without requiring the entire state to be held locally by a particular host, or requiring full access to the entire state by any particular user.
 
 The most common topological code, which we will use here as an example, is the toric code, which resides on a lattice graph over the surface of a torus\footnote{As with cluster states, this graph needn't (but could) correspond to the network graph.}. As with cluster states (Sec.~\ref{sec:CSQC}), the toric code is most easily visualised in the stabiliser formalism. Consider a rectangular sub-graph of the torus. We place a qubit on each edge (not vertex) of the graph. Now we define two sets of stabiliser operators: \emph{star} and \emph{plaquette} operators,
-\begin{align}
+\begin{align} \index{Topological code stabilisers}
 \hat{S}_\mathrm{star}(v) &= \prod_{i\in e(v)} \hat{X}_i, \nonumber \\
 \hat{S}_\mathrm{plaquette}(p) &= \prod_{i\in e(p)} \hat{Z}_i,
 \end{align}
@@ -354,8 +393,8 @@ There have been numerous approaches employed in the past for sharing communicati
 \begin{itemize}
 \item Channel-switching: an entire communications channel is designated for exclusive use by a given user. \index{Channel switching}
 \item Packet-switching: data is divided into packets, which are routed independently by the network, being reconstructed by the recipient once all packets have been received.\index{Packet-switching}
-\item Time- or frequency-multiplexing: each user is designated a particular frequency spectrum or series of time-slots exclusively for their use. \index{Time- \& frequency-multiplexing}
-\item Code Division Multiple Access (CDMA): all users can broadcast over a channel simultaneously, and the construction of the coding technique enables demultiplexing of the distinct signals, despite their interference with one another.\index{Time- \& frequency-multiplexing}
+\item Time- or frequency-multiplexing: each user is designated a particular frequency spectrum or series of time-slots exclusively for their use. \index{Time-multiplexing}\index{Frequency-multiplexing}
+\item Code Division Multiple Access (CDMA): all users can broadcast over a channel simultaneously, and the construction of the coding technique enables demultiplexing of the distinct signals, despite their interference with one another.\index{Code Division Multiple Access (CDMA)}
 \item Ethernet: all users are free to broadcast over a shared channel at will, and \emph{collision detection} identifies when packets interfere, after which they are discarded and rebroadcast following a random waiting period, repeating until success.\index{Ethernet}
 \end{itemize}
 
@@ -527,7 +566,7 @@ Fig.~\ref{fig:example_routes} illustrates a simple example network with all of i
 In a given network, it is unlikely that only a single cost metric or attribute will be of interest when determining optimal routings. There may be a tradeoff between different measures. For example, for time-critical applications the cost of a route might be considered a combination of both dollar cost and latency -- a satellite has very low latency but is extremely expensive, while a carrier pigeon is slow but cheap (and prohibited by PETA). What is the best tradeoff between the two?
 
 To accommodate this, we allow the \emph{net cost} of a route to be defined as an arbitrary function of other primitive cost metrics and attributes of the route,
-\begin{align} \label{eq:net_cost_R}
+\begin{align} \label{eq:net_cost_R} \index{Net cost function}
 c_\mathrm{net}(R) = f_\mathrm{cost}(\vec{c}(R),\vec{a}(R)),
 \end{align}
 where $c_\mathrm{net}$ is a single numeric value representing the net cost as calculated from an arbitrary cost function $f_\mathrm{cost}$. Note that the net cost needn't be a metric, as the cost function could be arbitrary. The net cost can be thought of as a ranking for routes, but not necessarily as a metric that accumulates across routes.
@@ -610,7 +649,7 @@ On the other hand, for {\sc Central} algorithms, either network exploration coul
 % Local vs. Global Optimisation
 %
 
-\subsubsection{Local vs. global optimisation} \index{Local \& global optimisation}
+\subsubsection{Local vs. global optimisation} \index{Local optimisation}\index{Global optimisation}
 
 There are two general approaches one might consider when choosing strategies -- \emph{local optimisation} ({\sc Local}) and \emph{global optimisation} ({\sc Global}). {\sc Local} simply takes each state to be communicated, one-by-one, and allows it to individually choose an optimal routing strategy based on the state of the network at that moment. {\sc Global} is far more sophisticated and simultaneously optimises the sum of the routing costs, Eq.~\ref{eq:c_total}, of all currently in-demand routes.
 
@@ -674,7 +713,7 @@ Like classical channels, quantum channels are inevitably subject to errors. Thes
 
 \subsection{Quantum processes} \index{Quantum processes}
 
-To quantify the operation of nodes and links within our network, we must characterise the evolution they impose upon quantum states passing through them. Quantum processes, also known as \emph{trace-preserving, completely positive maps} (CP-maps) are able to capture all the physical processes relevant to quantum networking, such as: unitary evolution; decoherence; measurement; quantum memory; state preparation; switching; and, indeed entire quantum computations. And they are able to capture physical processes in any degree of freedom, most commonly in the qubit basis, but also, for photons, in the spatio-temporal, photon-number, phase-space, or polarisation degrees of freedom.
+To quantify the operation of nodes and links within our network, we must characterise the evolution they impose upon quantum states passing through them. Quantum processes, also known as \emph{trace-preserving, completely positive maps} (CP-maps)\index{CP-maps} are able to capture all the physical processes relevant to quantum networking, such as: unitary evolution; decoherence; measurement; quantum memory; state preparation; switching; and, indeed entire quantum computations. And they are able to capture physical processes in any degree of freedom, most commonly in the qubit basis, but also, for photons, in the spatio-temporal, photon-number, phase-space, or polarisation degrees of freedom.
 
 Quantum processes are most easily represented using \emph{Kraus operators}, $\{\hat{K}_i\}$,
 \begin{align} \label{eq:kraus_rep}\index{Kraus operators}
@@ -684,7 +723,7 @@ where,
 \begin{align}
 \sum_i \hat{K}_i^\dag \hat{K}_i = \hat{\mathbb{I}},
 \end{align}
-for normalisation. Here $\mathcal{E}$ is a super-operator, denoting the action of the process on state $\hat\rho$. This is also referred to as the \emph{operator-sum representation}. This representation has the elegant interpretation as the probabilistic application of each of the Kraus operators $\hat{K}_i$, with probability,
+for normalisation. Here $\mathcal{E}$ is a super-operator, denoting the action of the process on state $\hat\rho$. This is also referred to as the \emph{operator-sum representation}\index{Operator-sum representation}. This representation has the elegant interpretation as the probabilistic application of each of the Kraus operators $\hat{K}_i$, with probability,
 \begin{align}
 p_i = \mathrm{tr}(\hat{K}_i \hat\rho \hat{K}_i^\dag).
 \end{align}
@@ -714,7 +753,7 @@ In general, processes do not commute, i.e \mbox{$\mathcal{E}_1\circ \mathcal{E}_
 	\mathcal{E}(\hat\rho_1+\hat\rho_2) = \mathcal{E}(\hat\rho_1)+\mathcal{E}(\hat\rho_2).
 \end{align}
 
-The only limitation faced by the quantum process formalism is that it is described over discrete-time only. To consider continuous-time evolution, \emph{master equations} can be used. These represent the continuous-time evolution of a quantum state as a differential equation in time, combining a usual Hamiltonian term as well as decoherence terms,
+The only limitation faced by the quantum process formalism is that it is described over discrete-time only. To consider continuous-time evolution, \emph{master equations}\index{Master equations} can be used. These represent the continuous-time evolution of a quantum state as a differential equation in time, combining a usual Hamiltonian term as well as decoherence terms,
 \begin{align}
 \frac{d\hat\rho}{dt} = -\frac{i}{\hbar}[\hat{H},\hat\rho] + \sum_j (2\hat{L}_j\hat\rho\hat{L}_j^\dag - \{\hat{L}_j^\dag\hat{L}_j,\hat\rho\}),
 \end{align}
@@ -860,12 +899,12 @@ When dealing with single photons, information can be encoded in a number of ways
 % Single Photons
 %
 
-\subsection{Single photons} \label{sec:single_phot_enc} \index{Single photon encoding}
+\subsection{Single photons} \label{sec:single_phot_enc} \index{Single-photon encoding}
 
 A very attractive feature of single photons is that they undergo very little decoherence, even over large distances -- dephasing (Sec.~\ref{sec:dephasing_error}) in the polarisation degree of freedom, for example, is negligible in free-space. They are, however, very susceptible to loss, and protocols relying on many single-photon states suffer exponential decay in their success rates as the number of photons is increased (Sec.~\ref{sec:eff_err}).
 
 We can encode a single qubit into a single photon in the polarisation basis using the horizontal and vertical polarisation degrees of freedom. Equivalently, one can employ `dual rail' encoding, whereby a single photon is placed into a superposition across two spatial modes. This leads to the equivalent representations for logical qubits ($L$),
-\begin{align} \label{eq:single_photon_enc}\index{Polarisation qubit encoding} \index{Dual-rail qubit encoding}
+\begin{align} \label{eq:single_photon_enc}\index{Polarisation encoding} \index{Dual-rail encoding}
 \ket{\psi}_\mathrm{qubit} &\equiv \alpha\ket{0}_L + \beta\ket{1}_L, \nonumber \\
 \ket{\psi}_\mathrm{pol} &\equiv \alpha\ket{H} + \beta\ket{V}, \nonumber \\
 \ket{\psi}_\mathrm{dual} &\equiv \alpha\ket{0,1} + \beta\ket{1,0}.
@@ -1042,10 +1081,10 @@ These representations, whilst entirely equivalent to a photon-number basis repre
 
 In a non-optical context, the elementary unit of quantum information -- the qubit -- can be naturally encoded into any system with a natural or engineered two-level structure. This actually encompasses a broad range of possibilities, including, amongst many others:
 \begin{itemize}
-\item \index{Two-level atoms}Two-level atoms: let two distinct electron energy levels, with long lifetimes, represent the two logical basis states.
-\item \index{$\lambda$-configuration atoms}$\lambda$-configuration atoms: atoms with two degenerate ground states, which encode the logical qubit, and an additional excited state, which may be transitioned to upon excitation from only one of the ground states. Relaxation from the excited state enables optical coupling via the emitted photon.
+\item \index{2-level systems}Two-level atoms: let two distinct electron energy levels, with long lifetimes, represent the two logical basis states.
+\item \index{$\lambda$-configuration systems}$\lambda$-configuration atoms: atoms with two degenerate ground states, which encode the logical qubit, and an additional excited state, which may be transitioned to upon excitation from only one of the ground states. Relaxation from the excited state enables optical coupling via the emitted photon.
 \item \index{Quantum dots}Quantum dots: are essentially artificial atoms, which can be engineered with custom band-structures, allowing two- or higher-level qudits to be easily fabricated.
-\item \index{Nitrogen-vacancy centres}Nitrogen-vacancy (NV) centres: are a type of point defect in diamond, which has a very well defined energy level structure that may be utilised to represent qubits.
+\item \index{Nitrogen-vacancy (NV) centres}Nitrogen-vacancy (NV) centres: are a type of point defect in diamond, which has a very well defined energy level structure that may be utilised to represent qubits.
 \item \index{Atomic ensembles}Atomic ensembles: encode quantum information similarly to a single atom, except that the excitation is a \emph{collective} one, in superposition across all the atoms in the ensemble.
 \item \index{Superconducting rings}Superconducting rings: a superposition of current flow direction in a superconducting ring represents the two logical basis states.
 \item \index{Trapped ions}Trapped ions: qubits are encoded into stable electronic states of electromagnetically trapped ions.
@@ -1251,7 +1290,7 @@ for temporal mismatch $\Delta_t$. Of course, this logically generalises to other
 \end{align}
 where $x$ and $y$ are the two transverse spatial dimensions perpendicular to the direction of propagation.
 
-The Hong-Ou-Mandel (HOM) \cite{bib:HOM87}\index{Hong-Ou-Mandel interference} \emph{visibility} is a direct measure of the indistinguishability of two photons based on their interference fringes. Specifically, interference fringes are reduced as the photons become more distinguishable. Once completely distinguishable, they obey classical statistics.
+The Hong-Ou-Mandel (HOM) \cite{bib:HOM87}\index{Hong-Ou-Mandel (HOM) interference} \emph{visibility} is a direct measure of the indistinguishability of two photons based on their interference fringes. Specifically, interference fringes are reduced as the photons become more distinguishable. Once completely distinguishable, they obey classical statistics.
 
 Let us consider this in detail. Consider the two-mode, two-photon state,
 \begin{align}
@@ -1298,7 +1337,7 @@ In the above representation of mode-mismatch as a temporal or spatial translatio
 \end{align}
 where $p_\mathrm{jitter}(\Delta_t)$ characterises the classical probability distribution of the temporal displacement. Time-jitter is particularly natural in heralded spontaneous parametric down-conversion (SPDC) sources (Sec.~\ref{sec:single_phot_src}), where imprecision in the measurement time of the heralding mode projects that temporal uncertainty onto the heralded state. For this reason, much time is being invested into engineering SPDC sources with separable output photons, such that pathological behaviour of the detection of the heralding photon does not project the heralded photon onto a mixed state. Time-jitter is a major consideration in all present-day single-photon source technologies.
 
-When considering mode-mismatch, there are two general regimes for how it manifests itself in an optical system. The first is when the interference taking place is between distinct, independent photons, i.e HOM interference (or its equivalent generalisations to higher-photon-number systems). The second is when multiple paths followed by a given photon interfere it with itself, i.e Mach-Zehnder (MZ)\index{Mach-Zehnder interference} interference. The former only requires mode-matching on the scale of the photons' wave-packets, whereas the latter requires interferometric stability on the order of the photons' wavelength, a far more demanding requirement.
+When considering mode-mismatch, there are two general regimes for how it manifests itself in an optical system. The first is when the interference taking place is between distinct, independent photons, i.e HOM interference (or its equivalent generalisations to higher-photon-number systems). The second is when multiple paths followed by a given photon interfere it with itself, i.e Mach-Zehnder (MZ)\index{Mach-Zehnder (MZ) interference} interference. The former only requires mode-matching on the scale of the photons' wave-packets, whereas the latter requires interferometric stability on the order of the photons' wavelength, a far more demanding requirement.
 
 Mode-mismatch has been studied extensively in the context of linear optics quantum computing (LOQC), introduced in Sec.~\ref{sec:KLM_univ}. In particular, it was shown that in the cluster state formalism (Sec.~\ref{sec:CSQC}), mode-mismatch is equivalent to a dephasing error model, where the dephasing rate is related to the degree of photon distinguishability (i.e visibility) \cite{bib:RohdeRalph06}. More generally, the operation of entangling gates \cite{bib:RohdeFreqTemp05, bib:RohdeGateChar05, bib:RohdeOptPhot05, bib:RohdeTimeRes11} and {\sc BosonSampling} \cite{bib:RohdeArbSpec15, bib:RohdeArbLow12} have been considered, and explicit error models derived.
 
@@ -1619,7 +1658,7 @@ where $\mathcal{C}_i$ is the dollar cost of utilising the $i$th link in route $R
 % Costs as Distance Metrics
 %
 
-\subsection{Costs as distance metrics} \label{sec:cost_as_dist} \index{Distance metrics}
+\subsection{Costs as distance metrics} \label{sec:cost_as_dist} \index{Cost distance metrics}
 
 Def.~\ref{def:metric} defines the properties of a cost metric in the classical context. We now wish to consider this in the quantum context.
 
@@ -1876,7 +1915,7 @@ QEC codes have been described for protecting against universal error models, inc
 \item Gate failure: essential when gates are non-deterministic, necessarily the case when dealing with maximally entangling two-qubit photonic quantum gates.
 \end{itemize}
 
-The first described QEC code was the three-qubit code\index{Three-qubit code} by \cite{bib:Shor95} for redundantly encoding a single logical qubit into three encoded qubits, allowing the detection and correction of at most a single bit-flip error between the encoded qubits. This protocol is shown in Alg.~\ref{tab:three_QEC}. By switching into a Hadamard-rotated basis, the same code could equivalently correct against at most a single phase-flip error (since \mbox{$\hat{H}\hat{X}\hat{H}=\hat{Z}$}). By concatenating these two codes a 9-qubit code correcting against a single depolarising error may be implemented.
+The first described QEC code was the 3-qubit code\index{3-qubit code} by \cite{bib:Shor95} for redundantly encoding a single logical qubit into three encoded qubits, allowing the detection and correction of at most a single bit-flip error between the encoded qubits. This protocol is shown in Alg.~\ref{tab:three_QEC}. By switching into a Hadamard-rotated basis, the same code could equivalently correct against at most a single phase-flip error (since \mbox{$\hat{H}\hat{X}\hat{H}=\hat{Z}$}). By concatenating these two codes a 9-qubit code\index{9-qubit code} correcting against a single depolarising error may be implemented.
 
 Since these original ideas into QEC, countless further codes have been described, able to correct against larger numbers of errors, with far more efficient resource overheads. Currently, topological codes (Sec.~\ref{sec:topol_codes}) are considered the most favourable codes in terms of their elegance, simplicity, high error-correction thresholds, and efficiency in resource overhead. Some such topological codes are particularly enticing, as they can be readily prepared from cluster states (Sec.~\ref{sec:CSQC}), which lend themselves naturally to certain networking methods, such as distributed state preparation.
 
@@ -1917,7 +1956,7 @@ into the three-qubit state,
 } \nonumber
 \end{align}
 }}
-\caption{Three-qubit code for protecting against at most a single logical bit-flip error. In a Hadamard-rotated basis, the same circuit may be employed to protect against a single phase-flip error. And by concatenating the two we obtain a 9-qubit code protecting against a single depolarising error, which is a universal error model.} \label{tab:three_QEC}
+\caption{3-qubit code for protecting against at most a single logical bit-flip error. In a Hadamard-rotated basis, the same circuit may be employed to protect against a single phase-flip error. And by concatenating the two we obtain a 9-qubit code protecting against a single depolarising error, which is a universal error model.} \label{tab:three_QEC}
 \end{table}
 
 Different error correcting codes have different error correcting power, and different resource overheads, which must be taken into consideration. The appropriate choice of code will largely be determined by the final {\sc Services \& Applications} layer. For some simple quantum communications protocols, simple error correction (or even no error correction) may suffice. A full-fledged quantum computation on the other hand will require error rates within a fault-tolerance threshold.
@@ -1955,7 +1994,7 @@ Having communicated all the {\sc Packet Data} from Alice to Bob, performed {\sc 
 % Collision Handling & Classical Errors
 %
 
-\section{Collision handling \& classical errors} \label{sec:collision} \index{Collision handling}
+\section{Collision handling \& classical errors} \label{sec:collision} \index{Collision handling} \index{Classical errors}
 
 In classical networking, protocols such as Ethernet allow users to simply broadcast data at their leisure and rely on \emph{collision detection} to detect when the broadcasts of multiple users have interfered, signalling that both users ought to retransmit following backoff, to minimise the chances of another collision occurring. While this {\sc Resend Until Success} approach has certainly proven to be effective in classical networking, in a quantum setting the rules of the game are entirely different.
 
@@ -1984,6 +2023,8 @@ In instances where corruption or loss of packets cannot be tolerated, a more pro
 \section{Packet teleportation} \index{Packet teleportation}
 
 \comment{To do}
+
+Sec.~\ref{sec:teleport}
 
 \comment{Send source classical header/data to destination. Replace classical data. Merge headers (accumulate costs, run attribute update function, replace routing queue. Source header becomes target header, but with updated/merged costs and attributes). Add algorithm. Discard source packet.}
 
@@ -2308,7 +2349,7 @@ We will now review some of the graph structures most likely to arise in quantum 
 % Point-To-Point
 %
 
-\subsection{Point-to-point (P2P)} \index{Point-to-point topologies}
+\subsection{Point-to-point (P2P)} \index{Point-to-point (P2P) topologies}
 
 The most trivial network topology, which also acts as the elementary primitive from which our other topologies will be constructed is a simple dedicated point-to-point (P2P) connection between two parties, where the sender and recipient of a packet reside on neighbouring nodes.
 
@@ -2522,7 +2563,7 @@ Both BFS and DFS exhibit runtime \mbox{$O(|V|+|E|)$}, where $|V|$ and $|E|$ are 
 % Shortest-Path
 %
 
-\subsection{Shortest-path} \label{sec:shortest_path} \index{Dijkstra's shortest-path algorithm}
+\subsection{Shortest-path} \label{sec:shortest_path} \index{Shortest-path algorithm} \index{Dijkstra's algorithm}
 
 In graph theory, the shortest-path problem is that of finding a subgraph of a given graph $G$, connecting two vertices, \mbox{$A\to B \subset G$}, such that the sum of its edge weights is minimised. In the context of our application to route-finding, this amounts to finding a route that minimises cost.
 
@@ -2562,7 +2603,7 @@ The shortest-path algorithm by Dijkstra presented above finds the shortest route
 
 Single-source shortest-path algorithms address this problem by calculating the shortest paths from the current node to \emph{every} other node in the network topology.
 
-The best-known algorithm for this problem is the Bellman-Ford (or Bellman-Ford-Moore) algorithm \cite{BF}, which requires worst-case runtime of $O(|V|\cdot |E|)$. Clearly this is more complex than Dijkstra's algorithm for finding a particular shortest-path. But it is more efficient than using brute-force to find the shortest-path between every pair of nodes in the network via repeated application of Dijkstra.
+The best-known algorithm for this problem is the Bellman-Ford (or Bellman-Ford-Moore)\index{Bellman-Ford-Moore algorithm} algorithm \cite{BF}, which requires worst-case runtime of $O(|V|\cdot |E|)$. Clearly this is more complex than Dijkstra's algorithm for finding a particular shortest-path. But it is more efficient than using brute-force to find the shortest-path between every pair of nodes in the network via repeated application of Dijkstra.
 
 %
 % Minimum Spanning Tree
@@ -2570,7 +2611,7 @@ The best-known algorithm for this problem is the Bellman-Ford (or Bellman-Ford-M
 
 \subsection{Minimum spanning tree} \label{sec:min_tree} \index{Minimum spanning tree algorithm}
 
-MST algorithms find an MST of some arbitrary graph. Like the shortest-path problem, it has a polynomial-time, deterministic algorithm (i.e it resides in \textbf{P}). The first MST algorithm \cite{bib:Boruvka26} required $O(|E|\log |V|)$ runtime. Numerous variations have since been proposed, with little change to the underlying scaling.
+MST algorithms find an MST\footnote{There may be multiple distinct MSTs for a given graph.} of some arbitrary graph. Like the shortest-path problem, it has a polynomial-time, deterministic algorithm (i.e it resides in \textbf{P}). The first MST algorithm \cite{bib:Boruvka26} required $O(|E|\log |V|)$ runtime. Numerous variations have since been proposed, with little change to the underlying scaling.
 
 Because MST algorithms are efficient, they play a very useful role in the design of real-world network topologies, where resource minimisation is crucial.
 
@@ -2692,7 +2733,7 @@ Coherent states (Sec.~\ref{sec:coherent_state_enc}), although not strictly \emph
 % Single-Photons
 %
 
-\subsubsection{Single-photons} \label{sec:single_phot_src} \index{Single-photon preparation}
+\subsubsection{Single-photons} \label{sec:single_phot_src} \index{Single-photon state preparation}
 
 Single-photon sources (Sec.~\ref{sec:single_phot_enc}) \cite{bib:Oxborrow05} are of particular interest, as a foundational building block in many optical quantum information processing applications, such as linear optics quantum computing (Sec.~\ref{sec:KLM_univ}) and quantum key distribution (Sec.~\ref{sec:QKD}).
 
@@ -2800,7 +2841,7 @@ GHZ states are useful for various quantum information processing applications, i
 
 \subsubsection{Bell states} \label{sec:bell_state_res} \index{Bell state preparation}
 
-Bell states (Eq.~\ref{eq:bell_basis}), also known as Einstein-Podolsky-Rosen (EPR) pairs \cite{bib:EPR35}, which are maximally-entangled two-qubit states, are particularly useful for many applications, including quantum teleportation (Sec.~\ref{sec:teleport}), cluster state preparation (Sec.~\ref{sec:CSQC}), and entanglement swapping (Sec.~\ref{sec:swapping}). Bell states are the special case of two-qubit cluster states, or equivalently, two-qubit GHZ states. They may be directly prepared as the two-mode output from a type-II\footnote{In type-II SPDC the photon-pair is polarisation-entangled, directly preparing a Bell-pair in the polarisation basis. In type-I SPDC both photons have the same polarisation, yielding only photon-number correlation, but no polarisation entanglement.} SPDC source, or using non-deterministic linear optics from single-photon sources.
+Bell states (Eq.~\ref{eq:bell_basis}), also known as Einstein-Podolsky-Rosen (EPR) pairs\index{Einstein-Podolsky-Rosen (EPR) pairs} \cite{bib:EPR35}, which are maximally-entangled two-qubit states, are particularly useful for many applications, including quantum teleportation (Sec.~\ref{sec:teleport}), cluster state preparation (Sec.~\ref{sec:CSQC}), and entanglement swapping (Sec.~\ref{sec:swapping}). Bell states are the special case of two-qubit cluster states, or equivalently, two-qubit GHZ states. They may be directly prepared as the two-mode output from a type-II\footnote{In type-II SPDC the photon-pair is polarisation-entangled, directly preparing a Bell-pair in the polarisation basis. In type-I SPDC both photons have the same polarisation, yielding only photon-number correlation, but no polarisation entanglement.} SPDC source, or using non-deterministic linear optics from single-photon sources.
 
 There are four Bell states, defined as, 
 \begin{align} \label{eq:bell_basis}
@@ -2853,7 +2894,7 @@ As discussed in Sec.~\ref{sec:exotic}, many other far more elaborate states are 
 % Matter Qubits
 %
 
-\subsubsection{Matter qubits} \index{Matter qubit state preparation}
+\subsubsection{Matter qubits} \index{Matter qubits state preparation}
 
 In addition to preparing optical states, they can be used to mediate the preparation of systems comprising matter qubits, using which-path erasure techniques (Sec.~\ref{sec:hybrid} \& Fig.~\ref{fig:barrett_kok}) or light-matter interactions (Sec.~\ref{sec:opt_inter} \& Fig.~\ref{fig:opt_int}). These techniques are very versatile, and apply to many different matter qubit systems, such as two-level atoms, nitrogen-vacancy centres, quantum dots, and atomic ensembles.
 
@@ -2883,7 +2924,7 @@ With the ability to perform measurements over a complete basis for the respectiv
 
 Perhaps the most useful, and ubiquitous, type of optical state measurement is photo-detection \cite{RohdePDReview}, where we would like to count photon-number. Broadly, there are two main classes of photo-detectors -- \emph{number-resolved} and \emph{non-number-resolved} (or `bucket' detectors). These behave exactly as the names suggest, with the former typically being more expensive and technologically demanding than the latter.
 
-The most common form of photo-detection is using avalanche photo-diodes (APDs), which are cheap but non-number-resolving. Here a single photon excites an electron into the conduction band at a semiconductor junction, enabling a detectable current flow.
+The most common form of photo-detection is using avalanche photo-diodes (APDs)\index{Avalanche photo-diodes (APDs)}, which are cheap but non-number-resolving. Here a single photon excites an electron into the conduction band at a semiconductor junction, enabling a detectable current flow.
 
 More recently, superconducting detectors\index{Superconducting photo-detectors} have been adopted, as they have the potential for number-resolution. Here a superconductor is kept just below its critical temperature, and the absorption of a photon is enough to heat the superconductor above the critical temperature, creating a detectable change in resistance across the superconductor. This is shown in Fig.~\ref{fig:super_det}. Despite their superior performance, however, superconducting detectors are very expensive (for obvious reasons) and only accessible to well-resourced labs.
 
@@ -2936,7 +2977,7 @@ A homodyne detector interferes a state with a coherent state on a beamsplitter, 
 
 \subsubsection{Bell state projection} \label{sec:bell_proj} \index{Bell measurements}
 
-For the purposes of which-path erasure, essential for optical cluster state (Sec.~\ref{sec:CSQC}) preparation and quantum teleportation (Sec.~\ref{sec:teleport}), Bell state measurements (i.e projections onto the Bell basis given in Eq.~\ref{eq:bell_basis}) are important. To realise this, there are two primary options. The first is to use a controlled-NOT (CNOT) gate (the quantum equivalent of the classical XOR gate), for example an LOQC gate (Sec.~\ref{sec:KLM_univ}). The second is to perform a \emph{partial} Bell state projection using a polarising beamsplitter (PBS) -- a beamsplitter which completely transmits vertical polarisation, and completely reflects horizontal polarisation \cite{bib:BraunsteinMann95}. In the Heisenberg picture, the transformation of the photonic creation operators is,
+For the purposes of which-path erasure, essential for optical cluster state (Sec.~\ref{sec:CSQC}) preparation and quantum teleportation (Sec.~\ref{sec:teleport}), Bell state measurements (i.e projections onto the Bell basis given in Eq.~\ref{eq:bell_basis}) are important. To realise this, there are two primary options. The first is to use a CNOT)\ gate, for example an LOQC gate (Sec.~\ref{sec:KLM_univ}). The second is to perform a \emph{partial} Bell state projection using a polarising beamsplitter (PBS) -- a beamsplitter which completely transmits vertical polarisation, and completely reflects horizontal polarisation \cite{bib:BraunsteinMann95}. In the Heisenberg picture, the transformation of the photonic creation operators is,
 \begin{align}\index{Polarising beamsplitters}
 \hat{h}_1^\dag &\to \hat{h}_2^\dag, \nonumber \\
 \hat{h}_2^\dag &\to \hat{h}_1^\dag, \nonumber \\
@@ -2945,7 +2986,7 @@ For the purposes of which-path erasure, essential for optical cluster state (Sec
 \end{align}
 where $\hat{h}_i^\dag$ ($\hat{v}_i^\dag$) are the horizontal (vertical) creation operators for the $i$th mode. This approach is described in Fig.~\ref{fig:partial_bell}.
 
-The former can be implemented with arbitrarily high success probability in principle. However, in most scenarios of interest (such as cluster state preparation and entanglement purification) the latter succeeds with probability of $1/2$, since a PBS is only able to uniquely distinguish two of the four Bell states. To its advantage, partial Bell measurements only require high HOM visibility, avoiding the need for the interferometric stability inherent to LOQC CNOT gates.
+The former can be implemented with arbitrarily high success probability in principle. However, in most scenarios of interest (such as cluster state preparation and entanglement purification) the latter succeeds with probability of $1/2$, since a PBS is only able to uniquely distinguish two of the four Bell states. To its advantage, such `partial' Bell measurements only require high HOM visibility, avoiding the need for the interferometric stability inherent to LOQC CNOT gates.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.75\columnwidth]{partial_bell}
@@ -3040,13 +3081,13 @@ These three main contenders are illustrated in Fig.~\ref{fig:LO_archs}, and desc
 
 Aside from the linear transformations described above, which are passive and photon-number-preserving, various active, non-linear interactions are also of interest to optical quantum information processing. The most prominent of these are primarily considered as transformations in phase-space (Sec.~\ref{sec:exotic}), using, for example, the Wigner function representation.
 
-The most well-known non-linear transformation is the displacement operation, which translates the Wigner function by some arbitrary amplitude in phase-space, whilst preserving all other features of the phase-space representation. This is described by the unitary operator,
+The most well-known non-linear transformation is the displacement operation, which translates the Wigner function by some arbitrary amplitude in phase-space, whilst preserving all other features of the phase-space representation. This is described by the unitary operator,\index{Displacement operator}
 \begin{align}
 \hat{D}(\alpha) = \mathrm{exp}\left[\alpha\hat{a}^\dag - \alpha^*\hat{a}\right],
 \end{align}
 where $\alpha$ is the displacement amplitude. This transformation is easily implemented by mixing a state on a low-reflectivity beamsplitter with a coherent state of some arbitrary complex amplitude, which determines the displacement amplitude. In the special case of a displacement operator acting on the vacuum state, we obtain a coherent state of equal amplitude, \mbox{$\hat{D}(\alpha)\ket{0}=\ket\alpha$}.
 
-Another common non-linear transformation is squeezing, discussed in Sec.~\ref{sec:squeezed}. This implements the unitary operator,
+Another common non-linear transformation is squeezing, discussed in Sec.~\ref{sec:squeezed}. This implements the unitary operator\index{Squeezing operator},
 \begin{align}
 \hat{S}(\xi) = \mathrm{exp}\left[ \frac{1}{2}(\xi^*\hat{a}^2 - \xi{\hat{a}^{\dag 2}})\right],
 \end{align}
@@ -3150,7 +3191,7 @@ This scenario is an obvious example of where a UDP-like {\sc Send And Forget} pr
 % Entanglement Purification
 %
 
-\subsubsection{Entanglement purification} \label{sec:ent_purif} \index{Entanglement purification}
+\subsubsection{Entanglement purification} \label{sec:ent_purif} \index{Entanglement purification/distillation}
 
 Entangled states, most notably Bell-pairs (Sec.~\ref{sec:bell_state_res}), play a central role in many quantum technologies. These maximally entangled states are easily represented optically using polarisation encoding of single photons, and can be non-deterministically prepared directly using SPDC (Sec.~\ref{sec:single_phot_src}), or post-selected linear optics \cite{???}.
 
@@ -3158,7 +3199,7 @@ Bell-pairs are the basis for building cluster states (Sec.~\ref{sec:CSQC}), some
 
 Suppose Alice and Bob share an entangled pair. Quantum mechanics, specifically the very definition of entanglement itself, prohibits local operations performed by Alice and Bob from increasing the level of entanglement. However, if Alice and Bob share multiple pairs, they can perform an operation known as \emph{entanglement purification} or \emph{entanglement distillation}, whereby two lower-fidelity entangled pairs are consumed and projected onto a single entangled pair with higher fidelity \cite{bib:PRA_53_2046, bib:PRA_54_3824, bib:PRL_77_2818}. Such protocols will be extremely useful in protocols where achieving the highest possible degree of entanglement is paramount, for example when error thresholds must be achieved for the purpose of error-correction and fault-tolerance \cite{bib:NielsenChuang00}.
 
-Taking two polarisation-encoded photonic Bell-pairs, say $\ket{\Psi^+}$, and subjecting them to a dephasing error model yields a mixed state of the form,
+Taking two polarisation-encoded photonic Bell-pairs, say $\ket{\Psi^+}$, and subjecting them to a dephasing error model (Sec.~\ref{sec:dephasing_error}) yields a mixed state of the form,
 \begin{align}
 \hat\rho_\mathrm{in} = F\ket{\Psi^+}\bra{\Psi^+} + (1-F)\ket{\Psi^-}\bra{\Psi^-},
 \end{align}
@@ -3267,7 +3308,7 @@ function StateTeleportation($\ket\phi_{A_1}$, $\ket{\Phi^+}_{A_2,B}$):
 \caption{Quantum state teleportation of a single qubit.} \label{alg:state_teleport}
 \end{table}
 
-In general, the protocol is deterministic, although using PBSs to perform partial Bell measurements, the success probability is $1/2$.
+In general, the protocol is deterministic, although using PBSs to perform partial Bell measurements, the success probability is at most $1/2$.
 
 The question now is what error metrics apply and how do they accumulate in the teleportation protocol. The answer is straightforward -- the final teleported qubit accumulates all local Pauli errors (e.g dephasing or depolarisation) associated with Alice's input state as well as any that acted upon the shared Bell-pair. That is, the errors get teleported along with the state being teleported, plus any errors on the Bell-pair.
 
@@ -3281,7 +3322,7 @@ The total resources required to teleport a single-qubit state are:
 \item A shared Bell-pair.
 \item A two-qubit measurement in the Bell basis.
 \item The transmission of two classical bits.
-\item Two classically controlled Pauli gates.
+\item Two classically-controlled Pauli gates.
 \end{enumerate}
 
 This is more costly than sending the qubit directly over a quantum channel, but may be the only approach if a direct link is not available. In the context of an internet where entanglement distribution is treated as the fundamental resource (Sec.~\ref{sec:ent_ultimate}), state teleportation is the natural approach for communicating quantum states, since no quantum communication of any kind is required once the two parties have a shared Bell-pair between them.
@@ -3354,9 +3395,11 @@ Quantum gate teleportation effectively reduces the problem of implementing CNOT 
 \end{enumerate}
 Importantly, like quantum state teleportation, there is no need for a quantum communications channel between the two parties holding the qubits to which the gate is applied -- classical communication is sufficient.
 
-The gate teleportation idea is conceptually interesting as it converts the problem of `gate application' to that of `state preparation'\footnote{The resource state is prepared from two Bell-pairs and a single CNOT gate. In the absence of a direct source of Bell-pairs, they can be prepared using separable single-qubit states and a CNOT gate. Thus, the full resource state may be prepared from separable single qubits via three CNOT gates.}, by commuting all the entangling operations to the beginning of the protocol. Cluster state quantum computing (Sec.~\ref{sec:CSQC}) is actually the extremity of this logic, whereby an entire quantum computation is transformed into a sequence of state and gate teleportations. One may interpret this to mean that teleportation is a universal resource for quantum computation \cite{bib:GottesmanChuang99}.
+The gate teleportation idea is conceptually interesting as it converts the problem of `gate application' to that of `state preparation'\footnote{The resource state is prepared from two Bell-pairs and a single CNOT gate, which is locally equivalent to a 4-qubit GHZ state. In the absence of a direct source of Bell-pairs, they can be prepared using separable single-qubit states and a CNOT gate. Thus, the full resource state may be prepared from separable single qubits via three CNOT gates.}, by commuting all the entangling operations to the beginning of the protocol. Cluster state quantum computing (Sec.~\ref{sec:CSQC}) is actually the extremity of this logic, whereby an entire quantum computation is transformed into a sequence of state and gate teleportations. One may interpret this to mean that teleportation is a universal resource for quantum computation \cite{bib:GottesmanChuang99}.
 
 The resource states required for gate teleportation are highly-entangled 4-qubit states, which are challenging to prepare, especially in the optical context. Thus, as with cluster states, if the preparation of these resource states were to be outsourced to a specialised provider, they could be in high demand.
+
+Note that this technique works for the CNOT gate because it is a Clifford gate\index{Clifford gates} (i.e it commutes with the classically-controlled Pauli gates to yield a different combination of classically-controlled Pauli gates). Thus, this technique does not automatically apply to \emph{any} two-qubit gate.
 
 %
 % Entanglement Swapping
@@ -3552,9 +3595,9 @@ Unless the entire pipeline of quantum operations through the course of a protoco
 % Two-Level Systems
 %
 
-\subsubsection{Two-level systems} \index{Two-level systems}
+\subsubsection{Two-level systems} \index{2-level systems}
 
-The archetypal interface is that between a photonic qubit in the \mbox{$\{\ket{0},\ket{1}\}$} photon-number basis, and a two-level matter qubit in the $\ket{g}$ (ground) and $\ket{e}$ (excited) state basis. The logical qubit is defined as \mbox{$\ket{0}_L\equiv\ket{g}$}, \mbox{$\ket{1}_L\equiv\ket{e}$}. Examples include atoms in cavities, nitrogen-vacancy (NV) centres, and engineered quantum dots.
+The archetypal interface is that between a photonic qubit in the \mbox{$\{\ket{0},\ket{1}\}$} photon-number basis, and a two-level matter qubit in the $\ket{g}$ (ground) and $\ket{e}$ (excited) state basis. The logical qubit is defined as \mbox{$\ket{0}_L\equiv\ket{g}$}, \mbox{$\ket{1}_L\equiv\ket{e}$}. Examples include atoms in cavities, NV centres, and engineered quantum dots.
 
 In the case of a photon interacting with a two-level matter qubit, the interface can be expressed as an interaction Hamiltonian of the form,
 \begin{align} \label{eq:two_level_hamil}
@@ -3571,7 +3614,7 @@ where $\hat{a}$ ($\hat{a}^\dag$) is the photonic annihilation (creation) operato
 % Lambda-Configuration Systems
 %
 
-\subsubsection{$\lambda$-configuration systems} \index{Lambda-configuration systems}
+\subsubsection{$\lambda$-configuration systems} \index{$\lambda$-configuration systems}
 
 Alternately, one can easily optically interface with a $\lambda$-configuration system, as shown in Fig.~\ref{fig:lambda_atom}. Here there are two degenerate ground states representing the logical qubit basis states (\mbox{$\ket{0}_L\equiv\ket{\!\uparrow}$}, \mbox{$\ket{1}_L\equiv\ket{\!\downarrow}$}), one of which may undergo a transition to an excited state, $\ket{e}$. By pumping the system to the excited state and waiting for a coherent relaxation, the emitted photon may be used to couple the qubit state of the $\lambda$-configuration to an optical mode, mapping the qubit value of the matter qubit to a photon-number representation.
 
@@ -3595,7 +3638,7 @@ where \mbox{$\hat{S}_i^\dag=\ket{e}_i\bra{g}_i$} is the excitation operator for 
 \ket{\psi_\mathrm{collective}} = \hat{S}^\dag \ket{g}^{\otimes N}.	
 \end{align}
 
-Atomic ensembles are essentially well-engineered clouds of atomic gasses, trapped in a glass container, coupled to an optical mode. Atomic ensembles have been demonstrated with extremely long coherence lifetimes ($\sim$100ms \comment{Check this!}), operating at room temperatures (a very attractive feature on its own). They exhibit \emph{collective enhancement} in their coupling to the optical mode -- the optical coupling strength is amplified by a factor of $\sqrt{N}$ compared to single-atom optical coupling, mitigating the need for a cavity.
+Atomic ensembles are essentially well-engineered clouds of atomic gasses, trapped in a glass container, coupled to an optical mode. Atomic ensembles have been demonstrated with extremely long coherence lifetimes ($\sim$100ms \comment{Check this!}), operating at room temperatures (a very attractive feature on its own). They exhibit \emph{collective enhancement}\index{Collective enhancement} in their coupling to the optical mode -- the optical coupling strength is amplified by a factor quadratic in $N$ compared to single-atom optical coupling, mitigating the need for a cavity.
 
 The collective excitations exhibit the same general mathematical structure as single-atom excitations -- the absorption (emission) of a single photon is associated with a single collective excitation (relaxation), albeit with the favourable collective enhancement in the coupling strength.
 
@@ -3620,7 +3663,7 @@ W-states are favourable from a decoherence perspective as tracing out a single p
 \hat\rho_\mathrm{tr} &= \mathrm{tr}_1(\ket{\psi_W^{(N)}}\bra{\psi_W^{(N)}}) \\
 &= \left(1-\frac{1}{N}\right)\ket{\psi_W^{(N-1)}}\bra{\psi_W^{(N-1)}} + \frac{1}{N}(\ket{g}\bra{g})^{\otimes (N-1)}, \nonumber
 \end{align}
-which for \mbox{$N\gg 1$} approaches the pure state $\ket{\psi_W^{(N-1)}}$, i.e a W-state with one fewer particle.
+which for \mbox{$N\gg 1$} approaches the pure state $\ket{\psi_W^{(N-1)}}$, i.e a W-state with one fewer particles.
 
 \comment{Add atomic ensemble refs! Get from Barrett, Rohde, Stace paper}
 
@@ -3645,7 +3688,7 @@ With single-photon encoding of qubits in the quantum network, the obvious archit
 LOQC allows universal quantum computing to be implemented using single-photon polarisation or dual-rail encoding, with only linear optics interactions, i.e beamsplitter/phase-shifter networks \cite{bib:Reck94}, with the addition of quantum memory, and fast-feedforward, whereby some photons are measured, and the remaining part of the optical circuit is dynamically reconfigured based on the measurement outcomes. The former is readily available technology today, and elementary demonstrations have been performed \cite{bib:OBrien03, bib:UniversalLOOBrien}, but the latter two have proven to be somewhat more challenging.
 
 Originally it was believed that universal optical quantum computation, specifically the implementation of two-qubit entangling gates (such as CNOT or CZ gates), would require extremely (and unrealistically) strong optical non-linearities that implement a non-linear sign-shift (NS) gate,
-\begin{align} \label{eq:NS_trans}\index{Non-linear sign-shift gate}
+\begin{align} \label{eq:NS_trans}\index{Non-linear sign-shift (NS) gate}
 NS: \alpha\ket{0}+\beta\ket{1}+\gamma\ket{2}\to\alpha\ket{0}+\beta\ket{1}-\gamma\ket{2},
 \end{align}
 in the photon-number basis, up to normalisation (which is determined by the post-selection success probability). That is, it applies a $\pi$ phase-shift to only the $\ket{2}$ component of a photon-number superposition. The breakthrough result by KLM demonstrated that this is in fact not the case at all. Instead, the NS gate can be implemented non-deterministically using post-selected linear optics. Two such NS gates allow the construction of a single CZ gate. The construction of the KLM NS and CZ gates are shown in Fig.~\ref{fig:KLM_gate}.
@@ -3726,7 +3769,7 @@ where $S$ sums over all possible photon-number configurations at the output, of 
 \begin{align}
 |S| = \binom{n+m-1}{n},
 \end{align}
-where there are $n$ photons in total, and it is assumed that \mbox{$m=O(n^2)$}. In the case of a large number of optical modes, the \mbox{$m=O(n^2)$} condition effectively ensures photon anti-bunching with high probability\footnote{That is, we are unlikely to observe more than a single photon in any given output mode, placing us into a binary photo-detection regime. This condition has become known as the `bosonic birthday paradox'.}, rendering non-number-resolved photo-detectors sufficient for physical implementation.
+where there are $n$ photons in total, and it is assumed that \mbox{$m=O(n^2)$}, which puts us into the anti-bunched (i.e binary photon-number) regime with high probability. In the case of a large number of optical modes, the \mbox{$m=O(n^2)$} condition effectively ensures photon anti-bunching with high probability\footnote{That is, we are unlikely to observe more than a single photon in any given output mode, placing us into a binary photo-detection regime. This condition has become known as the `bosonic birthday paradox'.}, rendering non-number-resolved photo-detectors sufficient for physical implementation.
 
 The amplitudes $\gamma_{S,T}$ are given by,\index{Boson-sampling configuration amplitudes}
 \begin{align}
@@ -3774,10 +3817,10 @@ Photonic quantum walks (QWs) are the other main contender for implementing restr
 With only a single walker (photon), nothing computationally complex can occur in the system, since a single photon evolving under passive linear optics can be efficiently classically simulated\footnote{Note that the literature has described QW schemes, both discrete-time \cite{bib:Lovett10} and continuous-time \cite{bib:Childs09}, that are universal for quantum computation. However, such universal schemes require an exponential number of vertices in the underlying graph, which clearly does not lend itself to efficient optical representation.}. However, once multiple walkers are introduced we have a system with almost identical features to {\sc BosonSampling}, differing only in the structure of the linear optics unitary.
 
 There are two predominant varieties of quantum walks: discrete- \cite{qwDiscrete:aharanov} and continuous-time (\cite{contTimeQW:childs}). In the discrete-time QW model, each walker has access to an ancillary `coin' Hilbert space, which is used to record the direction of the walker through the graph. At each discrete time-step the coin is used to update the position (vertex) of the walker, before applying a unitary `coin' operator to the coin Hilbert space. The addition of the coin space is necessary to enable such quantum walks to reside on arbitrary graph topologies, whilst retaining unitarity in their evolution. In the continuous-time QW model, on the other hand, there is no coin degree of freedom, and a Hamiltonian, $\hat{H}_\mathrm{QW}$, encoding the (Hermitian) adjacency matrix of the QWs graph evolves the walker(s), generating a unitary evolution of the form,
-\begin{align}
+\begin{align}\index{Quantum walk Hamiltonian}
 \hat{U}_\mathrm{QW}(t) = e^{-i\hat{H}_\mathrm{QW}t},
 \end{align}
-where \mbox{$t\in \mathbb{R}_+$}. Algorithms have been described for both the discrete- and continuous-time QW models.
+where \mbox{$t\in \mathbb{R}_+$}. Algorithms have been described for both the discrete- and continuous-time QW models. Fig.~\ref{fig:LO_archs}(c) is an example implementation of a linear optics, continuous-time quantum walk on a line.
 
 We will briefly summarise the discrete-time QW model, as it most readily lends itself to linear optics implementation, and illustrate the parallels with {\sc BosonSampling}. First, let us consider the standard simple example scenario of a single quantum walker, on a linear graph topology, using a Hadamard coin,
 \begin{align}
@@ -3790,7 +3833,7 @@ which has been experimentally demonstrated using both bulk-optics \cite{bib:Broo
 \ket\psi = \sum_{x,c} \lambda_{x,c} \ket{x,c}.
 \end{align}
 The evolution of the walk is given by the coin and step operators,
-\begin{align}
+\begin{align} \index{Coin operators}\index{Step operators}
 \hat{C}\ket{x,\pm 1} &\to \frac{1}{\sqrt{2}}(\ket{x,+1}\pm \ket{x,-1}), \nonumber \\
 \hat{S}\ket{x,c} &\to \ket{x+c,c}.
 \end{align}
@@ -3803,7 +3846,7 @@ where \mbox{$t\in\mathbb{Z}_+$}. Upon measurement, the probability of the walker
 P(x) = |\lambda_{x,-1}|^2 + |\lambda_{x,+1}|^2.
 \end{align}
 
-The single-walker walk on a linear graph is not of computational interest as it can be efficiently classically simulated. However, the formalism is easily logically generalised to multiple walkers on arbitrary graph topologies. We will illustrate this using the formalism of \cite{bib:RohdeMultiWalk11}, where \emph{walker operators}, rather than walker basis states are evolved under time-evolution (i.e we operate in the Heisenberg picture rather than the Schr{\" o}dinger picture). In an optical context, walker operators are identically photonic creation operators. The walker operators are of the form $\hat{w}(x,c)^\dag$, where $x$ denotes the vertex number currently occupied by the walker, and $c$ denotes the previous vertex occupied by the walker. The single-walker basis states are then of the form $\hat{w}(x,c)^\dag\ket{0}$, where $\ket{0}$ is the vacuum state containing no excitations. Notice the parallels to the previous example of a linear walk, where the coin degree of freedom specifies the direction the walker is following, which effectively acts as memory of the previous position.
+The single-walker walk on a linear graph is not of computational interest as it can be efficiently classically simulated. However, the formalism is easily logically generalised to multiple walkers on arbitrary graph topologies. We will illustrate this using the formalism of \cite{bib:RohdeMultiWalk11}, where \emph{walker operators}\index{Walker operators}, rather than walker basis states are evolved under time-evolution (i.e we operate in the Heisenberg picture rather than the Schr{\" o}dinger picture). In an optical context, walker operators are identically photonic creation operators. The walker operators are of the form $\hat{w}(x,c)^\dag$, where $x$ denotes the vertex number currently occupied by the walker, and $c$ denotes the previous vertex occupied by the walker. The single-walker basis states are then of the form $\hat{w}(x,c)^\dag\ket{0}$, where $\ket{0}$ is the vacuum state containing no excitations. Notice the parallels to the previous example of a linear walk, where the coin degree of freedom specifies the direction the walker is following, which effectively acts as memory of the previous position.
 
 The coin and step operators now take the form,
 \begin{align}
@@ -3825,9 +3868,9 @@ where \mbox{$t\in \mathbb{Z}_+$}.
 
 With this formalism, multiple walkers are easily accommodated for simply with the addition of extra walker operators. Specifically, the $n$-walker basis states are of the form,
 \begin{align}
-\ket{\vec{x},\vec{c}} = \prod_{i=1}^n \hat{w}(x_i,c_i)^\dag \ket{0}.
+\ket{\vec{x},\vec{c}} \propto \prod_{i=1}^n \hat{w}(x_i,c_i)^\dag \ket{0},
 \end{align}
-Any graph topology can be represented, subject to the constraint that all $A^{(x)}$ are unitary. This implies that every vertex must have as many incoming as outgoing edges, which could be either directed or undirected, subject to this constraint.
+where we have ignored the normalisation factor, which is a function of the number of walkers in each basis state. Any graph topology can be represented, subject to the constraint that all $A^{(x)}$ are unitary. This implies that every vertex must have as many incoming as outgoing edges, which could be either directed or undirected, subject to this constraint.
 
 Now the probabilities of measuring the walkers in different position configurations will be related to matrix permanents, in a similar manner to {\sc BosonSampling}. But now the permanents will be of matrices that are functions of the set of $A^{(x)}$ matrices characterising the graph, rather than a Haar-random matrix.
 
@@ -3873,13 +3916,13 @@ Of course this is not strictly a \emph{quantum} computation, since:
 
 Despite offering no direct quantum advantage, we introduce this model for restricted computation, since it lends itself very elegantly to a form of homomorphic encryption, to be described in detail in Sec.~\ref{sec:homo_coherent_state}.
 
-The applications for matrix multiplication needn't be stated, as it forms such a ubiquitous elementary primitive throughout linear algebra and in solving systems of differential equations, with countless applications.
+The applications for matrix multiplication needn't be stated, as it forms such a ubiquitous elementary primitive throughout linear algebra and in solving systems of differential equations, with applications too many to count.
 
 %
 % Continuous Variables
 %
 
-\subsection{Continuous variables} \label{sec:CV_QC} \index{Continuous variable quantum computation}
+\subsection{Continuous variables (CV)} \label{sec:CV_QC} \index{Continuous variable (CV) quantum computation}
 
 \comment{TO DO}
 
@@ -3898,7 +3941,7 @@ It is unlikely that future, large-scale quantum computers will be purely optical
 
 The natural example is matter qubits which couple to single-photon states, whereupon which-path erasure between coupled optical modes teleports entanglement onto the physical matter qubits.\index{Which-path erasure} Similarly, measurement of the matter qubits may be performed by stimulating the emission of photons from them. This idea has been applied to $\lambda$-configuration atomic qubits \cite{bib:BarrettKok05}, shown in Fig.~\ref{fig:barrett_kok}, and atomic ensemble qubits \cite{bib:RohdeAtEns10} (Sec.~\ref{sec:atomic_ens}). The protocol is described in Alg.~\ref{tab:which_path}.
 
-Optically-mediated atomic ensemble quantum computing architectures are particularly attractive as they exhibit extremely long coherence lifetimes, may be operated at room temperatures, and importantly, a phenomenon known as \emph{collective enhancement} quadratically enhances the effective light-matter interaction strength as a function of the number of atoms in the ensemble.
+Optically-mediated atomic ensemble quantum computing architectures are particularly attractive, as discussed in Sec.~\ref{sec:atomic_ens}\index{Atomic ensembles}.
 
 A novel `double heralding' technique, introduced in \cite{bib:BarrettKok05}, allows loss to be overcome during which-path erasure \comment{Check this, is this what the double heralding does?}. Similarly, quantum states of light can be coupled to two-level quantum systems using Hamiltonians of the form shown in Eq.~\ref{eq:two_level_hamil}. The preparation of long-distance entanglement between atomic systems has been demonstrated \cite{bib:Matsukevich05, bib:Matsukevich05b}
 
@@ -4114,7 +4157,7 @@ Of course, we have used the most simple model for modules, where each accommodat
 % The Global Virtual Quantum Computer
 %
 
-\subsection{The global virtual quantum computer} \label{sec:marketplace} \index{The global virtual quantum computer}
+\subsection{The global virtual quantum computer} \label{sec:marketplace} \index{Global virtual quantum computer}
 
 Suppose Alice and Bob both possessed expensive classical Cray\texttrademark\, supercomputers, both identical. They're both connected to the internet, so does it make sense to unify their computational resources over the network to construct a more powerful \emph{virtual machine}, which they subsequently time-share between themselves, or are they better off just using their own computers?
 
@@ -4122,7 +4165,7 @@ If there were an asymmetry in demand for computational resources, it would make 
 
 More generally, in a networked environment where time-sharing of classical computational resources is applied equitably, proportionate to users' contribution to the network, the dollar cost per computation is (roughly) unaffected by the rest of the network. Instead, the motivation for networking computational resources is to improve efficiency by ensuring that clock-cycles are not wasted, but instead distributed according to demand by a scheduling algorithm, which could be market-driven, for example.
 
-However, as discussed in Sec.~\ref{sec:dist_QC}, the computational power of a quantum computer does not scale linearly with its number of qubits, but exponentially. This completely changes the economics, and market dynamics of networked quantum computers. Intuitively, we expect equitable time-sharing of unified quantum computational resources to offer more performance to all users than if they were to exclusively use their own resources in isolation. That is, the cost of a computation is reduced by resource-sharing, even after time-sharing.
+However, as discussed in Sec.~\ref{sec:dist_QC}, the computational power of a quantum computer does not scale linearly with its number of qubits, but exponentially. This completely changes the economics, and market dynamics of networked quantum computers, whose joint computational power grows (very roughly speaking) multiplicatively, rather than additively in the classical case. Intuitively, we expect equitable time-sharing of unified quantum computational resources to offer more performance to all users than if they were to exclusively use their own resources in isolation. That is, the cost of a computation is reduced by resource-sharing, even after time-sharing.
 
 In Secs.~\ref{sec:dist_QC} \& \ref{sec:module} we introduced distributed and modularised quantum computation. Using this as a toy model, we will now investigate the market dynamics of uniting the quantum computational resources of multiple market participants. We envisage a model whereby network participants are contributing modules to the networked quantum computer, thereby unifying their computational power.
 
@@ -4191,7 +4234,7 @@ Classical homomorphic encryption has only been described very recently \cite{bib
 
 In the usual circuit model, blind quantum computation has been shown to be viable, and optimal bounds derived. Equivalently, such protocols have been described in the cluster state model (Sec.~\ref{sec:CSQC}). For universal computation, such protocols necessarily require classical interaction between the client and host. However, it was shown that in some restricted (i.e non-universal) models for optical quantum computation, specifically {\sc BosonSampling}, quantum walks and coherent state passive linear optics, non-interactive (partial) homomorphic encryption may be implemented.
 
-These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver information-theoretically secure\footnote{We differentiate between \emph{information theoretic security}, as opposed to \emph{computational security}. In the former, the laws of quantum information bound the amount of information that can be extracted from a system, irrespective of measurement or computational operations. Thus, such security can be regarded as attack-independent. In the latter, security is based on the assumption that an adversary's computational resources are insufficient to perform cryptanalysis or brute-force cracking. Clearly the former makes a far stronger statement about the security of a protocol than the latter. Classical public- and private-key encryption protocols are typically based upon the assumption of computational security (e.g the computational complexity of performing integer factorisation in the case of RSA public-key encryption, or solving a complex satisfiability problem in the case of private-key encryption), whereas quantum encryption protocols are typically information theoretically secure (e.g the one-time-pad using QKD).} data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
+These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver information-theoretically secure\footnote{We differentiate between \emph{information theoretic security}\index{Information-theoretic security}, as opposed to \emph{computational security}\index{Computational security}. In the former, the laws of quantum information bound the amount of information that can be extracted from a system, irrespective of measurement or computational operations. Thus, such security can be regarded as attack-independent. In the latter, security is based on the assumption that an adversary's computational resources are insufficient to perform cryptanalysis or brute-force cracking. Clearly the former makes a far stronger statement about the security of a protocol than the latter. Classical public- and private-key encryption protocols are typically based upon the assumption of computational security (e.g the computational complexity of performing integer factorisation in the case of RSA public-key encryption, or solving a complex satisfiability problem in the case of private-key encryption), whereas quantum encryption protocols are typically information theoretically secure (e.g the one-time-pad using QKD).} data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
 
 %
 % Classical Encrypted Computation 
@@ -4331,7 +4374,7 @@ In the following sections we introduce non-interactive techniques for passive op
 \begin{itemize}
 \item \emph{Polarisation-key encoding} (Sec.~\ref{sec:phot_homo_enc}): a uniform random polarisation rotation is applied to each input mode, which we apply to photonic linear optics.
 \item \emph{Phase-key encoding} (Sec.~\ref{sec:homo_coherent_state}): a uniform random phase-shift is applied to each input mode, which we apply to the encryption of coherent states under evolution via linear optics and generalised non-linear phase-shift operations.
-\item \emph{Displacement-key encoding} (Sec.~\ref{sec:disp_key_enc}): an arbitrary configuration of random phase-space displacements is applied to the input modes, for which no security proofs have yet been performed.
+\item \emph{Displacement-key encoding} (Sec.~\ref{sec:disp_key_enc}): an arbitrary configuration of random phase-space displacements is applied to the input modes, which in principle applies to any optical encoding.
 \end{itemize}
 However, we leave it as an open question for future work to fully characterise the set of compatible encoding, decoding and computational operations, and to evaluate their security for different choices of input states.
 
@@ -4733,7 +4776,7 @@ We will very succinctly summarise a brief history of major recent developments i
 % Quantum Teleportation & Entanglement Distribution
 %
 
-\subsection{Quantum teleportation \& entanglement distribution} \index{Quantum State Teleportation} \index{Quantum Gate Teleportation} \index{Entanglement distribution}
+\subsection{Quantum teleportation \& entanglement distribution} \index{Quantum state teleportation} \index{Quantum gate teleportation} \index{Entanglement distribution}
 
 Quantum state teleportation (Sec.~\ref{sec:teleport}) is useful in its own right, as a means by which to transmit quantum states, but also as a primitive in larger protocols, such as the gate teleportation (Sec.~\ref{sec:teleport_gate}) employed by LOQC (Sec.~\ref{sec:KLM_univ}). It also forms the basis for quantum repeater networks (Sec.~\ref{sec:rep_net}).
 
@@ -4741,7 +4784,7 @@ Since it was first proposed in 1993 \cite{bib:PRL_70_1895}, quantum state telepo
 
 For the generation of quantum entanglement, a significant breakthrough was made in 1995 by \cite{kwiat1995new}, who demonstrated a technique for the generation of high-intensity polarisation-entangled photon pairs. For the partial Bell state projection of two polarisation-encoded qubits, a 50:50 beamsplitter \cite{bib:Euro_25_559} was employed (Sec.~\ref{sec:bell_proj}).
 
-The first experimental demonstration of photonic quantum teleportation was achieved in 1997 \cite{bib:Boumeester97}. Two photon-pairs were prepared by double-pumping a single nonlinear beta-barium borate (BBO) crystal: one pair employed as the entanglement source; the other to prepare the state to teleport via heralding. The partial Bell state measurement was implemented using which-path erasure at a beamsplitter, with an efficiency of 25\%. 
+The first experimental demonstration of photonic quantum teleportation was achieved in 1997 \cite{bib:Boumeester97}. Two photon-pairs were prepared by double-pumping a single non-linear beta-barium borate (BBO) crystal: one pair employed as the entanglement source; the other to prepare the state to teleport via heralding. The partial Bell state measurement was implemented using which-path erasure at a beamsplitter, with an efficiency of 25\%. 
 
 Since then, great effort has been invested into experimentally demonstrating quantum teleportation with not only photons, but also many other quantum systems.
 
@@ -4775,7 +4818,7 @@ Hybrid schemes combining different physical systems have also been successfully 
 % Entanglement Swapping & Quantum Repeaters
 %
 
-\subsection{Entanglement swapping \& quantum repeaters} \index{Entanglement swapping} \index{Quantum repeaters}
+\subsection{Entanglement swapping \& quantum repeaters} \index{Entanglement swapping} \index{Quantum repeater networks}
 
 Closely related to entanglement distribution is entanglement swapping (Sec.~\ref{sec:swapping}), where the goal is to entangle two remote parties, each of whom have one half of two distinct Bell-pairs. As discussed in Sec.~\ref{sec:ent_ultimate}, entanglement swapping will be of fundamental importance in networks treating entanglement distribution as the most fundamental elementary resource, making it of great importance to quantum networking, allowing the distribution of entanglement between distant parties, who are unable to communicate directly (i.e the entanglement distribution is `mediated').
 
@@ -4817,7 +4860,7 @@ Aside from photonic systems, techniques based on other physical systems have als
 % Quantum Key Distribution
 %
 
-\subsection{Quantum key distribution} \index{Quantum Key Distribution (QKD)}
+\subsection{Quantum key distribution} \index{Quantum key distribution (QKD)}
 
 With the development of quantum technology, QKD will gradually become more and more practical and economically accessible. Bennett, one of the proposers of the BB84 protocol, firstly demonstrated the protocol on an optical platform with a distance of 30cm \cite{bib:JC_5_3}. Since then, experiments have developed rapidly from indoors to outdoors, and from short distance to long distance, with commercial QKD units even available as off-the-shelf products.
 
@@ -4867,7 +4910,7 @@ A Brazilian group \cite{bib:PRA_88_052303} demonstrated the protocol using a pol
 % Entanglement Purification
 %
 
-\subsection{Entanglement purification} \index{Entanglement purification}
+\subsection{Entanglement purification} \index{Entanglement purification/distillation}
 
 Entanglement purification is essential for entanglement distribution protocols, allowing us to distill high-fidelity entangled states from lower-fidelity ones. In order to meet experimental requirements, a feasible purification scheme only requiring PBSs and post-selection was proposed and demonstrated by \cite{bib:Nature_410_1067}. Then the scheme was demonstrated again in 2003 \cite{bib:Nature_423_417}, where they prepared a mixed state with fidelity of $0.75$ ($0.8$), which they were able to purify to $0.92$ ($0.94$), a major improvement in fidelity.
 
@@ -4883,7 +4926,7 @@ In 2005, \cite{bib:PRL_94_040504} performed a Bell experiment with purified stat
 % Coherent States
 %
 
-\subsubsection{Coherent states} \index{Coherent state preparation}
+\subsubsection{Coherent states} \index{Coherent states}
 
 Coherent states are well approximated by laser or maser light. Nowadays thousands of kinds of lasers are known with different power, temporal, spatial and spectral parameters, and the technology is already very mature and commercial. Here we only introduce some basic concepts of lasers related in quantum network.
 
@@ -4906,10 +4949,10 @@ The photons are usually created in pairs via SPDC, one photon (the heralding pho
 However, SPDC or FWM might be not easy to scaled to arbitrary size due to higher-order emission, or multiplexing requirements \cite{bib:RohdeLoopMulti15}. Thus truly deterministic single-photon sources will be indispensable for future large-scale implementations. One of most promising single photon sources are based on quantum dots, which have been developed simultaneously containing high purity of 99.1\%, high indistinguishability of 98.5\% and high extraction efficiency of 66\% \cite{he2013on, wei2014de, ding2016on, somaschi2016, wang2016near, loredo2016}. A good review about solid-state single-photon emitters can be found in a recent paper  \cite{aharonovich2016solid}. Different sources are compared in review paper \cite{eisaman2011}.
 
 %
-% Entangled States Based on Nonlinear Optics
+% Entangled States Based on Non-Linear Optics
 %
 
-\subsubsection{Entangled states based on nonlinear optics}
+\subsubsection{Entangled states based on non-linear optics} \index{Non-linear optics}
 
 Multi-photon GHZ states based on SPDC \cite{kwiat1995new} can be step-by-step constructed with two-photon entangled states. Here we take the four photon one as an example \cite{pan2012multiphoton}. Assume that two SPDC sources emit two polarisation entangled states \mbox{$\frac{1}{2}(\ket{HH} + \ket{VV})^{\otimes 2}$}. After passing through the polarizing beam-splitter (PBS), only the superposition \mbox{$\frac{1}{\sqrt{2}}(\ket{HHHH} + \ket{VVVV})$}, which is a four-photon GHZ state, leads to fourfold coincidence. In 1999, the world's first multi-particle 3-photon entanglement was generated \cite{bouwmeester1999observation, pan2000experimental}. After that, Pan \emph{et al.} broke the records continuously, and realised 4- \cite{zhao2003experimental}, 5- \cite{zhao2004experimental}, 6- \cite{lu2007experimental}, 8- \cite{yao2012observation}, 10- \cite{bib:tenPhotEnt} photon entanglement, and ten-qubit hyper-entanglement with two degrees of freedom \cite{gao2010experimental}.
 
@@ -4953,7 +4996,7 @@ In quantum dots, the recombination of a pair of electrons and hole, named excito
 % Nitrogren-Vacancy Centres
 %
 
-\subsubsection{Nitrogen-vacancy centres} \index{Nitrogen-vacancy centres}
+\subsubsection{Nitrogen-vacancy centres} \index{Nitrogen-vacancy (NV) centres}
 
 An nitrogen-vacancy (NV) centres in diamond refers to a nitrogen (N) atom replacing a carbon atom and neighbouring one vacancy (V) \cite{doherty2013nitrogen}. In such centres, both electron and nuclear spins can exhibit long coherence times ($>$1ms for the electron spin and $>$1s for the nuclear spin) even at room temperature \cite{balasubramanian2009ultralong, neumann2010quantum, maurer2012room}. In 2008, Wrachtrup \emph{et al.} demonstrated the creation of bipartite- and tripartite-entangled states among single nuclear spins in diamond \cite{neumann2008multipartite}. Five years later, they generated room-temperature entanglement between two single electron spins over some 10nm distance in diamond \cite{dolde2013room}. At the same year, Hanson \emph{et al.} reported heralded entanglement between two solid-state qubits located in independent low-temperature setups separated by 3m \cite{bernien2013heralded}. Because NV centres couple to both optical and microwave fields, they can also be used as a quantum interface between optical and solid-state systems. For example, quantum entanglement between a polarised optical photon and a NV center qubit has been realised in experiment \cite{togan2010quantum}.
 
@@ -4961,7 +5004,7 @@ An nitrogen-vacancy (NV) centres in diamond refers to a nitrogen (N) atom replac
 % Superconducting Rings
 %
 
-\subsubsection{Superconducting rings} \index{Superconducting ring detectors}
+\subsubsection{Superconducting rings} \index{Superconducting rings}
 
 In superconductors, electrons are paired and condensed into a single macroscopic quantum state and construction of large quantum integrated circuits is promising \cite{devoret2013superconducting}. There are three basic types of superconducting qubits¡ªcharge, flux and phase. In 2007, a charge-insensitive qubit, named transmon, was designed \cite{koch2007charge}. Transmon qubit in a waveguide cavity, named circuit QED, has reached a coherence time on the order of 0.1 ms \cite{paik2011observation, rigetti2012superconducting}. In 2013, Martinis \emph{et al.} designed a cross-shaped transmon qubits, named Xmons, which balances coherence, connectivity and fast control \cite{barends2013coherent}. In the next year, they constructed a five-qubit GHZ state using five Xmons arranged in a linear array \cite{barends2014superconducting}. Most recently, they reported the protection of states from environmental bit-flip errors in a nine Xmons qubits linear array \cite{kelly2015state}. Besides, the 100-photon Schr{\"o}dinger cat state was created mapping from an arbitrary transmon qubit state, and extended to superposition of up to four coherent states \cite{vlastakis2013deterministically}. The lifetime of microwave photon was extended to 0.3ms with error correction in superconducting circuits \cite{ofek2016extending}. Other topics about superconducting circuits interacting with other quantum systems can be found in an excellent review paper \cite{xiang2013hybrid}.
 
@@ -4979,7 +5022,7 @@ In superconductors, electrons are paired and condensed into a single macroscopic
 
 There are a variety of single photon detectors, detailed description of which can be found in several excellent review papers \cite{eisaman2011, hadfield2009}. Here we only introduce single-photon detectors that have good spectral response in the near-infrared region.
 
-\emph{Single photon avalanche diodes} (SPAD) -- They are the most compact and common single-photon detectors in the world. SPADs are avalanche diodes operated in Geiger mode (above breakdown voltage) to obtain a high gain. There are several commercially SPADs, with detection efficiency around 60\% at 780nm, maximum count rate of 25MHz and dark count rate as low as 25Hz. Several remarks are listed as following:
+\emph{Single-photon avalanche diodes} (SPAD) -- They are the most compact and common single-photon detectors in the world. SPADs are avalanche diodes operated in Geiger mode (above breakdown voltage) to obtain a high gain. There are several commercially SPADs, with detection efficiency around 60\% at 780nm, maximum count rate of 25MHz and dark count rate as low as 25Hz. Several remarks are listed as following:
 
 \begin{itemize}
     \item Even higher detection efficiency is available. However, on account of the significance trade-off between detection efficiency, dark noise and dead-time, it is often at the expense of a lower maximum count rate (typical dead-time is 1$\mu$s, leading to 1MHz count rate) and a bigger dark noise.
@@ -5060,21 +5103,21 @@ There are also other promising approaches to quantum memories, e.g., quantum dot
 % Quantum Computation
 %
 
-\subsection{Quantum computation}
+\subsection{Quantum computation}\index{Quantum computing}
 
 \comment{What are the different physical architectures for QC? What are their records for the number of qubits they can implement? What kinds of fidelities do they exhibit?}
 
-\subsubsection{Linear optics}
+\subsubsection{Linear optics}\index{Universal linear optics quantum computation}
 
-\subsubsection{Boson-sampling \& quantum walks}
+\subsubsection{Boson-sampling \& quantum walks}\index{Boson-sampling}\index{Quantum walks}
 
-\subsubsection{Ion traps}
+\subsubsection{Ion traps}\index{Ion traps}
 
-\subsubsection{Superconducting circuits}
+\subsubsection{Superconducting rings}\index{Superconducting rings}
 
-\subsubsection{Nitrogen-vacancy centres}
+\subsubsection{Nitrogen-vacancy centres}\index{Nitrogen-vacancy (NV) centres}
 
-\subsubsection{Adiabatic quantum computing \& quantum annealing}
+\subsubsection{Adiabatic quantum computing \& quantum annealing}\index{Adiabatic quantum computing \& quantum annealing}
 
 \comment{What else? What other main architectures?}
 
@@ -5090,18 +5133,18 @@ In this section we provide a non-technical outlook on the future quantum interne
 % The Era of Quantum Supremacy
 %
 
-\subsection{The era of quantum supremacy} \label{sec:era_quant} \index{The era of quantum supremacy}
+\subsection{The era of quantum supremacy} \label{sec:era_quant} \index{Era of quantum supremacy}
 
 A pertinent question to ask is `What is the timescale for useful quantum technologies? When will they be viable?'. The correct answer is likely very soon.
 
-From the perspective of classical computing, Moore's Law (observation!) for the exponential growth in classical computing power has proven to be a very accurate one. In Fig.~\ref{fig:moores_law} we illustrate the historical evolution in classical computing power, and extrapolate 5 years into the future.
+From the perspective of classical computing, Moore's Law (observation!) for the exponential growth in classical computing power has proven to be a very accurate one. In Fig.~\ref{fig:moores_law} we illustrate the historical evolution in classical computing power, and extrapolate 5 years into the future.\index{Moore's Law}
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{moores_law}
 \caption{Historical trends in classical computing power for both PCs and top-end supercomputers, with an extrapolation 5 years into the future. The close fit to exponential growth in performance over time is apparent.} \label{fig:moores_law}
 \end{figure}
 
-As a comparison we compare this to the {\sc BosonSampling} (Sec.~\ref{sec:BS}) model for restricted quantum computation, as it is perhaps the most plausible candidate for the first demonstration of quantum computational supremacy. The relationship between {\sc BosonSampling} photon-number and classical equivalent processing power is shown in Fig.~\ref{fig:moores_super}.
+As a comparison we compare this to the {\sc BosonSampling} (Sec.~\ref{sec:BS})\index{Boson-sampling} model for restricted quantum computation, as it is perhaps the most plausible candidate for the first demonstration of quantum computational supremacy. The relationship between {\sc BosonSampling} photon-number and classical equivalent processing power is shown in Fig.~\ref{fig:moores_super}.
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{moores_super}
@@ -5114,7 +5157,7 @@ However, be weary that we are being a little optimistic with this statement, sin
 
 While the power of classical computers scales at most linearly with the number of transistors, the classical-equivalent power of quantum computers scales exponentially with the number of qubits (in the best-case scenario). The classical Moore's Law is close to saturation -- we simply can't make transistors too much smaller than they already are\footnote{Current transistor feature sizes are on the order of several hundred atoms. Under a Moore's Law prediction, we are likely to hit fundamental physical barriers in transistor size within a decade.}! We therefore envisage a new Quantum Moore's Law, which follows a far more impressive trajectory than its classical counterpart. The point of critical mass in quantum computing will take place when the classical and Quantum Moore's Law extrapolations intersect, signalling the commencement of the \emph{post-classical era}. Estimating this is more challenging than it sounds, since although the classical Moore's Law is extremely well established with an excellent fit to an exponential trajectory, there aren't yet enough data-points to make a confident prediction about a Quantum Moore's Law, to what trajectory it best fits, and at what rate it progresses.
 
-On the other hand, aside from quantum computing, QKD systems are already technologically viable, and are in fact commercially available off-the-shelf today, as end-to-end units connected via fibre-optics. As the era of post-classical quantum computation edges closer, the importance of QKD networks will intensify, and along with it the demand for quantum networking infrastructure.
+On the other hand, aside from quantum computing, QKD systems are already technologically viable\index{Quantum key distribution (QKD)}, and are in fact commercially available off-the-shelf today, as end-to-end units connected via fibre-optics. As the era of post-classical quantum computation edges closer, the importance of QKD networks will intensify, and along with it the demand for quantum networking infrastructure.
 
 It is clear that humanity already sits at the precipice of harnessing quantum technologies, and must act quickly to enable them to be fully exploited as they emerge in the near future.
 
@@ -5122,7 +5165,7 @@ It is clear that humanity already sits at the precipice of harnessing quantum te
 % The Economics of the Quantum Internet
 %
 
-\subsection{The economics of the quantum internet} \label{sec:economics} \index{The economics of the quantum internet}
+\subsection{The economics of the quantum internet} \label{sec:economics} \index{Economics of the quantum internet}
 
 \comment{Add discussion of global virtual QC and quantum singularity!}
 
@@ -5132,13 +5175,13 @@ A key question regarding the economics of the quantum internet is the extent to 
 
 Technology should benefit humanity, not only an elite few. In light of this, who exactly will benefit from the quantum internet? Its beauty is that it doesn't create a system of winners and losers. Rather, it establishes a technological infrastructure from which all can benefit, rich or poor. Well-resourced operators who can afford quantum computers, for example, will benefit from being able to license out compute time on their computers, ensuring no wasted clock-cycles and maximising efficiency. The less-well-resourced will benefit in that they will have a means by which to access the extraordinary power of quantum computing on a licensed basis, facilitating access to infrastructure by those who otherwise would have been priced out of the market. This is essentially the same model as what is employed by some present-day supercomputer operators, enabling small players access to supercomputing infrastructure. The quantum internet is critical to achieving the same goal in the quantum era. This could have transformative effects on the developing world in particular. And many emerging industries, for whom access to quantum computation will be critical, but who cannot afford them, will benefit immensely from the client/server model.
 
-Already today, even before the advent of useful post-classical quantum computers, we are seeing the emergence of the outsourced model for computation. IBM recently made an elementary 5-qubit quantum computer freely available for use via the cloud. Interested users can log in online, upload a circuit description for a quantum protocol, and have it executed remotely, with the results relayed back in real-time. Although still very primitive, this simple development already makes experimentation with elementary quantum protocols accessible to the poor layman, undergrad, or PhD student in a developing country, people who just last year would never have dreamt of being able to run their own quantum computing experiments! This effectively opens up research opportunities to people who otherwise would have been priced out of the market entirely, unable to compete with established, well-resourced labs. Evidently, the market already recognises the importance of outsourced models for quantum computation. We encourage the impatiently curious reader to log onto the `IBM Quantum Experience' ({\tt \href{http://www.research.ibm.com/quantum/}{http://www.research.ibm.com/quantum/}}) and take a shot at designing a 5-qubit quantum protocol, without even seeing the quantum computer.
+Already today, even before the advent of useful post-classical quantum computers, we are seeing the emergence of the outsourced model for computation\index{Outsourced quantum computation}. IBM recently made an elementary 5-qubit quantum computer freely available for use via the cloud. Interested users can log in online, upload a circuit description for a quantum protocol, and have it executed remotely, with the results relayed back in real-time. Although still very primitive, this simple development already makes experimentation with elementary quantum protocols accessible to the poor layman, undergrad, or PhD student in a developing country, people who just last year would never have dreamt of being able to run their own quantum computing experiments! This effectively opens up research opportunities to people who otherwise would have been priced out of the market entirely, unable to compete with established, well-resourced labs. Evidently, the market already recognises the importance of outsourced models for quantum computation. We encourage the impatiently curious reader to log onto the `IBM Quantum Experience' ({\tt \href{http://www.research.ibm.com/quantum/}{http://www.research.ibm.com/quantum/}}) and take a shot at designing a 5-qubit quantum protocol, without even seeing the quantum computer.
 
-The quantum internet will facilitate the communication and trade of quantum assets beyond just quantum computation and cryptography. There are many uses for various hard-to-prepare quantum states, for example in metrology, lithography, or research, where outsourcing complicated state preparation would be valuable. Alternately, performing some quantum measurements can be technologically challenging, and the ability to delegate them to someone better-equipped would be desirable. The quantum internet goes beyond just quantum computing. Rather, it extends to a full range of quantum resources and protocols.
+The quantum internet will facilitate the communication and trade of quantum assets beyond just quantum computation and cryptography. There are many uses for various hard-to-prepare quantum states, for example in metrology, lithography, or research, where outsourcing complicated state preparation would be valuable. Alternately, performing some quantum measurements can be technologically challenging, and the ability to delegate them to someone better-equipped would be desirable. The quantum internet goes beyond just quantum computing. Rather, it extends to a full range of quantum resources and protocols.\index{State preparation} \index{Measurement}
 
-To commodify quantum computing, if constructing large-scale quantum computers were a simple matter of plug-and-play, where QuantumLego\texttrademark \,building blocks are available off-the-shelf and straightforward to assemble even for monkeys, mass production would rapidly force down prices. By arbitrarily interconnecting these boxes, large-scale quantum computers could be scaled up with demand, with a trajectory following a new Quantum Moore's Law, and a price scaling linearly with the number of qubits. We envisage that each of these commodity items is a black box, within which a relatively small number of qubits are held captive. Then, to build a larger quantum computer, we don't need to upgrade our boxes. Rather, we simply purchase more boxes to interconnect over the network. This notion is tailored to cluster states in particular -- because a cluster state can be realised by nearest neighbour interactions alone, and since all preparation stages commute with one another, they naturally lend themselves to modularised, distributed preparation.
+To commodify quantum computing, if constructing large-scale quantum computers were a simple matter of plug-and-play, where QuantumLego\texttrademark \,building blocks are available off-the-shelf and straightforward to assemble even for monkeys, mass production would rapidly force down prices. By arbitrarily interconnecting these boxes, large-scale quantum computers could be scaled up with demand, with a trajectory following a new Quantum Moore's Law, and a price scaling linearly with the number of qubits. We envisage that each of these commodity items is a black box, within which a relatively small number of qubits are held captive. Then, to build a larger quantum computer, we don't need to upgrade our boxes. Rather, we simply purchase more boxes to interconnect over the network. This notion is tailored to cluster states in particular -- because a cluster state can be realised by nearest neighbour interactions alone, and since all preparation stages commute with one another, they naturally lend themselves to modularised, distributed preparation.\index{Modularised quantum computation}
 
-Such an approach lends itself naturally to distributed computation, where modules may be shared across multiple users, with the economic benefit of maximising resource utilisation, and the practical benefit of the end-user effectively having a much larger quantum computer at their disposal.
+Such an approach lends itself naturally to distributed computation, where modules may be shared across multiple users, with the economic benefit of maximising resource utilisation, and the practical benefit of the end-user effectively having a much larger quantum computer at their disposal.\index{Distributed quantum computation}
 
 By having a standardised architecture for optically interconnecting modules, we also somewhat `future-proof' our hardware investment -- if interfacing modules is standardised, existing hardware can be fully compatible with newer, more capable module versions. We might envision the emergence of open standards on optical interconnects.
 
@@ -5152,13 +5195,13 @@ On the other hand, if quantum computers were only ever sold as specialised, room
 
 With any new technology comes ethical considerations. Who will have access to it, and how do they plan to use it? For this reason, many developed nations have export bans or restrictions in place on `dual-use' technologies -- those which have clearly legitimate and morally justifiable uses, but also nefarious ones by competitors and criminals. Nuclear technology is the obvious archetype. Quantum technologies (in particular quantum computing and quantum cryptography) are particularly vulnerable to dual-use, and for this reason are becoming subject to dual-use technology legislation, such as export controls, in some nations. In Australia, for example, legislation is being introduced criminalising the transfer of knowledge on certain quantum and cryptographic technologies to foreign nationals of certain target countries.
 
-With a global QKD infrastructure in place, any person on Earth would have uncrackable encryption at their fingertips. Whilst this might be welcomed by the populace of a despotic regime (or the libertarians in a democratic one), it would clearly be unwelcome for that level of secrecy and protection to be awarded to the regime itself. Similarly, criminal and terrorist organisations would be immune to government surveillance. With widespread global adoption of QKD technology, the signals intelligence agencies of nation states would become entirely obsolete, leaving the NSA and its Five Eyes\texttrademark \,partners furious.
+With a global QKD infrastructure\index{Quantum key distribution (QKD)} in place, any person on Earth would have uncrackable encryption at their fingertips. Whilst this might be welcomed by the populace of a despotic regime (or the libertarians in a democratic one), it would clearly be unwelcome for that level of secrecy and protection to be awarded to the regime itself. Similarly, criminal and terrorist organisations would be immune to government surveillance. With widespread global adoption of QKD technology, the signals intelligence agencies of nation states would become entirely obsolete, leaving the NSA and its Five Eyes\texttrademark \,partners furious.
 
 Quantum computing also has dual-use potential. In fact, given their ability to compromise some existing cryptographic protocols, it appears highly likely that the first useful, post-classical quantum computers will find their way into the hands of national SIGINT agencies. Of course, it doesn't take much imagination to see that many other quantum algorithms could be employed for sinister purposes. For this reason we are likely to see export limitations placed on quantum computer technology in the future.
 
 Much as the internet has eliminated national electronic borders, a quantum internet employed for distributed or outsourced computation, would make quantum computer technology available to hackers, criminals, terrorists, and strategically competing nations. And a distributed model for computation as unregulated as the classical internet would make it near impossible to prevent.
 
-Combined with encrypted quantum computing protocols, no one would even know what they were up to when using this awesome computing power, and what they learn, they could keep to themselves. Alg.~\ref{alg:russian} describes a typical protocol for a particularly nefarious application for this.
+Combined with encrypted quantum computing protocols\index{Encrypted quantum computation}, no one would even know what they were up to when using this awesome computing power, and what they learn, they could keep to themselves. Alg.~\ref{alg:russian} describes a typical protocol for a particularly nefarious application for this.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\tt
@@ -5178,7 +5221,7 @@ function MakeAmericaGreatAgain(Putin):
     \item return(America is Great Again\texttrademark).
     \item $\Box$
 \end{enumerate}}}
-\caption{A typical example of a nefarious use for cloud quantum computation.} \label{alg:russian}
+\caption{A typical example of a nefarious use for cloud quantum computation.} \label{alg:russian}\index{Pure evil}
 \end{table}
 
 % Coffee \cofeDm{0.07}{0.5}{90}{0}{0}
@@ -5191,7 +5234,7 @@ We take the view that the same ethical stance ought to be applied in the quantum
 % The Quantum Singularity
 %
 
-\subsection{The quantum singularity} \label{sec:singularity} \index{The quantum singularity}
+\subsection{The quantum singularity} \label{sec:singularity} \index{Quantum singularity}
 
 Since there is positive economic leverage to all participating parties, this creates a self-reinforcing economic model, whereby all market participants are incentivised to continue contributing to the network, exponentially enhancing its collective power, with ever increasing returns over time.
 
@@ -5205,7 +5248,7 @@ Once we reach the point at which the economic returns of the global virtual quan
 % Conclusion - The Vision of the Quantum Internet
 %
 
-\section{Conclusion -- The vision of the quantum internet} \label{sec:vision_quant} \index{The vision of the quantum internet}
+\section{Conclusion -- The vision of the quantum internet} \label{sec:vision_quant} \index{Vision of the quantum internet}
 
 Quantum technologies, particularly quantum computing, will truly revolutionise countless industries. With early demonstrations of key quantum technologies -- such as QKD, long distance quantum teleportation, and quantum computing -- becoming a reality, it is of utmost importance that networking protocols be pursued.
 
@@ -5259,13 +5302,13 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 % List Of Figures & Tables
 %
 
-\makeatletter
-\let\toc@pre\relax
-\let\toc@post\relax
-\makeatother
+%\makeatletter
+%\let\toc@pre\relax
+%\let\toc@post\relax
+%\makeatother
 
-\listoffigures
-\listoftables
+%\listoffigures
+%\listoftables
 
 %
 % Index
