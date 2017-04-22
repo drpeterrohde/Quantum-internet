@@ -2022,13 +2022,110 @@ In instances where corruption or loss of packets cannot be tolerated, a more pro
 
 \section{Packet teleportation} \index{Packet teleportation}
 
+In Sec.~\ref{sec:teleport} we describe the protocol for quantum state teleportation of a single qubit. Since the purpose of QTCP packets is to encapsulate quantum states, we may wish to teleport an entire packet. We will now need a resource of packets of Bell-pairs, as many as there are qubits in the packet to be teleported. The state teleportation procedure is then applied to the {\sc Quantum Data} component of the packet using the resource of Bell-pairs. We treat Alice's and Bob's halves of the Bell-pairs as residing in distinct packets, whose {\sc Quantum Data} fields are entangled, but may each have their own distinct costs and attributes, since they will be following different routes through the network. The classical component of the packet (e.g {\sc Header} field) is communicated directly over a classical channel.
+
+Introducing costs and attributes into the picture, there are now three distinct costs/attributes of relevance, associated with the source packet, and the two halves of the resource of Bell pairs.
+
+The net costs/attributes of the final teleported packet upon arrival at its destination must now be merged appropriately, combining three sets of costs/attributes into one. The general structure of this process is shown in Alg.~\ref{tab:packet_teleport}, where we have intentionally left the functions for combining costs and attributes unspecified.
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\tt
+function Transport.Teleport(source,Bell):
+\begin{enumerate}
+    \item target = source.Teleport()
+    \item netCosts = \\
+CombineCosts(source.Costs, Bell.Alice.Costs, Bell.Bob.Costs)
+    \item netAttributes = \\
+CombineAttributes(source.Attributes, Bell.Alice.Attributes, Bell.Bob.Attributes)
+    \item target.Costs = netCosts
+    \item target.Attributes = netAttributes
+    \item return(target)
+    \item $\Box$
+\end{enumerate}}}
+\caption{Transport layer implementation of packet teleportation.} \label{tab:packet_teleport}
+\end{table}
+
+%
+% Combining Costs & Attributes
+%
+
+\subsection{Combining costs \& attributes} \index{Combining costs \& attributes}
+
+Let us now turn our attention to the details of how the {\tt CombineCosts()} and {\tt CombineAttributes()} functions might be implemented. In Sec.~\ref{sec:quantum_meas_cost} we presented a number of examples of prominent costs and attributes that might arise in quantum networks. When combining these together across a teleportation link, we must consider each independently, since their behaviours can be varied. We refer to the circuit for quantum state teleportation shown in Alg.~\ref{alg:state_teleport}, labelling the qubits $A$, $B$ and $C$ from top to bottom -- $A$ is the source qubit, $B$ and $C$ are the Bell-pair, and qubit $C$ becomes the output. When teleporting an entire packet we envisage that multiple instances of this protocol are applied in series or in parallel, teleporting every individual qubit in the {\sc Quantum Data} field.\index{Quantum state teleportation}
+
+%
+% Efficiency
+%
+
+\subsubsection{Efficiency} \index{Efficiency}
+
+The effects of channel efficiency depend upon which of the three qubits it is applied to. When applied to qubits $A$ or $B$, qubit loss will be detected by the Bell state measurement. This converts loss into a heralded error, whereby we know that the teleportation has failed, and thus the packets may be discarded. On the other hand, when applied to qubit $C$, which is not measured, the loss commutes through the Pauli operations, preserving qubit $C$'s efficiency.
+
+Thus, the teleportation protocol exhibits both heralded (when either of the qubits in the Bell state measurement are lost) and unheralded (inherited from channel $C$) loss. This is outlined in Alg.~\ref{tab:combine_eff}.
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\tt
+function CombineCosts.Efficiency(source,Bell):
+\begin{enumerate}
+	\item if(bellMeasurementFailed) \{
+	\setlength{\itemindent}{0.2in}
+	\item source.Sender.Notify({\sc Failure})
+	\item source.Recipient.Notify({\sc Failure})
+    \item target.Costs.Efficiency = Bell.Bob.Costs.Efficiency
+    \setlength{\itemindent}{0in}
+    \item \}
+    \item $\Box$
+\end{enumerate}}}
+\caption{Transport layer algorithm for combining efficiencies in packet teleportation.} \label{tab:combine_eff}
+\end{table}
+
 \comment{To do}
 
-Sec.~\ref{sec:teleport}
+%
+% Decoherence
+%
 
-\comment{Send source classical header/data to destination. Replace classical data. Merge headers (accumulate costs, run attribute update function, replace routing queue. Source header becomes target header, but with updated/merged costs and attributes). Add algorithm. Discard source packet.}
+\subsubsection{Decoherence} \index{Decoherence}
 
-\comment{what happens to packet headers when teleporting the state? * merging packet costs and attributes * discard source packet * requires resource of Bell pairs, as many as there are data qubits}
+\comment{To do}
+
+%
+% Latency
+%
+
+\subsubsection{Latency} \index{Latency}
+
+In state teleportation there are three channels side-by-side, each exhibiting their own distinct latencies. However, as they are in parallel, the net latency will not be the accumulation of the individual latencies, but rather determined by the largest of those three latencies. That is, the slowest qubit acts as a bottleneck. This is shown in Alg.~\ref{tab:combine_lat}.
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\tt
+function CombineCosts.Latency(source,Bell):
+\begin{enumerate}
+	\item maxLatency = max(source.Costs.Latency, Bell.Alice.Costs.Latency, Bell.Bob.Costs.Latency)
+    \item target.Costs.Latency = maxLatency
+    \item $\Box$
+\end{enumerate}}}
+\caption{Transport layer algorithm for combining latencies in packet teleportation.} \label{tab:combine_lat}
+\end{table}
+
+%
+% Dollars
+%
+
+\subsubsection{Dollars} \index{Dollar cost}
+
+Dollars are perhaps the simplest of costs to account for, as they are simply additive -- the dollar cost of a protocol is the sum of the dollar cost of each component within it. This is shown in Alg.~\ref{tab:combine_dol}.
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\tt
+function CombineCosts.Dollars(source,Bell):
+\begin{enumerate}
+	\item totalCost = source.Costs.Dollars + Bell.Alice.Costs.Dollars + Bell.Bob.Costs.Dollars
+    \item target.Costs.Dollars = totalCost
+    \item $\Box$
+\end{enumerate}}}
+\caption{Transport layer algorithm for combining dollar costs in packet teleportation.} \label{tab:combine_dol}
+\end{table}
 
 %
 % Routing Strategies
@@ -2992,7 +3089,7 @@ The former can be implemented with arbitrarily high success probability in princ
 \includegraphics[width=0.75\columnwidth]{partial_bell}
 \caption{Partial Bell state projection using a polarising beamsplitter (PBS). The PBS completely transmits horizontally polarised light, whilst completely reflecting vertically polarised light. Shown are the four possible two-photon input states, and the respective trajectories followed by the photons. To complete the partial Bell projection we measure the output modes in the diagonal basis, \mbox{$\ket{\pm} = \frac{1}{\sqrt{2}}(\ket{H}\pm\ket{V})$}, such that horizontally and vertically polarised photons cannot be distinguished. If the input state was $\ket{H,H}$ or $\ket{V,V}$, we would measure one photon in each output mode (both transmitted or both reflected). Since the detectors cannot distinguish $\ket{H}$ from $\ket{V}$, this effectively projects us onto the coherent superposition of both possibilities (`which-path erasure'), implementing the measurement projector \mbox{$\hat\Pi_\mathrm{Bell}^\pm = \ket{H,H}\bra{H,H}\pm\ket{V,V}\bra{V,V}$}. If, on the other hand, we measure two photons at one output mode, we know with certainty what the polarisations of both incident photons were and we probabilistically implement one of the projectors \mbox{$\hat\Pi_
 \mathrm{HV}=\ket{H,V}\bra{H,V}$} or \mbox{$\hat\Pi_
-\mathrm{VH}=\ket{V,H}\bra{V,H}$}, effectively performing polarisation-resolved detection upon both modes. The practical outcome of this is that, when using a PBS to prepare cluster states, with probability $1/2$ we are able to successfully fuse two smaller cluster states together into a larger one, and with probability $1/2$ we fail to do so, instead removing two qubits from the clusters.} \label{fig:partial_bell}
+\mathrm{VH}=\ket{V,H}\bra{V,H}$}, effectively performing polarisation-resolved detection upon both modes, which equates to a $\hat{Z}$ measurement on the logical qubits. The practical outcome of this is that, when using a PBS to prepare cluster states, with probability $1/2$ we are able to successfully fuse two smaller cluster states together into a larger one, and with probability $1/2$ we fail to do so, instead removing two qubits from the clusters.} \label{fig:partial_bell}
 \end{figure}
 
 While partial Bell state projection using a PBS is relatively straightforward, LOQC CNOT gates (which are very desirable owing to their near-determinism) are very technologically challenging, with drastic resource overheads, particularly for high success probability. Thus, outsourcing them to the cloud may be very economically efficient.
@@ -3063,8 +3160,8 @@ for phase-shift $\phi$.
 These linear optics evolutions are most commonly implemented using either:
 \begin{itemize}
 \item Bulk optics: where discrete optical elements are arranged on an optical table.\index{Bulk optics}
-\item Time-bin architectures: where time-bin encoded qubits (Sec.~\ref{sec:time_bin}) evolve through delay lines and interfere at a single central optical component.\index{Time-bin encoding}
-\item Integrated waveguides: where all passive components are etched into a chip.\index{Integrated waveguides}
+\item Time-bin architectures: where time-bin encoded qubits (Sec.~\ref{sec:time_bin}) evolve through delay lines and interfere at a single central optical component.\index{Time-bin encoding}\index{Fibre-loops}
+\item Integrated waveguides: where all passive components are etched into a chip.\index{Optical waveguides}
 \end{itemize}
 These three main contenders are illustrated in Fig.~\ref{fig:LO_archs}, and described in more detail in Sec.~\ref{sec:LO_evolution}.
 
@@ -4940,7 +5037,7 @@ In 2005, \cite{bib:PRL_94_040504} performed a Bell experiment with purified stat
 % Coherent States
 %
 
-\subsubsection{Coherent states} \index{Coherent states}
+\subsubsection{Coherent states} \index{Coherent state preparation}
 
 Coherent states are well approximated by laser or maser light. Nowadays thousands of kinds of lasers are known with different power, temporal, spatial and spectral parameters, and the technology is already very mature and commercial. Here we only introduce some basic concepts of lasers related in quantum network.
 
@@ -4954,7 +5051,7 @@ Many quantum information experiments based on fibre network \cite{sun2016quantum
 % Single-Photon States
 %
 
-\subsubsection{Single-photon states} \index{Single-photon states}
+\subsubsection{Single-photon states} \index{Single-photon state preparation}
 
 A highly attenuated laser can be used as a good approximation to a single-photon source when no more than one single-photon is used in an interferometry experiment, such as QKD. Otherwise, heralded or deterministic single-photon sources are required.
 
@@ -4980,7 +5077,7 @@ Continuous-variable entangled states are attractive because they exploit standar
 % Non-Optical Systems
 %
 
-\subsection{Non-optical systems}
+\subsection{Non-optical systems} \index{Non-optical systems}
 
 %
 % Atomic Ensembles
@@ -5083,7 +5180,7 @@ They can be integrated onto a small chip, which is free of alignment, space-savi
 % Fibre-Loops
 %
 
-\subsubsection{Fibre-loops} \index{Time-bin encoding}
+\subsubsection{Fibre-loops} \index{Time-bin encoding} \index{Fibre-loops}
 
 It is extremely resource-frugal, irrespective of the size of the desired interferometer, whose scale is limited only by the loss rates of the fibre, dynamic switches and couplers \cite{motes2014}. While state-of-the-art integrated switches/couplers are fast enough, on the order of GHz \cite{winzer2010, schindler2014}, they involve high loss ($>1$dB). In order to lower loss \cite{he2016}, the controlled switch was realised using a bulk electro-optic modulator (EOM) with a transmission ratio of 97.3\%, modulated at 80MHz. The single-photons were coupled in and out of the loop using an acousto-optic modulator (AOM) with a transmission ratio of 99\% and first order diffraction efficiency of $\sim 85\%$. Inside the loop, the coupling efficiency from free-space to single-mode fibre was 92\%. Thus, a single-loop (BS operation) efficiency of 83\% was achieved.
 
