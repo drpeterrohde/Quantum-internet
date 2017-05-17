@@ -11,6 +11,7 @@
 \usepackage[dvipsnames]{xcolor}
 \usepackage{qcircuit}
 \usepackage{makeidx}
+\usepackage{nomencl}
 % Coffee \usepackage{coffee4}
 
 \newcommand{\bra}[1]{\langle#1|}
@@ -26,9 +27,11 @@
 \newcommand{\sihui}[1]{{\color{Emerald}{\textbf{#1}}}}
 
 \renewcommand{\tablename}{ALG.}
+\renewcommand{\nomname}{List of Abbreviations}
 
 \newtheorem{definition}{Definition}
 
+\makenomenclature
 \makeindex
 
 \begin{document}
@@ -61,6 +64,9 @@
 \affiliation{CAS-Alibaba Quantum Computing Laboratory, Shanghai 201315, China}
 
 \author{Si-Hui Tan}
+\affiliation{Singapore University of Technology \& Design, 20 Dover Dr, Singapore 138682}
+
+\author{Nana Liu}
 \affiliation{Singapore University of Technology \& Design, 20 Dover Dr, Singapore 138682}
 
 %\author{Samuel I. Marks}
@@ -2076,9 +2082,9 @@ function CombineCosts.Efficiency(source,Bell):
 	\setlength{\itemindent}{0.2in}
 	\item source.Sender.Notify(\textsc{Failure})
 	\item source.Recipient.Notify(\textsc{Failure})
-    \item target.Costs.Efficiency = Bell.Bob.Costs.Efficiency
-    \setlength{\itemindent}{0in}
+	\setlength{\itemindent}{0in}
     \item \}
+    \item target.Costs.Efficiency = Bell.Bob.Costs.Efficiency
     \item $\Box$
 \end{enumerate}}}}
 \caption{Transport layer algorithm for combining efficiencies in packet teleportation.} \label{alg:combine_eff}
@@ -3079,16 +3085,29 @@ A homodyne detector interferes a state with a coherent state on a beamsplitter, 
 
 \subsubsection{Bell state projection} \label{sec:bell_proj} \index{Bell measurements}
 
-For the purposes of which-path erasure, essential for optical cluster state (Sec.~\ref{sec:CSQC}) preparation and quantum teleportation (Sec.~\ref{sec:teleport}), Bell state measurements [i.e projections onto the Bell basis given in Eq.~(\ref{eq:bell_basis})] are important. To realise this, there are two primary options. The first is to use a CNOT gate, for example an LOQC gate (Sec.~\ref{sec:KLM_univ}). The second is to perform a \textit{partial} Bell state projection using a polarising beamsplitter (PBS) -- a beamsplitter which completely transmits vertical polarisation, and completely reflects horizontal polarisation \cite{bib:BraunsteinMann95}. In the Heisenberg picture, the transformation of the photonic creation operators is,
+For the purposes of which-path erasure, essential for optical cluster state (Sec.~\ref{sec:CSQC}) preparation and quantum teleportation (Sec.~\ref{sec:teleport}), Bell state measurements [i.e projections onto the Bell basis given in Eq.~(\ref{eq:bell_basis})] are important.
+
+To realise this, there are two primary options. The first is to use a CNOT gate, for example an LOQC gate (Sec.~\ref{sec:KLM_univ}). The second is to perform a \textit{partial} Bell state projection using a polarising beamsplitter (PBS) -- a beamsplitter which completely transmits vertical polarisation, and completely reflects horizontal polarisation \cite{bib:BraunsteinMann95}.
+
+In the Heisenberg picture, the transformation of the photonic creation operators implemented by a PBS is,
 \begin{align}\index{Polarising beamsplitters}
 \hat{h}_1^\dag &\to \hat{h}_2^\dag, \nonumber \\
 \hat{h}_2^\dag &\to \hat{h}_1^\dag, \nonumber \\
 \hat{v}_1^\dag &\to \hat{v}_1^\dag, \nonumber \\
 \hat{v}_2^\dag &\to \hat{v}_2^\dag,
 \end{align}
-where $\hat{h}_i^\dag$ ($\hat{v}_i^\dag$) are the horizontal (vertical) creation operators for the $i$th mode. This approach is described in Fig.~\ref{fig:partial_bell}.
+where $\hat{h}_i^\dag$ ($\hat{v}_i^\dag$) are the horizontal (vertical) creation operators for the $i$th mode. The measurement projectors implemented by the PBS, when both modes are measured in the diagonal ($+/-$) basis, are then,
+\begin{align}
+	\hat\Pi_\text{Bell}^+ &= \ket{H,H}\bra{H,H}+\ket{V,V}\bra{V,V}, \nonumber \\
+	\hat\Pi_\text{Bell}^- &= \ket{H,H}\bra{H,H}-\ket{V,V}\bra{V,V}, \nonumber \\
+	\hat\Pi_
+	\text{HV} &= \ket{H,V}\bra{H,V}, \nonumber \\
+\hat\Pi_
+	\text{VH} &= \ket{V,H}\bra{V,H},
+\end{align}
+where the former two represent successful projection onto the Bell basis, and the latter two represent failures, effectively measuring both modes in the $H/V$ basis. This approach is described in Fig.~\ref{fig:partial_bell}.
 
-The former can be implemented with arbitrarily high success probability in principle. However, in most scenarios of interest (such as cluster state preparation and entanglement purification) the latter succeeds with probability of $1/2$, since a PBS is only able to uniquely distinguish two of the four Bell states. To its advantage, such `partial' Bell measurements only require high HOM visibility, avoiding the need for the interferometric stability inherent to LOQC CNOT gates.
+Bell projections using CNOT gates can be implemented with arbitrarily high success probability in principle. However, in most scenarios of interest (such as cluster state preparation and entanglement purification) Bell projection using a PBS succeeds with probability of $1/2$, since a PBS is only able to uniquely distinguish two of the four Bell states. To its advantage, such `partial' Bell measurements only require high HOM visibility, avoiding the need for the interferometric stability inherent internally within LOQC CNOT gates.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.75\columnwidth]{partial_bell}
@@ -3734,7 +3753,11 @@ In addition to single atoms with well-defined electronic structure, atomic ensem
 \begin{align}\index{Collective excitations}
 \hat{S}^\dag = \frac{1}{\sqrt{N}}\sum_{i=1}^N \hat{S}_i^\dag,
 \end{align}
-where \mbox{$\hat{S}_i^\dag=\ket{e}_i\bra{g}_i$} is the excitation operator for the $i$th atom in the ensemble, $\ket{g}_i$ and $\ket{e}_i$ are the ground and excited states for the $i$th particle, and there are $N$ atoms. The state of a single collective excitation is then given by,
+where,
+\begin{align}
+\hat{S}_i^\dag=\ket{e}_i\bra{g}_i,
+\end{align}
+is the excitation operator for the $i$th atom in the ensemble, $\ket{g}_i$ and $\ket{e}_i$ are the ground and excited states for the $i$th particle, and there are $N$ atoms. The state of a single collective excitation is then given by,
 \begin{align}
 \ket{\psi_\text{collective}} = \hat{S}^\dag \ket{g}^{\otimes N}.	
 \end{align}
@@ -3757,7 +3780,8 @@ Essentially, the long coherence lifetimes of collective excitations owes to the 
 \ket{\psi_W} = \frac{1}{\sqrt{N}}(&\ket{e,g,g,\dots}\nonumber \\
 +&\ket{g,e,g,\dots}\nonumber \\
 +&\ket{g,g,e,\dots}\nonumber \\
-+&\dots).
++&\dots\nonumber \\
++&\ket{g,g,\dots,e}).
 \end{align}
 W-states are favourable from a decoherence perspective as tracing out a single particle has minimal impact on the coherence of the residual state, which preserves most entanglement, with this robustness growing with the number of particles. This is in stark contrast to GHZ states, which completely decohere under the loss of just a single particle. Specifically, if $\ket{\psi_W^{(N)}}$ is the $N$-particle W-state (collective excitation), tracing out a single particle yields,
 \begin{align}
@@ -3917,7 +3941,7 @@ Photonic quantum walks (QWs) are the other main contender for implementing restr
 
 With only a single walker (photon), nothing computationally complex can occur in the system, since a single photon evolving under passive linear optics can be efficiently classically simulated\footnote{Note that the literature has described QW schemes, both discrete-time \cite{bib:Lovett10} and continuous-time \cite{bib:Childs09}, that are universal for quantum computation. However, such universal schemes require an exponential number of vertices in the underlying graph, which clearly does not lend itself to efficient optical representation.}. However, once multiple walkers are introduced we have a system with almost identical features to \textsc{BosonSampling}, differing only in the structure of the linear optics unitary.
 
-There are two predominant varieties of quantum walks: discrete- \cite{qwDiscrete:aharanov} and continuous-time (\cite{contTimeQW:childs}). In the discrete-time QW model, each walker has access to an ancillary `coin' Hilbert space, which is used to record the direction of the walker through the graph. At each discrete time-step the coin is used to update the position (vertex) of the walker, before applying a unitary `coin' operator to the coin Hilbert space. The addition of the coin space is necessary to enable such quantum walks to reside on arbitrary graph topologies, whilst retaining unitarity in their evolution. In the continuous-time QW model, on the other hand, there is no coin degree of freedom, and a Hamiltonian, $\hat{H}_\text{QW}$, encoding the (Hermitian) adjacency matrix of the QWs graph evolves the walker(s), generating a unitary evolution of the form,
+There are two predominant varieties of quantum walks: discrete- \cite{qwDiscrete:aharanov} and continuous-time \cite{contTimeQW:childs}. In the discrete-time QW model, each walker has access to an ancillary `coin' Hilbert space, which is used to record the direction of the walker through the graph. At each discrete time-step the coin is used to update the position (vertex) of the walker, before applying a unitary `coin' operator to the coin Hilbert space. The addition of the coin space is necessary to enable such quantum walks to reside on arbitrary graph topologies, whilst retaining unitarity in their evolution. In the continuous-time QW model, on the other hand, there is no coin degree of freedom, and a Hamiltonian, $\hat{H}_\text{QW}$, encoding the (Hermitian) adjacency matrix of the QWs graph evolves the walker(s), generating a unitary evolution of the form,
 \begin{align}\index{Quantum walk Hamiltonian}
 \hat{U}_\text{QW}(t) = e^{-i\hat{H}_\text{QW}t},
 \end{align}
@@ -4459,18 +4483,18 @@ Let \mbox{$k=\{k_1,\dots,k_m\}$} be a partition of the key $k$ into sub-keys $\{
 \end{align}
 For the protocol to hide information, the plaintext basis states must not be invariant under the encoding operations,
 \begin{align}
-\left[\bigotimes_{i=1}^m\hat{E}_i(k_i)\right]\ket\psi_\text{plaintext} \neq \ket\psi_\text{plaintext}.
+\left[\bigotimes_{i=1}^m\hat{E}_i(k_i)\right]\ket\psi_\mathrm{plaintext} \neq \ket\psi_\mathrm{plaintext}.
 \end{align}
-The state observed by Bob is the mixture of Alice's plaintext over the complete set of encoding operations, implementing a quantum process $\mathcal{E}$ with Kraus operators $\hat{E}(k)$,
+The state observed by Bob is the mixture of Alice's plaintext over the complete set of encoding operations, implementing a quantum process $\mathcal{E}$, with Kraus operators $\hat{E}(k)$,
 \begin{align} \label{eq:mix_over_enc_ops}
-\hat\rho_\text{encoded} &= \mathcal{E}(\ket\psi_\text{plaintext}\bra\psi_\text{plaintext}) \nonumber \\
-&= \sum_k \hat{E}(k)\ket\psi_\text{plaintext}\bra\psi_\text{plaintext} \hat{E}^\dag(k),
+\hat\rho_\text{encoded} &= \mathcal{E}(\ket\psi_\mathrm{plaintext}\bra\psi_\mathrm{plaintext}) \nonumber \\
+&= \sum_k \hat{E}(k)\ket\psi_\mathrm{plaintext}\bra\psi_\mathrm{plaintext} \hat{E}^\dag(k),
 \end{align}
 where,
 \begin{align}
 \hat{E}(k) = \bigotimes_{i=1}^m\hat{E}_i(k_i).
 \end{align}
-To minimise Bob's chances of guessing Alice's state, we would like to maximise the von Neuman entropy of Bob's state. For \mbox{$S(\hat\rho_\text{encoded})=0$} we have no secrecy, whereas for maximal \mbox{$S(\hat\rho_\text{encoded})$} we have maximal secrecy (for the given plaintext basis state).
+To minimise Bob's chances of guessing Alice's state, we would like to maximise the von Neuman entropy of Bob's state. For \mbox{$S(\hat\rho_\mathrm{encoded})=0$} we have no secrecy, whereas for maximal \mbox{$S(\hat\rho_\mathrm{encoded})$} we have maximal secrecy (for the given plaintext basis state).
 \end{definition} 
 
 Intuitively, this simply says that a tensor product of single-mode encoding operations commutes through the passive computation to yield a (potentially different) tensor product of single-mode decoding operations. This way, Alice's operations are all separable, requiring no entangling gates (after all, if she had access to entangling gates she might be able to do quantum computations herself!). This relationship can be illustrated as shown in Fig.~\ref{fig:gen_pass_hom}.
@@ -4605,6 +4629,8 @@ Note that while we have considered linear optics in the above discussion, we cou
 [\hat{R}(\theta),\hat{H}]=0.
 \end{align}
 This could include, for example, polarisation-independent non-linear operations.
+
+\comment{Discuss follow-up paper by Fitzsimons group on using other photonic degrees of freedom to enhance security.}
 
 %
 % Phase-Key Encoding
@@ -4815,6 +4841,8 @@ Intuitively we expect displacement-key encoding to potentially offer better secu
 %
 
 \subsection{Authentication}
+
+\comment{To do}
 
 %
 % Verification Of Cloud Quantum Computing
@@ -5300,7 +5328,7 @@ As a comparison we compare this to the \textsc{BosonSampling} (Sec.~\ref{sec:BS}
 \caption{Relationship between photon-number and classical equivalent FLOPS for `scattershot' \textsc{BosonSampling}. The annotated red data-points show several points of interest, taking a Moore's Law extrapolation of classical computing power 5 years into the future for desktop PCs and top-end high-performance computers, as well as an order of magnitude greater performance respectively. We use these as indicators of the post-classical era.} \label{fig:moores_super}
 \end{figure}
 
-Based on these extrapolations, \cite{CYLu} made the prediction that a \textsc{BosonSampling} computer could outperform top-end supercomputers of 5 years into the future by an order of magnitude (a fairly reasonable benchmark for usage of the term `post-classical') using just \mbox{$\sim 24$} photons. Given that present-day experimental efforts have recently reached 10 photons \cite{bib:tenPhotEnt}, with great ambitions to scale up further, it is to be expected that the post-classical era is imminent. Whilst it is difficult to predict exactly when technology will allow a bank of 24 high-fidelity, highly-indistinguishable, push-button (or heralded) single-photon sources operating in parallel, it seems fair to predict that the timescale will be on the order of years rather than decades.
+Based on these extrapolations, \cite{CYLu} \comment{(Need to revise the numbers, cite Montanaro et al. on classical simulation of boson-sampling)} made the prediction that a \textsc{BosonSampling} computer could outperform top-end supercomputers of 5 years into the future by an order of magnitude (a fairly reasonable benchmark for usage of the term `post-classical') using just \mbox{$\sim 24$} photons. Given that present-day experimental efforts have recently reached 10 photons \cite{bib:tenPhotEnt}, with great ambitions to scale up further, it is to be expected that the post-classical era is imminent. Whilst it is difficult to predict exactly when technology will allow a bank of 24 high-fidelity, highly-indistinguishable, push-button (or heralded) single-photon sources operating in parallel, it seems fair to predict that the timescale will be on the order of years rather than decades.
 
 However, be weary that we are being a little optimistic with this statement, since \textsc{BosonSampling} is not universal for quantum computation, and doesn't even have any known practical uses, i.e it's post-classical and that's about it! It would be more helpful to consider prospects for \textit{universal} quantum computation.
 
@@ -5334,7 +5362,7 @@ Such an approach lends itself naturally to distributed computation, where module
 
 By having a standardised architecture for optically interconnecting modules, we also somewhat `future-proof' our hardware investment -- if interfacing modules is standardised, existing hardware can be fully compatible with newer, more capable module versions. We might envision the emergence of open standards on optical interconnects.
 
-On the other hand, if quantum computers were only ever sold as specialised, room-sized, all-in-one solutions (think D-Wave), such mass production would not experience the driving force of commodified, off-the-shelf building blocks, each of which is cheap, yet frugal in its computational power alone.
+On the other hand, if quantum computers were only ever sold as specialised, room-sized, all-in-one solutions (think D-Wave\texttrademark), such mass production would not experience the driving force of commodified, off-the-shelf building blocks, each of which is cheap, yet frugal in its computational power alone.
 
 %
 % Security Implications of the Global Quantum Internet
@@ -5375,7 +5403,7 @@ function MakeAmericaGreatAgain(Putin):
 
 % Coffee \cofeDm{0.07}{0.5}{90}{0}{0}
 
-These are all legitimate concerns. But they are very much the same ones that detractors expressed about the classical internet and strong encryption. Nonetheless, it can be said that encryption and the internet have on balance been overwhelmingly beneficial to mankind, enabling unprecedented rates of technological progress. Any attempts to eliminate or undermine them could be economically catastrophic.
+These are all legitimate concerns. But they are very much the same ones that detractors expressed about the classical internet and strong encryption. Nonetheless, it can be said that encryption and the internet have on balance been overwhelmingly beneficial to mankind, enabling unprecedented rates of technological and economic progress. Any attempts to eliminate or undermine them could be economically catastrophic.
 
 We take the view that the same ethical stance ought to be applied in the quantum era. While quantum technologies clearly have dual-use potential, the magnitude of the implications they will have for scientific and technological progress overwhelms the discussed proliferation issues. No doubt, politicians will nonetheless attempt to regulate and restrict the quantum internet -- that's what governments like to do. But this will inevitably fail for the same underlying reasons that it failed for the classical internet -- no tech-savvy Chinese person can actually say they are hindered by the Great Firewall of China\texttrademark.
 
@@ -5426,7 +5454,7 @@ Large-scale quantum computing may still seem a formidable, and somewhat long-ter
 It is essential for the adoption and development of quantum technology, that quantum networking infrastructure be sufficiently well developed that it is ready to be deployed the minute the first useful, post-classical hardware becomes available. The proliferation of the defining technology of the 21st century depends upon it.
 \\
 
-\textit{--- Ad astra per alas porci. Scientia potentia est.}
+\textit{--- Ad astra per alas fideles. Scientia potentia est.}
 
 %
 % Acknowledgments
@@ -5434,18 +5462,71 @@ It is essential for the adoption and development of quantum technology, that qua
 
 \begin{acknowledgments}
 We acknowledge Charlotte Bridault, Marco Tomamichel, Jonathan Olson \& Darryl Veitch for helpful discussions. We thank the authors of QCircuit (\texttt{\href{http://physics.unm.edu/CQuIC/Qcircuit/}{http://physics.unm.edu/CQuIC/Qcircuit/}}) for providing this very helpful package. P.P.R is funded by an ARC Future Fellowship (project FT160100397). We thank almost unethical quantities of 1,3,7-Trimethylxanthine for aiding in the motivation for this work.
-\\
-\\
+\end{acknowledgments}
 
 %
 % Statement of Contributions
 %
 
-\textbf{Statement of contributions}
-\\
-\\
+\section*{Statement of contributions}
+
 P.P.R conceived and directed this project, developed the original ideas, and prepared most of the manuscript. Z.E.S and H.L.H prepared Sec.~\ref{sec:state_of_the_art}. W.J.M prepared Sec.~\ref{sec:rep_net}. S.I.M contributed to Sec.~\ref{sec:classical_nets}. R.L.M contributed to Sec.~\ref{sec:protocols_quant_int}. All authors played active roles in the discussions that developed this work.
-\end{acknowledgments}
+
+%
+% List of Abbreviations
+%
+
+\nomenclature[]{\textbf{SPDC}}{Spontaneous parametric down-conversion}
+\nomenclature[]{\textbf{CV}}{Continuous variable}
+\nomenclature[]{\textbf{QKD}}{Quantum key distribution}
+\nomenclature[]{\textbf{TCP}}{Transmission control protocol}
+\nomenclature[]{\textbf{IP}}{Internet protocol}
+\nomenclature[]{\textbf{QTCP}}{Quantum transmission control protocol}
+\nomenclature[]{\textbf{BFS}}{Breadth-first-search}
+\nomenclature[]{\textbf{DFS}}{Depth-first-search}
+\nomenclature[]{\textbf{P2P}}{Point-to-point}
+\nomenclature[]{\textbf{CNOT gate}}{Controlled-NOT gate}
+\nomenclature[]{\textbf{CZ gate}}{Controlled-phase gate}
+\nomenclature[]{\textbf{BGP}}{Border gateway protocol}
+\nomenclature[]{\textbf{BQP}}{Bounded-error quantum polynomial-time}
+\nomenclature[]{\textbf{NP}}{Non-deterministic polynomial-time}
+\nomenclature[]{\textbf{P}}{Polynomial-time}
+\nomenclature[]{\textbf{BPP}}{Bounded-error probabilisitic polynomial-time}
+\nomenclature[]{\textbf{APD}}{Avalanche photo-diode}
+\nomenclature[]{\textbf{QST}}{Quantum state tomography}
+\nomenclature[]{\textbf{QPT}}{Quantum process tomography}
+\nomenclature[]{\textbf{CDMA}}{Code division multiple access}
+\nomenclature[]{\textbf{EGP}}{Exterior gateway protocol}
+\nomenclature[]{\textbf{GHZ state}}{Greenberger-Horne-Zeilinger state}
+\nomenclature[]{\textbf{MZ}}{Mach-Zehnder}
+\nomenclature[]{\textbf{HOM}}{Hong-Ou-Mandel}
+\nomenclature[]{\textbf{NV centre}}{Nitrogen-vacancy centre}
+\nomenclature[]{\textbf{NS gate}}{Non-linear sign-shift gate}
+\nomenclature[]{\textbf{QEC}}{Quantum error correction}
+\nomenclature[]{\textbf{UDP}}{User datagram protocol}
+\nomenclature[]{\textbf{QoS}}{Quality of service}
+\nomenclature[]{\textbf{LAN}}{Local area network
+\nomenclature[]{\textbf{CP-map}}{Completely positive map}}
+\nomenclature[]{\textbf{MST}}{Minimum spanning tree}
+\nomenclature[]{\textbf{VRP}}{Vehicle routing problem}
+\nomenclature[]{\textbf{VRSP}}{Vehicle rescheduling problem}
+\nomenclature[]{\textbf{QED}}{Quantum electrodynamics}
+\nomenclature[]{\textbf{LOQC}}{Linear optics quantum computing}
+\nomenclature[]{\textbf{KLM}}{Knill-Laflamme-Milburn}
+\nomenclature[]{\textbf{BB84}}{Bennett-Brassard 1984}
+\nomenclature[]{\textbf{SNL}}{Shot-noise limit}
+\nomenclature[]{\textbf{HL}}{Heisenberg limit}
+\nomenclature[]{\textbf{E91}}{Ekert 1991}
+\nomenclature[]{\textbf{NOON state}}{$\frac{1}{\sqrt{2}} (\ket{N,0}+\ket{0,N})$}
+\nomenclature[]{\textbf{QW}}{Quantum walk}
+\nomenclature[]{\textbf{MORDOR}}{Motes-Olson-Rabeaux-Olson-Dowling-Rohde}
+\nomenclature[]{\textbf{EO}}{Entangling operation}
+\nomenclature[]{\textbf{EPR state}}{Einstein-Podolsky-Rosen state}
+\nomenclature[]{\textbf{BBO}}{Beta-barium borate}
+\nomenclature[]{\textbf{PBS}}{Polarising beamsplitter}
+\nomenclature[]{\textbf{QIP}}{Quantum information processing}
+
+\printnomenclature
 
 %
 % Index
