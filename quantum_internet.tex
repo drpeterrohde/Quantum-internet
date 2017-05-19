@@ -17,6 +17,9 @@
 \newcommand{\bra}[1]{\langle#1|}
 \newcommand{\ket}[1]{|#1\rangle}
 
+\newcommand\gobbleone[1]{}
+\newcommand*{\seeonly}[2]{\ (\emph{\seename} #1)}
+
 \newcommand{\comment}[1]{{\color{blue}{\textbf{#1}}}}
 \newcommand{\peter}[1]{{\color{Aquamarine}{#1}}}
 \newcommand{\jonny}[1]{{\color{Orchid}{#1}}}
@@ -276,9 +279,9 @@ Using the circuit model, arbitrary quantum computations can be elegantly and int
 
 \subsection{Cluster states} \label{sec:CSQC} \index{Cluster state model}
 
-The \textit{cluster state} model for quantum computation \cite{bib:Raussendorf01, bib:Raussendorf03, bib:Nielsen06} (also referred to as the \textit{one-way}, \textit{measurement-based}\index{Measurement-based quantum computation}, or \textit{graph state} models for quantum computation) is an extremely powerful paradigm that warrants treatment of its own, owing to its significant distinction from the more familiar circuit model, and its applicability to distributed models for quantum computation to be discussed in Sec.~\ref{sec:dist_QC}.
+The \textit{cluster state} model for quantum computation \cite{bib:Raussendorf01, bib:Raussendorf03, bib:Nielsen06} (also referred to as the \textit{one-way}, \textit{measurement-based}, or \textit{graph state} models for quantum computation) is an extremely powerful paradigm that warrants treatment of its own, owing to its significant distinction from the more familiar circuit model, and its applicability to distributed models for quantum computation to be discussed in Sec.~\ref{sec:dist_QC}.
 
-In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \textit{cluster state} or \textit{graph state}\index{Graph states}. The state is associated with a graph, $G=(V,E)$, of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation\footnote{Note that the graph upon which a cluster state resides is not to be confused with the network graph. Rather it is just a convenient graphical representation for a class of multi-qubit states.}. That is, they act as a `substrate' for implementing arbitrary quantum computations.
+In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \textit{cluster state} or \textit{graph state}. The state is associated with a graph, $G=(V,E)$, of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation\footnote{Note that the graph upon which a cluster state resides is not to be confused with the network graph. Rather it is just a convenient graphical representation for a class of multi-qubit states.}. That is, they act as a `substrate' for implementing arbitrary quantum computations.
 
 In the graph, vertices represent qubits initialised into the,
 \begin{align}
@@ -532,7 +535,7 @@ A key feature of the global internet is redundancy. In a packet-switched environ
 % Network Costs & Attributes
 %
 
-\subsection{Network costs \& attributes} \label{sec:costs} \index{Costs \& attributes}
+\subsection{Network costs \& attributes} \label{sec:costs} \index{Costs}\index{Attributes}
 
 The edge weights in $G$ represent the \textit{costs} ($\vec c$) and \textit{attributes} ($\vec a$) associated with using that link. In general these needn't be single numbers, but would rather be sets, representing different types of costs and attributes of links, of which there may be many. These could include, for example, latency, bandwidth, dollar cost, and quality.
 
@@ -1114,7 +1117,7 @@ As with classical data, quantum data is susceptible to corruption during transmi
 % Known Unitaries
 %
 
-\subsection{Known unitaries} \index{Known unitary errors}
+\subsection{Known unitaries} \index{Unitary errors}
 
 The most trivial error mechanism is when a (potentially multi-qubit) unitary channel (e.g an identity channel for the purposes of quantum memory) actually implements some unitary transformation, $\hat{U}$, that is not that which is desired. However, the unitary is constant, not varying from trial to trial, and is known, which can be easily determined by performing QPT on the channel. For example, an optical fibre might induce a polarisation rotation on transmitted photons, but the fibre isn't changing and neither is the rotation. If consistently implementing the same known unitary then reversing it is straightforward in most architectures, by applying $\hat{U}^\dag$, since $\hat{U}^\dag\hat{U}=\hat{\mathbb{I}}$.
 
@@ -1122,7 +1125,7 @@ The most trivial error mechanism is when a (potentially multi-qubit) unitary cha
 % Unknown Unitaries
 %
 
-\subsection{Unknown imperfect unitaries} \index{Unknown unitary errors}
+\subsection{Unknown imperfect unitaries} \index{Unitary errors}
 
 Alternate to known unitaries, the unitary operation implemented by a node/channel may deviate from that which is desired, in an unknown manner, thereby implementing a slightly different operation than that which we intended to engineer. Specifically, the effective unitary can be represented as the ideal unitary, augmented by some deviation matrix,
 \begin{align}
@@ -1268,7 +1271,7 @@ Like the dephasing and loss channels, the error probability of multiple channels
 
 \subsection{Amplitude damping} \index{Amplitude damping channel} \label{sec:amp_damp}
 
-An error not so much relevant to optics, but which arises very naturally in some other systems, such as atomic systems or quantum dots, is amplitude damping, also referred to as a \textit{relaxation channel}\index{Relaxation channel}. Here the process models the relaxation of a higher energy level, $\ket{1}$, to a lower energy one, $\ket{0}$. The $\ket{0}$ state is assumed to be the ground state and cannot relax any further, but the $\ket{1}$ state can spontaneously relax to the ground state. After complete amplitude damping, any input state will be left in the ground state $\ket{0}$. This model can be thought of as energy dissipating from the qubit system and being measured by the environment, leading to a type of decoherence whereby the input state is probabilistically replaced by the ground state.
+An error not so much relevant to optics, but which arises very naturally in some other systems, such as atomic systems or quantum dots, is amplitude damping, also referred to as a \textit{relaxation channel}. Here the process models the relaxation of a higher energy level, $\ket{1}$, to a lower energy one, $\ket{0}$. The $\ket{0}$ state is assumed to be the ground state and cannot relax any further, but the $\ket{1}$ state can spontaneously relax to the ground state. After complete amplitude damping, any input state will be left in the ground state $\ket{0}$. This model can be thought of as energy dissipating from the qubit system and being measured by the environment, leading to a type of decoherence whereby the input state is probabilistically replaced by the ground state.
 
 The amplitude damping channel is easily represented in the quantum process formalism using two Kraus operators,
 \begin{align}
@@ -1451,7 +1454,7 @@ The fidelity is invariant under a common unitary applied to both states,
 \mathcal{F}(\hat\rho_1,\hat\rho_2) = \mathcal{F}(\hat{U}\hat\rho_1 \hat{U}^\dag,\hat{U} \hat\rho_2\,\hat{U}^\dag).
 \end{align}
 
-We define the fidelity of two processes \cite{bib:Gilchrist05} to be the fidelity between two identical copies of a state that have been evolved under each of those processes, minimised over all possible states. That is, it provides a lower bound on the fidelity between identical states evolved under the two processes. In the context of networking, where quality must be guaranteed, this definition is more appropriate than, say, the average case fidelity. Specifically,
+We define the fidelity of two processes, the process fidelity \index{Fidelity} \cite{bib:Gilchrist05}, to be the fidelity between two identical copies of a state that have been evolved under each of those processes, minimised over all possible states. That is, it provides a lower bound on the fidelity between identical states evolved under the two processes. In the context of networking, where quality must be guaranteed, this definition is more appropriate than, say, the average case fidelity. Specifically,
 \begin{align}
 \mathcal{F}(\mathcal{E}_1,\mathcal{E}_2) &= \min_{\hat\rho} \left[\mathcal{F}(\mathcal{E}_1(\hat\rho),\mathcal{E}_2(\hat\rho))\right] \nonumber \\
 &= \text{tr}\left(\sqrt{\chi_1^{1/2}\cdot\chi_2\cdot\chi_1^{1/2}}\right),
@@ -1741,18 +1744,18 @@ As with classical networking, our protocols for quantum networks will be separat
 
 The structure of the protocol stack for QTCP is shown in Fig.~\ref{fig:stack}. In summary, the layers in the protocol stack are, beginning from the lowest level:
 \begin{itemize}
-\item \textsc{Data (Message)}: Raw data (`payload') Alice wishes to transmit to Bob. Comprises both \textsc{Quantum Data} and \textsc{Classical Data}.
-\item \textsc{Packet}: Decomposition of \textsc{Data} into blocks (\textsc{Packet Data}), and associated classical \textsc{Packet Headers} containing metadata (e.g routing information).
-\item \textsc{Strategy}: Construct \textsc{Packet} routing strategies based on a cost optimisation algorithm.
-\item \textsc{Transport}: Physical routing of \textsc{Packets} to arrive at their destination, based upon metadata contained in \textsc{Packet Header}. Perform collision detection during transit.
-\item \textsc{Reconstruction}: Reconstruct \textsc{Data} from received \textsc{Packets}.
-\item \textsc{Quality of Service (QoS)}: Apply QEC and determine whether \textsc{QoS} requirements have been satisfied.
-\item \textsc{Services \& Applications}: High-level interface to \textsc{Data} presented to Bob's services and applications. The interface abstracts away lower levels of the protocol stack, presenting Bob with only \textsc{Data} and its associated metadata.
+\item \textsc{Data (Message)}\index{Data (message) layer}: Raw data (`payload') Alice wishes to transmit to Bob. Comprises both \textsc{Quantum Data}\index{Quantum data layer} and \textsc{Classical Data}\index{Classical data layer}.
+\item \textsc{Packet}\index{Packet layer}: Decomposition of \textsc{Data} into blocks (\textsc{Packet Data}\index{Packet data layer}), and associated classical \textsc{Packet Headers}\index{Packet header layer} containing metadata (e.g routing information).
+\item \textsc{Strategy}\index{Strategy layer}: Construct \textsc{Packet} routing strategies based on a cost optimisation algorithm.
+\item \textsc{Transport}\index{Transport layer}: Physical routing of \textsc{Packets} to arrive at their destination, based upon metadata contained in \textsc{Packet Header}. Perform collision detection during transit.
+\item \textsc{Reconstruction}\index{Reconstruction layer}: Reconstruct \textsc{Data} from received \textsc{Packets}.
+\item \textsc{Quality of Service (QoS)}\index{Quality of service layer}: Apply QEC and determine whether \textsc{QoS} requirements have been satisfied.
+\item \textsc{Services \& Applications}\index{Services \& applications layer}: High-level interface to \textsc{Data} presented to Bob's services and applications. The interface abstracts away lower levels of the protocol stack, presenting Bob with only \textsc{Data} and its associated metadata.
 \end{itemize}
 
 \begin{figure}[!htb]\index{QTCP protocol stack}
 \includegraphics[width=\columnwidth]{stack}
-\caption{Protocol stack for QTCP. The protocol stack mediates communication of quantum data from Alice to Bob using the shown layers of abstraction. The end goal is to provide Bob a virtual interface to Alice's transmitted data, while remaining oblivious to the underlying protocol.} \label{fig:stack}
+\caption{Protocol stack for QTCP. The protocol stack mediates communication of quantum data from Alice to Bob using the shown layers of abstraction. The end goal is to provide Bob a virtual interface to Alice's transmitted data, while remaining oblivious to the underlying protocol.} \label{fig:stack}\index{QTCP protocol stack}
 \end{figure}
 
 Next we describe the operation of these layers in detail.
@@ -1761,7 +1764,7 @@ Next we describe the operation of these layers in detail.
 % Data (Message)
 %
 
-\subsection{Data (Message)}
+\subsection{Data (Message)} \index{Data (message) layer}
 
 At the lowest level of the protocol we have the raw \textsc{Data} Alice wishes to communicate to Bob. \textsc{Data} is allowed to comprise both \textsc{Quantum Data} and \textsc{Classical Data} components, and may contain one or the other, or both.
 
@@ -1769,7 +1772,7 @@ At the lowest level of the protocol we have the raw \textsc{Data} Alice wishes t
 % Quantum Data
 %
 
-\subsubsection{Quantum data}
+\subsubsection{Quantum data} \index{Quantum data layer}
 
 \textsc{Quantum Data} is allowed to be an arbitrary quantum state. It could be a pure or mixed state, of arbitrary (but predetermined) dimension, or even a subsystem of a larger external state (i.e entangled with another system). We stress that it needn't be expressed using a conventional qubit representation, in the way digital data is necessarily represented using bits. Keep in mind that the quantum internet isn't just there to communicate qubit data streams. Rather, it is intended to act as generally as possible, such that essentially arbitrary \textit{quantum assets} can be exchanged. These needn't be restricted to any particular type of encoding, such as those discussed in Sec.~\ref{sec:opt_enc_of_qi}. For example, in addition to something `standard' like polarisation-encoded qubits in single photons, one network user might like to share an exotic CV state of light, like a cat state, with his mate whose cat died. Indeed, multiple types of state encoding might be encapsulated within a single \textsc{Packet}. The QTCP acts only as an abstract interface for quantum networking, but is completely blind as to what the underlying data in the network is. QTCP is only concerned with getting that state from Alice to Bob.
 
@@ -1777,7 +1780,7 @@ At the lowest level of the protocol we have the raw \textsc{Data} Alice wishes t
 % Classical Data
 %
 
-\subsubsection{Classical data}
+\subsubsection{Classical data} \index{Classical data layer}
 
 \textsc{Classical Data} is a purely classical state with no coherence (i.e a diagonal density matrix), which may be represented as a classical bit-string. We very intentionally segregate the \textsc{Classical} and \textsc{Quantum} components of \textsc{Data}, since the classical network is expected to be cheaper and more reliable than the quantum network operating in parallel to it. The \textsc{Classical Data} could, for example, provide nodes with classical instructions on what quantum computations to perform on the \textsc{Quantum Data}.
 
@@ -1785,7 +1788,7 @@ At the lowest level of the protocol we have the raw \textsc{Data} Alice wishes t
 % Packet
 %
 
-\subsection{Packet}
+\subsection{Packet} \index{Packet layer}
 
 \textsc{Data} is transmitted as \textsc{Packets}, much in the same way as conventional TCP. The \textsc{Data} is decomposed into three components: \textsc{Quantum Data}, \textsc{Classical Data}, and \textsc{Packet Header}.
 
@@ -1801,7 +1804,7 @@ Note that while one can always measure classical data without disturbance, this 
 % Packet Data
 %
 
-\subsubsection{Packet data}
+\subsubsection{Packet data} \index{Packet data layer}
 
 Comprises blocks of both \textsc{Quantum Data} and \textsc{Classical Data}, of sizes \textsc{Quantum Block Size} and \textsc{Classical Block Size} respectively. \textsc{Packet Data} requires that \textsc{Data} be decomposed into distinct subsystems which are independently transmitted by QTCP. For easy of exposition, we will restrict ourselves to the case where the \textsc{Data} is encoded into a stream of qubits (\textsc{Quantum Data}) and bits (\textsc{Classical Data}). But of course other encodings could be used. Also bear in mind that any quantum (classical) information can be encoded into qubits (bits), and once represented as such, the decomposition of \textsc{Data} into \textsc{Packets} arises very naturally and intuitively. The \textsc{Packet's} \textsc{Quantum Data} is what is transmitted via the quantum channels, while the \textsc{Classical Data} is communicated via classical channels.
 
@@ -1809,23 +1812,23 @@ Comprises blocks of both \textsc{Quantum Data} and \textsc{Classical Data}, of s
 % Packet Header
 %
 
-\subsubsection{Packet header} \label{sec:packet_header}
+\subsubsection{Packet header} \label{sec:packet_header} \index{Packet header layer}
 
 \textsc{Packet Header} is purely classical and needn't be transmitted over the costly quantum network, instead being transmitted over a complementary classical network, running in parallel to, and synchronised with the quantum network. \textsc{Packet Header} contains no information content from \textsc{Data}, instead comprising only metadata relevant to the higher levels of the protocol stack. In particular, \textsc{Packet Header} contains the following fields:
 \begin{itemize}
-    \item \textsc{Header Size}: The number of bits in the \textsc{Packet Header}.
-    \item \textsc{Message ID}: A unique identifier for the complete message to which this \textsc{Packet} belongs. This field mitigates ambiguity as to which \textsc{Message} this packet belongs when performing \textsc{Reconstruction}.
-    \item \textsc{Lifetime}: How long the \textsc{Packet} has been in existence for, i.e since it was initially sent by the \textsc{Sender}. This is used by strategies to prevent collisions.
-    \item \textsc{Sender}: A unique node identifier for the sender (Alice).
-    \item \textsc{Recipient}: A unique node identifier for the recipient (Bob).
-    \item \textsc{Order}: To which block taken from \textsc{Data} does this \textsc{Packet Data} belong? This is extremely important in networks where \textsc{Packets} may arrive out of order. The \textsc{Order} field forms the basis for the \textsc{Reconstruction} layer.
-    \item \textsc{Quantum Block Size}: The number of qubits contained in the \textsc{Quantum} component of \textsc{Packet Data}. This is important for the \textsc{Reconstruction} layer.
-    \item \textsc{Classical Block Size}: The number of bits contained in the \textsc{Classical} component of \textsc{Packet Data}, also important for the \textsc{Reconstruction} layer.
-    \item \textsc{Routing Queue}: A first in, first out (FIFO) queue of node identifiers, tracing out the entire route for the \textsc{Packet} to follow, in chronological order from the next node to visit all the way to the \textsc{Recipient}.
-    \item \textsc{Costs}: A tuple characterising all the accumulated costs of the \textsc{Packet} at the current stage in the route. These are treated as accumulators that are incremented appropriately after each step, since costs are additive.
-    \item \textsc{Attributes}: A tuple characterising all the non-\textsc{Cost} properties associated with the \textsc{Packet}. Examples include: the \textsc{Priority} of routing a \textsc{Packet} to its destination; suggesting a preferred routing \textsc{Strategy}; or, indicating whether or not a \textsc{Resend Until Success} protocol may be applied to this \textsc{Packet}.
-    \item \textsc{Padding}: Null data to pad the joint \textsc{Classical Packet Data} and \textsc{Packet Header} fields to be of the same length as the \textsc{Quantum Packet Data}. This ensures that the components of the \textsc{Packet} traversing the quantum and classical channels remain in perfect tandem -- bit for qubit. In Sec.~\ref{sec:transport} we show that this facilitates collision detection without the need to measure quantum states.
-    \item \textsc{Checksum}: A regular checksum of the entire \textsc{Classical} component of the \textsc{Packet}, including both \textsc{Classical Packet Data} and \textsc{Packet Header}. This also forms a part of the collision detection protocol.
+    \item \textsc{Header Size}\index{Header size}: The number of bits in the \textsc{Packet Header}.
+    \item \textsc{Message ID}\index{Message ID}: A unique identifier for the complete message to which this \textsc{Packet} belongs. This field mitigates ambiguity as to which \textsc{Message} this packet belongs when performing \textsc{Reconstruction}.
+    \item \textsc{Lifetime}\index{Lifetime}: How long the \textsc{Packet} has been in existence for, i.e since it was initially sent by the \textsc{Sender}. This is used by strategies to prevent collisions.
+    \item \textsc{Sender}\index{Sender}: A unique node identifier for the sender (Alice).
+    \item \textsc{Recipient}\index{Recipient}: A unique node identifier for the recipient (Bob).
+    \item \textsc{Order}\index{Order}: To which block taken from \textsc{Data} does this \textsc{Packet Data} belong? This is extremely important in networks where \textsc{Packets} may arrive out of order. The \textsc{Order} field forms the basis for the \textsc{Reconstruction} layer.
+    \item \textsc{Quantum Block Size}\index{Quantum block size}: The number of qubits contained in the \textsc{Quantum} component of \textsc{Packet Data}. This is important for the \textsc{Reconstruction} layer.
+    \item \textsc{Classical Block Size}\index{Classical block size}: The number of bits contained in the \textsc{Classical} component of \textsc{Packet Data}, also important for the \textsc{Reconstruction} layer.
+    \item \textsc{Routing Queue}\index{Routing queue}: A first in, first out (FIFO) queue of node identifiers, tracing out the entire route for the \textsc{Packet} to follow, in chronological order from the next node to visit all the way to the \textsc{Recipient}.
+    \item \textsc{Costs}\index{Costs}: A tuple characterising all the accumulated costs of the \textsc{Packet} at the current stage in the route. These are treated as accumulators that are incremented appropriately after each step, since costs are additive.
+    \item \textsc{Attributes}\index{Attributes}: A tuple characterising all the non-\textsc{Cost} properties associated with the \textsc{Packet}. Examples include: the \textsc{Priority} of routing a \textsc{Packet} to its destination; suggesting a preferred routing \textsc{Strategy}; or, indicating whether or not a \textsc{Resend Until Success} protocol may be applied to this \textsc{Packet}.
+    \item \textsc{Padding}\index{Padding}: Null data to pad the joint \textsc{Classical Packet Data} and \textsc{Packet Header} fields to be of the same length as the \textsc{Quantum Packet Data}. This ensures that the components of the \textsc{Packet} traversing the quantum and classical channels remain in perfect tandem -- bit for qubit. In Sec.~\ref{sec:transport} we show that this facilitates collision detection without the need to measure quantum states.
+    \item \textsc{Checksum}\index{Checksum}: A regular checksum of the entire \textsc{Classical} component of the \textsc{Packet}, including both \textsc{Classical Packet Data} and \textsc{Packet Header}. This also forms a part of the collision detection protocol.
 \end{itemize}
 
 One might question why \textsc{Packet Headers} tally accumulated costs when we ought to already know all the costs, since these were employed by the algorithm for choosing strategies in the first case. In the ideal case where all strategies are determined \textit{a priori} and are implemented as intended, this is certainly valid. However, for generality we retain this option since more realistic networks may require dynamically updating strategies during the course of propagation, in which case dynamically tallying costs is appropriate.
@@ -1834,7 +1837,7 @@ One might question why \textsc{Packet Headers} tally accumulated costs when we o
 % Strategy
 %
 
-\subsection{Strategy} \label{sec:into_strat}
+\subsection{Strategy} \label{sec:into_strat} \index{Strategy layer}
 
 Based on the \textsc{Packet Headers} of all users sharing the network, choose routing strategies to optimise cost metrics. The notion of strategies is introduced in Sec.~\ref{sec:strat_opt}, and a detailed discussion of example strategies is presented in Sec.~\ref{sec:strategies}.
 
@@ -1848,7 +1851,7 @@ The \textsc{Strategy} layer is responsible for evaluating the net cost function 
 % Transport
 %
 
-\subsection{Transport} \label{sec:transport}
+\subsection{Transport} \label{sec:transport} \index{Transport layer}
 
 The \textsc{Transport} layer is responsible for actual routing at the physical level, making direct decisions as to what to do with a \textsc{Packet} at each step, based upon the metadata contained in \textsc{Packet Header}, most notably the \textsc{Routing Queue}, which specifies the full route a \textsc{Packet} is destined to follow. It is also responsible for keeping track of costs that accumulate over their route.
 
@@ -1889,7 +1892,7 @@ function Transport(Packet):
 % Reconstruction
 %
 
-\subsection{Reconstruction}
+\subsection{Reconstruction} \index{Reconstruction layer}
 
 The \textsc{Reconstruction} layer only serves one purpose -- to chronologically reorder the received \textsc{Packets} based on the \textsc{Order} field in their \textsc{Packet Headers}. This stage is only performed by Bob -- the final recipient -- and not at any intermediate stage. In general this will require Bob to have a quantum memory, able to hold all \textsc{Packet Data} for a sufficient duration as to enable an arbitrary permutation of \textsc{Packets} to be applied, reproducing the correct chronological order.
 
@@ -1909,7 +1912,7 @@ function Reconstruction(Packets):
 % Quality of Service (QoS)
 %
 
-\subsection{Quality of service (QoS)} \label{sec:QOS}
+\subsection{Quality of service (QoS)} \label{sec:QOS} \index{Quality of service layer}
 
 In classical networking theory, error detection is an important element of networking protocols. Communication links may be unreliable, or subject to external noise, which users must be able to detect so as to guarantee the quality of their data.
 
@@ -1997,7 +2000,7 @@ function QoS(Packets):
 % Services & Applications
 %
 
-\subsection{Services \& applications}
+\subsection{Services \& applications} \index{Services \& applications layer}
 
 Having communicated all the \textsc{Packet Data} from Alice to Bob, performed \textsc{Reconstruction}, and applied \textsc{QoS} protocols, Bob ought to have $\hat\rho_\text{data}$ to a good approximation. The quality of Bob's received state can be inferred directly from the \textsc{Costs} vector contained in the \textsc{Packet Headers}. The final state and its associated quality metrics (\textsc{Costs} and QEC outcomes) may then be provided to Bob as a software interface for end use.
 
@@ -3311,7 +3314,7 @@ This scenario is an obvious example of where a UDP-like \textsc{Send And Forget}
 % Entanglement Purification
 %
 
-\subsubsection{Entanglement purification} \label{sec:ent_purif} \index{Entanglement purification/distillation}
+\subsubsection{Entanglement purification} \label{sec:ent_purif} \index{Entanglement purification}
 
 Entangled states, most notably Bell-pairs (Sec.~\ref{sec:bell_state_res}), play a central role in many quantum technologies. These maximally entangled states are easily represented optically using polarisation encoding of single photons, and can be non-deterministically prepared directly using SPDC (Sec.~\ref{sec:single_phot_src}), or post-selected linear optics \cite{???}.
 
@@ -4282,7 +4285,7 @@ Of course, we have used the most simple model for modules, where each accommodat
 % The Global Virtual Quantum Computer
 %
 
-\subsection{The global virtual quantum computer} \label{sec:marketplace} \index{Global virtual quantum computer}
+\subsection{The global virtual quantum computer} \label{sec:marketplace} \index{Virtual quantum computer}
 
 Suppose Alice and Bob both possessed expensive classical Cray\texttrademark\, supercomputers, both identical. They're both connected to the internet, so does it make sense to unify their computational resources over the network to construct a more powerful \textit{virtual machine}, which they subsequently time-share between themselves, or are they better off just using their own computers?
 
@@ -4462,7 +4465,7 @@ However, Alice may have access to no quantum resources whatsoever -- even single
 % Encryption Of Passive Non-Interactive Optics
 %
 
-\subsection{Encryption of passive non-interactive optics} \index{Encrypted passive non-interactive optics}
+\subsection{Encryption of passive non-interactive optics} \index{Encrypted passive optics}
 
 The previously discussed schemes for encrypted universal quantum computation required a degree of client/server interaction via classical communication. But perhaps there are some restricted (i.e non-universal) models for optical quantum computation, which lend themselves to passive, non-interactive encryption? And perhaps these restrictions simplify the physical resource requirements for encryption?
 
@@ -5078,7 +5081,7 @@ A Brazilian group \cite{bib:PRA_88_052303} demonstrated the protocol using a pol
 
 Entanglement purification has been very successful in optical systems. Table \ref{tab:ent_pur} lists some of the major developments.
 
-\subsection{Entanglement purification} \index{Entanglement purification/distillation}
+\subsection{Entanglement purification} \index{Entanglement purification}
 
 \begin{table*}[!htb]
 \caption{Developments in experimental entanglement purification.} \label{tab:ent_pur}
@@ -5294,7 +5297,7 @@ There are also other promising approaches to quantum memories, e.g., quantum dot
 
 \subsubsection{Nitrogen-vacancy centres}\index{Nitrogen-vacancy (NV) centres}
 
-\subsubsection{Adiabatic quantum computing \& quantum annealing}\index{Adiabatic quantum computing \& quantum annealing}
+\subsubsection{Adiabatic quantum computing \& quantum annealing}\index{Adiabatic quantum computing}\index{Quantum annealing}
 
 \comment{What else? What other main architectures?}
 
@@ -5310,7 +5313,7 @@ In this section we provide a non-technical outlook on the future quantum interne
 % The Era of Quantum Supremacy
 %
 
-\subsection{The era of quantum supremacy} \label{sec:era_quant} \index{Era of quantum supremacy}
+\subsection{The era of quantum supremacy} \label{sec:era_quant} \index{Quantum supremacy}
 
 A pertinent question to ask is `What is the timescale for useful quantum technologies? When will they be viable?'. The correct answer is likely very soon.
 
@@ -5342,7 +5345,7 @@ It is clear that humanity already sits at the precipice of harnessing quantum te
 % The Economics of the Quantum Internet
 %
 
-\subsection{The economics of the quantum internet} \label{sec:economics} \index{Economics of the quantum internet}
+\subsection{The economics of the quantum internet} \label{sec:economics} \index{Economics}
 
 \comment{Add discussion of global virtual QC and quantum singularity!}
 
@@ -5368,7 +5371,7 @@ On the other hand, if quantum computers were only ever sold as specialised, room
 % Security Implications of the Global Quantum Internet
 %
 
-\subsection{Security implications of the global quantum internet} \label{sec:sec_imp} \index{Security implications of the global quantum internet}
+\subsection{Security implications of the global quantum internet} \label{sec:sec_imp} \index{Security implications}
 
 With any new technology comes ethical considerations. Who will have access to it, and how do they plan to use it? For this reason, many developed nations have export bans or restrictions in place on `dual-use' technologies -- those which have clearly legitimate and morally justifiable uses, but also nefarious ones by competitors and criminals. Nuclear technology is the obvious archetype. Quantum technologies (in particular quantum computing and quantum cryptography) are particularly vulnerable to dual-use, and for this reason are becoming subject to dual-use technology legislation, such as export controls, in some nations. In Australia, for example, legislation is being introduced criminalising the transfer of knowledge on certain quantum and cryptographic technologies to foreign nationals of certain target countries.
 
@@ -5517,7 +5520,7 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \nomenclature[]{\textbf{SNL}}{Shot-noise limit}
 \nomenclature[]{\textbf{HL}}{Heisenberg limit}
 \nomenclature[]{\textbf{E91}}{Ekert 1991}
-\nomenclature[]{\textbf{NOON state}}{$\frac{1}{\sqrt{2}} (\ket{N,0}+\ket{0,N})$}
+\nomenclature[]{\textbf{NOON state}}{$\ket\psi_\text{NOON} = \frac{1}{\sqrt{2}} (\ket{N,0}+\ket{0,N})$}
 \nomenclature[]{\textbf{QW}}{Quantum walk}
 \nomenclature[]{\textbf{MORDOR}}{Motes-Olson-Rabeaux-Olson-Dowling-Rohde}
 \nomenclature[]{\textbf{EO}}{Entangling operation}
@@ -5531,6 +5534,15 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 %
 % Index
 %
+
+\index{Measurement-based quantum computation \seeonly{Cluster state model}|gobbleone}
+\index{Graph states \seeonly{Cluster state model}|gobbleone}
+\index{State fidelity \seeonly{Fidelity}|gobbleone}
+\index{Process fidelity \seeonly{Fidelity}|gobbleone}
+\index{Known unitary errors \seeonly{Unitary errors}|gobbleone}
+\index{Unknown unitary errors \seeonly{Unitary errors}|gobbleone}
+\index{Relaxation channel \seeonly{Amplitude damping channel}|gobbleone}
+\index{Entanglement distillation \seeonly{Entanglement purification}|gobbleone}
 
 \printindex
 
