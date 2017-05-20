@@ -2802,6 +2802,38 @@ To gain a quantum advantage, we treat the classical algorithm as an oracle whose
 While a quadratic improvement is far short of the exponential improvement we might hope for, Grover's algorithm is known to be optimal for the unstructured search problem \cite{?}. Nonetheless, despite only yielding a quadratic improvement, a quadratic speedup may already be sufficient to significantly improve network resource allocation.
 
 %
+% Optical Routers
+%
+
+\section{Optical routers} \index{Optical routers}
+
+\comment{To do!}
+
+\comment{Those below work for single photons or coherent states. Do not work in general for arbitrary states of light.}
+
+%
+% Two-Port Switching
+%
+
+\subsection{Two-port switching} \index{Two-port switching}
+
+\comment{Using MZ + tunable phase.}
+
+\comment{AOMs, EOMs, pockel cells, whatever CY-Lu used in his experiment.}
+
+\comment{Using polarisation, PBSs + tuneable polarisation rotation.}
+
+%
+% Multi-Port Switching
+%
+
+\subsection{Multi-port switching} \index{Multi-port switching}
+
+\comment{These both two 2-port switching. Discuss generalising to $m$-port switching. Scaling in number of switches (e.g linear vs log).}
+
+\comment{One-to-many (with a single input, multiple outputs). Many-to-many (multi in, multi out).}
+
+%
 % Protocols for the Quantum Internet
 %
 
@@ -4883,10 +4915,10 @@ These observations lead us to naturally conclude that a quantum network speciali
 Any form of computation comes at an economic cost, but also brings with it a payoff. Thus, a key consideration in any model for computation is the tradeoff between the two. Because the computational power of quantum computers inherently scales different than classical computers, we expect this cost/payoff ratio to exhibit different scaling characteristics, thereby fundamentally altering economic considerations.
 
 %
-% Economic Leverage
+% Quantum Economic Leverage
 %
 
-\subsection{Economic leverage} \index{Economic leverage}
+\subsection{Quantum economic leverage} \index{Quantum economic leverage}
 
 Suppose Alice and Bob both possessed expensive classical Cray\texttrademark\, supercomputers, both identical. They're both connected to the internet, so does it make sense to unify their computational resources over the network to construct a more powerful \textit{virtual machine}, which they subsequently time-share between themselves, or are they better off just using their own computers?
 
@@ -4912,34 +4944,34 @@ where $t_\text{joint}$ is the classical-equivalent runtime of the joint quantum 
 \begin{align}
 r_i=\frac{n_i}{\sum_j n_j},
 \end{align}
-and it is only fair that he receive a corresponding share of the quantum processing time (which would also be enforced by arbitrage in a competitive market), which increases his classical-equivalent processing time to,
+and it is only fair that he receive a corresponding share of the quantum processing time (which would also be enforced by arbitrage in a competitive market), which discounts his classical-equivalent processing time to,
 \begin{align}
-\tau_i &= \frac{t_\text{joint}}{r_i} \nonumber \\
-&= \alpha \beta^{\sum_j n_j} \left(\frac{\sum_j n_j}{n_i}\right).
+\tau_i &= t_\text{joint} \cdot r_i \nonumber \\
+&= \alpha \beta^{\sum_j n_j} \left(\frac{n_i}{\sum_j n_j}\right).
 \end{align}
 
 We are now interested to know whether the individual users are better off under this model than they were individually. Let us define the \textit{quantum economic leverage}\index{Economic leverage} of a user's quantum computer to be the ratio between their time-shared and individual classical-equivalent processing times,
 \begin{align}
 \lambda_i &= \frac{\tau_i}{t_i} \nonumber \\
-&= \beta^{\sum_{j\neq i} n_j} \left(\frac{\sum_j n_j}{n_i}\right).
+&= \beta^{\sum_{j\neq i} n_j} \left(\frac{n_i}{\sum_j n_j}\right).
 \end{align}
 Note that the leverage is strictly greater than unity, \mbox{$\lambda_i>1\,\forall\, i$}. Thus, for any user, irrespective of the size of their quantum computer, they are better off joining the distributed network and claiming a time-share, than utilising only their own hardware full-time. Similarly, the distributed network is better off accepting them into the network. This is in contrast to classical networks, where \mbox{$\lambda\approx 1$}, for any number of nodes in the network (i.e there is no leverage).
 
 As a special case, consider a single user's leverage when joining the global network. Then the \textit{single-user leverage}\index{Single-user economic leverage} is,
 \begin{align}
-\lambda_\text{user} = \beta^{n_\text{global}} \left(1+\frac{n_\text{global}}{n_\text{user}}\right),
+\lambda_\text{user} = \beta^{n_\text{global}} \left(\frac{n_\text{user}}{n_\text{user}+n_\text{global}}\right),
 \end{align}
-and we see that the user gains economic leverage exponential in the size of the global network he is joining. Needless to say, the global network will also benefit from him joining the network, albeit with a far smaller exponential factor,
-\begin{align}
-\lambda_\text{global} \approx \beta^{n_\text{user}},	
-\end{align}
-assuming \mbox{$n_\text{global}\gg n_\text{user}$}.
+and we see that the user gains economic leverage exponential in the size of the global network he is joining. %Needless to say, the global network will also benefit from him joining the network, albeit with a far smaller exponential factor,
+%\begin{align}
+%\lambda_\text{global} \approx \beta^{n_\text{user}},	
+%\end{align}
+%assuming \mbox{$n_\text{global}\gg n_\text{user}$}.
 
 A case of particular interest is the \textit{single-qubit leverage}\index{Single-qubit economic leverage} -- the leverage on the investment into adding a single additional qubit to the global network. This is an indicator of the economic or computational ratio of return on investment into expanding the network incrementally. This is simply given by letting \mbox{$n_\text{user}=1$},
 \begin{align}
-\lambda_\text{qubit} = \beta^{n_\text{global}} (1+n_\text{global}),
+\lambda_\text{qubit} \approx \frac{\beta^{n_\text{global}}}{n_\mathrm{global}},
 \end{align}
-which clearly implies that as the global quantum network expands over time, the return on investment into network expansion grows exponentially, or equivalently, the cost per unit of additional classical-equivalent processing time decreases exponentially.
+for a large global network (\mbox{$n_\mathrm{global}\gg 1$}), which clearly implies that as the global quantum network expands over time, the return on investment into network expansion grows exponentially, or equivalently, the cost per unit of additional classical-equivalent processing time decreases exponentially.
 
 Since exisiting network participants receive leverage upon other participants joining the network, an investment into contributing modules has exponentially increasing computational return over time as the network expands, even if that participant ceases making further investment into the network. This is in contrast to classical networks, whereby the computational return upon an investment is fixed over time.
 
@@ -4949,8 +4981,10 @@ t_i = f_\text{QC}(n_i),
 \end{align}
 where $f_\text{QC}$ is an arbitrary, monotonically increasing \emph{scaling function}\index{Scaling function} relating the number of qubits in the quantum computer to its classical-equivalent runtime. Then, following a similar derivation as before, we obtain,
 \begin{align}
-\lambda_i = \frac{f_\text{QC}\left(\sum_{j} n_j\right) \cdot \sum_j n_j}{f_\text{QC}(n_i) \cdot n_i}.
+\lambda_i = \frac{f_\text{QC}\left(\sum_{j} n_j\right)}{\sum_j n_j} \cdot \frac{n_i}{f_\text{QC}(n_i)}.
 \end{align}
+
+It is now evident that for linear scaling functions (as per classical computing) we obtain no leverage, \mbox{$\lambda=1$}. However, for any super-linear scaling function we achieve \mbox{$\lambda>1$} leverage, whereby it is beneficial to contribute resources to the network and time-share.
 
 Thus, the leverage is not merely a function of the hardware, but also of the software applications running upon it, each of which is associated with a unique scaling function.
 
@@ -5583,6 +5617,8 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \nomenclature[]{\textbf{QIP}}{Quantum information processing}
 \nomenclature[]{\textbf{QND}}{Quantum non-demolition measurement}
 \nomenclature[]{\textbf{MBQC}}{Measurement-based quantum computing}
+\nomenclature[]{\textbf{AOM}}{Acousto-optic modulator}
+\nomenclature[]{\textbf{EOM}}{Electro-optic modulator}
 
 \printnomenclature
 
