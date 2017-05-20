@@ -19,6 +19,7 @@
 
 \newcommand\gobbleone[1]{}
 \newcommand*{\seeonly}[2]{\ (\emph{\seename} #1)}
+\newcommand*{\also}[2]{(\emph{\alsoname} #1)}
 
 \newcommand{\comment}[1]{{\color{blue}{\textbf{#1}}}}
 \newcommand{\peter}[1]{{\color{Aquamarine}{#1}}}
@@ -722,10 +723,10 @@ Like classical channels, quantum channels are inevitably subject to errors. Thes
 
 \subsection{Quantum processes} \index{Quantum processes}
 
-To quantify the operation of nodes and links within our network, we must characterise the evolution they impose upon quantum states passing through them. Quantum processes, also known as \textit{trace-preserving, completely positive maps} (CP-maps)\index{CP-maps} are able to capture all the physical processes relevant to quantum networking, such as: unitary evolution; decoherence; measurement; quantum memory; state preparation; switching; and, indeed entire quantum computations. And they are able to capture physical processes in any degree of freedom, most commonly in the qubit basis, but also, for photons, in the spatio-temporal, photon-number, phase-space, or polarisation degrees of freedom.
+To quantify the operation of nodes and links within our network, we must characterise the evolution they impose upon quantum states passing through them. Quantum processes, also known as \textit{trace-preserving, completely positive maps} (CP-maps) are able to capture all the physical processes relevant to quantum networking, such as: unitary evolution; decoherence; measurement; quantum memory; state preparation; switching; and, indeed entire quantum computations. And they are able to capture physical processes in any degree of freedom, most commonly in the qubit basis, but also, for photons, in the spatio-temporal, photon-number, phase-space, or polarisation degrees of freedom.
 
 Quantum processes are most easily represented using \textit{Kraus operators}, $\{\hat{K}_i\}$,
-\begin{align} \label{eq:kraus_rep}\index{Kraus operators}
+\begin{align} \label{eq:kraus_rep}
 \mathcal{E}(\hat\rho) = \sum_i \hat{K}_i \hat\rho \hat{K}_i^\dag,
 \end{align}
 where,
@@ -1184,7 +1185,7 @@ Similarly, NOON states (Sec.~\ref{sec:NOON}) undergo complete wavefunction colla
 % Dephasing
 %
 
-\subsection{Dephasing} \label{sec:dephasing_error} \index{Dephasing channels}
+\subsection{Dephasing} \label{sec:dephasing_error} \index{Dephasing channel}
 
 The dephasing error model describes the deterioration of quantum coherence in a state. It does not change the actual amplitudes of the components in the superposition, but rather reduces the state to a mixture of those components. Thus, dephasing can be thought of as destroying quantum information (coherence), while retaining classical information (probability amplitudes). In terms of qubits, dephasing is most commonly represented using the Kraus representation,
 \begin{align} \label{eq:dephasing_channel}
@@ -1244,7 +1245,7 @@ For number states not in superposition, this corresponds to a simple unimportant
 % Depolarisation
 %
 
-\subsection{Depolarisation} \index{Depolarising channels}
+\subsection{Depolarisation} \index{Depolarising channel}
 
 Depolarisation is a noise model more general than dephasing, that probabilistically replaces a state with the completely mixed state (regardless of the input state). That is, with some probability we lose \textit{all} quantum \textit{and} classical information, i.e both coherences and probability amplitudes. Note that the dephasing channel introduced above only destroys quantum coherence, whilst preserving amplitudes. Formally, the depolarising channel can be expressed as,
 \begin{align} \label{eq:depolarizing_channel}
@@ -1387,7 +1388,7 @@ We now briefly introduce some of the key measures for quantifying the quality of
 % Efficiency
 %
 
-\subsubsection{Efficiency} \index{Loss channels}
+\subsubsection{Efficiency} \index{Loss channel}
 
 The efficiency measure introduced previously is multiplicative, so for consecutive lossy channels the net efficiency is,
 \begin{align}
@@ -1401,7 +1402,7 @@ When employing single-photon encoding of qubits (e.g using the polarisation degr
 % Decoherence
 %
 
-\subsubsection{Decoherence} \index{Dephasing channels} \index{Depolarising channels} \index{Decoherence}
+\subsubsection{Decoherence} \index{Dephasing channel} \index{Depolarising channel} \index{Decoherence}
 
 The dephasing and depolarising channels, given by Eqs.~(\ref{eq:dephasing_channel},\ref{eq:depolarizing_channel}), also behave multiplicatively. If $p_i$ is the probability that the state passing through the $i$th channel in series does not undergo the error process, then the probability of the state passing though the entire series without error is simply,
 \begin{align}
@@ -2866,7 +2867,7 @@ where $\chi$ is the squeezing parameter, a function of the pump-power and proper
 \end{figure}
 
 Applying the single-photon projector, \mbox{$\ket{1}\bra{1}$}, to the first mode yields the single-photon state in the other, up to normalisation, which reflects the inherent non-determinism. The preparation success probability is derived from the amplitude of the \mbox{$n=1$} term as,
-\begin{align}
+\begin{align} \label{eq:SPDC_p_prep}
 P_\text{prep}=\chi^2(1-\chi^2),
 \end{align}
 assuming ideal photo-detection. Thus, the perfect photon-number correlation enables heralded preparation of states with exactly one photon in principle.
@@ -3140,6 +3141,14 @@ Many non-optical systems can be indirectly measured by first entangling optical 
 In Fig.~\ref{fig:barrett_kok} we illustrate a scheme for entangling two $\lambda$-configuration atoms using which-path erasure. Consider just one of these qubits in isolation. If a $\pi$-pulse is applied to the atom, the $\ket{\!\downarrow}$ state is excited to the $\ket{e}$ state, after which, upon relaxation, it emits a photon. Thus, upon measurement, the presence or absence of a photon directly indicates whether the qubit was in the $\ket{\!\uparrow}$ or $\ket{\!\downarrow}$ state.
 
 The attractive feature of this is that although the matter qubit is stationary, its indirect measurement via optical coupling may be performed over arbitrary distances across the optical network, allowing the measurement stage to be outsourced. This includes entangling measurements, useful for, for example, cluster state preparation (Sec.~\ref{sec:CSQC}).
+
+%
+% Quantum non-demolition measurement (QND)
+%
+
+\subsubsection{Quantum non-demolition measurement (QND)}
+
+\comment{To do!}
 
 %
 % Evolution
@@ -3856,6 +3865,7 @@ Significant progress is being made on reconfigurable, integrated LOQC devices \c
 More recently, as an alternative to using post-selection to simulate strong optical non-linearities, it was shown that by introducing strong coherent states, the strength of a cross-Kerr optical non-linearity can be effectively amplified, allowing even very weak non-linearities to be employed for deterministic entangling gate operations \cite{bib:Munro05}. However, such schemes are particularly sensitive to loss, with sensitivity increasing with the coherent amplitudes in the system, creating a direct tradeoff between effective non-linear interaction strength and susceptibility to loss.
 
 \comment{To do! Bill Munro perhaps?}
+\index{Quantum bus (Qubus)}
 
 %
 % Passive Linear Optics
@@ -3897,7 +3907,11 @@ where $S$ sums over all possible photon-number configurations at the output, of 
 \begin{align}
 |S| = \binom{n+m-1}{n},
 \end{align}
-where there are $n$ photons in total, and it is assumed that \mbox{$m=O(n^2)$}, which puts us into the anti-bunched (i.e binary photon-number) regime with high probability. In the case of a large number of optical modes, the \mbox{$m=O(n^2)$} condition effectively ensures photon anti-bunching with high probability\footnote{That is, we are unlikely to observe more than a single photon in any given output mode, placing us into a binary photo-detection regime. This condition has become known as the `bosonic birthday paradox'.}, rendering non-number-resolved photo-detectors sufficient for physical implementation.
+where there are $n$ photons in total, and it is assumed that,
+\begin{align}
+m=O(n^2),
+\end{align}
+which puts us into the anti-bunched (i.e binary photon-number) regime with high probability. In the case of a large number of optical modes, the \mbox{$m=O(n^2)$} condition effectively ensures photon anti-bunching with high probability\footnote{That is, we are unlikely to observe more than a single photon in any given output mode, placing us into a binary photo-detection regime. This condition has become known as the `bosonic birthday paradox'.}, rendering non-number-resolved photo-detectors sufficient for physical implementation.
 
 The amplitudes $\gamma_{S,T}$ are given by,\index{Boson-sampling configuration amplitudes}
 \begin{align}
@@ -3912,7 +3926,12 @@ The full model is shown in Fig.~\ref{fig:bs_model}.
 \caption{The \textsc{BosonSampling} model for non-universal linear optics quantum computing. $S$ (output) and $T$ (input) are represented in the photon-number basis. After application of the Haar-random linear optics unitary to the input multi-mode Fock state, the output superposition is sampled with coincidence photo-detection.} \label{fig:bs_model}
 \end{figure}
 
+Very importantly, note that {\sc BosonSampling} does \textit{not} let us efficiently \textit{calculate} matrix permanents. Rather, it samples across a distribution of an exponential number of permanents. This is because, for an exponentially large sample space, with only a polynomial number of measurement trials, we are unlikely to gain more than binary accuracy about individual amplitudes, which is insufficient for determining any particular permanent. It appears that God knows how to efficiently solve matrix permanents, but conspires against us such that we remain ignorant of them. --- \textit{Deus magnus est.}
+
 \textsc{BosonSampling} in the presence of various error models, such as loss, source non-determinism and mode-mismatch, has been extensively investigated \cite{bib:RohdeErrBS12, bib:RohdeSPDC13, bib:ScottLost16, bib:RohdeArbSpec15, bib:RandBS}.
+
+\comment{Scattershot boson-sampling! Ref to multiplexed source} \index{Boson-sampling using Gaussian states}
+\ref{sec:single_phot_src} Eq.~(\ref{eq:SPDC_p_prep})
 
 %
 % Other Linear Optics Sampling Problems
@@ -4282,80 +4301,6 @@ Of course, we have used the most simple model for modules, where each accommodat
 \end{figure}
 
 %
-% The Global Virtual Quantum Computer
-%
-
-\subsection{The global virtual quantum computer} \label{sec:marketplace} \index{Virtual quantum computer}
-
-Suppose Alice and Bob both possessed expensive classical Cray\texttrademark\, supercomputers, both identical. They're both connected to the internet, so does it make sense to unify their computational resources over the network to construct a more powerful \textit{virtual machine}, which they subsequently time-share between themselves, or are they better off just using their own computers?
-
-If there were an asymmetry in demand for computational resources, it would make perfect sense to unify computational resources, so as to mitigate wasting precious clock-cycles. However, if they were both heavy users, always consuming every last clock-cycle, it would make no difference: for a given computation, Alice and Bob could each be allocated half the processing time of the virtual supercomputer twice as powerful; or, each could exploit the full processing time of their half-as-fast computers. In either case, the dollar cost of the computation is the same. This simple observation follows trivially from the linear relationship between processing power and the number of CPUs in a classical computer.
-
-More generally, in a networked environment where time-sharing of classical computational resources is applied equitably, proportionate to users' contribution to the network, the dollar cost per computation is (roughly) unaffected by the rest of the network. Instead, the motivation for networking computational resources is to improve efficiency by ensuring that clock-cycles are not wasted, but instead distributed according to demand by a scheduling algorithm, which could be market-driven, for example.
-
-However, as discussed in Sec.~\ref{sec:dist_QC}, the computational power of a quantum computer does not scale linearly with its number of qubits, but exponentially. This completely changes the economics, and market dynamics of networked quantum computers, whose joint computational power grows (very roughly speaking) multiplicatively, rather than additively in the classical case. Intuitively, we expect equitable time-sharing of unified quantum computational resources to offer more performance to all users than if they were to exclusively use their own resources in isolation. That is, the cost of a computation is reduced by resource-sharing, even after time-sharing.
-
-In Secs.~\ref{sec:dist_QC} \& \ref{sec:module} we introduced distributed and modularised quantum computation. Using this as a toy model, we will now investigate the market dynamics of uniting the quantum computational resources of multiple market participants. We envisage a model whereby network participants are contributing modules to the networked quantum computer, thereby unifying their computational power.
-
-Let $t_i$ be the classical-equivalent runtime of a quantum algorithm comprising $n_i$ qubits, where $i$ denotes the user. The users are running quantum algorithms with classical-equivalent processing time that grows exponentially with the number of qubits. Then, for each user,
-\begin{align}
-t_i &= \alpha \beta^{n_i},
-\end{align}
-where \mbox{$\alpha>0$} and \mbox{$\beta>1$} are constants specific to the algorithm being deployed, and the computational model (e.g cluster states vs the circuit model).
-
-If a network of quantum computers were combined into a single, larger virtual computer, it would exhibit scaling,
-\begin{align}
-t_\text{joint} = \alpha \beta^{\sum_j n_j},
-\end{align}
-where $t_\text{joint}$ is the classical-equivalent runtime of the joint quantum computation, and $j$ sums over all the nodes in the network. The $i$th user is contributing the fraction of the hardware,
-\begin{align}
-r_i=\frac{n_i}{\sum_j n_j},
-\end{align}
-and it is only fair that he receive a corresponding share of the quantum processing time (which would also be enforced by arbitrage in a competitive market), which increases his classical-equivalent processing time to,
-\begin{align}
-\tau_i &= \frac{t_\text{joint}}{r_i} \nonumber \\
-&= \alpha \beta^{\sum_j n_j} \left(\frac{\sum_j n_j}{n_i}\right).
-\end{align}
-
-We are now interested to know whether the individual users are better off under this model than they were individually. Let us define the \textit{quantum economic leverage}\index{Quantum economic leverage} of a user's quantum computer to be the ratio between their time-shared and individual classical-equivalent processing times,
-\begin{align}
-\lambda_i &= \frac{\tau_i}{t_i} \nonumber \\
-&= \beta^{\sum_{j\neq i} n_j} \left(\frac{\sum_j n_j}{n_i}\right).
-\end{align}
-Note that the leverage is strictly greater than unity, \mbox{$\lambda_i>1\,\forall\, i$}. Thus, for any user, irrespective of the size of their quantum computer, they are better off joining the distributed network and claiming a time-share, than utilising only their own hardware full-time. Similarly, the distributed network is better off accepting them into the network. This is in contrast to classical networks, where \mbox{$\lambda\approx 1$}, for any number of nodes in the network (i.e there is no leverage).
-
-As a special case, consider a single user's leverage when joining the global network. Then the \textit{single-user leverage}\index{Single-user quantum economic leverage} is,
-\begin{align}
-\lambda_\text{user} = \beta^{n_\text{global}} \left(1+\frac{n_\text{global}}{n_\text{user}}\right),
-\end{align}
-and we see that the user gains economic leverage exponential in the size of the global network he is joining. Needless to say, the global network will also benefit from him joining the network, albeit with a far smaller exponential factor,
-\begin{align}
-\lambda_\text{global} \approx \beta^{n_\text{user}},	
-\end{align}
-assuming \mbox{$n_\text{global}\gg n_\text{user}$}.
-
-A case of particular interest is the \textit{single-qubit leverage}\index{Single-qubit quantum economic leverage} -- the leverage on the investment into adding a single additional qubit to the global network. This is an indicator of the economic or computational ratio of return on investment into expanding the network incrementally. This is simply given by letting \mbox{$n_\text{user}=1$},
-\begin{align}
-\lambda_\text{qubit} = \beta^{n_\text{global}} (1+n_\text{global}),
-\end{align}
-which clearly implies that as the global quantum network expands over time, the return on investment into network expansion grows exponentially, or equivalently, the cost per unit of additional classical-equivalent processing time decreases exponentially.
-
-Since exisiting network participants receive leverage upon other participants joining the network, an investment into contributing modules has exponentially increasing computational return over time as the network expands, even if that participant ceases making further investment into the network. This is in contrast to classical networks, whereby the computational return upon an investment is fixed over time.
-
-These observations lead to the natural conclusion that it is always in the best interests of quantum computer operators to contribute their resources to the distributed global network and participate in time-sharing, rather than go it alone. It follows that in the interests of economic efficiency, market forces will ensure that future quantum computers will \textit{all} be networked into a single \textit{global virtual quantum computer}, providing exponentially greater computational power to all users than what they could have afforded on their own.
-
-The analysis thus far has considered the scenario whereby the classical-equivalent computational power of the quantum computer scales exponentially with the number of qubits. Of course, not all quantum algorithms are so favourable. Grover's algorithm, for example, yields only quadratic enhancement. More generally, let,
-\begin{align}
-t_i = f_\text{QC}(n_i),
-\end{align}
-where $f_\text{QC}$ is an arbitrary \emph{scaling function}\index{Scaling function} relating the number of qubits in the quantum computer to its classical-equivalent runtime. Then, following a similar derivation as before, we obtain,
-\begin{align}
-\lambda_i = \frac{f_\text{QC}\left(\sum_{j} n_j\right) \cdot \sum_j n_j}{f_\text{QC}(n_i) \cdot n_i}.
-\end{align}
-
-This analysis demonstrates that the leverage obtained by a user scales in tandem with the classical-equivalent power of a unified quantum computer. Thus, the leverage is not merely a function of the hardware, but also of the software applications running on it, each of which is associated with a unique scaling function.
-
-%
 % Encrypted Quantum Computation
 %
 
@@ -4363,7 +4308,7 @@ This analysis demonstrates that the leverage obtained by a user scales in tandem
 
 \comment{Si-Hui, I need your help in filling all the gaps in this section!}
 
-Extremely important to many high-performance data-processing applications is security, as proprietary or sensitive data may be being dealt with. To address this, two models for outsourced quantum computation exist for addressing this -- \textit{homomorphic encryption} \cite{???, gentry2009fully, van2010fully} and \textit{blind quantum computation} \cite{???, bib:blind2, bib:blind3, bib:blind1, PhysRevLett.108.200502, bib:Morimae3486, bib:Morimae5460, bib:Morimae3966}.
+Extremely important to many high-performance data-processing applications is security, as proprietary or sensitive data may be being dealt with. To address this, two models for outsourced quantum computation exist for addressing this -- \textit{homomorphic encryption} \cite{???, gentry2009fully, van2010fully}\index{Homomorphic encryption} and \textit{blind quantum computation}\index{Blind quantum computation} \cite{???, bib:blind2, bib:blind3, bib:blind1, PhysRevLett.108.200502, bib:Morimae3486, bib:Morimae5460, bib:Morimae3966}.
 
 In both cases, Alice has secret data, and wishes to not only ensure that an interceptor is unable to read it, but that even the server performing the computation isn't able to either -- she trusts no one. That is, she wishes the data to be processed in encrypted form, without first requiring decryption.
 
@@ -4766,7 +4711,7 @@ This protocol demonstrates that a simple optical system is able to homomorphical
 
 In the previous two sections we employed the encryption techniques of polarisation-key encoding and phase-key encoding. These are based on the observation that uniform polarisation- and phase-rotations commute through linear optics networks, as per Eq.~(\ref{eq:LO_key_commute}). Are there any other types of encoding operations that observe this property?
 
-The other obvious candidate is \textit{displacement-key encoding}, whereby random displacements (not necessarily uniform across all modes) in phase-space (Sec.~\ref{sec:non_lin_opt}) form the encoding operations. Displacement operators exhibit the property that a tensor product of displacements commutes through linear optics circuits to yield a different combination of tensor products of displacements, where the displacement amplitudes obey the same relationship as for coherent states from Eq.~\ref{eq:betaUalpha}. Specifically,
+The other obvious candidate is \textit{displacement-key encoding}, whereby random displacements (not necessarily uniform across all modes) in phase-space (Sec.~\ref{sec:non_lin_opt}) form the encoding operations. Displacement operators exhibit the property that a tensor product of displacements commutes through linear optics circuits to yield a different combination of tensor products of displacements, where the displacement amplitudes obey the same relationship as for coherent states from Eq.~(\ref{eq:betaUalpha}). Specifically,
 \begin{align}
 \bigotimes_{i=1}^m \hat{D}_i(\alpha_i) \to \bigotimes_{j=1}^m \hat{D}_j(\beta_j),
 \end{align}
@@ -4851,7 +4796,7 @@ Intuitively we expect displacement-key encoding to potentially offer better secu
 % Verification Of Cloud Quantum Computing
 %
 
-\section{Verification of cloud quantum computing} \index{Verification of cloud quantum computing}
+\section{Verification of cloud quantum computing} \index{Verification}
 
 \comment{To do! Nana Liu}
 
@@ -4861,15 +4806,15 @@ Intuitively we expect displacement-key encoding to potentially offer better secu
 
 \section{Entanglement -- The ultimate quantum resource} \label{sec:ent_ultimate} \index{Entanglement}
 
-As we have seen, the diversity of quantum states that may be communicated, and quantum protocols that may be implemented over the quantum internet, is extremely diverse, encompassing many different types of encodings and communications protocols.
+As we have seen, the diversity of quantum states that may be communicated, and protocols implemented over the quantum internet is extremely diverse, encompassing many different types of encodings and communications protocols.
 
-Considering the plethora of protocols that may be implemented over quantum networks, discussed in detail in Sec.~\ref{sec:protocols_quant_int}, one might ask whether there is a single primitive resource that might be applicable to all, or at least most of these quantum protocols, thereby reducing the technological requirements of the nodes and quantum channels forming the network.
+Given this plethora of protocols, discussed in detail in Sec.~\ref{sec:protocols_quant_int}, one might ask whether there is a single primitive resource that might be applicable to all, or at least most of these quantum protocols, thereby reducing the technological requirements of the nodes and quantum channels forming the network.
 
-It turns out that there is one particularly useful quantum resource, that finds applicability in most of these protocols -- entanglement, specifically in the form of Bell-pairs (Sec.~\ref{sec:bell_state_res}).
+It turns out that there is one particularly useful quantum resource, that finds applicability in many of these protocols -- entanglement, specifically in the form of Bell-pairs (Sec.~\ref{sec:bell_state_res}).
 
 In brief, Bell-pairs find applicability in, amongst many others, the following key protocols:
 \begin{itemize}
-\item Cluster states (Sec.~\ref{sec:CSQC}): a Bell-pair is also a two-qubit cluster state, a supply of which can be employed in fusion strategies to prepare larger cluster states, enabling universal measurement-based quantum computation.
+\item Cluster states (Sec.~\ref{sec:CSQC}): a Bell-pair is also a two-qubit cluster state, a supply of which can be employed in fusion strategies to prepare larger cluster states, enabling universal MBQC.
 \item Quantum state teleportation (Sec.~\ref{sec:teleport}): a shared Bell-pair between Alice and Bob forms the elementary quantum resource upon which the state teleportation protocol is constructed.
 \item Quantum gate teleportation (Sec.~\ref{sec:teleport_gate}): a shared 4-qubit entangled state allows the teleportation of a CNOT gate. This 4-qubit state may be prepared from a resource of two Bell-pairs.
 \item QKD (Sec.~\ref{sec:QKD}): the E91 protocol is built upon a reliable stream of distributed Bell-pairs.
@@ -4878,7 +4823,7 @@ In brief, Bell-pairs find applicability in, amongst many others, the following k
 
 Thus, we see that Bell-pairs form a ubiquitous resource, covering many of the most significant quantum protocols -- quantum computation, distributed quantum computation, quantum state and gate teleportation, and quantum cryptography. This warrants special treatment of entanglement distribution, as a fundamental building block in the quantum era.
 
-One might envisage a quantum internet in which a central server, who specialises in Bell state preparation, serves the sole role of pumping out Bell-pairs across the internet to whomever requests them, who subsequently use them for protocols such as those mentioned above. This could be in the form of a server transmitting over fibre networks, across free-space, or via a satellite in orbit, transmitting at an intercontinental level.
+One might envisage a quantum internet in which a central server, who specialises in only Bell state preparation and distribution, serves the sole role of pumping out Bell-pairs across the internet to whomever requests them, who subsequently use them for protocols such as those mentioned above. This could be in the form of a server transmitting over fibre networks, across free-space, or via a satellite in orbit, transmitting at an intercontinental level.
 
 What's the advantage of this approach to quantum networking? There are several:
 \begin{itemize}
@@ -4887,7 +4832,7 @@ What's the advantage of this approach to quantum networking? There are several:
 \item Unlike generic quantum states, Bell-pairs are known states that can be infinitely reproduced, without having to worry about no-cloning limitations.
 \item Photonic Bell-pairs are easily prepared via type-II SPDC at very high repetition rates (\mbox{$\sim 100$MHz-1GHz}), enabling rapid state preparation.
 \item Bell-pairs are relatively `cheap' to prepare, and can be readily manufactured using widely accessible, present-day technology.
-\item QoS is a lesser issue in most scenarios. We can employ a \textsc{Send and Forget} protocol for the distribution of entanglement (much like classical UDP). Since every Bell-pair is identical, we needn't be concerned about missing ones. Instead, we can simply wait for the next one (a \textsc{Repeat Until Success} strategy), knowing it will be exactly the same. We call this the \textsc{Shotgun} approach -- keep firing away until we hit something.
+\item QoS is a lesser issue in most scenarios. We can employ a \textsc{Send and Forget}\index{Send and forget protocol} protocol for the distribution of entanglement (much like classical UDP). Since every Bell-pair is identical, we needn't be concerned about missing ones. Instead, we can simply wait for the next one (a \textsc{Repeat Until Success}\index{Repeat until success strategy} strategy), knowing it will be exactly the same. We call this the \textsc{Shotgun}\index{Shotgun state preparation} approach -- keep firing away until we hit something.
 \item Rather than transmitting quantum states between distant parties directly, if we instead use state teleportation, the state to be transmitted will not be corrupted if the communications channel fails (e.g via loss). Instead we can wait for the next successfully transmitted Bell-pair until we are ready to teleport the state, which then proceeds without directly utilising the quantum communications channel, accumulating its associated costs, or risking losing the state altogether should link failure occur. Only classical communication is required to complete the protocol, which can be regarded as error-free for all intents and purposes.
 \item Entanglement purification may be employed by the two parties to improve the cost metrics associated with their shared entanglement, thereby partially overcoming the limitations imposed by the quantum communication channels.
 \item If no direct link exists between server and clients, bootstrapped entanglement swapping can be employed to concatenate servers to create longer-distance `virtual' links. This is the basis for \textit{quantum repeater networks}, to be discussed next in Sec.~\ref{sec:rep_net}.
@@ -4895,9 +4840,9 @@ What's the advantage of this approach to quantum networking? There are several:
 
 \comment{Any other advantages?}
 
-In addition to entanglement distribution, entangling measurements, e.g Bell state projections (Sec.~\ref{sec:bell_proj}), may be used as a primitive for many protocols. This is effectively entangled state distribution in reverse, whereby two clients transmit states to a host, who performs a joint entangling measurement upon them. For example, in the modularised model for cluster state quantum computing, two adjacent but distant modules might transmit optical qubits to a satellite, which projects them into the Bell basis, thereby creating a link between the respective modules. This isn't as powerful as entangled state distribution, since it cannot be used for, for example, E91 QKD, but nonetheless remains a powerful primitive for many protocols. \comment{Note, however, that in many instances where entangling measurements are required, entanglement swapping can be used in its place to achieve the same outcome. What do I mean here!???}
+In addition to entanglement distribution, entangling measurements, e.g Bell state projections (Sec.~\ref{sec:bell_proj}), may be used as a primitive for many protocols. This is effectively entangled state distribution in reverse, whereby two clients transmit states to a host, who performs a joint entangling measurement upon them. For example, in the modularised model for cluster state quantum computing, two adjacent but distant modules might transmit optical qubits to a satellite, which projects them into the Bell basis, thereby creating a link between the respective modules. This isn't as powerful as entangled state distribution, since it cannot be used for, for example, E91 QKD, but nonetheless remains a powerful primitive for many protocols.
 
-These observations lead us to naturally conclude that a quantum network specialised to this one particular task -- entanglement distribution -- would already be immensely useful, and on its own enable many key quantum protocols, such as many of the ones presented here in Sec.~\ref{sec:protocols_quant_int}.
+These observations lead us to naturally conclude that a quantum network specialised to this one particular task -- entanglement distribution -- would already be immensely useful, and on its own enable many key applications, such as many of the ones presented here in Sec.~\ref{sec:protocols_quant_int}.
 
 %
 % Quantum Repeater Networks
@@ -4917,6 +4862,98 @@ These observations lead us to naturally conclude that a quantum network speciali
 
 \comment{To do!}
 
+Any form of computation comes at an economic cost, but also brings with it a payoff. Thus, a key consideration in any model for computation is the tradeoff between the two. Because the computational power of quantum computers inherently scales different than classical computers, we expect this cost/payoff ratio to exhibit different scaling characteristics, thereby fundamentally altering economic considerations.
+
+%
+% Economic Leverage
+%
+
+\subsection{Economic leverage} \index{Economic leverage}
+
+Suppose Alice and Bob both possessed expensive classical Cray\texttrademark\, supercomputers, both identical. They're both connected to the internet, so does it make sense to unify their computational resources over the network to construct a more powerful \textit{virtual machine}, which they subsequently time-share between themselves, or are they better off just using their own computers?
+
+If there were an asymmetry in demand for computational resources, it would make perfect sense to unify computational resources, so as to mitigate wasting precious clock-cycles. However, if they were both heavy users, always consuming every last clock-cycle, it would make no difference: for a given computation, Alice and Bob could each be allocated half the processing time of the virtual supercomputer twice as powerful; or, each could exploit the full processing time of their half-as-fast computers. In either case, the dollar cost of the computation is the same. This simple observation follows trivially from the linear relationship between processing power and the number of CPUs in a classical computer.
+
+More generally, in a networked environment where time-sharing of classical computational resources is applied equitably, proportionate to users' contribution to the network, the dollar cost per computation is (roughly) unaffected by the rest of the network. Instead, the motivation for networking computational resources is to improve efficiency by ensuring that clock-cycles are not wasted, but instead distributed according to demand by a scheduling algorithm, which could be market-driven, for example.
+
+However, as discussed in Sec.~\ref{sec:dist_QC}, the computational power of a quantum computer does not scale linearly with its number of qubits, but exponentially. This completely changes the economics, and market dynamics of networked quantum computers, whose joint computational power grows (very roughly speaking) multiplicatively, rather than additively in the classical case. Intuitively, we expect equitable time-sharing of unified quantum computational resources to offer more performance to all users than if they were to exclusively use their own resources in isolation. That is, the cost of a computation is reduced by resource-sharing, even after time-sharing.
+
+In Secs.~\ref{sec:dist_QC} \& \ref{sec:module} we introduced distributed and modularised quantum computation. Using this as a toy model, we will now investigate the market dynamics of uniting the quantum computational resources of multiple market participants. We envisage a model whereby network participants are contributing modules to the networked quantum computer, thereby unifying their computational power.
+
+Let $t_i$ be the classical-equivalent runtime of a quantum algorithm comprising $n_i$ qubits, where $i$ denotes the user. The users are running quantum algorithms with classical-equivalent processing time that grows exponentially with the number of qubits. Then, for each user,
+\begin{align}
+t_i &= \alpha \beta^{n_i},
+\end{align}
+where \mbox{$\alpha>0$} and \mbox{$\beta>1$} are constants specific to the algorithm being deployed, and the computational model (e.g cluster states vs the circuit model).
+
+If a network of quantum computers were combined into a single, larger virtual computer, it would exhibit scaling,
+\begin{align}
+t_\text{joint} = \alpha \beta^{\sum_j n_j},
+\end{align}
+where $t_\text{joint}$ is the classical-equivalent runtime of the joint quantum computation, and $j$ sums over all the nodes in the network. The $i$th user is contributing the fraction of the hardware,
+\begin{align}
+r_i=\frac{n_i}{\sum_j n_j},
+\end{align}
+and it is only fair that he receive a corresponding share of the quantum processing time (which would also be enforced by arbitrage in a competitive market), which increases his classical-equivalent processing time to,
+\begin{align}
+\tau_i &= \frac{t_\text{joint}}{r_i} \nonumber \\
+&= \alpha \beta^{\sum_j n_j} \left(\frac{\sum_j n_j}{n_i}\right).
+\end{align}
+
+We are now interested to know whether the individual users are better off under this model than they were individually. Let us define the \textit{quantum economic leverage}\index{Quantum economic leverage} of a user's quantum computer to be the ratio between their time-shared and individual classical-equivalent processing times,
+\begin{align}
+\lambda_i &= \frac{\tau_i}{t_i} \nonumber \\
+&= \beta^{\sum_{j\neq i} n_j} \left(\frac{\sum_j n_j}{n_i}\right).
+\end{align}
+Note that the leverage is strictly greater than unity, \mbox{$\lambda_i>1\,\forall\, i$}. Thus, for any user, irrespective of the size of their quantum computer, they are better off joining the distributed network and claiming a time-share, than utilising only their own hardware full-time. Similarly, the distributed network is better off accepting them into the network. This is in contrast to classical networks, where \mbox{$\lambda\approx 1$}, for any number of nodes in the network (i.e there is no leverage).
+
+As a special case, consider a single user's leverage when joining the global network. Then the \textit{single-user leverage}\index{Single-user quantum economic leverage} is,
+\begin{align}
+\lambda_\text{user} = \beta^{n_\text{global}} \left(1+\frac{n_\text{global}}{n_\text{user}}\right),
+\end{align}
+and we see that the user gains economic leverage exponential in the size of the global network he is joining. Needless to say, the global network will also benefit from him joining the network, albeit with a far smaller exponential factor,
+\begin{align}
+\lambda_\text{global} \approx \beta^{n_\text{user}},	
+\end{align}
+assuming \mbox{$n_\text{global}\gg n_\text{user}$}.
+
+A case of particular interest is the \textit{single-qubit leverage}\index{Single-qubit quantum economic leverage} -- the leverage on the investment into adding a single additional qubit to the global network. This is an indicator of the economic or computational ratio of return on investment into expanding the network incrementally. This is simply given by letting \mbox{$n_\text{user}=1$},
+\begin{align}
+\lambda_\text{qubit} = \beta^{n_\text{global}} (1+n_\text{global}),
+\end{align}
+which clearly implies that as the global quantum network expands over time, the return on investment into network expansion grows exponentially, or equivalently, the cost per unit of additional classical-equivalent processing time decreases exponentially.
+
+Since exisiting network participants receive leverage upon other participants joining the network, an investment into contributing modules has exponentially increasing computational return over time as the network expands, even if that participant ceases making further investment into the network. This is in contrast to classical networks, whereby the computational return upon an investment is fixed over time.
+
+The analysis thus far has considered the best-case scenario whereby the classical-equivalent computational power of the quantum computer scales exponentially with the number of qubits. Of course, not all quantum algorithms are so favourable. Grover's algorithm, for example, yields only quadratic enhancement. More generally, let,
+\begin{align}
+t_i = f_\text{QC}(n_i),
+\end{align}
+where $f_\text{QC}$ is an arbitrary, monotonically increasing \emph{scaling function}\index{Scaling function} relating the number of qubits in the quantum computer to its classical-equivalent runtime. Then, following a similar derivation as before, we obtain,
+\begin{align}
+\lambda_i = \frac{f_\text{QC}\left(\sum_{j} n_j\right) \cdot \sum_j n_j}{f_\text{QC}(n_i) \cdot n_i}.
+\end{align}
+
+Thus, the leverage is not merely a function of the hardware, but also of the software applications running upon it, each of which is associated with a unique scaling function.
+
+%
+% The Global Virtual Quantum Computer
+%
+
+\subsection{The global virtual quantum computer} \label{sec:marketplace} \index{Virtual quantum computer}
+
+The observation that unified quantum computational resources have greater economic leverage than independent computers leads to the natural conclusion that it is always in the best interests of quantum computer operators to contribute their resources to the distributed global network and participate in time-sharing, rather than go it alone. It follows that in the interests of economic efficiency, market forces will ensure that future quantum computers will \textit{all} be networked into a single \textit{global virtual quantum computer}, providing exponentially greater computational power to all users than what they could have afforded on their own.
+
+\comment{To do!}
+
+%
+% Pricing Models
+%
+
+\subsection{Pricing models} \index{Pricing models}
+
+\comment{To do!}
+
 %
 % State of the Art
 %
@@ -4931,8 +4968,6 @@ When will we have the quantum internet? This is a question with as many answers 
 In this section we discuss recent developments in and the state of the art of some of the most important quantum technologies and protocols, with a view to understand trends in the development of the field, so as to gauge the rate of progress. With this we aim to shed light on what quantum networking services could be readily implemented today, using present-day technology, and what is likely to be viable in the near future.
 
 We will very succinctly summarise a brief history of major recent developments in the field, without much elaboration into the specific developments. Rather our goal here is simply to very tersely summarise recent progress and the state of the art. We provide detailed referencing so that the interested reader can follow up on the specifics of these important developments of interest. The reader disinterested in a history lesson might skip this section.
-
-\comment{Comment of upcoming tabular style}
 
 %
 % Quantum Teleportation & Entanglement Distribution
@@ -5528,6 +5563,7 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \nomenclature[]{\textbf{BBO}}{Beta-barium borate}
 \nomenclature[]{\textbf{PBS}}{Polarising beamsplitter}
 \nomenclature[]{\textbf{QIP}}{Quantum information processing}
+\nomenclature[]{\textbf{QND}}{Quantum non-demolition measurement}
 
 \printnomenclature
 
@@ -5546,6 +5582,12 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \index{Integer factorisation \seeonly{Shor's algorithm}|gobbleone}
 \index{Period finding \seeonly{Shor's algorithm}|gobbleone}
 \index{Quantum search algorithm \seeonly{Grover's algorithm}|gobbleone}
+\index{Tomography \seeonly{Quantum state tomography, quantum process tomography}|gobbleone}
+\index{Blind quantum computation @\also{Encrypted quantum computation}|gobbleone}
+\index{Homomorphic encryption @\also{Encrypted quantum computation}|gobbleone}
+\index{Scattershot boson-sampling \seeonly{Boson-sampling using Gaussian states}|gobbleone}
+\index{Kraus operators \seeonly{Operator-sum representation}|gobbleone}
+\index{Completely positive maps (CP-maps) \seeonly{Quantum processes}|gobbleone}
 
 \printindex
 
