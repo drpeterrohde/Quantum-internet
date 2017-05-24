@@ -2814,43 +2814,6 @@ While a quadratic improvement is far short of the exponential improvement we mig
 
 \section{Optical routers} \index{Optical routers}
 
-Perhaps the most fundamental building block in any network is routers, devices which switch data packets between multiple inputs and outputs.
-
-\comment{To do!}
-
-\comment{Those below work for single photons or coherent states. Do not work in general for arbitrary states of light. What states of light does it work for?}
-
-%
-% Two-Port Switching
-%
-
-\subsection{Two-channel switching} \index{Two-channel switching}
-
-\begin{figure}[!htb]
-\includegraphics[width=\columnwidth]{two_channel_two_port_switch}
-\caption{(top) A two-channel two-port switch has two inputs and two outputs, implementing either an identity or swap operation between them. This may be constructed using a Mach-Zehnder interferometer with a variable, classically-controlled phase-shift in one of the arms, which may be implemented using an acousto-optic or electro-optic modulator (AOM or EOM). The phase-shift is allowed to be either \mbox{$\phi=0$} for an identity channel (bottom left) or \mbox{$\phi=\pi$} for a swap operation (bottom right). Because the switch is based on MZ interference, this technique only applies to optical states to which MZ interference applies. The total resource requirements are two 50:50 beamsplitters and a single AOM or EOM.} \label{fig:two_channel_two_port_switch} \index{Two-channel two-port switch}
-\end{figure}
-
-\begin{figure}[!htb]
-\includegraphics[width=0.9\columnwidth]{linear_multiplexer}
-\caption{Linear multiplexers (left) and demultiplexers (right) may be constructed from a linear chain of two-port switches, cascading into one another. These switch a single optical channel between $n$ ports. The total resource requirements are \mbox{$n-1$} two-port switches. The number of two-port switches through which an optical path passes ranges from $1$ (for the first port) to $n-1$ (for the final port).} \label{fig:linear_multiplexer} \index{Linear multiplexer}	\index{Linear demultiplexer}
-\end{figure}
-
-\begin{figure}[!htb]
-\includegraphics[width=0.8\columnwidth]{pyramid_multiplexer}
-\caption{Pyramid multiplexers (top) and demultiplexers (bottom) decompose the multiplexing into a binary tree-structure, shown here for the case of \mbox{$n=8$} ports. For $n$ ports, all optical paths pass through \mbox{$\mathrm{log}_2(n)$} two-port switches, of which there are \mbox{$n-1$} in total.} \label{fig:pyramid_multiplexer} \index{Pyramid multiplexer}\index	{Pyramid demultiplexer}
-\end{figure}
-
-\begin{figure}[!htb]
-\includegraphics[width=0.75\columnwidth]{single_channel_multi_port_switch}
-\caption{A single-channel multi-port switch may be constructed by demuliplexing the $n$ input ports to a single port, routing the desired input channel to that port, before multiplexing it back out to the desired output port. This allows an arbitrary input to be routed to an arbitrary output, but only one channel at a time. This requires \mbox{$2(n-1)$} two-port switches in total.} \label{fig:single_channel_multi_port_switch} \index{Single-channel multi-port switch}	
-\end{figure}
-
-\begin{figure}[!htb]
-\includegraphics[width=\columnwidth]{multi_channel_multi_port_switch}
-\caption{A completely general multi-channel multi-port switch may be constructed using a staggered grid of two-port switches, shown here for \mbox{$n=6$} ports. This allows the implementation of an arbitrary permutation between input and output ports, enabling all $n$ channels to be simultaneously routed across distinct input-to-output routes. This requires \mbox{$\frac{n^2}{2}-n+1$} two-port switches in total (for even $n$).} \label{fig:multi_channel_multi_port_switch} \index{Multi-channel multi-port switch}	
-\end{figure}
-
 \comment{Show what AOM and EOM do}
 
 \comment{Using MZ + tunable phase.}
@@ -2859,15 +2822,94 @@ Perhaps the most fundamental building block in any network is routers, devices w
 
 \comment{Using polarisation, PBSs + tuneable polarisation rotation.}
 
+\comment{Show fig of bunch of nodes connected by routers}
+
+\comment{Index MZ}
+
+Perhaps the most fundamental building block in any network is routers, devices which switch data packets between multiple inputs and outputs. Indeed, in many real-world networks, many nodes will purely implement routing, and nothing more elaborate such as computations or other end-user protocols such as those mentioned in Sec.~\ref{sec:protocols_quant_int}.
+
+We now discuss the implementation of optical routers, beginning with the simplest two-port switch, upon which we build to construct more general and powerful routers.
+
 %
-% Multi-Port Switching
+% Two-Channel Two-Port Switching
 %
 
-\subsection{Multi-port switching} \index{Multi-port switching}
+\subsection{Two-channel two-port switches} \index{Two-channel two-port switches}
 
-\comment{These both two 2-port switching. Discuss generalising to $m$-port switching. Scaling in number of switches (e.g linear vs log).}
+The elementary primitive from which more complicated routers may be constructed is the two-channel two-port switch. We will use the terminology that `ports' refers to the number of input and output optical modes, and `channels' are the number of simultaneous communications streams running in parallel.
 
-\comment{One-to-many (with a single input, multiple outputs). Many-to-many (multi in, multi out).}
+This switch may be constructed from a Mach-Zehnder interferometer, with a classically-controlled phase-shifter in one arm. By switching the phase to either \mbox{$\phi=0$} or \mbox{$\phi=\pi$}, the MZ may be tuned to implement either an identity or swap operation respectively. This is shown in Fig.~\ref{fig:two_channel_two_port_switch}.
+
+In the upcoming diagrams we present, arrows are used to indicate the time-ordering of the flow of data. However, it should be noted that a MZ interferometer is reversible and therefore bidirectional, and so too are all of the more complex routers based upon them.
+
+Because the two-port switch is based upon MZ interference, it will only function for optical states subject to such MZ interference. Thus, single-photons and coherent states are applicable, whereas thermal states, for example, are not.
+
+The variable phase-shift can be implemented using acousto-optic modulators (AOMs) or electro-optic modulators (EOMs), both of which a standard, readily available components in present-day laboratories.
+
+\begin{figure}[!htb]
+\includegraphics[width=\columnwidth]{two_channel_two_port_switch}
+\caption{(top) A two-channel two-port switch has two inputs and two outputs, implementing either an identity or swap operation between them. This may be constructed using a Mach-Zehnder interferometer with a variable, classically-controlled phase-shift in one of the arms, which may be implemented using an acousto-optic or electro-optic modulator (AOM or EOM). The phase-shift is allowed to be either \mbox{$\phi=0$} for an identity channel (bottom left) or \mbox{$\phi=\pi$} for a swap operation (bottom right). Because the switch is based on MZ interference, this technique only applies to optical states to which MZ interference applies. The total resource requirements are two 50:50 beamsplitters and a single AOM or EOM.} \label{fig:two_channel_two_port_switch} \index{Two-channel two-port switch}
+\end{figure}
+
+%
+% Multiplexers & Demultiplexers
+%
+
+\subsection{Multiplexers \& demultiplexers} \index{Multiplexers}\index{Demultiplexers}
+
+From the two-port switch, which implements a controlled permutation of two optical modes, we can construct multi-port multiplexers and demultiplexers, which controllably route a single input port to one of $n$ multiple output ports, or vice versa.
+
+There are two main architectures that may be employed for implementing such multiplexers/demultiplexers. The first is to use a linear cascade of two-port switches, shown in Fig.~\ref{fig:linear_multiplexer}\index{Linear multiplexers \& demultiplexers}. The second is to use a pyramid cascade, shown in Fig.~\ref{fig:pyramid_multiplexer}\index{Pyramid multiplexers \& demultiplexers}. Both layouts require,
+\begin{align}
+N_s = n-1,
+\end{align}
+two-port switches to implement. However, they differ in one important aspect. In the linear multiplexer, different routes traverse different numbers of two-port switches, ranging from $1$ (for the first port) to \mbox{$n-1$} (for the final port). This will lead to asymmetry in accumulated errors. In the pyramid multiplexer, on the other hand, all optical paths traverse \mbox{$\mathrm{log}_2(n)$} two-port switches, yielding completely symmetric operation.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.85\columnwidth]{linear_multiplexer}
+\caption{Linear multiplexers (left) and demultiplexers (right) may be constructed from a linear chain of two-port switches, cascading into one another. These switch a single optical channel between $n$ ports. The total resource requirements are \mbox{$n-1$} two-port switches. The number of two-port switches through which an optical path passes ranges from $1$ (for the first port) to \mbox{$n-1$} (for the final port).} \label{fig:linear_multiplexer} \index{Linear multiplexer}\index{Linear demultiplexer}
+\end{figure}
+
+\begin{figure}[!htb]
+\includegraphics[width=0.7\columnwidth]{pyramid_multiplexer}
+\caption{Pyramid multiplexers (top) and demultiplexers (bottom) decompose the multiplexing into a binary tree-structure, shown here for the case of \mbox{$n=8$} ports. For $n$ ports, all optical paths pass through \mbox{$\mathrm{log}_2(n)$} two-port switches, of which there are \mbox{$n-1$} in total.} \label{fig:pyramid_multiplexer} \index{Pyramid multiplexer}\index	{Pyramid demultiplexer}
+\end{figure}
+
+%
+% Single-Channel Multi-Port Switches
+%
+
+\subsection{Single-channel multi-port switches}
+
+The multiplexers and demultiplexers route between one port and $n$ ports. In the more general and useful case, we wish to route between $n$ inputs and $n$ outputs. If we only require one active channel at a given time, such a router may be trivially constructed from an $n$-port multiplexer connected to and $n$-port demultiplexer, as shown in Fig.~\ref{fig:single_channel_multi_port_switch}. Here the demultiplexer chooses one of the input modes to route to its single output, which then feeds into the multiplexer to fan it out to the desired output. The multiplexers/demultiplexers could be implemented using either of the aforementioned layouts, yielding a total resource count of,
+\begin{align}
+	N_s = 2n-3,
+\end{align}
+two-port switches\footnote{Note that the multiplexer and demultiplexer each require \mbox{$2(n-1)$} two-port switches, but one of the central ones adjoining the multiplexer and demultiplexer is redundant and may be eliminated, reducing the number of two-port switches to \mbox{$2n-3$}.}.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.75\columnwidth]{single_channel_multi_port_switch}
+\caption{A single-channel multi-port switch may be constructed by demultiplexing the $n$ input ports to a single port, routing the desired input channel to that port, before multiplexing it back out to the desired output port. This allows an arbitrary input to be routed to an arbitrary output, but only one channel at a time. This requires \mbox{$2n-3$} two-port switches in total.} \label{fig:single_channel_multi_port_switch} \index{Single-channel multi-port switch}	
+\end{figure}
+
+%
+% Multi-Channel Multi-Port Switches
+%
+
+\subsection{Multi-channel multi-port switches} \index{Multi-channel multi-port switches}
+
+The single-channel multi-port switch enables switching between an arbitrary number of input/output ports, but suffers that it can only route a single channel at a time. The most general scenario to consider is multi-channel multi-port switches, which implement an arbitrary permutation between $n$ inputs and $n$ outputs. That is, all $n$ ports may be routing active channels, enabling simultaneous routing of multiple data-flows.
+
+Such a switch may be constructed from a staggered, rectangular lattice of two-port switches, as shown in Fig.~\ref{fig:multi_channel_multi_port_switch}. It is easy to see upon inspection that optical paths exist between every input/output pair of ports. The total resource count for this device is,
+\begin{align}
+N_s = \frac{n^2}{2}-n+1,
+\end{align}
+two-port switches.
+
+\begin{figure}[!htb]
+\includegraphics[width=\columnwidth]{multi_channel_multi_port_switch}
+\caption{A completely general multi-channel multi-port switch may be constructed using a staggered grid of two-port switches, shown here for \mbox{$n=6$} ports. This allows the implementation of an arbitrary permutation between input and output ports, enabling all $n$ channels to be simultaneously routed across distinct input-to-output routes. This requires \mbox{$\frac{n^2}{2}-n+1$} two-port switches in total (for even $n$).} \label{fig:multi_channel_multi_port_switch} \index{Multi-channel multi-port switch}	
+\end{figure}
 
 %
 % Protocols for the Quantum Internet
