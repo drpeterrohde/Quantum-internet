@@ -2814,42 +2814,58 @@ While a quadratic improvement is far short of the exponential improvement we mig
 
 \section{Optical routers} \index{Optical routers}
 
-\comment{Show what AOM and EOM do}
-
-\comment{Using MZ + tunable phase.}
-
-\comment{AOMs, EOMs, pockel cells, whatever CY-Lu used in his experiment.}
-
-\comment{Using polarisation, PBSs + tuneable polarisation rotation.}
-
-\comment{Show fig of bunch of nodes connected by routers}
-
-\comment{Index MZ}
-
-Perhaps the most fundamental building block in any network is routers, devices which switch data packets between multiple inputs and outputs. Indeed, in many real-world networks, many nodes will purely implement routing, and nothing more elaborate such as computations or other end-user protocols such as those mentioned in Sec.~\ref{sec:protocols_quant_int}.
+Perhaps the most fundamental building block in any network is routers, devices which switch data packets between multiple inputs and outputs. Indeed, in many real-world networks, many nodes will purely implement routing, and nothing more elaborate such as computations or other end-user protocols, such as those mentioned in Sec.~\ref{sec:protocols_quant_int}.
 
 We now discuss the implementation of optical routers, beginning with the simplest two-port switch, upon which we build to construct more general and powerful routers.
 
+A summary of the routing devices we consider, and their associated resource requirements, is provided in Table.~\ref{tab:router_summary}.
+
+\renewcommand{\tablename}{TABLE}
+
+\begin{table*}[!htb]
+\begin{tabular}{|c|c|c|}
+\hline
+  Device & Resource requirements & Optical depth \\
+  \hline
+  \hline
+  Two-channel two-port switch & \mbox{$N_\mathrm{bs}=2$}, \mbox{$N_\mathrm{ps}=1$} & \mbox{$d=1$} \\
+  Linear $n$-port multiplexer & \mbox{$N_\mathrm{s}=n-1$} & \mbox{$1\leq d\leq n-1$} \\
+  Pyramid $n$-port multiplexer & \mbox{$N_\mathrm{s}=n-1$} & \mbox{$d=\mathrm{log}_2(n)$} \\
+    Single-channel multi-port switch (linear) & \mbox{$N_\mathrm{s}=2n-3$} & \mbox{$2\leq d\leq 2n-3$} \\
+  Single-channel multi-port switch (pyramid) & \mbox{$N_\mathrm{s}=2n-3$} & \mbox{$d=2\,\mathrm{log}_2(n)-1$} \\
+  Multi-channel multi-port switch & \mbox{$N_\mathrm{s} = \left\lceil \frac{n^2}{2}\right\rceil - n + 1$} & \mbox{$\left\lceil \frac{n}{2} \right\rceil \leq d\leq n-1$} \\
+    \hline
+\end{tabular}
+\caption{Summary of different primitives for constructing optical routers. $n$, $N_\mathrm{bs}$, $N_\mathrm{ps}$ and $N_\mathrm{s}$ are the number of input/output ports, beamsplitters, phase-shifters, and two-port switches respectively. $d$ is the optical depth (number of two-port switches an optical path must traverse). Since all of the multi-port devices are constructed from two-port switches, in all cases \mbox{$N_\mathrm{bs} = 2 N_\mathrm{s}$} and \mbox{$N_\mathrm{ps} = N_\mathrm{s}$}.} \label{tab:router_summary} \index{Optical routers}\index{Optical depth}\index{Router resource requirements}
+\end{table*}
+
+\renewcommand{\tablename}{ALG.}
+
 %
-% Two-Channel Two-Port Switching
+% Two-Channel Two-Port Switches
 %
 
 \subsection{Two-channel two-port switches} \index{Two-channel two-port switches}
 
 The elementary primitive from which more complicated routers may be constructed is the two-channel two-port switch. We will use the terminology that `ports' refers to the number of input and output optical modes, and `channels' are the number of simultaneous communications streams running in parallel.
 
-This switch may be constructed from a Mach-Zehnder interferometer, with a classically-controlled phase-shifter in one arm. By switching the phase to either \mbox{$\phi=0$} or \mbox{$\phi=\pi$}, the MZ may be tuned to implement either an identity or swap operation respectively. This is shown in Fig.~\ref{fig:two_channel_two_port_switch}.
+This switch may be constructed from a Mach-Zehnder interferometer\index{Mach-Zehnder interference}, with a classically-controlled phase-shifter in one arm. By switching the phase to either \mbox{$\phi=0$} or \mbox{$\phi=\pi$}, the MZ may be tuned to implement either an identity or swap operation respectively. This is shown in Fig.~\ref{fig:two_channel_two_port_switch}.
 
 In the upcoming diagrams we present, arrows are used to indicate the time-ordering of the flow of data. However, it should be noted that a MZ interferometer is reversible and therefore bidirectional, and so too are all of the more complex routers based upon them.
 
-Because the two-port switch is based upon MZ interference, it will only function for optical states subject to such MZ interference. Thus, single-photons and coherent states are applicable, whereas thermal states, for example, are not.
-
-The variable phase-shift can be implemented using acousto-optic modulators (AOMs) or electro-optic modulators (EOMs), both of which a standard, readily available components in present-day laboratories.
-
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{two_channel_two_port_switch}
-\caption{(top) A two-channel two-port switch has two inputs and two outputs, implementing either an identity or swap operation between them. This may be constructed using a Mach-Zehnder interferometer with a variable, classically-controlled phase-shift in one of the arms, which may be implemented using an acousto-optic or electro-optic modulator (AOM or EOM). The phase-shift is allowed to be either \mbox{$\phi=0$} for an identity channel (bottom left) or \mbox{$\phi=\pi$} for a swap operation (bottom right). Because the switch is based on MZ interference, this technique only applies to optical states to which MZ interference applies. The total resource requirements are two 50:50 beamsplitters and a single AOM or EOM.} \label{fig:two_channel_two_port_switch} \index{Two-channel two-port switch}
+\caption{(top) A two-channel two-port switch has two inputs and two outputs, implementing either an identity or swap operation between them. This may be constructed using a Mach-Zehnder interferometer with a variable, classically-controlled phase-shift in one of the arms, which may be implemented using an acousto-optic or electro-optic modulator (AOM or EOM). The phase-shift is allowed to be either \mbox{$\phi=0$} for an identity channel (bottom left) or \mbox{$\phi=\pi$} for a swap operation (bottom right). Because the switch is based on MZ interference, this technique only applies to optical states which undergo MZ interference. The total resource requirements are two 50:50 beamsplitters and a single phase-shifter.} \label{fig:two_channel_two_port_switch} \index{Two-channel two-port switches}\index{Mach-Zehnder interference}
 \end{figure}
+
+Because the two-port switch is based upon MZ interference, it will only function for optical states subject to such MZ interference. Thus, single-photons and coherent states are applicable, whereas thermal states, for example, are not.
+
+The controllable phase-shift can be implemented in several ways:
+\begin{itemize}\index{Electro-optic modulator (EOM)}\index{Acousto-optic modulator (AOM)}\index{Pockels cell}
+\item Electro-optic modulators (EOMs): an applied electric field induces a change in refractive index in a medium, causing a phase-shift.
+\item Acousto-optic modulators (AOMs): an applied acoustic wave induces a change in refractive index in a medium, causing a phase-shift.
+\item Pockels cells: act as voltage-controlled wave-plates, 	which take the place of phase-shifters in a polarisation-encoded version of Mach-Zehnder interference.
+\end{itemize}
 
 %
 % Multiplexers & Demultiplexers
@@ -2861,35 +2877,37 @@ From the two-port switch, which implements a controlled permutation of two optic
 
 There are two main architectures that may be employed for implementing such multiplexers/demultiplexers. The first is to use a linear cascade of two-port switches, shown in Fig.~\ref{fig:linear_multiplexer}\index{Linear multiplexers \& demultiplexers}. The second is to use a pyramid cascade, shown in Fig.~\ref{fig:pyramid_multiplexer}\index{Pyramid multiplexers \& demultiplexers}. Both layouts require,
 \begin{align}
-N_s = n-1,
+N_\mathrm{s} = n-1,
 \end{align}
-two-port switches to implement. However, they differ in one important aspect. In the linear multiplexer, different routes traverse different numbers of two-port switches, ranging from $1$ (for the first port) to \mbox{$n-1$} (for the final port). This will lead to asymmetry in accumulated errors. In the pyramid multiplexer, on the other hand, all optical paths traverse \mbox{$\mathrm{log}_2(n)$} two-port switches, yielding completely symmetric operation.
+two-port switches to implement. However, they differ in one important aspect. In the linear multiplexer, different routes traverse different numbers of two-port switches (the optical depth, $d$)\index{Optical depth}, ranging from \mbox{$d=1$} (for the first port) to \mbox{$d=n-1$} (for the final port). This will lead to asymmetry in accumulated errors. In the pyramid multiplexer, on the other hand, all optical paths have the same optical depth \mbox{$d=\mathrm{log}_2(n)$}, yielding completely symmetric operation.
+
+Note that the logarithmic optical depth of the pyramid configuration grows less quickly than the linear average optical depth of the linear configuration. Thus, on average, optical paths pass through fewer optical elements in the pyramid configuration, reducing average accumulated error rates when using noisy optical elements. This, in conjunction with the pyramid's perfect symmetry, makes the pyramid multiplexer configuration generally most favourable.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.85\columnwidth]{linear_multiplexer}
-\caption{Linear multiplexers (left) and demultiplexers (right) may be constructed from a linear chain of two-port switches, cascading into one another. These switch a single optical channel between $n$ ports. The total resource requirements are \mbox{$n-1$} two-port switches. The number of two-port switches through which an optical path passes ranges from $1$ (for the first port) to \mbox{$n-1$} (for the final port).} \label{fig:linear_multiplexer} \index{Linear multiplexer}\index{Linear demultiplexer}
+\caption{Linear multiplexers (left) and demultiplexers (right) may be constructed from a linear chain of two-port switches, cascading into one another. These switch a single optical channel between $n$ ports. The total resource requirements are \mbox{$n-1$} two-port switches. The optical depth ranges from $1$ (for the first port) to \mbox{$n-1$} (for the final port).} \label{fig:linear_multiplexer} \index{Linear multiplexers \& demultiplexers}
 \end{figure}
 
 \begin{figure}[!htb]
 \includegraphics[width=0.7\columnwidth]{pyramid_multiplexer}
-\caption{Pyramid multiplexers (top) and demultiplexers (bottom) decompose the multiplexing into a binary tree-structure, shown here for the case of \mbox{$n=8$} ports. For $n$ ports, all optical paths pass through \mbox{$\mathrm{log}_2(n)$} two-port switches, of which there are \mbox{$n-1$} in total.} \label{fig:pyramid_multiplexer} \index{Pyramid multiplexer}\index	{Pyramid demultiplexer}
+\caption{Pyramid multiplexers (top) and demultiplexers (bottom) decompose the multiplexing into a binary tree-structure, shown here for the case of \mbox{$n=8$} ports. For $n$ ports, all optical paths observe an optical depth of \mbox{$\mathrm{log}_2(n)$} two-port switches, of which there are \mbox{$n-1$} in total.} \label{fig:pyramid_multiplexer} \index{Pyramid multiplexers \& demultiplexers}
 \end{figure}
 
 %
 % Single-Channel Multi-Port Switches
 %
 
-\subsection{Single-channel multi-port switches}
+\subsection{Single-channel multi-port switches} \index{Single-channel multi-port switches}
 
 The multiplexers and demultiplexers route between one port and $n$ ports. In the more general and useful case, we wish to route between $n$ inputs and $n$ outputs. If we only require one active channel at a given time, such a router may be trivially constructed from an $n$-port multiplexer connected to and $n$-port demultiplexer, as shown in Fig.~\ref{fig:single_channel_multi_port_switch}. Here the demultiplexer chooses one of the input modes to route to its single output, which then feeds into the multiplexer to fan it out to the desired output. The multiplexers/demultiplexers could be implemented using either of the aforementioned layouts, yielding a total resource count of,
 \begin{align}
-	N_s = 2n-3,
+	N_\mathrm{s} = 2n-3,
 \end{align}
 two-port switches\footnote{Note that the multiplexer and demultiplexer each require \mbox{$2(n-1)$} two-port switches, but one of the central ones adjoining the multiplexer and demultiplexer is redundant and may be eliminated, reducing the number of two-port switches to \mbox{$2n-3$}.}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.75\columnwidth]{single_channel_multi_port_switch}
-\caption{A single-channel multi-port switch may be constructed by demultiplexing the $n$ input ports to a single port, routing the desired input channel to that port, before multiplexing it back out to the desired output port. This allows an arbitrary input to be routed to an arbitrary output, but only one channel at a time. This requires \mbox{$2n-3$} two-port switches in total.} \label{fig:single_channel_multi_port_switch} \index{Single-channel multi-port switch}	
+\caption{A single-channel multi-port switch may be constructed by demultiplexing the $n$ input ports to a single port, routing the desired input channel to that port, before multiplexing it back out to the desired output port. This allows an arbitrary input to be routed to an arbitrary output, but only one channel at a time. This requires \mbox{$2n-3$} two-port switches in total.} \label{fig:single_channel_multi_port_switch} \index{Single-channel multi-port switches}	
 \end{figure}
 
 %
@@ -2898,17 +2916,17 @@ two-port switches\footnote{Note that the multiplexer and demultiplexer each requ
 
 \subsection{Multi-channel multi-port switches} \index{Multi-channel multi-port switches}
 
-The single-channel multi-port switch enables switching between an arbitrary number of input/output ports, but suffers that it can only route a single channel at a time. The most general scenario to consider is multi-channel multi-port switches, which implement an arbitrary permutation between $n$ inputs and $n$ outputs. That is, all $n$ ports may be routing active channels, enabling simultaneous routing of multiple data-flows.
+The single-channel multi-port switch enables switching between an arbitrary number of input/output ports, but suffers that it can only route a single channel at a time. The most general scenario to consider is multi-channel multi-port switching, which implements an arbitrary permutation between $n$ inputs and $n$ outputs. That is, all $n$ ports may be routing active channels, enabling simultaneous routing of multiple data-flows.
 
 Such a switch may be constructed from a staggered, rectangular lattice of two-port switches, as shown in Fig.~\ref{fig:multi_channel_multi_port_switch}. It is easy to see upon inspection that optical paths exist between every input/output pair of ports. The total resource count for this device is,
 \begin{align}
-N_s = \frac{n^2}{2}-n+1,
+N_\mathrm{s} = \left\lceil \frac{n^2}{2}\right\rceil - n + 1,
 \end{align}
 two-port switches.
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{multi_channel_multi_port_switch}
-\caption{A completely general multi-channel multi-port switch may be constructed using a staggered grid of two-port switches, shown here for \mbox{$n=6$} ports. This allows the implementation of an arbitrary permutation between input and output ports, enabling all $n$ channels to be simultaneously routed across distinct input-to-output routes. This requires \mbox{$\frac{n^2}{2}-n+1$} two-port switches in total (for even $n$).} \label{fig:multi_channel_multi_port_switch} \index{Multi-channel multi-port switch}	
+\caption{A completely general multi-channel multi-port switch may be constructed using a staggered grid of two-port switches, shown here for \mbox{$n=6$} ports. This allows the implementation of an arbitrary permutation between input and output ports, enabling all $n$ channels to be simultaneously utilised and routed across distinct input-to-output routes. This requires \mbox{$\left\lceil \frac{n^2}{2}\right\rceil - n + 1$} two-port switches in total.} \label{fig:multi_channel_multi_port_switch} \index{Multi-channel multi-port switches}	
 \end{figure}
 
 %
@@ -3003,7 +3021,7 @@ where there are $N$ sources in parallel. This relationship is shown in Fig.~\ref
 The multiplexing approach needn't be restricted to the spatial domain, but could also be equivalently implemented in the temporal domain \cite{bib:RohdeLoopMulti15, mosley, othersSeePaper}, as shown in Fig.~\ref{fig:SPDC_time_multiplexing}.
 
 \begin{figure}[!htb]
-\includegraphics[width=0.7\columnwidth]{SPDC_time_multiplexing}
+\includegraphics[width=0.75\columnwidth]{SPDC_time_multiplexing}
 \caption{Multiplexed single-photon state preparation in the temporal domain. An SPDC source operating at high repetition rate, with time-bin separation $\tau$, enters a fibre-loop with an in/out coupling switch classically controlled by the heralding outcomes. The fibre-loop acts as a quantum memory, keeping the most recent successfully heralded time-bin in memory until the procedure terminates. The output is a pulse-train where the last time-bin closely approximates a single-photon.} \label{fig:SPDC_time_multiplexing}
 \end{figure}
 
@@ -4995,7 +5013,7 @@ These observations lead us to naturally conclude that a quantum network speciali
 
 \section{Economics of the quantum internet} \index{Economics}
 
-Any form of computation comes at an economic cost, but also brings with it a payoff. Thus, a key consideration in any model for computation is the tradeoff between the two. Because the computational power of quantum computers inherently scales differently than classical computers, we expect this return on investment (ROI)\index{Return on investment (ROI)} ratio to exhibit different scaling characteristics, thereby fundamentally altering economic considerations.
+Any form of computation comes at an economic cost, but also brings with it a payoff. Thus, a key consideration in any model for computation is the tradeoff between the two. Because the computational power of quantum computers inherently scales differently than classical computers, we expect this return on investment (RoI)\index{Return on investment (RoI)} ratio to exhibit different scaling characteristics, thereby fundamentally altering economic considerations.
 
 \comment{To do!}
 
@@ -5104,7 +5122,7 @@ It follows that in the interests of economic efficiency, market forces will ensu
 \begin{itemize}
 	\item Forward contract on purchasing an existing, functional QC at some point in the future. (will require incorporating discounting the spot price by the computational payoff before maturity).
 	\item Forward contract on purchasing a new QC that doesn't exist yet. (there will be no computational dividend before maturity).
-	\item ROI of purchasing quantum hardware in the context of some growth model for the proliferation of qubits and their reduction in physical cost over time.
+	\item RoI of purchasing quantum hardware in the context of some growth model for the proliferation of qubits and their reduction in physical cost over time.
 	\item Risk/return tradeoffs.
 	\item Market capitalisation of vendors of quantum hardware. This includes both manufacturers/sellers and also licensors of hardware.
 	\item Construct business models for being a licensor of quantum computing. Company invests into quantum hardware $\to$ license out compute time on a time-share basis $\to$ reinvest profits into purchasing more hardware. What kind of growth would we expect to see in this business model?
@@ -5118,8 +5136,8 @@ It follows that in the interests of economic efficiency, market forces will ensu
 \begin{itemize}
 	\item Pricing model for forward contracts on time-shares in QC use. Use usual forward contract pricing model. But need to rethink the dividend yield functions.
 	\item Dividends are measured in units of computational power (i.e FLOPs). For a fixed-size QC in a growing network, the dividend yield (FLOPs) will be increasing exponentially over time (because of quantum leverage).
-	\item ROI of purchasing a QC of given size and contributing it to the network. Return in FLOPs is increasing exponentially over time. What about in terms of dollars?
-	\item How to convert FLOPs to dollars? Cost per FLOP will be decreasing exponentially over time since the ROI is increasing exponentially over time, as will the number of physical qubits in existence. How can we model such a relationship?
+	\item RoI of purchasing a QC of given size and contributing it to the network. Return in FLOPs is increasing exponentially over time. What about in terms of dollars?
+	\item How to convert FLOPs to dollars? Cost per FLOP will be decreasing exponentially over time since the RoI is increasing exponentially over time, as will the number of physical qubits in existence. How can we model such a relationship?
 	\item The dollar cost of manufacturing new qubits will decrease exponentially over time as engineering and technology improves. A quantum Moore's Law.
 	\item Make some assumption about growth rate of quantum internet. i.e some kind of quantum Moore's Law (e.g model as exponential function). 
 	\item Consider the fact that these models will all heavily depend on the software applications the QCs are used for, since different scaling functions yield different leverages.
@@ -5773,15 +5791,13 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \index{Switch \seeonly{Optical routers}|gobbleone}
 \index{Router \seeonly{Optical routers}|gobbleone}
 
-\index{Two-channel two-port switch @\also{Optical routers}|gobbleone}
-\index{Multiplexer @\also{Optical routers}|gobbleone}
-\index{Demultiplexer @\also{Optical routers}|gobbleone}
-\index{Linear multiplexer @\also{Multiplexer, optical routers}|gobbleone}
-\index{Linear demultiplexer @\also{Demultiplexer, optical routers}|gobbleone}
-\index{Pyramid multiplexer @\also{Multiplexer, optical routers}|gobbleone}
-\index{Pyramid demultiplexer @\also{Demultiplexer, optical routers}|gobbleone}
-\index{Single-channel multi-port switch @\also{Optical routers}|gobbleone}
-\index{Multi-channel multi-port switch @\also{Optical routers}|gobbleone}
+\index{Two-channel two-port switches @\also{Optical routers}|gobbleone}
+\index{Multiplexers @\also{Optical routers}|gobbleone}
+\index{Demultiplexers @\also{Optical routers}|gobbleone}
+\index{Linear multiplexers \& demultiplexers @\also{Optical routers}|gobbleone}
+\index{Pyramid multiplexers \& demultiplexers @\also{Optical routers}|gobbleone}
+\index{Single-channel multi-port switches @\also{Optical routers}|gobbleone}
+\index{Multi-channel multi-port switches @\also{Optical routers}|gobbleone}
 \index{Quantum error correction (QEC) @\also{3-qubit code, 9-qubit code, topological codes}|gobbleone}
 \index{Homomorphic encryption @\also{Encrypted quantum computation}|gobbleone}
 \index{Blind quantum computation @\also{Encrypted quantum computation}|gobbleone}
