@@ -2967,32 +2967,52 @@ where \mbox{$\sigma\in S_m$} is an arbitrary element of the symmetric group (i.e
 
 \section{Optical stability in quantum networks} \index{Optical stability}
 
+Given that communications links in quantum networks are expected to be optical, an issue of central importance is optical stability when signals from remote sources interfere or interact with local quantum states. For example, in an entanglement swapping protocol (Sec.~\ref{sec:swapping}) forming a part of a quantum repeater network (Sec.~\ref{sec:rep_net}), if the entangling operation between the remotely prepared qubits suffers errors, so too will the prepared distributed entangled state.
+
+If we consider the simplest scenario of employing a PBS (Sec.~\ref{sec:bell_proj}) to implement the entangling operation in the polarisation degree of freedom, photon distinguishability in the form of mode-mismatch (Sec.~\ref{sec:MM_error}) will undermine quantum interference, thereby reducing the entangling power of the gate. Similar observations apply to many other protocols involving entangling measurements, or multi-photon interference more generally.
+
+In present-day laboratories, mode-mismatch and photon-distinguishability can be controlled with exceptionally high fidelity. However, in the networking context this is likely to not be so easy, since perfectly aligning states emanating over long-distance communications channels, which we do not have exquisite control over in a well-controlled laboratory setting, is going to be a somewhat unpredictable and time-varying technological challenge.
+
+Such processes are likely to arise in a multitude of ways, including, but certainly not limited to:
+\begin{itemize}
+	\item Optical fibre: slight variations in temperatures induce refractive index changes, or changes in physical dimension, resulting in temporal displacements of optical wave-packets.
+	\item Satellite: precise knowledge of the distance to a rapidly moving target, at the scale of photon wave-packets, is an extremely daunting prospect.
+	\item Free space (including via satellite): unpredictable temperature and pressure fluctuations in the atmosphere cause unpredictable variations in the speed of light.
+\end{itemize}
+
+For these inevitable reasons, it is important to understand the susceptibility of different network protocols to optical stability. 
+
+There are two dominant forms of photonic interference that must be considered, each with quite distinct behaviours under the influence of optical instability. These are:
+\begin{itemize}	
+	\item Hong-Ou-Mandel (HOM) interference (Sec.~\ref{sec:HOM_inter}):  interference between two distinct photons at a beamsplitter.
+	\item Mach-Zehnder (MZ) interference (Sec.~\ref{sec:MZ_inter}): self-interference of a single-photon traversing multiple paths in superposition within an interferometer.
+\end{itemize}
+
 %
 % Photon Wave-Packets
 %
 
 \subsection{Photon wave-packets} \index{Wave-packets}
 
-\ref{sec:spatio_temporal, sec:MM_error}
-
+Before describing optical interference in detail, we must first formalise a definition for the optical wave-packets we will be dealing with. We will assume wave-packets with Gaussian temporal envelope of width $\sigma$, frequency-shifted by some carrier frequency $\omega_0$. The temporal distribution function is then,
 \begin{align} \label{eq:wavepacket_modulated}
 \psi(t) = \sqrt[4]{\frac{2}{\sigma\pi}}e^{-\frac{t^2}{\sigma}-i\omega_0t},
 \end{align}
+
+Of course the temporal envelope needn't be Gaussian in general, and could take any other form, subject to normalisation. In Fig.~\ref{fig:HOM_vs_MZ} we illustrate the two main features of this representation: the temporal envelope, and the underlying carrier frequency that it modulates.
+
+In real-world scenarios we are likely to encounter carrier frequencies sufficiently large that oscillations at the carrier frequency level are far more rapid than that of the temporal envelope. For this simple reason, it is to be expected that interference dependent only on $\sigma$ will be far more robust against temporal instability than interference dependent on $\omega_0$.
 
 \begin{figure}[!htb]
 	\includegraphics[width=\columnwidth]{wavepacket} \\
 	\caption{(top) A photonic wave-packet of the form of Eq.~\ref{eq:wavepacket_modulated}, with Gaussian temporal envelope of width $\sigma$ (orange), shifted by a carrier frequency $\omega_0$ (blue).} \label{fig:HOM_vs_MZ}
 \end{figure}
 
-\ref{sec:MM_error}
-
-\comment{MZ vs HOM}
-
 %
 % Mach-Zehnder Interference
 %
 
-\subsection{Mach-Zehnder interference} \index{Mach-Zehnder (MZ) interference}
+\subsection{Mach-Zehnder interference} \index{Mach-Zehnder (MZ) interference} \label{sec:MZ_inter}
 
 Fig.~\ref{fig:MZ_inter}
 
@@ -3023,7 +3043,7 @@ P_\text{MZ}(\tau) &= \frac{1}{4} \int_{-\infty}^\infty |\psi(t) + \psi(t-\tau)|^
 % Hong-Ou-Mandel Interference
 %
 
-\subsection{Hong-Ou-Mandel interference} \index{Hong-Ou-Mandel (HOM) interference}
+\subsection{Hong-Ou-Mandel interference} \index{Hong-Ou-Mandel (HOM) interference} \label{sec:HOM_inter}
 
 Fig.~\ref{fig:HOM_inter}
 
@@ -3058,6 +3078,13 @@ Fig.~\ref{fig:HOM_inter}
 
 \comment{Fusions require HOM, KLM requires MZ -> cluster states are more favourable}
 
+%
+% Optical Stabilisation
+%
+
+\subsection{Optical stabilisation}
+
+\comment{To do!}
 
 %
 % Protocols for the Quantum Internet
