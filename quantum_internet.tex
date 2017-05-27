@@ -2220,9 +2220,9 @@ Next the cost metrics are updated by the strategy $\mathcal{S}$ following each c
 \mathcal{S} : a_1 \to a_1-1.
 \end{align}
 
-Suppose the strategy optimises the \mbox{$A_1\to B_1$} route first, yielding $R_3$, before moving onto the \mbox{$A_2\to D_2$} route. In this case, the reduction of the bandwidth attribute signals that the cheapest route $R_2$ is no longer available to be utilised simultaneously to $R_3$, and must therefore wait its turn on the following clock cycle. Alternately, the strategy could employ $R_1$ for \mbox{$A_2\to B_2$}, in which case their common link with capacity for two states would eliminate the competition between the two communications, allowing both to take place simultaneously. Thus, there is a tradeoff: for \mbox{$A_2\to B_2$}, we could achieve a net cost of \mbox{$c(A_2\to B_2)=5$}, requiring 2 clock cycles; or we could achieve simultaneous communication at the expense of increasing cost to \mbox{$c(A_2\to B_2)=6$}. This indicates that when choosing strategies, we must carefully define its goals.
+Suppose the strategy optimises the \mbox{$A_1\to B_1$} route first, yielding $R_3$, before moving onto the \mbox{$A_2\to D_2$} route. In this case, the reduction of the bandwidth attribute signals that the cheapest route $R_2$ is no longer available to be utilised simultaneously to $R_3$, and must therefore wait its turn on the following clock-cycle. Alternately, the strategy could employ $R_1$ for \mbox{$A_2\to B_2$}, in which case their common link with capacity for two states would eliminate the competition between the two communications, allowing both to take place simultaneously. Thus, there is a tradeoff: for \mbox{$A_2\to B_2$}, we could achieve a net cost of \mbox{$c(A_2\to B_2)=5$}, requiring 2 clock-cycles; or we could achieve simultaneous communication at the expense of increasing cost to \mbox{$c(A_2\to B_2)=6$}. This indicates that when choosing strategies, we must carefully define its goals.
 
-Suppose net cost, rather than clock cycles, was the key measure of interest. Then choosing the routes $R_1$ and $R_3$ would be the optimal choice. An optimal \textsc{Global} optimisation would recognise this. However, a \textsc{Local} optimisation, based on choosing shortest-paths one-by-by for each sender/receiver pair, may or may not choose the optimal routes, depending on the order in which the decisions were made.
+Suppose net cost, rather than clock-cycles, was the key measure of interest. Then choosing the routes $R_1$ and $R_3$ would be the optimal choice. An optimal \textsc{Global} optimisation would recognise this. However, a \textsc{Local} optimisation, based on choosing shortest-paths one-by-by for each sender/receiver pair, may or may not choose the optimal routes, depending on the order in which the decisions were made.
 
 Suppose the \mbox{$A_2\to B_2$} route were optimised first. We would choose $R_2$. Then there would be a traffic jam on the \mbox{$A_1\to B_1$} route, and it would necessarily have to wait its turn. In a time-critical application, where waiting is intolerable, this effectively renders the network useless to the first sender/receiver pair.
 
@@ -2455,7 +2455,7 @@ Such interconnects will typically comprise a combination of:
 \begin{itemize}
 \item Packet switching\index{Packet switching}: such that packets can be arbitrarily switched between the different levels of the network hierarchy.
 \item Physical interface: interconnect may be switching between different media. Such physical interfaces have costs associated with them. For example, coupling between free-space and fibre is typically very lossy. Sec.~\ref{sec:opt_inter} discusses optical interfacing with matter qubits, and Sec.~\ref{sec:hybrid} discusses hybrid architectures, where optics mediates entanglement generation between matter qubits.
-\item Quantum memory\index{Quantum memory}: such that data can be buffered while it awaits its turn at being switched between networks, as different networks may have different loads and operate at different clock rates. This is discussed in Sec.~\ref{sec:memory}.
+\item Quantum memory\index{Quantum memory}: such that data can be buffered while it awaits its turn at being switched between networks, as different networks may have different loads and operate at different clock-rates. This is discussed in Sec.~\ref{sec:memory}.
 \item Packet format conversion\index{Packet format conversion}: different levels of the network hierarchy may be employing entirely different cost metrics, attributes, and cost functions, requiring packet headers to be reformatted upon switching between networks.
 \end{itemize}
 
@@ -2829,6 +2829,13 @@ Perhaps the most fundamental building block in any network is routers, devices w
 
 We now discuss the implementation of optical routers, beginning with the simplest two-port switch, upon which we build to construct more general and powerful routers.
 
+We will use the terminology that:
+\begin{itemize}
+	\item \textit{Ports}\index{Ports}: refers to the number of input and output optical modes in a device.
+	\item \textit{Channels}\index{Channels}: refers to the number of simultaneous communications streams running in parallel through the device.
+	\item \textit{Optical depth}\index{Optical depth}: is the number of optical elements a light path traverses through the course of its trajectory.
+\end{itemize}
+
 A summary of the routing devices we consider, and their associated resource requirements, is provided in Table.~\ref{tab:router_summary}.
 
 \renewcommand{\tablename}{TABLE}
@@ -2847,7 +2854,7 @@ A summary of the routing devices we consider, and their associated resource requ
   		Multi-channel multi-port switch & \mbox{$N_\mathrm{s} = \left\lceil \frac{n^2}{2}\right\rceil - n + 1$} & \mbox{$\left\lceil \frac{n}{2} \right\rceil \leq d\leq n-1$} \\
     	\hline
 	\end{tabular}
-	\caption{Summary of different primitives for constructing optical routers. $n$, $N_\mathrm{bs}$, $N_\mathrm{ps}$ and $N_\mathrm{s}$ are the number of input/output ports, beamsplitters, phase-shifters, and two-port switches respectively. $d$ is the optical depth (number of two-port switches an optical path must traverse). Since all of the multi-port devices are constructed from two-port switches, in all cases \mbox{$N_\mathrm{bs} = 2 N_\mathrm{s}$} and \mbox{$N_\mathrm{ps} = N_\mathrm{s}$}.} \label{tab:router_summary} \index{Optical routers}\index{Optical depth}\index{Router resource requirements}
+	\caption{Summary of different primitives for constructing optical routers. $n$, $N_\mathrm{bs}$, $N_\mathrm{ps}$ and $N_\mathrm{s}$ are the number of input/output ports, beamsplitters, phase-shifters, and two-port switches respectively. $d$ is the optical depth (in units of number of two-port switches). Since all of the multi-port devices are constructed from two-port switches, in all cases \mbox{$N_\mathrm{bs} = 2 N_\mathrm{s}$} and \mbox{$N_\mathrm{ps} = N_\mathrm{s}$}.} \label{tab:router_summary} \index{Optical routers}\index{Optical depth}\index{Router resource requirements}
 \end{table*}
 
 \renewcommand{\tablename}{ALG.}
@@ -2858,15 +2865,13 @@ A summary of the routing devices we consider, and their associated resource requ
 
 \subsection{Two-channel two-port switches} \index{Two-channel two-port switches}
 
-The elementary primitive from which more complicated routers may be constructed is the two-channel two-port switch. We will use the terminology that `ports' refers to the number of input and output optical modes in a device, and `channels' are the number of simultaneous communications streams running in parallel over the device.
-
-This switch may be constructed from a Mach-Zehnder interferometer\index{Mach-Zehnder interference}, with a classically-controlled phase-shifter in one arm. By switching the phase to either \mbox{$\phi=0$} or \mbox{$\phi=\pi$}, the MZ may be tuned to implement either an identity or swap operation respectively. This is shown in Fig.~\ref{fig:two_channel_two_port_switch}.
+The elementary primitive from which more complicated routers may be constructed is the two-channel two-port switch. This switch may be constructed from a Mach-Zehnder interferometer\index{Mach-Zehnder (MZ) interference}, with a classically-controlled phase-shifter in one arm. By switching the phase to either \mbox{$\phi=0$} or \mbox{$\phi=\pi$}, the MZ may be tuned to implement either an identity or swap operation respectively. This is shown in Fig.~\ref{fig:two_channel_two_port_switch}.
 
 In the upcoming diagrams we present, arrows are used to indicate the time-ordering of the flow of data. However, it should be noted that a MZ interferometer is reversible and therefore bidirectional, and so too are all of the more complex routers based upon them.
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{two_channel_two_port_switch}
-\caption{(top) A two-channel two-port switch has two inputs and two outputs, implementing either an identity or swap operation between them. This may be constructed using a Mach-Zehnder interferometer with a variable, classically-controlled phase-shift in one of the arms, which may be implemented using an acousto-optic or electro-optic modulator (AOM or EOM). The phase-shift is allowed to be either \mbox{$\phi=0$} for an identity channel (bottom left) or \mbox{$\phi=\pi$} for a swap operation (bottom right). Because the switch is based on MZ interference, this technique only applies to optical states which undergo MZ interference. The total resource requirements are two 50:50 beamsplitters and a single phase-shifter.} \label{fig:two_channel_two_port_switch} \index{Two-channel two-port switches}\index{Mach-Zehnder interference}
+\caption{(top) A two-channel two-port switch has two inputs and two outputs, implementing either an identity or swap operation between them. This may be constructed using a Mach-Zehnder interferometer with a variable, classically-controlled phase-shift in one of the arms, which may be implemented using an acousto-optic or electro-optic modulator (AOM or EOM). The phase-shift is allowed to be either \mbox{$\phi=0$} for an identity channel (bottom left) or \mbox{$\phi=\pi$} for a swap operation (bottom right). Because the switch is based on MZ interference, this technique only applies to optical states which undergo MZ interference. The total resource requirements are two 50:50 beamsplitters and a single phase-shifter.} \label{fig:two_channel_two_port_switch} \index{Two-channel two-port switches}\index{Mach-Zehnder (MZ) interference}
 \end{figure}
 
 Because the two-port switch is based upon MZ interference, it will only function for optical states subject to such MZ interference. Thus, single-photons and coherent states are applicable, whereas thermal states, for example, are not.
@@ -2875,7 +2880,7 @@ The controllable phase-shift can be implemented in several ways:
 \begin{itemize}\index{Electro-optic modulator (EOM)}\index{Acousto-optic modulator (AOM)}\index{Pockels cell}
 \item Electro-optic modulators (EOMs): an applied electric field induces a change in refractive index in a medium, causing a phase-shift.
 \item Acousto-optic modulators (AOMs): an applied acoustic wave generated by a piezoelectric transducer induces a change in refractive index in a medium, causing a phase-shift.
-\item Pockels cells: act as voltage-controlled wave-plates, 	which take the place of phase-shifters in a polarisation-encoded version of Mach-Zehnder interference.
+\item Pockels cells: act as voltage-controlled wave-plates, 	which take the place of phase-shifters in a polarisation-encoded version of Mach-Zehnder interference. \comment{Is this right?}
 \end{itemize}
 
 %
@@ -2890,7 +2895,7 @@ There are two main architectures that may be employed for implementing such mult
 \begin{align}
 N_\mathrm{s} = n-1,
 \end{align}
-two-port switches to implement. However, they differ in one important respect. In the linear multiplexer, different routes traverse different numbers of two-port switches (the optical depth, $d$)\index{Optical depth}, ranging from \mbox{$d=1$} (for the first port) to \mbox{$d=n-1$} (for the final port). This will lead to asymmetry in accumulated errors. In the pyramid multiplexer, on the other hand, all optical paths have the same optical depth, \mbox{$d=\mathrm{log}_2(n)$}, yielding completely symmetric operation.
+two-port switches to implement. However, they differ in one important respect. In the linear multiplexer, different routes experience different optical depth\index{Optical depth}, ranging from \mbox{$d=1$} (for the first port) to \mbox{$d=n-1$} (for the final port). This will lead to asymmetry in accumulated errors. In the pyramid multiplexer, on the other hand, all optical paths have the same optical depth, \mbox{$d=\mathrm{log}_2(n)$}, yielding completely symmetric operation.
 
 Note that the logarithmic optical depth of the pyramid configuration grows less quickly than the linear average optical depth of the linear configuration. Thus, on average, optical paths pass through fewer optical elements in the pyramid configuration, reducing average accumulated error rates when using noisy optical elements. This, in conjunction with the pyramid's perfect symmetry, makes the pyramid multiplexer configuration generally most favourable.
 
@@ -2935,10 +2940,124 @@ N_\mathrm{s} = \left\lceil \frac{n^2}{2}\right\rceil - n + 1,
 \end{align}
 two-port switches.
 
+The operation implemented by this device can therefore be expressed as,
+\begin{align}
+	\left(\begin{matrix}{}
+  		\hat{b}^\dag_1 \\
+  		\hat{b}^\dag_2 \\
+  		\vdots \\
+  		\hat{b}^\dag_m
+\end{matrix}\right)=\sigma\cdot\left(\begin{matrix}{}
+  		\hat{a}^\dag_1 \\
+  		\hat{a}^\dag_2 \\
+  		\vdots \\
+  		\hat{a}^\dag_m
+\end{matrix}\right),
+\end{align}
+where \mbox{$\sigma\in S_m$} is an arbitrary element of the symmetric group (i.e a permutation matrix), and $\hat{a}_i^\dag$ ($\hat{b}_i^\dag$) are the input (output) photonic creation operators.
+
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{multi_channel_multi_port_switch}
 \caption{A completely general multi-channel multi-port switch may be constructed using a staggered grid of two-port switches, shown here for \mbox{$n=6$} ports. This allows the implementation of an arbitrary permutation between input and output ports, enabling all $n$ channels to be simultaneously utilised and routed across distinct input-to-output routes. This requires \mbox{$\left\lceil \frac{n^2}{2}\right\rceil - n + 1$} two-port switches in total.} \label{fig:multi_channel_multi_port_switch} \index{Multi-channel multi-port switches}	
 \end{figure}
+
+%
+% Optical Stability In Quantum Networks
+%
+
+\section{Optical stability in quantum networks} \index{Optical stability}
+
+%
+% Photon Wave-Packets
+%
+
+\subsection{Photon wave-packets} \index{Wave-packets}
+
+\ref{sec:spatio_temporal, sec:MM_error}
+
+\begin{align} \label{eq:wavepacket_modulated}
+\psi(t) = \sqrt[4]{\frac{2}{\sigma\pi}}e^{-\frac{t^2}{\sigma}-i\omega_0t},
+\end{align}
+
+\begin{figure}[!htb]
+	\includegraphics[width=\columnwidth]{wavepacket} \\
+	\caption{(top) A photonic wave-packet of the form of Eq.~\ref{eq:wavepacket_modulated}, with Gaussian temporal envelope of width $\sigma$ (orange), shifted by a carrier frequency $\omega_0$ (blue).} \label{fig:HOM_vs_MZ}
+\end{figure}
+
+\ref{sec:MM_error}
+
+\comment{MZ vs HOM}
+
+%
+% Mach-Zehnder Interference
+%
+
+\subsection{Mach-Zehnder interference} \index{Mach-Zehnder (MZ) interference}
+
+Fig.~\ref{fig:MZ_inter}
+
+\begin{figure}[!htb]
+	\includegraphics[width=\columnwidth]{MZ_setup} \\
+	\includegraphics[width=\columnwidth]{MZ}
+	\caption{Mach-Zehnder self-interference of a single photon. (top) Layout of the interferometer. The photon is subject to a time-delay $\tau$ within only the upper arm of a balanced interferometer, comprising two 50:50 beamsplitters. (bottom) Interference fringe $P_\text{MZ}(\tau)$ as a function of the time-delay. The interference is sensitive at the scale of the photon wavelength, (blue) in Fig.~\ref{fig:HOM_vs_MZ}.} \label{fig:MZ_inter}
+\end{figure}
+
+\begin{align}
+	\ket\psi_\text{in} &= \hat{A}^\dag_\psi \ket{0,0} \nonumber \\
+	&\underset{BS}{\to} \frac{1}{\sqrt{2}} [\hat{A}^\dag_\psi + \hat{B}^\dag_\psi] \ket{0,0} \nonumber \\
+	&\underset{\tau}{\to} \frac{1}{\sqrt{2}} [\hat{A}^\dag_{\psi-\tau} + \hat{B}^\dag_\psi] \ket{0,0} \nonumber \\
+	&\underset{BS}{\to} \frac{1}{2} [\hat{A}^\dag_{\psi-\tau} + \hat{B}^\dag_{\psi-\tau} + \hat{A}^\dag_\psi - \hat{B}^\dag_\psi] \ket{0,0} \nonumber \\
+	&\underset{PS}{\to} \frac{1}{2} [\hat{A}^\dag_{\psi-\tau} + \hat{A}^\dag_\psi] \ket{0,0} \nonumber \\
+	&= \frac{1}{2} \int_{-\infty}^\infty [\psi(t) + \psi(t-\tau)] \hat{a}^\dag(t)\,dt.
+\end{align}
+
+\begin{align}
+P_\text{MZ}(\tau) &= \frac{1}{4} \int_{-\infty}^\infty |\psi(t) + \psi(t-\tau)|^2 \,dt \nonumber \\
+&= \frac{1}{2} \left[ 1 + e^{-\frac{\tau^2}{2\sigma}}\text{cos}(\omega_0\tau) \right].
+\end{align}
+
+
+\comment{To do!}
+
+%
+% Hong-Ou-Mandel Interference
+%
+
+\subsection{Hong-Ou-Mandel interference} \index{Hong-Ou-Mandel (HOM) interference}
+
+Fig.~\ref{fig:HOM_inter}
+
+\begin{figure}[!htb]
+	\includegraphics[width=0.65\columnwidth]{HOM_setup} \\
+	\includegraphics[width=\columnwidth]{HOM}
+	\caption{Hong-Ou-Mandel interference between two independent photons, $A$ and $B$. (top) Layout of the interferometer. Two photons given by mode operators $\hat{A}^\dag$ and $\hat{B}^\dag$, both with temporal distribution function $\psi(t)$, interfere at a 50:50 beamsplitter, where mode $A$ is first subject to a time-delay $\tau$. (bottom) Interference fringe $P_\text{HOM}(\tau)$ as a function of the time-delay. The fringe is only sensitive at the scale of the wave-packet envelope, (orange) in Fig.~\ref{fig:HOM_vs_MZ}.} \label{fig:HOM_inter}
+\end{figure}
+
+\begin{align}
+	\ket\psi_\text{in} &= \hat{A}^\dag_\psi \hat{B}^\dag_\psi \ket{0,0} \nonumber \\
+	&\underset{\tau}{\to} \hat{A}^\dag_{\psi-\tau} \hat{B}^\dag_\psi \ket{0,0} \nonumber \\
+	&\underset{BS}{\to} \frac{1}{2} [\hat{A}^\dag_{\psi-\tau} + \hat{B}^\dag_{\psi-\tau}] [\hat{A}^\dag_\psi - \hat{B}^\dag_\psi] \ket{0,0} \nonumber \\
+	&\underset{PS}{\to} \frac{1}{2} \hat{A}^\dag_\psi \hat{A}^\dag_{\psi-\tau} \ket{0,0} \nonumber \\
+	&= \frac{1}{2} \int_{-\infty}^\infty \int_{-\infty}^\infty \psi(t)\psi(t'-\tau)\hat{a}^\dag(t)\hat{a}^\dag(t')\,dt\,dt'.
+\end{align}
+
+\begin{align}
+	P_\text{HOM}(\tau) &= \frac{1}{4} \left[1 + \left|\int_{-\infty}^\infty \psi(t)\psi(t-\tau)^*\,dt\right|^2 \right] \nonumber \\
+	&= \frac{1}{4}\left[ 1 + e^{-\frac{\tau^2}{\sigma}} \right].
+\end{align}
+
+\comment{To do!}
+
+%
+% HOM vs MZ Inteference
+%
+
+\subsection{HOM vs MZ interference} \index{Mach-Zehnder (MZ) interference}\index{Hong-Ou-Mandel (HOM) interference}\index{Hong-Ou-Mandel vs Mach-Zehnder interference}
+
+\comment{Why do we want HOM?}
+
+\comment{Fusions require HOM, KLM requires MZ -> cluster states are more favourable}
+
 
 %
 % Protocols for the Quantum Internet
@@ -2954,7 +3073,7 @@ We keep in mind that although throughout this presentation we have been very qua
 
 At the lowest physical level, quantum protocols have in common that they involve state preparation, evolution, and measurement as the fundamental primitives upon which more complex protocols are constructed. We consider these primitive resources in detail, before building upon them to consider some of the major elementary quantum protocols that implement tasks of practical interest. All of those discussed here have been subject to extensive experimental investigation and demonstration, which will be summarised in Sec.~\ref{sec:state_of_the_art}. We treat full quantum computation separately in Secs.~\ref{sec:models_QC} \& \ref{sec:archs_QC}, as this is such an involved topic in its own right.
 
-We will employ circuit model diagrams when describing some protocols. The unfamiliar reader may refer forwards to Sec.~\ref{sec:circuit_model} for a very brief introduction to quantum circuits.
+We will employ circuit model diagrams when describing some protocols. The unfamiliar reader may refer to Sec.~\ref{sec:circuit_model} for a very brief introduction to quantum circuits.
 
 %
 % State Preparation
@@ -3234,10 +3353,10 @@ A homodyne detector interferes a state with a coherent state on a beamsplitter, 
 
 
 %
-% Bell state projection
+% Bell State & Parity Measurements
 %
 
-\subsubsection{Bell state projection} \label{sec:bell_proj} \index{Bell measurements}
+\subsubsection{Bell state \& parity measurements} \label{sec:bell_proj} \index{Bell measurements}\index{Parity measurements}
 
 For the purposes of which-path erasure, essential for optical cluster state (Sec.~\ref{sec:CSQC}) preparation and quantum teleportation (Sec.~\ref{sec:teleport}), Bell state measurements [i.e projections onto the Bell basis given in Eq.~(\ref{eq:bell_basis})] are important.
 
@@ -3260,6 +3379,8 @@ where $\hat{h}_i^\dag$ ($\hat{v}_i^\dag$) are the horizontal (vertical) creation
 	\text{VH} &= \ket{V,H}\bra{V,H},
 \end{align}
 where the former two represent successful projection onto the Bell basis, and the latter two represent failures, effectively measuring both modes in the $H/V$ basis. This approach is described in Fig.~\ref{fig:partial_bell}.
+
+Technically, $\hat\Pi^\pm_\text{Bell}$ are not Bell measurements, but rather projections onto the even parity subspace. A true Bell projection would implement $\ket{\Phi^\pm}\bra{\Phi^\pm}$. However, in an optical context the two terms are often used interchangeably, since they exhibit effectively the same behaviour, given that the detection process is destructive.
 
 Bell projections using CNOT gates can be implemented with arbitrarily high success probability in principle. However, in most scenarios of interest (such as cluster state preparation and entanglement purification) Bell projection using a PBS succeeds with probability of $1/2$, since a PBS is only able to uniquely distinguish two of the four Bell states. To its advantage, such `partial' Bell measurements only require high HOM visibility, avoiding the need for the interferometric stability inherent internally within LOQC CNOT gates.
 
@@ -3864,6 +3985,14 @@ In Sec.~\ref{sec:QPT} we introduced QST and QPT, as procedures by which to exper
 Consider the case where a node joins an existing ad hoc network. Before thinking about routing its packets through the network, it must understand the network's relevant cost metrics. Suppose that metric is one that is calculated directly from a channel's process matrix. Then, to characterise the channels in the network connecting the node to its new nearest neighbours, it could apply distributed QPT, whereby the new node is responsible for preparing the complete basis of input states required for QPT, which are transmitted to the chosen neighbour across the respective channel, after which the recipient performs all the necessary measurements in the required bases. Purely classical communication is obviously required to communicate measurement settings and outcomes.
 
 In this simple example scenario it is immediately clear that QPT of new links in a network is perfectly suited to distributed implementation. In fact, having a node attempt to characterise a channel from start to finish could be entirely unrealistic if the channel ran over long distances -- the owner of the node would never be able to reach the other end of the channel in time for the photons' arrival! This necessitates a cooperative protocol.
+
+%
+% Quantum Clock Synchronisation
+%
+
+\subsubsection{Quantum clock synchronisation} \index{Quantum clock synchronisation}
+
+\comment{To do!}
 
 %
 % Optical Interfacing
@@ -4595,7 +4724,7 @@ Let \mbox{$k=\{k_1,\dots,k_m\}$} be a partition of the key $k$ into sub-keys $\{
 \end{align}
 For the protocol to hide information, the plaintext basis states must not be invariant under the encoding operations,
 \begin{align}
-\left[\bigotimes_{i=1}^m\hat{E}_i(k_i)\right]\ket\psi_\mathrm{plaintext} \neq \ket\psi_\mathrm{plaintext}.
+\left[\bigotimes_{i=1}^m\hat{E}_i(k_i)\right]\ket\psi_\text{plaintext} \neq \ket\psi_\mathrm{plaintext}.
 \end{align}
 The state observed by Bob is the mixture of Alice's plaintext over the complete set of encoding operations, implementing a quantum process $\mathcal{E}$, with Kraus operators $\hat{E}(k)$,
 \begin{align} \label{eq:mix_over_enc_ops}
@@ -5145,6 +5274,7 @@ It follows that in the interests of economic efficiency, market forces will ensu
 \comment{Summary of things to think about and some suggested assumptions:}
 
 \begin{itemize}
+	\item Time-chunks as tradable commodity.
 	\item Pricing model for forward contracts on time-shares in QC use. Use usual forward contract pricing model. But need to rethink the dividend yield functions.
 	\item Dividends are measured in units of computational power (i.e FLOPs). For a fixed-size QC in a growing network, the dividend yield (FLOPs) will be increasing exponentially over time (because of quantum leverage).
 	\item RoI of purchasing a QC of given size and contributing it to the network. Return in FLOPs is increasing exponentially over time. What about in terms of dollars?
@@ -5801,6 +5931,7 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \index{Dijkstra's algorithm \seeonly{Shortest-path algorithm}|gobbleone}
 \index{Switches \seeonly{Optical routers}|gobbleone}
 \index{Routers \seeonly{Optical routers}|gobbleone}
+\index{Photon wave-packets \seeonly{Wave-packets}|gobbleone}
 
 \index{Two-channel two-port switches @\also{Optical routers}|gobbleone}
 \index{Multiplexers @\also{Optical routers}|gobbleone}
