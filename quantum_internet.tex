@@ -3014,7 +3014,9 @@ In real-world scenarios we are likely to encounter carrier frequencies sufficien
 
 \subsection{Mach-Zehnder interference} \index{Mach-Zehnder (MZ) interference} \label{sec:MZ_inter}
 
-Fig.~\ref{fig:MZ_inter}
+Mach-Zehnder (MZ) interference is the interference of a photon or coherent state with itself in a two-mode interferometer constructed from two 50:50 beamsplitters in series, as shown in Fig.~\ref{fig:MZ_inter}(top). This is MZ interference in its simplest form, which can of course be generalised to more complex networks involving self-interference across multiple optical paths.
+
+Within the interferometer is a time-delay, $\tau$, which acts as a temporal mismatch between the two optical paths. 
 
 \begin{figure}[!htb]
 	\includegraphics[width=\columnwidth]{MZ_setup} \\
@@ -3022,22 +3024,23 @@ Fig.~\ref{fig:MZ_inter}
 	\caption{Mach-Zehnder self-interference of a single photon. (top) Layout of the interferometer. The photon is subject to a time-delay $\tau$ within only the upper arm of a balanced interferometer, comprising two 50:50 beamsplitters. (bottom) Interference fringe $P_\text{MZ}(\tau)$ as a function of the time-delay. The interference is sensitive at the scale of the photon wavelength, (blue) in Fig.~\ref{fig:HOM_vs_MZ}.} \label{fig:MZ_inter}
 \end{figure}
 
+Let us calculate explicitly the evolution of a single-photon through this device, beginning with a photon described by $\hat{A}^\dag_\psi$, with the temporal distribution function from Eq.~\ref{eq:wavepacket_modulated}. We have,
 \begin{align}
 	\ket\psi_\text{in} &= \hat{A}^\dag_\psi \ket{0,0} \nonumber \\
-	&\underset{BS}{\to} \frac{1}{\sqrt{2}} [\hat{A}^\dag_\psi + \hat{B}^\dag_\psi] \ket{0,0} \nonumber \\
+	&\underset{\text{BS}}{\to} \frac{1}{\sqrt{2}} [\hat{A}^\dag_\psi + \hat{B}^\dag_\psi] \ket{0,0} \nonumber \\
 	&\underset{\tau}{\to} \frac{1}{\sqrt{2}} [\hat{A}^\dag_{\psi-\tau} + \hat{B}^\dag_\psi] \ket{0,0} \nonumber \\
-	&\underset{BS}{\to} \frac{1}{2} [\hat{A}^\dag_{\psi-\tau} + \hat{B}^\dag_{\psi-\tau} + \hat{A}^\dag_\psi - \hat{B}^\dag_\psi] \ket{0,0} \nonumber \\
-	&\underset{PS}{\to} \frac{1}{2} [\hat{A}^\dag_{\psi-\tau} + \hat{A}^\dag_\psi] \ket{0,0} \nonumber \\
-	&= \frac{1}{2} \int_{-\infty}^\infty [\psi(t) + \psi(t-\tau)] \hat{a}^\dag(t)\,dt.
+	&\underset{\text{BS}}{\to} \frac{1}{2} [\hat{A}^\dag_{\psi-\tau} + \hat{B}^\dag_{\psi-\tau} + \hat{A}^\dag_\psi - \hat{B}^\dag_\psi] \ket{0,0} \nonumber \\
+	&\underset{\text{PS}}{\to} \frac{1}{2} [\hat{A}^\dag_{\psi-\tau} + \hat{A}^\dag_\psi] \ket{0,0} \nonumber \\
+	&= \frac{1}{2} \int_{-\infty}^\infty [\psi(t) + \psi(t-\tau)] \hat{a}^\dag(t)\,dt,
 \end{align}
+where BS denotes the evolution implemented by a 50:50 beamsplitter, and PS denotes post-selecting upon detecting a single-photon in the first output mode.
 
+We now characterise the operation of the device in terms of the probability of detecting the photon in the first output mode,
 \begin{align}
 P_\text{MZ}(\tau) &= \frac{1}{4} \int_{-\infty}^\infty |\psi(t) + \psi(t-\tau)|^2 \,dt \nonumber \\
 &= \frac{1}{2} \left[ 1 + e^{-\frac{\tau^2}{2\sigma}}\text{cos}(\omega_0\tau) \right].
 \end{align}
-
-
-\comment{To do!}
+These dynamics are shown in Fig.~\ref{fig:MZ_inter}(bottom). There are two key features in the behaviour of $P_\text{MZ}(\tau)$. First, there is a slowly varying Gaussian term. Second, the Gaussian term modulates a rapidly oscillating sinusoidial term associated with the carrier frequency. This implies that $\tau$ on the order of the photon's wavelength dominates the measurement dynamics, making it extremely sensitive to temporal instability.
 
 %
 % Hong-Ou-Mandel Interference
@@ -3045,7 +3048,7 @@ P_\text{MZ}(\tau) &= \frac{1}{4} \int_{-\infty}^\infty |\psi(t) + \psi(t-\tau)|^
 
 \subsection{Hong-Ou-Mandel interference} \index{Hong-Ou-Mandel (HOM) interference} \label{sec:HOM_inter}
 
-Fig.~\ref{fig:HOM_inter}
+In Hong-Ou-Mandel (HOM) interference, there is no self-interference as per MZ, but rather interference between two independent but indistinguishable photons. The interference takes place at a single 50:50 beamsplitter, with a temporal delay in one input mode modelling temporal instability. The model is shown in Fig.~\ref{fig:HOM_inter}(top).
 
 \begin{figure}[!htb]
 	\includegraphics[width=0.63\columnwidth]{HOM_setup} \\
@@ -3053,6 +3056,7 @@ Fig.~\ref{fig:HOM_inter}
 	\caption{Hong-Ou-Mandel interference between two independent photons, $A$ and $B$. (top) Layout of the interferometer. Two photons given by mode operators $\hat{A}^\dag$ and $\hat{B}^\dag$, both with temporal distribution function $\psi(t)$, interfere at a 50:50 beamsplitter, where mode $A$ is first subject to a time-delay $\tau$. (bottom) Interference fringe $P_\text{HOM}(\tau)$ as a function of the time-delay. The fringe is only sensitive at the scale of the wave-packet envelope, (orange) in Fig.~\ref{fig:HOM_vs_MZ}.} \label{fig:HOM_inter}
 \end{figure}
 
+Performing the same evaluation of the evolution of the system as before, we obtain,
 \begin{align}
 	\ket\psi_\text{in} &= \hat{A}^\dag_\psi \hat{B}^\dag_\psi \ket{0,0} \nonumber \\
 	&\underset{\tau}{\to} \hat{A}^\dag_{\psi-\tau} \hat{B}^\dag_\psi \ket{0,0} \nonumber \\
@@ -3061,22 +3065,69 @@ Fig.~\ref{fig:HOM_inter}
 	&= \frac{1}{2} \int_{-\infty}^\infty \int_{-\infty}^\infty \psi(t)\psi(t'-\tau)\hat{a}^\dag(t)\hat{a}^\dag(t')\,dt\,dt'.
 \end{align}
 
+We then characterise the operation of the device in terms of the probability of detecting both photons in the first output mode (photon bunching),
 \begin{align}
 	P_\text{HOM}(\tau) &= \frac{1}{4} \left[1 + \left|\int_{-\infty}^\infty \psi(t)\psi(t-\tau)^*\,dt\right|^2 \right] \nonumber \\
 	&= \frac{1}{4}\left[ 1 + e^{-\frac{\tau^2}{\sigma}} \right].
 \end{align}
+These dynamics are shown in Fig.~\ref{fig:HOM_inter}(bottom). Now, unlike MZ interference, we observe no dependence on the carrier frequency and its associated rapidly oscillating terms. Rather, operation depends only on the temporal envelop, which exists over a far larger time-scale.
 
-\comment{To do!}
+Importantly, unlike MZ interference, HOM interference is not applicable to coherent states, which do not entangle or enter into superposition at beamsplitters. The photon bunching effect is unique to single-photons.
 
 %
-% HOM vs MZ Inteference
+% HOM vs MZ Interference
 %
 
 \subsection{HOM vs MZ interference} \index{Mach-Zehnder (MZ) interference}\index{Hong-Ou-Mandel (HOM) interference}\index{Hong-Ou-Mandel vs Mach-Zehnder interference}
 
-\comment{Why do we want HOM?}
+Let us now examine the implications of these different types of interference. To summarise our observations thus far, we have,
+\begin{itemize}
+	\item Temporal wave-packet: frequency-shifted Gaussian.\\
+	\begin{align}
+		\psi(t) = \sqrt[4]{\frac{2}{\sigma\pi}}e^{-\frac{t^2}{\sigma}-i\omega_0t}.
+	\end{align}
+	\item Mach-Zehnder interference: Single-photon self-interference. \\
+	\begin{align}
+	P_\text{MZ}(\tau) = \frac{1}{2} \left[ 1 + e^{-\frac{\tau^2}{2\sigma}}\text{cos}(\omega_0\tau) \right].
+	\end{align}
+	\item Hong-Ou-Mandel interference: Two-photon interference.\\
+	\begin{align}
+		P_\text{HOM}(\tau) = \frac{1}{4}\left[ 1 + e^{-\frac{\tau^2}{\sigma}} \right].
+	\end{align}
+\end{itemize}
 
-\comment{Fusions require HOM, KLM requires MZ -> cluster states are more favourable}
+The key observation was that MZ is far more sensitive to temporal mismatch than HOM, the former at the scale of the photons' wavelength, the latter at the scale of their temporal envelope, which is far larger.
+
+This leads to the immediate conclusion that network protocols relying on HOM interference will be far more robust against temporal instability than those relying on MZ interference. Realistically, it is to be expected that the latter might be impossibly challenging, as wavelength-scale stabilisation over long distances seem implausible.
+
+In Table.~\ref{table:summary_inter} now summarise the network protocols discussed in Sec.~\ref{sec:protocols_quant_int} in terms of the types of interference they rely upon. This creates a picture of which are more realistic from a near-term engineering perspective.
+
+\begin{table}[!htb]
+	\begin{tabular}{|c|c|}
+		\hline
+  		Protocol & Interference type \\
+  		\hline
+  		\hline
+  		QKD & None \\
+  		Quantum state \& process tomography & None \\
+  		\hline
+  		Partial Bell state measurements & HOM \\
+  		Matter qubit entangling operations & HOM \\
+  		Entanglement purification & HOM \\
+  		Quantum state teleportation & HOM \\
+  		Quantum gate teleportation & HOM \\
+  		Entanglement swapping & HOM \\
+  		Cluster states (fusion gates) & HOM \\
+  		\hline
+  		General linear optics networks & MZ \\
+  		KLM universal LOQC & MZ \\
+  		{\sc BosonSampling} & MZ \\
+  		Quantum walks & MZ \\
+  		Quantum metrology & MZ \\
+    	\hline
+	\end{tabular}
+	\caption{Summary of major quantum network protocols and their required type of interference.}\index{???}\label{table:summary_inter}
+\end{table}
 
 %
 % Optical Stabilisation
@@ -4221,16 +4272,29 @@ which puts us into the anti-bunched (i.e binary photon-number) regime with high 
 
 The amplitudes $\gamma_{S,T}$ are given by,\index{Boson-sampling configuration amplitudes}
 \begin{align}
-\gamma_{S,T} = \frac{\text{Per}(U_{S,T})}{\sqrt{S_1!\dots S_m! T_1!\dots T_m!}},
+	\gamma_{S,T} = \frac{\text{Per}(U_{S,T})}{\sqrt{S_1!\dots S_m! T_1!\dots T_m!}},
 \end{align}
-where $\text{Per}(\cdot)$ denotes the matrix permanent, and $U_{S,T}$ is a sub-matrix of $U$, obtained by taking $S_i$ copies of the $i$th row, and $T_j$ copies of the $j$th column of the linear optics unitary matrix $U$. The probability of measuring a given configuration is obviously \mbox{$P_{S,T} = |\gamma_{S,T}|^2$}. The unitary is chosen randomly from the Haar-measure\footnote{The Haar-measure generalises the notion of a uniform distribution to higher-dimensional topologies than the real numbers, in this instance to the $\text{SU}(n)$ group.}.
+and the associated configuration probabilities by\index{Boson-sampling configuration probabilities},
+\begin{align}
+	P_{S,T} &= |\gamma_{S,T}|^2 \nonumber \\
+	&= \frac{|\text{Per}(U_{S,T})|^2}{S_1!\dots S_m! T_1!\dots T_m!}
+\end{align}
+where $\text{Per}(\cdot)$ denotes the matrix permanent, and $U_{S,T}$ is a sub-matrix of $U$ -- the transfer matrix associated with the particular sample configuration -- obtained by taking $S_i$ copies of the $i$th row, and $T_j$ copies of the $j$th column of the linear optics unitary matrix $U$. The unitary is chosen randomly from the Haar-measure\footnote{The Haar-measure generalises the notion of a uniform distribution to higher-dimensional topologies than the real numbers, in this instance to the $\text{SU}(n)$ group.}.
 
-The full model is shown in Fig.~\ref{fig:bs_model}.
+The computational problem is simply to sample this probability distribution $P_{S,T}$, which the linear optics network can implement efficiently, but it is believed a classical computer cannot. The full model is shown in Fig.~\ref{fig:bs_model}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.7\columnwidth]{bs_model}
 \caption{The \textsc{BosonSampling} model for non-universal linear optics quantum computing. $S$ (output) and $T$ (input) are represented in the photon-number basis. After application of the Haar-random linear optics unitary to the input multi-mode Fock state, the output superposition is sampled with coincidence photo-detection.} \label{fig:bs_model}
 \end{figure}
+
+The size of a boson-sampler required to exhibit post-classicality is under active debate. But some estimates suggest that as many as 50 photons in 2,500 modes might be a rough guide for such a threshold. Needless to say, this is already an extremely challenging technological goal, suggesting that although the {\sc BosonSampling} problem is far simpler than universal LOQC, it is far from simple.
+
+For comparison, the equivalent classical protocol using distinguishable photons that evolve independently through the network would be described by,
+\begin{align}
+	P_{S,T} = \frac{\text{Per}(|U_{S,T}|^2)}{S_1!\dots S_m! T_1!\dots T_m!},
+\end{align}
+which yields a classically efficient sampling problem. Thus, for boson-sampling the permanents are of complex-valued matrices, whereas for the equivalent classical problem the permanents are of positive real-values matrices.
 
 Very importantly, note that {\sc BosonSampling} does \textit{not} let us efficiently \textit{calculate} matrix permanents. Rather, it samples across a distribution of an exponential number of permanents. This is because, for an exponentially large sample space, with only a polynomial number of measurement trials, we are unlikely to gain more than binary accuracy about individual amplitudes, which is insufficient for determining any particular permanent. It appears that God knows how to efficiently solve matrix permanents, but conspires against us such that we remain ignorant of them. --- \textit{Deus magnus est.}
 
