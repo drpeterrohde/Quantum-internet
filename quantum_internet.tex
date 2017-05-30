@@ -1160,12 +1160,19 @@ Given that quantum communication links will typically be optical, the dominant e
 
 When implementing protocols employing post-selection upon detecting all photons, the protocol will be non-deterministic, where loss dictates the protocol's success probability. Specifically, with $n$ photons, each with efficiency $\eta$, the net post-selection success probability of the entire device is $\eta^n$. This implies an exponential number of trials, \mbox{$(1/\eta)^n$}, is required in post-selected protocols. Clearly this exponential scaling is of concern, requiring demanding efficiencies in future large-scale implementations.
 
-Formally, let $\mathcal{E}^\text{loss}_\eta$ be the loss channel with efficiency $\eta$. The channel acting on an initially pure single-photon state, $\ket{1}$, can be modelled as a beamsplitter with transmissivity $\eta$ acting on the state, where the reflected mode is traced out, shown in Fig.\ref{fig:loss_model}. This yields,
+Formally, let $\mathcal{E}^\text{loss}_\eta$ be the loss channel with efficiency $\eta$. The channel acting on an initially pure single-photon state, $\ket{1}$, can be modelled as a beamsplitter with transmissivity $\eta$ acting on the state, where the reflected mode is traced out, shown in Fig.\ref{fig:loss_model}. This yields the quantum process,
 \begin{align}
-\mathcal{E}^\text{loss}_\eta(\ket{0}\bra{0}) &= \ket{0}\bra{0}, \nonumber \\
+\mathcal{E}^\text{loss}_\eta(\hat\rho) = \text{tr}_B[\hat{U}_\text{BS}(\hat\rho_A\otimes\ket{0}_B\bra{0}_B)\hat{U}_\text{BS}^\dag],
+\end{align}
+where $\hat{U}_\text{BS}$ is the beamsplitter operation. In the special case of the vacuum and single-photon states, which is most relevant to qubit encodings, we obtain,
+\begin{align}
+	\mathcal{E}^\text{loss}_\eta(\ket{0}\bra{0}) &= \ket{0}\bra{0}, \nonumber \\
 \mathcal{E}^\text{loss}_\eta(\ket{1}\bra{1}) &= (1-\eta)\ket{0}\bra{0} + \eta\ket{1}\bra{1}.
 \end{align}
-Note that this dynamic is of the same form as amplitude damping (Sec.~\ref{sec:amp_damp}).
+This dynamic is of the same form as amplitude damping (Sec.~\ref{sec:amp_damp}). In the general case of an $n$-photon Fock state, we obtain,
+\begin{align}
+	\mathcal{E}^\text{loss}_\eta(\ket{n}\bra{n}) = \sum_{i=0}^n \binom{n}{i} \eta^i(1-\eta)^{n-i} \ket{i}\bra{i}.
+\end{align}
 
 \begin{figure}[!htb]
 	\includegraphics[width=0.5\columnwidth]{loss_model}
@@ -1393,7 +1400,21 @@ Mode-mismatch has been studied extensively in the context of linear optics quant
 
 In Sec.~\ref{sec:eff_err} we discussed the loss channel, whereby with some fixed probability photons are lost to the environment. In reality, this process is often not uniform, but frequency-dependent, resulting in spectral filtering effects. For example, optical fibres are typically designed to operate with a particular optical frequency in mind, and will attenuate frequencies outside a given range, implementing, for example, low-pass, high-pass or band-pass spectral filtering.
 
-Because spectral filtering can be regarded as frequency-dependent loss, it can be modelled in the same way as described in Fig.~\ref{fig:loss_model}, but using a frequency-dependent beamsplitter with transmissivity $\eta_f(\omega)$, which models the frequency response of the channel.
+Because spectral filtering can be regarded as frequency-dependent loss, it can be modelled in the same way as per the loss channel, but using a frequency-dependent beamsplitter with transmissivity $\eta_f(\omega)$, which models the frequency response of the channel. The model is shown in Fig.~\ref{fig:spectral_filter_model}.
+
+\begin{figure}[!htb]
+	\includegraphics[width=0.5\columnwidth]{spectral_filter_model}
+	\caption{Model for the spectral filtering channel. The input state, $\hat\rho_\text{in}$, passes through a beamsplitter of frequency-dependent transmissivity $\eta_f(\omega)$, and the reflected mode discarded, yielding the lossy output state \mbox{$\hat\rho_\text{out} = \mathcal{E}^\text{filter}_{\eta_f}(\hat\rho_\text{in})$}.} \label{fig:spectral_filter_model} \index{Spectral filtering}
+\end{figure}
+
+This channel has the effect of modulating the spectral distribution function of a photonic mode operator $\hat{A}_\psi^\dag$ to $\hat{A}_{\psi'}^\dag$, where,
+\begin{align}
+\psi'(\omega) = \sqrt{\eta_f(\omega)}\psi(\omega).	
+\end{align}
+Note that unless \mbox{$\eta_f(\omega)=1\,\forall\,\,\psi(\omega)\neq 0$}, the new distribution function $\psi'(\omega)$ will not be normalised, where the normalisation reflects the loss probability,
+\begin{align}
+p_\text{loss} = 1 - \int_{-\infty}^\infty \eta_f(\omega)|\psi(\omega)|^2\,d\omega.
+\end{align}
 
 %
 % Phase-Space
@@ -2129,7 +2150,7 @@ Let us now turn our attention to the details of how the \texttt{CombineCosts()} 
 % Efficiency
 %
 
-\subsubsection{Efficiency} \index{Efficiency}
+\subsubsection{Efficiency} \index{Loss channel}
 
 The effects of channel efficiency depend upon which of the three qubits it is applied to. When applied to qubits $A$ or $B$, qubit loss will be detected by the Bell state measurement. This converts loss into a heralded error, whereby we know that the teleportation has failed, and thus the packets may be discarded. On the other hand, when applied to qubit $C$, which is not measured, the loss commutes through the Pauli operations, preserving qubit $C$'s efficiency.
 
@@ -6085,6 +6106,7 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \index{Phase-key encoding @\also{Encrypted quantum computation}|gobbleone}
 \index{Polarisation-key encoding @\also{Encrypted quantum computation}|gobbleone}
 \index{Displacement-key encoding @\also{Encrypted quantum computation}|gobbleone}
+\index{Efficiency @\also{Loss channel}|gobbleone}
 
 \printindex
 
