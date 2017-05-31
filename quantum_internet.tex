@@ -3,10 +3,10 @@
 %
 
 % Publication version
-\documentclass[aps,rmp,twocolumn,amsmath,amssymb,nofootinbib,superscriptaddress,longbibliography,floatfix,table-of-contents,eqsecnum]{revtex4-1} 
+\documentclass[aps, rmp, twocolumn, amsmath, amssymb, nofootinbib, superscriptaddress, longbibliography, floatfix, table-of-contents, eqsecnum, byrevtex]{revtex4-1} 
 
 % Preprint version
-%\documentclass[aps,preprint,rmp,singlecolumn,amsmath,amssymb,nofootinbib,superscriptaddress,longbibliography,floatfix,table-of-contents,eqsecnum]{revtex4-1} 
+%\documentclass[aps, preprint, rmp, singlecolumn, amsmath, amssymb, nofootinbib, superscriptaddress, longbibliography, floatfix, table-of-contents, eqsecnum]{revtex4-1} 
 
 \usepackage[pdftex]{graphicx}
 \usepackage{mathrsfs}
@@ -38,7 +38,7 @@
 \renewcommand{\nomname}{List of Abbreviations}
 
 \newtheorem{definition}{Definition}
-
+  
 \makenomenclature
 \makeindex
 
@@ -113,13 +113,26 @@
 The desire to share and unite remote digital assets motivated the development of the classical internet. As we enter the quantum era, it is to be expected that there will be a similar demand for quantum assets, motivating a \textit{global quantum internet}. Large ad hoc networks require well-constructed protocols to efficiently and reliably facilitate communication between arbitrary distant parties. We discuss quantum networking, and introduce the Quantum Transmission Control Protocol (QTCP) -- an extension of the classical TCP/IP protocol stack -- its operation and implementation, including a presentation of the low-level algorithms underpinning it, and consider its application to various quantum protocols to which networking will foreseeably be applied in the near future. This will enable future quantum networks to communicate quantum resources, implement full global networking services, and enable new models for the commercialisation and proliferation of quantum technologies. In particular, we examine \textit{cloud quantum computing}, whereby clients can license compute time on a host's quantum computer to process their data in the cloud. This is of great importance for the widespread adoption of quantum computing -- given their high expected initial cost a client/server model for outsourced quantum computation will be essential to enabling accessibility. Combined with protocols for encrypted quantum computation, the client/server model can ensure secrecy of data and algorithms. Entanglement distribution is a primitive resource with widespread applications in quantum protocols, and we discuss quantum repeater networks, which specialise in this single task. As the scaling in the computational power of quantum computers is fundamentally different to classical computing, it is to be expected the economics of networked quantum computers will also be. We discuss the economic implications of networked quantum computers, and arrive at the conclusion that future quantum computers around the globe will all be networked, pooling their computational resources to form a \textit{global virtual quantum computer} with exponentially more power than that possessed by individual market participants. The optimal economic model for all users, large or small, is to contribute their resources to the network and time-share the net computational power -- a fundamentally different conclusion than for classical computers. We also provide a review of the current state of the art in quantum technologies. Finally we present a non-technical discussion of the implications of the quantum internet, and a vision for its future. While this work is only an early step in a rapidly developing field, still in its infancy, the central concepts we present will be highly relevant to future developments. This work is targeted very broadly at quantum and classical computer scientists, classical computer systems, software and network engineers, physicists, and those generally curious about the future of quantum technologies. \newpage
 \end{abstract}
 
+%
+% Title
+%
+
 \maketitle
 
 %
 % Table Of Contents
 %
 
+\makeatletter
+\def\l@paragraph{\@dottedtocline{4}{8em}{1.2em}}
+\makeatother
+
+\makeatletter
+\addtocontents{toc}{\def\string\@dotsep{100}}
+\makeatother
+
 \tableofcontents 
+\addtocontents{toc}{~\hfill\textbf{Page}\par}
 
 %
 % Foreword
@@ -1219,7 +1232,7 @@ The dephasing error model describes the deterioration of quantum coherence in a 
 \begin{align} \label{eq:dephasing_channel}
 \mathcal{E}_p^\text{dephasing}(\hat\rho) = p\cdot\hat\rho + (1-p)\cdot \hat{Z}\hat\rho\hat{Z},
 \end{align}
-where $\hat\rho$ is the state of a single qubit, and $\hat{Z}$ is the Pauli phase-flip operator\footnote{Bit-flip and bit-phase-flip channels may be represented similarly by replacing $\hat{Z}$ with $\hat{X}$ or $\hat{Y}$ respectively, although these don't arise as naturally as dephasing in many physical contexts.}. Intuitively this tells us that the dephasing channel creates a mixture of an input state with its phase-flipped self.
+where $\hat\rho$ is the state of a single qubit, and $\hat{Z}$ is the Pauli phase-flip operator\footnote{Bit-flip\index{Bit-flip channel} and bit-phase-flip\index{Bit-phase-flip channel} channels may be represented similarly by replacing $\hat{Z}$ with $\hat{X}$ or $\hat{Y}$ respectively, although these don't arise as naturally as dephasing in many physical contexts.}. Intuitively this tells us that the dephasing channel creates a mixture of an input state with its phase-flipped self.
 
 An alternate interpretation for the dephasing channel is that it is equivalent to the outside environment measuring $\hat\rho$ in the logical ($\hat{Z}$) basis, but unknown to us, thereby projecting the state onto one basis state or another, yielding a mixture of the two.
 
@@ -3025,7 +3038,7 @@ where \mbox{$\sigma\in S_m$} is an arbitrary element of the symmetric group (i.e
 % Optical Stability In Quantum Networks
 %
 
-\section{Optical stability in quantum networks} \index{Optical stability}
+\section{Optical stability in quantum networks} \label{sec:opt_stab} \index{Optical stability}
 
 Given that communications links in quantum networks are expected to be optical, an issue of central importance is optical stability when signals from remote sources interfere or interact with local quantum states. For example, in an entanglement swapping protocol (Sec.~\ref{sec:swapping}) forming a part of a quantum repeater network (Sec.~\ref{sec:rep_net}), if the entangling operation between the remotely prepared qubits suffers errors, so too will the prepared distributed entangled state.
 
@@ -3066,7 +3079,7 @@ In real-world scenarios we are likely to encounter carrier frequencies sufficien
 
 \begin{figure}[!htb]
 	\includegraphics[width=\columnwidth]{wavepacket} \\
-	\caption{(top) A photonic wave-packet of the form of Eq.~\ref{eq:wavepacket_modulated}, with Gaussian temporal envelope of width $\sigma$ (orange), shifted by a carrier frequency $\omega_0$ (blue).} \label{fig:HOM_vs_MZ}
+	\caption{(top) A photonic wave-packet of the form of Eq.~(\ref{eq:wavepacket_modulated}), with Gaussian temporal envelope of width $\sigma$ (orange), shifted by a carrier frequency $\omega_0$ (blue).} \label{fig:HOM_vs_MZ}
 \end{figure}
 
 %
@@ -3085,7 +3098,7 @@ Within the interferometer is a time-delay, $\tau$, which acts as a temporal mism
 	\caption{Mach-Zehnder self-interference of a single photon. (top) Layout of the interferometer. The photon is subject to a time-delay $\tau$ within only the upper arm of a balanced interferometer, comprising two 50:50 beamsplitters. (bottom) Interference fringe $P_\text{MZ}(\tau)$ as a function of the time-delay. The interference is sensitive at the scale of the photon wavelength, (blue) in Fig.~\ref{fig:HOM_vs_MZ}.} \label{fig:MZ_inter}
 \end{figure}
 
-Let us calculate explicitly the evolution of a single-photon through this device, beginning with a photon described by mode operator $\hat{A}^\dag_\psi$\index{Mode operators} (Sec.~\ref{sec:spatio_temporal}), with the temporal distribution function from Eq.~\ref{eq:wavepacket_modulated}. We have,
+Let us calculate explicitly the evolution of a single-photon through this device, beginning with a photon described by mode operator $\hat{A}^\dag_\psi$\index{Mode operators} (Sec.~\ref{sec:spatio_temporal}), with the temporal distribution function from Eq.~(\ref{eq:wavepacket_modulated}). We have,
 \begin{align}
 	\ket\psi_\text{in} &= \hat{A}^\dag_\psi \ket{0,0} \nonumber \\
 	&\underset{\text{BS}}{\to} \frac{1}{\sqrt{2}} [\hat{A}^\dag_\psi + \hat{B}^\dag_\psi] \ket{0,0} \nonumber \\
@@ -3179,7 +3192,7 @@ In Table.~\ref{table:summary_inter} we summarise the network protocols discussed
   		Quantum walks & MZ \\
     	\hline
 	\end{tabular}
-	\caption{Summary of major quantum network protocols and their required type of interference.}\index{Interferometric requirements}\label{table:summary_inter}
+	\caption{Summary of the major quantum network protocols presented in Sec.~\ref{sec:protocols_quant_int}, and their required type of interference.}\index{Interferometric requirements}\label{table:summary_inter}
 \end{table}
 
 %
@@ -4235,10 +4248,10 @@ The models for quantum computation introduced in the previous section are abstra
 Here we will summarise some of the physical architectures most applicable to networking. Since we reasonably anticipate that future quantum networking will be optically mediated, we focus on pure-optical and hybrid-optical architectures, on the basis that these will naturally lend themselves to optical interfacing.
 
 %
-% Universal Linear Optics Quantum Computing
+% Universal Linear Optics Quantum Computing (KLM)
 %
 
-\subsection{Universal linear optics} \label{sec:KLM_univ} \index{Universal linear optics quantum computation}
+\subsection{Universal linear optics (KLM)} \label{sec:KLM_univ} \index{Universal linear optics quantum computation}\index{Knill-Laflamme-Milburn (KLM)}
 
 With single-photon encoding of qubits in the quantum network, the obvious architecture to implement quantum computation is linear optics quantum computing (LOQC) \cite{bib:KLM01} (KLM), since the states being processed by the computer are of the same form as the states traversing the network. See \cite{bib:Kok05, bib:KokLovettBook} for excellent introductions to this what has become a very broad and exciting field.
 
@@ -4252,7 +4265,7 @@ in the photon-number basis, up to normalisation (which is determined by the post
 
 \begin{figure}[!htb]
 \includegraphics[width=0.8\columnwidth]{KLM_gate}
-\caption{(a) A KLM CZ gate, employing dual-rail encoding, constructed from two non-linear sign-shift (NS) gates, which apply a $\pi$ phase-shift to only $\ket{2}$ terms in the photon-number basis. (b) Construction of the non-deterministic linear optics NS gate. Two ancillary states -- one $\ket{1}$ and one $\ket{0}$ -- are employed, and two photo-detectors post-select upon detecting $\ket{1}\bra{1}$ and $\ket{0}\bra{0}$ respectively. The beamsplitter reflectivities in (a) are 50:50, and in (b) are chosen such that the amplitudes obey Eq.~(\ref{eq:NS_trans}).}. \label{fig:KLM_gate}
+\caption{(a) A KLM CZ gate, employing dual-rail encoding, constructed from two non-linear sign-shift (NS) gates, which apply a $\pi$ phase-shift to only $\ket{2}$ terms in the photon-number basis. (b) Construction of the non-deterministic linear optics NS gate. Two ancillary states -- one $\ket{1}$ and one $\ket{0}$ -- are employed, and two photo-detectors post-select upon detecting $\ket{1}\bra{1}$ and $\ket{0}\bra{0}$ respectively. The beamsplitter reflectivities in (a) are 50:50, and in (b) chosen such that the amplitudes obey Eq.~(\ref{eq:NS_trans}).}. \label{fig:KLM_gate} \index{Knill-Laflamme-Milburn (KLM)}\index{Non-linear sign-shift (NS) gate}
 \end{figure}
 
 Clearly this non-determinism is of immediate concern, since concatenating multiple gates would have exponentially decreasing success probability, making the protocol inefficient -- if the probability of a single gate succeeding is $p$, and we require that a circuit comprising $n$ of them all succeed, the success probability is clearly $p^n$.
@@ -4263,7 +4276,7 @@ The final insight provided by KLM is that by concatenating these non-determinist
 
 \begin{figure}[!htb]
 \includegraphics[width=0.5\columnwidth]{KLM}
-\caption{KLM architecture for universal LOQC. $n_L$ optical modes are associated with logical qubits in the state $\ket{\psi_L}$, with the remaining $n_A$ modes acting as ancillary states, $\ket{\psi_A}$. A round of passive linear optics is applied, $\hat{U}_1$. Then the ancillary modes are measured, yielding some set of measurement outcomes $m_1$. These are classically processed to determine what the next round of passive linear optics, $\hat{U}_2$, ought to be. This repeats some polynomial number of times, from which an arbitrary quantum computation can be implemented. The \textsc{BosonSampling} and quantum walk models are equivalent to taking just the first stage of this protocol: one round of input state, passive linear optics, and measurement.} \label{fig:KLM_protocol}
+\caption{KLM architecture for universal LOQC. $n_L$ optical modes are associated with logical qubits in the state $\ket{\psi_L}$, with the remaining $n_A$ modes acting as ancillary states, $\ket{\psi_A}$. A round of passive linear optics is applied, $\hat{U}_1$. Then the ancillary modes are measured, yielding some set of measurement outcomes $m_1$. These are classically processed to determine what the next round of passive linear optics, $\hat{U}_2$, ought to be. This repeats some polynomial number of times, from which an arbitrary quantum computation can be implemented. The \textsc{BosonSampling} and quantum walk models are equivalent to taking just the first stage of this protocol: one round of input state, passive linear optics, and measurement.} \label{fig:KLM_protocol}\index{Knill-Laflamme-Milburn (KLM)}
 \end{figure}
 
 Evolution via linear optics implements transformations of the form of Eq.~(\ref{eq:LO_unitary_map}), and may be implemented using the experimental architectures described in Sec.~\ref{sec:LO_ev_archs} and Fig.~\ref{fig:LO_archs}.
@@ -4275,6 +4288,41 @@ Since the original presentation of a universal LOQC gate set by KLM, numerous al
 Although the original KLM scheme is universal, resource usage can be reduced by orders of magnitude by combining concepts from LOQC with the cluster state formalism (Sec.~\ref{sec:CSQC}) or related concepts \cite{bib:YoranReznik03, bib:Nielsen04, bib:BrowneRudolph05, bib:GilchristHayes05, bib:Lim05, bib:LimBarrett05}. Specifically, instead of using our non-deterministic KLM CZ gates within the circuit model formalism, they could be employed for the preparation of cluster states. Cluster state preparation using non-deterministic entangling gates is discussed in more detail in Sec.~\ref{sec:module}.
 
 Significant progress is being made on reconfigurable, integrated LOQC devices \cite{bib:UniversalLOOBrien}, but switching times remain orders of magnitude slower than that required for fast-feedforward. The resource overhead associated with overcoming the non-determinism of entangling gates is substantial in the original KLM proposal. But despite being improved upon by cluster state approaches, resource scaling remains daunting. It therefore seems most likely that certain elements from LOQC might be combined into hybrid architectures, to be discussed in detail in Sec.~\ref{sec:hybrid}.
+
+%
+% Cluster State Linear Optics
+%
+
+\subsection{Cluster state linear optics} \label{sec:CS_LO} \index{Cluster states}
+
+Sec.~\ref{sec:opt_stab}
+Sec.~\ref{sec:module}
+
+\comment{To do!}
+
+%
+% Fusion Gates
+%
+
+\subsubsection{Fusion gates} \index{Cluster state fusion gates}
+
+\comment{To do!}
+
+%
+% Fusion Strategies
+%
+
+\subsubsection{Fusion strategies} \index{Cluster state fusion strategies}
+
+\comment{To do!}
+
+%
+% Advantages
+%
+
+\subsubsection{Advantages} \index{Cluster state advantages}
+
+\comment{To do!}
 
 %
 % Weak Cross-Kerr Non-Linearities
@@ -4309,13 +4357,19 @@ The \textsc{BosonSampling} and quantum walk models are based on single-photon en
 % Boson-Sampling
 %
 
-\subsubsection{Boson-sampling} \label{sec:BS} \index{Boson-sampling}
+\subsubsection{{\sc BosonSampling}} \label{sec:BS} \index{Boson-sampling}
 
 \textsc{BosonSampling} is the problem of sampling the output photon-number statistics of a linear optics interferometer fed with single-photon inputs. While not universal for quantum computing (in fact no one has any idea what to use it for at all!), there is strong evidence that it is a classically hard problem \cite{bib:AaronsonArkhipov10, bib:RohdeIntroBS15}.
 
 The computational hardness of \textsc{BosonSampling} relates to the fact that the amplitudes in the output superpositions are proportional to matrix permanents, which are known to be \#\textbf{P}-hard\index{\textbf{\#P} \& \textbf{\#P}-complete} in general. This is believed to be a classically hard complexity class, even harder than \textbf{NP}-complete\index{\textbf{NP} \& \textbf{NP}-complete} in the complexity hierarchy, requiring exponential classical time to evaluate (see Fig.~\ref{fig:complexity_classes} for the believed complexity relationships). This yields computationally complex sampling problems.
 
-Specifically, for an $m$-mode interferometer, and input state,
+%
+% The Boson-Sampling Model
+%
+
+\paragraph{The {\sc BosonSampling} model} \index{Boson-sampling model}
+
+For an $m$-mode interferometer, and input state,
 \begin{align}
 \ket\psi_\text{in} = \ket{T_1,\dots,T_m},
 \end{align}
@@ -4366,9 +4420,42 @@ Very importantly, note that {\sc BosonSampling} does \textit{not} let us efficie
 
 \textsc{BosonSampling} in the presence of various error models, such as loss, source non-determinism and mode-mismatch, has been extensively investigated \cite{bib:RohdeErrBS12, bib:RohdeSPDC13, bib:ScottLost16, bib:RohdeArbSpec15, bib:RandBS}. 
 
-As discussed in Sec.~\ref{sec:single_phot_src}, SPDC is the most common present-day implementation of single-photon sources. However, despite their ready availability, they suffer from non-determinism, with single-photon heralding probability given by Eq.~(\ref{eq:SPDC_p_prep}). To improve upon this, multiplexed sources can be employed \cite{bib:RohdeSPDC13}, improving effective single-photon preparation probabilities asymptotically to unity, as given by Eq.~(\ref{eq:SPDC_multiplex}). However, this comes at the expense of a large number of sources, and more challengingly, fast-feedforward.
+%
+% Multiplexed Boson-Sampling
+%
 
-Addressing this, a variation on SPDC-based {\sc BosonSampling}, known as `scattershot'\index{Scattershot boson-sampling} {\sc BosonSampling}, has been presented \cite{bib:RandBS}. Here, rather than inputting an SPDC source into the first $n$ of the $m$ modes, we input a source into \textit{every} mode, i.e $m$ sources in total. We then accept all events with $n$ heralding successes in total, irrespective of the configuration in which they occurred. This has the effect of implementing $n$-photon {\sc BosonSampling} with an additional layer of randomisation on the input modes (i.e a randomisation in the input configuration, $T$, which is ordinarily fixed). However, since the algorithm is already randomised, this additional layer of randomisation does not undermine the complexity proofs, which hold as is. This effectively boosts the $n$-photon heralding probability from,
+\paragraph{Multiplexed {\sc BosonSampling}} \index{Multiplexed boson-sampling}
+
+As discussed in Sec.~\ref{sec:single_phot_src}, SPDC is the most common present-day implementation of single-photon sources. However, despite their ready availability, they suffer from non-determinism, with single-photon heralding probability given by Eq.~(\ref{eq:SPDC_p_prep}). To improve upon this, multiplexed sources can be employed \cite{bib:RohdeSPDC13}, improving effective single-photon preparation probabilities asymptotically to unity, as given by Eq.~(\ref{eq:SPDC_multiplex}).
+
+However, rather than employing a multiplexed SPDC source in place of each of the required $n$ single-photons, we can instead employ a larger multiplexer that routes \mbox{$N\gg n$} modes to $n$ modes, which is far more efficient than $n$ independent multiplexed single-photon sources.
+
+The model is shown in Fig.~\ref{fig:multiplexed_bs}. We begin by operating $N$ SPDC sources in parallel. Clearly if $N$ is sufficiently large with respect to $n$, it becomes asymptotically certain that at least $n$ photons will be heralded. When this occurs, the successfully prepared $n$ photons -- in whatever configuration they happen to occur -- are routed to the first $n$ modes of the {\sc BosonSampling} interferometer $\hat{U}$, and the protocol proceeds as usual.
+
+\begin{figure}[!htb]
+\includegraphics[width=\columnwidth]{multiplexed_boson_sampling}
+\caption{Model for multiplexed {\sc BosonSampling}. We operate \mbox{$N\gg n$} SPDC sources in parallel, which are multiplexed to the first $n$ modes of the interferometer $\hat{U}$. With sufficiently large $N$ it becomes asymptotically certain that at least $n$ single-photons will be heralded, thereby successfully preparing the {\sc BosonSampling} input state.} \label{fig:multiplexed_bs}\index{Multiplexed boson-sampling}
+\end{figure}
+
+Specifically, the probability of at least $n$ successful single-photon heralding events occurring is,
+\begin{align}
+P_{\geq n} = \sum_{i=n}^\infty \binom{N}{i} 	{P_\text{herald}}^i (1-P_\text{herald})^{N-i},
+\end{align}
+where,
+\begin{align}
+	P_\text{herald} = \chi^2(1-\chi^2),
+\end{align}
+is the probability of a single SPDC source heralding the preparation of a single-photon. This quantity asymptotes to unity for \mbox{$N\gg n$}.
+
+However, although this procedure works in-principle, it comes at the expense of a large number of sources, $N$, and more challengingly, fast-feedforward. Keep in mind that if we were able to perform complex fast-feedforward, we might be able to do much more than just {\sc BosonSampling} in the first place!
+
+%
+% Scattershot Boson-Sampling
+%
+
+\paragraph{Scattershot {\sc BosonSampling}} \index{Scattershot boson-sampling}
+
+A variation on SPDC-based {\sc BosonSampling}, known as `scattershot'\index{Scattershot boson-sampling} {\sc BosonSampling}, has been presented \cite{bib:RandBS}, which obviates the difficultly of fast multiplexing in the approach described previously. Here, rather than inputting an SPDC source into the first $n$ of the $m$ modes, we input a source into \textit{every} mode, i.e $m$ sources in total. We then accept all events with $n$ heralding successes in total, irrespective of the configuration in which they occurred. This has the effect of implementing $n$-photon {\sc BosonSampling} with an additional layer of randomisation on the input modes (i.e a randomisation in the input configuration, $T$, which is ordinarily fixed). However, since the algorithm is already randomised, this additional layer of randomisation does not undermine the complexity proofs, which hold as is. This effectively boosts the $n$-photon heralding probability from,
 \begin{align}
 P_n = \chi^{2n}(1-\chi^2)^n,	
 \end{align}
@@ -4413,11 +4500,35 @@ Photonic quantum walks (QWs) are the other main contender for implementing restr
 
 With only a single walker (photon), nothing computationally complex can occur in the system, since a single photon evolving under passive linear optics can be efficiently classically simulated\footnote{Note that the literature has described QW schemes, both discrete-time \cite{bib:Lovett10} and continuous-time \cite{bib:Childs09}, that are universal for quantum computation. However, such universal schemes require an exponential number of vertices in the underlying graph, which clearly does not lend itself to efficient optical representation.}. However, once multiple walkers are introduced we have a system with almost identical features to \textsc{BosonSampling}, differing only in the structure of the linear optics unitary.
 
-There are two predominant varieties of quantum walks: discrete- \cite{qwDiscrete:aharanov} and continuous-time \cite{contTimeQW:childs}. In the discrete-time QW model, each walker has access to an ancillary `coin' Hilbert space, which is used to record the direction of the walker through the graph. At each discrete time-step the coin is used to update the position (vertex) of the walker, before applying a unitary `coin' operator to the coin Hilbert space. The addition of the coin space is necessary to enable such quantum walks to reside on arbitrary graph topologies, whilst retaining unitarity in their evolution. In the continuous-time QW model, on the other hand, there is no coin degree of freedom, and a Hamiltonian, $\hat{H}_\text{QW}$, encoding the (Hermitian) adjacency matrix of the QWs graph evolves the walker(s), generating a unitary evolution of the form,
+There are two predominant varieties of quantum walks: discrete- \cite{qwDiscrete:aharanov} and continuous-time \cite{contTimeQW:childs}, which we will now introduce. Algorithms have been described for both the discrete- and continuous-time QW models.
+
+%
+% Continuous-Time Quantum Walks
+%
+
+\paragraph{Continuous-time quantum walks}
+
+In the continuous-time QW model, a Hamiltonian, $\hat{H}_\text{QW}$, encoding the (Hermitian) adjacency matrix of the QW's graph evolves the walker(s), generating a unitary evolution of the form,
 \begin{align}\index{Quantum walk Hamiltonian}
 \hat{U}_\text{QW}(t) = e^{-i\hat{H}_\text{QW}t},
 \end{align}
-where \mbox{$t\in \mathbb{R}_+$}. Algorithms have been described for both the discrete- and continuous-time QW models. Fig.~\ref{fig:LO_archs}(c) is an example implementation of a linear optics, continuous-time quantum walk on a line.
+where \mbox{$t\in \mathbb{R}_+$}.
+
+This model lends itself readily to optical wave-guide implementation, where evanescent coupling between neighbouring wave-guides is inherently a continuous-time process. Fig.~\ref{fig:LO_archs}(c) illustrates an example implementation of a linear optics, continuous-time quantum walk on a line in an integrated wave-guide device.
+
+In the context of linear optics, the evolution is best described using the coupled oscillator Hamiltonian,
+\begin{align}
+	\hat{H}_\text{QW} = \sum_{i,j=1}^m c_{i,j} \hat{a}^\dag_i\hat{a}_j,
+\end{align}
+where $\hat{a}^\dag_i$ ($\hat{a}_i$) is the photonic creation (annihilation) operator for the $i$th of the $m$ modes, and the Hermitian matrix $c_{i,j}$ encodes the coupling strength between the $i$th and $j$th modes, which could correspond identically to the QW's graph adjacency matrix.
+
+%
+% Discrete-Time Quantum Walks
+%
+
+\paragraph{Discrete-time quantum walks}
+
+In the discrete-time QW model, each walker has access to an ancillary `coin' Hilbert space, which is used to record the direction of the walker through the graph. At each discrete time-step the coin is used to update the position (vertex) of the walker, before applying a unitary `coin' operator to the coin Hilbert space. The addition of the coin space is necessary to enable such quantum walks to reside on arbitrary graph topologies, whilst retaining unitarity in their evolution. 
 
 We will briefly summarise the discrete-time QW model, as it most readily lends itself to linear optics implementation, and illustrate the parallels with \textsc{BosonSampling}. First, let us consider the standard simple example scenario of a single quantum walker, on a linear graph topology, using a Hadamard coin\index{Hadamard gate},
 \begin{align}
@@ -4749,6 +4860,14 @@ Of course, we have used the most simple model for modules, where each accommodat
 \includegraphics[width=0.6\columnwidth]{larger_module}
 \caption{A larger cluster state module comprising a \mbox{$3\times 3$} lattice of logical qubits (grey), and dangling arms of ancillary qubits (white) in each direction for joining them to neighbouring modules. Fusing these modules enables the `patchwork' preparation of large, distributed lattices.} \label{fig:larger_module}
 \end{figure}
+
+%
+% Outsourced Quantum Experiments
+%
+
+\subsection{Outsourced quantum experiments} \index{Outsourced quantum experiments}
+
+\comment{To do}
 
 %
 % Encrypted Quantum Computation
@@ -5674,7 +5793,7 @@ Continuous-variable entangled states are attractive because they exploit standar
 % Non-Optical Systems
 %
 
-\subsection{Non-optical systems} \index{Non-optical systems}
+\subsection{Non-optical systems} \index{Matter qubits}
 
 %
 % Atomic Ensembles
@@ -6092,6 +6211,9 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \index{Frequency filtering \seeonly{Spectral filtering}|gobbleone}
 \index{Parity measurements \seeonly{Bell measurements}|gobbleone}
 \index{Partial Bell measurements \seeonly{Bell measurements}|gobbleone}
+\index{Fusion gates \seeonly{Cluster state fusion gates}|gobbleone}
+\index{Fusion strategies \seeonly{Cluster state fusion strategies}|gobbleone}
+\index{Pauli channels \seeonly{Bit-flip channel, bit-phase-flip channel, dephasing channel, depolarising channel}|gobbleone}
 
 \index{Two-channel two-port switches @\also{Optical routers}|gobbleone}
 \index{Multiplexers @\also{Optical routers}|gobbleone}
@@ -6107,6 +6229,7 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \index{Polarisation-key encoding @\also{Encrypted quantum computation}|gobbleone}
 \index{Displacement-key encoding @\also{Encrypted quantum computation}|gobbleone}
 \index{Efficiency @\also{Loss channel}|gobbleone}
+\index{Non-optical encodings @\also{Matter qubits}|gobbleone}
 
 \printindex
 
