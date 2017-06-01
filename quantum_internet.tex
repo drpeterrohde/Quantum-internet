@@ -48,7 +48,7 @@
 % Title
 %
 
-\title{The Quantum Internet -- A Vision for the Future}
+\title{The Quantum Internet --- Towards the Singularity}
 
 % Coffee \cofeAm{0.4}{1.0}{0}{5.5cm}{2cm}
 
@@ -110,7 +110,8 @@
 %
 
 \begin{abstract}
-The desire to share and unite remote digital assets motivated the development of the classical internet. As we enter the quantum era, it is to be expected that there will be a similar demand for quantum assets, motivating a \textit{global quantum internet}. Large ad hoc networks require well-constructed protocols to efficiently and reliably facilitate communication between arbitrary distant parties. We discuss quantum networking, and introduce the Quantum Transmission Control Protocol (QTCP) -- an extension of the classical TCP/IP protocol stack -- its operation and implementation, including a presentation of the low-level algorithms underpinning it, and consider its application to various quantum protocols to which networking will foreseeably be applied in the near future. This will enable future quantum networks to communicate quantum resources, implement full global networking services, and enable new models for the commercialisation and proliferation of quantum technologies. In particular, we examine \textit{cloud quantum computing}, whereby clients can license compute time on a host's quantum computer to process their data in the cloud. This is of great importance for the widespread adoption of quantum computing -- given their high expected initial cost a client/server model for outsourced quantum computation will be essential to enabling accessibility. Combined with protocols for encrypted quantum computation, the client/server model can ensure secrecy of data and algorithms. Entanglement distribution is a primitive resource with widespread applications in quantum protocols, and we discuss quantum repeater networks, which specialise in this single task. As the scaling in the computational power of quantum computers is fundamentally different to classical computing, it is to be expected the economics of networked quantum computers will also be. We discuss the economic implications of networked quantum computers, and arrive at the conclusion that future quantum computers around the globe will all be networked, pooling their computational resources to form a \textit{global virtual quantum computer} with exponentially more power than that possessed by individual market participants. The optimal economic model for all users, large or small, is to contribute their resources to the network and time-share the net computational power -- a fundamentally different conclusion than for classical computers. We also provide a review of the current state of the art in quantum technologies. Finally we present a non-technical discussion of the implications of the quantum internet, and a vision for its future. While this work is only an early step in a rapidly developing field, still in its infancy, the central concepts we present will be highly relevant to future developments. This work is targeted very broadly at quantum and classical computer scientists, classical computer systems, software and network engineers, physicists, and those generally curious about the future of quantum technologies. \newpage
+The desire to share and unite remote digital assets motivated the development of the classical internet, the enabler of the entire 21st century economy and our modern way of life. As we enter the quantum era, it is to be expected there will be a similar demand for quantum assets, motivating a \textit{global quantum internet} for bringing together the world's quantum resources, leveraging off their exponential trajectory in capability. We present models for quantum networking, how they might be applied in the future, and the implications they will have. Socially, economically and politically, the upcoming era of quantum supremacy will be as significant for the 21st century as the transistor was for the 20th. The inherently different scaling in computational power of quantum computers fundamentally changes the dynamics of how quantum technologies will operate in the future. Given their high expected initial cost, a client/server model for outsourcing quantum computation will be essential to enabling the accessibility and proliferation of this technology. We therefore anticipate the emergence of \textit{cloud quantum computing}, a model for outsourcing quantum computations to the network. We argue that in this context economic efficiency will mandate that all future quantum computers be united into a single global \textit{virtual quantum computer}, offering exponentially more power to all network participants than if they were to keep their resources to themselves. Given the sensitivity of much of the data to which future quantum computers are going to be applied, protocols for encrypted quantum computation will be essential. This will enable new models for the commercialisation and proliferation of quantum technologies, unlike any existing models for classical computing. While this work is only an early step in a rapidly developing field, still in its infancy, the central concepts we present will be highly relevant to future developments. This work is targeted very broadly at quantum and classical computer scientists, classical computer systems, software and network engineers, physicists, and those generally curious about the future of quantum technologies and what it might bring to humanity.
+\newpage
 \end{abstract}
 
 %
@@ -161,14 +162,14 @@ The internet is one of the key technological achievements of the 20th century, a
 Perhaps the most exciting prospect in the quantum age is the development of quantum computers\index{Quantum computing}. Richard Feynman \cite{bib:Feynman85} was the first to ask the question `If quantum systems are so exponentially complex that we are unable to simulate them on our classical computers, can those same quantum systems be exploited in a controlled way to exponentially outperform our classical computers?'\index{Richard Feynman}. Subsequently, the Deutsch-Jozsa algorithm \cite{bib:DeutschJozsa92}\index{Deutsch-Jozsa algorithm} demonstrated for the first time that algorithms can run on a quantum computer, exponentially outperforming any classical algorithm. Since then, an enormous amount of research has been dedicated to finding new quantum algorithms, and the search has indeed been a very fruitful one\footnote{See the Quantum Algorithm Zoo for a comprehensive summary of the current state of knowledge on quantum algorithms (\texttt{\href{http://math.nist.gov/quantum/zoo/}{http://math.nist.gov/quantum/zoo/}}).}, with many important applications having been found, including, amongst many others\index{Quantum algorithms}:
 \begin{itemize}
 	\item Searching unstructured databases (Grover's algorithm \cite{bib:Grover96} -- quadratic speedup).\index{Grover's algorithm}
-	\item Satisfiability problems\footnote{A satisfiability problem is one where we search a function's input space for a solution(s) satisfying a given output constraint. The hardest such problems, like the archetypal \textsc{3-SAT} problem, are \textbf{NP}-complete.}\index{\textbf{NP} \& \textbf{NP}-complete} (Grover's algorithm -- quadratic speedup). This includes solving \textbf{NP}-complete problems, and brute-force cracking of private encryption keys\footnote{Note that when performing a brute-force attack against a private encryption key, a quadratic speedup effectively halves the key length in terms of algorithmic runtime. Thus, in the quantum era private key lengths will need to be doubled.}.\index{Satisfiability problems}
+	\item Satisfiability problems\footnote{A satisfiability problem is one where we search a function's input space for a solution(s) satisfying a given output constraint. The hardest such problems, like the archetypal \textsc{3-SAT}\index{3-\textsc{SAT}} problem, are \textbf{NP}-complete.}\index{\textbf{NP} \& \textbf{NP}-complete} (Grover's algorithm -- quadratic speedup). This includes solving \textbf{NP}-complete problems, and brute-force cracking of private encryption keys\footnote{Note that when performing a brute-force attack against a private encryption key, a quadratic speedup effectively halves the key length in terms of algorithmic runtime. Thus, in the quantum era private key lengths will need to be doubled.}.\index{Satisfiability problems}
 	\item Optimisation problems (Grover's algorithm -- quadratic speedup): many optimisation problems reside in \textbf{NP} or can be approximated in \textbf{NP}.\index{Optimisation problems}
 	\item Period finding and integer factorisation\index{Shor's algorithm} (Shor's algorithm \cite{bib:ShorFactor} -- exponential speedup). This compromises Rivest, Shamir \& Adleman (RSA) public-key cryptography \cite{bib:RSA}, the most widely used cryptographic protocol on the internet today.
 	\item Simulation of quantum systems\index{Quantum simulation} (\cite{bib:lloyd1996universal} - exponential speedup). This includes simulation of: molecular and atomic interactions in the study of quantum chemistry or nuclear physics; interactions between drug molecules and organic molecules for drug design; genetic interactions for the study of genetics and genetic medicine; nanoscale semiconductor physics for integrated circuit design; and much more.
 	\item Simulation of quantum field theories\index{Simulating quantum field theories} (\cite{bib:JLP, bib:RohdeWavelet15} - exponential speedup), a key area of fundamental physics research.
 	\item Topological big-data analysis\index{Topological big-data analysis} (\cite{bib:lloyd2016quantum, USTCexperiment} - exponential speedup), with broad applications including: social media network analysis; consumer behaviour; behavioural dynamics; neuroscience; and higher-dimensional signal and image processing.
 	\item Solving linear systems of equations\index{Linear systems} \cite{bib:harrow2009quantum, bib:BerryLinear}, with widespread applications in linear algebra and calculus.
-	\item Quantum machine learning\index{Quantum machine learning} \cite{bib:lloyd2013quantum}. This includes putting an end to humanity.
+	\item Quantum machine learning\index{Quantum machine learning} \cite{bib:lloyd2013quantum}. This includes putting an end to humanity. --- \textit{Ne obliviscaris}.
 \end{itemize}
 
 It is likely we haven't yet begun to fully recognise the capabilities of quantum computers, and the full plethora of applications they may have in the future. We stand at the beginning of the emergence of an entirely new type of technology.
@@ -204,7 +205,7 @@ The quantum internet will enable advances in the large-scale deployment of quant
 
 With the addition of recent advances in homomorphic encryption and blind quantum computing\index{Encrypted quantum computation}, such cloud quantum computing can be performed securely, guaranteeing privacy of both data and algorithms, secure even against the host performing the computation. This opens up entirely new economic models and applications for the licensing of compute time on future quantum computers in the cloud.
 
-But quantum technologies extend far beyond computation. Many other exciting applications for controlled quantum systems exist, with new ones frequently emerging. Thus, the quantum internet will find utility beyond cloud quantum computing, enabling the global exchange of quantum resources and assets. This could include the networking of elementary quantum resources such as state preparation, entanglement sharing, teleportation and quantum measurements, or scale all the way up to massively distributed quantum computation or a global quantum cryptography network.
+But quantum technologies extend far beyond computation. Many other exciting applications for controlled quantum systems exist, with new ones frequently emerging. Thus, the quantum internet will find utility beyond cloud quantum computing, enabling the global exchange of quantum resources and assets. This could include the networking of elementary quantum resources such as state preparation, entanglement sharing, teleportation and quantum measurements, or scale all the way up to massively distributed quantum computation or a global quantum cryptography network.\index{Quantum assets}
 
 It is hard to foresee the future trajectory of quantum technology, much as no one foresaw the advances digital technology has made over the last half century. But it is certain that as the internet transformed digital technology, the quantum internet will define the future of quantum technologies.
 
@@ -310,7 +311,7 @@ state, and edges represent the application of maximally entangling CZ gates betw
 \begin{align}
 	\ket\psi_\text{cluster} = \prod_{e\in E} \hat{\text{CZ}}_e \cdot \bigotimes_{v\in V}\ket{+}_v.
 \end{align}
-Alternately, but equivalently, cluster states may be defined in the stabiliser formalism. Specifically, a cluster state is defined to be the joint +1 eigenstate of all the stabilisers,
+Alternately, but equivalently, cluster states may be defined in the stabiliser formalism\index{Stabiliser formalism}. Specifically, a cluster state is defined to be the joint +1 eigenstate of all the stabilisers,
 \begin{align} \label{eq:CS_stab} \index{Cluster state stabilisers}
 	\hat{S}_v = \hat{X}_v \prod_{i\in n_v} \hat{Z}_i,
 \end{align}
@@ -367,7 +368,7 @@ There are several cluster state identities we will utilise later, summarised in 
 	\caption{Several cluster state identities. (a) a CZ gate between two qubits creates an edge between them in the graph. (b) Measurement of a qubit in the Pauli $\hat{Y}$ basis removes that qubit from the graph, while creating new edges between the neighbouring qubits. (c) Measurement of a qubit in the Pauli $\hat{Z}$ basis removes that qubit and any neighbouring edges.} \label{fig:cluster_ident} 
 \end{figure}
 
-When using non-deterministic gates to prepare cluster states, there are approaches to nonetheless preparing ideal cluster states. This is discussed in more detail in Sec.~\ref{sec:module}. Alternately, we can borrow ideas from percolation theory to simply tolerate defects in a cluster state lattice by working around them. Specifically, if the defect probability (i.e probability of a missing vertex or edge) is below some \textit{percolation threshold}, \mbox{$p_\text{defect}\leq \epsilon_\text{threshold}$}, in the asymptotic limit we are guaranteed that routes exist through the lattice. This allows defective graphs to be employed for quantum computation.
+When using non-deterministic gates to prepare cluster states, there are approaches to nonetheless preparing ideal cluster states. This is discussed in more detail in Sec.~\ref{sec:module}. Alternately, we can borrow ideas from percolation theory\index{Percolation theory} to simply tolerate defects in a cluster state lattice by working around them. Specifically, if the defect probability (i.e probability of a missing vertex or edge) is below some \textit{percolation threshold}\index{Percolation threshold}, \mbox{$p_\text{defect}\leq \epsilon_\text{threshold}$}, in the asymptotic limit we are guaranteed that routes exist through the lattice, enabling the required flow of information. This allows defective graphs to be employed for quantum computation.
 
 %
 % Topological Codes
@@ -383,8 +384,8 @@ These codes have been shown to have very favourable fault-tolerance thresholds i
 
 Importantly, topological codes do not require joint measurements across the entire graph state, instead requiring only operations localised to small regions within the graph. Thanks to this, computation using such topological codes can remain distributed, without requiring the entire state to be held locally by a particular host, or requiring full access to the entire state by any particular user.
 
-The most common topological code, which we will use here as an example, is the toric code, which resides on a lattice graph over the surface of a torus\footnote{As with cluster states, this graph needn't (but could) correspond to the network graph.}. As with cluster states (Sec.~\ref{sec:CSQC}), the toric code is most easily visualised in the stabiliser formalism. Consider a rectangular sub-graph of the torus. We place a qubit on each edge (not vertex) of the graph. Now we define two sets of stabiliser operators: \textit{star} and \textit{plaquette} operators,
-\begin{align} \index{Topological code stabilisers}
+The most common topological code, which we will use here as an example, is the toric code\index{Toric code}, which resides on a lattice graph over the surface of a torus\footnote{As with cluster states, this graph needn't (but could) correspond to A network graph.}. As with cluster states (Sec.~\ref{sec:CSQC}), the toric code is most easily visualised in the stabiliser formalism\index{Stabiliser formalism}. Consider a rectangular sub-graph of the torus. We place a qubit on each edge (not vertex) of the graph. Now we define two sets of stabiliser operators: \textit{star} and \textit{plaquette} operators,
+\begin{align} \index{Topological code stabilisers}\index{Star operator}\index{Plaquette operator}
 	\hat{S}_\text{star}(v) &= \prod_{i\in e(v)} \hat{X}_i, \nonumber \\
 	\hat{S}_\text{plaquette}(p) &= \prod_{i\in e(p)} \hat{Z}_i,
 \end{align}
@@ -494,7 +495,7 @@ Ethernet is a networking protocol based on `broadcasting' on a shared network. T
 	\caption{The topology of an Ethernet network, whereby all users share a common channel, which they can broadcast to at their leisure. If data packets collide, it is detected via the packets' checksums, and the corrupted packets may be re-broadcast after a random `backoff' waiting period, repeating this process until packet delivery is successful. Obviously the chance of collisions occurring increases with the number of connected users, thus network performance is inversely related to the number of nodes.} \label{fig:ethernet}
 \end{figure}
 
-In the Ethernet protocol, every user is free to broadcast data onto the shared channel as they please -- all users transmit to, and receive from a single shared channel. However, clearly sometimes packet `collisions' will occur\index{Collision handling}, resulting in packet corruption. To overcome this, Ethernet packets contain a checksum that can be used to verify upon arrival whether a packet has been corrupted by a collision. If a collision is detected, the respective users are able to re-broadcast, following a randomly chosen waiting period (known as `backoff')\index{Backoff}. Collisions therefore reduce network performance, and it follows that network bandwidth decreases with the number of users competing for bandwidth\footnote{Think of that awkward dinner table conversation, where two people start talking simultaneously. It's immediately obvious to them both that they are interfering with one another, and if they were to just talk over one another (packet collision), no one would understand either of them. So, they both awkwardly pause, before starting to speak again. In a \textit{really} awkward conversation, they will both start again simultaneously, after which there will be an even longer awkward pause before recommencing. Eventually, this self-regulating system will resolve itself probabilistically, with a sole victor controlling the airwaves, commanding the attention of the listeners. Provided that all dinner guests adhere to social etiquette and backoff appropriately, with repeated conversations, all guests will statistically receive an equitable share of attention, albeit with some wastage of conversation time owing to the periods of silence. Clearly, the proportion of the time wasted due to collisions will scale up with the number of guests, limiting the protocol to not-too-large tables.}.
+In the Ethernet protocol, every user is free to broadcast data onto the shared channel as they please -- all users transmit to, and receive from a single shared channel. However, clearly sometimes packet `collisions' will occur\index{Collision handling}, resulting in packet corruption. To overcome this, Ethernet packets contain a checksum that can be used to verify upon arrival whether a packet has been corrupted by a collision. If a collision is detected, the respective users are able to re-broadcast, following a randomly chosen waiting period (known as `backoff')\index{Backoff}. Collisions therefore reduce network performance, and it follows that network bandwidth decreases with the number of users competing for bandwidth\footnote{Think of that awkward dinner table conversation, where two people start talking simultaneously. It's immediately obvious to them both that they are interfering with one another, and if they were to just talk over one another (packet collision), no one would understand either of them. So, they both awkwardly pause, before starting to speak again. In a \textit{really} awkward conversation, they will both start again simultaneously, after which there will be an even longer awkward pause before recommencing. Eventually, this self-regulating system will resolve itself probabilistically, with a sole victor controlling the airwaves, commanding the attention of the listeners. Provided that all dinner guests adhere to social etiquette and backoff appropriately, with repeated conversations, all guests will statistically receive an equitable share of attention, albeit with some wastage of conversation time owing to the periods of silence. Clearly, the proportion of the time wasted due to collisions will scale up with the number of guests, limiting the protocol to not-too-large tables (or very quiet guests).}.
 
 From this protocol, any given packet will eventually be successfully transmitted uncorrupted, collision-free, albeit with uncertain timing that grows with the number of competing users. For this reason, the Ethernet protocol is not ideal for time-critical applications requiring hard guarantees on network latency.
 
@@ -549,9 +550,13 @@ We now turn our attention to defining a mathematical construction for the repres
 
 \subsection{Graph-theoretic representation} \index{Network graphs}
 
-We consider a classical network to be a weighted, directed graph \mbox{$G=(V,E)$}, where vertices represent \textit{nodes} (\mbox{$v\in V$}) in the network, and the weighted edges represent communication \textit{links} (\mbox{$e\in E$}) between neighbouring nodes \cite{???}.
+We consider a classical network to be a weighted, directed graph,
+\begin{align}
+	G=(V,E),
+\end{align}
+where vertices represent \textit{nodes} (\mbox{$v\in V$}) in the network, and the weighted edges represent communication \textit{links} (\mbox{$e\in E$}) between neighbouring nodes \cite{???}.
 
-A node could be, for example, data storage, a classical computer implementing a computation, a router that switches the connections between incoming and outgoing links, or an end-user. A link on the other hand is any arbitrary means of communication between nodes, such as optical fibre, satellite, radio, electrical, smoke signals, tin cans connected by a taut piece of string, or well-trained carrier pigeon. In the protocols to be described here, it is completely irrelevant what the specific mediums for communication are. Rather what matters are \textit{costs}, quantifying the relative performance of different links.
+A node could be, for example, data storage, a classical computer implementing a computation, a router that switches the connections between incoming and outgoing links, or an end-user -- anything that communicates with the network, sender or receiver. A link on the other hand is any arbitrary means of communication between nodes, such as optical fibre, satellite, radio, electrical, smoke signals, tin cans connected by a taut piece of string, or well-trained carrier pigeon. In the protocols to be described here, it is completely irrelevant what the specific mediums for communication are. Rather what matters are \textit{costs} and \textit{attributes}, quantifying the relative performance of different links.
 
 A key feature of the global internet is redundancy. In a packet-switched environment, sending identical packets twice might each follow entirely different routes to their common destination. Node-to-node redundancy is easily accommodated for in the graph-theoretic model by allowing multiple distinct edges between nodes. It is extremely important to accommodate multiple edges in network graphs, since redundant routes provide a direct means by which to load-balance a route. So, for example, a hub in Australia might connect to a sister hub in New Zealand using both a fibre-optic undersea cable, and simultaneously via a satellite uplink. If the faster of the two connections is running out of capacity, a proportion of the packets can simply be switched to the other link, thereby balancing the load. For this reason we abstain from using an adjacency matrix representation for network graphs, as they do not accommodate redundancy.
 
@@ -578,7 +583,7 @@ The reason we demand costs have a distance interpretation is so that graph-theor
 
 A detailed discussion of some of the major costs and attributes that realistic quantum networks will be subject to is presented in Sec.~\ref{sec:quantum_meas_cost}.
 
-A \textit{route} between two nodes, Alice ($A$) and Bob ($B$), of the network, $G$, is an acyclic subgraph connecting those nodes, \mbox{$R_{A\to B}\subseteq G$}. In general ad hoc networks there will typically be multiple paths between two nodes \mbox{$A\to B$}. For a particular cost metric, the cost of an entire route is simply the sum of the costs of each of the constituent links,
+A \textit{route}\index{Routes} between two nodes, Alice ($A$) and Bob ($B$), of the network, $G$, is an acyclic subgraph connecting those nodes, \mbox{$R_{A\to B}\subseteq G$}. In general ad hoc networks there will typically be multiple paths between two nodes \mbox{$A\to B$}. For a particular cost metric, the cost of an entire route is simply the sum of the costs of each of the constituent links,
 \begin{align}\index{Route costs}
 c(R_{A\to B}) = \sum_{i=1}^{|R_{A\to B}|-1} c(v_i \to v_{i+1}),
 \end{align}
@@ -730,7 +735,7 @@ Given that classical networking is decades more advanced than quantum networking
 
 The motivation for the dual network is to ensure that classical and quantum data that jointly represent packets (Sec.~\ref{sec:prot_stack}) remain synchronised and subject to the same QoS issues, such as packet collisions (Sec.~\ref{sec:collision}) and network congestion.
 
-We envisage quantum networks to extend beyond just client/server quantum computation, to include the free trade of any quantum asset. This includes state preparation, measurement, computation, randomness, entanglement, and information. Much like the classical internet, by allowing quantum assets to be exchanged, we can maximise utility, improve economy of scale, and enable new models for commercialisation.
+We envisage quantum networks to extend beyond just client/server quantum computation, to include the free trade of any quantum asset. This includes state preparation, measurement, computation, randomness, entanglement, and information. Much like the classical internet, by allowing quantum assets to be exchanged, we can maximise utility, improve economy of scale, and enable new models for commercialisation.\index{Quantum assets}
 
 %
 % Quantum Channels
@@ -949,7 +954,7 @@ Conversion between polarisation and dual-rail encoding is straightforward and de
 \caption{Conversion from single-photon polarisation encoding to dual-rail encoding, using a polarising beamsplitter (PBS) and wave-plate (WP). The PBS separates the polarisation components into two distinct spatial modes. The WP then rotates the polarisation of one of the spatial modes such that it has the same polarisation as the other. Conversion from dual-rail to polarisation encoding is just the reverse of this procedure.} \label{fig:pol_to_dual_conv}
 \end{figure}
 
-Note that polarisation encoding requires a single spatial mode per qubit, whereas dual-rail encoding requires two. Polarisation encoding brings with it the advantage that arbitrary single-qubit operations may be implemented using wave-plates, which maintain coherence between the basis states extraordinarily well. In dual-rail encoding, on the other hand, single-qubit operations are implemented using beamsplitter operations between the two spatial modes, which must be interferometrically stable, since consecutive single-qubit operations yields Mach-Zehnder (MZ) interference \cite{bib:Zehnder1, bib:Zehnder2}.
+Note that polarisation encoding requires a single spatial mode per qubit, whereas dual-rail encoding requires two. Polarisation encoding brings with it the advantage that arbitrary single-qubit operations may be implemented using wave-plates, which maintain coherence between the basis states extraordinarily well. In dual-rail encoding, on the other hand, single-qubit operations are implemented using beamsplitter operations between the two spatial modes, which must be interferometrically stable, since consecutive single-qubit operations yields Mach-Zehnder (MZ) interference \cite{bib:Zehnder1, bib:Zehnder2}\index{Mach-Zehnder (MZ) interference}, to be discussed in detail in Sec.~\ref{sec:MZ_inter}.
 
 Single-photon encodings are extremely important, as they form the basis for universal linear optics quantum computing (Sec.~\ref{sec:KLM_univ}), \textsc{BosonSampling} (Sec.~\ref{sec:BS}) and quantum walks (Sec.~\ref{sec:QW}). They are also the simplest optical states for representing single qubits.
 
@@ -1101,15 +1106,15 @@ The optical encodings presented thus far are the main textbook examples. However
 
 In phase-space, the most common representations of optical states are in terms of quasi-probability functions:
 \begin{itemize}\index{$P$-function}\index{$Q$-function}\index{Wigner function}
-\item $P$-function:
+\item $P$-function: represents a state as a quasi-mixture of coherent states. When the $P$-function is strictly non-negative, it can be interpreted as a perfect classical mixture of coherent states. However, with any negativity this classical interpretation breaks down, hence `quasi'-probability. In general, the $P$-function representation for a state is not unique.
 \begin{align}
 \hat\rho = \int\!\!\!\int P(\alpha) \ket{\alpha}\bra{\alpha} d^2\alpha.
 \end{align}
-\item $Q$-function:
+\item $Q$-function: represents a state in terms of its overlap with the complete set of all coherent states, which form an over-complete basis.
 \begin{align}
 Q(\alpha) = \frac{1}{\pi} \bra{\alpha}\hat\rho\ket{\alpha}.
 \end{align}
-\item Wigner function:
+\item Wigner function: also has a quasi-probability interpretation, and negativity is qualitatively associated with `quantumness'. The Wigner function of a state is unique, and isomorphic to the density operator, making it perhaps the most useful phase-space representation for quantum states of light.
 \begin{align}
 W(x,p) = \int e^{ips/\hbar} \left\langle{x-\frac{s}{2}}\right| \hat\rho \left|{x+\frac{s}{2}}\right\rangle ds.
 \end{align}
@@ -1393,7 +1398,7 @@ In the above representation of mode-mismatch as a temporal or spatial translatio
 \end{align}
 where $p_\text{jitter}(\Delta_t)$ characterises the classical probability distribution of the temporal displacement. Time-jitter is particularly natural in heralded spontaneous parametric down-conversion (SPDC) sources (Sec.~\ref{sec:single_phot_src}), where imprecision in the measurement time of the heralding mode projects that temporal uncertainty onto the heralded state. For this reason, much time is being invested into engineering SPDC sources with separable output photons, such that pathological behaviour of the detection of the heralding photon does not project the heralded photon onto a mixed state. Time-jitter is a major consideration in all present-day single-photon source technologies.
 
-When considering mode-mismatch, there are two general regimes for how it manifests itself in an optical system. The first is when the interference taking place is between distinct, independent photons, i.e HOM interference (or its equivalent generalisations to higher-photon-number systems). The second is when multiple paths followed by a given photon interfere it with itself, i.e Mach-Zehnder (MZ)\index{Mach-Zehnder (MZ) interference} interference. The former only requires mode-matching on the scale of the photons' wave-packets, whereas the latter requires interferometric stability on the order of the photons' wavelength, a far more demanding requirement.
+When considering mode-mismatch, there are two general regimes for how it manifests itself in an optical system. The first is when the interference taking place is between distinct, independent photons, i.e HOM interference (or its equivalent generalisations to higher-photon-number systems). The second is when multiple paths followed by a given photon interfere it with itself, i.e Mach-Zehnder (MZ)\index{Mach-Zehnder (MZ) interference} interference. The former only requires mode-matching on the scale of the photons' wave-packets, whereas the latter requires interferometric stability on the order of the photons' wavelength, a far more demanding requirement. This is discussed in greater detail in Sec.~\ref{sec:opt_stab}.
 
 Mode-mismatch has been studied extensively in the context of linear optics quantum computing (LOQC), introduced in Sec.~\ref{sec:KLM_univ}. In particular, it was shown that in the cluster state formalism (Sec.~\ref{sec:CSQC}), mode-mismatch is equivalent to a dephasing error model, where the dephasing rate is related to the degree of photon distinguishability (i.e visibility) \cite{bib:RohdeRalph06}. More generally, the operation of entangling gates \cite{bib:RohdeFreqTemp05, bib:RohdeGateChar05, bib:RohdeOptPhot05, bib:RohdeTimeRes11} and \textsc{BosonSampling} \cite{bib:RohdeArbSpec15, bib:RohdeArbLow12} have been considered, and explicit error models derived.
 
@@ -1816,7 +1821,7 @@ All of the examples for cost metrics we introduced in Sec.~\ref{sec:quantum_meas
 % Quantum Transmission Control Protocol (QTCP)
 %
 
-\section{Quantum Transmission Control Protocol (QTCP)} \index{Quantum Transmission Control Protocol (QTCP)}
+\section{Quantum Transmission Control Protocol (QTCP)} \index{Quantum Transmission Control Protocol (QTCP)}\label{sec:QTCP}
 
 In the classical world, TCP is employed for data transmission and routing. Next we define the quantum equivalent -- the Quantum Transmission Control Protocol (QTCP).
 
@@ -1866,7 +1871,7 @@ At the lowest level of the protocol we have the raw \textsc{Data} Alice wishes t
 
 \subsubsection{Quantum data} \index{Quantum data layer}
 
-\textsc{Quantum Data} is allowed to be an arbitrary quantum state. It could be a pure or mixed state, of arbitrary (but predetermined) dimension, or even a subsystem of a larger external state (i.e entangled with another system). We stress that it needn't be expressed using a conventional qubit representation, in the way digital data is necessarily represented using bits. Keep in mind that the quantum internet isn't just there to communicate qubit data streams. Rather, it is intended to act as generally as possible, such that essentially arbitrary \textit{quantum assets} can be exchanged. These needn't be restricted to any particular type of encoding, such as those discussed in Sec.~\ref{sec:opt_enc_of_qi}. For example, in addition to something `standard' like polarisation-encoded qubits in single photons, one network user might like to share an exotic CV state of light, like a cat state, with his mate whose cat died. Indeed, multiple types of state encoding might be encapsulated within a single \textsc{Packet}. The QTCP acts only as an abstract interface for quantum networking, but is completely blind as to what the underlying data in the network is. QTCP is only concerned with getting that state from Alice to Bob.
+\textsc{Quantum Data} is allowed to be an arbitrary quantum state. It could be a pure or mixed state, of arbitrary (but predetermined) dimension, or even a subsystem of a larger external state (i.e entangled with another system). We stress that it needn't be expressed using a conventional qubit representation, in the way digital data is necessarily represented using bits. Keep in mind that the quantum internet isn't just there to communicate qubit data streams. Rather, it is intended to act as generally as possible, such that essentially arbitrary \textit{quantum assets}\index{Quantum assets} can be exchanged. These needn't be restricted to any particular type of encoding, such as those discussed in Sec.~\ref{sec:opt_enc_of_qi}. For example, in addition to something `standard' like polarisation-encoded qubits in single photons, one network user might like to share an exotic CV state of light, like a cat state, with his mate whose cat died. Indeed, multiple types of state encoding might be encapsulated within a single \textsc{Packet}. The QTCP acts only as an abstract interface for quantum networking, but is completely blind as to what the underlying data in the network is. QTCP is only concerned with getting that state from Alice to Bob.
 
 %
 % Classical Data
@@ -2132,7 +2137,7 @@ In Sec.~\ref{sec:teleport} we describe the protocol for quantum state teleportat
 
 Introducing costs and attributes into the picture, there are now three distinct costs/attributes of relevance, associated with the source packet, and the two halves of the resource of Bell pairs.
 
-The net costs/attributes of the final teleported packet upon arrival at its destination must now be merged appropriately, combining three sets of costs/attributes into one. The general structure of this process is shown in Alg.~\ref{alg:packet_teleport}, where we have intentionally left the functions for combining costs and attributes unspecified.
+The net costs/attributes of the final teleported packet upon arrival at its destination must now be merged appropriately, combining three sets of costs/attributes into one. The general structure of this process is shown in Alg.~\ref{alg:packet_teleport}, where we have intentionally left the functions for combining costs and attributes unspecified. In many instances, the \texttt{CombineCosts()} function could be as simple as a summation of its arguments.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\texttt{ 
@@ -2494,6 +2499,8 @@ The \textsc{Costs} and \textsc{Attributes} fields within the \textsc{Header} are
 
 \textsc{Costs} naturally capture characteristics of the network that accumulate additively along routes, whereas \textsc{Attributes} capture any other characteristics that aren't additive. A network needn't have both costs \textit{and} attributes. It may have one or the other, or both, but not neither, since there must be some measure by which to judge routes.
 
+\comment{To do!}
+
 %
 % Scalability
 %
@@ -2733,9 +2740,56 @@ Of course, all the topological structures described until now are in-principle c
 
 \section{Network algorithms} \label{sec:graph_theory} \index{Network algorithms}
 
-Having introduced some of the more relevant graph structures, we now introduce some of the key graph-theoretic algorithms that are of direct relevance to networking theory \cite{bib:RivestAlgBook}. In graph theory, many fundamental problems are believed to be computationally hard to solve, often \textbf{NP}-complete\index{\textbf{NP} \& \textbf{NP}-complete}. However, there are several important graph algorithms that are classically efficient to solve, and which are of great utility to us as network architects.
+Having introduced some of the more relevant graph structures, we now introduce some of the key graph-theoretic algorithms of direct relevance to networking theory \cite{bib:RivestAlgBook}. In graph theory, many fundamental problems are believed to be computationally hard to solve, often \textbf{NP}-complete\index{\textbf{NP} \& \textbf{NP}-complete}. However, there are several important graph algorithms that are (very) classically efficient to solve, and which are of great utility to us as network architects.
 
-We will focus heavily on combinatorial optimisation techniques, where the goal is to allocate network resources so as to optimise some cost metric. This includes both single- and multi-user algorithms, the latter being the far more relevant ones in the context of shared networks.
+We will focus heavily on combinatorial optimisation techniques, where the goal is to allocate network resources so as to optimise some cost metric. This includes both single- and multi-user algorithms, the latter being the far more relevant ones in the context of shared networks like the internet.
+
+In Table.~\ref{tab:net_alg_sum} we summarise the upcoming discussion on important network algorithms, and their associated complexities.
+
+\renewcommand{\tablename}{TABLE}
+
+\begin{table*}[!htb]
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+  		Algorithm & Description & Complexity class & Scaling \\
+  		\hline
+  		\hline
+  		Breadth-first-search & Explore all vertices in a graph & \textbf{P} & $O(|V|+|E|)$ \\
+  		\hline
+  		Depth-first-search & (same as above) & \textbf{P} & $O(|V|+|E|)$ \\
+		\hline
+  		Shortest-path (Dijkstra) & Find the shortest route between two nodes & \textbf{P} & $O(|V|^2)$ \\
+  		& in a directed graph & &  \\
+  		  		\hline
+		Shortest-path (\textit{A*}) & (same as above) & \textbf{P} & (varying) \\
+  		  		\hline
+		Single-source shortest path & Find the shortest paths from a given node to & \textbf{P} & $O(|V|\cdot |E|)$\\
+  		& \emph{all} other nodes & & \\
+ 		\hline
+Minimum spanning tree & Find a spanning tree of a graph that minimises & \textbf{P} & $O(|E|\text{log}|V|)$ \\
+  		& the total of the edge weights & & \\
+  		\hline
+  		Minimum cost flow & Minimise total costs in a network &  \textbf{P} & $O(|V|\text{log}|V|(|E|$\\
+  		(Orlin)& with a specified amount of flow& & $+|V|\text{log}|V|))$ \\
+  		\hline
+  		Maximum flow & Maximise flow in a network, regardless of costs & \textbf{P} & $O(|E|\cdot c_\text{max})$ \\
+  		(Ford-Fulkerson) & & & \\
+  		\hline
+  		Multi-commodity flow & Same as maximum flow, but generalised to & \textbf{NP}-complete & ? \\
+  		& arbitrary numbers of users & (exactly), & \\
+  		& & \textbf{P} (approximation & \\
+  		& & using heuristics) & \\
+  		\hline
+  		Vehicle routing problem & Generalises the shortest-path algorithm to multiple & \textbf{NP}-complete & ? \\
+  		& users, with distinct sources and destinations & & \\ 
+  		\hline
+  		Vehicle rescheduling problem & Same as above but with dynamically changing costs & \textbf{NP}-complete & ? \\
+    	\hline
+	\end{tabular}
+	\caption{Summary of some important network algorithms and their complexities. The \textbf{NP}-complete algorithms are not believed to have efficient classical algorithms, and their exact scaling is not well understood.} \label{tab:net_alg_sum} \index{Network algorithms}
+\end{table*}
+
+\renewcommand{\tablename}{ALG.}
 
 %
 % Network Exploration & Pathfinding
@@ -2770,13 +2824,47 @@ Both BFS and DFS exhibit runtime \mbox{$O(|V|+|E|)$}, where $|V|$ and $|E|$ are 
 
 In graph theory, the shortest-path problem is that of finding a subgraph of a given graph $G$, connecting two vertices, \mbox{$A\to B \subset G$}, such that the sum of its edge weights is minimised. In the context of our application to route-finding, this amounts to finding a route that minimises cost.
 
-The first proven shortest-path algorithm was by Dijkstra \cite{bib:Dijkstra59}, which requires runtime $O(|V|^2)$, also residing in \textbf{P}\index{\textbf{P} \& \textbf{BPP}}. Subsequently, a number of improvements and variations on Dijkstra's algorithm have been proposed, most notably the $A^*$ algorithm \cite{???}, which has found widespread modern use.
+The first proven shortest-path algorithm was by Dijkstra \cite{bib:Dijkstra59}, which requires runtime $O(|V|^2)$, also residing in \textbf{P}\index{\textbf{P} \& \textbf{BPP}}. Subsequently, a number of improvements and variations on Dijkstra's algorithm have been proposed, most notably the $A^*$ algorithm \cite{bib:Astar}, which has found widespread modern use, using a heuristic approach to improve performance over Dijkstra.
 
 Formally, let $\vec{R}$ be the set of all routes \mbox{$A\to B$}. Then,
 \begin{align}
 c_\text{opt} = \min_{r\in R} \left(\sum_{i\in r} c_\text{net}(i) \right),
 \end{align}
-where \mbox{$i\in r$} denotes the $i$th edge in the route $r$.
+where \mbox{$i\in r$} denotes the $i$th edge in the route $r$. Intuitively, the (in general) exponential number of possible paths through a graph might lead one to believe the above optimisation problem is a computationally inefficient one (such as \textbf{NP}-complete, or worse). However, perhaps surprisingly, Dijkstra's algorithm cleverly manages to reduce this to a polynomial-time problem. A sketch of the algorithm is provided in Alg.~\ref{alg:dijkstra}, which needn't be understood by the reader desperate to read further.
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function DijkstraShortestPath($G$,$A$,$B$):
+\begin{enumerate}
+	\item currentNode = $A$
+    \item tentativeDistances[$A$] = 0
+    \item tentativeDistances[others] = $\infty$
+    \item nodesVisited[$A$] = True
+    \item nodesVisited[others] = False
+    \item loopStart:
+    \item neighbours = currentNode.neighbourhood
+    \item nodesVisited[neighbours] = True
+    \item for(n$\in$neighbours) \{
+    \setlength{\itemindent}{0.2in}
+    \item newTentativeDist = \\ min(tentativeDistances[currentNode] \\+ edgeWeight[currentNode,n],\\
+        tentativeDistances[n])\\
+    \item nodesVisited[currentNode] = True
+    \setlength{\itemindent}{0in}
+    \item \}
+    \item if(nodesVisited[$B$] = True) \{
+    \setlength{\itemindent}{0.2in}
+	\item return(tentativeDistances[$B$])
+	\item $\Box$
+    \setlength{\itemindent}{0in}
+    \item \}
+	\item currentNode = \\
+	tentativeDistances[unvisitedNodes].\\
+	nodeWithSmallest()
+	\item goto(loop)
+    \item $\Box$
+\end{enumerate}}}}
+\caption{Dijkstra's original shortest-path algorithm for finding the lowest weight path through a graph, $G$, between two vertices, $A$ (source) and $B$ (destination). The algorithm has $O(|V|^2)$ runtime (in \textbf{P}). \comment{Fix me}} \label{alg:dijkstra}\index{Shortest-path algorithm}
+\end{table}
 
 Fig.~\ref{fig:simp_route_opt} illustrates a directed, edge-weighted graph. A shortest-path algorithm applied between vertices $A$ and $B$ would return \mbox{$R_\text{shortest} = A\to F\to B$} as the minimum cost route.
 
@@ -2806,7 +2894,7 @@ The shortest-path algorithm by Dijkstra presented above finds the shortest route
 
 Single-source shortest-path algorithms address this problem by calculating the shortest paths from the current node to \textit{every} other node in the network topology.
 
-The best-known algorithm for this problem is the Bellman-Ford (or Bellman-Ford-Moore)\index{Bellman-Ford-Moore algorithm} algorithm \cite{BF}, which requires worst-case runtime of $O(|V|\cdot |E|)$. Clearly this is more complex than Dijkstra's algorithm for finding a particular shortest-path. But it is more efficient than using brute-force to find the shortest-path between every pair of nodes in the network via repeated application of Dijkstra.
+The best-known algorithm for this problem is the Bellman-Ford (or Bellman-Ford-Moore)\index{Bellman-Ford-Moore algorithm} algorithm \cite{BF}, which requires worst-case runtime of $O(|V|\cdot |E|)$. Clearly this is more complex than Dijkstra's algorithm for finding a particular shortest-path. But it is more efficient than using brute-force to find the shortest-path between every pair of nodes in the network via $O(|V|^2)$ repeated applications of Dijkstra.
 
 %
 % Minimum Spanning Tree
@@ -2829,6 +2917,8 @@ Fig.~\ref{fig:mst} shows an example of a graph with its MST.
 The \textit{minimum cost flow problem} \cite{???} is that of minimising costs through a network for a specified amount of flow (i.e total bandwidth or throughput), which acts as a constraint on the problem. The definition of `cost' in this context is compatible with our earlier definition of cost metrics (Def.~\ref{def:metric}).
 
 This problem can be efficiently solved using linear programming. Specifically, cost metrics along links in series are given by linear combinations of individual link costs. If, in addition, we let our net cost function be linear in the constituent costs then the net cost will also be linear in all the edge weights. This lends itself directly to optimisation via linear programming techniques. Algorithms for linear programming, such as the \textit{simplex} algorithm, have polynomial-time solutions (i.e reside in \textbf{P}\index{\textbf{P} \& \textbf{BPP}}), and a plethora of software libraries are available for implementing them numerically.
+
+One polynomial-time algorithm for solving this problem does so in \mbox{$O(|V|\text{log}|V|(|E|+|V|\text{log}|V|))$} time \cite{JAMES_B_ORLIN}.
 
 %
 % Maximum Flow
@@ -3213,7 +3303,7 @@ There are countless applications for the long-distance communication and process
 
 Much of the recent experimental progress in quantum technology has been in the area of low-level protocols, although demonstrations of higher-level protocols are rapidly accelerating.
 
-We keep in mind that although throughout this presentation we have been very quantum computing-centric, quantum computing is not the \textit{only} quantum resource worth communicating. In the same way that \textit{digital assets} encompass a broad range of digital systems and information, any aspect of a quantum system -- from a state, to an operation, storage, to a measurement, or anything else -- could be treated as a \textit{quantum asset}, which, for generality, we would like our quantum networks to be able to handle.
+We keep in mind that although throughout this presentation we have been very quantum computing-centric, quantum computing is not the \textit{only} quantum resource worth communicating. In the same way that \textit{digital assets} encompass a broad range of digital systems and information, any aspect of a quantum system -- from a state, to an operation, storage, to a measurement, or anything else -- could be treated as a \textit{quantum asset}\index{Quantum assets}, which, for generality, we would like our quantum networks to be able to handle.
 
 At the lowest physical level, quantum protocols have in common that they involve state preparation, evolution, and measurement as the fundamental primitives upon which more complex protocols are constructed. We consider these primitive resources in detail, before building upon them to consider some of the major elementary quantum protocols that implement tasks of practical interest. All of those discussed here have been subject to extensive experimental investigation and demonstration, which will be summarised in Sec.~\ref{sec:state_of_the_art}. We treat full quantum computation separately in Secs.~\ref{sec:models_QC} \& \ref{sec:archs_QC}, as this is such an involved topic in its own right.
 
@@ -3458,7 +3548,7 @@ More recently, superconducting detectors\index{Superconducting photo-detectors} 
 \caption{A superconducting photo-detector. A superconductor is held at just below its critical temperature. The absorption of a photon is sufficient to heat it above the critical temperature, yielding a detectable change in conductance across the device.} \label{fig:super_det}
 \end{figure}
 
-The key parameter of interest in a photo-detector, in addition to whether or not it is number-resolving, is its efficiency, $\eta$ -- the probability that a given incident photon will trigger the detector. For most applications, the goal is to maximise $\eta$. As one might expect, there is a direct tradeoff between $\eta$ and cost, with very high-efficiency detectors often economically out of reach for many experimentalists. Also of interest is the `dark-count' rate -- the rate at which the detector falsely clicks in the absence of photons. However, this is often ignored as modern detectors typically exhibit very low dark-count rates.
+The key parameter of interest in a photo-detector, in addition to whether or not it is number-resolving, is its efficiency, $\eta$ -- the probability that a given incident photon will trigger the detector. For most applications, the goal is to maximise $\eta$. As one might expect, there is a direct tradeoff between $\eta$ and cost, with very high-efficiency detectors often economically out of reach for many experimentalists. Also of interest is the `dark-count' rate -- the rate at which the detector falsely clicks in the absence of photons. However, this is often ignored as modern detectors typically exhibit very low dark-count-rates.
 
 Mathematically, the measurement operators for number-resolved detection are,
 \begin{align}\index{Number-resolved photo-detection}
@@ -4381,11 +4471,11 @@ where $S$ sums over all possible photon-number configurations at the output, of 
 \begin{align}
 |S| = \binom{n+m-1}{n},
 \end{align}
-where there are $n$ photons in total, and it is assumed that,
+where there are $n$ photons in total in $m$ modes. It is assumed that,
 \begin{align}
 m=O(n^2),
 \end{align}
-which puts us into the anti-bunched (i.e binary photon-number) regime with high probability. In the case of a large number of optical modes, the \mbox{$m=O(n^2)$} condition effectively ensures photon anti-bunching with high probability\footnote{That is, we are unlikely to observe more than a single photon in any given output mode, placing us into a binary photo-detection regime. This condition has become known as the `bosonic birthday paradox'.}, rendering non-number-resolved photo-detectors sufficient for physical implementation. However, this `no-collision' subspace remains exponentially large,
+which, for large $m$, puts us into the anti-bunched (i.e binary photon-number) regime with high probability\footnote{That is, we are unlikely to observe more than a single photon in any given output mode, placing us into a binary photo-detection regime. This condition has become known as the `bosonic birthday paradox'.}, rendering non-number-resolved photo-detectors sufficient for physical implementation. However, this `no-collision' subspace remains exponentially large,
 \begin{align}
 |S_\text{no-collision}| = \binom{m}{n}.
 \end{align}
@@ -4399,7 +4489,7 @@ and the associated configuration probabilities by\index{Boson-sampling configura
 	P_{S,T} &= |\gamma_{S,T}|^2 \nonumber \\
 	&= \frac{|\text{Per}(U_{S,T})|^2}{S_1!\dots S_m! T_1!\dots T_m!}
 \end{align}
-where $\text{Per}(\cdot)$ denotes the matrix permanent, and $U_{S,T}$ is a sub-matrix of $U$ -- the transfer matrix associated with the particular sample configuration -- obtained by taking $S_i$ copies of the $i$th row, and $T_j$ copies of the $j$th column of the linear optics unitary matrix $U$. The unitary is chosen randomly from the Haar-measure\footnote{The Haar-measure generalises the notion of a uniform distribution to higher-dimensional topologies than the real numbers, in this instance to the $\text{SU}(n)$ group.}.
+where $\text{Per}(\cdot)$ denotes the matrix permanent, and $U_{S,T}$ is a sub-matrix of $U$ -- the transfer matrix\index{Transfer matrix} associated with the particular input-to-output sample configuration -- obtained by taking $S_i$ copies of the $i$th row, and $T_j$ copies of the $j$th column of the linear optics unitary matrix $U$. For the purposes of the original complexity proof, the unitary is chosen randomly from the Haar-measure\footnote{The Haar-measure generalises the notion of a uniform distribution to higher-dimensional topologies than the real numbers, in this instance to the $\text{SU}(n)$ group.}\index{Haar measure}, although it remains an open question as to what is the full class of unitaries that yield computationally hard problems.
 
 The computational problem is simply to sample this probability distribution $P_{S,T}$, which the linear optics network can implement efficiently, but it is believed a classical computer cannot. The full model is shown in Fig.~\ref{fig:bs_model}.
 
@@ -4408,15 +4498,15 @@ The computational problem is simply to sample this probability distribution $P_{
 \caption{The \textsc{BosonSampling} model for non-universal linear optics quantum computing. $S$ (output) and $T$ (input) are represented in the photon-number basis. After application of the Haar-random linear optics unitary to the input multi-mode Fock state, the output superposition is sampled with coincidence photo-detection.} \label{fig:bs_model}
 \end{figure}
 
-The size of a boson-sampler required to exhibit post-classicality is under active debate. But some estimates suggest that as many as 50 photons in 2,500 modes might be a rough guide for such a threshold \cite{NoSupBS_Montanaro}. Needless to say, this is already an extremely challenging technological goal, suggesting that although the {\sc BosonSampling} problem is far simpler than universal LOQC, it is far from simple.
-
 For comparison, the equivalent classical protocol using distinguishable photons that evolve independently through the network would be described by,
 \begin{align}
 	P_{S,T} = \frac{\text{Per}(|U_{S,T}|^2)}{S_1!\dots S_m! T_1!\dots T_m!},
 \end{align}
-which yields a classically efficient sampling problem. Thus, for boson-sampling the permanents are of complex-valued matrices, whereas for the equivalent classical problem the permanents are of positive real-valued matrices.
+which yields a classically efficient sampling problem. Thus, for {\sc BosonSampling} the permanents are of complex-valued matrices, whereas for the equivalent classical problem the permanents are of positive real-valued matrices.
 
 Very importantly, note that {\sc BosonSampling} does \textit{not} let us efficiently \textit{calculate} matrix permanents. Rather, it samples across a distribution of an exponential number of permanents. This is because, for an exponentially large sample space, with only a polynomial number of measurement trials, we are unlikely to gain more than binary accuracy about individual amplitudes, which is insufficient for determining any particular permanent. It appears that God knows how to efficiently solve matrix permanents, but conspires against us such that we remain ignorant of them. --- \textit{Deus magnus est.}
+
+The size of a boson-sampler required to exhibit post-classicality is under active debate, as has undergone much historical revision \cite{RohdeRalph}. But some recent estimates suggest that as many as 50 photons in 2,500 modes might be a rough guide for such a threshold \cite{NoSupBS_Montanaro}. Needless to say, this is already an extremely challenging technological goal, suggesting that although the {\sc BosonSampling} problem is far simpler than universal LOQC, it is far from simple.
 
 \textsc{BosonSampling} in the presence of various error models, such as loss, source non-determinism and mode-mismatch, has been extensively investigated \cite{bib:RohdeErrBS12, bib:RohdeSPDC13, bib:ScottLost16, bib:RohdeArbSpec15, bib:RandBS}. 
 
@@ -4428,13 +4518,13 @@ Very importantly, note that {\sc BosonSampling} does \textit{not} let us efficie
 
 As discussed in Sec.~\ref{sec:single_phot_src}, SPDC is the most common present-day implementation of single-photon sources. However, despite their ready availability, they suffer from non-determinism, with single-photon heralding probability given by Eq.~(\ref{eq:SPDC_p_prep}). To improve upon this, multiplexed sources can be employed \cite{bib:RohdeSPDC13}, improving effective single-photon preparation probabilities asymptotically to unity, as given by Eq.~(\ref{eq:SPDC_multiplex}).
 
-However, rather than employing a multiplexed SPDC source in place of each of the required $n$ single-photons, we can instead employ a larger multiplexer that routes \mbox{$N\gg n$} modes to $n$ modes, which is far more efficient than $n$ independent multiplexed single-photon sources.
+However, rather than employing a multiplexed SPDC source in place of each of the required $n$ single-photons, we can instead employ a larger multiplexer that routes \mbox{$N\gg n$} sources to $n$ modes, which is far more efficient than $n$ independent multiplexed single-photon sources.
 
-The model is shown in Fig.~\ref{fig:multiplexed_bs}. We begin by operating $N$ SPDC sources in parallel. Clearly if $N$ is sufficiently large with respect to $n$, it becomes asymptotically certain that at least $n$ photons will be heralded. When this occurs, the successfully prepared $n$ photons -- in whatever configuration they happen to occur -- are routed to the first $n$ modes of the {\sc BosonSampling} interferometer $\hat{U}$, and the protocol proceeds as usual.
+The model is shown in Fig.~\ref{fig:multiplexed_bs}. We begin by operating $N$ SPDC sources in parallel. Clearly if $N$ is sufficiently large with respect to $n$, it becomes asymptotically certain that at least $n$ photons will be heralded. When this occurs, the successfully prepared $n$ photons -- in whatever configuration they happen to occur -- are routed to the first $n$ modes of the {\sc BosonSampling} interferometer $\hat{U}$ by the multiplexer (which is classically controlled by the SPDC heralding outcomes), and the protocol proceeds as usual.
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{multiplexed_boson_sampling}
-\caption{Model for multiplexed {\sc BosonSampling}. We operate \mbox{$N\gg n$} SPDC sources in parallel, which are multiplexed to the first $n$ modes of the interferometer $\hat{U}$. With sufficiently large $N$ it becomes asymptotically certain that at least $n$ single-photons will be heralded, thereby successfully preparing the {\sc BosonSampling} input state.} \label{fig:multiplexed_bs}\index{Multiplexed boson-sampling}
+\caption{Model for multiplexed {\sc BosonSampling}. We operate \mbox{$N\gg n$} SPDC sources in parallel, which are multiplexed to the first $n$ modes of the interferometer $\hat{U}$. With sufficiently large $N$ it becomes asymptotically certain that at least $n$ single-photons will be heralded, thereby successfully preparing the desired {\sc BosonSampling} input state.} \label{fig:multiplexed_bs}\index{Multiplexed boson-sampling}
 \end{figure}
 
 Specifically, the probability of at least $n$ successful single-photon heralding events occurring is,
@@ -4452,7 +4542,7 @@ is the probability of a single SPDC source heralding the preparation of a single
 \caption{Probability of successfully preparing at least $n$ photons for {\sc BosonSampling} from a multiplexed source comprising a bank of $N$ SPDC sources in parallel. For sufficiently large $N$, we prepare the desired $n$ photons with probability asymptoting to unity.} \label{fig:multiplex_bs_res}\index{Multiplexed boson-sampling}
 \end{figure}
 
-However, although this procedure works in-principle, it comes at the expense of a large number of sources, $N$, and more challengingly, fast-feedforward. Keep in mind that if we were able to perform complex fast-feedforward, we might be able to do much more than just {\sc BosonSampling} in the first place!
+However, although this procedure works in-principle, it comes at the expense of a large number of sources, $N$, and more challengingly, fast-feedforward. Keep in mind that if we were able to perform complex fast-feedforward, we might be able to do much more (and far more interesting things) than just {\sc BosonSampling} in the first place!
 
 %
 % Scattershot Boson-Sampling
@@ -4460,22 +4550,26 @@ However, although this procedure works in-principle, it comes at the expense of 
 
 \paragraph{Scattershot {\sc BosonSampling}} \index{Scattershot boson-sampling}
 
-A variation on SPDC-based {\sc BosonSampling}, known as `scattershot'\index{Scattershot boson-sampling} {\sc BosonSampling}, has been presented \cite{bib:RandBS}, which obviates the difficultly of fast multiplexing in the approach described previously. Here, rather than inputting an SPDC source into the first $n$ of the $m$ modes, we input a source into \textit{every} mode, i.e $m$ sources in total. We then accept all events with $n$ heralding successes in total, irrespective of the configuration in which they occurred. This has the effect of implementing $n$-photon {\sc BosonSampling} with an additional layer of randomisation on the input modes (i.e a randomisation in the input configuration, $T$, which is ordinarily fixed). However, since the algorithm is already randomised, this additional layer of randomisation does not undermine the complexity proofs, which hold as is. This effectively boosts the $n$-photon heralding probability from,
-\begin{align}
-P_n = \chi^{2n}(1-\chi^2)^n,	
-\end{align}
-to,
-\begin{align}
-P_n = \binom{n^2}{n}\chi^{2n}(1-\chi^2)^{n^2},	
-\end{align}
-exhibiting a binomial enhancement in $n$-photon events, yielding a significant improvement in count rates. The scattershot model is shown in Fig.~\ref{fig:scattershot_model}.
+A variation on SPDC-based {\sc BosonSampling}, known as `scattershot'\index{Scattershot boson-sampling} {\sc BosonSampling}, has been presented \cite{bib:RandBS}, which obviates the difficultly of fast multiplexing in the approach described previously. Here, rather than inputting an SPDC source into the first $n$ of the $m$ modes, we input a source into \textit{every} mode, i.e $m$ sources in total. We then accept all events with $n$ heralding successes in total, irrespective of the configuration in which they occur. This has the effect of implementing $n$-photon {\sc BosonSampling} with an additional layer of randomisation on the input modes (i.e a randomisation in the input configuration, $T$, which is ordinarily fixed). However, since the algorithm is already randomised, this additional layer of randomisation does not undermine the complexity proofs, which hold as is. The scattershot model is shown in Fig.~\ref{fig:scattershot_model}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.7\columnwidth]{scattershot_model}
 \caption{Model for `scattershot' {\sc BosonSampling}. An SPDC source is inputted into all $m$ input modes. We post-select upon detecting a total of $n$ photons in the heralding modes, irrespective of their configuration, yielding an $n$-photon instance of {\sc BosonSampling} with randomised input configuration. Unlike multiplexed architectures, the scheme remains entirely passive, without requiring adaptive fast-feedforward.} \label{fig:scattershot_model}
 \end{figure}
 
-The probability of successfully heralding an $n$-photon {\sc BosonSampling} instance is shown in Fig.~\ref{fig:scattershot_probs}, showing distinct peaks for different $\chi$, which have been binomially enhanced with respect to the conventional approach.
+By keeping all configurations of $n$ photons, rather than just the \mbox{$\ket{T}=\ket{1}^{\otimes n} \ket{0}^{\otimes (m-n)}$} case, we effectively boost the $n$-photon heralding probability from,
+\begin{align}
+	P_n = \chi^{2n}(1-\chi^2)^n,	
+\end{align}
+to,
+\begin{align}
+	P_n = \binom{n^2}{n}\chi^{2n}(1-\chi^2)^{n^2},	
+\end{align}
+exhibiting a binomial enhancement in $n$-photon events, yielding a significant improvement in count-rates. For a given desired photon-number $n$, choosing the value for the squeezing parameter, $\chi$, which maximises $P_n$, we obtain the optimised success probability,
+\begin{align}
+	P_n^{(\text{opt})} \approx \frac{1}{e\sqrt{2\pi(n-1)}},
+\end{align}
+which exhibits only polynomial scaling against photon-number $n$, and is therefore scalable. This is shown in Fig.~\ref{fig:scattershot_probs}. This is in stark contrast to conventional {\sc BosonSampling}, where the success probability decays exponentially with photon-number, and is therefore inefficient. Importantly, unlike the multiplexed approach, this efficiency improvement does not require any active elements, remaining in the true spirit of {\sc BosonSampling}.
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{scattershot_probs}
@@ -4491,9 +4585,23 @@ The probability of successfully heralding an $n$-photon {\sc BosonSampling} inst
 In addition to photonic \textsc{BosonSampling}, several authors have presented strong evidence that other classes of quantum states of light exist, which yield computationally complex sampling problems under the action of linear optics. Most notably, such evidence has been provided for the following:
 \begin{itemize}
 \item \cite{bib:RandBS} considered two-mode squeezed vacuum (or SPDC) states, a type of Gaussian state with strictly positive Wigner function. This is the same as the scattershot model presented in Sec.~\ref{sec:BS}.\index{Two-mode squeezed vacuum states}\index{Gaussian states}
-\item \cite{bib:RohdeDisp15} considered photon-added coherent states ($\hat{a}^\dag\ket\alpha$) and displaced single-photon states ($\hat{D}(\alpha)\ket{1}$).\index{Photon-added coherent states}\index{Displaced single-photon states}
-\item \cite{bib:RohdePhotAdd15} considered photon-added or -subtracted squeezed vacuum states ($\hat{a}^\dag\hat{S}(\chi)\ket{0}$, $\hat{a}\hat{S}(\chi)\ket{0}$).\index{Photon-added squeezed vacuum states}\index{Photon-subtracted squeezed vacuum states}
-\item \cite{bib:RohdeCat15} considered `cat' states -- superpositions of coherent states (\mbox{$\ket\alpha+\ket{-\alpha}$}).\index{Cat states}
+	\begin{align}
+		\ket\psi_\text{in} = \sqrt{1-\chi^2}\sum_{n=0}^\infty \chi^n\ket{n,n}.
+	\end{align}
+\item \cite{bib:RohdeDisp15} considered photon-added coherent states and displaced single-photon states.\index{Photon-added coherent states}\index{Displaced single-photon states}
+	\begin{align}
+		\ket\psi_\text{in} &\propto \hat{a}^\dag\ket\alpha,\\
+		\ket\psi_\text{in} &\propto \hat{D}(\alpha)\ket{1}.
+	\end{align}
+\item \cite{bib:RohdePhotAdd15} considered photon-added or -subtracted squeezed vacuum states.\index{Photon-added squeezed vacuum states}\index{Photon-subtracted squeezed vacuum states}
+	\begin{align}
+		\ket\psi_\text{in} &\propto \hat{a}^\dag\hat{S}(\chi)\ket{0},\\
+		\ket\psi_\text{in} &\propto \hat{a}\hat{S}(\chi)\ket{0}.
+	\end{align}
+\item \cite{bib:RohdeCat15} considered `cat' states -- superpositions of coherent states.\index{Cat states}
+	\begin{align}
+		\ket\psi_\text{in} \propto \ket\alpha \pm \ket{-\alpha}.
+	\end{align}
 \end{itemize}
 
 Preparation of all of these classes of quantum states of light present their own technological challenges, some very daunting, and all much harder to prepare than single-photons. Thus, the ability to outsource their preparation would be a useful application for the quantum cloud.
@@ -4756,7 +4864,7 @@ There are two main models for how a distributed computation may proceed -- in \t
 \caption{Models for distributed computation in parallel and in series. In parallel, a root node oversees the total computation, delegating tasks to child nodes, which process data independently of one another. In series the nodes sequentially process data in a pipeline of algorithmic stages.} \label{fig:distributed}
 \end{figure}
 
-Classical parallel processing typically involves a root node, which delegates tasks to be performed in parallel by a number of child nodes, and the results returned to the root node, which potentially applies an algorithm to merge the set of results, before returning a final result to the client. Classical models such as Google's \textsc{MapReduce} protocol \cite{bib:MapReduce} are built on this idea.
+Classical parallel processing typically involves a root node, which delegates tasks to be performed in parallel by a number of child nodes, and the results returned to the root node, which potentially applies an algorithm to merge the set of results, before returning a final result to the client. Classical models such as Google's \textsc{MapReduce} protocol \cite{bib:MapReduce}\index{MapReduce} are built on this idea.
 
 In classical computing, parallel processing is widely employed to shorten algorithmic runtimes. However, the increase in clock-cycles scales only linearly with the number of nodes in the network: $k$-fold parallelisation yields a \mbox{$\sim k$}-fold speedup. For time-critical applications, such a linear improvement may be already highly beneficial, albeit costly. The attractive feature of quantum computing, however, is the potentially exponential improvement in algorithmic performance of certain tasks over their classical counterparts. This exponential relationship implies that parallelisation in general no longer has a simple linear tradeoff.
 
@@ -4874,12 +4982,34 @@ Of course, we have used the most simple model for modules, where each accommodat
 \end{figure}
 
 %
-% Outsourced Quantum Experiments
+% Outsourced Quantum Research
 %
 
-\subsection{Outsourced quantum experiments} \index{Outsourced quantum experiments}
+\subsection{Outsourced quantum research} \index{Outsourced quantum research}
 
-\comment{To do}
+Thus far we have focussed on computation as the key utility for outsourced quantum technologies, and certainly this is likely to be the dominant driving force behind quantum outsourcing. But of course not everyone wants to only solve complex algorithmic problems. Others may wish to study quantum systems themselves from the perspective of basic science research. Around the world, scientists are competing the set up elaborate laboratories, implementing ever increasingly complicated quantum experiments, not for the purposes of algorithmic problem solving, but for that of intellectual pursuit.
+
+It is foreseeable that in the context of a true quantum internet, there will be a demand for not only the communication of bits and qubits, but more general `quantum assets'\index{Quantum assets} (Secs.~\ref{sec:introduction} \& \ref{sec:quant_net}), involving all manner of state preparation, manipulation, evolution and measurement, potentially all performed by different interconnected parties, specialising in different aspects of quantum protocols. The demand for this will extend far beyond computation.
+
+The QTCP protocol presented in Sec.~\ref{sec:QTCP} provides an extensible framework for facilitating these kinds of outsourced or delegated protocols using generic quantum assets. Bear in mind that, as designed, the payload of QTCP packets could encapsulate all manner of optical states, or mediate long-distance interaction between them.
+
+This model for quantum research could be invaluable to less-well-resourced researchers, for example in developing nations or not-so-well-funded universities, opening up a field of experimental research previously inaccessible to them. Indeed, some private and university sector operators are making elementary, remotely programmable quantum information processing protocols available over the internet, bringing this type of research within reach of researchers and even curious hobbyists around the globe.
+
+While such early implementations fall far short of being truly reconfigurable, outsourced or delegated quantum protocols, applicable to a broad range of applications, they certainly already demonstrate the interest such models for outsourcing is generating within the research community, and the viability of further extending it.
+
+Examples of how this type of model might be applied could include, but not be limited to research into:
+\begin{itemize}
+	\item Quantum information processing protocols, beyond only quantum computation, bits and qubits.
+	\item Bose-Einstein condensates (BECs)\index{Bose-Einstein condensates (BECs}.
+	\item Light-matter interactions.\index{Light-matter interactions}
+	\item Quantum thermodynamics and quantum statistical mechanics.\index{Quantum thermodynamics}\index{Quantum statistical mechanics}
+	\item Quantum phase-transitions.\index{Quantum phase-transitions}
+	\item Quantum optics, involving all manner of quantum states of light, beyond only those raised in Sec.~\ref{sec:opt_enc_of_qi}.\index{Quantum optics}
+	\item Optical interferometry.\index{Optical interferometry}
+	\item \comment{More!}
+\end{itemize}
+
+In some instances, such outsourced quantum protocols might be applicable to encryption protocols like those discussed in the next section, Sec.~\ref{sec:homo_blind}, enabling highly valuable secrecy for the experiments being conducted by researchers and their hard-earned results\footnote{Note, however, that the upcoming protocols are designed for application to particular optical states and protocols, and encryption schemes involving more generic quantum assets are likely to require some rethinking and adaptation (if possible at all, which isn't guaranteed!).}.
 
 %
 % Encrypted Quantum Computation
@@ -4899,7 +5029,7 @@ Classical homomorphic encryption has only been described very recently \cite{bib
 
 In the usual circuit model, blind quantum computation has been shown to be viable, and optimal bounds derived. Equivalently, such protocols have been described in the cluster state model (Sec.~\ref{sec:CSQC}). For universal computation, such protocols necessarily require classical interaction between the client and host. However, it was shown that in some restricted (i.e non-universal) models for optical quantum computation, specifically \textsc{BosonSampling}, quantum walks and coherent state passive linear optics, non-interactive (partial) homomorphic encryption may be implemented.
 
-These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver information-theoretically secure\footnote{We differentiate between \textit{information theoretic security}\index{Information-theoretic security}, as opposed to \textit{computational security}\index{Computational security}. In the former, the laws of quantum information bound the amount of information that can be extracted from a system, irrespective of measurement or computational operations. Thus, such security can be regarded as attack-independent. In the latter, security is based on the assumption that an adversary's computational resources are insufficient to perform cryptanalysis or brute-force cracking. Clearly the former makes a far stronger statement about the security of a protocol than the latter. Classical public- and private-key encryption protocols are typically based upon the assumption of computational security (e.g the computational complexity of performing integer factorisation in the case of RSA public-key encryption, or solving a complex satisfiability problem in the case of private-key encryption), whereas quantum encryption protocols are typically information theoretically secure (e.g the one-time-pad using QKD).} data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
+These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver (at least partially) information-theoretically secure\footnote{We differentiate between \textit{information theoretic security}\index{Information-theoretic security}, as opposed to \textit{computational security}\index{Computational security}. In the former, the laws of quantum information bound the amount of information that can be extracted from a system, irrespective of measurement or computational operations. Thus, such security can be regarded as attack-independent. In the latter, security is based on the assumption that an adversary's computational resources are insufficient to perform cryptanalysis or brute-force cracking. Clearly the former makes a far stronger statement about the security of a protocol than the latter. Classical public- and private-key encryption protocols are typically based upon the assumption of computational security (e.g the computational complexity of performing integer factorisation in the case of RSA public-key encryption, or solving a complex satisfiability problem in the case of private-key encryption), whereas quantum encryption protocols are typically information theoretically secure (e.g the one-time-pad using QKD).} data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
 
 %
 % Classical Computation 
@@ -4997,7 +5127,7 @@ The previously discussed schemes for encrypted universal quantum computation req
 
 Let us formalise some reasonable requirements for such a scheme. We will require that:
 \begin{itemize}
-\item Alice's encoding and decoding operations are separable, single-mode operations (i.e she has no quantum power of entanglement at her disposal).
+\item Alice's encoding (state preparation) and decoding (measurement) operations are separable, single-mode operations (i.e she has no quantum power of entanglement at her disposal).
 \item Bob's computation is non-interactive, requiring no input from Alice beyond her input state.
 \item Bob's computation is passive, requiring no intermediate measurement and feedforward.
 \item Other than this, there are no constraints on the structure of the encoding/decoding operations, or the optical quantum computation being implemented (e.g it could encompass more than just linear optics).
@@ -5517,7 +5647,7 @@ where $f_s$ is an arbitrary, monotonically increasing \emph{scaling function}\in
 
 It is now evident that for linear scaling functions, \mbox{$f_s(n)\propto n$} (as per classical computing, approximately), we obtain no leverage, \mbox{$\lambda=1$}. However, for any super-linear scaling function we achieve \mbox{$\lambda>1$} leverage, whereby it becomes beneficial to contribute resources to the network and time-share.
 
-Thus, the leverage is not merely a function of the hardware, but also of the software applications running upon it, each of which associated with a unique scaling function.
+Thus, the leverage is not merely a function of the hardware, but also of the software applications running upon it, each of which associated with a unique scaling function. Furthermore, it is to be reasonably anticipated that the size of the quantum internet will increase monotonically over time, yielding ever increasing leverage on the initial hardware investment by network contributors.
 
 %
 % The Global Virtual Quantum Computer
@@ -5529,7 +5659,9 @@ From the leverage phenomena\index{Quantum economic leverage} emerges an entirely
 
 Users who make an initial fixed investment into quantum computing infrastructure, which they contribute to the network, but are then unable or unwilling to finance further expansion, will nonetheless observe exponential growth in their computing power over time. That is, the computational dividends yielded by an investment increase exponentially over time. This creates a very powerful model for investment into computational infrastructure with no classical parallel, which could be particularly valuable in developing nations or less-wealthy enterprises.
 
-It follows that in the interests of economic efficiency, market forces will ensure that future quantum computers will \textit{all} be networked into a single \textit{global virtual quantum computer}\index{Virtual quantum computer}, providing exponentially greater computational power to all users than what they could have afforded on their own.
+It follows that in the interests of economic efficiency, market forces will ensure that future quantum computers will \textit{all} be networked into a single global \textit{virtual quantum computer}\index{Virtual quantum computer}, providing exponentially greater computational power to all users than what they could have afforded on their own.
+
+This might have very interesting implications for strategic adversaries -- government or private sector -- competing for computational supremacy, but nonetheless individually benefitting from jointly uniting their quantum resources. Bear in mind that using encrypted quantum computation (Sec.~\ref{sec:homo_blind}) both parties could maintain secrecy. Despite this secrecy, will the KGB and NSA really cooperate, to the benefit of both, or will the asymmetry in the economic leverage incentivise them to not unify resources and construct independent infrastructure? The leverage asymmetry will be a key consideration in answering this question, since the weaker party achieves the higher leverage.
 
 %
 % Pricing Models
@@ -5861,16 +5993,16 @@ In superconductors, electrons are paired and condensed into a single macroscopic
 
 There are a variety of single photon detectors, detailed description of which can be found in several excellent review papers \cite{eisaman2011, hadfield2009}. Here we only introduce single-photon detectors that have good spectral response in the near-infrared region.
 
-\textit{Single-photon avalanche diodes} (SPAD) -- They are the most compact and common single-photon detectors in the world. SPADs are avalanche diodes operated in Geiger mode (above breakdown voltage) to obtain a high gain. There are several commercially SPADs, with detection efficiency around 60\% at 780nm, maximum count rate of 25MHz and dark count rate as low as 25Hz. Several remarks are listed as following:
+\textit{Single-photon avalanche diodes} (SPAD) -- They are the most compact and common single-photon detectors in the world. SPADs are avalanche diodes operated in Geiger mode (above breakdown voltage) to obtain a high gain. There are several commercially SPADs, with detection efficiency around 60\% at 780nm, maximum count-rate of 25MHz and dark-count-rate as low as 25Hz. Several remarks are listed as following:
 
 \begin{itemize}
-    \item Even higher detection efficiency is available. However, on account of the significance trade-off between detection efficiency, dark noise and dead-time, it is often at the expense of a lower maximum count rate (typical dead-time is 1$\mu$s, leading to 1MHz count rate) and a bigger dark noise.
+    \item Even higher detection efficiency is available. However, on account of the significance trade-off between detection efficiency, dark noise and dead-time, it is often at the expense of a lower maximum count-rate (typical dead-time is 1$\mu$s, leading to 1MHz count-rate) and a bigger dark noise.
 
     \item Telecom band SAPDs are usually based on InGaAs/InP, which, however, suffer from low efficiency about 25\% and long dead-time on the order of microsecond. Another more efficient method is up-conversion detection. The idea is to convert the telecom photons into the near infrared ones by up-conversion, and then detect them with a silicon SPAD. In this method, up-conversion usually utilises sum-frequency generation in periodically poled lithium niobate (PPLN) waveguides or bulk crystals. The detection efficiency can be as high as \mbox{$30\sim 40\%$} for PPLN waveguide-based up-conversion detectors \cite{shentu2013ultralow}.
     \item SPADs are also commercially available in a multi-channel (e.g., 4-channel) array format with single power supply and individual inputs and outputs. They are different from the multi-element SAPD arrays, which have either only one input or one output, and can be used to achieving photon number resolution or high-speed single photon sensors.
 \end{itemize}
 
-\textit{Superconducting nanowire single photon detectors (SNSPD)} -- They are more efficient, but larger and more expensive than SPADs. Up until now, the highest detection efficiency of SNSPDs is 93\% at 1550nm, demonstrated in 2014 \cite{marsili2013}. SNSPDs are also commercially available. There are companies specialising in best-performance SNSPDs with high detection efficiency. They have achieved specifications with peak detection efficiencies higher than 80\% around 800nm, maximum dark-count rates of \mbox{$100\sim 300$Hz}, and a dead-time ranging from \mbox{$10\sim 70$ns}. Similar performance is expected for optimised SNSPD at other wavelengths (\mbox{$780\sim 1550$nm}). However, SNSPDs must be operated at cryogenic temperatures of a few Kelvin to maintain the superconducting state in the sensing material. This is the main reason why SNSPDs are much more cumbersome and expensive than SPADs.
+\textit{Superconducting nanowire single photon detectors (SNSPD)} -- They are more efficient, but larger and more expensive than SPADs. Up until now, the highest detection efficiency of SNSPDs is 93\% at 1550nm, demonstrated in 2014 \cite{marsili2013}. SNSPDs are also commercially available. There are companies specialising in best-performance SNSPDs with high detection efficiency. They have achieved specifications with peak detection efficiencies higher than 80\% around 800nm, maximum dark-count-rates of \mbox{$100\sim 300$Hz}, and a dead-time ranging from \mbox{$10\sim 70$ns}. Similar performance is expected for optimised SNSPD at other wavelengths (\mbox{$780\sim 1550$nm}). However, SNSPDs must be operated at cryogenic temperatures of a few Kelvin to maintain the superconducting state in the sensing material. This is the main reason why SNSPDs are much more cumbersome and expensive than SPADs.
 
 \textit{Transition edge sensors (TES)} -- They own the highest detection efficiency, even 98\% (95\%) at wavelengths around 850nm (1556nm) have been reported \cite{fukuda2011, lita2008}. Moreover, they are photon-number-resolving, owing to the linear response between resistance and temperature. However, the typical thermal recovery times of TESs are a fraction of a microsecond, limiting their application in high-speed quantum network. Besides, TESs usually work in a ultra-low temperature of 100mK, which makes it challenging to migrate the technique from lab to market.
 
@@ -6192,6 +6324,7 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \nomenclature[]{\textbf{AOM}}{Acousto-optic modulator}
 \nomenclature[]{\textbf{EOM}}{Electro-optic modulator}
 \nomenclature[]{\textbf{RoI}}{Return on investment}
+\nomenclature[]{\textbf{BEC}}{Bose-Einstein condensate}
 
 \printnomenclature
 
@@ -6199,6 +6332,7 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 % Index
 %
 
+\index{Interferometry \seeonly{Optical interferometry, Mach-Zehnder (M) interference, Hong-Ou-Mandel (HOM) interference}|gobbleone}
 \index{Measurement-based quantum computation \seeonly{Cluster state model}|gobbleone}
 \index{Graph states \seeonly{Cluster state model}|gobbleone}
 \index{State fidelity \seeonly{Fidelity}|gobbleone}
@@ -6226,6 +6360,7 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \index{Fusion gates \seeonly{Cluster state fusion gates}|gobbleone}
 \index{Fusion strategies \seeonly{Cluster state fusion strategies}|gobbleone}
 \index{Pauli channels \seeonly{Bit-flip channel, bit-phase-flip channel, dephasing channel, depolarising channel}|gobbleone}
+\index{Toric code \seeonly{Topological code}|gobbleone}
 
 \index{Two-channel two-port switches @\also{Optical routers}|gobbleone}
 \index{Multiplexers @\also{Optical routers}|gobbleone}
