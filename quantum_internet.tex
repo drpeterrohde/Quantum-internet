@@ -112,9 +112,9 @@
 \begin{abstract}
 The desire to share and unite remote digital assets motivated the development of the classical internet, the enabler of the entire 21st century economy and our modern way of life. As we enter the quantum era, it is to be expected there will be a similar demand for networking quantum assets, motivating a \textit{global quantum internet} for bringing together the world's quantum resources, leveraging off their exponential trajectory in capability. We present models for quantum networking, how they might be applied in the future, and the implications they will have. Socially, economically and politically, the upcoming era of quantum supremacy will be as significant for the 21st century as the transistor was for the 20th. The inherently different scaling in the computational power of quantum computers fundamentally changes the dynamics of how they will operate in the future. Given their high expected initial cost, a client/server model for outsourcing computation will be essential to enabling the accessibility and proliferation of this technology, and ensuring its economic viability. We therefore anticipate the emergence of \textit{cloud quantum computing}, a model for outsourcing quantum computations to the network. We argue that economic efficiency will mandate that all future quantum computers be united into a single global \textit{virtual quantum computer}, offering exponentially more power to all network participants than if they were to keep their resources to themselves. This model for the allocation of computational resources is uniquely quantum, with no classical analogue, completely altering the economic landscape for the future of computation. Given the sensitivity of much of the data to which future quantum computers are going to be applied, protocols for encrypted quantum computation will be essential -- the outsourcing of computations that neither an eavesdropper nor even the server performing the computation can spy on. This will enable new models for the commercialisation and proliferation of quantum technologies, unlike any existing models for classical computing. While this work is only an early step in a rapidly developing field, still in its infancy, the central concepts we present will be highly relevant to future developments.
 \\[4pt]
-We present both original ideas, as well as an extensive review of relevant and related background material. The work is divided into technical sections (requiring only a basic knowledge of the notation for quantum mechanics), for those interested in mathematical details, as well as extensive, entirely non-technical sections for the less technically inclined.
+We present both original ideas, as well as an extensive review of relevant and related background material. The work is divided into technical sections (requiring only a basic knowledge of the notation of quantum mechanics), for those interested in mathematical details, as well as extensive, entirely non-technical sections for the less technically inclined.
 \\[4pt]
-We target this very broadly at quantum and classical computer scientists, classical computer systems, software and network engineers, physicists, and those generally curious about the future of quantum technologies and what it might bring to humanity.
+We target this work very broadly at quantum and classical computer scientists, classical computer systems, software and network engineers, physicists, economists, and those just generally curious about the future of quantum technologies and what it might bring to humanity.
 \newpage
 \end{abstract}
 
@@ -3629,7 +3629,7 @@ Furthermore, photo-detectors are subject to `dead-time'\index{Dead-time}, which 
 
 Finally, photo-detectors of all types are inevitably subject to `dark-counts'\index{Dark-counts}, whereby thermal noise, either within the detector or coupled from the noisy environment, triggers non-existent detection events. The distribution follows exactly that of the thermal state photon-number distribution (Sec.~\ref{sec:thermal_states}). Thus, the probability of $n$ dark-counts occurring is,
 \begin{align} \index{Thermal distribution}
-p_\text{DC}(n) = e^{-|\alpha|^2} \frac{|\alpha|^2}{n!},
+p_\text{dc}(n) = e^{-|\alpha|^2} \frac{|\alpha|^2}{n!},
 \end{align}
 where $\alpha$ is a parameterisation of the temperature of the environmental noise. Fortunately, modern detector technology is able to keep dark-count rates very low, making this far less of an issue than the aforementioned ones, loss being the dominant.
 
@@ -4461,7 +4461,17 @@ Sec.~\ref{sec:module}
 
 As introduced in Sec.~\ref{sec:CSQC}, a cluster state may be defined by the action of CZ gates upon a graph of qubits initialised into the $\ket{+}$ state. As we saw in the previous section, implementing these CZ gates is troublesome using linear optics, as it is non-deterministic and carries the burden of a large resource overhead. Nonetheless, it was shown early on \cite{NielsenOptCS} that by combining non-deterministic CZ gates with the cluster state formalism yields LOQC protocols far more efficient than the original KLM protocol for LOQC.
 
-It was then noted \cite{BrowneRudolph} that CZ gates aren't required at all for the preparation of optical cluster states. Instead, parity measurements (Sec.~\ref{sec:bell_proj}) operating in a rotated basis may be used to fuse smaller cluster states into larger ones, albeit acting destructively on two of the qubits, and also being non-deterministic, with a success probability of $1/2$. These gates have become known as \textit{fusion gates}, of which there are two types: type-I fusion gates destroy only a single photon, but require number-resolved detection; type-II fusion gates destroy two photon, but only need on/off detectors. In both cases, only HOM stability is required -- at no stage in the cluster state preparation procedure is any interferometric stability requires, which is a major bonus compared to KLM.
+It was then noted \cite{BrowneRudolph} that CZ gates aren't required at all for the preparation of optical cluster states. Instead, parity measurements (Sec.~\ref{sec:bell_proj}) operating in a rotated basis may be used to fuse smaller cluster states into larger ones, albeit acting destructively on two of the qubits, and also being non-deterministic, with a success probability of $1/2$. These gates have become known as \textit{fusion gates}, of which there are two types:
+\begin{itemize}
+	\item Type-I: destroy only a single photon, but require efficient number-resolved detection.
+	\item Type-II: destroy two photons, but only require on/off detectors.
+\end{itemize}
+Both types of gates have several highly favourable characteristics:
+\begin{itemize}
+	\item Only HOM stability is required (Sec.~\ref{sec:opt_stab}). At no stage in the cluster state preparation procedure is any interferometric (i.e wavelength-scale) stability required.
+	\item Gate failure is heralded by measurement of the wrong photon-number.
+	\item Gate failure measures the respective qubits in the computational basis, thereby simply removing those qubits from the cluster state graph, whilst preserving the remainder of the state.
+\end{itemize}
 
 \comment{To do!}
 
@@ -5705,16 +5715,18 @@ for a large global network (\mbox{$n_\mathrm{global}\gg 1$}), which clearly impl
 
 Since exisiting network participants receive leverage upon other participants joining the network, an investment into contributing modules has exponentially increasing computational return over time as the network expands, even if that participant ceases making further investment into the network. This is in contrast to classical networks, whereby the computational return upon an investment is fixed over time.
 
-The analysis thus far has considered the best-case scenario whereby the classical-equivalent computational power of the quantum computer scales exponentially with the number of qubits. Of course, not all quantum algorithms are so favourable. Grover's algorithm, for example, yields only quadratic enhancement. More generally, let,
+The analysis thus far has considered the best-case scenario whereby the classical-equivalent computational power of the quantum computer scales exponentially with the number of qubits. Of course, not all quantum algorithms are so favourable. Grover's algorithm, for example, yields only quadratic enhancement. In this more general scenario, using a similar derivation as before, we can define the quantum economic leverage formula,
+\begin{definition}[Quantum economic leverage] \label{def:quant_econ_lev}\index{Quantum economic leverage formula} For the $i$th user, let the classical-equivalent runtime, $t_i$, of a quantum computer comprising $n_i$ qubits be given by the monotonically increasing \textit{scaling function} $f_s$, such that,
 \begin{align}
-t_i = f_s(n_i),
+t_i = f_s(n_i).
 \end{align}
-where $f_s$ is an arbitrary, monotonically increasing \emph{scaling function}\index{Scaling function} relating the number of qubits in the quantum computer to its classical-equivalent runtime. Then, following a similar derivation as before, we obtain,
+The quantum economic leverage is then given by,
 \begin{align}
-\lambda_i = \frac{f_s\left(\sum_{j} n_j\right)}{\sum_j n_j} \cdot \frac{n_i}{f_s(n_i)}.
+\lambda_i = \frac{f_s\left(\sum_{j} n_j\right)}{\sum_j n_j} \cdot \frac{n_i}{f_s(n_i)}.	
 \end{align}
+\end{definition}
 
-It is now evident that for linear scaling functions, \mbox{$f_s(n)\propto n$} (as per classical computing, approximately), we obtain no leverage, \mbox{$\lambda=1$}. However, for any super-linear scaling function we achieve \mbox{$\lambda>1$} leverage, whereby it becomes beneficial to contribute resources to the network and time-share.
+It is now evident that for linear scaling functions, \mbox{$f_s(n)\propto n$} (as per classical computing, approximately), we obtain no leverage, \mbox{$\lambda=1$}. However, for any super-linear scaling function we achieve \mbox{$\lambda>1$} leverage, whereby it becomes beneficial for all users to contribute resources to the network and time-share.
 
 Thus, the leverage is not merely a function of the hardware, but also of the software applications running upon it, each of which associated with a unique scaling function. Furthermore, it is to be reasonably anticipated that the size of the quantum internet will increase monotonically over time, yielding ever increasing leverage on the initial hardware investment by network contributors.
 
