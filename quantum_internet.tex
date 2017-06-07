@@ -147,13 +147,13 @@ We target this work very broadly at quantum and classical computer scientists, c
 
 Quantum technologies are not just of interest to quantum physicists, but will have transformative effects across countless areas -- the next technological revolution. For this reason, this work is directed at a general audience of not only quantum computer scientists, but also classical computer scientists, physicists, and computer, software and network engineers. More broadly, we hope this work will be of interest to those who recognise the future significance of quantum technologies, and the implications (or even just curiosities) that globally networking them might have.
 
-A basic understanding of quantum mechanics \cite{bib:Sakurai94}, quantum optics \cite{bib:GerryKnight05}, quantum computing and quantum information theory \cite{bib:NielsenChuang00}\footnote{Throughout this manuscript we use the Nielsen \& Chuang convention for the pronunciation of `zed'.},\index{Zed} and classical networking \cite{bib:TanenbaumNet} are helpful, but not essential, to following our discussion. Some mathematical sections require a basic understanding of the mathematical notation of quantum mechanics. Although the reader without this background ought to be able to nonetheless follow the broader arguments.
+A basic understanding of quantum mechanics \cite{bib:Sakurai94}, quantum optics \cite{bib:GerryKnight05}, quantum computing and quantum information theory \cite{bib:NielsenChuang00}\footnote{Throughout this manuscript we use the Nielsen \& Chuang convention for the pronunciation of `zed'.\index{Zed}}, and classical networking \cite{bib:TanenbaumNet} are helpful, but not essential, to following our discussion. Some mathematical sections require a basic understanding of the mathematical notation of quantum mechanics. Although the reader without this background ought to be able to nonetheless follow the broader arguments.
 
 The entirely technically disinterested or mathematically incompetent reader may refer to just Secs.~\ref{sec:introduction}, \ref{sec:outlook} \& \ref{sec:vision_quant} -- essentially brief non-technical essays about the motivation, applications and implications of the future quantum internet.
 
 This work is partially a review of existing knowledge relevant to quantum networking, and partially original ideas, to a large extent based on the adaptation of classical networking concepts and quantum information theory to the context of quantum networking. A reader with an existing background in these areas could calmly skip the respective review sections.
 
-Our goal is to present a broadly accessible technical overview of how we foresee quantum technologies to operate in the era of quantum globalisation, and the exciting possibilities that will emerge.
+Our goal is to present a broadly accessible technical and non-technical overview of how we foresee quantum technologies to operate in the era of quantum globalisation, and the exciting possibilities that will emerge.
 
 %
 % Introduction
@@ -168,7 +168,7 @@ Perhaps the most exciting prospect in the quantum age is the development of quan
 	\item Searching unstructured databases (Grover's algorithm \cite{bib:Grover96} -- quadratic speedup).\index{Grover's algorithm}
 	\item Satisfiability problems\footnote{A satisfiability problem is one where we search a function's input space for a solution(s) satisfying a given output constraint. The hardest such problems, like the archetypal \textsc{3-SAT}\index{3-\textsc{SAT}} problem, are \textbf{NP}-complete.}\index{\textbf{NP} \& \textbf{NP}-complete} (Grover's algorithm -- quadratic speedup). This includes solving \textbf{NP}-complete problems, and brute-force cracking of private encryption keys\footnote{Note that when performing a brute-force attack against a private encryption key, a quadratic speedup effectively halves the key length in terms of algorithmic runtime. Thus, in the quantum era private key lengths will need to be doubled.}.\index{Satisfiability problems}
 	\item Optimisation problems (Grover's algorithm -- quadratic speedup): many optimisation problems reside in \textbf{NP} or can be approximated in \textbf{NP}.\index{Optimisation problems}
-	\item Period finding and integer factorisation\index{Shor's algorithm} (Shor's algorithm \cite{bib:ShorFactor} -- exponential speedup). This compromises Rivest, Shamir \& Adleman (RSA) public-key cryptography \cite{bib:RSA}, the most widely used cryptographic protocol on the internet today.
+	\item Period finding and integer factorisation\index{Shor's algorithm} (Shor's algorithm \cite{bib:ShorFactor} -- exponential speedup). This compromises Rivest, Shamir \& Adleman (RSA) public-key cryptography \cite{bib:RSA}\index{RSA encryption}, the most widely used cryptographic protocol on the internet today.
 	\item Simulation of quantum systems\index{Quantum simulation} (\cite{bib:lloyd1996universal} - exponential speedup). This includes simulation of: molecular and atomic interactions in the study of quantum chemistry or nuclear physics; interactions between drug molecules and organic molecules for drug design; genetic interactions for the study of genetics and genetic medicine; nanoscale semiconductor physics for integrated circuit design; and much more.
 	\item Simulation of quantum field theories\index{Simulating quantum field theories} (\cite{bib:JLP, bib:RohdeWavelet15} - exponential speedup), a key area of fundamental physics research.
 	\item Topological big-data analysis\index{Topological big-data analysis} (\cite{bib:lloyd2016quantum, USTCexperiment} - exponential speedup), with broad applications including: social media network analysis; consumer behaviour; behavioural dynamics; neuroscience; and higher-dimensional signal and image processing.
@@ -305,7 +305,11 @@ Using the circuit model, arbitrary quantum computations can be elegantly and int
 
 The \textit{cluster state} model for quantum computation \cite{bib:Raussendorf01, bib:Raussendorf03, bib:Nielsen06} (also referred to as the \textit{one-way}, \textit{measurement-based}, or \textit{graph state} models for quantum computation) is an extremely powerful paradigm that warrants treatment of its own, owing to its significant distinction from the more familiar circuit model, and its applicability to distributed models for quantum computation to be discussed in Sec.~\ref{sec:dist_QC}.
 
-In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \textit{cluster state} or \textit{graph state}. The state is associated with a graph, $G=(V,E)$, of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation\footnote{Note that the graph upon which a cluster state resides is not to be confused with the network graph. Rather it is just a convenient graphical representation for a class of multi-qubit states.}. That is, they act as a `substrate' for implementing arbitrary quantum computations.
+In the cluster state model, we begin by preparing a particular, highly-entangled state, called a \textit{cluster state} or \textit{graph state}. The state is associated with a graph $G$, comprising vertices, $V$, and edges, $E$,
+\begin{align}
+	G=(V,E),
+\end{align}
+of some topology, although rectangular lattice graphs are usually considered as they are sufficient for universal quantum computation\footnote{Note that the graph upon which a cluster state resides is not to be confused with the network graph. Rather it is just a convenient graphical representation for a class of multi-qubit states.}. That is, they act as a `substrate' for implementing arbitrary quantum computations.
 
 In the graph, vertices represent qubits initialised into the,
 \begin{align}
@@ -343,7 +347,7 @@ Mapping a circuit model computation to a cluster state topology can be most na{\
 
 The distinctive feature of this model is that all the entangling CZ gates are performed at the very beginning of the protocol, during the state preparation stage. The algorithm itself is purely measurement-based, requiring only single-qubit measurements (no entangling measurements).
 
-An alternate interpretation of the cluster state model is that it is a complicated network of state and gate teleportation protocols (Sec.~\ref{sec:teleport}). Specifically, a CZ gate with a $\ket{+}$ state as a resource, followed by measurement of one of the two qubits acts as a single-qubit teleporter, as shown in Fig.~\ref{fig:single_qubit_teleporter}. Thus, with a substrate state of CZ gates applied between $\ket{+}$ states, the single-qubit measurements progressively teleport the input state through the graph topology, at each stage accumulating the action of more gates, which are related to the choices of the previous single-qubit measurement bases, and the graph topology.
+An alternate interpretation of the cluster state model is that it is a complicated network of state and gate teleportation protocols (Sec.~\ref{sec:teleport}). Specifically, a CZ gate with a $\ket{+}$ state as a resource, followed by measurement of one of the two qubits acts as a single-qubit teleporter, as shown in Fig.~\ref{fig:single_qubit_teleporter}\footnote{This is an alternative, but equivalent implementation for quantum state teleportation to that presented in Sec.~\ref{sec:teleport}.}. Thus, with a substrate state of CZ gates applied between $\ket{+}$ states, the single-qubit measurements progressively teleport the input state through the graph topology, at each stage accumulating the action of more gates, which are related to the choices of the previous single-qubit measurement bases, and the graph topology.
 
 \begin{figure}[!htb]
 	\begin{align}
@@ -882,7 +886,7 @@ We will now explain QPT in the archetypal context of single-qubit channels, whic
 
 \subsubsection{Quantum state tomography} \index{Quantum state tomography (QST)}
 
-The first stage in QPT is \textit{quantum state tomography} (QST), where the goal is to reconstruct and unknown density matrix via measurements upon multiple copies of the state. QST is based upon the simple observation that the completeness relation for an arbitrary state can be expressed,
+The first stage in QPT is \textit{quantum state tomography} (QST), where the goal is to reconstruct and unknown density matrix via measurements upon multiple copies of the state. QST is based upon the simple observation that the completeness relation\index{Completeness relation} for an arbitrary state can be expressed,
 \begin{align}
 \hat\rho = \sum_i \text{tr}(\hat{E}_i\hat\rho)\cdot\hat{E}_i,
 \end{align}
@@ -955,7 +959,7 @@ Conversion between polarisation and dual-rail encoding is straightforward and de
 
 \begin{figure}
 \includegraphics[width=0.6\columnwidth]{pol_to_dual_conversion}
-\caption{Conversion from single-photon polarisation encoding to dual-rail encoding, using a polarising beamsplitter (PBS) and wave-plate (WP). The PBS separates the polarisation components into two distinct spatial modes. The WP then rotates the polarisation of one of the spatial modes such that it has the same polarisation as the other. Conversion from dual-rail to polarisation encoding is just the reverse of this procedure.} \label{fig:pol_to_dual_conv}
+\caption{Conversion from single-photon polarisation encoding to dual-rail encoding, using a polarising beamsplitter (PBS) and wave-plate (WP). The PBS separates the polarisation components into two distinct spatial modes. The WP then rotates the polarisation of one of the spatial modes such that it has the same polarisation as the other. Conversion from dual-rail to polarisation encoding is just the reverse of this procedure.} \label{fig:pol_to_dual_conv}\index{Polarising beamsplitters}
 \end{figure}
 
 Note that polarisation encoding requires a single spatial mode per qubit, whereas dual-rail encoding requires two. Polarisation encoding brings with it the advantage that arbitrary single-qubit operations may be implemented using wave-plates, which maintain coherence between the basis states extraordinarily well. In dual-rail encoding, on the other hand, single-qubit operations are implemented using beamsplitter operations between the two spatial modes, which must be interferometrically stable, since consecutive single-qubit operations yields Mach-Zehnder (MZ) interference \cite{bib:Zehnder1, bib:Zehnder2}\index{Mach-Zehnder (MZ) interference}, to be discussed in detail in Sec.~\ref{sec:MZ_inter}.
@@ -1021,7 +1025,7 @@ In time-bin encoding we define our basis of modes (whether it be qubits or highe
 \end{align}
 as well as the usual orthonormality constraints. Here $\tau$ is sufficiently large, and $\xi_i(t)$ sufficiently temporally localised, that the temporal modes are orthogonal as per Eq.~(\ref{eq:spec_orth_def}).
 
-Time-bin encoding arises naturally in architectures where the photon source driving the system is operating at a high repetition rate, $R$, in which case \mbox{$\tau=1/R$}. Architectures for optical quantum computing have been described \cite{bib:RohdeLoop15, bib:RohdeUnivLoop15}, and experimentally demonstrated \cite{???}, based entirely on time-bin encoding.
+Time-bin encoding arises naturally in architectures where the photon source driving the system is operating at a high repetition rate\index{Repetition rate}, $R$, in which case \mbox{$\tau=1/R$}. Architectures for optical quantum computing have been described \cite{bib:RohdeLoop15, bib:RohdeUnivLoop15}, and experimentally demonstrated \cite{???}, based entirely on time-bin encoding.
 
 These schemes can be very resource efficient, since a single source operating at high repetition rate can replace an entire bank of distinct sources that would ordinarily be required in spatial architectures. Similarly, a single time-resolved detector, with resolution at least $\tau$, can replace a bank of detectors operating in parallel. And only a single spatial mode is required to store an arbitrary number of qubits/qudits, so long as it is long enough to support the entire pulse-train -- at least $2n\tau$ for $n$ qubits.
 
@@ -1038,7 +1042,7 @@ When encoding information optically, we needn't restrict ourselves to photon-num
 As a simple example, consider coherent states. These are particularly useful since they are pure states, with well defined coherence relationships, and are closely approximated by laser sources, and therefore readily available in the lab.
 
 A coherent state, $\ket\alpha$, is parameterised by a single complex parameter, $\alpha$, given by a phase and amplitude,
-\begin{align}
+\begin{align}\index{Coherent states}
 \ket{\alpha} = e^{-\frac{|\alpha|^2}{2}} \sum_{n=0}^\infty \frac{\alpha^n}{\sqrt{n!}} \ket{n}.
 \end{align}
 By manipulating these parameters, information can be encoded into coherent states. We could, for example, define two coherent states of opposite phase to represent qubit basis states,
@@ -1205,7 +1209,7 @@ Consecutive loss channels act multiplicatively,
 \begin{align}
 \mathcal{E}_{\eta_1}^\text{loss} \circ \mathcal{E}_{\eta_2}^\text{loss} = \mathcal{E}_{\eta_1 \eta_2}^\text{loss}.
 \end{align}
-In the special case of linear optics circuits, loss channels have the elegant property that, provided the loss rate is uniform across all modes, they can be commuted through the circuit to the front or back \cite{???}. Specifically,
+In the special case of linear optics circuits, loss channels have the elegant property that, provided the loss rate is uniform across all modes, they can be commuted through the circuit to the front or back \cite{???}\index{Loss commutation}. Specifically,
 \begin{align}
 (\mathcal{E}_{\eta}^\text{loss})^{\otimes m} \circ \mathcal{E}_U = \mathcal{E}_U \circ (\mathcal{E}_{\eta}^\text{loss})^{\otimes m},
 \end{align}
@@ -1393,7 +1397,7 @@ which is shown in Fig.~\ref{fig:HOM_dip}. Thus, experimentally measuring $P_\tex
 
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{HOM_dip}
-\caption{Hong-Ou-Mandel dip for two photons with normal Gaussian temporal distribution functions, and temporal offset $\tau$ between them. $\tau$ effectively characterises the degree of photon distinguishability, where \mbox{$\tau=0$} represents complete indistinguishability (quantum statistics), and \mbox{$\tau\to\pm\infty$} represents complete distinguishability (classical statistics). Thus, performing this experiment and measuring $P_\text{coincidence}$ can be used to characterise the degree of photon distinguishability.} \label{fig:HOM_dip}
+\caption{Hong-Ou-Mandel dip for two photons with normal Gaussian temporal distribution functions, and temporal offset $\tau$ between them. $\tau$ effectively characterises the degree of photon distinguishability, where \mbox{$\tau=0$} represents complete indistinguishability (quantum statistics), and \mbox{$\tau\to\pm\infty$} represents complete distinguishability (classical statistics). Thus, performing this experiment and measuring $P_\text{coincidence}$ can be used to characterise the degree of photon distinguishability.} \label{fig:HOM_dip}\index{Hong-Ou-Mandel dip}
 \end{figure}
 
 In the above representation of mode-mismatch as a temporal or spatial translation, the process is entirely coherent, and could in principle be reversed if the displacement were known (which might easily be established using tomographic characterisation techniques). Of course, such translations could occur incoherently also. In particular, `time-jitter' is where this process occurs incoherently, and the photons are subject to probabilistic temporal displacements. In this instance, a pure single-photon state would evolve into a mixture of states subject to different displacements. Since the mode-mismatch is now probabilisitic, it is not reversible. The state of a single photon subject to time-jitter would be of the form,
@@ -3216,7 +3220,10 @@ Before describing optical interference in detail, we must first formalise a defi
 \begin{align} \label{eq:wavepacket_modulated}
 \psi(t) = \sqrt[4]{\frac{2}{\sigma\pi}}e^{-\frac{t^2}{\sigma}-i\omega_0t},
 \end{align}
-with associated mode-operator $\hat{A}^\dag_\psi$ (Sec.~\ref{sec:spatio_temporal}).
+with associated mode-operator $\hat{A}^\dag_\psi$ (Sec.~\ref{sec:spatio_temporal}). This wave-packet is normalised such that,
+\begin{align}
+|\bra{0} \hat{A}_\psi \hat{A}_\psi^\dag \ket{0}|^2 = \int_{-\infty}^\infty |\psi(t)|^2 \, dt = 1.
+\end{align}
 
 Of course the temporal envelope needn't be Gaussian in general, and could take any other form, subject to normalisation. In Fig.~\ref{fig:HOM_vs_MZ} we illustrate the two main features of this representation: the temporal envelope, and the underlying carrier frequency that it modulates.
 
@@ -3344,7 +3351,7 @@ In Table.~\ref{table:summary_inter} we summarise the network protocols discussed
 % Optical Stabilisation
 %
 
-\subsection{Optical stabilisation}
+\subsection{Optical stabilisation} \index{Optical stabilisation}
 
 \comment{To do!}
 
@@ -4764,7 +4771,7 @@ Here $n_x$ denotes the set of vertices neighbouring $x$. The coin operators $A^{
 
 \begin{figure}[!htb]
 \includegraphics[width=0.4\columnwidth]{QW_arbitrary_graph}
-\caption{A simple example of a quantum walk on an irregular graph structure. Associated with each vertex $x$ is an $\text{SU}(|n_x|)$ coin operator $A^{(x)}$, where $|n_x|$ is the number of neighbours to $x$.} \label{fig:QW_arbitrary_graph}
+\caption{A simple example of a quantum walk on an irregular graph structure. Associated with each vertex $x$ is an $\text{SU}(|n_x|)$ coin operator $A^{(x)}$, where $|n_x|$ is the number of neighbours to $x$.} \label{fig:QW_arbitrary_graph}\index{Quantum walk graph}
 \end{figure}
 
 The total time evolution is defined analogously to before,
@@ -5716,13 +5723,21 @@ for a large global network (\mbox{$n_\mathrm{global}\gg 1$}), which clearly impl
 Since exisiting network participants receive leverage upon other participants joining the network, an investment into contributing modules has exponentially increasing computational return over time as the network expands, even if that participant ceases making further investment into the network. This is in contrast to classical networks, whereby the computational return upon an investment is fixed over time.
 
 The analysis thus far has considered the best-case scenario whereby the classical-equivalent computational power of the quantum computer scales exponentially with the number of qubits. Of course, not all quantum algorithms are so favourable. Grover's algorithm, for example, yields only quadratic enhancement. In this more general scenario, using a similar derivation as before, we can define the quantum economic leverage formula,
-\begin{definition}[Quantum economic leverage] \label{def:quant_econ_lev}\index{Quantum economic leverage formula} For the $i$th user, let the classical-equivalent runtime, $t_i$, of a quantum computer comprising $n_i$ qubits be given by the monotonically increasing \textit{scaling function} $f_s$, such that,
+\begin{definition}[Quantum economic leverage] \label{def:quant_econ_lev}\index{Quantum economic leverage formula}\index{Single-qubit quantum economic leverage} For the $i$th user, let the classical-equivalent runtime, $t_i$, of a quantum computer, $i$, comprising $n_i$ qubits, be given by the monotonically increasing \textit{scaling function} $f_s$, such that,
 \begin{align}
 t_i = f_s(n_i).
 \end{align}
 The quantum economic leverage is defined as the ratio between the time-shared and individual classical-equivalent algorithmic runtimes,
 \begin{align}
-\lambda_i = \frac{f_s\left(\sum_{j} n_j\right)}{\sum_j n_j} \cdot \frac{n_i}{f_s(n_i)}.	
+\lambda_i = \frac{f_s(n_\text{global})}{n_\text{global}} \cdot \frac{n_i}{f_s(n_i)},
+\end{align}
+where,
+\begin{align}
+	n_\text{global} = \sum_{j} n_j,
+\end{align}
+is the total number of qubits in the network. The single-qubit quantum economic leverage is,
+\begin{align}
+	\lambda_1 = \frac{f_s(n_\text{global})}{f_s(1)\cdot n_\text{global}}.
 \end{align}
 \end{definition}
 
@@ -6407,6 +6422,7 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \nomenclature[]{\textbf{RoI}}{Return on investment}
 \nomenclature[]{\textbf{BEC}}{Bose-Einstein condensate}
 \nomenclature[]{\textbf{FIFO}}{First in, first out}
+\nomenclature[]{\textbf{RSA}}{Rivest-Shamir-Adleman}
 
 \printnomenclature
 
@@ -6444,6 +6460,7 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \index{Pauli channels \seeonly{Bit-flip channel, bit-phase-flip channel, dephasing channel, depolarising channel}|gobbleone}
 \index{Toric code \seeonly{Topological code}|gobbleone}
 \index{Efficiency \seeonly{Loss channel, detector efficiency, computational efficiency}|gobbleone}
+\index{Unstructured database searching \seeonly{Grover's algorithm}|gobbleone}
 
 %
 % Index: See Also
