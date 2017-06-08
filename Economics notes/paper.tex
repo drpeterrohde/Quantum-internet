@@ -33,7 +33,7 @@
 \begin{abstract}
 \end{abstract}
 
-\maketitle
+\maketitle 
 
 \section{Forward contract pricing model}
 
@@ -63,39 +63,39 @@ where \mbox{$\gamma_N\geq 1$} characterises the rate of exponential growth in th
 
 The leverage then scales as,
 \begin{align}
-\lambda_t &= \eta_n \frac{f_s(N_t)}{N_t} \nonumber \\
-&= \eta_n \frac{f_s(N_0 {\gamma_N}^{t})}{N_0 {\gamma_N}^{t}},
+\lambda_t &= \eta_n \frac{f_\text{sc}(N_t)}{N_t} \nonumber \\
+&= \eta_n \frac{f_\text{sc}(N_0 {\gamma_N}^{t})}{N_0 {\gamma_N}^{t}},
 \end{align}
 where,
 \begin{align}
-	\eta_n = \frac{n}{f_s(n)},
+	\eta_n = \frac{n}{f_\text{sc}(n)},
 \end{align}
 and $n$ is the number of qubits involved in the transaction, which we treat as a constant, since we are valuing the future price of an asset comprising a fixed number of qubits.
 
 Let the dividend, $D_t$, be a measure of the dollar value of the $n$ qubits' computational power at a given time $t$. This scales with the leverage and dollars-per-FLOPS,
 \begin{align}
 D_t &= L_t \lambda_t \nonumber \\
-&= \frac{\eta_n L_0 {\gamma_L}^{-t} f_s(N_t)}{N_t} \nonumber \\
-&= \frac{\eta_n L_0}{N_0} \cdot \frac{f_s(N_0 {\gamma_N}^{t})}{(\gamma_L\gamma_N)^{t}}.
+&= \frac{\eta_n L_0 {\gamma_L}^{-t} f_\text{sc}(N_t)}{N_t} \nonumber \\
+&= \frac{nL_0}{f_\text{sc}(n)} \cdot \frac{f_\text{sc}(N_0 {\gamma_N}^{t})}{N_0(\gamma_L\gamma_N)^{t}}.
 \end{align}
 
 Let the spot price, $S_0$, be the present day price ($t=0$) of FLOPS times the leverage at time $T$ (i.e its future computing power),
 \begin{align}
 S_0 &= L_0 \lambda_T \nonumber \\
-&= L_0 \eta_n \frac{f_s(N_T)}{N_T} \nonumber \\
-&= L_0 \eta_n \frac{f_s(N_0 {\gamma_N}^{T})}{N_0 {\gamma_N}^{T}}
+&= L_0 \eta_n \frac{f_\text{sc}(N_T)}{N_T} \nonumber \\
+&= L_0 \eta_n \frac{f_\text{sc}(N_0 {\gamma_N}^{T})}{N_0 {\gamma_N}^{T}}
 \end{align}
 
 Then the forward price is,
 \begin{align}
-F(T) = \frac{e^{rT}L_0\eta_n}{N_0} \left[ \frac{f_s(N_0 {\gamma_N}^{T})}{{\gamma_N}^{T}} - \sum_{t=0}^{T} \frac{f_s(N_0 {\gamma_N}^{t})}{(\gamma_N \gamma_L e)^{t}} \right].
+F(T) = \frac{e^{rT}L_0\eta_n}{N_0} \left[ \frac{f_\text{sc}(N_0 {\gamma_N}^{T})}{{\gamma_N}^{T}} - \sum_{t=0}^{T} \frac{f_\text{sc}(N_0 {\gamma_N}^{t})}{(\gamma_N \gamma_L e)^{t}} \right].
 \end{align}
 
 \subsection{Linear scaling functions}
 
 As a first example, to provide a benchmark, let the scaling function be linear in $n$,
 \begin{align}
-f_s(n) = \alpha n,	
+f_\text{sc}(n) = \alpha n,	
 \end{align}
 as we would (approximately) observe for clustered classical computers, whereby there is no leverage. Then the forward price reduces to,
 \begin{align}
@@ -107,7 +107,7 @@ F(T) &= {e^{rT}L_0} \left[1 - \sum_{t=0}^{T} (\gamma_L e)^{-t} \right] \nonumber
 
 Let the scaling function be a simple quadratic polynomial (e.g the quantum resources are being employed for Grover-like algorithms, such as speeding up \textbf{NP}-complete optimisation problems),
 \begin{align}
-f_s(n) = \alpha n^2	
+f_\text{sc}(n) = \alpha n^2	
 \end{align}
 Then the forward price reduces to,
 \begin{align}

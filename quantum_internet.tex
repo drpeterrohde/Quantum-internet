@@ -5030,7 +5030,7 @@ Let us first assume that we wish to construct a cluster state with $n_\text{logi
 
 We arrange the modules to internally represent a $+$-topology where each node has neighbouring branches in each of the up/down/left/right directions. But we imagine the situation whereby each logical qubit, along with its respective ancillary branches, is held by a different server. Thus, the final cluster state is truly decentralised across all the servers, and in general entire computations cannot be performed locally.
 
-Using the ancillary states in the respective directions, we attempt to fuse neighbouring clusters using entangling operations (EOs), such as CZ gates (e.g a KLM CZ gate), linear optics \textit{fusion gates} (i.e rotated polarising beamsplitters followed by photo-detection, implementing which-path erasure\index{Which-path erasure}) \cite{bib:BrowneRudolph05}, or atoms with a $\lambda$-configuration coupled to photons \cite{bib:BarrettKok05}, which undergo which-path erasure (Sec.~\ref{sec:hybrid}). Importantly, using the fusion gate and which-path erasure approaches, only a single beamsplitter is required to perform the EO, which only necessitates high-visibility HOM interference, mitigating the need for far more challenging interferometric (MZ) stability. This is delightful, as current leading quantum optics experiments routinely achieve HOM visibilities well in excess of 99\% \cite{???}.
+Using the ancillary states in the respective directions, we attempt to fuse neighbouring clusters using entangling operations (EOs), such as CZ gates (e.g a KLM CZ gate), linear optics \textit{fusion gates} (i.e rotated polarising beamsplitters followed by photo-detection, implementing which-path erasure\index{Which-path erasure}) \cite{bib:BrowneRudolph05}, or atoms with a $\lambda$-configuration coupled to photons \cite{bib:BarrettKok05}, which undergo which-path erasure (Sec.~\ref{sec:hybrid}). Importantly, using the fusion gate and which-path erasure approaches, only a single beamsplitter is required to perform the EO, which only necessitates high-visibility HOM interference, mitigating the need for far more challenging interferometric (MZ) stability (Sec.~\ref{sec:opt_stab}). This is delightful, as current leading quantum optics experiments routinely achieve HOM visibilities well in excess of 99\% \cite{???}.
 
 An alternate fusion strategy is not to directly communicate qubits to be bonded, but instead rely off Bell-pairs provided by a central authority. Each party then applies an EO between their half of the Bell-pair and their target module qubit, which swaps the Bell-pair entanglement onto the two respective module qubits (Sec.~\ref{sec:swapping}).
 
@@ -5657,91 +5657,144 @@ These observations lead us to naturally conclude that a quantum network speciali
 
 \section{Economics of the quantum internet} \index{Economics}
 
-Any form of computation comes at an economic cost, but also brings with it a payoff. Thus, a key consideration in any model for computation is the tradeoff between the two. Because the computational power of quantum computers inherently scales differently than classical computers, we expect this return on investment (RoI)\index{Return on investment (RoI)} ratio to exhibit different scaling characteristics, thereby fundamentally altering economic considerations.
+Any form of computation comes at an economic cost, but also brings with it a payoff. Thus, a key consideration in any model for computation is the tradeoff between the two. Because the computational power of quantum computers scales inherently differently than classical computers, we expect this return on investment (RoI)\index{Return on investment (RoI)} ratio to exhibit different scaling characteristics, thereby fundamentally altering economic considerations.
 
-\comment{To do!}
+We will now treat these economic considerations in the context of a global network of unified quantum computing resources, which are then equitably time-shared\index{Time-sharing}. We argue in Sec.~\ref{sec:quant_ec_lev} that this model for quantum computation is always more computationally efficient than having distinct quantum computers operating independently in parallel, owing to the super-linear scaling in the computational power of quantum computers.
+
+%
+% Arbitrage-Free Time-Sharing
+%
+
+\subsection{Arbitrage-free time-sharing model}\index{Arbitrage-free time-sharing model}\index{Time-sharing}
+
+In the context of our global network of unified quantum computers, how do we fairly and equitably allocate time-shares between contributors? We now derive an elementary arbitrage-free model for equitable time-sharing in such a network.
+
+Let,
+\begin{align}
+	0\leq r_n \leq 1,
+\end{align}
+be the proportion of compute-time allocated to a user in possession of $n$ qubits, in a global network of $n_\text{global}$ qubits. Arbitrage in the value of physical qubits will enforce the linearity constraint,
+\begin{align}
+	r_{n_1+n_2} = r_{n_1} + r_{n_2}.
+\end{align}
+This constraint effectively mandates that `all qubits are created equal' -- \textit{Qubit aequalitatem}. Were, for example, a bundle of two qubits be worth more than two individual qubits purchased in isolation, a market participant could unfairly gain free compute time by buying two qubits separately, unifying them, selling the bundle, buying them back individually, and repeating indefinitely.
+
+Additionally, we will assume an efficient and competitive market, in which no compute-cycles are wasted -- compute-time is always fully utilised. Then it follows that the time-share of the combined resources of the entire network should be unity,
+\begin{align}
+	r_{n_\text{global}}=1.
+\end{align}
+Combining this with the linearity constraint implies the arbitrage-free time-sharing model,
+\begin{definition}[Arbitrage-free time-sharing] \label{def:arb_free_ts}\index{Arbitrage-free time-sharing model}
+In an efficient, arbitrage-free market for unified quantum computing time-shares, a network participant in possession of $n$ of the entire $n_\text{global}$ qubits in the network is entitled to the fraction of unified network compute time,
+\begin{align}
+	r_n = \frac{n}{n_\text{global}},
+\end{align}
+where,
+\begin{align}
+n_\text{global} = \sum_{j\in\text{users}} n_j,
+\end{align}
+and
+\begin{align}
+0\leq r_n \leq 1.	
+\end{align}
+\mbox{$r_n=1$} iff the user has a complete monopoly over qubits, i.e \mbox{$n=n_\text{global}$}.
+\end{definition}
+
+This model is intuitively unsurprising, since it is analogous to the case of classical computing -- users receive a time-share proportional to the proportion of the hardware they are contributing to the network. However, it is important to point out that the arbitrage is taking place in the cost of physical qubits, but not in terms of the dollar value of their classical-equivalent processing power, since this is in general non-linearly related to the number of qubits. Arbitrage in computational power is complicated by the fact that it is a non-fungible asset that cannot be directly traded, or uniquely associated with a tangible, tradable asset -- its computational value is a function of other assets. \comment{Does that really sound right?}
 
 %
 % Quantum Economic Leverage
 %
 
-\subsection{Quantum economic leverage} \index{Quantum economic leverage}
+\subsection{Quantum economic leverage}\label{sec:quant_ec_lev}\index{Quantum economic leverage}
 
-Suppose Alice and Bob both possessed expensive classical Cray\texttrademark\, supercomputers, both identical. They're both connected to the internet, so does it make sense to unify their computational resources over the network to construct a more powerful \textit{virtual machine}\index{Virtual quantum computer}, which they subsequently time-share\index{Time-sharing} between themselves, or are they better off just using their own computers?
+Suppose Alice and Bob both possessed expensive classical Cray\texttrademark\, supercomputers, both identical. They're both connected to the internet, so does it make sense to unify their computational resources over the network to construct a more powerful \textit{virtual machine}\index{Virtual quantum computer}, which they subsequently time-share\index{Time-sharing} between themselves, or are they better off just using their own computers independently?
 
 If there were an asymmetry in demand for computational resources, it would make perfect sense to unify computational resources, so as to mitigate wasting precious clock-cycles. However, if they were both heavy users, always consuming every last clock-cycle, it would make no difference: for a given computation, Alice and Bob could each be allocated half the processing time of the virtual supercomputer twice as powerful; or, each could exploit the full processing time of their half-as-fast computers. In either case, the dollar cost of the computation is the same. This simple observation follows trivially from the linear relationship between processing power and the number of CPUs in a classical computer.
 
 More generally, in a networked environment where time-sharing\index{Time-sharing} of classical computational resources is applied equitably, proportionate to users' contribution to the network, the dollar cost per computation is (roughly) unaffected by the rest of the network. Instead, the motivation for networking computational resources is to improve efficiency by ensuring that clock-cycles are not wasted, but instead distributed according to demand by a scheduling algorithm, which could be market-driven, for example.
 
-However, as discussed in Sec.~\ref{sec:dist_QC}, the computational power of a quantum computer does not scale linearly with its number of qubits, but exponentially. This completely changes the economics, and market dynamics of networked quantum computers, whose joint computational power grows (very roughly speaking) multiplicatively, rather than additively in the classical case. Intuitively, we expect equitable time-sharing of unified quantum computational resources to offer more performance to all users than if they were to exclusively use their own resources in isolation. That is, the cost of a computation is reduced by resource-sharing, even after time-sharing.
+However, as discussed in Sec.~\ref{sec:dist_QC}, the computational power of a quantum computer does not scale linearly with its number of qubits, but super-linearly, often exponentially. This completely changes the economics, and market dynamics of networked quantum computers, whose joint computational power grows (very roughly speaking) multiplicatively, rather than additively in the classical case. Intuitively, we expect equitable time-sharing of unified quantum computational resources to offer more performance to all users than if they were to exclusively use their own resources in isolation. That is, the cost of a computation is reduced by resource-sharing, even after time-sharing.
 
 In Secs.~\ref{sec:dist_QC} \& \ref{sec:module} we introduced distributed and modularised quantum computation. Using this as a toy model, we will now investigate the market dynamics of uniting the quantum computational resources of multiple market participants. We envisage a model whereby network participants are contributing modules to the networked quantum computer, thereby unifying their computational power.
 
-Let $t_i$ be the classical-equivalent runtime\index{Classical-equivalent power} of a quantum algorithm comprising $n_i$ qubits, where $i$ denotes the user. The users are running quantum algorithms with classical-equivalent processing time that grows exponentially with the number of qubits. Then, for each user,
+Let $t_i$ be the classical-equivalent runtime\index{Classical-equivalent power} of a quantum algorithm comprising $n_i$ qubits, where $i$ denotes the user. We define a \emph{scaling function}\index{Scaling function}, $f_\text{sc}$, characterising this relationship. Then, for a given user,
 \begin{align}
-t_i &= \alpha \beta^{n_i},
+t_i = f_\text{sc}(n_i).	
 \end{align}
-where \mbox{$\alpha>0$} and \mbox{$\beta>1$} are constants specific to the algorithm being deployed, and the computational model (e.g cluster states vs the circuit model).
-
-If a network of quantum computers were combined into a single, larger virtual computer\index{Virtual quantum computer}, it would exhibit scaling,
+The exact form of the scaling function will be specific to the algorithm being deployed, and the computational model (e.g cluster states vs the circuit model). If a network of quantum computers were combined into a single, larger virtual computer\index{Virtual quantum computer}, it would exhibit scaling,
 \begin{align}
-t_\text{joint} = \alpha \beta^{\sum_j n_j},
-\end{align}
-where $t_\text{joint}$ is the classical-equivalent runtime\index{Classical-equivalent power} of the joint quantum computation, and $j$ sums over all the nodes in the network. The $i$th user is contributing the fraction of the hardware,
-\begin{align}
-r_i=\frac{n_i}{\sum_j n_j},
-\end{align}
-and it is only fair that he receive a corresponding share of the quantum processing time (which would also be enforced by arbitrage in a competitive market), which discounts his classical-equivalent processing time\index{Classical-equivalent power} to,
-\begin{align}
-\tau_i &= t_\text{joint} \cdot r_i \nonumber \\
-&= \alpha \beta^{\sum_j n_j} \left(\frac{n_i}{\sum_j n_j}\right).
-\end{align}
-
-We are now interested to know whether the individual users are better off under this model than they were individually. Let us define the \textit{quantum economic leverage}\index{Economic leverage} of a user's quantum computer to be the ratio between their time-shared and individual classical-equivalent processing times\index{Classical-equivalent power},
-\begin{align}
-\lambda_i &= \frac{\tau_i}{t_i} \nonumber \\
-&= \beta^{\sum_{j\neq i} n_j} \left(\frac{n_i}{\sum_j n_j}\right).
-\end{align}
-Note that the leverage is strictly greater than unity, \mbox{$\lambda_i>1\,\forall\, i$}. Thus, for any user, irrespective of the size of their quantum computer, they are better off joining the distributed network and claiming a time-share, than utilising only their own hardware full-time. Similarly, the distributed network is better off accepting them into the network. This is in contrast to classical networks, where \mbox{$\lambda\approx 1$}, for any number of nodes in the network (i.e there is no leverage).
-
-As a special case, consider a single user's leverage when joining the global network. Then the \textit{single-user leverage}\index{Single-user economic leverage} is,
-\begin{align}
-\lambda_\text{user} = \beta^{n_\text{global}} \left(\frac{n_\text{user}}{n_\text{user}+n_\text{global}}\right),
-\end{align}
-and we see that the user gains economic leverage exponential in the size of the global network he is joining. Needless to say, the global network will also benefit from him joining the network, albeit with a far smaller exponential factor,
-\begin{align}
-\lambda_\text{global} \approx \beta^{n_\text{user}},	
-\end{align}
-assuming \mbox{$n_\text{global}\gg n_\text{user}$}.
-
-A case of particular interest is the \textit{single-qubit leverage}\index{Single-qubit quantum economic leverage} -- the leverage on the investment into adding a single additional qubit to the global network. This is an indicator of the economic or computational ratio of return on investment into expanding the network incrementally. This is simply given by letting \mbox{$n_\text{user}=1$},
-\begin{align}
-\lambda_\text{qubit} \approx \frac{\beta^{n_\text{global}}}{n_\mathrm{global}},
-\end{align}
-for a large global network (\mbox{$n_\mathrm{global}\gg 1$}), which clearly implies that as the global quantum network expands over time, the return on investment into network expansion grows exponentially, or equivalently, the cost per unit of additional classical-equivalent processing time decreases exponentially.
-
-Since exisiting network participants receive leverage upon other participants joining the network, an investment into contributing modules has exponentially increasing computational return over time as the network expands, even if that participant ceases making further investment into the network. This is in contrast to classical networks, whereby the computational return upon an investment is fixed over time.
-
-The analysis thus far has considered the best-case scenario whereby the classical-equivalent computational power of the quantum computer scales exponentially with the number of qubits. Of course, not all quantum algorithms are so favourable. Grover's algorithm, for example, yields only quadratic enhancement. In this more general scenario, using a similar derivation as before, we can define the quantum economic leverage formula,
-\begin{definition}[Quantum economic leverage] \label{def:quant_econ_lev}\index{Quantum economic leverage formula}\index{Single-qubit quantum economic leverage} For the $i$th user, let the classical-equivalent runtime, $t_i$, of a quantum computer, $i$, comprising $n_i$ qubits, be given by the monotonically increasing \textit{scaling function} $f_s$, such that,
-\begin{align}
-t_i = f_s(n_i).
-\end{align}
-The quantum economic leverage is defined as the ratio between the time-shared and individual classical-equivalent algorithmic runtimes,
-\begin{align}
-\lambda_i = \frac{f_s(n_\text{global})}{n_\text{global}} \cdot \frac{n_i}{f_s(n_i)},
+t_\text{joint} = f_\text{sc}(n_\text{global}),
 \end{align}
 where,
 \begin{align}
-	n_\text{global} = \sum_{j} n_j,
+n_\text{global} = \sum_{j\in\text{users}} n_j,
 \end{align}
-is the total number of qubits in the network. The single-qubit quantum economic leverage is,
+is the total number of qubits in the network, and $t_\text{joint}$ is the classical-equivalent runtime\index{Classical-equivalent power} of the joint quantum computation, with $j$ summing over all the nodes in the network.
+
+The $i$th user is contributing the fraction of the hardware $r_i$, and receives this same proportion of compute-time under the arbitrage-free time-sharing model (Def.~\ref{def:arb_free_ts}). This discounts his classical-equivalent processing time\index{Classical-equivalent power} to,
 \begin{align}
-	\lambda_1 = \frac{f_s(n_\text{global})}{f_s(1)\cdot n_\text{global}}.
+\tau_i = t_\text{joint} \cdot r_i.
 \end{align}
+
+We are now interested to know whether the individual users are better off under this model than they were individually. Let us define the \textit{quantum economic leverage}\index{Economic leverage} of a user's quantum computer to be the ratio between their unified time-shared and individual classical-equivalent processing times\index{Classical-equivalent power},
+\begin{align}
+\lambda_i = \frac{\tau_i}{t_i},
+\end{align}
+yielding the quantum economic leverage formula,
+
+\begin{definition}[Quantum economic leverage] \label{def:quant_econ_lev}\index{Quantum economic leverage formula}\index{Single-qubit quantum economic leverage}
+For the $i$th user, let the classical-equivalent runtime, $t_i$, of a computation comprising $n_i$ qubits, be given by the monotonically increasing \textit{scaling function}\index{Scaling function} $f_{sc}$, such that,
+\begin{align}
+t_i = f_{sc}(n_i).
+\end{align}
+
+The quantum economic leverage is defined as the ratio between the unified time-shared and individual classical-equivalent algorithmic runtimes,
+\begin{align}
+\lambda_i &= \frac{\tau_i}{t_i} \nonumber \\
+&= \frac{f_{sc}(n_\text{global})\cdot n_i}{f_{sc}(n_i) \cdot n_\text{global}},
+\end{align}
+where,
+\begin{align}
+	n_\text{global} = \sum_{j\in \text{users}} n_j,
+\end{align}
+is the total number of qubits in the network.
+
+The single-qubit quantum economic leverage is the leverage associated with adding a single qubit to the network, \mbox{$n_\text{user}=1$}, defined as,
+\begin{align}
+	\lambda_\text{qubit} = \frac{f_{sc}(n_\text{global})}{f_{sc}(1)\cdot n_\text{global}}.
+\end{align}
+
+For any super-linear scaling function we have \mbox{$\lambda_i > 1 \,\,\forall \, i$}, and for any linear scaling function we have \mbox{$\lambda_i = 1 \,\,\forall \, i$}. For \mbox{$\lambda_i>1$} it is always computationally beneficial to all users to unify computational resources and time-share them equitably. For \mbox{$\lambda_i=1$} it makes no difference.
 \end{definition}
 
-It is now evident that for linear scaling functions, \mbox{$f_s(n)\propto n$} (as per classical computing, approximately), we obtain no leverage, \mbox{$\lambda=1$}. However, for any super-linear scaling function we achieve \mbox{$\lambda>1$} leverage, whereby it becomes beneficial for all users to contribute resources to the network and time-share.
+Note that the leverage is strictly greater than unity, \mbox{$\lambda_i>1\,\forall\, i$}, for any super-linear scaling function. Thus, for any user, irrespective of the size of their quantum computer, they are better off joining the distributed network and claiming a time-share, than utilising only their own hardware full-time. Similarly, the distributed network is better off accepting them into the network, albeit to a lesser extent for a large network. This is in contrast to classical networks, where \mbox{$\lambda\approx 1$}, for any number of nodes in the network (i.e there is no leverage).
+
+This clearly implies that as the global quantum network expands over time, so too does the computational return on investment into network expansion, or equivalently, the cost per unit of additional classical-equivalent processing time decreases exponentially.
+
+Since exisiting network participants receive leverage upon other participants joining the network, an investment into contributing modules has monotonically increasing computational return over time as the network expands, even if that participant ceases making further investment into the network. This is in contrast to classical networks, whereby the computational return upon an investment is fixed over time.
+
+In classical computing, we (approximately, modulo inefficiencies) observe linear scaling functions -- doubling the number of CPUs doubles our computational resources. Thus, for classical computing we obtain no leverage, \mbox{$\lambda_i=1$}, and unifying computational resources over the internet makes no difference to users' net computational resources. However, typical quantum computing algorithms exhibit super-linear scaling function, and we achieve \mbox{$\lambda_i>1$} leverage, whereby it becomes beneficial for all users to contribute resources to the network and time-share, rather than operate independently in isolation.
+
+In Table.~\ref{tab:leverage_summary} we summarise the structure of the quantum economic leverage for several cases of particular interest for typical quantum computing applications.
+
+\renewcommand{\tablename}{TABLE}
+
+\begin{table*}[!htb]
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+  		Scaling function & $f_\text{sc}(n)$ & Examples & $\lambda_i$ & Leverage scaling \\
+  		\hline
+  		\hline
+  		Linear & \mbox{$O(n)$} & Classical computing & \mbox{$1$} & None \\
+  		Quadratic & \mbox{$O(n^2)$} & Grover's, speeding up \textbf{NP}-complete problems & \mbox{$n_\text{global}/n_i > 1$} & Linear \\
+  		Exponential & \mbox{$O(\beta^n)$} & Shor's, quantum simulation, \textbf{BQP}-complete problems & \mbox{$\beta^{n_\text{global}-n_i} n_i/n_\text{global} > 1$} & Exponential \\
+    	\hline
+	\end{tabular}
+	\caption{Summary of the quantum economic leverage offered by several computational scaling functions of interest. $n_i$ and $n_\text{global}$ are the number of qubits held by the user and the entire network respectively. \comment{Check these}} \label{tab:leverage_summary} \index{Quantum economic leverage}\index{Scaling function}
+\end{table*}
+
+\renewcommand{\tablename}{ALG.}
 
 Thus, the leverage is not merely a function of the hardware, but also of the software applications running upon it, each of which associated with a unique scaling function. Furthermore, it is to be reasonably anticipated that the size of the quantum internet will increase monotonically over time, yielding ever increasing leverage on the initial hardware investment by network contributors.
 
@@ -5813,7 +5866,6 @@ This might have very interesting implications for strategic adversaries -- gover
 \section{State of the art} \label{sec:state_of_the_art} \index{State of the art}
 
 \renewcommand{\tablename}{TABLE}
-\setcounter{table}{0}
 
 When will we have the quantum internet? This is a question with as many answers as there are people one asks. And the developments of the different components of such an internet will be staggered and under continual development -- a quantum internet with the capacity for long-distance QKD will likely arrive far sooner than one supporting fully distributed, blind quantum computation.
 
