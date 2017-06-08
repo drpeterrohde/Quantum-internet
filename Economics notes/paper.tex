@@ -35,90 +35,122 @@
 
 \maketitle 
 
-\section{Forward contract pricing model}
+%
+% Forward Contract Pricing Model
+%
 
-We wish to price the future value of a fixed number of qubits, that are traded as a time-shared asset, unified with the global network.
+\section{Forward contract pricing model}\index{Forward contract pricing model}
+
+Unlike conventional securities traded on the financial markets, the dividends paid by a computer are measured in units of computation, FLOPS, rather than dollars. However, of course there will always be some market for trading FLOPS for dollars. We envisage a derivatives market where the currency is in terms of present and future units of computation, expressed in its dollar-equivalent. Specifically, units of computation at different points in time are traded as a financial instrument.
+
+Forward contracts such as these are immensely useful in conventional markets, as a means by which to secure future use or ownership of an asset at predictable points in time. For example, farmers make heavy use of forward contracts to lock in sale of their produce before it has been harvested, such that the value is locked in in advance and the sale is guaranteed. We envisage similar utility in the context of quantum computing. A company engaging in heavy use of computing power might have a need to perform certain computations on a regular basis at predictable intervals going forward. In this instance, forward contracts could be very helpful in reducing exposure to risk and guaranteeing access to the technology when needed.
+
+Now let us price the future value of a fixed number of qubits, that are traded as a time-shared asset, unified with the global network. 
 
 The standard forward pricing model is,
-\begin{align}
+\begin{align} \index{Forward contract pricing model}
 F(T) = S_0 e^{(r-q)T} - \sum_{t=0}^T D_t e^{(r-q)(T-t)},
 \end{align}
-where $T$ is the time of maturity (at which the contract is executed), $r$ is the risk-free rate of return, $q$ is the cost of carry, and $D_t$ is the expected dividend at time $t$.
+where,
+\begin{itemize}
+	\item $F(T)$ is the forward price at time $T$.\index{Forward price}
+	\item $T$ is the time of maturity, at which time the contract is executed and the transaction is made.\index{Time of maturity}
+	\item $r$ is the risk-free rate of return.\index{Risk-free rate of return}
+	\item $q$ is the cost of carry (e.g storage and maintenance costs). We assume this is zero since maintenance of physical computer assets is negligible and the goods are effectively non-perishable.\index{Cost of carry}
+	\item $D_t$ is the expected dividend at time $t$.\index{Dividend}
+\end{itemize}
 
-Assume cost-of-carry, $q$, is zero since maintenance of physical computer assets is negligible and the goods are effectively non-perishable.
-
-Assume that the dollar value of FLOPS, $L_t$, is decreasing exponentially over time $t$. This is what we observe for the classical Moore's Law, and it is reasonable to assume a similar exponential trajectory in the future,
-\begin{align}
+The execution of computations typically has monetary value to the consumer. After all, they are paying hard-earned money for access to the technology. We let $L_t$ be the dollar value of FLOPS at time $t$. The exact form of this will be highly market-dependent. However, as a toy model we assume $L_t$ is decreasing exponentially over time. This is what we observe for the classical Moore's Law\index{Moore's Law}, and it is reasonable to assume a similar exponential trajectory in future technologies. Thus,
+\begin{align}\index{Cost of computation}
 	L_t = L_0{\gamma_L}^{-t},
 \end{align}
 where \mbox{$\gamma_L\geq 1$} characterises the rate of exponential decay.
 
-Let the number of FLOPS associated with the tradable asset grow according to the quantum economic leverage over time, $\lambda_t$. That is, as the future network grows, so does our leverage, and thus our classical-equivalent processing power.
-
-Assume the number of qubits in the global network in the future is growing exponentially over time (i.e the rate of progress of quantum technology will observe a Moore's Law-like behaviour -- exponential reduction in qubit manufacturing costs over time will yield exponential growth in the number of qubits in existence),
+Assume the number of qubits in the global network in the future is growing exponentially over time, i.e the rate of progress of quantum technology will observe a Moore's Law-like behaviour -- exponential reduction in qubit manufacturing costs over time will yield exponential growth in the number of qubits in existence. This is a reasonable assumption based on the observation of this ubiquitous kind of behaviour in present-day technologies. Classical computing has been on an exponential trajectory since the 1980's, and although it must eventually asymptote, it shows no sign of doing so in the immediate future. Thus, we let the number of qubits in the network be,
 \begin{align}
 	N_t = N_0 {\gamma_N}^{t},
 \end{align}
 where \mbox{$\gamma_N\geq 1$} characterises the rate of exponential growth in the number of qubits available to the quantum network.
 
-The leverage then scales as,
-\begin{align}
-\lambda_t &= \eta_n \frac{f_\text{sc}(N_t)}{N_t} \nonumber \\
-&= \eta_n \frac{f_\text{sc}(N_0 {\gamma_N}^{t})}{N_0 {\gamma_N}^{t}},
+The time-dependent quantum economic leverage scales as,
+\begin{align}\index{Quantum economic leverage}
+\lambda_n(t) = \frac{f_\text{sc}(N_0 {\gamma_N}^{t})\cdot n}{f_\text{sc}(n) \cdot N_0 {\gamma_N}^{t}},
 \end{align}
-where,
-\begin{align}
-	\eta_n = \frac{n}{f_\text{sc}(n)},
-\end{align}
-and $n$ is the number of qubits involved in the transaction, which we treat as a constant, since we are valuing the future price of an asset comprising a fixed number of qubits.
+where $n$ is the number of qubits involved in the transaction, which we treat as a constant, since we are valuing the future price of an asset comprising a fixed number of qubits.
 
-Let the dividend, $D_t$, be a measure of the dollar value of the $n$ qubits' computational power at a given time $t$. This scales with the leverage and dollars-per-FLOPS,
+Let the spot price, $S_0$, be the present-day price ($t=0$) of FLOPS times the share of computing power at time of maturity, $T$ (i.e future computing power, accounting for growth, priced according to present market value),
 \begin{align}
-D_t &= L_t \lambda_t \nonumber \\
-&= \frac{\eta_n L_0 {\gamma_L}^{-t} f_\text{sc}(N_t)}{N_t} \nonumber \\
-&= \frac{nL_0}{f_\text{sc}(n)} \cdot \frac{f_\text{sc}(N_0 {\gamma_N}^{t})}{N_0(\gamma_L\gamma_N)^{t}}.
+S_0 &= L_0 \cdot c_n(T) \nonumber \\
+&= L_0 r_n(T) \cdot f_\text{sc}(N_0 {\gamma_N}^{T}) \nonumber \\
+&= \frac{L_0 n\cdot f_\text{sc}(N_0 {\gamma_N}^{T})}{N_0 {\gamma_N}^{T}}.
 \end{align}
 
-Let the spot price, $S_0$, be the present day price ($t=0$) of FLOPS times the leverage at time $T$ (i.e its future computing power),
+The computational dividend at time $t$, $D_t$, is masterfully baked using the same recipe,
 \begin{align}
-S_0 &= L_0 \lambda_T \nonumber \\
-&= L_0 \eta_n \frac{f_\text{sc}(N_T)}{N_T} \nonumber \\
-&= L_0 \eta_n \frac{f_\text{sc}(N_0 {\gamma_N}^{T})}{N_0 {\gamma_N}^{T}}
+D_t &= \frac{L_0 {\gamma_L}^{-t} n\cdot f_\text{sc}(N_0 {\gamma_N}^{t})}{N_0 {\gamma_N}^{t}}.
 \end{align}
 
-Then the forward price is,
+Then the forward price for time-shared quantum computing is then,
+
+DEFINITION XXXX
+
 \begin{align}
-F(T) = \frac{e^{rT}L_0\eta_n}{N_0} \left[ \frac{f_\text{sc}(N_0 {\gamma_N}^{T})}{{\gamma_N}^{T}} - \sum_{t=0}^{T} \frac{f_\text{sc}(N_0 {\gamma_N}^{t})}{(\gamma_N \gamma_L e)^{t}} \right].
+F(T) &= S_0 e^{rT} - \sum_{t=0}^T D_t e^{r(T-t)} \nonumber \\
+&= \frac{L_0 n e^{rT}}{N_0}\left[ \frac{f_\text{sc}(N_0 {\gamma_N}^{T})}{{\gamma_N}^T} - \sum_{t=0}^T \frac{f_\text{sc}(N_0 {\gamma_N}^{t})}{e^{rt}{\gamma_N}^t{\gamma_L}^{t}}\right].
 \end{align}
 
-\subsection{Linear scaling functions}
+\subsection{Example pricing dynamics}
 
-As a first example, to provide a benchmark, let the scaling function be linear in $n$,
+Let us consider the behaviour of forward contract pricing dynamics for several different scaling functions of particular interest in quantum computing.
+
+We will choose the variables as follows for simplicity: \mbox{$L_0=N_0=n=r=1$}, \mbox{$\gamma_N=\gamma_L=2$}. In this example scenario the forward price reduces to,
 \begin{align}
-f_\text{sc}(n) = \alpha n,	
-\end{align}
-as we would (approximately) observe for clustered classical computers, whereby there is no leverage. Then the forward price reduces to,
-\begin{align}
-F(T) &= {e^{rT}L_0} \left[1 - \sum_{t=0}^{T} (\gamma_L e)^{-t} \right] \nonumber \\
-&= {e^{rT}L_0} \left[\frac{1-(e\gamma_L)^{-T}}{1-e\gamma_L} \right].
+F(T) = e^{T}\left[ \frac{f_\text{sc}(2^{T})}{2^T} - \sum_{t=0}^T \frac{f_\text{sc}(2^{t})}{(4e)^t}\right]
 \end{align}
 
-\subsection{Quadratic scaling functions}
+%
+% Linear Scaling Functions
+%
 
-Let the scaling function be a simple quadratic polynomial (e.g the quantum resources are being employed for Grover-like algorithms, such as speeding up \textbf{NP}-complete optimisation problems),
+\subsection{Linear scaling functions}\index{Linear scaling functions}
+
+To provide a benchmark against classical computation, let the scaling function be linear in $n$,
 \begin{align}
-f_\text{sc}(n) = \alpha n^2	
+f_\text{sc}(n) = n,	
 \end{align}
 Then the forward price reduces to,
 \begin{align}
-F(T) &= \frac{e^{rT}L_0N_0}{n^2} \left[{\gamma_N}^{T} - \sum_{t=0}^{T} \left(\frac{\gamma_N}{\gamma_L e}\right)^t \right] \nonumber \\
-&= \frac{e^{rT}L_0 N_0}{n^2} \left[{\gamma_N}^T + \frac{\gamma_N\left(\frac{\gamma_N}{e \gamma_L}\right)^T-e\gamma_L}{e\gamma_L - \gamma_N} \right].
+F(T) = e^{T}\left[ 1 - \sum_{t=0}^T \frac{1}{(2e)^t}\right].
 \end{align}
 
-\textbf{Something I don't understand: arbitrage should enforce the condition that 2 qubits costs twice as much as 1 qubit. This formula doesn't reflect this.}
+%
+% Quadratic Scaling Functions
+%
 
-\subsection{Exponential scaling functions}
+\subsection{Quadratic scaling functions}\index{Quadratic scaling functions}
 
-\textbf{To do}
+Let the scaling function be a simple quadratic polynomial (e.g the quantum resources are being employed for Grover-like algorithms, such as speeding up \textbf{NP}-complete optimisation problems). The scaling function is,
+\begin{align}
+f_\text{sc}(n) = n^2,	
+\end{align}
+Now the forward contract pricing model reduces to,
+\begin{align}
+F(T) = e^{T}\left[ 2^{T} - \sum_{t=0}^T \frac{1}{e^t}\right]
+\end{align}
+
+%
+% Exponential Scaling Functions
+%
+
+\subsection{Exponential scaling functions}\index{Exponential scaling functions}
+
+Finally let us consider exponential scaling functions -- the most powerful we might hope for. We let,
+\begin{align}
+f_\text{sc}(n) = e^n.	
+\end{align}
+And the forward price reduces to,
+\begin{align}
+F(T) = e^{T}\left[ \frac{\text{exp}(2^{T})}{2^T} - \sum_{t=0}^T \frac{\text{exp}(2^{t})}{(4e)^t}\right]
+\end{align}
 
 \end{document}
