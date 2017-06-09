@@ -3201,9 +3201,9 @@ where \mbox{$\sigma\in S_m$} is an arbitrary element of the symmetric group (i.e
 
 \subsection{Mechanical switches}
 
-\comment{To do!}
+Most obviously, optical switching could be performed mechanically, by physically displacing fibre endpoints, directing them towards different routes. Such switches have found use in other areas, but are not particularly appropriate for quantum information processing applications, as they are extremely slow compared to electro- or acousto-optic technologies. Certainly, mechanical switching would not be applicable to optical fast-feedforward, such as that required by optical quantum computing, on the order of nanoseconds.
 
-\comment{Others!}
+A second disadvantage of mechanical switches is that the introduction of moving parts into quantum optics protocols makes optical stabilisation extremely challenging. The mechanical control required to preserver wavelength-level coherence, for example, is effectively ruled out by moving parts.
 
 %
 % Optical Stability In Quantum Networks
@@ -5679,9 +5679,9 @@ These observations lead us to naturally conclude that a quantum network speciali
 
 \section{Economics of the quantum internet} \index{Economics}
 
-Any form of computation comes at an economic cost, but also brings with it a payoff. Thus, a key consideration in any model for computation is the tradeoff between the two. Because the computational power of quantum computers scales inherently differently than classical computers, we expect this return on investment (RoI)\index{Return on investment (RoI)} ratio to exhibit different scaling characteristics, thereby fundamentally altering economic considerations.
+Any form of computation comes at an economic cost, but also brings with it a payoff. A key consideration in any model for computation is the tradeoff between the two. Because the computational power of quantum computers scales inherently differently than classical computers, we expect this return on investment (RoI)\index{Return on investment (RoI)} ratio to exhibit different scaling characteristics, thereby fundamentally altering economic considerations.
 
-We will now treat these economic considerations in the context of a global network of unified quantum computing resources, which are then equitably time-shared\index{Time-sharing}. We argue in Sec.~\ref{sec:quant_ec_lev} that this model for quantum computation is always more computationally efficient than having distinct quantum computers operating independently in parallel, owing to the super-linear scaling in the computational power of quantum computers.
+We will now treat some of these economic issues in the context of a global network of unified quantum computing resources, which are then equitably time-shared\index{Time-sharing}. We argue in Sec.~\ref{sec:quant_ec_lev} that this model for quantum computation is always more computationally efficient than having distinct quantum computers operating independently in parallel, owing to the super-linear scaling in their computational power.
 
 %
 % Arbitrage-Free Time-Sharing
@@ -5699,7 +5699,7 @@ be the proportion of compute-time allocated to a user in possession of $n$ qubit
 \begin{align}
 	r_{n_1+n_2} = r_{n_1} + r_{n_2}.
 \end{align}
-This constraint effectively mandates that `all qubits are created equal', and two qubits are twice as valuable as one -- \textit{Qubit aequalitatem}. Were, for example, a bundle of two qubits be worth more than two individual qubits purchased in isolation, a market participant could unfairly gain free compute time by buying two qubits separately, unifying them, selling the bundle, buying them back individually, and repeating indefinitely.
+This constraint effectively mandates that `all qubits are created equal', and two qubits are twice as valuable as one -- \textit{Qubit aequalitatem}. Were, for example, a bundle of two qubits be worth more than two individual qubits purchased in isolation, a market participant could perform arbitrage and unfairly gain free compute-time by buying two qubits separately, unifying them, selling the bundle, buying them back individually, and repeating indefinitely until he seizes the entire network.
 
 Additionally, we will assume an efficient and competitive market, in which no compute-cycles are wasted -- compute-time is always fully utilised. Then it follows that the time-share of the combined resources of the entire network should be unity,
 \begin{align}
@@ -5715,7 +5715,7 @@ where,
 \begin{align}
 n_\text{global} = \sum_{j\in\text{users}} n_j,
 \end{align}
-and
+is the total number of qubits on the network, and,
 \begin{align}
 0\leq r_n \leq 1.	
 \end{align}
@@ -5745,10 +5745,16 @@ However, as discussed in Sec.~\ref{sec:dist_QC}, the computational power of a qu
 
 In Secs.~\ref{sec:dist_QC} \& \ref{sec:module} we introduced distributed and modularised quantum computation. Using this as a toy model, we will now investigate the market dynamics of uniting the quantum computational resources of multiple market participants. We envisage a model whereby network participants are contributing modules to the networked quantum computer, thereby unifying their computational power.
 
-Let $t_i$ be the classical-equivalent runtime\index{Classical-equivalent power} of a quantum algorithm comprising $n_i$ qubits, where $i$ denotes the user. We define a \emph{scaling function}\index{Scaling function}, $f_\text{sc}$, characterising this relationship. Then, for a given user,
+Let $t_i$ be the classical-equivalent runtime\index{Classical-equivalent power} of a quantum algorithm comprising $n_i$ qubits, where $i$ denotes the user. We define a \emph{scaling function}\index{Scaling function} characterising this relationship,
+
+\begin{definition}[Scaling function] \label{def:scaling_func}\index{Scaling function} 
+The scaling function, $f_\text{sc}$, relates the number of qubits held by a quantum computer, $n$, and the classical-equivalent runtime, $t$, of the algorithm it implements,
 \begin{align}
-t_i = f_\text{sc}(n_i).	
+t = f_\text{sc}(n).	
 \end{align}
+	$f_\text{sc}$ is monotonically increasing, and depends heavily on both the algorithm being implemented, as well as the architecture of the computer.
+\end{definition}
+
 The exact form of the scaling function will be specific to the algorithm being deployed, and the computational model (e.g cluster states vs the circuit model). If a network of quantum computers were combined into a single, larger virtual computer\index{Virtual quantum computer}, it would exhibit scaling,
 \begin{align}
 t_\text{joint} = f_\text{sc}(n_\text{global}),
@@ -5792,12 +5798,12 @@ The single-qubit quantum economic leverage is the leverage associated with addin
 	\lambda_\text{qubit} = \frac{f_{sc}(n_\text{global})}{f_{sc}(1)\cdot n_\text{global}}.
 \end{align}
 
-For any super-linear scaling function we have \mbox{$\lambda_i > 1 \,\,\forall \, i$}, and for any linear scaling function we have \mbox{$\lambda_i = 1 \,\,\forall \, i$}. For \mbox{$\lambda_i>1$} it is always computationally beneficial to all users to unify computational resources and time-share them equitably. For \mbox{$\lambda_i=1$} it makes no difference.
+For any super-linear scaling function we have \mbox{$\lambda_i > 1 \,\,\forall \, i$}, and for any linear scaling function we have \mbox{$\lambda_i = 1 \,\,\forall \, i$}. For \mbox{$\lambda_i>1$} it is always computationally beneficial to all users to unify computational resources and time-share them equitably, as per the arbitrage-free time-sharing model. For \mbox{$\lambda_i=1$} it makes no difference whether users unify resources or operate independently.
 \end{definition}
 
 Note that the leverage is strictly greater than unity, \mbox{$\lambda_i>1\,\forall\, i$}, for any super-linear scaling function. Thus, for any user, irrespective of the size of their quantum computer, they are better off joining the distributed network and claiming a time-share, than utilising only their own hardware full-time. Similarly, the distributed network is better off accepting them into the network, albeit to a lesser extent for a large network. This is in contrast to classical networks, where \mbox{$\lambda\approx 1$}, for any number of nodes in the network (i.e there is no leverage).
 
-This clearly implies that as the global quantum network expands over time, so too does the computational return on investment into network expansion, or equivalently, the cost per unit of additional classical-equivalent processing time decreases exponentially.
+This clearly implies that as the global quantum network expands over time (which might happen at an exponential rate), so too does the computational return on investment into network expansion, or equivalently, the cost per unit of additional classical-equivalent processing time decreases exponentially.
 
 Since exisiting network participants receive leverage upon other participants joining the network, an investment into contributing modules has monotonically increasing computational return over time as the network expands, even if that participant ceases making further investment into the network. This is in contrast to classical networks, whereby the computational return upon an investment is fixed over time.
 
@@ -5831,13 +5837,15 @@ Thus, the leverage is not merely a function of the hardware, but also of the sof
 
 \subsection{Forward contract pricing model}\index{Forward contract pricing model}
 
-Unlike conventional securities traded on the financial markets, the dividends paid by a computer are measured in units of computation, FLOPS, rather than dollars. However, of course there will always be some market for trading FLOPS for dollars. We envisage a derivatives market where the currency is in terms of present and future units of computation, expressed in its dollar-equivalent. Specifically, units of computation at different points in time are traded as a financial instrument.
+Unlike conventional securities traded on the financial markets, the dividends paid by a computer are measured in units of computation, FLOPS say, rather than dollars. However, of course there will always be some market for trading FLOPS for dollars. We envisage a derivatives market where the currency is in terms of present and future units of computation, expressed in its dollar-equivalent. Specifically, units of computation at different points in time are traded as a financial instrument.
 
-Forward contracts such as these are immensely useful in conventional markets, as a means by which to secure future use or ownership of an asset at predictable points in time. For example, farmers make heavy use of forward contracts to lock in sale of their produce before it has been harvested, such that the value is locked in in advance and the sale is guaranteed. We envisage similar utility in the context of quantum computing. A company engaging in heavy use of computing power might have a need to perform certain computations on a regular basis at predictable intervals going forward. In this instance, forward contracts could be very helpful in reducing exposure to risk and guaranteeing access to the technology when needed.
+Forward contracts such as these are immensely useful in conventional markets, as a means by which to secure future use or ownership of an asset at predictable points in time. For example, farmers make heavy use of forward contracts to lock in sale of their produce before it has been harvested, such that the value is locked in in advance and the sale is guaranteed, providing a very valuable hedging instrument.
+
+We envisage similar utility in the context of quantum computing. A company engaging in heavy use of computing power might have a need to perform certain computations on a regular basis at predictable intervals going forward. In this instance, forward contracts could be very helpful in reducing exposure to risk and guaranteeing access to the technology when needed.
 
 Now let us price the future value of a fixed number of qubits, that are traded as a time-shared asset, unified with the global network. 
 
-The standard forward pricing model is,
+The standard forward pricing model is \cite{???},
 \begin{align} \index{Forward contract pricing model}
 F(T) = S_0 e^{(r-q)T} - \sum_{t=0}^T D_t e^{(r-q)(T-t)},
 \end{align}
@@ -5849,6 +5857,7 @@ where,
 	\item $q$ is the cost of carry (e.g storage and maintenance costs). We assume this is zero since maintenance of physical computer assets is negligible and the goods are effectively non-perishable.\index{Cost of carry}
 	\item $D_t$ is the expected dividend at time $t$.\index{Dividend}
 \end{itemize}
+The intuitive interpretation of this formula is that the strike price is given by the spot price, discounted by the compounded dividends paid before maturation, conversely for the compounded risk-free rate of return. 
 
 The execution of computations typically has monetary value to the consumer. After all, they are paying hard-earned money for access to the technology. We let $L_t$ be the dollar value of FLOPS at time $t$. The exact form of this will be highly market-dependent. However, as a toy model we assume $L_t$ is decreasing exponentially over time. This is what we observe for the classical Moore's Law\index{Moore's Law}, and it is reasonable to assume a similar exponential trajectory in future technologies. Thus,
 \begin{align}\index{Cost of computation}
@@ -5868,16 +5877,16 @@ The time-dependent quantum economic leverage scales as,
 \end{align}
 where $n$ is the number of qubits involved in the transaction, which we treat as a constant, since we are valuing the future price of an asset comprising a fixed number of qubits.
 
-Let the spot price, $S_0$, be the present-day price ($t=0$) of FLOPS times the share of computing power at time of maturity, $T$ (i.e future computing power, accounting for infrastructural growth, priced according to present market value),
+Let the spot price, $S_0$, be the present-day ($t=0$) price of FLOPS, $L_0$, times the present-day share of computing power held by the qubits under transaction, $c_n(0)$,
 \begin{align}
-S_0 &= L_0 \cdot c_n(T) \nonumber \\
-&= L_0 r_n(T) \cdot f_\text{sc}(N_0 {\gamma_N}^{T}) \nonumber \\
-&= \frac{L_0 n\cdot f_\text{sc}(N_0 {\gamma_N}^{T})}{N_0 {\gamma_N}^{T}}.
+S_0 &= L_0 c_n(0) \nonumber \\
+&= L_0 r_n(0) \cdot f_\text{sc}(N_0) \nonumber \\
+&= \frac{L_0 n\cdot f_\text{sc}(N_0)}{N_0}.
 \end{align}
 
 The computational dividend at time $t$, $D_t$, is masterfully baked using the same recipe,
 \begin{align}
-D_t &= \frac{L_0 {\gamma_L}^{-t} n\cdot f_\text{sc}(N_0 {\gamma_N}^{t})}{N_0 {\gamma_N}^{t}}.
+D_t &= \frac{L_0 n\cdot f_\text{sc}(N_0 {\gamma_N}^{t})}{N_0 {\gamma_N}^{t}{\gamma_L}^{t}}.
 \end{align}
 
 Then the forward price for time-shared quantum computing is,
@@ -5885,21 +5894,27 @@ Then the forward price for time-shared quantum computing is,
 \begin{definition}[Forward contract pricing model] \label{def:forward_cont}\index{Forward contract pricing model}
 The efficient market price for a forward contract in time-shared quantum computing is,
 \begin{align}
-F(T) &= \frac{L_0 n e^{rT}}{N_0}\left[ \frac{f_\text{sc}(N_0 {\gamma_N}^{T})}{{\gamma_N}^T} - \sum_{t=0}^T \frac{f_\text{sc}(N_0 {\gamma_N}^{t})}{e^{rt}{\gamma_N}^t{\gamma_L}^{t}}\right],
+F(T) &= \frac{L_0 n e^{rT}}{N_0}\left[ f_\text{sc}(N_0) - \sum_{t=0}^T \frac{f_\text{sc}(N_0 {\gamma_N}^{t})}{(e^{r}{\gamma_N}{\gamma_L})^t}\right],
 \end{align}
 where,
 \begin{itemize}
-	\item $F(T)$ is the price of the contract.
+	\item $F(T)$ is the future price of the time-share asset.
 	\item $L_t$ is the dollar value of classical-equivalent FLOPS.
 	\item $N_t$ is the number of qubits in the network.
-	\item $T$ is time of maturity.
+	\item $T$ is time of maturity for the contract.
 	\item $r$ is the risk-free rate of return.
 	\item $n$ is the number of qubits under transaction.
 	\item $\gamma_N$ is the exponential growth coefficient for $N$.
 	\item $\gamma_L$ is the exponential growth coefficient for $L$.
 	\item $f_\text{sc}$ is the scaling function.
+	\item \mbox{$q=0$} is the cost-of-carry, which we neglect.
 \end{itemize}
 \end{definition}
+
+Note that the forward price formula preserves our desired `all qubits are equal' criteria, in the sense that it obeys linearity,
+\begin{align}
+	F_{n_1+n_2}(T) = F_{n_1}(T) + F_{n_2}(T).
+\end{align}
 
 %
 % Example Pricing Dynamics
@@ -5926,7 +5941,7 @@ F(T) &= \frac{L_0 n (e^{rT} - \gamma_L^{-T})}{1-e^r\gamma_L} \nonumber \\
 \end{align}
 approximating an exponential function for not-too-small $T$.
 
-This outcome is to be expected, since it represents a `standard' application of the forward contract pricing model to a classical asset, that ought to largely behave like other conventional commodities. The exponential growth in the strike price against time simply owes to the compounding of the risk-free rate of return. The expression is independent of $\gamma_N$, since time-sharing offers no computational advantage in the no-leverage scenario.
+This outcome is to be expected, since it represents a `standard' application of the forward contract pricing model to a classical asset, that ought to largely behave like other conventional commodities. The exponential growth in the strike price against time simply owes to the compounding of the risk-free rate of return. The expression is independent of $N_0$ and $\gamma_N$, since time-sharing offers no computational advantage in the no-leverage scenario. That is, what others do on the network has no multiplier effect on the performance of our own asset.
 
 %
 % Quadratic Scaling Functions
@@ -5940,9 +5955,9 @@ f_\text{sc}(n) = n^2,
 \end{align}
 Now the forward contract pricing model reduces to,
 \begin{align}
-F(T) = O(\text{exp}(T)),
+F(T) = \frac{L_0 N_0 n ({\gamma_L}^{-T}{\gamma_N}^{T+1} - e^{rT}\gamma_N)}{e^r\gamma_L-\gamma_N} \nonumber \\
 \end{align}
-as per the linear scaling function, albeit with a higher order exponential.
+as per the linear scaling function, albeit with a higher order exponential. \comment{Discuss scaling. Different regimes.}
 
 %
 % Exponential Scaling Functions
@@ -5956,10 +5971,10 @@ f_\text{sc}(n) = e^n.
 \end{align}
 And the forward price reduces to,
 \begin{align}
-F(T) = O(\text{exp}(2^T)),
+F(T) = ,
 \end{align}
-which is doubly exponential.
-
+\comment{To do}
+ 
 %
 % Economic Implications
 %
@@ -5967,6 +5982,7 @@ which is doubly exponential.
 \subsection{Economic implications}
 
 \comment{To do}
+\comment{Different users might have different scaling functions. How to reconcile into single marketplace?}
 
 %
 % Ideas For How To Proceed
@@ -5977,7 +5993,6 @@ which is doubly exponential.
 \comment{Some different pricing models and other ideas that would be worth considering:}
 
 \begin{itemize}
-	\item Forward contract on purchasing an existing, functional QC at some point in the future. (will require incorporating discounting the spot price by the computational payoff before maturity).
 	\item Forward contract on purchasing a new QC that doesn't exist yet. (there will be no computational dividend before maturity).
 	\item RoI of purchasing quantum hardware in the context of some growth model for the proliferation of qubits and their reduction in physical cost over time.
 	\item Risk/return tradeoffs.
@@ -5992,18 +6007,10 @@ which is doubly exponential.
 
 \begin{itemize}
 	\item Time-chunks as tradable commodity.
-	\item Pricing model for forward contracts on time-shares in QC use. Use usual forward contract pricing model. But need to rethink the dividend yield functions.
-	\item Dividends are measured in units of computational power (i.e FLOPs). For a fixed-size QC in a growing network, the dividend yield (FLOPs) will be increasing exponentially over time (because of quantum leverage).
 	\item RoI of purchasing a QC of given size and contributing it to the network. Return in FLOPs is increasing exponentially over time. What about in terms of dollars?
-	\item How to convert FLOPs to dollars? Cost per FLOP will be decreasing exponentially over time since the RoI is increasing exponentially over time, as will the number of physical qubits in existence. How can we model such a relationship?
-	\item The dollar cost of manufacturing new qubits will decrease exponentially over time as engineering and technology improves. A quantum Moore's Law.
-	\item Make some assumption about growth rate of quantum internet. i.e some kind of quantum Moore's Law (e.g model as exponential function). 
 	\item Consider the fact that these models will all heavily depend on the software applications the QCs are used for, since different scaling functions yield different leverages.
 	\item The value of a number of qubits to a user will vary, depending on the scaling function of their application. But arbitrage would enforce that the cost of licensing a qubit is the same, regardless of the application. How to reconcile this?
 	\item The dollar cost of a qubit at a given point in time is not affected by its application -- it's a unit of hardware. So the dollar cost per unit of hardware (manufacturing) is independent of use, but the value to the end-user varies enormously depending on their application. How do these discrepancies affect market dynamics? Does this imply that users of `slow' quantum algorithms (e.g quadratically enhanced algorithms) will be forced to pay more for a unit of computation than users using `fast' algorithms (e.g ones with exponential computational enhancement)?
-	\item The increasing leverage over time of a fixed-size asset (QC) in a growing network exponentially increases computational power of the asset over time.
-	\item Under an arbitrage-free fair pricing assumption, all users will be entitled to a time-share of the global virtual QC proportional to the ratio of qubits they contribute to the network.
-	\item Do these observations imply that qubits are a permanently appreciating asset? Or does the value of a fixed number of physical qubits asymptote and stop appreciating at some point in time? 
 	\item Think about how different taxation policies might affect the future quantum internet. Tax always has a multiplier. For quantum infrastructure the multiplier might be far greater than in other sectors of the economy.
 \end{itemize}
 
@@ -6637,6 +6644,7 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \nomenclature[]{\textbf{BEC}}{Bose-Einstein condensate}
 \nomenclature[]{\textbf{FIFO}}{First in, first out}
 \nomenclature[]{\textbf{RSA}}{Rivest-Shamir-Adleman}
+\nomenclature[]{\textbf{FLOP}}{Floating point operation}
 
 \printnomenclature
 
