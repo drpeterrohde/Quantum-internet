@@ -5878,14 +5878,14 @@ The time-dependent quantum economic leverage scales as,
 where $n$ is the number of qubits involved in the transaction, which we treat as a constant, since we are valuing the future price of an asset comprising a fixed number of qubits.
 
 Let the spot price, $S_0$, be the present-day ($t=0$) price of FLOPS, $L_0$, times the present-day share of computing power held by the qubits under transaction, $c_n(0)$,
-\begin{align}
+\begin{align} \index{Spot price}
 S_0 &= L_0 c_n(0) \nonumber \\
 &= L_0 r_n(0) \cdot f_\text{sc}(N_0) \nonumber \\
 &= \frac{L_0 n\cdot f_\text{sc}(N_0)}{N_0}.
 \end{align}
 
 The computational dividend at time $t$, $D_t$, is masterfully baked using the same recipe,
-\begin{align}
+\begin{align} \label{eq:dividend}\index{Dividend}
 D_t &= \frac{L_0 n\cdot f_\text{sc}(N_0 {\gamma_N}^{t})}{N_0 {\gamma_N}^{t}{\gamma_L}^{t}}.
 \end{align}
 
@@ -5898,16 +5898,16 @@ F(T) &= \frac{L_0 n e^{rT}}{N_0}\left[ f_\text{sc}(N_0) - \sum_{t=0}^T \frac{f_\
 \end{align}
 where,
 \begin{itemize}
-	\item $F(T)$ is the future price of the time-share asset.
-	\item $L_t$ is the dollar value of classical-equivalent FLOPS.
+	\item $F(T)$ is the future price of the time-share asset.\index{Future price}
+	\item $L_t$ is the dollar value of classical-equivalent FLOPS.\index{Dollar value}
 	\item $N_t$ is the number of qubits in the network.
-	\item $T$ is time of maturity for the contract.
-	\item $r$ is the risk-free rate of return.
+	\item $T$ is time of maturity for the contract.\index{Maturity}
+	\item $r$ is the risk-free rate of return.\index{Risk-free rate of return}
 	\item $n$ is the number of qubits under transaction.
-	\item $\gamma_N$ is the exponential growth coefficient for $N$.
+	\item $\gamma_N$ is the exponential growth coefficient for $N$.\index{Growth coefficient}
 	\item $\gamma_L$ is the exponential growth coefficient for $L$.
-	\item $f_\text{sc}$ is the scaling function.
-	\item \mbox{$q=0$} is the cost-of-carry, which we neglect.
+	\item $f_\text{sc}$ is the scaling function.\index{Scaling function}
+	\item \mbox{$q=0$} is the cost-of-carry, which we neglect.\index{Cost-of-carry}
 \end{itemize}
 \end{definition}
 
@@ -5936,7 +5936,7 @@ f_\text{sc}(n) = n,
 \end{align}
 Then the forward price reduces to,
 \begin{align}
-F(T) &= \frac{L_0 n (e^{rT} - \gamma_L^{-T})}{1-e^r\gamma_L} \nonumber \\
+F(T) &= \frac{L_0 n}{1-e^r\gamma_L} \left[e^{rT} - \gamma_L^{-T}\right] \nonumber \\
 &= O(\text{exp}(T)),
 \end{align}
 approximating an exponential function for not-too-small $T$.
@@ -5955,9 +5955,17 @@ f_\text{sc}(n) = n^2,
 \end{align}
 Now the forward contract pricing model reduces to,
 \begin{align}
-F(T) = \frac{L_0 N_0 n ({\gamma_L}^{-T}{\gamma_N}^{T+1} - e^{rT}\gamma_N)}{e^r\gamma_L-\gamma_N} \nonumber \\
+F(T) = \frac{L_0 N_0 n \gamma_N}{e^r\gamma_L-\gamma_N} \left[\left(\frac{\gamma_N}{\gamma_L}\right)^{T} - e^{rT}\right].
 \end{align}
-as per the linear scaling function, albeit with a higher order exponential. \comment{Discuss scaling. Different regimes.}
+This scales as,
+\begin{align}
+	F(T)=O(\text{exp}(T)),
+\end{align}
+in the regime where,
+\begin{align}
+	\frac{\gamma_N}{\gamma_L} > e^r > 1.
+\end{align}
+That is, we observe exponential scaling, provided that the rate at which qubits are added to the network outperforms the rate at which they lose dollar value. If, on the other hand, the value of computation decays more rapidly than the rate of qubit growth, the asset depreciates over time yielding a worthless forward contract.
 
 %
 % Exponential Scaling Functions
@@ -5974,7 +5982,30 @@ And the forward price reduces to,
 F(T) = ,
 \end{align}
 \comment{To do}
- 
+
+%
+% Qubit Asset Pricing Model
+%
+
+\subsection{Qubit asset pricing model}\index{Qubit asset pricing model}
+
+In Eq.~(\ref{def:forward_cont}) we derived the forward contract pricing model for time-shared quantum computing, based on the dividend formula,
+\begin{align}
+D_t = \frac{L_0 n\cdot f_\text{sc}(N_0 {\gamma_N}^{t})}{N_0 {\gamma_N}^{t}{\gamma_L}^{t}},
+\end{align}
+which prices future dividends in today's cost. Rather than trade forward contract derivatives, we may wish to price the present-day value of qubit assets for immediate trade.
+
+To price the asset we employ a similar construction to the forward contract pricing model, summing up all future dividends, discounted by their respective accumulation of the equivalent risk-free rate of return. We take the limit as time goes to infinity, such that we envisage holding onto the assets and receiving its dividends indefinitely. Then the qubit asset pricing model
+
+\begin{definition}[Qubit asset pricing model] \label{def:qubit_ass_pricing}\index{Qubit asset pricing model}
+The present-day price of a qubit asset is,	
+\begin{align}
+S &= \sum_{t=0}^\infty D_t e^{-rt} \nonumber \\
+&= \frac{L_0 n}{N_0} \sum_{t=0}^\infty \frac{f_\text{sc}({N_0\gamma_N}^{t})}{{(e^r \gamma_N \gamma_L)}^{t}},
+\end{align}	
+using the same parameters as Def.~\ref{def:forward_cont}.
+\end{definition}
+
 %
 % Economic Implications
 %
@@ -6684,6 +6715,7 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \index{Efficiency \seeonly{Loss channel, detector efficiency, computational efficiency}|gobbleone}
 \index{Unstructured database searching \seeonly{Grover's algorithm}|gobbleone}
 \index{Time-dependent quantum economic leverage \seeonly{Quantum economic leverage}|gobbleone}
+\index{Time of maturity leverage \seeonly{Maturity}|gobbleone}
 
 %
 % Index: See Also
