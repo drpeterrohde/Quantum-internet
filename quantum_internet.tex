@@ -5721,13 +5721,13 @@ is the total number of qubits on the network, and,
 \end{align}
 \mbox{$r_n=1$} iff the user has a complete monopoly over qubits, i.e \mbox{$n=n_\text{global}$}.
 
-The net computing power allocated to the user is then given by,
+The net computing power\index{Net computing power allocation} allocated to the user is then given by,
 \begin{align}
 	c_n = r_n \cdot f_\text{sc}(n_\text{global}).
 \end{align}
 \end{definition}
 
-This model is intuitively unsurprising, since it is analogous to the case of classical computing -- users receive a time-share proportional to the proportion of the hardware they are contributing to the network. However, it is important to point out that the arbitrage is taking place in the cost of physical qubits, but not in terms of the dollar value of their classical-equivalent processing power, since this is in general non-linearly related to the number of qubits. Arbitrage in computational power is complicated by the fact that it is a non-fungible asset that cannot be directly traded, or uniquely associated with a tangible, tradable asset -- its computational value is a function of other assets. \comment{Does that really sound right?}
+This model is intuitively unsurprising, since it is analogous to the case of classical computing -- users receive a time-share proportional to the proportion of the hardware they are contributing to the network. However, it is important to point out that the arbitrage is taking place in the cost of physical qubits, but not in terms of the dollar value of their classical-equivalent processing power, since this is in general non-linearly related to the number of qubits. Arbitrage in computational power per se is complicated by the fact that it is a non-fungible asset that cannot be directly traded, or uniquely associated with a tangible, tradable asset -- its computational value is a function of other assets.
 
 %
 % Quantum Economic Leverage
@@ -5854,10 +5854,10 @@ where,
 	\item $F(T)$ is the forward price at time $T$.\index{Forward price}
 	\item $T$ is the time of maturity, at which time the contract is executed and the transaction is made.\index{Time of maturity}
 	\item $r$ is the risk-free rate of return. \index{Risk-free rate of return}
-	\item $q$ is the cost of carry (e.g storage and maintenance costs). We assume this is zero since maintenance of physical computer assets is negligible and the goods are effectively non-perishable.\index{Cost of carry}
+	\item $q$ is the cost of carry (e.g storage and maintenance costs). We assume this is zero since maintenance of physical computer assets is somewhat negligible and the goods are effectively non-perishable.\index{Cost of carry}
 	\item $D_t$ is the expected dividend at time $t$.\index{Dividend}
 \end{itemize}
-The intuitive interpretation of this formula is that the strike price is given by the spot price, discounted by the compounded dividends paid before maturation, conversely for the compounded risk-free rate of return. 
+The intuitive interpretation of this formula is that the strike price is given by the spot price, discounted by the compounded dividends paid before maturation, and marked-up by the compounded risk-free rate of return. 
 
 The execution of computations typically has monetary value to the consumer. After all, they are paying hard-earned money for access to the technology. We let $L_t$ be the dollar value of FLOPS at time $t$. The exact form of this will be highly market-dependent. However, as a toy model we assume $L_t$ is decreasing exponentially over time. This is what we observe for the classical Moore's Law\index{Moore's Law}, and it is reasonable to assume a similar exponential trajectory in future technologies. Thus,
 \begin{align}\index{Cost of computation}
@@ -5871,23 +5871,32 @@ Assume the number of qubits in the global network in the future is growing expon
 \end{align}
 where \mbox{$\gamma_N\geq 1$} characterises the rate of exponential growth in the number of qubits available to the quantum network.
 
-The time-dependent quantum economic leverage scales as,
+The time-dependent quantum economic leverage now scales as,
 \begin{align}\index{Quantum economic leverage}
 \lambda_n(t) = \frac{f_\text{sc}(N_0 {\gamma_N}^{t})\cdot n}{f_\text{sc}(n) \cdot N_0 {\gamma_N}^{t}},
 \end{align}
 where $n$ is the number of qubits involved in the transaction, which we treat as a constant, since we are valuing the future price of an asset comprising a fixed number of qubits.
 
 Let the spot price, $S_0$, be the present-day ($t=0$) price of FLOPS, $L_0$, times the present-day share of computing power held by the qubits under transaction, $c_n(0)$,
-\begin{align} \index{Spot price}
+\begin{definition}[Time-share spot price] \index{Spot price}
+The spot price (present-day value) of a time-share in the quantum network is,
+\begin{align}
 S_0 &= L_0 c_n(0) \nonumber \\
 &= L_0 r_n(0) \cdot f_\text{sc}(N_0) \nonumber \\
-&= \frac{L_0 n\cdot f_\text{sc}(N_0)}{N_0}.
+&= \frac{L_0 n\cdot f_\text{sc}(N_0)}{N_0},
 \end{align}
+using the same parameters as per Def.~\ref{def:forward_cont}.
+\end{definition}
 
-The computational dividend at time $t$, $D_t$, is masterfully baked using the same recipe,
+The computational dividend at time $t$, $D_t$, is masterfully baked using the same recipe\index{Jamie Oliver},
+\begin{definition}[Computational dividend]
+The dollar-equivalent dividend paid by a time-share in the quantum network at future time $t$ is,
 \begin{align} \label{eq:dividend}\index{Dividend}
 D_t &= \frac{L_0 n\cdot f_\text{sc}(N_0 {\gamma_N}^{t})}{N_0 {\gamma_N}^{t}{\gamma_L}^{t}}.
 \end{align}
+using the same parameters as per Def.~\ref{def:forward_cont}.
+Note that the spot price is the dividend at time zero, \mbox{$S_0 = D_0$}.
+\end{definition}
 
 Then the forward price for time-shared quantum computing is,
 
@@ -5965,7 +5974,7 @@ in the regime where,
 \begin{align}
 	\frac{\gamma_N}{\gamma_L} > e^r > 1.
 \end{align}
-That is, we observe exponential scaling, provided that the rate at which qubits are added to the network outperforms the rate at which they lose dollar value. If, on the other hand, the value of computation decays more rapidly than the rate of qubit growth, the asset depreciates over time yielding a worthless forward contract.
+That is, we observe exponential scaling, provided that the rate at which qubits are added to the network outperforms the rate at which they lose dollar value. If, on the other hand, the value of computation decays more rapidly than the rate of qubit growth, the asset depreciates over time yielding a worthless forward contract with negative value.
 
 %
 % Exponential Scaling Functions
@@ -5995,16 +6004,44 @@ D_t = \frac{L_0 n\cdot f_\text{sc}(N_0 {\gamma_N}^{t})}{N_0 {\gamma_N}^{t}{\gamm
 \end{align}
 which prices future dividends in today's cost. Rather than trade forward contract derivatives, we may wish to price the present-day value of qubit assets for immediate trade.
 
-To price the asset we employ a similar construction to the forward contract pricing model, summing up all future dividends, discounted by their respective accumulation of the equivalent risk-free rate of return. We take the limit as time goes to infinity, such that we envisage holding onto the assets and receiving its dividends indefinitely. Then the qubit asset pricing model
+To price the asset we employ a similar construction to the forward contract pricing model, summing up all future dividends, discounted by their respective accumulation of the equivalent risk-free rate of return. We take the limit as time goes to infinity, such that we envisage holding onto the assets and receiving its dividends indefinitely. Then the qubit asset pricing model is,
 
 \begin{definition}[Qubit asset pricing model] \label{def:qubit_ass_pricing}\index{Qubit asset pricing model}
-The present-day price of a qubit asset is,	
+The present-day spot price of a qubit asset is,	
 \begin{align}
 S &= \sum_{t=0}^\infty D_t e^{-rt} \nonumber \\
 &= \frac{L_0 n}{N_0} \sum_{t=0}^\infty \frac{f_\text{sc}({N_0\gamma_N}^{t})}{{(e^r \gamma_N \gamma_L)}^{t}},
 \end{align}	
 using the same parameters as Def.~\ref{def:forward_cont}.
 \end{definition}
+
+Note that this spot price is distinct from that employed in the forward contract pricing model. In the forward contract model we are trading time-shares rather than outright purchasing of the underlying physical asset. Thus, in the forward contract model, the spot price is the dividend at time zero, $D_0$. Here, rather, the spot price reflects the fact that the buyer will profit from the computational dividends indefinitely into the future.
+
+%
+% Return On Investment
+%
+
+\subsection{Return on investment}\index{Return on investment (RoI)}
+
+\begin{align}
+R(T) = \frac{c_\text{profit}(T)}{c_\text{cost}(0)}.
+\end{align}
+
+Let the cost be the current spot price (\mbox{$t=0$}), as per the qubit asset pricing model (Def.~\ref{def:qubit_ass_pricing}), \mbox{$c_\text{cost} = S$}. Let the profit be the accumulated dividends, paid up until time $T$, using the same derivation technique that was applied to the dividend formula,
+\begin{align}\index{Profit}
+c_\text{profit}(T) &= \sum_{t=0}^T D_t e^{-rt} \nonumber \\
+&= \frac{L_0 n}{N_0} \sum_{t=0}^T \frac{f_\text{sc}({N_0\gamma_N}^{t})}{{(e^r \gamma_N \gamma_L)}^{t}}.	
+\end{align}
+Then the RoI is given by,
+
+\begin{definition}[Return on investment]\index{Return on investment formula}
+The return on investment at time $T$, on the purchase of qubits is given by,
+\begin{align}
+	R(T) &= \frac{\sum_{t=0}^T \frac{f_\text{sc}({N_0\gamma_N}^{t})}{{(e^r \gamma_N \gamma_L)}^{t}}}{\sum_{t=0}^\infty \frac{f_\text{sc}({N_0\gamma_N}^{t})}{{(e^r \gamma_N \gamma_L)}^{t}}}
+\end{align}
+\end{definition}
+
+\comment{To do}
 
 %
 % Economic Implications
