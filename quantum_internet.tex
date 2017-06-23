@@ -739,7 +739,7 @@ Clearly the goal when choosing routing strategies is to minimise the total cost,
 \begin{definition}[Strategy optimisation]
 The optimisation of strategies with a network comprising net costs $c_\text{total}$ is given by,
 \begin{align}
-c_\text{min} &= \min_\mathcal{S} (c_\text{total}), \nonumber \\
+c_\text{min} &= \underset{\mathcal{S}}{\text{min}}(c_\text{total}), \nonumber \\
 \mathcal{S}_\text{opt} &= \underset{\mathcal{S}}{\text{argmin}} (c_\text{total}).
 \end{align}
 \end{definition}
@@ -2148,7 +2148,7 @@ into the three-qubit state,
 \ket\psi_2 &= \hat{X}_2 \ket\psi_R = \alpha\ket{010}+\beta\ket{101}, \nonumber \\
 \ket\psi_3 &= \hat{X}_3 \ket\psi_R = \alpha\ket{100}+\beta\ket{011}.
 \end{align}
-\item Using three pairs of CNOT operations and $\hat{Z}$-basis measurements, apply parity measurements between each of the three pairs of encoded qubits.
+\item Determine the parity of each of the three pairs of encoded qubits.
 \item Assuming at most a single bit-flip operation has occurred on the encoded state, the three parity outcomes uniquely determine which encoded qubit the bit-flip was applied to.
 \item Apply classically-controlled bit-flip recovery operations, $\mathcal{R}$, to correct the encoded state, recovering $\ket\psi_R$.
 \item Apply the inverse of the encoding operation to recover $\ket\psi$.
@@ -2165,7 +2165,7 @@ into the three-qubit state,
 } \nonumber
 \end{align}
 }}
-\caption{3-qubit code for protecting against at most a single logical bit-flip error. In a Hadamard-rotated basis, the same circuit may be employed to protect against a single phase-flip error. And by concatenating the two we obtain a 9-qubit code protecting against a single depolarising error, which is a universal error model.} \label{alg:three_QEC}
+\caption{3-qubit code for protecting against at most a single logical bit-flip error. The doubly-controlled CNOT gates represent parity measurements, \mbox{$n_3=n_1\oplus n_2$}, where $n_i$ represents the value of the $i$th qubit. In a Hadamard-rotated basis, the same circuit may be employed to protect against a single phase-flip error. And by concatenating the two we obtain a 9-qubit code protecting against a single depolarising error, which is a universal error model.} \label{alg:three_QEC}
 \end{table}
 
 Different error correcting codes have different error correcting power, and different resource overheads, which must be taken into consideration. The appropriate choice of code will largely be determined by the final \textsc{Services \& Applications} layer. For some simple quantum communications protocols, simple error correction (or even no error correction) may suffice. A full-fledged quantum computation on the other hand will require error rates within a fault-tolerance threshold.
@@ -3645,15 +3645,15 @@ The beauty of this type of state is that there is a natural separation between s
 
 \subsubsection{Greenberger-Horne-Zeilinger states} \index{Greenberger-Horne-Zeilinger (GHZ) state preparation}
 
-Another class of states is Greenberger-Horne-Zeilinger (GHZ) states \cite{bib:GHZ89}, which are maximally-entangled states across an arbitrary number of qubits, of the form,
+Another class of states is Greenberger-Horne-Zeilinger (GHZ) states \cite{bib:GHZ89}, which are maximally-entangled states across an arbitrary number of qubits, $n$, of the form,
 \begin{align}
-\ket\psi_\text{GHZ} = \frac{1}{\sqrt{2}}(\ket{0,\dots,0} + \ket{1,\dots,1}).
+\ket\psi_\text{GHZ} = \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n} + \ket{1}^{\otimes n}).
 \end{align}
 
-GHZ states are useful for various quantum information processing applications, including quantum anonymous broadcasting (Sec.~\ref{sec:anon_broad}). These states are particularly susceptible to loss, since the loss of a single qubit completely decoheres the state into a perfect mixture of the \mbox{$\ket{0,\dots,0}$} and \mbox{$\ket{1,\dots,1}$} states, with complete loss of entanglement and coherence,
+GHZ states are useful for various quantum information processing applications, including quantum anonymous broadcasting (Sec.~\ref{sec:anon_broad}). These states are particularly susceptible to loss, since the loss of a single qubit completely decoheres the state into a perfect mixture of the \mbox{$\ket{0}^{\otimes (n-1)}$} and \mbox{$\ket{1}^{\otimes (n-1)}$} states, with complete loss of entanglement and coherence,
 \begin{align}
-&\text{tr}_A(\ket\psi_\text{GHZ}\bra\psi_\text{GHZ})\nonumber \\
-&= \frac{1}{2}(\ket{0,\dots,0}\bra{0,\dots,0}+\ket{1,\dots,1}\bra{1,\dots,1}).
+\hat\rho_\text{GHZ}^\text{loss} &= \text{tr}_1(\ket\psi_\text{GHZ}\bra\psi_\text{GHZ})\nonumber \\
+&= \frac{1}{2}(\ket{0}^{\otimes (n-1)}\bra{0}^{\otimes (n-1)}+\ket{1}^{\otimes (n-1)}\bra{1}^{\otimes (n-1)}).
 \end{align}
 
 %
@@ -5858,10 +5858,10 @@ We make several assumptions about the efficiency of the quantum marketplace. Som
 	\item Qubits are a `scarce' resource, such that there is always positive, non-zero demand for them.
 	\item Quantum computational resources are always fully utilised, with no down-time.
 	\item Transaction costs are negligible.
-	\item Cost-of-carry (i.e storage and maintenance costs) is negligible.
+	\item Cost-of-carry (i.e storage and maintenance cost) is negligible.
 	\item High liquidity.
 	\item Perfect price competition.
-	\item The market is arbitrage-free.
+	\item Arbitrage-free.
 \end{itemize}
 \end{postulate}
 
@@ -5932,7 +5932,7 @@ The dollar value of a computation decreases over time as,
 \end{align}
 \end{postulate}
 
-Note that if $f_\text{sc}$ scales linearly against time, we observe a regular exponential decay in the cost of computation, consistent with the classical Moore's Law. On the other hand however, for super-linear $f_\text{sc}$ the cost of computation decreases super-exponentially over time.
+Note that if $f_\text{sc}$ scales linearly against time, we observe a regular exponential decay in the cost of computation, consistent with the classical Moore's Law. On the other hand, however, for super-linear $f_\text{sc}$ the cost of computation decreases super-exponentially over time.
 
 %
 % Arbitrage-Free Time-Sharing
@@ -6001,11 +6001,11 @@ The $i$th user is contributing the fraction of the hardware $r_i$, and receives 
 \tau_i = t_\text{joint} \cdot r_i.
 \end{align}
 
-We are now interested to know whether the individual users are better off under this model than they were individually. Let us define the \textit{quantum economic leverage}\index{Economic leverage} of a user's quantum computer to be the ratio between their unified time-shared and individual classical-equivalent processing times\index{Classical-equivalent power},
+We are now interested to know whether the individual users are better off under this model than they were individually. Let us define the \textit{quantum economic leverage}\index{Economic leverage} (QEL) of a user's quantum computer to be the ratio between their unified time-shared and individual classical-equivalent processing times\index{Classical-equivalent power},
 \begin{align}
 \lambda_i = \frac{\tau_i}{t_i},
 \end{align}
-yielding the quantum economic leverage formula,
+yielding the QELx formula,
 
 \begin{definition}[Quantum economic leverage] \label{def:quant_econ_lev}\index{Quantum economic leverage formula}\index{Single-qubit quantum economic leverage}
 For the $i$th user, let the classical-equivalent runtime, $t_i$, of a computation comprising $n_i$ qubits, be given by the monotonically increasing \textit{scaling function}\index{Scaling function} $f_{sc}$, such that,
@@ -6013,7 +6013,7 @@ For the $i$th user, let the classical-equivalent runtime, $t_i$, of a computatio
 t_i = f_{sc}(n_i).
 \end{align}
 
-The quantum economic leverage is defined as the ratio between the unified time-shared and individual classical-equivalent algorithmic runtimes,
+The QEL is defined as the ratio between the unified time-shared and individual classical-equivalent algorithmic runtimes,
 \begin{align}
 \lambda_i &= \frac{\tau_i}{t_i} \nonumber \\
 &= \frac{f_{sc}(n_\text{global})\cdot n_i}{f_{sc}(n_i) \cdot n_\text{global}},
@@ -6023,22 +6023,28 @@ where,
 	n_\text{global} = \sum_{j\in \text{users}} n_j,
 \end{align}
 is the total number of qubits in the network.
+\end{definition}
 
-The single-qubit quantum economic leverage is the leverage associated with adding a single qubit to the network, \mbox{$n_\text{user}=1$}, defined as,
+For any super-linear scaling function we have \mbox{$\lambda_i > 1 \,\,\forall \, i$}, and for any linear scaling function we have \mbox{$\lambda_i = 1 \,\,\forall \, i$}. For \mbox{$\lambda_i>1$} it is always computationally beneficial to all users to unify computational resources and time-share them equitably, as per the arbitrage-free time-sharing model. For \mbox{$\lambda_i=1$} it makes no difference whether users unify resources or operate independently.
+
+\begin{definition}[Single-qubit QEL]
+The single-qubit QEL is the leverage associated with adding a single qubit to the network, \mbox{$n_\text{user}=1$}, defined as,
 \begin{align}
 	\lambda_\text{qubit} = \frac{f_{sc}(n_\text{global})}{f_{sc}(1)\cdot n_\text{global}}.
 \end{align}
-
-For any super-linear scaling function we have \mbox{$\lambda_i > 1 \,\,\forall \, i$}, and for any linear scaling function we have \mbox{$\lambda_i = 1 \,\,\forall \, i$}. For \mbox{$\lambda_i>1$} it is always computationally beneficial to all users to unify computational resources and time-share them equitably, as per the arbitrage-free time-sharing model. For \mbox{$\lambda_i=1$} it makes no difference whether users unify resources or operate independently.
 \end{definition}
 
 Note that the leverage is strictly greater than unity, \mbox{$\lambda_i>1\,\forall\, i$}, for any super-linear scaling function. Thus, for any user, irrespective of the size of their quantum computer, they are better off joining the distributed network and claiming a time-share, than utilising only their own hardware full-time. Similarly, the distributed network is better off accepting them into the network, albeit to a lesser extent for a large network. This is in contrast to classical networks, where \mbox{$\lambda\approx 1$}, for any number of nodes in the network (i.e there is no leverage).
 
-Using our postulate for network growth (Pos.~\ref{post:net_growth}) yields the postulated time-dependent quantum economic leverage,
-\begin{align}\index{Quantum economic leverage}
+Using our postulate for network growth (Pos.~\ref{post:net_growth}) yields the postulated time-dependent QEL,
+\begin{postulate}[Time-dependent QEL]
+The time-dependent QEL, based on the postulate of exponential network growth, is,
+\begin{align}\index{Time-dependent quantum economic leverage}
 \lambda_n(t) = \frac{f_\text{sc}(N_0 {\gamma_N}^{t})\cdot n}{f_\text{sc}(n) \cdot N_0 {\gamma_N}^{t}},
 \end{align}
-where $n$ is the number of qubits held by the user. Note that for any super-linear scaling function, the time-dependent leverage grows exponentially over time, unlike the classical case where there is no leverage, which does not change over time (i.e \mbox{$\lambda_n(t)=1\,\,\forall\,n,t$}).
+where $n$ is the number of qubits held by the user.
+\end{postulate}
+Note that for any super-linear scaling function, the time-dependent QEL grows exponentially over time, unlike the classical case where there is no leverage, which does not change over time (i.e \mbox{$\lambda_n(t)=1\,\,\forall\,n,t$}).
 
 This clearly implies that as the global quantum network expands over time (which might happen at an exponential rate), so too does the computational return on investment into network expansion, or equivalently, the cost per unit of additional classical-equivalent processing time decreases exponentially.
 
@@ -6123,7 +6129,7 @@ where,
 \begin{itemize}
 	\item $F(T)$ is the forward price at time $T$.\index{Forward price}
 	\item $S_0$ is the spot price at time \mbox{$t=0$} (i.e present-day value).
-	\item $T$ is the time of maturity, at which time the contract is executed and the transaction is made.\index{Time of maturity}
+	\item $T$ is the time of maturity, at which time the contract is executed and the transaction is made.\index{Maturity}
 	\item $r$ is the risk-free rate of return. \index{Risk-free rate of return}
 	\item $q$ is the cost of carry (e.g storage and maintenance costs). We assume this is zero since maintenance of physical computer assets is somewhat negligible and the goods are effectively non-perishable.\index{Cost of carry}
 	\item $D_t$ is the expected dividend at time $t$.\index{Dividend}
@@ -6342,7 +6348,7 @@ F(T) = ,
 
 \section{The global virtual quantum computer} \label{sec:GVQC} \index{Virtual quantum computer}
 
-From the leverage phenomena\index{Quantum economic leverage} emerges an entirely new paradigm for future supercomputing. Rather than different quantum hardware vendors competing to have the biggest and best computers, using them independently in isolation, they are incentivised to unite their resources and leverage off one another, to the (exponential) benefit of all parties. The key observation is that \textit{all} network users gain positive leverage from other users joining the network, irrespective of their size.
+From the QEL phenomena\index{Quantum economic leverage} emerges an entirely new paradigm for future supercomputing. Rather than different quantum hardware vendors competing to have the biggest and best computers, using them independently in isolation, they are incentivised to unite their resources and leverage off one another, to the (exponential) benefit of all parties. The key observation is that \textit{all} network users gain positive leverage from other users joining the network, irrespective of their size.
 
 Users who make an initial fixed investment into quantum computing infrastructure, which they contribute to the network, but are then unable or unwilling to finance further expansion, will nonetheless observe exponential growth in their computing power over time. That is, the computational dividends yielded by an investment increase exponentially over time. This creates a very powerful model for investment into computational infrastructure with no classical parallel, which could be particularly valuable in developing nations or less-wealthy enterprises.
 
@@ -6967,6 +6973,7 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \nomenclature[]{\textbf{FIFO}}{First in, first out}
 \nomenclature[]{\textbf{RSA}}{Rivest-Shamir-Adleman}
 \nomenclature[]{\textbf{FLOP}}{Floating point operation}
+\nomenclature[]{\textbf{QEL}}{Quantum economic leverage}
 
 \printnomenclature
 
@@ -7006,7 +7013,7 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 \index{Efficiency \seeonly{Loss channel, detector efficiency, computational efficiency}|gobbleone}
 \index{Unstructured database searching \seeonly{Grover's algorithm}|gobbleone}
 \index{Time-dependent quantum economic leverage \seeonly{Quantum economic leverage}|gobbleone}
-\index{Time of maturity leverage \seeonly{Maturity}|gobbleone}
+\index{Time of maturity \seeonly{Maturity}|gobbleone}
 
 %
 % Index: See Also
