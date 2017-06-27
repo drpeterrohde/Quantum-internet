@@ -19,7 +19,7 @@
 \usepackage{qcircuit}
 \usepackage{makeidx}
 \usepackage{nomencl}
-% Coffee \usepackage{coffee4}
+\usepackage{coffee4}
 
 \newcommand{\bra}[1]{\langle#1|}
 \newcommand{\ket}[1]{|#1\rangle}
@@ -53,8 +53,6 @@
 %
 
 \title{The Quantum Internet --- Towards the Singularity}
-
-% Coffee \cofeAm{0.4}{1.0}{0}{5.5cm}{2cm}
 
 %
 % Authors
@@ -1030,7 +1028,7 @@ We can encode a single qubit into a single photon in the polarisation basis usin
 \end{align}
 Conversion between polarisation and dual-rail encoding is straightforward and deterministic using standard optical components, as described in Fig.~\ref{fig:pol_to_dual_conv}.
 
-\begin{figure}
+\begin{figure}[!htb]
 \includegraphics[width=0.6\columnwidth]{pol_to_dual_conversion}
 \caption{Conversion from single-photon polarisation encoding to dual-rail encoding, using a polarising beamsplitter (PBS) and wave-plate (WP). The PBS separates the polarisation components into two distinct spatial modes. The WP then rotates the polarisation of one of the spatial modes such that it has the same polarisation as the other. Conversion from dual-rail to polarisation encoding is just the reverse of this procedure.} \label{fig:pol_to_dual_conv}\index{Polarising beamsplitters}
 \end{figure}
@@ -3148,15 +3146,15 @@ Of course, real-world routers will not only switch optical paths, but also imple
   		Device & Resource requirements & Optical depth \\
   		\hline
   		\hline
-  		Two-channel two-port switch & \mbox{$N_\mathrm{bs}=2$}, \mbox{$N_\mathrm{ps}=1$} & \mbox{$d=1$} \\
-  		Linear $n$-port multiplexer & \mbox{$N_\mathrm{s}=n-1$} & \mbox{$1\leq d\leq n-1$} \\
-  		Pyramid $n$-port multiplexer & \mbox{$N_\mathrm{s}=n-1$} & \mbox{$d=\mathrm{log}_2(n)$} \\
-    	Single-channel multi-port switch (linear) & \mbox{$N_\mathrm{s}=2n-3$} & \mbox{$2\leq d\leq 2n-3$} \\
-  		Single-channel multi-port switch (pyramid) & \mbox{$N_\mathrm{s}=2n-3$} & \mbox{$d=2\,\mathrm{log}_2(n)-1$} \\
-  		Multi-channel multi-port switch & \mbox{$N_\mathrm{s} = \left\lceil \frac{n^2}{2}\right\rceil - n + 1$} & \mbox{$\left\lceil \frac{n}{2} \right\rceil \leq d\leq n-1$} \\
+  		Two-channel two-port switch & \mbox{$N_\text{bs}=2$}, \mbox{$N_\text{ps}=1$} & \mbox{$d=1$} \\
+  		Linear $n$-port multiplexer & \mbox{$N_\text{s}=n-1$} & \mbox{$1\leq d\leq n-1$} \\
+  		Pyramid $n$-port multiplexer & \mbox{$N_\text{s}=n-1$} & \mbox{$d=\text{log}_2(n)$} \\
+    	Single-channel multi-port switch (linear) & \mbox{$N_\text{s}=2n-3$} & \mbox{$2\leq d\leq 2n-3$} \\
+  		Single-channel multi-port switch (pyramid) & \mbox{$N_\text{s}=2n-3$} & \mbox{$d=2\,\text{log}_2(n)-1$} \\
+  		Multi-channel multi-port switch & \mbox{$N_\text{s} = \left\lceil \frac{n^2}{2}\right\rceil - n + 1$} & \mbox{$\left\lceil \frac{n}{2} \right\rceil \leq d\leq n-1$} \\
     	\hline
 	\end{tabular}
-	\caption{Summary of different primitives for constructing optical routers. $n$, $N_\mathrm{bs}$, $N_\mathrm{ps}$ and $N_\mathrm{s}$ are the number of input/output ports, beamsplitters, phase-shifters, and two-port switches respectively. $d$ is the optical depth (in units of number of two-port switches). Since all of the multi-port devices are constructed from two-port switches, in all cases \mbox{$N_\mathrm{bs} = 2 N_\mathrm{s}$} and \mbox{$N_\mathrm{ps} = N_\mathrm{s}$}.} \label{tab:router_summary} \index{Optical routers}\index{Optical depth}\index{Router resource requirements}
+	\caption{Summary of different primitives for constructing optical routers. $n$, $N_\text{bs}$, $N_\text{ps}$ and $N_\text{s}$ are the number of input/output ports, beamsplitters, phase-shifters, and two-port switches respectively. $d$ is the optical depth (in units of number of two-port switches). Since all of the multi-port devices are constructed from two-port switches, in all cases \mbox{$N_\text{bs} = 2 N_\text{s}$} and \mbox{$N_\text{ps} = N_\text{s}$}.} \label{tab:router_summary} \index{Optical routers}\index{Optical depth}\index{Router resource requirements}
 \end{table*}
 
 \renewcommand{\tablename}{ALG.}
@@ -3244,9 +3242,9 @@ From the two-port switch, which implements a controlled permutation of two optic
 
 There are two main architectures that may be employed for implementing such multiplexers/demultiplexers. The first is to use a linear cascade of two-port switches, shown in Fig.~\ref{fig:linear_multiplexer}\index{Linear multiplexers \& demultiplexers}. The second is to use a pyramid cascade, shown in Fig.~\ref{fig:pyramid_multiplexer}\index{Pyramid multiplexers \& demultiplexers}. Both layouts require,
 \begin{align}
-N_\mathrm{s} = n-1,
+N_\text{s} = n-1,
 \end{align}
-two-port switches to implement. However, they differ in one important respect. In the linear multiplexer, different routes experience different optical depth\index{Optical depth}, ranging from \mbox{$d=1$} (for the first port) to \mbox{$d=n-1$} (for the final port). This will lead to asymmetry in accumulated errors. In the pyramid multiplexer, on the other hand, all optical paths have the same optical depth, \mbox{$d=\mathrm{log}_2(n)$}, yielding completely symmetric operation.
+two-port switches to implement. However, they differ in one important respect. In the linear multiplexer, different routes experience different optical depth\index{Optical depth}, ranging from \mbox{$d=1$} (for the first port) to \mbox{$d=n-1$} (for the final port). This will lead to asymmetry in accumulated errors. In the pyramid multiplexer, on the other hand, all optical paths have the same optical depth, \mbox{$d=\text{log}_2(n)$}, yielding completely symmetric operation.
 
 Note that the logarithmic optical depth of the pyramid configuration grows less quickly than the linear average optical depth of the linear configuration. Thus, on average, optical paths pass through fewer optical elements in the pyramid configuration, reducing average accumulated error rates when using noisy optical elements. This, in conjunction with the pyramid's perfect symmetry, makes the pyramid multiplexer configuration generally most favourable.
 
@@ -3257,7 +3255,7 @@ Note that the logarithmic optical depth of the pyramid configuration grows less 
 
 \begin{figure}[!htb]
 \includegraphics[width=0.7\columnwidth]{pyramid_multiplexer}
-\caption{Pyramid multiplexers (top) and demultiplexers (bottom) decompose the multiplexing into a binary tree-structure of two-port switches (grey boxes), shown here for the case of \mbox{$n=8$} ports. For $n$ ports, all optical paths observe an optical depth of \mbox{$d=\mathrm{log}_2(n)$} two-port switches, of which there are \mbox{$n-1$} in total.} \label{fig:pyramid_multiplexer} \index{Pyramid multiplexers \& demultiplexers}
+\caption{Pyramid multiplexers (top) and demultiplexers (bottom) decompose the multiplexing into a binary tree-structure of two-port switches (grey boxes), shown here for the case of \mbox{$n=8$} ports. For $n$ ports, all optical paths observe an optical depth of \mbox{$d=\text{log}_2(n)$} two-port switches, of which there are \mbox{$n-1$} in total.} \label{fig:pyramid_multiplexer} \index{Pyramid multiplexers \& demultiplexers}
 \end{figure}
 
 %
@@ -3268,7 +3266,7 @@ Note that the logarithmic optical depth of the pyramid configuration grows less 
 
 The multiplexers and demultiplexers route between one port and $n$ ports. In the more general and useful case, we wish to route between $n$ inputs and $n$ outputs. If we only require one active channel at a given time, such a router may be trivially constructed from an $n$-port multiplexer connected to and $n$-port demultiplexer, as shown in Fig.~\ref{fig:single_channel_multi_port_switch}. Here the demultiplexer chooses one of the input modes to route to its single output, which then feeds into the multiplexer to fan it out to the desired output. The multiplexers/demultiplexers could be implemented using either of the aforementioned layouts, yielding a total resource count of,
 \begin{align}
-	N_\mathrm{s} = 2n-3,
+	N_\text{s} = 2n-3,
 \end{align}
 two-port switches\footnote{Note that the multiplexer and demultiplexer each require \mbox{$2(n-1)$} two-port switches, but one of the central ones adjoining the multiplexer and demultiplexer is redundant and may be eliminated, reducing the number of two-port switches to \mbox{$2n-3$}.}.
 
@@ -3287,7 +3285,7 @@ The single-channel multi-port switch enables switching between an arbitrary numb
 
 Such a switch may be constructed from a staggered, rectangular lattice of two-port switches, as shown in Fig.~\ref{fig:multi_channel_multi_port_switch}. It is easy to see upon inspection that optical paths exist between every input/output pair of ports. The total resource count for this device is,
 \begin{align}
-N_\mathrm{s} = \left\lceil \frac{n^2}{2}\right\rceil - n + 1,
+N_\text{s} = \left\lceil \frac{n^2}{2}\right\rceil - n + 1,
 \end{align}
 two-port switches.
 
@@ -3651,12 +3649,12 @@ The beauty of this type of state is that there is a natural separation between s
 
 Another class of states is Greenberger-Horne-Zeilinger (GHZ) states \cite{bib:GHZ89}, which are maximally-entangled states across an arbitrary number of qubits, $n$, of the form,
 \begin{align}
-\ket\psi_\text{GHZ} = \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n} + \ket{1}^{\otimes n}).
+\ket\psi_\text{GHZ}^{(n)} = \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n} + \ket{1}^{\otimes n}).
 \end{align}
 
 GHZ states are useful for various quantum information processing applications, including quantum anonymous broadcasting (Sec.~\ref{sec:anon_broad}). These states are particularly susceptible to loss, since the loss of a single qubit completely decoheres the state into a perfect mixture of the \mbox{$\ket{0}^{\otimes (n-1)}$} and \mbox{$\ket{1}^{\otimes (n-1)}$} states, with complete loss of entanglement and coherence,
 \begin{align}
-\hat\rho_\text{GHZ}^\text{loss} &= \text{tr}_1(\ket\psi_\text{GHZ}\bra\psi_\text{GHZ})\nonumber \\
+\hat\rho_\text{GHZ}^\text{loss} &= \text{tr}_1(\ket\psi_\text{GHZ}^{(n)}\bra\psi_\text{GHZ}^{(n)})\nonumber \\
 &= \frac{1}{2}(\ket{0}^{\otimes (n-1)}\bra{0}^{\otimes (n-1)}+\ket{1}^{\otimes (n-1)}\bra{1}^{\otimes (n-1)}).
 \end{align}
 
@@ -5382,18 +5380,18 @@ Let \mbox{$k=\{k_1,\dots,k_m\}$} be a partition of the key $k$ into sub-keys $\{
 \end{align}
 For the protocol to hide information, the plaintext basis states must not be invariant under the encoding operations,
 \begin{align}
-\left[\bigotimes_{i=1}^m\hat{E}_i(k_i)\right]\ket\psi_\mathrm{plaintext} \neq \ket\psi_\mathrm{plaintext}.
+\left[\bigotimes_{i=1}^m\hat{E}_i(k_i)\right]\ket\psi_\text{plaintext} \neq \ket\psi_\text{plaintext}.
 \end{align}
 The state observed by Bob is the mixture of Alice's plaintext over the complete set of encoding operations, implementing a quantum process $\mathcal{E}$, with Kraus operators $\hat{E}(k)$,
 \begin{align} \label{eq:mix_over_enc_ops}
-\hat\rho_\text{encoded} &= \mathcal{E}(\ket\psi_\mathrm{plaintext}\bra\psi_\mathrm{plaintext}) \nonumber \\
-&= \sum_k \hat{E}(k)\ket\psi_\mathrm{plaintext}\bra\psi_\mathrm{plaintext} \hat{E}^\dag(k),
+\hat\rho_\text{encoded} &= \mathcal{E}(\ket\psi_\text{plaintext}\bra\psi_\text{plaintext}) \nonumber \\
+&= \sum_k \hat{E}(k)\ket\psi_\text{plaintext}\bra\psi_\text{plaintext} \hat{E}^\dag(k),
 \end{align}
 where,
 \begin{align}
 \hat{E}(k) = \bigotimes_{i=1}^m\hat{E}_i(k_i).
 \end{align}
-To minimise Bob's chances of guessing Alice's state, we would like to maximise the von Neuman entropy of Bob's state. For \mbox{$S(\hat\rho_\mathrm{encoded})=0$} we have no secrecy, whereas for maximal \mbox{$S(\hat\rho_\mathrm{encoded})$} we have maximal secrecy (for the given plaintext basis state).
+To minimise Bob's chances of guessing Alice's state, we would like to maximise the von Neuman entropy of Bob's state. For \mbox{$S(\hat\rho_\text{encoded})=0$} we have no secrecy, whereas for maximal \mbox{$S(\hat\rho_\text{encoded})$} we have maximal secrecy (for the given plaintext basis state).
 \end{definition} 
 
 Intuitively, this simply says that a tensor product of single-mode encoding operations commutes through the passive computation to yield a (potentially different) tensor product of single-mode decoding operations. This way, Alice's operations are all separable, requiring no entangling gates (after all, if she had access to entangling gates she might be able to do quantum computations herself!). This relationship can be illustrated as shown in Fig.~\ref{fig:gen_pass_hom}.
@@ -6324,17 +6322,20 @@ The net return on investment at time $T$, on the purchase of qubits, is given by
 
 Any asset, dividend, derivative or other financial instrument will inevitably be subject to taxation. Any form of taxation has multiplier effects as the cost markup is repeatedly handed from one market participant to the next, influencing supply and demand along the way. However, this multiplier and other economic consequences are highly dependent on the asset undergoing transaction -- the economic implications of personal income tax are quite different to those of capital gains tax. We now consider the effect of taxation on quantum resources, specifically in the form of a \textit{qubit tax}, a sales tax on the purchase of physical qubits.
 
-Imagine that consumers have an amount of capital available for the purchase of qubits. Let $\gamma_T$ be the rate of taxation (\mbox{$\gamma_T=1$} represents no taxation, \mbox{$\gamma_T>1$} represents positive taxation, and \mbox{$\gamma_T<1$} represents subsidisation). Then the cost of physical qubits is scaled by $\gamma_T$, reducing the number of qubits that can be afforded by consumers to,
+Imagine that consumers have an amount of capital available for the purchase of qubits. Let $\gamma_T$ be the rate of taxation (\mbox{$\gamma_T=1$} represents no taxation, \mbox{$\gamma_T>1$} represents positive taxation, and \mbox{$\gamma_T<1$} represents subsidisation). Then the cost of physical qubits is marked up by $\gamma_T$, reducing the number of qubits that can be afforded by the consumers to,
 \begin{align}
 	N_\text{tax} = N_\text{no\,tax}{\gamma_T}^{-1}.
 \end{align}
 
-We now wish to understand how this taxation influences the computational power of the network. Consider the ratio between computational scaling functions with and without taxation,
+We now wish to understand how this taxation influences the computational power of the network. We define the \textit{performance multiplier}\index{Performance multiplier} as the ratio between computational scaling functions with and without taxation,
+\begin{definition}[Performance multiplier]
 \begin{align}
 T(N_\text{tax}) &= \frac{f_\text{sc}(N_\text{tax})}{f_\text{sc}(N_\text{no\,tax})} \nonumber \\
-&= \frac{f_\text{sc}(N_\text{tax})}{f_\text{sc}(N_\text{tax} \gamma_T)}
+&= \frac{f_\text{sc}(N_\text{tax})}{f_\text{sc}(N_\text{tax} \gamma_T)},
 \end{align}
-where the consumers have purchased $N_\text{tax}$ qubits after taxation. This effectively gives us a factor by which qubit prices are marked up via the qubit tax.
+where the consumers have purchased $N_\text{tax}$ qubits, after taxation at a rate of $\gamma_T$.
+\end{definition}
+This effectively gives us a factor by which computational power is depreciated under taxation.
 
 Using our illustrative examples of computational scaling functions (linear, quadratic and exponential), the respective performance multipliers are given by,
 \begin{align}
@@ -6345,7 +6346,11 @@ T_\text{exp}(N_\text{tax}) &= e^{1-N_\text{tax}\gamma_T}.
 
 This demonstrates that the computational power of classical networks is simply proportional to the rate of taxation, i.e a linear performance multiplier, as we intuitively expect. And for quadratic scaling functions the dependence is quadratic in the taxation rate. In both these cases the performance multiplier is a constant factor, independent of the network size. However, for exponential scaling functions we observe an exponential dependence on both the rate of taxation and the size of the network. This implies that as the quantum network expands over time, its joint processing power decreases exponentially with the rate of taxation, yielding an ever-decreasing performance multiplier. 
 
-It is evident that taxation of qubits has far deeper economic implications than the taxation of other typical financial assets or classical technologies. This will require extremely prudent consideration when designing tax policies in the era of the quantum internet, so as to avoid exponential suppression of quantum-related economic activity.
+\comment{Transfer following to essay}
+
+It is evident that taxation of qubits has far deeper economic implications than the taxation of other typical financial assets or classical technologies. This will require extremely prudent consideration when designing tax policies in the quantum era, so as to avoid exponential suppression of quantum-related economic activity.
+
+Conversely, the exponential dependence on the rate of taxation could be exploited for leverage in subsidisation. It may be economically beneficial to subsidise quantum infrastructure, reaping its exponential payback, via taxation of other economic sectors, which are less sensitive to taxation. That is, the economy might be made more efficient by transferring capital from low-multiplier sectors to high-multiplier quantum technologies.
 
 %
 % Ideas For How To Proceed
@@ -6868,7 +6873,7 @@ function MakeAmericaGreatAgain(Putin):
 \caption{A typical example of a nefarious use for cloud quantum computation.} \label{alg:russian}\index{Trump}
 \end{table}
 
-% Coffee \cofeDm{0.07}{0.5}{90}{0}{0}
+\cofeDm{0.07}{0.5}{90}{0}{0} % Coffee stain
 
 These are all legitimate concerns. But they are very much the same ones that detractors expressed about the classical internet and strong encryption. Nonetheless, it can be said that encryption and the internet have on balance been overwhelmingly beneficial to mankind, enabling unprecedented rates of technological and economic progress. Any attempts to eliminate or undermine them could be economically catastrophic.
 
@@ -7009,7 +7014,7 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 % Index: See Only
 %
 
-\index{Interferometry \seeonly{Optical interferometry, Mach-Zehnder (M) interference, Hong-Ou-Mandel (HOM) interference}|gobbleone}
+\index{Interferometry \seeonly{Optical interferometry, Mach-Zehnder (MZ) interference, Hong-Ou-Mandel (HOM) interference}|gobbleone}
 \index{Measurement-based quantum computation \seeonly{Cluster state model}|gobbleone}
 \index{Graph states \seeonly{Cluster state model}|gobbleone}
 \index{State fidelity \seeonly{Fidelity}|gobbleone}
