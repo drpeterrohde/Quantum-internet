@@ -19,7 +19,7 @@
 \usepackage{qcircuit}
 \usepackage{makeidx}
 \usepackage{nomencl}
-\usepackage{coffee4}
+%\usepackage{coffee4}
 
 \newcommand{\bra}[1]{\langle#1|}
 \newcommand{\ket}[1]{|#1\rangle}
@@ -82,8 +82,8 @@
 %\author{Samuel I. Marks}
 %\affiliation{Sydney Medical School, University of Sydney, Australia}
 
-%\author{Ryan L. Mann}
-%\affiliation{Centre for Quantum Software \& Information (QSI), Faculty of Engineering \& Information Technology, University of Technology Sydney, NSW 2007, Australia}
+\author{Ryan L. Mann}
+\affiliation{Centre for Quantum Software \& Information (QSI), Faculty of Engineering \& Information Technology, University of Technology Sydney, NSW 2007, Australia}
 
 \author{William J. Munro}
 \affiliation{NTT Basic Research Laboratories, 3-1 Morinosato-Wakamiya, Atsugi, Kanagawa 243-0198, Japan}
@@ -114,7 +114,9 @@
 \begin{abstract}
 \includegraphics[width=0.8\columnwidth]{cover_picture}
 \newpage
-The desire to share and unite remote digital assets motivated the development of the classical internet, the enabler of the entire 21st century economy and our modern way of life. As we enter the quantum era, it is to be expected there will be a similar demand for networking quantum assets, motivating a \textit{global quantum internet} for bringing together the world's quantum resources, leveraging off their exponential trajectory in capability. We present models for quantum networking, how they might be applied in the future, and the implications they will have. Socially, economically, politically and geo-strategically, the upcoming era of quantum supremacy will be as significant for the 21st century as the transistor was for the 20th. The inherently different scaling in the computational power of quantum computers fundamentally changes the dynamics of how they will operate in the future. Given their high expected initial cost, a client/server model for outsourcing computation will be essential to enabling the accessibility and proliferation of this technology, and ensuring its economic viability. We therefore anticipate the emergence of \textit{cloud quantum computing}, a model for outsourcing quantum computations to the network. We argue that economic efficiency will mandate that all future quantum computers be united into a single global \textit{virtual quantum computer}, offering exponentially more power to all network participants than if they were to keep their resources to themselves. This model for the allocation of computational resources is uniquely quantum, with no classical analogue, completely altering the economic landscape for the future of computation. Given the sensitivity of much of the data to which future quantum computers are going to be applied, protocols for encrypted quantum computation will be essential -- the outsourcing of computations that neither an eavesdropper nor even the server performing the computation can spy on. This will enable new models for the commercialisation and proliferation of quantum technologies, unlike any existing models for classical computing. While this work is only an early step in a rapidly developing field, still in its infancy, the central concepts we present will be highly relevant to future developments.
+The desire to share and unite remote digital assets motivated the development of the classical internet, the enabler of the entire 21st century economy and our modern way of life. As we enter the quantum era, it is to be expected there will be a similar demand for networking quantum assets, motivating a \textit{global quantum internet} for bringing together the world's quantum resources, leveraging off their exponential trajectory in capability. We present models for quantum networking, how they might be applied in the future, and the implications they will have. Socially, economically, politically and geo-strategically, the upcoming era of quantum supremacy will be as significant for the 21st century as the transistor was for the 20th. The inherently different scaling in the computational power of quantum computers fundamentally changes the dynamics of how they will operate in the future. Given their high expected initial cost, a client/server model for outsourcing computation will be essential for enabling the accessibility and proliferation of this technology, and ensuring its economic viability. We therefore anticipate the emergence of \textit{cloud quantum computing}, a model for outsourcing quantum computations to the network. We argue that economic efficiency will mandate that all future quantum computers be united into a single global \textit{virtual quantum computer}, offering exponentially more power to all network participants than if they were to keep their resources to themselves. This model for the allocation of computational resources is uniquely quantum, with no classical analogue, completely altering the economic landscape for the future of computation. Given the sensitivity of much of the data to which future quantum computers are going to be applied, protocols for encrypted quantum computation will be essential -- the outsourcing of computations that neither an eavesdropper nor even the server performing the computation can spy on. This will enable new models for the commercialisation and proliferation of quantum technologies, unlike any existing models for classical computing.
+\\[4pt]
+While this work is only an early step in a rapidly developing field, still in its infancy, the central concepts we present will be highly relevant to future developments.
 \\[4pt]
 We present both original ideas, as well as an extensive review of relevant and related background material. The work is divided into technical sections (requiring only a basic knowledge of the notation of quantum mechanics), for those interested in mathematical details, as well as extensive, entirely non-technical sections for the less technically inclined.
 \\[4pt]
@@ -674,7 +676,7 @@ The net cost of a route \mbox{$A\to B$} is given by,
 \begin{align} \label{eq:net_cost_R} \index{Net cost}
 c_\text{net}(R) = f_\text{cost}(\vec{c}(R),\vec{a}(R)),
 \end{align}
-where $c_\text{net}$ is a single numeric value representing the net cost as calculated from an arbitrary cost function $f_\text{cost}$.
+where $c_\text{net}$ is a single numeric value representing the net cost as calculated from an arbitrary cost function, $f_\text{cost}$, of the vector of associated costs and attributes.
 \end{definition}
 Note that the net cost needn't be a metric, as the cost function could be arbitrary. The net cost can be thought of as a ranking for routes, but not necessarily as a metric that accumulates across routes.
 
@@ -684,7 +686,7 @@ Eq.~(\ref{eq:net_cost_R}) gives us the net cost of a given route. For multiple u
 \begin{align} \label{eq:c_total}
 c_\text{total}(\vec{R}_{\vec{A}\to \vec{B}}) = \sum_{r \in {\vec R}_{\vec{A}\to \vec{B}}} c_\text{net}(r),
 \end{align}
-where $\vec{R}_{\vec{A}\to \vec{B}}$ is a set of routes connecting each pair \mbox{$A_i\to B_i~\forall ~ i$}.
+where $\vec{R}_{\vec{A}\to \vec{B}}$ is a set of active routes connecting each pair \mbox{$A_i\to B_i~\forall ~ i$}.
 \end{definition}
 
 %
@@ -709,7 +711,7 @@ The more complex (and realistic) scenario is of multiple users each transmitting
 
 \subsection{Routing strategies} \label{sec:route_strats} \index{Routing strategies}
 
-A \textit{strategy}, $\mathcal{S}$, is simply an algorithm that chooses a route ($k$), based on the starting ($i$) and finishing ($j$) nodes of a communication, and also updates the vectors of costs and attributes within the network associated with the utilisation of that route,
+A \textit{strategy}, $\mathcal{S}$, is simply an algorithm that chooses a route, based on the starting and finishing nodes of a communication, and also updates the vectors of costs and attributes within the network associated with the utilisation of that route,
 \begin{definition}[Routing strategies]
 A routing strategy is defined by,
 	\begin{align}
@@ -717,17 +719,20 @@ A routing strategy is defined by,
 i,j &\in V, \nonumber\\
 k &\in \{R_{v_i\to v_j}\},
 \end{align}
+where $\mathcal{S}$ denotes the strategy, $k$ is a route, $i$ and $j$ are the source and destination nodes of the route, and $\vec{c}$ and $\vec{a}$ are vectors of associated costs and attributes.
 \end{definition}
-with the goal of minimising a chosen cost measure.
+The goal of the strategy $\mathcal{S}$ is to minimise a chosen cost measure.
 
-No particular route through a network is going to have infinite capacity, and therefore we cannot typically always reemploy the same most cost-effective route for all data. Particularly in multi-user networks, as routes are employed for communicating quantum states, their cost metrics may change according to load, or other external influences. For this reason, it is important that strategies accommodate dynamic changes in the network. This is easily accounted for by letting the edge weights in our network graph be a function of time, $G_t$, which are updated via the application of a strategy, which may also be a function of time,
-\comment{Add to def}
+No particular route through a network is going to have infinite capacity, and therefore we cannot typically always reemploy the same most cost-effective route for all data. Particularly in multi-user networks, as routes are employed for communicating quantum states, their cost metrics may change according to load, or other external influences. For this reason, it is important that strategies accommodate dynamic changes in the network. This is easily accounted for by letting the edge weights in our network graph be a function of time, $G_t$, which are updated via the application of a strategy, which may also be time-dependent,
+\begin{definition}[Time-dependent routing strategies]
+A time-dependent strategy, $\mathcal{S}_t$, updates the network graph, $G_t$, at each time-step $t$,
 \begin{align} \label{eq:S_G}
 G_{t+1} = \mathcal{S}_t(G_t).
 \end{align}
+\end{definition}
 For example, the network might have bandwidth restrictions on some links, in which case if more than a certain amount of data is transmitted through a link, it is no longer available for use until previous transmissions have completed. Or, based on market dynamics, the dollar cost of utilising a link may change with its demand.
 
-This type of cost minimisation approach to routing is analogous to \textit{distance-vector routing protocols} in classical networking theory.
+This type of cost minimisation approach to routing is analogous to \textit{distance-vector routing protocols}\index{Distance-vector routing protocols} in classical networking theory.
 
 A detailed exposition of routing strategies is provided in Sec.~\ref{sec:strategies}.
 
@@ -2474,7 +2479,7 @@ function Strategy.RoundRobin(Packets):
     \setlength{\itemindent}{0in} \}
     \item $\Box$
 \end{enumerate}}}}
-\caption{In the \textsc{Round Robin} strategy we simply iterate through the list of active packets, with no regard for any metrics, or conflicts between them. Rather, we strive for perfect time-sharing equality, and every packet entirely ignores the actions of all other packets.} \label{alg:round_robin}
+\caption{In the \textsc{Round Robin} strategy we simply iterate through the list of active packets, with no regard for any metrics, or conflicts between them. Rather, we strive for perfect time-sharing equality, and every packet entirely ignores the actions of all other packets, performing a completely selfish optimisation strategy.} \label{alg:round_robin}
 \end{table}
 The \textsc{Round Robin} strategy can be considered base skeleton code for more sophistic algorithms to build upon, simply by reordering the packet queue.
 
@@ -3803,7 +3808,6 @@ A homodyne detector interferes a state with a coherent state on a beamsplitter, 
 \caption{Homodyne detection of an unknown optical state $\hat\rho_\text{in}$, by mixing it with a reference coherent state $\ket\alpha$ on a 50:50 beamsplitter, and taking the difference in the photo-detection rates at the output modes. By sweeping through the phase and amplitude of $\ket\alpha$, we can directly sample the Wigner function of $\hat\rho_\text{in}$, allowing its full reconstruction.} \label{fig:homodyne}
 \end{figure}
 
-
 %
 % Bell State & Parity Measurements
 %
@@ -3821,7 +3825,7 @@ In the Heisenberg picture, the transformation of the photonic creation operators
 \hat{v}_1^\dag &\to \hat{v}_1^\dag, \nonumber \\
 \hat{v}_2^\dag &\to \hat{v}_2^\dag,
 \end{align}
-where $\hat{h}_i^\dag$ ($\hat{v}_i^\dag$) are the horizontal (vertical) creation operators for the $i$th mode. The measurement projectors implemented by the PBS, when both modes are measured in the diagonal ($+/-$) basis, are then,
+where $\hat{h}_i^\dag$ ($\hat{v}_i^\dag$) are the horizontal (vertical) creation operators for the $i$th mode. The measurement projectors implemented by the PBS, when both modes are measured in the diagonal ($+/-$) basis\footnote{By measuring in the diagonal basis we erase information about whether photons were horizontally or vertically polarised, thereby projecting onto the coherent subspace of both possibilities. Such a diagonal basis measurement may be implemented using a wave-plate to perform a Hadamard polarisation rotation, followed by another PBS, separating the horizontal and vertical components, which are then independently measured via regular photo-detection.}, are then,
 \begin{align}
 	\hat\Pi_\text{Bell}^+ &= \ket{H,H}\bra{H,H}+\ket{V,V}\bra{V,V}, \nonumber \\
 	\hat\Pi_\text{Bell}^- &= \ket{H,H}\bra{H,H}-\ket{V,V}\bra{V,V}, \nonumber \\
@@ -4420,11 +4424,51 @@ QKD has been widely experimentally demonstrated over long distances \cite{bib:Mu
 % Superdense Coding
 %
 
-\subsubsection{Superdense coding} \index{Superdense coding}
+\subsubsection{Superdense coding}\label{sec:superdense}\index{Superdense coding}
 
-\cite{???}
+\emph{Superdense coding} is a communications protocol, which utilises shared entanglement between two parties to increase the rate at which classical information may be transmitted between them.
 
-\comment{Ryan to do}
+Suppose Alice wishes to send classical information to Bob over a quantum channel. The HSW Theorem \cite{bib:holevo1998capacity, bib:schumacher1997sending} tells us that Alice can send information to Bob at a maximum rate of one bit per qubit. However, if Alice and Bob share Bell-pairs, superdense coding allows information to be transmitted at a maximum rate of two bits per qubit.
+
+Let Alice and Bob begin with the shared Bell state,
+\begin{align}
+    \ket{B_{00}} = \frac{1}{\sqrt{2}}\left(\ket{0}_{A}\ket{0}_{B}+\ket{1}_{A}\ket{1}_{B}\right),
+\end{align}
+where the first qubit, $A$, belongs to Alice and the second qubit, $B$, belongs to Bob. This entangled pair is provided to them by a third party entanglement server. The protocol exploits the fact that all four Bell states are locally-equivalent, and can be transformed into one another using operations performed only by Alice. Specifically, the four Bell states can be prepared from $\ket{B_{00}}$ via the local operations,
+\begin{align}
+    \ket{B_{00}} &= (\hat{\mathbb{I}}\otimes\hat{\mathbb{I}})\ket{B_{00}} \nonumber \\
+    &= \frac{1}{\sqrt{2}}\left(\ket{0}\ket{0}+\ket{1}\ket{1}\right), \nonumber \\
+    \ket{B_{01}} &= (\hat{Z}\otimes\hat{\mathbb{I}})\ket{B_{00}} \nonumber \\
+    &= \frac{1}{\sqrt{2}}\left(\ket{0}\ket{0}-\ket{1}\ket{1}\right), \nonumber \\
+    \ket{B_{10}} &= (\hat{X}\otimes\hat{\mathbb{I}})\ket{B_{00}} \nonumber \\
+    &= \frac{1}{\sqrt{2}}\left(\ket{0}\ket{1}+\ket{1}\ket{0}\right), \nonumber \\
+    \ket{B_{11}} &= (\hat{Z}\hat{X}\otimes\hat{\mathbb{I}})\ket{B_{00}} \nonumber \\
+    &= \frac{1}{\sqrt{2}}\left(\ket{0}\ket{1}-\ket{1}\ket{0}\right).
+\end{align}
+
+Suppose Alice wishes to send Bob the two-bit string $x\in\{0,1\}^2$. She applies local operations on her qubit to transform the shared Bell state into the Bell state $\ket{B_{x}}$. There are four such states, therefore this encodes two classical bits of information. She then sends her qubit to Bob, who already holds the other half of the entangled pair. Now by measuring in the Bell basis Bob can determine which two-bit string Alice encoded. The algorithm is described in Alg.~\ref{alg:superdense}.
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function SuperdenseCoding($\ket{B_{00}}$, $x$):
+\begin{enumerate}
+\item Alice and Bob share the Bell pair $\ket{B_{00}}$.
+\item Alice encodes the two-bit string \mbox{$x\in\{0,1\}^2$} into a choice of the four possible Bell pairs.
+\item Alice prepares the respective Bell pair using operations local to only her half of the shared state ($\hat{\mathbb{I}}$, $\hat{X}$, $\hat{Z}$ or \mbox{$\hat{Z}\hat{X}$}).
+\item Alice sends her qubit to Bob.
+\item Bob measures in the Bell basis, with four possible measurement outcomes.
+\item The measurement outcome corresponds to the bit-string $x$.
+\item $\Box$
+\end{enumerate}
+}}}
+\caption{Superdense coding protocol for communicating two classical bits via transmission of a single qubit. The protocol requires the two parties share a Bell-pair as a resource, provided by a third party.} \label{alg:superdense}
+\end{table}
+
+Note that the protocol in a sense `cheats', since it assumes a resource of Bell-pairs between Alice and Bob, which doesn't come for free. However, in an environment where both parties have access to the same entanglement server or repeater network (Sec.~\ref{sec:rep_net}), in addition to their own direct line of quantum communication, they can utilise this protocol to double classical communication rates from one bit per qubit to two.
+
+However, this doubling in communication rate requires using quantum infrastructure, which, at least for the foreseeable future, will come at a greater cost than our present-day commodified classical hardware. It may therefore be the case that the technological effort of implementing this protocol outweighs the gain, or that for the same effort other classical bandwidth-increasing technologies could be employed.
+
+Alternately, in a future quantum world where such technologies are cheap off-the-shelf commodities, as with our current classical ones, why not double our classical network bandwidths if we can?
 
 %
 % Quantum Metrology
@@ -5768,6 +5812,7 @@ In brief, Bell-pairs find applicability in, amongst many others, the following k
 \item Quantum gate teleportation (Sec.~\ref{sec:teleport_gate}): a shared 4-qubit entangled state allows the teleportation of a CNOT gate. This 4-qubit state may be prepared from a resource of two Bell-pairs.
 \item QKD (Sec.~\ref{sec:QKD}): the E91 protocol is built upon a reliable stream of distributed Bell-pairs.
 \item Modularised quantum computation (Sec.~\ref{sec:module}): using Bell-pairs, entanglement swapping (Sec.~\ref{sec:swapping}) can be employed to fuse neighbouring, but potentially distant modules together using operations local to each module.
+\item Superdense coding (Sec.~\ref{sec:superdense}): a shared Bell-pair enables the communication of two classical bits of information via a single qubit, thereby doubling classical channel capacity.
 \end{itemize}
 
 Thus, we see that Bell-pairs form a ubiquitous resource, covering many of the most significant quantum protocols -- quantum computation, distributed quantum computation, quantum state and gate teleportation, and quantum cryptography. This warrants special treatment of entanglement distribution, as a fundamental building block in the quantum era.
@@ -6346,12 +6391,6 @@ T_\text{exp}(N_\text{tax}) &= e^{1-N_\text{tax}\gamma_T}.
 
 This demonstrates that the computational power of classical networks is simply proportional to the rate of taxation, i.e a linear performance multiplier, as we intuitively expect. And for quadratic scaling functions the dependence is quadratic in the taxation rate. In both these cases the performance multiplier is a constant factor, independent of the network size. However, for exponential scaling functions we observe an exponential dependence on both the rate of taxation and the size of the network. This implies that as the quantum network expands over time, its joint processing power decreases exponentially with the rate of taxation, yielding an ever-decreasing performance multiplier. 
 
-\comment{Transfer following to essay}
-
-It is evident that taxation of qubits has far deeper economic implications than the taxation of other typical financial assets or classical technologies. This will require extremely prudent consideration when designing tax policies in the quantum era, so as to avoid exponential suppression of quantum-related economic activity.
-
-Conversely, the exponential dependence on the rate of taxation could be exploited for leverage in subsidisation. It may be economically beneficial to subsidise quantum infrastructure, reaping its exponential payback, via taxation of other economic sectors, which are less sensitive to taxation. That is, the economy might be made more efficient by transferring capital from low-multiplier sectors to high-multiplier quantum technologies.
-
 %
 % Ideas For How To Proceed
 %
@@ -6753,10 +6792,10 @@ There are also other promising approaches to quantum memories, e.g., quantum dot
 \comment{What else? What other main architectures?}
 
 %
-% Outlook
+% Outlook - Towards the Singularity
 %
 
-\section{Outlook} \label{sec:outlook} \index{Outlook}
+\section{Outlook -- Towards the singularity} \label{sec:outlook} \index{Outlook}
 
 In this section we provide a non-technical outlook on the future quantum internet and its implications, for the benefit of the technically disinterested reader. This section is in the form of several short essays, requiring no background knowledge in quantum computation, quantum mechanics, or mathematics.
 
@@ -6804,19 +6843,27 @@ A key question regarding the economics of the quantum internet is the extent to 
 
 Technology should benefit humanity, not only an elite few --- \textit{Homo sum humani a me nihil alienum puto}. In light of this, who exactly will benefit from the quantum internet? Its beauty is that it doesn't create a system of winners and losers. Rather, it establishes a technological infrastructure from which all can benefit, rich or poor. Well-resourced operators who can afford quantum computers, for example, will benefit from being able to license out compute time on their computers, ensuring no wasted clock-cycles and maximising efficiency. The less-well-resourced will benefit in that they will have a means by which to access the extraordinary power of quantum computing on a licensed basis, facilitating access to infrastructure by those who otherwise would have been priced out of the market. This is essentially the same model as what is employed by some present-day supercomputer operators, enabling small players access to supercomputing infrastructure. The quantum internet is critical to achieving the same goal in the quantum era. This could have transformative effects on the developing world in particular. And many emerging industries, for whom access to quantum computation will be critical, but who cannot afford them, will benefit immensely from the client/server model.
 
-Already today, even before the advent of useful post-classical quantum computers, we are seeing the emergence of the outsourced model for computation\index{Outsourced quantum computation}. IBM recently made an elementary 16-qubit quantum computer freely available for use via the cloud. Interested users can log in online, upload a circuit description for a quantum protocol, and have it executed remotely, with the results relayed back in real-time. Although still very primitive, this simple development already makes experimentation with elementary quantum protocols accessible to the poor layman, undergrad, or PhD student in a developing country, people who just last year would never have dreamt of being able to run their own quantum computing experiments! This effectively opens up research opportunities to people who otherwise would have been priced out of the market entirely, unable to compete with established, well-resourced labs. Evidently, the market already recognises the importance of outsourced models for quantum computation. We encourage the impatiently curious reader to log onto the `IBM Quantum Experience' (\texttt{\href{http://www.research.ibm.com/quantum/}{http://www.research.ibm.com/quantum/}}) and take a shot at designing a 16-qubit quantum protocol, without even seeing the quantum computer.
+Already today, even before the advent of useful post-classical quantum computers, we are seeing the emergence of the outsourced model for computation\index{Outsourced quantum computation}. IBM recently made an elementary 16-qubit quantum computer freely available for use via the cloud. Interested users can log in online, upload a circuit description for a quantum protocol, and have it executed remotely, with the results relayed back in real-time. Although still very primitive, this simple development already makes experimentation with elementary quantum protocols accessible to the poor layman, undergrad, or PhD student in a developing country, people who just last year would never have dreamt of being able to run their own quantum information processing experiments! This effectively opens up research opportunities to people who otherwise would have been priced out of the market entirely, unable to compete with established, well-resourced labs. Evidently, the market already recognises the importance of outsourced models for quantum computation. We encourage the impatiently curious reader to log onto the `IBM Quantum Experience' (\texttt{\href{http://www.research.ibm.com/quantum/}{http://www.research.ibm.com/quantum/}}) and take a shot at designing a 16-qubit quantum protocol, without even needing to be in the same country as the quantum computer.
 
 The quantum internet will facilitate the communication and trade of quantum assets beyond just quantum computation and cryptography. There are many uses for various hard-to-prepare quantum states, for example in metrology, lithography, or research, where outsourcing complicated state preparation would be valuable. Alternately, performing some quantum measurements can be technologically challenging, and the ability to delegate them to someone better-equipped would be desirable. The quantum internet goes beyond just quantum computing. Rather, it extends to a full range of quantum resources and protocols.\index{State preparation} \index{Measurement}
 
-To commodify quantum computing, if constructing large-scale quantum computers were a simple matter of plug-and-play, where QuantumLego\texttrademark \,building blocks are available off-the-shelf and straightforward to assemble even for monkeys, mass production would rapidly force down prices. By arbitrarily interconnecting these boxes, large-scale quantum computers could be scaled up with demand, with a trajectory following a new Quantum Moore's Law, and a price scaling linearly with the number of qubits. We envisage that each of these commodity items is a black box, within which a relatively small number of qubits are held captive. Then, to build a larger quantum computer, we don't need to upgrade our boxes. Rather, we simply purchase more boxes to interconnect over the network. This notion is tailored to cluster states in particular -- because a cluster state can be realised by nearest neighbour interactions alone, and since all preparation stages commute with one another, they naturally lend themselves to modularised, distributed preparation.\index{Modularised quantum computation}
+To commodify quantum computing, if constructing large-scale quantum computers were a simple matter of plug-and-play, where QuantumLego\texttrademark \,building blocks are available off-the-shelf and straightforward to assemble even for monkeys, mass production would rapidly force down prices. By arbitrarily interconnecting these boxes, large-scale quantum computers could be scaled up with demand, with a trajectory following a new Quantum Moore's Law, and a price scaling only logarithmically with the number of physical qubits.
+
+We envisage that each of these commodity items is a black box, within which a relatively small number of qubits are held captive. Then, to build a larger quantum computer, we don't need to upgrade our boxes. Rather, we simply purchase more boxes to interconnect over the network. This notion is tailored to cluster states in particular -- because a cluster state can be realised by nearest neighbour interactions alone, and since all preparation stages commute with one another, they naturally lend themselves to modularised, distributed preparation.\index{Modularised quantum computation}
 
 Such an approach lends itself naturally to distributed computation, where modules may be shared across multiple users, with the economic benefit of maximising resource utilisation, and the practical benefit of the end-user effectively having a much larger quantum computer at their disposal.\index{Distributed quantum computation}
 
-By having a standardised architecture for optically interconnecting modules, we also somewhat `future-proof' our hardware investment -- if interfacing modules is standardised, existing hardware can be fully compatible with newer, more capable module versions. We might envision the emergence of open standards on optical interconnects.
+By having a standardised architecture for optically interconnecting modules, we also somewhat `future-proof' our hardware investment -- if interfacing modules is standardised, existing hardware can be fully compatible with newer, more capable module versions. We might envision the emergence of open standards on optical interconnects and fusion protocols.
 
 On the other hand, if quantum computers were only ever sold as specialised, room-sized, all-in-one solutions (think D-Wave\texttrademark), such mass production would not experience the driving force of commodified, off-the-shelf building blocks, each of which is cheap, yet frugal in its computational power alone.
 
-%%%^ TAX ???
+Networked quantum computing will present new challenges for policy-makers, whose fiscal policies strive to maximise economic efficiency and optimise resource allocation. Devising policies of taxation and regulation in the quantum era will require careful deliberation.
+
+It is evident that taxation of qubits has far deeper economic implications than the taxation of other typical financial assets or classical technologies, owing to their exponential scaling characteristics. Generally speaking, taxation of an asset disincentivises its growth. But if the computational return on quantum assets grows exponentially with network size, so too will sensitivity to taxes that stifle it. This will require extremely prudent consideration when designing tax policies in the quantum era, so as to avoid exponential suppression of quantum-related economic activity.
+
+Conversely, the exponential dependence on the rate of taxation could be exploited for leverage in subsidisation. It may be economically beneficial to subsidise quantum infrastructure, reaping its exponential payback, via taxation of other economic sectors, which are less sensitive to taxation.
+
+Specifically, the future quantum economy might be made more efficient by transferring capital from low-multiplier sectors to high-multiplier quantum technologies. This is a uniquely quantum consideration that never applied to conventional supercomputing. The onset of the quantum era may redefine our entire economic mindset and fiscal policy-making, to adapt to the economic idiosyncrasies of this emerging technology.
 
 %
 % The Global Virtual Quantum Computer
@@ -6834,7 +6881,7 @@ Vendors of quantum compute time who do not unite with the global network will qu
 
 This might have very interesting implications for strategic adversaries -- government or private sector -- competing for computational supremacy, but nonetheless individually benefitting from jointly uniting their quantum resources. Bear in mind that using encrypted quantum computation (Sec.~\ref{sec:homo_blind}) all parties could maintain secrecy in their operations. Despite this secrecy, will the KGB and NSA really cooperate, to the benefit of both, or will the asymmetry in the computational leverage incentivise them to not unify resources and instead construct independent infrastructure?
 
-The leverage asymmetry will be a key consideration in answering this question, since the weaker party achieves the higher leverage. For this reason, it is plausible the global virtual quantum computer will dissolve into independent smaller virtual quantum computers, divided across geo-strategic boundaries, with the stronger parties seceding from the union -- the stronger nations, even though they would individually benefit computationally from unification, may not wish the weaker ones to piggyback off them, achieving greater leverage than themselves\footnote{Insert jokes about Greece and Germany here.}.
+The leverage asymmetry will be a key consideration in answering this question, since although both parties benefit on an absolute basis from unification, on a relative basis the weaker party achieves the higher computational leverage. For this reason, it is plausible the global virtual quantum computer will dissolve into independent smaller virtual quantum computers, divided across geo-strategic boundaries, with the stronger parties seceding from the union -- the stronger nations, even though they would individually benefit computationally from unification, may not wish the weaker ones to piggyback off them, achieving greater leverage than themselves\footnote{Insert jokes about Greece and Germany here.}.
 
 %
 % Security Implications of the Global Quantum Internet
@@ -6873,11 +6920,19 @@ function MakeAmericaGreatAgain(Putin):
 \caption{A typical example of a nefarious use for cloud quantum computation.} \label{alg:russian}\index{Trump}
 \end{table}
 
-\cofeDm{0.07}{0.5}{90}{0}{0} % Coffee stain
+%\cofeDm{0.07}{0.5}{90}{0}{0} % Coffee stain
 
 These are all legitimate concerns. But they are very much the same ones that detractors expressed about the classical internet and strong encryption. Nonetheless, it can be said that encryption and the internet have on balance been overwhelmingly beneficial to mankind, enabling unprecedented rates of technological and economic progress. Any attempts to eliminate or undermine them could be economically catastrophic.
 
 We take the view that the same ethical stance ought to be applied in the quantum era. While quantum technologies clearly have dual-use potential, the magnitude of the implications they will have for scientific and technological progress overwhelms the discussed proliferation issues. No doubt, politicians will nonetheless attempt to regulate and restrict the quantum internet -- that's what governments like to do. But this will inevitably fail for the same underlying reasons that it failed for the classical internet -- no tech-savvy Chinese person can actually say they are hindered by the Great Firewall of China\texttrademark.
+
+%
+% The Quantum Space Race
+%
+
+\subsection{The quantum space race}\index{Quantum space race}
+
+\comment{To do: Dowling, Tim, Altman.}
 
 %
 % The Quantum Singularity
