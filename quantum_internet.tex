@@ -19,7 +19,6 @@
 \usepackage{qcircuit}
 \usepackage{makeidx}
 \usepackage{nomencl}
-\usepackage{graphbox}
 %\usepackage{coffee4}
 
 \newcommand{\bra}[1]{\langle#1|}
@@ -3363,7 +3362,9 @@ There are two dominant forms of photonic interference that must be considered, e
 
 \subsection{Photon wave-packets} \index{Wave-packets}
 
-Before describing optical interference in detail, we must first formalise a definition for the optical wave-packets we will be dealing with. We will assume wave-packets with Gaussian temporal envelope of width $\sigma$, frequency-shifted by some carrier frequency $\omega_0$. The temporal distribution function is then,
+Before describing optical interference in detail, we must first formalise a definition for the optical wave-packets we will be dealing with. We will assume wave-packets with Gaussian temporal envelope of width $\sigma$ (the coherence length\index{Coherence length}), frequency-shifted by some carrier frequency $\omega_0$ (the wavelength\index{Wavelength}).
+
+The temporal distribution function is then,
 \begin{align} \label{eq:wavepacket_modulated}
 \psi(t) = \sqrt[4]{\frac{2}{\sigma\pi}}e^{-\frac{t^2}{\sigma}-i\omega_0t},
 \end{align}
@@ -3443,7 +3444,7 @@ We then characterise the operation of the device in terms of the probability of 
 	P_\text{HOM}(\tau) &= \frac{1}{4} \left[1 + \left|\int_{-\infty}^\infty \psi(t)\psi(t-\tau)^*\,dt\right|^2 \right] \nonumber \\
 	&= \frac{1}{4}\left[ 1 + e^{-\frac{\tau^2}{\sigma}} \right].
 \end{align}
-These dynamics are shown in Fig.~\ref{fig:HOM_inter}(bottom). Now, unlike MZ interference, we observe no dependence on the carrier frequency and its associated rapidly oscillating terms. Rather, operation depends only on the temporal envelop, which exists over a far larger time-scale.
+These dynamics are shown in Fig.~\ref{fig:HOM_inter}(bottom). Now, unlike MZ interference, we observe no dependence on the carrier frequency and its associated rapidly oscillating terms. Rather, operation depends only on the temporal envelope, which exists over a far larger time-scale.
 
 Importantly, unlike MZ interference, HOM interference is not applicable to coherent states, which do not entangle or enter into superposition at beamsplitters. The photon bunching effect is unique to single-photons.
 
@@ -3861,6 +3862,8 @@ While partial Bell state projection using a PBS is relatively straightforward, L
 
 In the case of an entire quantum computation, whether it be in the circuit model or cluster state model, many qubits may need to be measured independently, adding a direct multiplicative overhead in the required number of detectors. Furthermore, in protocols requiring fast-feedforward, the detectors may be required to have very fast time-response. These requirements can quickly become very challenging and expensive, further exaggerating the desirability of outsourcing the measurement stage.
 
+\comment{Using multiplexing to reuse single detector}
+
 %
 % Matter Qubits
 %
@@ -3877,9 +3880,9 @@ The attractive feature of this is that although the matter qubit is stationary, 
 % Quantum non-demolition measurement (QND)
 %
 
-\subsubsection{Quantum non-demolition measurement (QND)}
+\subsubsection{Quantum non-demolition measurement (QND)}\index{Quantum non-demolition measurement}
 
-\comment{To do!}
+\comment{To do! Add QND to abbreviations list.}
 
 %
 % Evolution
@@ -4464,6 +4467,15 @@ function SuperdenseCoding($\ket{B_{00}}$, $x$):
 \item The measurement outcome corresponds to the bit-string $x$.
 \item $\Box$
 \end{enumerate}
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {
+\lstick{x_0} & \cw & \cw & \control \cw \\
+\lstick{x_1} & \cw & \control \cw \\
+\lstick{} & \qw & \gate{X} \cwx & \gate{Z} \cwx[-2] & \qw & \multimeasureD{1}{\text{Bell}} & \cw & \rstick{x_0} \\
+\lstick{} & \qw & \qw & \qw & \qw & \ghost{\text{Bell}} & \cw & \rstick{x_1}
+\inputgroupv{3}{4}{.8em}{.8em}{\ket{B_{00}}\quad} \\
+} \nonumber
+\end{align}
 }}}
 \caption{Superdense coding protocol for communicating two classical bits via transmission of a single qubit. The protocol requires the two parties share a Bell-pair as a resource, provided by a third party.} \label{alg:superdense}
 \end{table}
@@ -4580,9 +4592,9 @@ To couple with a polarisation-encoded photonic qubit, a PBS can be employed to s
 
 Atomic ensembles have been proposed as quantum memories, given their long coherence lifetimes. Additionally, a protocol for universal cluster state quantum computation (Sec.~\ref{sec:CSQC}) based upon atomic ensemble qubits has been described \cite{bib:RohdeAtEns10}.
 
-Essentially, the long coherence lifetimes of collective excitations owes to the fact that the excitation is effectively encoded as a W-state \cite{???}\index{W-states}, an equal superposition of a single excitation across many atoms, of the form,
+Essentially, the long coherence lifetimes of collective excitations owes to the fact that the excitation is effectively encoded as a W-state \cite{???}\index{W-states}, an equal superposition of a single excitation across many ($N$) atoms, of the form,
 \begin{align}
-\ket{\psi_W} = \frac{1}{\sqrt{N}}(&\ket{e,g,g,\dots}\nonumber \\
+\ket{\psi_W^{(N)}} = \frac{1}{\sqrt{N}}(&\ket{e,g,g,\dots}\nonumber \\
 +&\ket{g,e,g,\dots}\nonumber \\
 +&\ket{g,g,e,\dots}\nonumber \\
 +&\dots\nonumber \\
@@ -4630,7 +4642,7 @@ in the photon-number basis, up to normalisation (which is determined by the post
 
 \begin{figure}[!htb]
 \includegraphics[width=0.8\columnwidth]{KLM_optical_paths}
-\caption{Evolution of the four logical basis states through the KLM CZ gate. The NS gates do nothing in the first three cases, since they are operating only on vacuum and single-photon terms, which are left unchanged by the NS gate. In the last case, where both control and target are on, HOM interference results in photon bunching after the first beamsplitter, thereby creating two-photon terms. These terms inherit the $\pi$ phase-shift from the NS gate transformation, after which the final beamsplitter reverses the HOM photon bunching.}. \label{fig:KLM_explain} \index{Knill-Laflamme-Milburn (KLM)}\index{CZ gate}
+\caption{Evolution of the four logical basis states through the KLM CZ gate. The NS gates do nothing in the first three cases, since they are operating only on vacuum and single-photon terms, which are left unchanged by the NS gate. In the last case, where both control and target are on, HOM interference results in photon bunching after the first beamsplitter, thereby creating two-photon terms. These terms inherit the $\pi$ phase-shift from the NS gate transformation, after which the final beamsplitter reverses the HOM photon bunching, yielding the same logical basis state with an acquired $\pi$ phase-shift.}. \label{fig:KLM_explain} \index{Knill-Laflamme-Milburn (KLM)}\index{CZ gate}
 \end{figure}
 
 Clearly this non-determinism is of immediate concern, since concatenating multiple gates would have exponentially decreasing success probability, making the protocol inefficient -- if the probability of a single gate succeeding is $p$, and we require that a circuit comprising $n$ of them all succeed, the success probability is clearly $p^n$.
@@ -6385,7 +6397,7 @@ Imagine that consumers have an amount of capital available for the purchase of q
 
 We now wish to understand how this taxation influences the computational power of the network. We define the \textit{tax performance multiplier}\index{Tax performance multiplier},
 \begin{definition}[Tax performance multiplier]
-The \textit{tax performance multiplier}\index{Tax performance multiplier}, is the ratio between computational scaling functions with and without taxation,
+The \textit{tax performance multiplier}\index{Tax performance multiplier}, is the ratio between computational scaling functions with and without qubit taxation,
 \begin{align}
 T(N_\text{tax}) &= \frac{f_\text{sc}(N_\text{tax})}{f_\text{sc}(N_\text{no\,tax})} \nonumber \\
 &= \frac{f_\text{sc}(N_\text{tax})}{f_\text{sc}(N_\text{tax} \gamma_T)},
@@ -6410,7 +6422,7 @@ However, taxation could also be negative, in the form of subsidisation. In Fig.~
 \begin{figure}[!htb]
 \includegraphics[width=\columnwidth]{tax_exp} \\
 \includegraphics[width=\columnwidth]{tax_subsidy}
-\caption{(top) Relationship between the performance multiplier, (positive) tax rate, and network size, assuming an exponential computational scaling function, in the regime of positive taxation, \mbox{$\gamma_T>1$}. (bottom) For \mbox{$N_\text{tax}=10$}, a zoom into the region around neutral taxation, \mbox{$\gamma_T\approx 1$} (shown in orange), showing slight degrees of both taxation (\mbox{$\gamma_T>1$}) and subsidisation (\mbox{$\gamma_T<1$}).}\label{fig:tax_exp}	
+\caption{(top) Relationship between the tax performance multiplier, (positive) tax rate, and network size, assuming an exponential computational scaling function, in the regime of positive taxation, \mbox{$\gamma_T>1$}. (bottom) For \mbox{$N_\text{tax}=10$}, a zoom into the region around neutral taxation, \mbox{$\gamma_T\approx 1$} (shown in orange), showing slight degrees of both taxation (\mbox{$\gamma_T>1$}) and subsidisation (\mbox{$\gamma_T<1$}).}\label{fig:tax_exp}	
 \end{figure}
 
 %
@@ -7193,5 +7205,41 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 %
 
 \section*{About the authors}
+
+\includegraphics[width=\columnwidth]{photo_peter_rohde}
+
+Peter Rohde is an ARC Future Fellow in the Centre for Quantum Software \& Information at the University of Technology Sydney. He obtained a Bachelor of Engineering and PhD in theoretical physics at the University of Queensland. He has worked at highly-acclaimed international institutes, including the University of Oxford and the Max-Planck Institute. His theoretical proposals have inspired several leading experimental efforts. In his spare time he is a musician, composer, public speaker, charity worker, mountaineer and adrenaline junkie. He is a very naughty boy and was expelled from preschool.
+
+\includegraphics[width=\columnwidth]{photo_zuen_su}
+
+Zu-En Su is a PhD candidate at the University of Science \& Technology China.
+
+\includegraphics[width=\columnwidth]{photo_heliang_huang}
+
+He-Liang Huang is a PhD candidate at the University of Science \& Technology China.
+
+\includegraphics[width=\columnwidth]{photo_sihui_tan}
+
+Si-Hui Tan is a Research Scientist at the Singapore University of Technology \& Design. She obtained a Bachelor of Science with Honours from Caltech, and subsequently a PhD from MIT. She has received numerous awards, including the MIT Presidential Fellowship.
+
+\includegraphics[width=\columnwidth]{photo_nana_liu}
+
+Nana Liu is a Postdoctoral Research Fellow at the Singapore University of Technology \& Design.
+
+\includegraphics[width=\columnwidth]{photo_ryan_mann}
+
+Ryan Mann is a PhD candidate in the Centre for Quantum Software \& Information at the University of Technology Sydney. He is a better rock-climber than he is physicist, despite being outstanding at the latter.
+
+\includegraphics[width=\columnwidth]{photo_rohit_ramakrishnan}
+
+Rohit Ramakrishnan is a researcher at the Indian Institute of Science.
+
+\includegraphics[width=\columnwidth]{photo_jon_dowling}
+
+Jon Dowling is Professor and Hearne Chair of Theoretical Physics, and Co-Director of the Hearne Institute for Theoretical Physics at Louisiana State University. He has a highly-acclaimed research career, and is author of the popular book \textit{Schr\"odinger's Killer App: Race to Build the World's First Quantum Computer}.
+\newline
+\includegraphics[width=\columnwidth]{photo_bill_munro}
+
+Bill Munro obtained his PhD at the University of Waikato, and has since held numerous prestigious fellowships and positions. He is currently Senior Research Scientist and leader of the theoretical quantum physics research group at NTT Japan.
 
 \end{document}  
