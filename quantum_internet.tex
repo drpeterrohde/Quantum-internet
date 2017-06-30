@@ -6069,10 +6069,16 @@ The value of all computations (i.e gain, which approximately matches investment)
 
 Thus,
 \begin{align}
-L_t &\approx \frac{n_\text{gain}}{f_\text{sc}(N_0 {\gamma_N}^t)} \nonumber \\
-&= L_0\cdot\frac{f_\text{sc}(N_0)}{f_\text{sc}(N_0{\gamma_N}^t)},
+L_t \approx \frac{n_\text{gain}}{f_\text{sc}(N_0 {\gamma_N}^t)}.
 \end{align}
-where $L_0$ is the initial value of computation.
+Letting \mbox{$t=0$} we obtain,
+\begin{align}
+n_\text{gain} = L_0 \cdot f_\text{sc}(N_0),	
+\end{align}
+where $L_0$ is the initial value of computation, which finally yields,
+\begin{align}
+L_t \approx L_0\cdot\frac{f_\text{sc}(N_0)}{f_\text{sc}(N_0{\gamma_N}^t)},	
+\end{align}
 
 \begin{postulate}[Cost of computation]\label{post:cost_comp}
 The efficient market value of a computation (in dollars) decreases over time as,
@@ -6234,7 +6240,7 @@ Let the spot price of a time-share (for the duration of a single unit of time), 
 \begin{definition}[Time-share spot price] \index{Spot price}
 The spot price of a time-share in the quantum network is,
 \begin{align}
-S &= L_0 \cdot c_n(0) \nonumber \\
+S_0 &= L_0 \cdot c_n(0) \nonumber \\
 &= L_0 \cdot r_n(0) \cdot f_\text{sc}(N_0) \nonumber \\
 &= n\cdot L_0\cdot \frac{f_\text{sc}(N_0)}{N_0} \nonumber \\
 &= n\cdot L_0\cdot \chi_\text{sc}(N_0).
@@ -6364,14 +6370,6 @@ The net return on investment at time $T$, on the purchase of qubits, is given by
 \comment{Why is it independent of the scaling function? This is strictly less than unity. Is that reasonable? As T goes to infinity the ROI approaches unity. Or is this because efficient markets imply no profit??}
 
 %
-% Example Pricing Dynamics
-%
-
-\subsection{Example pricing dynamics}
-
-\comment{To do -- consider different models under different scaling functions (linear, quadratic, exp)}
-
-%
 % Economic Implications
 %
 
@@ -6424,6 +6422,45 @@ However, taxation could also be negative, in the form of subsidisation. In Fig.~
 \includegraphics[width=\columnwidth]{tax_subsidy}
 \caption{(top) Relationship between the tax performance multiplier, (positive) tax rate, and network size, assuming an exponential computational scaling function, in the regime of positive taxation, \mbox{$\gamma_T>1$}. (bottom) For \mbox{$N_\text{tax}=10$}, a zoom into the region around neutral taxation, \mbox{$\gamma_T\approx 1$} (shown in orange), showing slight degrees of both taxation (\mbox{$\gamma_T>1$}) and subsidisation (\mbox{$\gamma_T<1$}).}\label{fig:tax_exp}	
 \end{figure}
+
+%
+% Example Pricing Dynamics
+%
+
+\subsection{Example economic dynamics}
+
+In Table.~\ref{tab:summary_ec_models} we summarise the economic models and parameters we developed for several scaling functions of particular interest: linear, quadratic, and exponential.
+
+\begin{table*}[!htb]
+\caption{Summary of the dynamics of various economic models under several computational scaling functions of interest. Price models are in units of qubits ($n$).} \label{tab:summary_ec_models}
+\begin{tabular}{|p{0.25\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|p{0.23\linewidth}|}
+	\hline
+	Model & \[f_\text{sc}(n)=n\] & \[f_\text{sc}(n)=n^2\] & \[f_\text{sc}(n)=e^n\]\\
+	\hline \hline
+	Network price scaling factor, $\chi_\text{sc}(n)$ & \[1\] & \[n\] & \[\frac{e^n}{n}\]\\
+	\hline
+	Cost of computation, $L_t$ & \[L_0 {\gamma_N}^{-t}\] & \[L_0{\gamma_N}^{-2t}\] & \[L_0 \cdot \text{exp}(-{\gamma_N}^t)\]\\
+	\hline
+	Quantum computational leverage, $\lambda_i$ & \[1\] & \[\frac{n_\text{global}}{n_i}\] & \[\frac{n_i\cdot e^{n_\text{global}}}{n_\text{global}\cdot e^{n_i}}\]\\
+	\hline
+	Single qubit leverage, $\lambda_\text{qubit}$ & \[1\] & \[n_\text{global}\] & \[\frac{e^{n_\text{global}-1}}{n_\text{global}}\]\\
+	\hline
+	Time-dependent leverage, $\lambda_n(t)$ & \[1\] & \[N_0{\gamma_T}^t\] & \[\frac{n \cdot \text{exp}(N_0 {\gamma_N}^t)}{e^n N_0 {\gamma_N}^t}\]\\
+	\hline
+	Time-share spot price, $S_0$ & \[L_0\] & \[L_0 N_0\] & \[\frac{L_0 e^{N_0}}{N_0}\]\\
+	\hline
+	Computational dividend, $D_t$ & \[L_0 {\gamma_N}^{-t}\] & \[L_0 {N_0}^2 {\gamma_N}^{-t}\] & \[L_0 \frac{e^{N_0}}{N_0} {\gamma_N}^{-t}\]\\
+	\hline
+	Qubit asset price, $S$ & \[L_0 \frac{e^r\gamma_N}{e^r\gamma_N-1}\] & \[L_0 N_0 \frac{e^r\gamma_N}{e^r\gamma_N-1}\] & \[L_0 e^{N_0} \frac{e^r\gamma_N}{e^r\gamma_N-1}\]\\
+	\hline
+	Forward contract price, $F(T)$ & \[L_0 e^{rT}\frac{1}{{\gamma_N}^t(\gamma_N-1)}\] & \[L_0 N_0 e^{rT}\frac{1}{{\gamma_N}^t(\gamma_N-1)}\] & \[L_0 e^{rT}\frac{e^{N_0}}{N_0{\gamma_N}^t(\gamma_N-1)}\]\\
+	\hline
+	Return on investment, $R(T)$ & \[\frac{1}{(e^r\gamma_N)^{T+1}[(e^r\gamma_N)^{T+1}-1]}\] & \[\frac{1}{(e^r\gamma_N)^{T+1}[(e^r\gamma_N)^{T+1}-1]}\] & \[\frac{1}{(e^r\gamma_N)^{T+1}[(e^r\gamma_N)^{T+1}-1]}\]\\
+	\hline
+	Tax performance multiplier, $T(N_\text{tax})$ & \[{\gamma_T}^{-1}\] & \[{\gamma_T}^{-2}\] & \[e^{N_\text{tax}(1-\gamma_T)}\]\\
+	\hline
+\end{tabular}
+\end{table*}
 
 %
 % Ideas For How To Proceed
@@ -6932,7 +6969,7 @@ Vendors of quantum compute time who do not unite with the global network will qu
 
 This might have very interesting implications for strategic adversaries -- government or private sector -- competing for computational supremacy, but nonetheless individually benefitting from jointly uniting their quantum resources. Bear in mind that using encrypted quantum computation (Sec.~\ref{sec:homo_blind}) all parties could maintain secrecy in their operations. Despite this secrecy, will the KGB and NSA really cooperate, to the benefit of both, or will the asymmetry in the computational leverage incentivise them to not unify resources and instead construct independent infrastructure?
 
-The leverage asymmetry will be a key consideration in answering this question, since although both parties benefit on an absolute basis from unification, on a relative basis the weaker party achieves the higher computational leverage. For this reason, it is plausible the global virtual quantum computer will dissolve into independent smaller virtual quantum computers, divided across geo-strategic boundaries, with the stronger parties seceding from the union -- the stronger nations, even though they would individually benefit computationally from unification, may not wish the weaker ones to piggyback off them, achieving greater leverage than themselves\footnote{Insert jokes about Greece and Germany here.}.
+The leverage asymmetry will be a key consideration in answering this question, since although both parties benefit on an absolute basis from unification, on a relative basis the weaker party achieves the higher computational leverage. For this reason, it is plausible the global virtual quantum computer will dissolve into independent smaller virtual quantum computers, divided across geo-strategic boundaries, with the stronger parties seceding from the union -- the stronger nations, even though they would individually benefit computationally from unification, may not wish the weaker ones to piggyback off them, achieving greater leverage than themselves\footnote{Insert jokes about Greece and Germany here.}. --- \textit{Im Wandel der Zeiten -- Eine Geschichte der Zivilisation.}
 
 %
 % Security Implications of the Global Quantum Internet
@@ -6993,9 +7030,9 @@ We take the view that the same ethical stance ought to be applied in the quantum
 
 Since there is positive computational leverage to all participating parties, this creates a self-reinforcing economic ecosystem, whereby all market participants are incentivised to continue contributing to the network, exponentially enhancing its collective power, with ever increasing returns over time. That is, the computational dividend increases monotonically over time, with every new qubit being more valuable (computationally) than the last.
 
-Once we reach the point at which the economic returns of the global virtual quantum computer outweigh the costs of maintaining the quantum internet and the participating quantum computers, we will have reached the \textit{quantum singularity} -- a point of no return with self-reinforcing exponential growth, driven by market forces (assuming efficient markets whereby computational resources are always fully utilised).
+Once we reach the point at which the economic returns of the global virtual quantum computer outweigh the costs of maintaining the quantum internet and the participating quantum computers, we will have reached the \textit{quantum singularity} -- a point of no return with self-reinforcing exponential growth, driven by market forces (assuming efficient markets whereby computational resources are always fully utilised). \comment{Double check that this is consistent with pricing models}
 
-What are the implications of the (efficient market) quantum singularity? Foremost, investment into quantum hardware will provide guaranteed profit, since we are operating in a regime of monotonically increasing dividends, with positive dollar-value return on investment into hardware.
+What are the implications of the (efficient market) quantum singularity? Foremost, investment into quantum hardware will provide guaranteed profit, since we are operating in a regime of monotonically increasing dividends, with positive dollar-value return on investment into hardware. \comment{Double check that this is consistent with pricing models}
 
 Since quantum algorithms provide quadratic speedup to \textbf{NP}-complete problems, it follows that the existing distributed quantum computer will be able to perform self-enhancement by improving network routing efficiency compared to what could be achieved using classical scheduling algorithms. This self-improvement will also be self-reinforcing -- as the quantum network becomes more powerful, its self-improvement capability will accelerate, at which point the self-enhancement becomes self-sustaining, without the need for human intervention or classical computers to guide the way.
 
@@ -7208,7 +7245,7 @@ P.P.R conceived and directed this project, developed the original ideas, and pre
 
 \includegraphics[width=\columnwidth]{photo_peter_rohde}
 
-Peter Rohde is an ARC Future Fellow in the Centre for Quantum Software \& Information at the University of Technology Sydney. He obtained a Bachelor of Engineering and PhD in theoretical physics at the University of Queensland. He has worked at highly-acclaimed international institutes, including the University of Oxford and the Max-Planck Institute. His theoretical proposals have inspired several leading experimental efforts. In his spare time he is a musician, composer, public speaker, charity worker, mountaineer and adrenaline junkie. He is a very naughty boy and was expelled from preschool.
+Peter Rohde is an ARC Future Fellow in the Centre for Quantum Software \& Information at the University of Technology Sydney, and associate member of the Hearne Institute for Theoretical Physics at Louisiana State University. He obtained a Bachelor of Computer Systems Engineering with First Class Honours, and a PhD in theoretical physics at the University of Queensland. He has worked at highly-acclaimed international institutes, including the University of Oxford, University of Queensland, Institute for Molecular Biosciences and Max-Planck Institute, with over 45 publications and 1,100 citations in quantum optics, quantum computing, quantum information theory and ecology. His theoretical proposals have inspired several leading experimental efforts, including time-bin encoded boson-sampling and sub-shot-noise limited quantum metrology. In his spare time he is a musician, composer, public speaker, charity worker, mountaineer and adrenaline junkie. He regularly speaks at prominent scientific outreach events, features in newspaper and magazine articles, and conducts radio interviews. He is a very naughty boy and was expelled from preschool.
 
 \includegraphics[width=\columnwidth]{photo_zuen_su}
 
@@ -7236,7 +7273,7 @@ Rohit Ramakrishnan is a researcher at the Indian Institute of Science.
 
 \includegraphics[width=\columnwidth]{photo_jon_dowling}
 
-Jon Dowling is Professor and Hearne Chair of Theoretical Physics, and Co-Director of the Hearne Institute for Theoretical Physics at Louisiana State University. He has a highly-acclaimed research career, and is author of the popular book \textit{Schr\"odinger's Killer App: Race to Build the World's First Quantum Computer}.
+Jon Dowling is Professor and Hearne Chair of Theoretical Physics, and Co-Director of the Hearne Institute for Theoretical Physics at Louisiana State University. He has a highly-acclaimed research career, with over 450 publications and 15,000 citations. He is author of the popular book \textit{Schr\"odinger's Killer App: Race to Build the World's First Quantum Computer}.
 \newline
 \includegraphics[width=\columnwidth]{photo_bill_munro}
 
