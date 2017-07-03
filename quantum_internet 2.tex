@@ -6126,7 +6126,6 @@ Given that the quantum marketplace doesn't actually exist yet, it isn't immediat
 	\item Arbitrage-free --- market rates for different assets and derivatives are perfectly consistent, with no opportunity for `free money' by trading on market discrepancies.
 	\item Perfect information --- all market participants have complete knowledge of all market variables, including one another.
 	\item Rational markets --- all market participants act rationally\footnote{i.e with perfect economic self-interest.} upon available information.
-	\item Indefinite lifetime --- there is no deterioration of quantum hardware over time.
 \end{itemize}
 \end{postulate}
 
@@ -6190,32 +6189,51 @@ The total computational power of the entire network now scales as,
 \begin{align}
 n_\text{FLOPS}(t) = f_\text{sc}(N_0{\gamma_N}^t),
 \end{align}
-based on the network growth postulate (Pos.~\ref{post:net_growth}) and employing a combined computational scaling function (Def.~\ref{def:comb_sc_func}). The dollar-value of current net computational power of the entire network scales as,
+based on the network growth postulate (Pos.~\ref{post:net_growth}) and combined computational scaling function definition (Def.~\ref{def:comb_sc_func}). The dollar-value of current net computational power scales as,
 \begin{align}
 	n_\text{gain}(t) &= N_t \cdot L_t \cdot n_\text{FLOPS}(t) \nonumber \\
 	&= N_0 {\gamma_N}^t \cdot L_t\cdot f_\text{sc}(N_0 {\gamma_N}^t).
 \end{align}
-And the present-day dollar-value of the physical hardware is the product of the hardware cost per qubit and the number of qubits,
+And the dollar-value of the physical hardware is the product of the hardware cost per qubit and the number of qubits,
 \begin{align}
 	n_\text{invest}(t) &= N_t \cdot C_t \nonumber \\
 	&= N_0 C_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t.
 \end{align}
 Equating these, as per Eq.~(\ref{sec:gain_eq_invest}), yields,
 \begin{align}
-N_0 {\gamma_N}^t \cdot L_t\cdot f_\text{sc}(N_0 {\gamma_N}^t) \approx N_0 C_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t,
+L_t &\approx \frac{C_0 N_0}{f_\text{sc}(N_0 {\gamma_N}^t)} \left(\frac{\gamma_N}{\gamma_C}\right)^t	 \nonumber \\
+&= \frac{C_0 {\gamma_C}^{-t}}{\chi_\text{sc}(N_0 {\gamma_N}^t)}.
 \end{align}
-which yields the cost of computation postulate,
+
+%%% xxx ???
+
+%\comment{Fix the rest from here onwards}
+
+%Thus,
+%\begin{align}
+%L_t \approx \frac{n_\text{gain}(t)}{f_\text{sc}(N_0 {\gamma_N}^t)}.
+%\end{align}
+%Letting \mbox{$t=0$} we obtain,
+%\begin{align}
+%n_\text{gain}(0) = L_0 \cdot f_\text{sc}(N_0),	
+%\end{align}
+%where $L_0$ is the initial value of computation, which finally yields,
+%\begin{align}
+%L_t \approx L_0\cdot\frac{f_\text{sc}(N_0)}{f_\text{sc}(N_0{\gamma_N}^t)},	
+%\end{align}
+%\comment{I broke the derivation when I added time-dependence. Fix this!}
 
 \begin{postulate}[Cost of computation]\label{post:cost_comp}
-The efficient-market dollar-value of a computation per qubit decreases over time as,
+The efficient market dollar-value of a computation decreases over time as,
 \begin{align}\index{Cost of computation}
-	L_t \approx \frac{C_0 {\gamma_C}^{-t}}{f_\text{sc}(N_0 {\gamma_N}^t)}.
-\end{align}
-This implies the initial (i.e present-day) cost of computation is,
-\begin{align}
-L_0 \approx \frac{C_0}{f_\text{sc}(N_0)}.	
+	L_t \approx \frac{C_0 {\gamma_C}^{-t}}{\chi_\text{sc}(N_0 {\gamma_N}^t)}.
 \end{align}
 \end{postulate}
+
+This implies the initial (i.e present-day) cost of computation is,
+\begin{align}
+L_0 \approx \frac{C_0}{\chi_\text{sc}(N_0)}.	
+\end{align}
 That is, the initial value of computations simply approximates the initial hardware investment, scaled by its initial computational power, as is intuitively expected.
 
 Note that if $f_\text{sc}$ scales linearly, as per classical computation, we observe a regular exponential decay in the cost of computation, consistent with the classical Moore's Law. On the opposing extreme, for quantum-enhanced exponential $f_\text{sc}$, the cost of computation decreases super-exponentially with time, an economic behaviour unique to post-classical computation.
@@ -6371,7 +6389,7 @@ Let the spot price of a time-share (for the duration of a single unit of time), 
 \begin{definition}[Time-share spot price] \index{Spot price}
 The spot price of a time-share in the quantum network is,
 \begin{align}
-D_0 &= L_0 \cdot c_n(0) \nonumber \\
+S_0 &= L_0 \cdot c_n(0) \nonumber \\
 &= \frac{C_0}{\chi_\text{sc}(N_0)} \cdot \frac{n}{N_0} \cdot f_\text{sc}(N_0) \nonumber \\
 &= n\cdot C_0.
 \end{align}
@@ -6393,7 +6411,7 @@ D_t &= L_t \cdot c_n(t) \nonumber \\
 \end{align}
 \end{definition}
 
-Note that the spot price is the dividend at time zero.
+Note that the spot price is the dividend at time zero, \mbox{$S = D_0$}.
 
 %
 % Qubit Asset Pricing Model
@@ -6406,9 +6424,9 @@ The simplest transaction that might take place is the outright purchase of physi
 \begin{definition}[Qubit asset pricing model] \label{def:qubit_ass_pricing}\index{Qubit asset pricing model}
 The present-day spot price of a qubit asset is,	
 \begin{align}
-S_0 &= \sum_{t=0}^\infty D_t e^{-rt} \nonumber \\
+S &= \sum_{t=0}^\infty D_t e^{-rt} \nonumber \\
 &= n \cdot C_0 \cdot \sum_{t=0}^\infty e^{-rt} {\gamma_C}^{-t} \nonumber \\
-&= n \cdot C_0 \cdot \frac{e^r \gamma_C}{e^r \gamma_C - 1}.
+&= n \cdot \frac{C_0 e^r \gamma_C}{e^r \gamma_C - 1}.
 \end{align}	
 \end{definition}
 
@@ -6458,11 +6476,10 @@ In our case, the spot price is that given by the qubit asset pricing model, and 
 The efficient market price for a forward contract in qubits is,
 \begin{align}
 F(T) &= e^{rT} \sum_{t=T+1}^\infty D_t e^{-rt} \nonumber \\
-&= n\cdot C_0\cdot e^{rT} \cdot \sum_{t=T+1}^\infty e^{-rt} {\gamma_C}^{-t} \nonumber \\
-&= n\cdot C_0 \cdot \frac{e^{-rT}{\gamma_C}^{-T}}{e^{r}g-1}.
+&= n\cdot L_0 \cdot e^{rT}\cdot \frac{f_\text{sc}(N_0)}{N_0} \cdot \frac{1}{{\gamma_N}^T(\gamma_N-1)} \nonumber \\
+&= n\cdot L_0 \cdot e^{rT}\cdot \chi_\text{sc}(N_0) \cdot \frac{1}{{\gamma_N}^T(\gamma_N-1)}.
 \end{align}
 \end{definition}
-\comment{To do}
 
 %
 % Return On Investment
@@ -6479,7 +6496,7 @@ R(T) = \frac{c_\text{profit}(T)}{c_\text{cost}(0)}.
 
 Let the cost of the asset be the current spot price, as per the qubit asset pricing model (Def.~\ref{def:qubit_ass_pricing}). That is,
 \begin{align}
-c_\text{cost}(0) &= S_0 \nonumber \\
+c_\text{cost}(0) &= S \nonumber \\
 &= \sum_{t=0}^\infty D_t e^{-rt}.
 \end{align}
 Let the profit be the accumulated dividends, paid up until time $T$, using the same derivation technique that was applied to the qubit asset pricing model,
@@ -6489,14 +6506,13 @@ c_\text{profit}(T) &= \sum_{t=0}^T D_t e^{-rt}. \nonumber \\
 Then the RoI is given by,
 \begin{align}
 	R(T) &= \frac{\sum_{t=0}^T D_t e^{-rt}}{\sum_{t=0}^\infty D_t e^{-rt}} \nonumber \\
-	&= \frac{e^{-r(T+1)}}{e^{r(T+1)}-{\gamma_C}^{T+1}}.
+	&= \frac{1}{(e^r\gamma_N)^{T+1}[(e^r\gamma_N)^{T+1}-1]}.
 \end{align}
-\comment{To do}
 
 \begin{definition}[Return on investment]\index{Return on investment formula}
 The net return on investment at time $T$, on the purchase of qubits, is given by,
 \begin{align}
-	R(T) = \frac{e^{-r(T+1)}}{e^{r(T+1)}-{\gamma_C}^{T+1}}.
+	R(T) = \frac{1}{(e^r\gamma_N)^{T+1}[(e^r\gamma_N)^{T+1}-1]}.
 \end{align}
 \end{definition}
 
