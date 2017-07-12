@@ -6006,7 +6006,7 @@ These observations lead us to naturally conclude that a quantum network speciali
 
 \section{Economics of the quantum internet} \index{Economics}
 
-Any form of computation comes at an economic cost, but also brings with it a payoff. A key consideration in any model for computation is the tradeoff between the two. Because the computational power of quantum computers scales inherently differently than classical computers, we expect economic indicators to exhibit different scaling characteristics also, thereby fundamentally altering the economic landscape.
+Any form of computation comes at an economic cost, but also brings with it a payoff. A key consideration in any model for computation is the tradeoff between the two. Because the computational power of quantum computers scales inherently differently than classical computers, we expect economic indicators to exhibit different scaling characteristics also, thereby fundamentally altering the economic landscape of the post-quantum world.
 
 We will now treat some of these economic issues in the context of a global network of unified quantum computing resources, which are then equitably time-shared\index{Time-sharing}. We argue in Sec.~\ref{sec:quant_ec_lev} that this time-shared model for quantum computation is always more computationally efficient than having distinct quantum computers operating independently in parallel, owing to the super-linear scaling in their joint computational power.
 
@@ -6016,7 +6016,7 @@ We will now treat some of these economic issues in the context of a global netwo
 
 \subsection{Classical-equivalent computational power \& computational scaling functions}\index{Classical-equivalent computational power}\index{Computational scaling functions}
 
-Let $t_i$ be the classical-equivalent runtime\index{Classical-equivalent power} of a quantum algorithm comprising $n_i$ qubits, where $i$ denotes the user. We define a \textit{computational scaling function}\index{Computational scaling functions} characterising this relationship,
+Let $t$ be the classical-equivalent runtime\index{Classical-equivalent power} of a quantum algorithm comprising $n$ qubits. We define a \textit{computational scaling function}\index{Computational scaling functions} characterising this relationship,
 
 \begin{definition}[Computational scaling functions] \label{def:scaling_func}\index{Computational scaling functions} 
 The computational scaling function, $f_\text{sc}$, relates the number of qubits held by a quantum computer, $n$, and the classical-equivalent runtime, $t$, of the algorithm it implements,
@@ -6045,7 +6045,7 @@ where,
 \begin{align}
 n_\text{global} = \sum_{j\in\text{users}} n_j,
 \end{align}
-is the total number of qubits in the network, with $j$ summing over all nodes in the network. $f_\text{sc}^\text{virtual}$ is obtained from $f_\text{sc}$ by factoring in network overheads and inefficiencies. With perfect network efficiency, \mbox{$f_\text{sc}^\text{virtual}=f_\text{sc}$}.
+is the total number of qubits in the network, with $j$ summing over all nodes in the network, each of which holds $n_j$ qubits. $f_\text{sc}^\text{virtual}$ is obtained from $f_\text{sc}$ by factoring in network overheads and inefficiencies. With perfect network efficiency, \mbox{$f_\text{sc}^\text{virtual}=f_\text{sc}$}.
 \end{definition}
 
 %
@@ -6209,26 +6209,29 @@ n_\text{FLOPS}(t) = f_\text{sc}(N_0{\gamma_N}^t),
 \end{align}
 based on the network growth postulate (Pos.~\ref{post:net_growth}) and employing a combined computational scaling function (Def.~\ref{def:comb_sc_func}). The dollar-value of current net computational power of the entire network scales as,
 \begin{align}
-	n_\text{gain}(t) &= N_t \cdot L_t \cdot n_\text{FLOPS}(t) \nonumber \\
-	&= N_0 {\gamma_N}^t \cdot L_t\cdot f_\text{sc}(N_0 {\gamma_N}^t).
+	n_\text{gain}(t) &= N_t L_t \cdot n_\text{FLOPS}(t) \nonumber \\
+	&= N_0 {\gamma_N}^t L_t\cdot f_\text{sc}(N_0 {\gamma_N}^t).
 \end{align}
 And the present-day dollar-value of the physical hardware is the product of the hardware cost per qubit and the number of qubits,
 \begin{align}
-	n_\text{invest}(t) &= N_t \cdot C_t \nonumber \\
+	n_\text{invest}(t) &= N_t C_t \nonumber \\
 	&= N_0 C_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t.
 \end{align}
 Equating these, as per Eq.~(\ref{sec:gain_eq_invest}), yields,
 \begin{align}
-N_0 {\gamma_N}^t \cdot L_t\cdot f_\text{sc}(N_0 {\gamma_N}^t) \gtrapprox N_0 C_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t,
+N_0 {\gamma_N}^t L_t\cdot f_\text{sc}(N_0 {\gamma_N}^t) \gtrapprox N_0 C_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t,
 \end{align}
 which yields the cost of computation postulate,
 
 \begin{postulate}[Cost of computation]\label{post:cost_comp}
-The efficient-market dollar-value of a computation per qubit decreases over time as,
+The efficient-market dollar-value of a computation, measured in FLOPs per qubit, decreases over time as,
 \begin{align}\index{Cost of computation}
 	L_t \gtrapprox \frac{C_0 {\gamma_C}^{-t}}{f_\text{sc}(N_0 {\gamma_N}^t)}.
 \end{align}
-This implies the spot price of computation is,
+\end{postulate}
+
+This implies,
+\begin{postulate}[Spot price of computation] The present-day (\mbox{$t=0$}) spot price of a computation is,
 \begin{align}
 L_0 \gtrapprox \frac{C_0}{f_\text{sc}(N_0)}.	
 \end{align}
@@ -6364,13 +6367,13 @@ The leverage is not merely a function of the hardware, but also of the software 
 
 \subsection{Time-share spot price}\label{sec:time_share_spot}\index{Time-share spot price}
 
-Let the spot price of a time-share (for the duration of a single unit of time), $S_0$, be the initial price of FLOPS times the respective share of computing power held by the qubits under transaction, $c_n(0)$,
+Let the spot price of a time-share (for the duration of a single unit of time), $D_0$, be the initial price of FLOPS times the respective share of computing power held by the qubits under transaction, $c_n(0)$,
 \begin{definition}[Time-share spot price] \index{Spot price}
 The spot price of a time-share in the quantum network is,
 \begin{align}
-D_0 &= L_0 \cdot c_n(0) \nonumber \\
+D_0 &= L_0 c_n(0) \nonumber \\
 &= \frac{C_0}{\chi_\text{sc}(N_0)} \cdot \frac{n}{N_0} \cdot f_\text{sc}(N_0) \nonumber \\
-&= n\cdot C_0.
+&= n C_0.
 \end{align}
 \end{definition}
 
@@ -6384,12 +6387,11 @@ The computational dividend at future time $t$, $D_t$, is masterfully baked using
 \begin{definition}[Computational dividend]\label{def:dividend_formula}
 The dollar-equivalent dividend paid by a time-share in the quantum network at future time $t$, for the duration of a single unit of time, is,
 \begin{align} \label{eq:dividend}\index{Dividend}
-D_t &= L_t \cdot c_n(t) \nonumber \\
+D_t &= L_t c_n(t) \nonumber \\
 &= \frac{C_0 {\gamma_C}^{-t}}{\chi_\text{sc}(N_0 {\gamma_N}^t)} \cdot \frac{n}{N_0 {\gamma_N}^t} \cdot f_\text{sc}(N_0 {\gamma_N}^t) \nonumber \\
-&= n\cdot C_0 {\gamma_C}^{-t}.
+&= n C_0 {\gamma_C}^{-t}.
 \end{align}
 \end{definition}
-
 Note that the spot price is the dividend at time zero.
 
 %
@@ -6404,8 +6406,8 @@ The simplest transaction that might take place is the outright purchase of physi
 The present-day spot price of a qubit asset is,	
 \begin{align}
 S_0 &= \sum_{t=0}^\infty D_t e^{-rt} \nonumber \\
-&= n \cdot C_0 \cdot \sum_{t=0}^\infty e^{-rt} {\gamma_C}^{-t} \nonumber \\
-&= n \cdot C_0 \cdot \frac{e^r \gamma_C}{e^r \gamma_C - 1}.
+&= n C_0 \sum_{t=0}^\infty e^{-rt} {\gamma_C}^{-t} \nonumber \\
+&= n C_0 \frac{e^r \gamma_C}{e^r \gamma_C - 1}.
 \end{align}	
 \end{definition}
 
@@ -6453,8 +6455,8 @@ In our case, the spot price is that given by the qubit asset pricing model, and 
 The efficient market price for a forward contract in qubits is,
 \begin{align}
 F(T) &= e^{rT} \sum_{t=T+1}^\infty D_t e^{-rt} \nonumber \\
-&= n\cdot C_0\cdot e^{rT} \cdot \sum_{t=T+1}^\infty e^{-rt} {\gamma_C}^{-t} \nonumber \\
-&= n\cdot C_0 \cdot \frac{e^{-rT}{\gamma_C}^{-T}}{e^{r}\gamma_C-1}.
+&= n C_0 e^{rT} \sum_{t=T+1}^\infty e^{-rt} {\gamma_C}^{-t} \nonumber \\
+&= n C_0 \frac{e^{-rT}{\gamma_C}^{-T}}{e^{r}\gamma_C-1}.
 \end{align}
 \end{definition}
 \comment{To do. Why no dependence on fsc or gammaN?}
@@ -6576,38 +6578,40 @@ However, taxation could also be negative, in the form of subsidisation. In Fig.~
 In Table.~\ref{tab:summary_ec_models} we summarise the economic models and parameters we developed for several illustrative scaling functions of particular interest: linear, polynomial, and exponential.
 
 \renewcommand{\tablename}{TABLE}
-
+???
 \begin{table*}[!htb]
-\caption{Summary of the dynamics of various economic models under several computational scaling functions of interest, where there are $n$ qubits held by the user and $n_\text{global}$ qubits in the global network. \comment{Fix all these!}} \label{tab:summary_ec_models}
-\begin{tabular}{|p{0.22\linewidth}|p{0.07\linewidth}|p{0.22\linewidth}|p{0.22\linewidth}|p{0.22\linewidth}|}
+\caption{Summary of the dynamics of various economic models under several computational scaling functions of interest, where there are $n$ qubits held by the user and $n_\text{global}$ qubits in the global network. \comment{Make sure these are up-to-date!}} \label{tab:summary_ec_models}
+\begin{tabular}{|p{0.255\linewidth}|p{0.22\linewidth}|p{0.155\linewidth}|p{0.155\linewidth}|p{0.155\linewidth}|}
 	\hline
-	Model & Variable & \[f_\text{sc}(n)=n\] & \[f_\text{sc}(n)=n^p\] & \[f_\text{sc}(n)=e^n\]\\
+	\[\text{Model}\] & \[\text{General form}\] & \[f_\text{sc}(n)=n\] & \[f_\text{sc}(n)=n^p\] & \[f_\text{sc}(n)=e^n\]\\
 	\hline \hline
-	Network price scaling factor (Sec.~\ref{sec:NPSF}) & $\chi_\text{sc}(n)$ & \[1\] & \[n^{p-1}\] & \[\frac{e^n}{n}\]\\
+	Network price scaling factor (Sec.~\ref{sec:NPSF}) & \[\chi_\text{sc}(n)=\frac{f_\text{sc}(n)}{n}\] & \[1\] & \[n^{p-1}\] & \[\frac{e^n}{n}\]\\
 	\hline
-	Future cost of computation (Sec.~\ref{sec:cost_of_comp}) & $L_t$ & \[\frac{C_0}{N_0{\gamma_N}^{t}{\gamma_C}^{t}}\] & \[\frac{C_0}{{N_0}^p{\gamma_N}^{pt}{\gamma_C}^t}.\] & \[\frac{C_0}{\text{exp}(N_0{\gamma_N}^t){\gamma_C}^t}\]\\
+	Future cost of computation (Sec.~\ref{sec:cost_of_comp}) & \[L_t=\frac{C_0 {\gamma_C}^{-t}}{f_\text{sc}(N_0 {\gamma_N}^t)}
+\] & \[\frac{C_0}{N_0{\gamma_N}^{t}{\gamma_C}^{t}}\] & \[\frac{C_0}{{N_0}^p{\gamma_N}^{pt}{\gamma_C}^t}\] & \[\frac{C_0}{\text{exp}(N_0{\gamma_N}^t){\gamma_C}^t}\]\\
 	\hline
-	Spot price of computation (Sec.~\ref{sec:cost_of_comp}) & $L_0$ & \[\frac{C_0}{N_0}\] & \[\frac{C_0}{{N_0}^p}.\] & \[\frac{C_0}{\text{exp}(N_0)}\]\\
+	Spot price of computation (Sec.~\ref{sec:cost_of_comp}) & \[L_0=\frac{C_0}{f_\text{sc}(N_0)}\] & \[\frac{C_0}{N_0}\] & \[\frac{C_0}{{N_0}^p}\] & \[\frac{C_0}{\text{exp}(N_0)}\]\\
 	\hline
-	Time-share computational power (Sec.~\ref{sec:arb_free_time_share}) & $c_n$ & \[n\] & \[n\cdot{n_\text{global}}^{p-1}\] & \[\frac{n\cdot\text{exp}(n_\text{global})}{n_\text{global}}\]\\
+	Time-share computational power (Sec.~\ref{sec:arb_free_time_share}) & \[c_n=n \cdot \chi_\text{sc}(n_\text{global})
+\] & \[n\] & \[n\cdot{n_\text{global}}^{p-1}\] & \[\frac{n\cdot\text{exp}(n_\text{global})}{n_\text{global}}\]\\
 	\hline
-	Quantum computational leverage (Sec.~\ref{sec:quant_ec_lev}) & $\lambda_n$ & \[1\] & \[\left(\frac{n_\text{global}}{n}\right)^{p-1}\] & \[\frac{n\cdot \text{exp}(n_\text{global})}{n_\text{global}\cdot\text{exp}(n)}\]\\
+	Quantum computational leverage (Sec.~\ref{sec:quant_ec_lev}) & \[\lambda_n=\frac{\chi_\text{sc}(n_\text{global})}{\chi_\text{sc}(n)}\] & \[1\] & \[\left(\frac{n_\text{global}}{n}\right)^{p-1}\] & \[\frac{n\cdot \text{exp}(n_\text{global})}{n_\text{global}\cdot\text{exp}(n)}\]\\
 	\hline
-	Single qubit leverage (Sec.~\ref{sec:quant_ec_lev}) & $\lambda_\text{qubit}$ & \[1\] & \[{n_\text{global}}^{p-1}\] & \[\frac{\text{exp}(n_\text{global}-1)}{n_\text{global}}\]\\
+	Single qubit leverage (Sec.~\ref{sec:quant_ec_lev}) & \[\lambda_\text{qubit}=\frac{\chi_\text{sc}(n_\text{global})}{\chi_\text{sc}(1)}\] & \[1\] & \[{n_\text{global}}^{p-1}\] & \[\frac{\text{exp}(n_\text{global}-1)}{n_\text{global}}\]\\
 	\hline
-	Time-dependent leverage (Sec.~\ref{sec:quant_ec_lev}) & $\lambda_n(t)$ &  \[1\] & \[\left(\frac{N_0{\gamma_N}^t}{n}\right)^{p-1}\] & \[\frac{n \cdot \text{exp}(N_0{\gamma_N}^t)}{N_0{\gamma_N}^t\cdot\text{exp}(n)}\]\\
+	Time-dependent leverage (Sec.~\ref{sec:quant_ec_lev}) & \[\lambda_n(t)=\frac{\chi_\text{sc}(N_0{\gamma_N}^t)}{\chi_\text{sc}(n)}\] &  \[1\] & \[\left(\frac{N_0{\gamma_N}^t}{n}\right)^{p-1}\] & \[\frac{n \cdot \text{exp}(N_0{\gamma_N}^t)}{N_0{\gamma_N}^t\cdot\text{exp}(n)}\]\\
 	\hline
-	Time-share spot price (Sec.~\ref{sec:time_share_spot}) & $S_0$ & \[nC_0\] & \[nC_0\] & \[nC_0\]\\
+	Time-share spot price (Sec.~\ref{sec:time_share_spot}) & \[D_0=n C_0\] & \[nC_0\] & \[nC_0\] & \[nC_0\]\\
 	\hline
-	Computational dividend (Sec.~\ref{sec:comp_div}) & $D_t$ & \[n C_0 {\gamma_C}^{-t}\] & \[n C_0 {\gamma_C}^{-t}\] & \[n C_0 {\gamma_C}^{-t}\]\\
+	Computational dividend (Sec.~\ref{sec:comp_div}) & \[D_t=n C_0 {\gamma_C}^{-t}\] & \[n C_0 {\gamma_C}^{-t}\] & \[n C_0 {\gamma_C}^{-t}\] & \[n C_0 {\gamma_C}^{-t}\]\\
 	\hline
-	Qubit asset price (Sec.~\ref{sec:qubit_pricing_model}) & $S$ & \[n C_0 \frac{e^r \gamma_C}{e^r \gamma_C - 1}\] & \[n C_0 \frac{e^r \gamma_C}{e^r \gamma_C - 1}\] & \[n C_0 \frac{e^r \gamma_C}{e^r \gamma_C - 1}\]\\
+	Qubit asset price (Sec.~\ref{sec:qubit_pricing_model}) & \[S_0=n C_0 \frac{e^r \gamma_C}{e^r \gamma_C - 1}\] & \[n C_0 \frac{e^r \gamma_C}{e^r \gamma_C - 1}\] & \[n C_0 \frac{e^r \gamma_C}{e^r \gamma_C - 1}\] & \[n C_0 \frac{e^r \gamma_C}{e^r \gamma_C - 1}\]\\
 	\hline
-	Forward contract price (Sec.~\ref{sec:for_contr}) & $F(T)$ & \[n C_0 \frac{e^{-rT}{\gamma_C}^{-T}}{e^{r}\gamma_C-1}\] & \[n C_0 \frac{e^{-rT}{\gamma_C}^{-T}}{e^{r}\gamma_C-1}\] & \[n C_0 \frac{e^{-rT}{\gamma_C}^{-T}}{e^{r}\gamma_C-1}\]\\
+	Forward contract price (Sec.~\ref{sec:for_contr}) & \[F(T)=n C_0 \frac{e^{-rT}{\gamma_C}^{-T}}{e^{r}\gamma_C-1}\] & \[n C_0 \frac{e^{-rT}{\gamma_C}^{-T}}{e^{r}\gamma_C-1}\] & \[n C_0 \frac{e^{-rT}{\gamma_C}^{-T}}{e^{r}\gamma_C-1}\] & \[n C_0 \frac{e^{-rT}{\gamma_C}^{-T}}{e^{r}\gamma_C-1}\]\\
 	\hline
-	Return on investment (Sec.~\ref{sec:ROI}) & $R(T)$ & \[\frac{e^{-r(T+1)}}{e^{r(T+1)}-{\gamma_C}^{T+1}}\] & \[\frac{e^{-r(T+1)}}{e^{r(T+1)}-{\gamma_C}^{T+1}}\] & \[\frac{e^{-r(T+1)}}{e^{r(T+1)}-{\gamma_C}^{T+1}}\]\\
+	Return on investment (Sec.~\ref{sec:ROI}) & \[R(T)=\frac{e^{-r(T+1)}}{e^{r(T+1)}-{\gamma_C}^{T+1}}\] & \[\frac{e^{-r(T+1)}}{e^{r(T+1)}-{\gamma_C}^{T+1}}\] & \[\frac{e^{-r(T+1)}}{e^{r(T+1)}-{\gamma_C}^{T+1}}\] & \[\frac{e^{-r(T+1)}}{e^{r(T+1)}-{\gamma_C}^{T+1}}\]\\
 	\hline
-	Tax performance multiplier (Sec.~\ref{sec:taxation}) & $M(N_\text{tax})$ & \[{\gamma_T}^{-1}\] & \[{\gamma_T}^{-p}\] & \[e^{N_\text{tax}(1-\gamma_T)}\]\\
+	Tax performance multiplier (Sec.~\ref{sec:taxation}) & \[M(N_\text{tax})=\frac{f_\text{sc}(N_\text{tax})}{f_\text{sc}(N_\text{tax} \gamma_T)}\] & \[{\gamma_T}^{-1}\] & \[{\gamma_T}^{-p}\] & \[e^{N_\text{tax}(1-\gamma_T)}\]\\
 	\hline
 \end{tabular}
 \end{table*}
