@@ -1,0 +1,151 @@
+%
+% Quantum Algorithms
+%
+
+\section{Quantum algorithms} \index{Quantum algorithms}
+
+The ultimate goal of quantum computing is to implement algorithms with a quantum speedup compared to classical algorithms. The degree of speedup achieved varies between algorithms, and it is important to note that not every classical algorithm exhibits any speedup when implemented quantum mechanically.
+
+To provide context for the excitement of quantum computing and motivate interest in their development, we now summarise some of the key quantum algorithms that have been described exhibiting quantum speedup.
+
+\comment{To do - USTC group}
+
+\comment{Table summarising algs, speedups, refs}
+
+%
+% Deutsch-Jozsa
+%
+
+\subsection{Deutsch-Jozsa} \index{Deutsch-Jozsa algorithm}
+
+The first quantum algorithm demonstrating a provable improvement over the best classical algorithm was the Deutsch-Jozsa algorithm\cite{bib:DeutschJozsa92}. Unfortunately the algorithm solves a very contrived problem, designed for the purposes of demonstrating post-classicality rather than solving a problem of actual practical interest. Nonetheless, the algorithm is straightforward to explain and understand, making it a useful starting point in understanding quantum algorithms and the computational enhancement they may offer.
+
+The algorithm relies on a `black box', referred to as an \textit{oracle}\index{Oracle}, which takes an input bit-string and outputs a single bit, evaluating the function $f(x)$ for the $n$-bit input bit-string $x$. In this contrived problem $f(x)$ is guaranteed to be either \textit{uniform}\index{Uniform function} or \textit{balanced}\index{Balanced function}. In the former case, the output to the oracle is always \mbox{$f(x)=0$} or always \mbox{$f(x)=1$}, but it doesn't matter which, they simply must always be the same. In the latter case, the output is \mbox{$f(x)=0$} for exactly half the inputs $x$, and \mbox{$f(x)=1$} for the other half of $x$, but the ordering of which inputs generate which outputs may be arbitrary. The goal of the algorithm is to determine whether $f(x)$ is uniform of balanced using the least number of queries to the oracle.
+
+While it's clear that the dimensionality of the input state space is exponentially large, $2^n$, it is fairly obvious that a trivial \textbf{BPP} algorithm exists for solving this problem with confidence exponentially asymptoting to unity against the number of oracle queries. We simply evaluate the oracle for randomly chosen inputs. If we measure any occurrences of measurement outcomes that are not all 0 or all 1 we know with certainty that the function must have been balanced. If on the other hand we measure all 0s or all 1s for more than half the input state space $x$, we know with certainty the function was uniform.
+
+However, if the function were balanced, there is the possibility that it might conspire against us to fool us into thinking the function was uniform until we evaluate half plus one of the input states, requiring $O(2^n)$ oracle queries, although this will occur with exponentially low probability against the number of queries. Thus, the algorithm can be approximated with exponential asymptotic certainty in \textbf{BPP}. But considering the \textit{worst} case\index{Worst case complexity} rather than the \textit{average} case\index{Average case complexity}, we may have to perform an exponential number of evaluations, $O(2^n)$, to know the answer with absolute certainty.
+
+The Deutsch-Jozsa algorithm solves this rather specialised problem in the worst case using only a single quantum evaluation of the oracle.
+
+The algorithm implementing the Deutsch-Jozsa protocol and its circuit diagram are shown in Alg.~\ref{alg:deutsch_jozsa}. The engine room of the algorithm is in the Hadamard transform\index{Hadamard transform}, which prepares an equal superposition of all $2^n$ possible input bit-strings $x$, which are then evaluated in superposition by the oracle. To ensure unitarity, the oracle is defined to implement the transformation,
+\begin{align}
+	    \hat{U}_f \ket{x}\ket{y} &= \ket{x}\ket{y\oplus f(x)}.
+\end{align}
+That is, it flips bit $y$ if \mbox{$f(x)=1$}. An inverse Hadamard transform subsequently yields a measurement outcome with one of two possibilities:
+\begin{itemize}
+	\item The 0 and 1 terms outputted from the oracle interfere perfectly constructively, if the function was uniform.
+	\item They interfere perfectly destructively, if the function was balanced.
+\end{itemize}
+Then, with a single-shot measurement of the inverse Hadamard transformed output from the oracle we establish whether $f(x)$ was balanced or uniform with certainty. This exhibits an exponential worst case speedup compared to a randomised classical sampling algorithm (which is classically optimal).
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function DeutschJozsa(f,n):
+\begin{enumerate}
+    \item Prepare the \mbox{$n+1$}-bit state,
+    \begin{align}
+    \ket\psi_0 = \ket{0}^{\otimes n}\ket{1}.	
+    \end{align}
+    \item Apply the \mbox{$n+1$}-bit Hadamard transform across all qubits,
+    \begin{align}
+    \ket\psi_1 &= \hat{H}^{\otimes(n+1)}\ket\psi_0 \nonumber \\
+    &= \frac{1}{\sqrt{2^{n+1}}} \sum_{x=0}^{2^n-1}\ket{x}(\ket{0}-\ket{1}),	
+    \end{align}
+    where $x$ denote $n$-bit binary bit-strings, of which there are $2^n$.
+    \item Apply the unitary oracle, implementing the transformation,
+    \begin{align}
+    \hat{U}_f \ket{x}\ket{y} &= \ket{x}\ket{y\oplus f(x)},
+    \end{align}
+    where $\oplus$ denotes addition modulo 2, yielding,
+    \begin{align}
+    \ket\psi_2 = \hat{U}_f \ket\psi_1.	
+    \end{align}
+    \item Apply another Hadamard transform,
+    \begin{align}
+    \ket\psi_3 = \hat{H}^{\otimes n} \ket\psi_2.
+    \end{align}
+    \item The full evolution is thus given by,
+    \begin{align}
+    	\ket\psi_\text{out} = (\hat{H}^{\otimes n}\otimes\hat{I}) \cdot \hat{U}_f \cdot \hat{H}^{\otimes (n+1)}\ket{0}^{\otimes n}\ket{1}.
+    \end{align}
+	\item Measure the first $n$ qubits to determine the probability of measurement outcome $\ket{0}^{\otimes n}$.
+	\item This probability is given by,
+	\begin{align}
+	P_0 = \left| \frac{1}{2^n} \sum_{x=0}^{2^n-1} (-1)^{f(x)} \right|^2.	
+	\end{align}
+	\item Depending on whether $f(x)$ was uniform or balanced, the alternating sign terms in this sum interfere constructively or destructively, yielding \mbox{$P_0=1$} or \mbox{$P_0=0$} respectively.
+	\item Thus, a single measurement outcome suffices to determine whether $f(x)$ was balanced or uniform.
+\end{enumerate}
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {
+    \lstick{\ket{0}^{\otimes n}} & \gate{\hat{H}^{\otimes n}} & \multigate{1}{\hat{U}_f} & \gate{\hat{H}^{\otimes n}} & \meter \\
+    \lstick{\ket{1}} & \gate{\hat{H}} & \ghost{\hat{U}_f} & \qw & \\
+} \nonumber
+\end{align}
+}}}
+\caption{Deutsch-Jozsa algorithm for evaluating whether the function $f(x)$ implemented by the oracle is balanced or uniform, exhibiting exponential worst case speedup compared to the best classical \textbf{BPP} algorithm.} \label{alg:deutsch_jozsa}
+\end{table}
+
+%
+% Quantum Search
+%
+
+\subsection{Quantum search} \index{Grover's algorithm}
+
+\comment{Multi-solution search}
+
+\comment{To do - USTC group}
+
+
+\index{Oracle}
+
+%
+% NP-Complete Problems
+%
+
+\subsection{Satisfiability \& \textbf{NP}-complete problems} \index{\textbf{NP}-complete problems}\index{Satisfiability problems}
+
+\comment{To do - USTC group}
+
+%
+% Quantum Simulation
+%
+
+\subsection{Quantum simulation} \index{Quantum simulation}
+
+\comment{To do - USTC group}
+
+%
+% Integer Factorisation
+%
+
+\subsection{Integer factorisation} \index{Shor's algorithm}
+
+\comment{To do - USTC group}
+
+%
+% Quantum Machine Learning
+%
+
+\subsection{Quantum machine learning} \index{Quantum machine learning}
+
+\comment{To do - USTC group}
+
+%
+% Topological Data Analysis
+%
+
+\subsection{Topological data analysis} \index{Topological data analysis}
+
+\comment{To do - USTC group}
+
+%
+% Linear Systems
+%
+
+\subsection{Linear systems} \index{Linear systems}
+
+\comment{To do - USTC group}
+
+\comment{Example: recommendation algorithm where sampling the vector yields, with high probability, a recommendation that is a good one, without having to explicitly know the entire solution vector.}

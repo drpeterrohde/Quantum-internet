@@ -1,0 +1,44 @@
+%
+% Entanglement - The Ultimate Quantum Resource
+%
+
+\section{Entanglement -- The ultimate quantum resource} \label{sec:ent_ultimate} \index{Entanglement}
+
+As we have seen, the diversity of quantum states that may be communicated, and protocols implemented over the quantum internet is extremely diverse, encompassing many different types of encodings and communications protocols.
+
+Given this plethora of protocols, discussed in detail in Sec.~\ref{sec:protocols_quant_int}, one might ask whether there is a single primitive resource that might be applicable to all, or at least most of these quantum protocols, thereby reducing the technological requirements of the nodes and quantum channels forming the network.
+
+It turns out that there is one particularly useful quantum resource, that finds applicability in many of these protocols -- entanglement, specifically in the form of Bell-pairs (Sec.~\ref{sec:bell_state_res}).
+
+In brief, Bell-pairs find applicability in, amongst many others, the following key protocols:
+\begin{itemize}
+\item Cluster states (Sec.~\ref{sec:CSQC}): a Bell-pair is also a two-qubit cluster state, a supply of which can be employed in fusion strategies to prepare larger cluster states, enabling universal MBQC.
+\item Quantum state teleportation (Sec.~\ref{sec:teleport}): a shared Bell-pair between Alice and Bob forms the elementary quantum resource upon which the state teleportation protocol is constructed.
+\item Quantum gate teleportation (Sec.~\ref{sec:teleport_gate}): a shared 4-qubit entangled state allows the teleportation of a CNOT gate. This 4-qubit state may be prepared from a resource of two Bell-pairs.
+\item QKD (Sec.~\ref{sec:QKD}): the E91 protocol is built upon a reliable stream of distributed Bell-pairs.
+\item Modularised quantum computation (Sec.~\ref{sec:module}): using Bell-pairs, entanglement swapping (Sec.~\ref{sec:swapping}) can be employed to fuse neighbouring, but potentially distant modules together using operations local to each module.
+\item Superdense coding (Sec.~\ref{sec:superdense}): a shared Bell-pair enables the communication of two classical bits of information via a single qubit, thereby doubling classical channel capacity.
+\end{itemize}
+
+Thus, we see that Bell-pairs form a ubiquitous resource, covering many of the most significant quantum protocols -- quantum computation, distributed quantum computation, quantum state and gate teleportation, and quantum cryptography. This warrants special treatment of entanglement distribution, as a fundamental building block in the quantum era.
+
+One might envisage a quantum internet in which a central server, who specialises in only Bell state preparation and distribution, serves the sole role of pumping out Bell-pairs across the internet to whomever requests them, who subsequently use them for protocols such as those mentioned above. This could be in the form of a server transmitting over fibre networks, across free-space, or via a satellite in orbit, transmitting at an intercontinental level.
+
+What's the advantage of this approach to quantum networking? There are several:
+\begin{itemize}
+\item Dedicated servers can specialise in this one particular task, as can be the transmission infrastructure. The server needn't concern itself with the nitty-gritty of the protocols implemented by the end-user.
+\item Because servers are providing a single standardised product, they can be commodified, enabling mass production of the hardware devices and the associated economy of scale.
+\item Unlike generic quantum states, Bell-pairs are known states that can be infinitely reproduced, without having to worry about no-cloning limitations.
+\item Photonic Bell-pairs are easily prepared via type-II SPDC at very high repetition rates (\mbox{$\sim 100$MHz-1GHz}), enabling rapid state preparation.
+\item Bell-pairs are relatively `cheap' to prepare, and can be readily manufactured using widely accessible, present-day technology.
+\item QoS is a lesser issue in most scenarios. We can employ a \textsc{Send and Forget}\index{Send and forget protocol} protocol for the distribution of entanglement (much like classical UDP). Since every Bell-pair is identical, we needn't be concerned about missing ones. Instead, we can simply wait for the next one (a \textsc{Repeat Until Success}\index{Repeat until success strategy} strategy), knowing it will be exactly the same. We call this the \textsc{Shotgun}\index{Shotgun state preparation} approach -- keep firing away until we hit something.
+\item Rather than transmitting quantum states between distant parties directly, if we instead use state teleportation, the state to be transmitted will not be corrupted if the communications channel fails (e.g via loss). Instead we can wait for the next successfully transmitted Bell-pair until we are ready to teleport the state, which then proceeds without directly utilising the quantum communications channel, accumulating its associated costs, or risking losing the state altogether should link failure occur. Only classical communication is required to complete the protocol, which can be regarded as error-free for all intents and purposes.
+\item Entanglement purification may be employed by the two parties to improve the cost metrics associated with their shared entanglement, thereby partially overcoming the limitations imposed by the quantum communication channels.
+\item If no direct link exists between server and clients, bootstrapped entanglement swapping can be employed to concatenate servers to create longer-distance `virtual' links. This is the basis for \textit{quantum repeater networks}, to be discussed next in Sec.~\ref{sec:rep_net}.
+\end{itemize}
+
+\comment{Any other advantages?}
+
+In addition to entanglement distribution, entangling measurements, e.g Bell state projections (Sec.~\ref{sec:bell_proj}), may be used as a primitive for many protocols. This is effectively entangled state distribution in reverse, whereby two clients transmit states to a host, who performs a joint entangling measurement upon them. For example, in the modularised model for cluster state quantum computing, two adjacent but distant modules might transmit optical qubits to a satellite, which projects them into the Bell basis, thereby creating a link between the respective modules. This isn't as powerful as entangled state distribution, since it cannot be used for, for example, E91 QKD, but nonetheless remains a powerful primitive for many protocols.
+
+These observations lead us to naturally conclude that a quantum network specialised to this one particular task -- entanglement distribution -- would already be immensely useful, and on its own enable many key applications, such as many of the ones presented here in Sec.~\ref{sec:protocols_quant_int}.
