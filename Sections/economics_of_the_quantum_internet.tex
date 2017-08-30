@@ -6,7 +6,7 @@
 
 Any form of computation comes at an economic cost, but also brings with it a payoff. A key consideration in any model for computation is the tradeoff between the two. Because the computational power of quantum computers scales inherently differently than classical computers, we expect economic indicators to exhibit different scaling characteristics also, thereby fundamentally altering the economic landscape of the post-quantum world.
 
-We will now treat some of these economic issues in the context of a global network of unified quantum computing resources, which are then equitably time-shared\index{Time-sharing}. We argue in Sec.~\ref{sec:quant_ec_lev} that this time-shared model for quantum computation is always more computationally efficient than having distinct quantum computers operating independently in parallel, owing to the super-linear scaling in their joint computational power.
+We will now treat some of these economic issues in the context of a global network of unified quantum computing resources, which are then equitably time-shared\index{Time-sharing}. We argue in Sec.~\ref{sec:quant_ec_lev} that this time-shared model for quantum computation is always more computationally efficient than having distinct quantum computers operating independently in parallel, owing to the super-linear scaling in their joint computational power. While this section provides mathematical details of various economic models, Sec.~\ref{sec:economics} provides a popular, high-level discussion of these issues.
 
 %
 % Classical-Equivalent Computational Power & Computational Scaling Functions
@@ -14,7 +14,7 @@ We will now treat some of these economic issues in the context of a global netwo
 
 \subsection{Classical-equivalent computational power \& computational scaling functions}\index{Classical-equivalent computational power}\index{Computational scaling functions}
 
-Let $t$ be the classical-equivalent runtime\index{Classical-equivalent power} of a quantum algorithm comprising $n$ qubits. We define a \textit{computational scaling function}\index{Computational scaling functions} characterising this relationship,
+Let $t$ be the classical-equivalent runtime\index{Classical-equivalent power} of a quantum algorithm comprising $n$ qubits -- that is, how long would a given classical computer require to implement this $n$-qubit quantum computation? We define a \textit{computational scaling function}\index{Computational scaling functions} characterising this relationship,
 
 \begin{definition}[Computational scaling functions] \label{def:scaling_func}\index{Computational scaling functions} 
 The computational scaling function, $f_\text{sc}$, relates the number of qubits held by a quantum computer, $n$, and the classical-equivalent runtime, $t$, of the algorithm it implements,
@@ -24,10 +24,10 @@ t = f_\text{sc}(n),
 	where $f_\text{sc}$ is monotonically increasing, and depends heavily on both the algorithm being implemented, as well as the architecture of the computer.
 \end{definition}
 
-The exact form of the scaling function will be specific to the algorithm being deployed, and the computational model (e.g cluster states vs the circuit model, as well as choices in error correction, amongst other factors).
+The exact form of the scaling function will be specific to the algorithm being deployed\footnote{For example, the \textit{circuit depth}, i.e number of gate applications in series, will heavily influence the number of classical steps required to simulate the circuit.}, and the computational model (e.g cluster states vs the circuit model, as well as choices in error correction, amongst other factors). Most notably, different quantum algorithms offer different scalings in their quantum speedup -- Grover's algorithm offers only a quadratic quantum speedup, compared to the exponential speedup afforded by Shor's algorithm. Thus, the computational scaling function depends on both the hardware and software.
 
 %
-% Virtual Scaling Function
+% Virtual Scaling Functionx
 %
 
 \subsubsection{Virtual computational scaling functions}\index{Virtual computational scaling functions}
@@ -52,9 +52,9 @@ is the total number of qubits in the network, with $j$ summing over all nodes in
 
 \subsubsection{Combined computational scaling functions}\index{Combined computational scaling functions}
 
-Until now we have characterised the entire network by a single scaling function. Of course, the scaling functions observed by different market participants needn't all be the same, as they are functions of not only the hardware, but also the participants' different algorithmic applications.
+Until now we have characterised the entire network by a single scaling function. Of course, the scaling functions observed by different market participants needn't all be the same, as they are functions of not only the hardware, but also the participants' different algorithmic applications (i.e software).
 
-Consider taking a single unit of time (i.e we are ignoring cost discounting over multiple units of time) and dividing it amongst a number of nodes, $n_\text{nodes}$, each with their own scaling function, $f_\text{sc}^{(i)}$. The total classical-equivalent runtime of the computation is additive, given simply by a linear combination of the classical-equivalent processing times of the individual node. This yields the relationship for combining scaling functions,
+Consider taking a single unit of time (i.e we are ignoring cost discounting over multiple units of time) and dividing it amongst a number of nodes, $n_\text{nodes}$, each with their own scaling function, $f_\text{sc}^{(i)}$. The total classical-equivalent runtime of the computation is additive, given simply by a linear combination of the classical-equivalent processing times of the individual nodes. This yields the relationship for combining scaling functions,
 \begin{definition}[Combined scaling functions]\index{Combined computational scaling functions}\label{def:comb_sc_func}
 The effective combined computational scaling function, $f_\text{sc}^\text{(joint)}$, of a group of participants, each with their own scaling functions, $f_\text{sc}^{(i)}$, is given by,
 \begin{align}
@@ -114,7 +114,7 @@ Before proceeding with explicit derivations of economic models, we state some as
 
 \subsubsection{Efficient markets}\label{sec:eff_markets} \index{Efficient markets}
 
-We make several assumptions about the efficiency of the quantum marketplace. These are largely based on the conventional efficient-market hypothesis (EMH)\index{Efficient-market hypothesis (EMH)} \cite{???}.
+We make several assumptions about the efficiency of the quantum marketplace. These are largely based on the conventional efficient-market hypothesis (EMH)\index{Efficient-market hypothesis (EMH)} \cite{???}, readily taught in undergraduate ECON101 and subsequently summarily rejected upon entering ECON202. For ease of exposition, we will remain in the ECON101 classroom.
 
 Some of these assumptions may reasonably turn out to be invalid, or require revision as we learn more about upcoming quantum technologies and the trajectories their marketplace will follow. However, for ease of exposition, and the purposes of presenting some initial rudimentary, qualitative analyses and thought experiments, these assumptions simplify our derivations and act as a good starting point for future work.
 
@@ -122,16 +122,16 @@ Given that the quantum marketplace doesn't actually exist yet, it isn't immediat
 
 \begin{postulate}[Efficient markets]\label{post:market_eff}\index{Efficient markets} We make the following efficiency assumptions on the dynamics of the quantum marketplace:
 \begin{itemize}
-	\item Qubits are a `scarce' resource --- there is always positive, non-zero demand for them.
-	\item No wastage --- quantum computational resources are always fully utilised, with no down-time.
-	\item Transaction free --- transaction costs are negligible.
-	\item Negligible cost-of-carry --- e.g storage and maintenance costs are negligible.
-	\item High liquidity --- it is always possible to execute transactions at market rates.
-	\item Perfect price competition --- there is sufficient competition that profits from quantum hardware and the execution of quantum computations is marginal.
-	\item Arbitrage-free --- market rates for different assets and derivatives are perfectly consistent, with no opportunity for `free money' by trading on market discrepancies.
-	\item Perfect information --- all market participants have complete knowledge of all market variables, including one another.
-	\item Rational markets --- all market participants act rationally\footnote{i.e with perfect economic self-interest --- \textit{Avaritia}.} upon available information.
-	\item Indefinite lifetime --- there is no deterioration or death of quantum hardware over time.
+	\item Qubits are a `scarce' resource --- there is always positive, non-zero demand for them.\index{Scarce resource}
+	\item No wastage --- quantum computational resources are always fully utilised, with no down-time.\index{Wastage}
+	\item Transaction free --- transaction costs are negligible.\index{Transaction cost}
+	\item Negligible cost-of-carry --- e.g storage and maintenance costs are negligible.\index{Cost-of-carry}
+	\item High liquidity --- it is always possible to execute transactions at market rates.\index{Liquidity}
+	\item Perfect price competition --- there is sufficient competition that profits from quantum hardware and the execution of quantum computations is marginal.\index{Price competition}
+	\item Arbitrage-free --- market rates for different assets and derivatives are perfectly consistent, with no opportunity for `free money' by trading on market discrepancies.\index{Arbitrage-free}
+	\item Perfect information --- all market participants have complete knowledge of all market variables, including one another.\index{Perfect information}
+	\item Rational markets --- all market participants act rationally\footnote{i.e with perfect economic self-interest --- \textit{Avaritia}.} upon available information.\index{Rational markets}
+	\item Indefinite asset lifetime --- there is no deterioration or death of quantum hardware over time.\index{Asset lifetime}
 \end{itemize}
 \end{postulate}
 
@@ -196,7 +196,7 @@ We begin by defining the ratio $Q(t)$ between the economic gain from executing c
 Q(t)=\frac{n_\text{gain}(t)}{n_\text{cost}(t)}.
 \end{align}
 
-Now, if \mbox{$Q=1$} we have the breakeven point, whereby investment into physical hardware is profit-neutral in payback. If \mbox{$Q<1$} we spend more on hardware than we gain from its use. But if \mbox{$Q>1$} we can make guaranteed profit by investing in new hardware. The perfect price competition assumption (Pos.~\ref{post:market_eff}) will drive the market price towards the zero-profit breakeven point (but not quite -- someone has to make money!), such that \mbox{$Q\gtrapprox 1$}. That is, the economic gain approximates the hardware investment,
+Now, if \mbox{$Q=1$} we have the breakeven point, whereby investment into physical hardware is profit-neutral in payback. If \mbox{$Q<1$} we spend more on hardware than we gain from its use and run at a loss. But if \mbox{$Q>1$} we can make guaranteed profit by investing in new hardware. The perfect price competition assumption (Pos.~\ref{post:market_eff}) will drive the market price towards the zero-profit breakeven point (but not quite -- someone has to make money!), such that \mbox{$Q\gtrapprox 1$}. That is, the economic gain approximates the hardware investment,
 \begin{align} \label{sec:gain_eq_invest}
 	n_\text{gain}(t) \gtrapprox n_\text{invest}(t).
 \end{align}

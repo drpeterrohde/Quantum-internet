@@ -23,7 +23,7 @@ A node could be, for example, data storage, a classical computer implementing a 
 A key feature of the global internet is redundancy. In a packet-switched environment, sending identical packets twice might each follow entirely different routes to their common destination. Node-to-node redundancy is easily accommodated for in the graph-theoretic model by allowing multiple distinct edges between nodes. It is extremely important to accommodate multiple edges in network graphs, since redundant routes provide a direct means by which to load-balance a route. So, for example, a hub in Australia might connect to a sister hub in New Zealand using both a fibre-optic undersea cable, and simultaneously via a satellite uplink. If the faster of the two connections is running out of capacity, a proportion of the packets can simply be switched to the other link, thereby balancing the load. For this reason we abstain from using an adjacency matrix representation for network graphs, as they do not accommodate redundancy.
 
 %
-% Network Costs & Attributes
+% Cost Vector Analysis
 %
 
 \subsection{Cost vector analysis} \label{sec:costs} \index{Cost vectors}\index{Attributes}
@@ -35,8 +35,8 @@ The distinction between costs and attributes, is that costs may be expressed in 
 \begin{definition}[Network cost metrics] \label{def:metric} Cost metrics satisfy the properties:\index{Network cost metrics}
 	\begin{itemize}
     	\item Identity operations: If a channel performs nothing, its associated cost is zero, \mbox{$c(\mathbb{\hat{I}}) = 0$}.
-    	\item Triangle inequality: \\ $c(v_1\to v_2\to v_3) \leq c(v_1\to v_2) + c(v_2\to v_3)$, \\ across all paths \mbox{$v_1 \to v_2 \to v_3$}.
-    	\item Positivity: \mbox{$c\geq 0$}. This ensures that shortest-path algorithms will function correctly.
+    	\item Triangle inequality: \\ $c(v_1\to v_2\to v_3) \leq c(v_1\to v_2) + c(v_2\to v_3)$, \\ across all paths \mbox{$v_1 \to v_2 \to v_3$}. In the case of strict equality under addition we refer to the cost as a \emph{strictly additive cost}.
+    	\item Positivity: \mbox{$c\geq 0$}. This ensures that shortest-path algorithms will function correctly. It is also congruent with the intuitive expectation that data traversing a communications channel is not somehow better off than if it hadn't traversed that channel at all.
 	\end{itemize}
 \end{definition}
 Attributes, on the other hand do not have a distance interpretation, and may have arbitrary structure. A detailed discussion on the relationship between costs and attributes is presented in Sec.~\ref{sec:c_vs_a}.
@@ -47,7 +47,7 @@ A detailed discussion of some of the major costs and attributes that realistic q
 
 A \textit{route}\index{Routes} between two nodes, Alice ($A$) and Bob ($B$), of the network, $G$, is an acyclic subgraph connecting those nodes, \mbox{$R_{A\to B}\subseteq G$}. In general ad hoc networks there will typically be multiple paths between two nodes \mbox{$A\to B$}. For a particular cost metric, the cost of an entire route is simply the sum of the costs of each of the constituent links,
 \begin{definition}[Route costs]
-The net cost of a route \mbox{$A\to B$}, traversing nodes $v_i$, is,
+The net cost of a route \mbox{$A\to B$}, using cost metric $c(A\to B)$, traversing nodes $v_i$, is,
 \begin{align}\index{Route costs}
 c(R_{A\to B}) = \sum_{i=1}^{|R_{A\to B}|-1} c(v_i \to v_{i+1}),
 \end{align}
