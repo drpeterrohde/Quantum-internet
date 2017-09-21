@@ -2,7 +2,7 @@
 % Protocols for the Quantum Internet
 %
 
-\section{Protocols for the quantum internet} \label{sec:protocols_quant_int} \index{Protocols for quantum networks}
+\section{Protocols for the quantum internet} \label{sec:protocols_quant_int} \index{Protocols for quantum networks}\index{Low-level protocols}\index{High-level protocols}
 
 There are countless applications for the long-distance communication and processing of quantum data. We will outline some of the most notable examples. Broadly, we will begin with discussion of \textit{low-level protocols} that form the primitives upon which other protocols are built. We will then progressively move towards \textit{high-level protocols}, culminating with full \textit{cloud quantum computing}.
 
@@ -13,6 +13,8 @@ We keep in mind that although throughout this presentation we have been very qua
 At the lowest physical level, quantum protocols have in common that they involve state preparation, evolution, and measurement as the fundamental primitives upon which more complex protocols are constructed. We consider these primitive resources in detail, before building upon them to consider some of the major elementary quantum protocols that implement tasks of practical interest. All of those discussed here have been subject to extensive experimental investigation and demonstration, which will be summarised in Sec.~\ref{sec:state_of_the_art}. We treat full quantum computation separately in Secs.~\ref{sec:models_QC} \& \ref{sec:archs_QC}, as this is such an involved topic in its own right.
 
 We will employ circuit model diagrams when describing some protocols. The unfamiliar reader may refer to Sec.~\ref{sec:circuit_model} for a very brief introduction to quantum circuits.
+
+Throughout this section the material will be optics-heavy, and not include discussion of some purely non-optical architectures, based on the reasonable assumption that networked quantum protocols will be optically mediated.
 
 %
 % State Preparation
@@ -847,19 +849,42 @@ Each Bell measurement can be implemented non-deterministically using a PBS, miti
 
 \subsubsection{Quantum key distribution (QKD)} \label{sec:QKD} \index{Quantum key distribution (QKD)}
 
-Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. There is only a single provably secure encryption protocol -- the \textit{one-time-pad} \cite{bib:Schneier96}. This protocol requires Alice and Bob to share a random bit-string as long as the message (plaintext) being communicated between them. The two bit-strings undergo bit-wise XOR operations to form the ciphertext. Mathematically,\index{One-time-pad cipher}
+Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}.  The demand for secure cryptography is now extremely important in the context of electronic commerce and general security of information transmission in the internet age. Electronic currencies such as Bitcoin\index{Bitcoin} depend on cryptographic protocols in order to secure the value of assets, assign ownership certificates\index{Owner certificates}, and secure the currency against fraud. However such protocols are based upon the computational complexity of certain mathematical problems (\textit{computational security}\index{Computational security}), and are not fundamentally secure in the presence of limitless computational resources, or quantum computers. Therefore, using quantum mechanical protocols based on physical principles (\textit{information-theoretic security}\index{Information-theoretic security}) rather than computational limitations, are favorable in the sense of future-proofing security.
+
+Quantum key distribution (QKD) is a relatively mature technology with already several commercial systems being available off-the-shelf. The main drawback is thus the ability to perform long-distance transmission of photons. For these reasons, current QKD networks have been limited to relatively small distances, on the order of $\sim100$km, including in Austria, Switzerland, Japan, USA, and China \cite{bib:lo2014secure}. The longest distance QKD network that is currently planned is the Beijing to Shanghai QKD link spanning a distance of 2000km. This involves 32 trusted nodes\index{Trusted node} to break the total distance into shorter segments to convert the quantum information to classical information.  
+
+Utilizing space communications for the purpose of QKD has been discussed in several works \cite{bib:hughes2000quantum, bib:rarity2002ground, bib:pfennigbauer2003free, bib:aspelmeyer2003long, bib:armengol08}. As already demonstrated in space-based entanglement experiments \cite{bib:yin2017satellite, bib:ren2017ground, bib:liao2017satellite} far lower attenuation rates are possible than ground-only approaches. Since cryptography schemes such as BB84\index{BB84} do not require entanglement, these would appear to be the first widespread commercial application for quantum technologies.  
+
+The ready realisability of space based QKD was already noted in a variety of configurations including ground-to-space\index{Ground-to-space} and space-to-ground\index{Space-to-ground} quantum communication \cite{bib:rarity2002ground, bib:aspelmeyer2003long}. In the context of security, the first long-distance experiments that are likely to be demonstrated will employ trusted nodes\index{Trusted nodes}. For example, after performing QKD between satellite\index{Satellites} and ground stations, a satellite could store the key for some time until another QKD can be performed to another ground station\index{Ground stations} using a one-time pad\index{One-time-pad cipher} \cite{bib:liao2017satellite}. These types of experiments are planned to eventually perform intercontinental QKD\index{Intercontinental QKD} between China and Austria.  
+
+%
+% One-Time Pad
+%
+
+\paragraph{One-time pad}\index{One-time pad}
+
+
+\comment{Repetition}
+
+We now turn our attention to the technical implementation of QKD and its perfect security. There is only a single provably secure encryption protocol -- the \textit{one-time-pad}\index{One-time pad cipher} \cite{bib:Schneier96}. This protocol requires Alice and Bob to share a random bit-string as long as the message (plaintext\index{Plaintext}) being communicated between them. The two bit-strings undergo bit-wise XOR operations to form the ciphertext\index{Ciphertext}. Mathematically,\index{One-time-pad cipher}
 \begin{align}
 c = s \oplus k,
 \end{align}
 where $\oplus$ is the bitwise XOR operation (equivalently addition modulo 2), and $c$, $s$ and $k$ are the ciphertext, plaintext and key strings respectively, all of which are of the same length, \mbox{$|c|=|s|=|k|$}.
 
-The security of this protocol is easy to see intuitively -- with an appropriate choice of key, \textit{any} plaintext of the same length could be inferred from the ciphertext. This means that there is no possibility of performing any kind of frequency analysis, as the ciphertext string has maximum entropy (inherited from the maximum entropy of the key) and thus no correlations. Alternately, suppose we were to try and crack this code by expressing the decryption as an oracle, where the input is a key bit-string. Then we use brute-force (or Grover's algorithm) to query the oracle for tagged elements, where by `tagged' we mean that it satisfies an appropriate test (e.g an English language test) to decide whether a decrypted message is valid. Since every possible valid plaintext can be recovered using an appropriate key, the protocol is unable to find a unique plaintext matching the ciphertext.
+The security of this protocol is easy to see intuitively -- with an appropriate choice of key, \textit{any} plaintext of the same length could be inferred from the ciphertext. This means that there is no possibility of performing any kind of frequency analysis, as the ciphertext string has maximum entropy\index{Entropy} (inherited from the maximum entropy of the key, and assuming a strong cryptographic random number random bit generator) and thus no correlations. Alternately, suppose we were to try and crack this code by expressing the decryption as an oracle, where the input is a key bit-string. Then we use brute-force\index{Brute force} (or Grover's algorithm) to query the oracle for tagged elements, where by `tagged' we mean that it satisfies an appropriate test (e.g an English language test) to decide whether a decrypted message is valid. Since every possible valid plaintext can be recovered using an appropriate key, the protocol is unable to find a unique plaintext matching the ciphertext.
 
-Importantly, the secrecy of the one-time-pad strictly requires that a key never be reused. A fresh key must be generated for each message sent, otherwise trivial frequency analysis techniques can be employed to compromise security\footnote{If the same key $k$ is used to encode two messages $s_1$ and $s_2$, yielding ciphertexts \mbox{$c_1=s_1\oplus k$} and \mbox{$c_2=s_2\oplus k$}, then we trivially obtain \mbox{$c_1 \oplus c_2 = s_1 \oplus k \oplus s_2 \oplus k = s_1 \oplus s_2$}. Now a frequency analysis on the bitwise XOR of two plaintexts can be applied, without requiring any knowledge of the key whatsoever.}.
+Importantly, the secrecy of the one-time-pad\index{One-time-pad} strictly requires that a key never be reused. A fresh key must be generated for each message sent, otherwise trivial frequency analysis\index{Frequency analysis} techniques can be employed to compromise security\footnote{If the same key $k$ is used to encode two messages $s_1$ and $s_2$, yielding ciphertexts \mbox{$c_1=s_1\oplus k$} and \mbox{$c_2=s_2\oplus k$}, then we trivially obtain \mbox{$c_1 \oplus c_2 = s_1 \oplus k \oplus s_2 \oplus k = s_1 \oplus s_2$}. Now a frequency analysis on the bitwise XOR of two plaintexts can be applied, without requiring any knowledge of the key whatsoever.}.
 
-Needless to say, the requirement for keys of the same length as the plaintexts, which cannot be reused, raises the obvious criticism that now secret key-sharing is as difficult as sharing a secret message in the first place. This reduces the problem of perfect secrecy of arbitrary messages to the secrecy of shared randomness. Quantum key distribution (QKD) protocols enable this by providing a shared source of randomness between Alice and Bob, where any intercept-resend attack may be detected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle and no-cloning theorem).
+Needless to say, the requirement for keys of the same length as the plaintexts, which cannot be reused, raises the obvious criticism that now secret key-sharing is as difficult as sharing a secret message in the first place. This reduces the problem of perfect secrecy of arbitrary messages to the secrecy of shared randomness. QKD protocols enable this by providing a shared source of randomness between Alice and Bob, where any intercept-resend attack\index{Intercept-resend attack} (man-in-the-middle attack\index{Man-in-the-middle attack})\index{Man-in-the-middle attack} may be detected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle\index{Heisenberg uncertainty principle} and no-cloning theorem\index{No-cloning theorem}).
 
-The two original QKD protocols, known as the \textit{BB84} \cite{bib:BennetBrassard84}\index{BB84 QKD protocol}, and \textit{E91} \cite{bib:Ekert91}\index{E91 QKD protocol} protocols, are based on polarisation encoding in photons. BB84 requires only the transmission of a sequence of single photons, polarisation encoded with random data. E91, on the other hand, requires a server that distributes entangled Bell-pairs between Alice and Bob. Since then, numerous other protocols for QKD have been proposed, for example, using CV states.
+%
+% BB84 & E91
+%
+
+\paragraph{BB84 \& E91}
+
+The two original QKD protocols, known as the \textit{BB84} \cite{bib:BennetBrassard84}\index{BB84 QKD protocol}, and \textit{E91} \cite{bib:Ekert91}\index{E91 QKD protocol} protocols, are based on polarisation encoding in photons. BB84 requires only the transmission of a sequence of single photons, polarisation-encoded\index{Polarisation encoding} with random data. E91, on the other hand, requires a server that distributes entangled Bell-pairs between Alice and Bob. Since then, numerous other protocols for QKD have been proposed, for example, using CV (ontinuous variable) states\index{Continuous variable QKD}.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\texttt{ 
@@ -888,20 +913,24 @@ or,
 \item Alice and Bob sacrifice some of their bits by publicly communicating them to check for consistency. This rules out intercept-resend attacks.
 \item Privacy amplification may be used to distill the partially compromised key into a shorter but more secret one.
 \end{enumerate}}}}
-\caption{BB84 QKD protocol using polarisation-encoded photons. Upon completion of the protocol, Alice and Bob share a random bit-string. Suppose an eavesdropper, Eve, were to perform an intercept-resend attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of bases, and Eve will not know the bases in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. By sacrificing a some of their shared bits, via openly communicating them to one another for comparison, such an attack will be detected. Thus, Alice and Bob have great confidence that they have a shared, secret, random bit-string, which may subsequently be employed in a one-time-pad.} \label{alg:bb84}
+\caption{BB84 QKD protocol using polarisation-encoded\index{Polarisation encoding} photons. Upon completion of the protocol, Alice and Bob share a random bit-string. Suppose an eavesdropper, Eve, were to perform an intercept-resend\index{Intercept-resent attack} attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of bases, and Eve will not know the bases in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. By sacrificing a some of their shared bits, via openly communicating them to one another for comparison, such an attack will be detected with asymptotically high security. Thus, Alice and Bob have great confidence that they have a shared, secret, random bit-string, which may subsequently be employed in a one-time-pad.\index{One-time-pad}}\label{alg:bb84}
 \end{table}
-
-The BB84 protocol is described in Alg.~\ref{alg:bb84}. A key observation is that it requires no entanglement, no mode-matching, no interference, and no interferometric stability. It can be realised using nothing more than a single-photon source, wave-plates, and a photo-detector. For these reasons, QKD is a technology that is entirely viable on a large scale using present-day technology.
 
 E91 is slightly different. Here Alice and Bob share an entangled Bell-pair provided by a central authority. Then both Alice \textit{and} Bob measure their qubits in random bases. As with BB84, after measuring all qubits, they compare their choices of random bases. When they coincide, they have a shared bit. When they don't, they discard their result. From here the remainder of the protocol is the same as for BB84.
 
-Like BB84, E91 has no mode-matching or interferometric stability requirements, and Alice and Bob both only require single-photon detection. Unlike BB84, however, E91 requires a central authority that is able to prepare entanglement on-demand as a resource.
+\comment{Explain E91 in detail}
 
-Importantly, unlike classical cryptographic protocols, QKD makes no assumptions about the computational complexity of inverting encoding algorithms. The protocol is information theoretically secure, and therefore no physically realisable computer, even a quantum computer, can compromise it. Thus, usual cryptanalytic techniques, like linear and differential cryptanalysis \cite{bib:Schneier96}, or the ability to factor large numbers, that are employed to attack other encryption protocols, do not compromise QKD.
+\comment{What's the other QKD protocol? Include it}
+
+Like BB84, E91 has no mode-matching\index{Mode-matching} or interferometric stability\index{Interferometric stability} requirements, and Alice and Bob both only require single-photon detection. Unlike BB84, however, E91 requires a central authority that is able to prepare entanglement on-demand as a resource.
+
+Importantly, unlike classical cryptographic protocols, QKD makes no assumptions about the computational complexity of inverting encoding algorithms. The protocol is information theoretically secure\index{Information-theoretic security}, and therefore no physically realisable computer, even a quantum computer, can compromise it. Thus, usual cryptanalytic techniques, like linear and differential cryptanalysis \cite{bib:Schneier96}\index{Linear cryptanalysis}\index{Differential cryptanalysis}, or the ability to factor large numbers, that are employed to attack other encryption protocols, do not compromise QKD.
 
 It is easy to see the utility of quantum networks in enabling commodity deployment of QKD -- users desire to communicate photons across long-range ad hoc networks, with low loss and dephasing. A global quantum internet would allow quantum cryptography to truly supersede classical cryptography, bypassing the vulnerabilities faced by classical cryptography in the era of quantum computing.
 
-QKD has been widely experimentally demonstrated over long distances \cite{bib:Muller96}, and unlike quantum computing, QKD is at the stage of commercial viability, with several vendors offering off-the-shelf plug-and-play QKD systems. Thus, a quantum internet with low cost metrics would already find substantial utility with today's technology. Currently, great progress in being made in the implementation of QKD in fibre \cite{???}, over free space \cite{bib:Buttler00}, and even over intercontinental satellite uplinks \cite{JWP}. It seems extremely likely that some government agencies would be rolling out QKD systems \cite{bib:Secret}, especially in light of the paranoia surrounding quantum codebreaking.
+QKD has been widely experimentally demonstrated over long distances \cite{bib:Muller96}, and unlike quantum computing, QKD is at the stage of commercial viability, with several vendors offering off-the-shelf plug-and-play QKD systems. Thus, a quantum internet with low cost metrics would already find substantial utility with today's technology. Currently, great progress in being made in the implementation of QKD in fibere \cite{???}, over free space \cite{bib:Buttler00}, and even over intercontinental satellite uplinks \cite{JWP}. It seems extremely likely that some government agencies would be rolling out QKD systems \cite{bib:Secret}, especially in light of the paranoia surrounding quantum codebreaking.
+
+In Sec.~\ref{sec:state_of_the_art} we summarise the state-of-the-art in the physical implementation of QKD.
 
 %
 % Quantum Anonymous Broadcasting
@@ -923,7 +952,7 @@ QKD has been widely experimentally demonstrated over long distances \cite{bib:Mu
 
 \emph{Superdense coding} is a communications protocol, which utilises shared entanglement between two parties to increase the rate at which classical information may be transmitted between them.
 
-Suppose Alice wishes to send classical information to Bob over a quantum channel. The HSW Theorem \cite{bib:holevo1998capacity, bib:schumacher1997sending} tells us that Alice can send information to Bob at a maximum rate of one bit per qubit. However, if Alice and Bob share Bell-pairs, superdense coding allows information to be transmitted at a maximum rate of two bits per qubit.
+Suppose Alice wishes to send classical information to Bob over a quantum channel. The HSW Theore\index{HSW theorem}\cite{bib:holevo1998capacity, bib:schumacher1997sending} tells us that Alice can send information to Bob at a maximum rate of one bit per qubit. However, if Alice and Bob share Bell-pairs, superdense coding allows information to be transmitted at a maximum rate of two bits per qubit.
 
 Let Alice and Bob begin with the shared Bell state,
 \begin{align}
@@ -1008,7 +1037,7 @@ In this simple example scenario it is immediately clear that QPT of new links in
 % Quantum Clock Synchronisation
 %
 
-\subsubsection{Quantum clock synchronisation} \index{Quantum clock synchronisation}
+\subsubsection{Quantum clock synchronisation} \index{Quantum clock synchronisation}\label{sec:clock_sync}
 
 \comment{To do!}
 
