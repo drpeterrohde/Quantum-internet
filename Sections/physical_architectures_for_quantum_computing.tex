@@ -64,7 +64,7 @@ Significant progress is being made on reconfigurable, integrated LOQC devices \c
 Sec.~\ref{sec:opt_stab}
 Sec.~\ref{sec:module}
 
-\comment{To do!}
+\comment{To do! Talk about different gate types. Show update table. Reference from fusion strategies section.}
 
 %
 % Fusion Gates
@@ -77,16 +77,16 @@ As introduced in Sec.~\ref{sec:CSQC}, a cluster state may be defined by the acti
 It was then noted \cite{BrowneRudolph} that CZ gates aren't required at all for the preparation of optical cluster states. Instead, parity measurements (Sec.~\ref{sec:bell_proj}) operating in a rotated basis may be used to fuse smaller cluster states into larger ones, albeit acting destructively on two of the qubits, and also being non-deterministic, with a success probability of $1/2$. These gates have become known as \textit{fusion gates}, of which there are two types:
 \begin{itemize}
 	\item Type-I: destroy only a single photon, but require efficient number-resolved detection.
-	\item Type-II: destroy two photons, but only require on/off detectors.
+	\item Type-II: destroy two photons, but only require on/off detectors, since the gate succeeds upon coincidence events only.
 \end{itemize}
 Both types of gates have several highly favourable characteristics:
 \begin{itemize}
 	\item Only HOM stability is required (Sec.~\ref{sec:opt_stab}). At no stage in the cluster state preparation procedure is any interferometric (i.e wavelength-scale) stability required.
 	\item Gate failure is heralded by measurement of the wrong photon-number.
-	\item Gate failure measures the respective qubits in the computational basis, thereby simply removing those qubits from the cluster state graph, whilst preserving the remainder of the state.
+	\item Gate failure measures the respective qubits in the computational basis, thereby simply removing those qubits from the cluster state graph, whilst preserving the remainder of the state, which can be `recycled'\index{Cluster state recycling} for reuse.
 \end{itemize}
 
-\comment{To do!}
+\comment{To do! Picture}
 
 %
 % Fusion Strategies
@@ -94,9 +94,29 @@ Both types of gates have several highly favourable characteristics:
 
 \subsubsection{Fusion strategies} \index{Cluster state fusion strategies}
 
-Despite their non-determinism, numerous authors have examined approaches for efficiently preparing arbitrarily large cluster states using these destructive, non-deterministic gates.
+Despite their non-determinism, numerous authors have examined approaches for efficiently preparing arbitrarily large cluster states using these destructive, non-deterministic gates \cite{???}. We will now briefly sketch out the formalism introduced by \cite{bib:RohdeBarrett07} for performing a theoretical analysis of such cluster state preparation schemes. This formalism was initially only presented in the context of linear clusters. However, these act as a primitive resource from which less trivial clusters may be constructed, such as rectangular lattices, which are universal for MBQC.
 
-\comment{To do!}
+Consider a non-deterministic KLM-type CZ gate\footnote{In reality, no one would use KLM-type gates for preparing cluster states, owing to their complexity compared to fusion gates. Rather, we use this gate for illustrative purposes, since its operation upon success and failure are very simple for exposition.}, which upon failure destroys its two input photons by measuring them in the computational basis, and leaves the number of qubits unchanged upon success and bonds them together.
+
+To analyze the operation of such a non-deterministic protocol, we begin by defining a vector $\vec{n}_t$ at time $t$, which stores purely classical information. Specifically, the vector tells us how many clusters of every length we have stored in memory (except single qubit clusters, which we assume `come for free'). For example, the second element of the vector tell us how many 3-qubit linear clusters we have in our possession.
+
+We then define a strategy, $f_s$\index{Fusion strategies}, for choosing clusters we have stored and bonding them together to form larger clusters. Note that a key result from this study was that different strategies are hugely different in their ability to prepare long clusters. The strategy acts on our cluster vector and updates it accordingly,
+\begin{align}\index{Fusion strategy update rules}
+\vec{n}_{t+1} = f_s(\vec{n}_t).
+\end{align}
+That is, the length vector can be thought of as a series of `buckets' containing clusters of different lengths, and the strategy simply shifts the contents of the buckets around between buckets each time it is applied.
+
+The strategy description, $f_s$, is also responsible for taking care of updating the elements of $\vec{n}$ according to an update rule, which dictates how many photons are lost or gained upon success or failure of the non-deterministic gate. For example, the CZ gate we have employed here for our toy model destroys two qubits upon failure, but upon success creates a cluster of length given by the sum of the lengths of the clusters acted upon by the gate.
+
+We are then interested in the `rate'\index{Cluster state preparation rate}, $r$, at which large clusters are output from the protocol. This is simply extracted by defining a single parameter which counts the number of clusters in $\vec{n}$ above some predetermined target length, and normalises it by the total time taken to reach that point. The rate parameter converges asymptotically for long runtimes. Formally, the rate of preparation is given by,
+\begin{align}
+r = \lim_{t\to\infty} \frac{N_t}{t},
+\end{align}
+where $N_t$ is the total number of clusters of length greater than the target length at time $t$.
+
+This completes the theoretical analysis for different strategies and gate types, allowing us to explore different approaches tailored to different physical systems and their varying gate implementations.
+
+One of the key outcomes of this research was that a {\sc Balanced} strategy\index{Balanced strategy} is optimal in terms of preparation rate. This is simply a strategy which preferentially always bonds clusters of equal length.
 
 %
 % Advantages
