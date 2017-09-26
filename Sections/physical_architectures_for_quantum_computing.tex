@@ -70,7 +70,7 @@ Sec.~\ref{sec:module}
 % Fusion Gates
 %
 
-\subsubsection{Fusion gates} \index{Cluster state fusion gates}
+\subsubsection{Fusion gates} \index{Fusion gates}
 
 As introduced in Sec.~\ref{sec:CSQC}, a cluster state may be defined by the action of CZ gates upon a graph of qubits initialised into the $\ket{+}$ state. As we saw in the previous section, implementing these CZ gates is troublesome using linear optics, as it is non-deterministic and carries the burden of a large resource overhead. Nonetheless, it was shown early on \cite{NielsenOptCS} that by combining non-deterministic CZ gates with the cluster state formalism yields LOQC protocols far more efficient than the original KLM protocol for LOQC.
 
@@ -86,7 +86,12 @@ Both types of gates have several highly favourable characteristics:
 	\item Gate failure measures the respective qubits in the computational basis, thereby simply removing those qubits from the cluster state graph, whilst preserving the remainder of the state, which can be `recycled'\index{Cluster state recycling} for reuse.
 \end{itemize}
 
-\comment{To do! Picture}
+The explicit construction of the linear optics fusion gates is shown in Fig.~\ref{fig:fusion_gates}.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.8\columnwidth]{fusion_gates}
+\caption{Linear optics cluster state fusion gates for polarisation-encoded photons. Both type-I and type-II gates employ a single polarising beamsplitter to mediate the entangling measurement. The black bars represent Hadamard gates in the polarisation basis. The type-I gate only measures a single photon, the other freely exiting the gate, which forms a part of the final cluster state. The type-II gate consumes two photons. Because the type-I gate does not measure in coincidence, as per the type-II gate, it requires number-resolved photo-detection, whereas bucket detectors suffice for the type-II gate.} \label{fig:fusion_gates}	
+\end{figure}
 
 %
 % Fusion Strategies
@@ -94,7 +99,19 @@ Both types of gates have several highly favourable characteristics:
 
 \subsubsection{Fusion strategies} \index{Cluster state fusion strategies}
 
-Despite their non-determinism, numerous authors have examined approaches for efficiently preparing arbitrarily large cluster states using these destructive, non-deterministic gates \cite{???}. We will now briefly sketch out the formalism introduced by \cite{bib:RohdeBarrett07} for performing a theoretical analysis of such cluster state preparation schemes. This formalism was initially only presented in the context of linear clusters. However, these act as a primitive resource from which less trivial clusters may be constructed, such as rectangular lattices, which are universal for MBQC.
+Despite their non-determinism, numerous authors have examined approaches for efficiently preparing arbitrarily large cluster states using these destructive, non-deterministic gates \cite{nielsen, kieling, rohdebarrett, kokBuffer, ???}. 
+
+\comment{These principles can be extended beyond LO to other schemes where entangling gates are inherently non-deterministic or sometimes fail in a heralded manner. E.g hybrid architectures (Sec.~\ref{sec:hybrid}), where a beamsplitter mediates entanglement via which-path erasure, but only sucessfully projects onto an entangled state with probability 1/2.}
+
+%
+% Linear Clusters
+%
+
+\paragraph{Linear clusters}\index{Linear cluster states}
+
+\comment{Enhance intro}
+
+We will now briefly sketch out the formalism introduced by \cite{bib:RohdeBarrett07} for performing a theoretical analysis of such cluster state preparation schemes. This formalism was initially only presented in the context of linear clusters. However, these act as a primitive resource from which less trivial clusters may be constructed, such as rectangular lattices, which are universal for MBQC.
 
 Consider a non-deterministic KLM-type CZ gate\footnote{In reality, no one would use KLM-type gates for preparing cluster states, owing to their complexity compared to fusion gates. Rather, we use this gate for illustrative purposes, since its operation upon success and failure are very simple for exposition.}, which upon failure destroys its two input photons by measuring them in the computational basis, and leaves the number of qubits unchanged upon success and bonds them together.
 
@@ -112,19 +129,41 @@ We are then interested in the `rate'\index{Cluster state preparation rate}, $r$,
 \begin{align}
 r = \lim_{t\to\infty} \frac{N_t}{t},
 \end{align}
-where $N_t$ is the total number of clusters of length greater than the target length at time $t$.
+where $N_t$ is the total number of clusters of length greater than the target length at time $t$. The preparation rate is bounded by \mbox{$0\leq r\leq1$}.
 
 This completes the theoretical analysis for different strategies and gate types, allowing us to explore different approaches tailored to different physical systems and their varying gate implementations.
 
 One of the key outcomes of this research was that a {\sc Balanced} strategy\index{Balanced strategy} is optimal in terms of preparation rate. This is simply a strategy which preferentially always bonds clusters of equal length.
 
+\comment{These form a resource for more elaborate topology constructions}
+
+%
+% Lattice Clusters
+%
+
+\paragraph{Lattice clusters}\index{Lattice cluster states}
+
+\comment{To do!}
+
+\comment{Stars, pluses, snowflakes}
+
+\comment{Error teleportation upon measuring out leftover qubits}
+
+%
+% On-Demand Cluster State Preparation
+%
+
+\paragraph{On-demand cluster state preparation}\index{On-demand cluster state preparation}
+
+\comment{To do!}
+
 %
 % Advantages
 %
 
-\subsubsection{Advantages} \index{Cluster state advantages}
+\subsubsection{Advantages}\index{Cluster state advantages}
 
-\comment{To do!}
+\comment{To do! Talk about efficiency}
 
 %
 % Weak Cross-Kerr Non-Linearities
@@ -294,6 +333,12 @@ which exhibits only polynomial scaling against photon-number $n$, and is therefo
 
 \subsubsection{Other linear optics sampling problems} \label{sec:other_LO_samp_probs} \index{Linear optics sampling problems}
 
+%
+% Hard Problems
+%
+
+\paragraph{Hard problems}\index{Hard linear optics sampling problems}
+
 In addition to photonic \textsc{BosonSampling}, several authors have presented strong evidence that other classes of quantum states of light exist, which yield computationally complex sampling problems under the action of linear optics. Most notably, such evidence has been provided for the following:
 \begin{itemize}
 \item \cite{bib:RandBS} considered two-mode squeezed vacuum (or SPDC) states, a type of Gaussian state with strictly positive Wigner function. This is the same as the scattershot model presented in Sec.~\ref{sec:BS}.\index{Two-mode squeezed vacuum states}\index{Gaussian states}
@@ -321,6 +366,14 @@ Preparation of all of these classes of quantum states of light present their own
 On the other hand, some classes of optical states are known to be efficiently classically simulable under linear optics evolution and photo-detection. This includes coherent states, thermal states, or any state with strictly positive $P$-function\footnote{A strictly positive $P$-function implies that the state can be considered a purely classical mixture of coherent states (each of which are classically efficient to simulate), according to some probability distribution.} (Sec.~\ref{sec:exotic}) \cite{bib:SalehQOCCC15, bib:SalehEffSim16}. Furthermore, Gaussian states evolved via linear optics and measured using Gaussian measurements have been shown to be computationally easy to simulate \cite{bib:Bartlett02, bib:Bartlett02b}.
 
 \comment{Cite Saleh/Carlton paper on most optical states generating entanglement. Is it exponential entanglement? If so, is this a necessary but not sufficient condition for computational complexity.}
+
+%
+% Easy Problems
+%
+
+\paragraph{Easy problems}\index{Easy linear optics sampling problems}
+
+\comment{Cite Saleh/Ralph etc on positivity of P-function}
 
 %
 % Quantum Walks
@@ -449,7 +502,7 @@ Equivalently, this could simply be expressed as the matrix equation,
 Of course this is not strictly a \textit{quantum} computation, since:
 \begin{itemize}
 \item It can be efficiently classically computed using $O(m^2)$ operations\footnote{Using the na\"ive element-wise approach, which can be further improved upon using more sophisticated contemporary algorithms.}, thus residing in \textbf{P}\index{\textbf{P} \& \textbf{BPP}}.
-\item Coherent states are considered classical states (i.e laser light).
+\item Coherent states are considered classical states (i.e laser light) with strictly positive Wigner functions\index{Wigner function}.
 \item There is no entanglement between modes.
 \item The algorithm offers no quantum speedup.
 \end{itemize}
@@ -457,6 +510,16 @@ Of course this is not strictly a \textit{quantum} computation, since:
 Despite offering no direct quantum advantage, we introduce this model for restricted computation, since it lends itself very elegantly to a form of homomorphic encryption, to be described in detail in Sec.~\ref{sec:homo_coherent_state}.
 
 The applications for matrix multiplication needn't be stated, as it forms such a ubiquitous elementary primitive throughout linear algebra and in solving systems of differential equations, with applications too many to count.
+
+%
+% Quantum Error Correction of Passive Unitary Errors
+%
+
+\subsubsection{Quantum error correction of passive unitary errors}\index{Quantum error correction (QEC)}\index{Error averaging}\label{sec:error_averaging}
+
+\comment{Marshman error averaging}
+
+\comment{Redundant copies could in principle be distributed}
 
 %
 % Continuous Variables
