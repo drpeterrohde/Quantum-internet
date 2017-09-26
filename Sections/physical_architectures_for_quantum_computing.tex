@@ -335,10 +335,47 @@ which exhibits only polynomial scaling against photon-number $n$, and is therefo
 \end{figure}
 
 %
+% Coherent States
+%
+
+\subsubsection{Coherent states} \label{sec:coherent_state_QC} \index{Coherent state computation}
+
+A linear optics network acting on a tensor product of coherent state inputs implements simple matrix multiplication\index{Matrix multiplication} on the vector of coherent amplitudes. Specifically, Eq.~(\ref{eq:LO_unitary_map}) implies that for the input multi-mode coherent state,
+\begin{align}
+\ket{\psi}_\text{in} = \ket{\vec\alpha} = \ket{\alpha_1,\dots,\alpha_m},
+\end{align}
+where $\alpha_i$ is the coherent amplitude of the $i$th mode, the linear map now takes the form,
+\begin{align}
+\beta_i = \sum_{j=1}^m U_{i,j} \alpha_j,
+\end{align}
+where the output state is the separable multi-mode coherent state,
+\begin{align}
+\ket{\psi}_\text{out} = \ket{\vec\beta} = \ket{\beta_1,\dots,\beta_m}.
+\end{align}
+Equivalently, this could simply be expressed as the matrix equation,
+\begin{align}\label{eq:coherent_state_LO_map}
+\vec{\beta} = U\cdot\vec{\alpha}.
+\end{align}
+
+Of course this is not strictly a \textit{quantum} computation, since:
+\begin{itemize}
+\item It can be efficiently classically computed using $O(m^2)$ operations\footnote{Using the na\"ive element-wise approach, which can be further improved upon using more sophisticated contemporary algorithms.}, thus residing in \textbf{P}\index{\textbf{P} \& \textbf{BPP}}.
+\item Coherent states are considered classical states (i.e approximated by laser light\index{Laser light}) with strictly positive Wigner and $P$-functions\index{Wigner function}\index{$P$-function}.
+\item There is no entanglement between modes.
+\item The algorithm offers no quantum speedup.
+\end{itemize}
+
+Despite offering no direct quantum advantage, we introduce this model for restricted computation, since it lends itself very elegantly to a form of homomorphic encryption, to be described in detail in Sec.~\ref{sec:homo_coherent_state}.
+
+The applications for matrix multiplication needn't be stated, as it forms such a ubiquitous elementary primitive throughout linear algebra and in solving systems of differential equations, with applications too many to count.
+
+%
 % Other Linear Optics Sampling Problems
 %
 
 \subsubsection{Other linear optics sampling problems} \label{sec:other_LO_samp_probs} \index{Linear optics sampling problems}
+
+Beyond photonic {\sc BosonSampling}, much investigation has explored the computational hardness of other types of linear optics sampling problems, using states beyond just single photons.
 
 %
 % Hard Problems
@@ -370,15 +407,53 @@ In addition to photonic \textsc{BosonSampling}, several authors have presented s
 
 Preparation of all of these classes of quantum states of light present their own technological challenges, some very daunting, and all much harder to prepare than single-photons. Thus, the ability to outsource their preparation would be a useful application for the quantum cloud.
 
-On the other hand, some classes of optical states are known to be efficiently classically simulable under linear optics evolution and photo-detection. This includes coherent states, thermal states, or any state with strictly positive $P$-function\footnote{A strictly positive $P$-function implies that the state can be considered a purely classical mixture of coherent states (each of which are classically efficient to simulate), according to some probability distribution.} (Sec.~\ref{sec:exotic}) \cite{bib:SalehQOCCC15, bib:SalehEffSim16}. Furthermore, Gaussian states evolved via linear optics and measured using Gaussian measurements have been shown to be computationally easy to simulate \cite{bib:Bartlett02, bib:Bartlett02b}.
-
-\comment{Cite Saleh/Carlton paper on most optical states generating entanglement. Is it exponential entanglement? If so, is this a necessary but not sufficient condition for computational complexity.}
-
 %
 % Easy Problems
 %
 
-\paragraph{Easy problems}\index{Easy linear optics sampling problems}
+\paragraph{Easy problems}\label{sec:easy_LO_probs}\index{Easy linear optics sampling problems}
+
+On the other hand, some classes of optical states are known to be efficiently classically simulable under linear optics evolution and photo-detection. This includes coherent states, thermal states, or any state with strictly positive $P$-function\footnote{A strictly positive $P$-function implies that the state can be considered a purely classical mixture of coherent states (each of which are classically efficient to simulate), according to some classical probability distribution.} (Sec.~\ref{sec:exotic}) \cite{bib:SalehQOCCC15, bib:SalehEffSim16}. Furthermore, Gaussian states evolved via linear optics and measured using Gaussian measurements have been shown to be computationally easy to simulate \cite{bib:Bartlett02, bib:Bartlett02b}.
+
+While such negative results might be somewhat depressing, it is extremely insightful to understand these regimes, in the interest of avoiding investing excrutiating effort into trying to instead fruitlessly prove that they are hard.
+
+\comment{Cite Saleh/Carlton paper on most optical states generating entanglement. Is it exponential entanglement? If so, is this a necessary but not sufficient condition for computational complexity.}
+
+The simplest example of an easy such problem is coherent state linear optics\index{Coherent state linear optics}, as discussed in Sec.~\ref{sec:coherent_state_QC}. Taking this notion further, recall from Sec.~\ref{sec:exotic} that one of the phase-space\index{Phase-space} representations for generic optical states is the $P$-function\index{$P$-function}, which represents a density operator as a sum over coherent state,
+\begin{align}
+\hat\rho = \int\!\!\!\int P(\alpha) \ket{\alpha}\bra{\alpha} d^2\alpha.
+\end{align}
+Here $P(\alpha)$ is a quasi-probability function\index{Quasi-probability function}. Importantly, iff the $P$-function is strictly non-negative, \mbox{$P(\alpha)\geq 0 \,\,\forall \,\alpha$}, the optical state may be trivially interpreted as a purely classical mixture of coherent states ($P(\alpha)$ would be a delta function for pure coherent states). If, on the other hand, the $P$-function exhibits negativity for any $\alpha$, this interpretation breaks down and is indicative of the state exhibiting non-classical\index{Non-classical states} behaviour.
+
+Alg.~\ref{alg:positive_P_sim} describes an efficient classical algorithm for simulating the output photo-statistics of a linear optics sampler fed with strictly non-negative $P$-function input states.
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function SimulatePositiveP($\vec{P}$):
+\begin{enumerate}
+	\item for(m$\in$modes) \{
+	\setlength{\itemindent}{0.2in}
+	\item Randomly choose a sample $\alpha_m$ from probability density function $P_m(\alpha)$\index{Probablity density function}.
+	\setlength{\itemindent}{0in}
+		\item \}
+		\item Evolve the set of input coherent states through the linear optics network,
+		\begin{align}
+		\vec\beta = U\cdot\vec\alpha.
+		\end{align}
+	\item for(m$\in$modes) \{
+	\setlength{\itemindent}{0.2in}
+	\item The probability of measuring $n$ photons in the $m$th mode is given by the distribution,
+	\begin{align}
+	D_{m,n} = e^{-\frac{|\beta_m|^2}{2}} \frac{{\beta_m}^n}{\sqrt{n!}}.
+	\end{align}
+	\item Choose $n$ from this distribution.
+	\setlength{\itemindent}{0in}
+	\item \}
+	\item return($\vec{n}$).
+    \item $\Box$
+\end{enumerate}}}}
+\caption{Efficient classical algorithm for simulating any linear optics sampling problem whose input states have strictly non-negative $P$-functions, with output measured via photon-counting. $\vec{P}$ is the vector of $P$-functions for all modes.} \label{alg:positive_P_sim}
+\end{table}
 
 \comment{Cite Saleh/Ralph etc on positivity of P-function}
 
@@ -484,41 +559,6 @@ It was shown by \cite{bib:RohdeMultiWalk11} that any such walk can be efficientl
 Because of the graph structure of the walk, it lends itself naturally to distributed implementation. We might imagine that different subgraphs -- or `widgets' \cite{bib:Lovett10, bib:Childs09} -- implement different computational primitives or subroutines. These widgets might be proprietary or expensive to implement, and are therefore best outsourced over a network.
 
 %
-% Coherent States
-%
-
-\subsubsection{Coherent states} \label{sec:coherent_state_QC} \index{Coherent state computation}
-
-A linear optics network acting on a tensor product of coherent state inputs implements simple matrix multiplication on the vector of coherent amplitudes. Specifically, Eq.~(\ref{eq:LO_unitary_map}) implies that for the input multi-mode coherent state,
-\begin{align}
-\ket{\psi}_\text{in} = \ket{\vec\alpha} = \ket{\alpha_1,\dots,\alpha_m},
-\end{align}
-where $\alpha_i$ is the coherent amplitude of the $i$th mode, the linear map now takes the form,
-\begin{align}
-\beta_i = \sum_{j=1}^m U_{i,j} \alpha_j,
-\end{align}
-where the output state is the separable multi-mode coherent state,
-\begin{align}
-\ket{\psi}_\text{out} = \ket{\vec\beta} = \ket{\beta_1,\dots,\beta_m}.
-\end{align}
-Equivalently, this could simply be expressed as the matrix equation,
-\begin{align}
-\vec{\beta} = U\cdot\vec{\alpha}.
-\end{align}
-
-Of course this is not strictly a \textit{quantum} computation, since:
-\begin{itemize}
-\item It can be efficiently classically computed using $O(m^2)$ operations\footnote{Using the na\"ive element-wise approach, which can be further improved upon using more sophisticated contemporary algorithms.}, thus residing in \textbf{P}\index{\textbf{P} \& \textbf{BPP}}.
-\item Coherent states are considered classical states (i.e laser light) with strictly positive Wigner functions\index{Wigner function}.
-\item There is no entanglement between modes.
-\item The algorithm offers no quantum speedup.
-\end{itemize}
-
-Despite offering no direct quantum advantage, we introduce this model for restricted computation, since it lends itself very elegantly to a form of homomorphic encryption, to be described in detail in Sec.~\ref{sec:homo_coherent_state}.
-
-The applications for matrix multiplication needn't be stated, as it forms such a ubiquitous elementary primitive throughout linear algebra and in solving systems of differential equations, with applications too many to count.
-
-%
 % Quantum Error Correction of Passive Unitary Errors
 %
 
@@ -542,18 +582,20 @@ Cat states
 Gaussian states
 
 %
-% Hybrid Architectures
+% Hybrid Light-Matter Architectures
 %
 
-\subsection{Hybrid architectures} \label{sec:hybrid} \index{Hybrid architectures}
+\subsection{Hybrid light-matter architectures} \label{sec:hybrid} \index{Hybrid light-matter architectures}
 
 It is unlikely that future, large-scale quantum computers will be purely optical. Some other technologies have a more favourable outlook in terms of scalability. Nonetheless, when it comes to networking quantum computers, optics is the natural approach, motivating investigation into hybrid architectures, where qubits are represented using some non-optical system, but entangling operations (EOs)\index{Entangling operations} between them are mediated by optical states and linear optics \cite{bib:Duan06, bib:Beugnon06}.
 
-The natural example is matter qubits which couple to single-photon states, whereupon which-path erasure between coupled optical modes teleports entanglement onto the physical matter qubits.\index{Which-path erasure} Similarly, measurement of the matter qubits may be performed by stimulating the emission of photons from them. This idea has been applied to $\lambda$-configuration atomic qubits \cite{bib:BarrettKok05}, shown in Fig.~\ref{fig:barrett_kok}, and atomic ensemble qubits \cite{bib:RohdeAtEns10} (Sec.~\ref{sec:atomic_ens}). The protocol is described in Alg.~\ref{alg:which_path}.
+The natural example is matter qubits which couple to single-photon states, whereupon which-path erasure between coupled optical modes teleports entanglement onto the physical matter qubits\index{Entanglement teleportation}.\index{Which-path erasure} Similarly, measurement of the matter qubits may be performed by stimulating the emission\index{Stimulated emission} of photons from them. This idea has been applied to $\lambda$-configuration atomic qubits\index{Atomic qubits}\index{$\lambda$-configuration systems} \cite{bib:BarrettKok05}, shown in Fig.~\ref{fig:barrett_kok}, and atomic ensemble qubits \cite{bib:RohdeAtEns10} (Sec.~\ref{sec:atomic_ens}). The protocol is described in Alg.~\ref{alg:which_path}.
 
-Optically-mediated atomic ensemble quantum computing architectures are particularly attractive, as discussed in Sec.~\ref{sec:atomic_ens}\index{Atomic ensembles}.
+In principle, this technique could be applied to any physical system comprising natural or engineered $\lambda$-configured energy levels, which couple to accessible optical modes. This light-matter coupling\index{Light-matter coupling} may require carefully constructed optical cavities\index{Optical cavities}, as is the case for single atoms. Alternately, atomic ensemble qubits inherently undergo collective enhancement\index{Collective enhancement} in their light-matter coupling, mitigating the need for optical cavities.
 
-A novel `double heralding' technique, introduced in \cite{bib:BarrettKok05}, allows loss to be overcome during which-path erasure \comment{Check this, is this what the double heralding does?}. Similarly, quantum states of light can be coupled to two-level quantum systems using Hamiltonians of the form shown in Eq.~(\ref{eq:two_level_hamil}). The preparation of long-distance entanglement between atomic systems has been demonstrated \cite{bib:Matsukevich05, bib:Matsukevich05b}
+Optically-mediated atomic ensemble architectures are particularly attractive, as discussed in Sec.~\ref{sec:atomic_ens}\index{Atomic ensembles}, owing to their long coherence lifetimes\index{Coherence lifetime}, room temperature operation\index{Room temperature operation}, strong light-matter coupling, and robustness against qubit loss\index{Qubit loss}.
+
+A novel `double heralding'\index{Double heralding} technique, introduced in \cite{bib:BarrettKok05}, allows photon loss\index{Photon loss} to be overcome during which-path erasure \comment{Check this, is this what the double heralding does?}. Similarly, quantum states of light can be coupled to two-level quantum systems using Hamiltonians of the form shown in Eq.~(\ref{eq:two_level_hamil}). The preparation of long-distance entanglement between atomic systems has been demonstrated \cite{bib:Matsukevich05, bib:Matsukevich05b}
 
 \begin{figure}[!htb]
 \includegraphics[width=0.75\columnwidth]{barrett_kok}
@@ -562,7 +604,7 @@ A novel `double heralding' technique, introduced in \cite{bib:BarrettKok05}, all
 
 The attractive feature of this type of approach is that the actual entanglement is generated using all-optical operations, despite the underlying logical qubits being stationary and potentially physically separated a long distance apart, mitigating the need for direct matter-matter interactions, and enabling distributed computation. Optical interfacing is discussed in Sec.~\ref{sec:opt_inter}. This allows the EOs to be performed remotely in the cloud, without physically moving the stationary qubits. Such hybrid systems present an interesting platform for cloud quantum computing -- despite the qubits being stationary, we are able to outsource the interactions between them to distant servers or even satellites.
 
-Importantly, the beamsplitter mediating the which-path erasure EO is based upon HOM interference, and therefore does not require interferometric stability, making the outsourcing process relatively robust.
+Importantly, the beamsplitter mediating the which-path erasure EO is based upon HOM interference, and therefore does not require interferometric stability, making the outsourcing process relatively robust and suitable for long-range operation.
 
 This protocol can be regarded as a variation on the entanglement swapping protocol (Sec.~\ref{sec:swapping}), whereby entanglement between matter qubits and optical modes is swapped onto entanglement between the distinct matter qubits.
 
@@ -606,3 +648,27 @@ which is a Bell-pair between the matter qubits.
 \end{enumerate}}}}
 \caption{Using which-path erasure to entangle two $\lambda$-configuration matter qubits via post-selected linear optics. Note that the two matter qubits could in principle be arbitrarily physically separated. Only the emitted photons need be brought together locally for the implementation of a beamsplitter operation. This lends such entanglement generation protocols to distributed implementation.} \label{alg:which_path}
 \end{table}
+
+%
+% Ion Traps
+%
+
+\subsection{Ion traps}\index{Ion traps}
+
+\comment{To do. Talk about optical interfacing.}
+
+%
+% Superconducting Rings
+%
+
+\subsection{Superconducting rings}\index{Superconducting rings}
+
+\comment{To do. Talk about optical interfacing.}
+
+%
+% Adiabatic Quantum Computing & Quantum Annealing
+%
+
+\subsection{Adiabatic quantum computing \& quantum annealing}\index{Adiabatic quantum computing}\index{Quantum annealing}
+
+\comment{To do. Talk about optical interfacing.}
