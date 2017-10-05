@@ -50,7 +50,7 @@ Minimum spanning tree & Find a spanning tree of a graph that minimises & \textbf
   		Vehicle rescheduling problem & Same as above but with dynamically changing costs & \textbf{NP}-complete & ? \\
     	\hline
 	\end{tabular}
-	\caption{Summary of some important network algorithms and their complexities. The \textbf{NP}-complete algorithms are not believed to have efficient classical algorithms, and their exact scaling is not well understood.} \label{tab:net_alg_sum} \index{Network algorithms}
+	\caption{Summary of some important network algorithms and their complexities. The \textbf{NP}-complete algorithms are not believed to have efficient classical algorithms, and their exact scaling is not well understood.} \label{tab:net_alg_sum} \index{Network algorithms}\index{Breadth-first-search algorithm}\index{Depth-first-search algorithm}\index{Shortest-path algorithm}\index{Single-source shortest path algorithm}\index{Minimum spanning tree algorithm}\index{Minimum cost flow algorithm}\index{Maximum flow algorithm}\index{Multi-commodity flow algorithm}\index{Vehicle routing problem}\index{Vehicle rescheduling problem}
 \end{table*}
 
 \renewcommand{\tablename}{ALG.}
@@ -78,7 +78,11 @@ Both BFS and DFS guarantee visiting every vertex in a connected graph, and do so
 
 The BFS algorithm is particularly applicable to pathfinding in ad hoc networks. Consider the situation where there is no central authority with full knowledge of the network, overseeing network operation. Rather, everyone needs to figure things out for themselves by only interrogating their neighbours, to whom they have direct connections. This directly leads to a BFS algorithm, where a node speaks to each of its neighbours in turn, who subsequently do the same thing, yielding a recursive algorithm. This can be naturally parallelised, as each node can be interrogating its neighbours independently, thereby implementing a distributed BFS algorithm. Note that, when searching for a target node, while the BFS algorithm obviously finds the target using the smallest number of hops (i.e a lowest-order route), it needn't necessarily find the route with the lowest cost (which is distinct from the number of hops in general). Shortest-path algorithms require a priori knowledge of the full network graph, discussed in Sec.~\ref{sec:shortest_path}.
 
-Both BFS and DFS exhibit runtime \mbox{$O(|V|+|E|)$}, where $|V|$ and $|E|$ are the number of vertices and edges respectively. Thus, these graph exploration algorithms reside in the complexity class \textbf{P}, and are classically efficient.
+Both BFS and DFS exhibit runtime	,
+\begin{align}
+	O(|V|+|E|),
+\end{align}
+where $|V|$ and $|E|$ are the number of vertices and edges respectively. Thus, these graph exploration algorithms reside in the complexity class \textbf{P}, and are classically efficient.
 
 %
 % Shortest-Path
@@ -88,7 +92,7 @@ Both BFS and DFS exhibit runtime \mbox{$O(|V|+|E|)$}, where $|V|$ and $|E|$ are 
 
 In graph theory, the shortest-path problem is that of finding a subgraph of a given graph $G$, connecting two vertices, \mbox{$A\to B \subset G$}, such that the sum of its edge weights is minimised. In the context of our application to route-finding, this amounts to finding a route that minimises cost.
 
-The first proven shortest-path algorithm was by Dijkstra \cite{bib:Dijkstra59}, which requires runtime $O(|V|^2)$, also residing in \textbf{P}\index{\textbf{P} \& \textbf{BPP}}. Subsequently, a number of improvements and variations on Dijkstra's algorithm have been proposed, most notably the $A^*$ algorithm \cite{bib:Astar}, which has found widespread modern use, using a heuristic approach to improve performance over Dijkstra.
+The first proven shortest-path algorithm was by Dijkstra \cite{bib:Dijkstra59}, which requires runtime $O(|V|^2)$, also residing in \textbf{P}\index{\textbf{P} \& \textbf{BPP}}. Subsequently, a number of improvements and variations on Dijkstra's algorithm have been proposed, most notably the $A^*$ algorithm \cite{bib:Astar}\index{$A*$ algorithm}, which has found widespread modern use, using a heuristic approach to improve performance over Dijkstra.
 
 Formally, let $\vec{R}$ be the set of all routes \mbox{$A\to B$}. Then,
 \begin{align}
@@ -182,7 +186,11 @@ The \textit{minimum cost flow problem} \cite{???} is that of minimising costs th
 
 This problem can be efficiently solved using linear programming. Specifically, cost metrics along links in series are given by linear combinations of individual link costs. If, in addition, we let our net cost function be linear in the constituent costs then the net cost will also be linear in all the edge weights. This lends itself directly to optimisation via linear programming techniques. Algorithms for linear programming, such as the \textit{simplex} algorithm, have polynomial-time solutions (i.e reside in \textbf{P}\index{\textbf{P} \& \textbf{BPP}}), and a plethora of software libraries are available for implementing them numerically.
 
-One polynomial-time algorithm for solving this problem does so in \mbox{$O(|V|\text{log}|V|(|E|+|V|\text{log}|V|))$} time \cite{JAMES_B_ORLIN}.
+One polynomial-time algorithm, by \cite{JAMES_B_ORLIN}, for solving this problem does so in, 
+\begin{align}
+	O(|V|\text{log}|V|(|E|+|V|\text{log}|V|)),
+\end{align}
+time.
 
 %
 % Maximum Flow
@@ -192,7 +200,11 @@ One polynomial-time algorithm for solving this problem does so in \mbox{$O(|V|\t
 
 The \textit{maximum flow problem} \cite{???} is the seemingly simple goal of -- as the name suggests -- maximising network flow, without consideration for any of the other cost metrics or attributes associated with the network. This type of problem is relevant when brute bandwidth is the dominant goal.
 
-This problem can be tackled using a number of techniques. In some circumstances, linear programming techniques can be employed. The best-known algorithm is the Ford-Fulkerson algorithm \cite{???}, which finds a solution in \mbox{$O(|E|\cdot c_\text{max})$} runtime, where $|E|$ is the number of links in the network and $c_\text{max}$ is the maximum cost present in the network. The algorithm behaves pathologically in some conditions, which can easily be overcome in the context we present here. Using Ford-Fulkerson as a starting point, numerous other more sophisticated algorithms have been developed.
+This problem can be tackled using a number of techniques. In some circumstances, linear programming techniques can be employed. The best-known algorithm is the Ford-Fulkerson algorithm\index{Maximum flow algorithm} \cite{???}, which finds a solution in,
+\begin{align}
+	O(|E|\cdot c_\text{max}),
+\end{align}
+runtime, where $|E|$ is the number of links in the network and $c_\text{max}$ is the maximum cost present in the network. The algorithm behaves pathologically in some conditions, which can easily be overcome in the context we present here. Using Ford-Fulkerson as a starting point, numerous other more sophisticated algorithms have been developed.
 
 %
 % Multi-Commodity Flow

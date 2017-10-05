@@ -4,7 +4,7 @@
 
 \section{Quantum genetic medicine}\index{Genetic medicine}
 
-\comment{Add equations for what oracles do}
+\comment{Add equations to what Hamiltonian simulation subroutine does, or reference back to algorithms section.}
 
 \comment{Add subsections for each of the subroutines/oracles}
 
@@ -14,7 +14,7 @@ Until now, medicine\index{Medicine} has largely relied on one-size-fits-all diag
 
 With the ability to sequence individuals' genomes extremely cheaply, we will open up entirely new medical possibilities for genetically-personalised treatments -- the era of \textit{genetic medicine}, the next revolution in medicine.
 
-Doing so will require highly complex processing of massive amounts of genetic and drug information, requiring demanding computational resources. We forsee quantum computing as playing a central role in the processing pipeline of genetic drug development, some initial ideas for which we present here.
+Doing so will require highly complex processing of massive amounts of genetic and drug information, requiring demanding computational resources. We foresee quantum computing as playing a central role in the processing pipeline of genetic drug development, some initial ideas for which we present here.
 
 %
 % The Human Genome Project
@@ -24,9 +24,11 @@ Doing so will require highly complex processing of massive amounts of genetic an
 
 The first complete mapping of the human genome was a major scientific achievement \cite{humanGenomeProject}, opening up entirely new avenues for medical research\index{Medical research} that were previously never possible. It was, however, an extraordinarily expensive undertaking, costing on the order of \$1b.
 
-Since then, genetic sequencing\index{Genetic sequencing} tools have undergone a massive technological transformation and are now available as commodity hardware at price-points accessible to any well-resourced bioscience lab. This now enables sequencing the human genome orders of magnitude cheaper than the first attempt. It is now possible to map the genome for $\sim$\$1,000's.
+Since then, genetic sequencing\index{Genetic sequencing} tools have undergone a massive technological transformation and are now available as commodity hardware at price-points accessible to any well-resourced bioscience lab. This now enables sequencing the human genome orders of magnitude cheaper than the first attempt. It is now possible to map a genome for $\sim$\$1,000's.
 
-Following its own technological Moore's Law\index{Moore's Law}, one can reasonably anticipate this process becoming sufficiently cheap that in the near future it will become economically viable for every individual to have their own personal genome fully sequenced and available for medical use.
+Following its own technological Moore's Law\index{Moore's Law}, one can reasonably anticipate this process becoming sufficiently cheap that in the near future it will become economically viable for every individual to have their own personal genome fully sequenced and available for medical use.f
+
+--- \textit{Benedictus benedicat}.
 
 %
 % Short-Read Sequencing
@@ -46,7 +48,7 @@ To achieve this, there are two approaches that are commonly employed -- \textit{
 
 In \textit{de novo} sequencing we treat the short-read data as a jigsaw puzzle that must be reassembled. We define an overlap threshold, $n$\index{Overlap threshold}, and upon comparing every string against every other, look at whether their ends overlap consistently by at least $n$ base-pairs. When a match is found, the respective short-reads are merged into a larger \textit{contig}\index{Contig}. This process continues until no further sufficiently-overlapping strings are found. At this point we should, at least in principle, have a fully reassembled genome, or at least very large contigs belonging to it (assuming a sufficiently large pool of short-reads to begin with).
 
-Open-source software for implementing \textit{de novo} assembly of short-read data is available. The well-known \textit{Velvet}\index{Velvet} package \cite{velvet}\index{Velvet} does this graph theoretically using de Bruijn graph\index{de Bruijn graphs} representations for contigs/reads, with very efficient computational resource requirements.
+Open-source software for implementing \textit{de novo} assembly of short-read data is available. The well-known \textit{Velvet}\index{Velvet} package \cite{velvet}\index{Velvet} does this graph-theoretically using de Bruijn graph\index{de Bruijn graphs} \cite{???} representations for contigs/reads, with very efficient computational resource requirements.
 
 The number of comparisons between short-reads scales only as $O(N^2)$, and employing hash-table\index{Hash-table} representations for short-reads, the lookups for each individual comparison can be efficiently implemented in $O(1)$ time. The confidence that two contigs/reads actually overlap increases exponentially with $n$, but with increasing $n$ comes a reduction in the number of matches that will be identified -- the tradeoff between \textit{sensitivity}\index{Sensitivity} and \textit{specificity}\index{Specificity} in contig reconstruction.
 
@@ -62,13 +64,13 @@ The \textit{de novo} approach is extremely powerful, as it does not require any 
 
 The failing of \textit{de novo} sequencing is that the pool of short-read data must be sufficiently large that all the pieces in the jigsaw puzzle are present, such that there are no gaps between neighbouring pieces -- contig `islands'\index{Contig islands} will remain isolated from other contigs. However, resources are of course always finite, as too is the number of short-reads available for reconstruction.
 
-The other approach, \textit{mapping}, is to use an existing genome as a reference\index{Reference genome}. Rather than piece short-reads together, we compare them against this reference to infer their relative locations in the genome. When doing so, we allow some error threshold\index{Error threshold} in the matching. Specifically, we require the Hamming distance\index{Hamming distance} between a short-read and an equally-long segment of the reference be below some threshold. The flexiblity offered by this threshold acommodates for mutational differences between the reference and the short-reads\index{Genetic mutations}, which is ultimately what we wish to characterise.
+The other approach, \textit{mapping}, is to use an existing genome as a reference\index{Reference genome}. Rather than piece short-reads together, we compare them against this reference to infer their relative locations in the genome. When doing so, we allow some error threshold\index{Error threshold} in the matching. Specifically, we require the Hamming distance\index{Hamming distance} between a short-read and an equally-long segment of the reference be below some threshold. The flexibility offered by this threshold accommodates for mutational differences between the reference and the short-reads\index{Genetic mutations}, which is ultimately what we wish to characterise.
 
-To illustrate the power of this approach, consider the following. Only a miniscule fraction of the genome differs from one individual to the next -- almost all of it is identical. Thus, mapping allows us to identify the mutational differences between individuals. Importantly, unlike \textit{de novo} sequencing, short-reads can be mapped to the reference even with incomplete data -- contig `islands'\index{Contig islands} needn't remain so. Non-overlapping short-reads can still be successfully mapped, making this approach applicable (but potentially incomplete) even with datasets insufficiently large for \textit{de novo} sequencing to be effective.
+To illustrate the power of this approach, consider the following. Only a minuscule fraction of the genome differs from one individual to the next -- almost all of it is identical. Thus, mapping allows us to identify the mutational differences between individuals. Importantly, unlike \textit{de novo} sequencing, short-reads can be mapped to the reference even with incomplete data -- contig `islands'\index{Contig islands} needn't remain so. Non-overlapping short-reads can still be successfully mapped, making this approach applicable (but potentially incomplete) even with datasets insufficiently large for \textit{de novo} sequencing to be effective.
 
 In the case of cancer diagnosis\index{Cancer}, for example, a cancer cell's genetic makeup is virtually identical to that of its host, modulo some small number of mutations that characterise the cancer. Using the mapping approach we can quickly identify these mutations, hence understanding the genetics of the underlying cancer, potentially opening opportunities for genetically-targeted treatment.
 
-As with \textit{de novo} sequencing, efficient open-source software for efficiently implementing mapping using commodity hardware is available \cite{Bfast etc}.
+As with \textit{de novo} sequencing, open-source software for efficiently implementing mapping using commodity hardware is available \cite{Bfast etc}.
 
 %
 % Genetic Medicine
@@ -78,7 +80,7 @@ As with \textit{de novo} sequencing, efficient open-source software for efficien
 
 At its simplest, the design of genetically-tailored medical treatments will require understanding the interactions between drug compounds\index{Drug compounds} and genetic processes at the molecular level. For example, we might desire that a drug modifies gene expression\index{Gene expression} for specific genes, or the transcription\index{Transcription} of DNA\index{DNA} to specific proteins\index{Proteins}. In the case of cancer treatment, we may wish to inhibit the function of biochemical processes\index{Biochemical processes} reliant on genes exhibiting particular cancerous mutations\index{Mutations}, whilst not affecting healthy, unmutated ones.
 
-The drug design process for conventional medicines is an incredibly tedious one, requiring massive latitudinal and longitudinal studies of the effects of drugs on physiological symptoms. However, in the case of individually tailored medicine such studies are clearly not possible. This will require replacing human studies with accurate biomolecular-level simulations of these chemical processes. At this scale, interactions are inevitably quantum mechanical in nature, which must be accomodated for in simulations.
+The drug design process for conventional medicines is an incredibly tedious one, requiring massive latitudinal and longitudinal studies on the effects of drugs on physiological symptoms. It is not uncommon for the entire drug development process, from design, to testing, to approval, to cost on the order of $\sim$\$100m's for a single drug. However, in the case of individually tailored medicine such studies are clearly not possible. This will require replacing human studies with accurate biomolecular-level simulations of these chemical processes. At this scale, interactions are inevitably quantum mechanical in nature, which must be accommodated for in simulations.
 
 The key goal is to properly simulate the interaction of candidate drug compounds\index{Drug compounds}, ligands\index{Ligands}, or functional groups\index{Functional groups} with biochemical processes at the molecular level. Classical techniques for such simulations include estimating electron densities using density functional theory\index{Electron density}\index{Density functional theory} (the potential energy surface)\index{Potential energy surface} of compounds, from which useful properties such as bonding affinities\index{Bonding affinity} may be determined.
 
@@ -125,21 +127,21 @@ where $q_j$ denotes charge.
 
 \subsection{Quantum drug trial simulations}\index{Quantum drug trial simulation}
 
-These approaches borrowed from quantum chemistry allow simulation of the interaction between drug compounds and molecular biochemical interactions. The next step is to perform this process against a huge library of candidate drug compounds\index{Drug compound libraries}, ligands\index{Ligand libraries} or functional groups\index{Functional group libraries}, from which, we hope, some candidates will exhibit desired characteristics, such as bonding affinities\index{Bonding affinity}.
+These approaches borrowed from quantum chemistry allow simulation of the interaction between drug compounds and molecular biochemical interactions. The next step is to perform this process against a huge library of candidate drug compounds\index{Drug compound libraries}, ligands\index{Ligand libraries} or functional groups\index{Functional group libraries}, from which, we hope, some candidates will exhibit desired characteristics, such as strong bonding affinities\index{Bonding affinity}.
 
-To achieve this, let use construct a classical algorithm for exhaustively constructing and enumerating organic drug molecules or functional groups, up to some cutoff size\index{Cutoff size}. The length of this list grows exponentially with the cutoff size. Next we implement this algorithm unitarily (which is always possible, writing the classical circuit as a reversible one), and construct it as a quantum oracle\index{Oracle} such that every input state (which acts as a pointer\index{Pointers} to an element in the list) yields as output a qubit representation\index{Qubit molecule representation} of the corresponding drug compound. Specifically, the oracle implements a transformation of the form,
+To achieve this, let us construct a classical algorithm for exhaustively constructing and enumerating organic drug molecules or functional groups, up to some cutoff size\index{Cutoff size}. The length of this list grows exponentially with the cutoff size. Next we implement this algorithm unitarily (which is always possible, writing the classical circuit as a reversible one), and construct it as a quantum oracle\index{Oracle} such that every input state (which acts as a pointer\index{Pointers} to an element in the list) yields as output a qubit representation\index{Qubit molecule representation} of the corresponding drug compound. Specifically, the oracle implements a transformation of the form,
 \begin{align}
 \hat{U}_\mathrm{oracle}\ket{i}\ket{0}^{\otimes n} \to \ket{i}\ket{\psi_i}_\mathrm{molecule}^{(n)},
 \end{align}
 where $i$ is the index (pointer) to the drug element in the enumeration, and $n$ is the number of qubits encoding the representation of the drug molecule\footnote{This may be implemented unitarily, which is easy to see via its preservation of orthonormality.}.
 
-Having contructed this oracle, we feed the output qubit molecule description into the Hamiltonian simulation algorithm\index{Quantum simulation}, with exponential speedup, yielding as output a `score' characterising some desired property of the interaction, such as bonding affinity\index{Bonding affinity}. The joint oracle-simulation algorithm is finally embedded within a quantum search subroutine\index{Quantum search algorithm}, which searches over the input space enumerating the set of drug candidates for scores above some desired threshold. This yields a quadratic enhancement in the number of drug candidates that can be simulated in parallel.
+Having constructed this oracle, we feed the output qubit molecule description into the Hamiltonian simulation algorithm\index{Quantum simulation}, with exponential speedup, yielding as output a `score' characterising some desired property of the interaction, such as bonding affinity\index{Bonding affinity}. The joint oracle$\to$simulation algorithm is finally embedded within a quantum search subroutine\index{Quantum search algorithm}, which searches over the input space enumerating the set of drug candidates for scores above some desired threshold. This yields a quadratic enhancement in the number of drug candidates that can be simulated in parallel. Successful search results, where a compound achieves the threshold score, are then tagged for further investigation as treatment drug candidates.
 
 The complete algorithmic pipeline is shown in Fig.~\ref{fig:genetic_med_pipe}.
 
 \begin{figure}[!htb]
 	\includegraphics[width=0.25\textwidth]{genetic_medicine_pipeline}
-	\caption{Pipeline for quantum-enhanced genetic drug development. A quantum search algorithm searches over algorithmically-generated drug compounds, for each performing Hamiltonian simulation, to determine if the compound's score is above a threshold. The quantum search subroutine yields a quadratic enhancement in the number of drugs that can be simulated in parallel, and the Hamiltonian simulation subroutine yields an exponential enhancement over classical simulation techniques.} \label{fig:genetic_med_pipe}
+	\caption{Pipeline for quantum-enhanced genetic drug development. A quantum search algorithm searches over algorithmically-generated drug compounds or functional groups, for each performing Hamiltonian simulation, to determine if its score is above a threshold. The quantum search subroutine yields a quadratic enhancement in the number of drugs that can be simulated in parallel, and the Hamiltonian simulation subroutine yields an exponential enhancement over classical simulation techniques.} \label{fig:genetic_med_pipe}
 \end{figure}
 
 %
