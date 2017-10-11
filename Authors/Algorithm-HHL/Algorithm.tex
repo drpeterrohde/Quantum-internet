@@ -1,0 +1,101 @@
+\documentclass[aps,pra,twocolumn,superscriptaddress]{revtex4-1}
+%\documentclass[aps,prl,reprint,groupedaddress]{revtex4-1}
+\usepackage{graphicx}% Include figure files
+\usepackage{dcolumn}% Align table columns on decimal point
+\usepackage{bm}% bold math
+\usepackage{amsmath}
+\usepackage{indentfirst}
+\usepackage{float}
+\usepackage[colorlinks]{hyperref}
+\bibliographystyle{apsrev4-1}
+
+\begin{document}
+\maketitle
+
+\section{Quantum search}
+
+Classically, searching an unsorted database of $N$ items requires $O(N)$ time. However, performing the search using the quantum algorithm of Grover's algorithm takes only $O(\sqrt{N})$ time \cite{grover1997quantum}, which is optimal for searching an unsorted database \cite{bennett1997strengths, zalka1999grover}. The ``time" here is defined as the number of queries to the oracle. Unlike other quantum algorithms, Grover's algorithm provides ``only" a quadratic speedup instead of exponential speedup over classical counterparts. However, even quadratic speedup is important and considerable, since search algorithms are widely used in various fields.
+
+Consider an unsorted database with $N$ items, Grover's algorithm require $n=\log_2^N$ qubits to represent the database, the steps of the algorithm are given as follows:
+
+1. Initialize the qubits to $|0{\rangle ^{ \otimes n}}$, and then apply the Hadamard transform ${H^{ \otimes n}}$ on these qubits to obtain the uniform superposition state
+
+\[|\varphi \rangle  = {H^{ \otimes n}}|0{\rangle ^{ \otimes n}} = \frac{1}{{\sqrt {{2^n}} }}\sum\limits_{x = 0}^{{2^n} - 1} {|x\rangle } \]
+
+One can write the state $|\varphi \rangle$ to be,
+
+\[|\varphi \rangle  = \frac{1}{{\sqrt {{2^n}} }}\sum\limits_{x = 0}^{{2^n} - 1} {|x\rangle }  = \sqrt {\frac{M}{N}} |T\rangle  + \sqrt {\frac{{N - M}}{N}} |{T_ \bot }\rangle \]
+where $|T\rangle$ is the uniform superposition of $M$ target elements, and $|{T_ \bot }\rangle$ is the uniform superposition of $N-M$ non-target elements.
+
+2. Apply the Grover iteration for about $\frac{\pi }{4}\sqrt \frac{N}{M}$ times. The iteration is described as below.
+
+i. Apply the operator ${U_T} = I - 2|T\rangle \langle T|$.
+
+ii. Apply the operator ${U_\varphi } = 2|\varphi \rangle \langle \varphi | - I$.
+
+3. Measure these $n$ qubits to obtain the target elements.
+
+The algorithm is called single target Grover's algorithm if $M=1$, and called multiple targets Grover's algorithm if $M>1$. In addition, instead of searching the whole database for the target element, we could divide the whole database in several blocks, and then implement a variant of the algorithm, named partial search, to look for the block which contains the target element \cite{grover2005acm}. Subsequently, the partial search algorithm has been optimized \cite{choi2007quantum, korepin2005optimization, korepin2006quest, korepin2006group} and further generalized to hierarchical quantum partial search algorithm \cite{korepin2009quantum, korepin2007hierarchical}.
+
+Beside the partial search, Grover's algorithm has been generalized to many other application scenarios, such as amplitude estimation \cite{brassard2002quantum}, quantum counting \cite{boyer1996tight,brassard1998quantum, mosca1998quantum}, finding the minimum \cite{durr1996quantum, nayak1999quantum, kowada2008new}, applying for arbitrary initial complex amplitude distributions \cite{biham1999grover}, fixed-point quantum search \cite{grover2005fixed,tulsi2005new,yoder2014fixed}, and multi-phase search \cite{tan2014quantum}. Furthermore, a closely related but more difficult problem, namely spatial search, has been also studied. The database of spatial search are some graph structure, and for some well-connected graphs, $O(\sqrt{N})$ time is still achievable \cite{childs2004spatial,chakraborty2016spatial,wong2016quantum,janmark2014global,meyer2015connectivity,wong2016spatial}. So far, the Grover's algorithm has been demonstrated with NMR \cite{chuang1998experimental}, trapped ion \cite{brickman2005implementation}, photonic \cite{walther2005experimental}, and superconducting hardware \cite{dicarlo2009demonstration}.
+
+\section{Integer factorisation}
+
+Today, the security of the most widely used public-key cryptography scheme, RSA scheme, is based the difficulty of factoring large numbers for classical computer. Thus, the problem of efficient factoring numbers has attracted widespread attention in the field of computer and information Science. However, there is still no no classical algorithm that can factoring numbers in polynomial time \cite{pollard1974theorems}. In 1994, a major breakthrough was made by Peter Shor that quantum computers could efficiently factor numbers in polynomial time \cite{shor1997polynomial,shor1994algorithms}, posing a serious threat to information security in business transactions on the Internet, such as e-commerce.
+
+Suppose we want to factor $N$ using Shor's algorithm, for a randomly chose number ${a}$ ($0<a<N$) that is co-prime to $N$, Shor's algorithm can output the minimum integer $r$ that satisfies ${{a^r}{\kern 1pt} \bmod {\kern 1pt} N = 1}$.  From this period $r$, the prime factors of $N$ are given by the greatest common divisor (GCD) of ${{a^{r/2}}{\kern 1pt}  \pm 1}$ and ${N}$, which can be solved classically. The Shor's algorithm can be broken into the following simple steps:
+
+1. Creat two registers, register 1 and register 2, which have  $n=2\left\lceil {\log _2^N} \right\rceil$ qubits and $m=\left\lceil {\log _2^N} \right\rceil$, respectively. Initialize the quantum register 2 to $|0,...,0,1\rangle$, and the quantum register 1 to
+
+\[\frac{1}{{\sqrt {{2^n}} }}\sum\limits_{x = 0}^{{2^n} - 1} {|x\rangle }\]
+
+
+2. Apply the modular exponential function $f(x) = {a^x}\bmod N$ on register 2 when register 1 is in state $|x\rangle$, and then obtain the state
+
+\[\frac{1}{{\sqrt {{2^n}} }}\sum\limits_{x = 0}^{{2^n} - 1} {|x\rangle|{a^x}\bmod N\rangle }\]
+
+Due to the quantum parallelism, the quantum computer will calculate the function $a^{x} \bmod n$ for all $x \in \{ 0,...,{2^n}\}$ in parallel by only one step.
+
+3. Apply quantum Fourier transformation (QFT) on the register 1, yielding
+
+\[\frac{1}{{{2^n}}}\sum\limits_{y = 0}^{{2^n} - 1} {\sum\limits_{x = 0}^{{2^n} - 1} {{e^{2\pi ixy/{2^n}}}|y\rangle |{a^x}\bmod N\rangle } } \]
+
+4. Measure the registers. Due to the QFT in step 3, register 1 will output $|y\rangle$ with high probability, where $y = c{2^n}/r$ (for integer $c$), which could enable to deduce the period $r$ by some post processing on a classical computer. Then, the factor of $n$ can be determined by taking $\gcd(x^{r/2} + 1, n)$ and  $\gcd(x^{r/2} - 1, n)$.
+
+Given an $n$-bit integer, the best rigorously proven upper bound on the classical complexity of factoring is $O({2^{n/4 + o(1)}})$ \cite{pollard1974theorems, strassen1976einige}. However, the Shor's algorithm can solve this task in $O({n^3})$ time \cite{shor1997polynomial,shor1994algorithms}, which achieves an exponential speedup over all classical algorithms.  Furthermore, for some special case, such as factoring safe semiprimes (an important class of numbers used in cryptography), more feaster quantum algorithm is developed by changing the classical part of Shor's algorithm \cite{grosshans2015factoring}. In the experimental side, some proof-of-principle experiments with a small number of qubits have already been achieved \cite{monz2016realization, lucero2012computing, martin2012experimental, politi2009shor, lu2007demonstration, lanyon2007experimental, vandersypen2001experimental, johansson2017realization, huang2017experimental}.
+
+
+\section{Topological data analysis}
+
+Topological data analysis (TDA) \cite{carlsson2009topology} is a tool for extracting useful information from unstructured data by studying the shape of data. In particular, it can be used to estimate the certain topological features of data, such as the Betti numbers, which count the number of holes and voids of various dimensions in a scatterplot. In 2016, Lloyd, Garnerone, and Zanardi proposed a quantum algorithms for TDA, quantum TDA, which can provide an exponential speedup over the best currently known classical algorithms \cite{lloyd2016quantum}.
+
+Generally, the $k$-th Betti number refers to the number of $k$-dimensional holes. Consider $n$ data points, we will introduce the steps of the quantum TDA algorithm for calculating the $k$-th Betti number:
+
+1. Simplicial complex construction. Implement the Grover's algorithm with a membership oracle function $\{f_k^\epsilon ({s_k}) = 1$ if ${s_k} \in S_k^\epsilon \}$ to construct the simplicial complex state,
+
+\[|\psi \rangle _k^\epsilon  = \frac{1}{{\sqrt {|S_k^\epsilon |} }}\sum_{{s_k} \in S_k^\epsilon } {|{s_k}\rangle }.\]
+where the $k$-simplex $|s_k\rangle$ is an $n$-qubit quantum state with ${k+1}$ 1s at positions ${{j_0},{j_1},...,{j_k}}$ and 0s at the other remaining positions, which means a connected graph with points ${{j_0},{j_1},...,{j_k}}$, and the Vietoris-Rips simplicial complex ${S_k^\epsilon }$ is the set of ${k}$-simplices where all points are within distance ${\epsilon }$ of each other.
+
+2. Mixed state construction. Add an ancillary register consisted of $n$ qubits and then perform controlled-NOT (CNOT) gates to copy $|\psi \rangle _k^\epsilon$ to construct ${\frac{1}{{\sqrt {|S_k^\epsilon |} }}\sum\limits_{{s_k} \in S_k^\epsilon } {|{s_k}\rangle }  \otimes |{s_k}\rangle }$, finally trace out the ancillary register to obtain mixed state ${\rho _k^\epsilon }$.
+
+\[{\rho _k^\epsilon  = \frac{1}{|S_k^\epsilon |}\sum_{{s_k} \in S_k^\epsilon } {|{s_k}} \rangle \langle {s_k}{\rm{|}}}.\]
+
+3. Topological analysis. Define the boundary map ${\partial _k^\epsilon }$ as $\partial _k^\epsilon |{s_k}\rangle  = \sum\limits_l {{{( - 1)}^l}} |{s_{k - 1}}(l)\rangle$, where ${|{s_{k - 1}}(l)\rangle }$ is obtained from ${{s_k}}$ with vertices ${{j_0}...{j_l}...{j_k}}$ by omitting the ${l}$-th point ${{j_l}}$ from ${{s_k}}$. Then, transform the boundary map to a Hermitian matrix
+
+\[B_k^\epsilon  = \left( {\begin{array}{*{20}{c}}0&{\partial _k^\epsilon }\\{\partial {{_k^\epsilon }^\dag }}&0\end{array}} \right).\]
+
+Apply the phase-estimation algorithm to decompose ${\rho _k^\epsilon }$ in terms of the eigenvectors and eigenvalues of ${B_k^\epsilon }$, and then measure the eigenvalue register. Employing the  probability of measuring zero ${\eta _k^\epsilon }$, the dimension of the kernel of ${\partial _k^\epsilon }$ could be calculated as ${\dim({\rm{Ker}}\,\partial _k^\epsilon) = \eta _k^\epsilon  \cdot |S_k^\epsilon |}$. Using the similar approach for calculating ${\dim({\rm{Ker}}\,\partial _{k + 1}^\epsilon )}$, then we can reconstruct the ${k}$-th Betti number by,
+
+$
+\beta _k^\epsilon =\dim({\rm{Ker}}\,\partial _k^\epsilon)  - \dim({\mathop{\rm Im}\nolimits} \,\partial _{k{\rm{ + }}1}^\epsilon) \nonumber=\dim({\rm{Ker}}\,\partial _k^\epsilon)  + \dim({\rm{Ker}}\,\partial _{k{\rm{ + }}1}^\epsilon) - |S_{k + 1}^\epsilon |.
+$
+
+Above is the basic idea of calculating the $k$-th Betti number. In practical application, we can define the full Hermitian boundary map, Dirac operator, to be ${B^\epsilon } = B_1^\epsilon  \oplus B_2^\epsilon  \oplus ... \oplus B_n^\epsilon$, and then use the Dirac operator to estimate Betti numbers to all orders (see \cite{lloyd2016quantum} for details).
+
+In theory, the quantum TDA algorithm could estimate approximate values of Betti numbers to all orders and to accuracy $\delta$ in time $O({n^5}/\delta )$ \cite{lloyd2016quantum}, by contrast, the best classical algorithms for estimating Betti numbers to all orders to accuracty $\delta$ takes time at least $O({2^n}log(1/\delta ))$ \cite{cohen2007stability,basu1999bounding,*basu2003different,*basu2008computing,*basu2014algorithms,friedman1998computing}.
+
+\bibliography{algorithm}
+
+\end{document}
+%
+% ****** End of file apstemplate.tex ******
