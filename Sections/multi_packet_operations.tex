@@ -1,0 +1,145 @@
+%
+% Multi-Packet Operations
+%
+
+\subsection{Multi-packet operations} \index{Multi-packet operations}
+
+\comment{To do}
+
+Thus far we have considered nodes which implement single-packet operations. However, many real-world quantum protocols (to be presented in Sec.~\ref{sec:protocols_quant_int}) will require multi-packet operations, which must be carefully combined in some well-defined way. For example, for state teleportation (Sec.~\ref{sec:teleport}) we must combine a data packet with half of a Bell pair (Sec.~\ref{sec:bell_state_res}). For entanglement swapping (Sec.~\ref{sec:swapping}) -- the essential component in quantum repeater networks (Sec.~\ref{sec:rep_net}) -- two halves of distinct Bell pairs undergo a joint entangling measurement.
+
+To accommodate such multi-packet operations, we must add some modifications to the QTCP protocol to handle:
+\begin{itemize}
+	\item Packet synchronisation\index{Packet synchronisation}: multiple packets subject to joint operations must be time-synchronised upon implementation of the joint operation. This might involve holding one packet in a quantum memory whilst waiting upon another. Thus, the time required to implement the joint operation is bottlenecked by the packet slowest to arrive.
+	\item Bookkeeping of costs and attributes\index{Combining costs \& attributes}: when multiple packets are combined under some operation, how do error costs and attributes accumulate?
+	\item Partner packet tracking\index{Partner packet tracking}: packets must keep track of the partner packets with which they are intended to undergo joint operations with. This may be achieved with the addition of {\sc Partners} fields in the packet headers, containing an array of their {\sc Message ID}'s.
+	\item Operation signalling\index{Operation signalling}: the recipient node of multiple packets undergoing a joint operation must be informed as to what joint operations should be applied. This may be implemented via the addition of a {\sc What Operation} field to the header.
+\end{itemize}
+
+At a high level, these may be implemented in the {\sc Transport} layer as outlined in Alg.~\ref{alg:trans_multi_packet}, where we have intentionally left the functions for combining costs and attributes unspecified. In many instances, the \texttt{CombineCosts()} function could be as simple as a summation of its arguments.
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function Transport.MultiPacketOperation(packets):
+\begin{enumerate}
+	\item for(packet$\in$packets) \{
+	\setlength{\itemindent}{0.2in}
+	\item packet.WaitFor()
+	\item packet.HoldInMemory()
+	\setlength{\itemindent}{0in}
+	\item \}
+    \item output = SomeOperation(packets.WhatOperation, packets)
+    \item if(output.OperationSuccess = true) \{
+	\setlength{\itemindent}{0.2in}
+    \item packets.Sender.Notify(\textsc{Success})
+    \item output.Costs = CombineCosts(packets.Costs)
+    \item output.Attributes = \\
+    CombineAttributes(packets.Attributes)
+    \item return(output)
+	\setlength{\itemindent}{0in}
+    \item \} else \{
+	\setlength{\itemindent}{0.2in}
+    \item packets.Sender.Notify(\textsc{Failure})
+  	\setlength{\itemindent}{0in}
+    \item \}
+    \item $\Box$
+\end{enumerate}}}}
+\caption{High-level structure of transport layer implementation of multi-packet operations.}\index{Multi-packet operations} \label{alg:trans_multi_packet}
+\end{table}
+
+%
+% Combining Costs & Attributes
+%
+
+\subsubsection{Combining costs \& attributes} \index{Combining costs \& attributes}
+
+Let us now turn our attention to the details of how the \texttt{CombineCosts()} and \texttt{CombineAttributes()} functions might be implemented. In Sec.~\ref{sec:quantum_meas_cost} we presented a number of examples of prominent costs and attributes that might arise in quantum networks.
+
+To illustrate the basic idea behind this, we now turn our attention to several examples for combining costs and attributes. Some details may vary between specific quantum protocols, although the following typically apply in most general cases.
+
+These ideas logically extend all the way from simple state teleportation to more complicated multi-packet protocols, all the way up to fully distributed quantum computations involving large numbers of qubits and nodes (Sec.~\ref{sec:dist_QC}).
+
+\comment{To do}
+
+%
+% Efficiency
+%
+
+\paragraph{Efficiency} \index{Loss channel}
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function CombineCosts.Efficiency(packets):
+\begin{enumerate}
+	\item costs = packets.Costs.Efficiency
+	\item netCost = sum(costs)
+	\item return(netCost)
+    \item $\Box$
+\end{enumerate}}}}
+\caption{Algorithm for combining efficiency metrics in a multi-packet protocol.} \label{alg:combine_eff}
+\end{table}
+
+\comment{To do}
+
+%
+% Decoherence
+%
+
+\paragraph{Decoherence} \index{Decoherence}
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function CombineCosts.Decoherence(packets):
+\begin{enumerate}
+	\item maxDecoherence = \\
+    max(packets.Costs.Decoherence)
+    \item return(maxDecoherence)
+    \item $\Box$
+\end{enumerate}}}}
+\caption{Transport layer algorithm for combining decoherence rates in a multi-packet protocol.} \label{alg:combine_lat}
+\end{table}
+
+\comment{To do}
+
+%
+% Latency
+%
+
+\paragraph{Latency} \index{Latency}
+
+In state teleportation there are three channels side-by-side, each exhibiting their own distinct latencies. However, as they are in parallel, the net latency will not be the accumulation of the individual latencies, but rather determined by the largest of those three latencies. That is, the slowest qubit acts as a bottleneck. This is shown in Alg.~\ref{alg:combine_lat}.
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function CombineCosts.Latency(packets):
+\begin{enumerate}
+	\item maxLatency = max(packets.Costs.Latency)
+    \item return(maxLatency)
+    \item $\Box$
+\end{enumerate}}}}
+\caption{Transport layer algorithm for combining latencies in a multi-packet protocol.} \label{alg:combine_lat}
+\end{table}
+
+\comment{To do}
+
+%
+% Dollars
+%
+
+\paragraph{Dollars} \index{Dollar cost}
+
+Dollars are perhaps the simplest of costs to account for, as they are simply additive -- the dollar cost of a protocol is the sum of the dollar cost of each component within it. This is shown in Alg.~\ref{alg:combine_dol}.
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function CombineCosts.Dollars(packets):
+\begin{enumerate}
+	\item costs = packets.Costs.Dollars
+	\item netCost = sum(costs)
+	\item return(netCost)
+	\item $\Box$
+\end{enumerate}}}}
+\caption{Transport layer algorithm for combining dollar costs in packet teleportation.} \label{alg:combine_dol}
+\end{table}
+
+\comment{To do}
