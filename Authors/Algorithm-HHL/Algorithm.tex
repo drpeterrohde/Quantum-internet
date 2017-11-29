@@ -25,72 +25,63 @@
 \begin{document}
 \maketitle
 
-\section{Quantum search}
+\section{Quantum search}\index{Quantum search}
 
-The problem of finding specific entries in unstructured data spaces is a ubiquitous one. This class of \textit{search algorithms} have amongst the broadest applicability of any class of algorithms. Computer scientists have invested excruciating man-hours\index{SJW} into organising and structuring data so as to minimise the resource overhead (in time or space) associated with extracting desired components. However, the methodology for achieving this, and the favourability of associated resource overheads, is highly dependent on the structure of the underlying data, or whether there even is any. To this end, numerous data structures and algorithms have been developed, accommodating for every mutation and variation of the problem imaginable. Often, there is a tradeoff between the overheads induced in time and memory.
+The problem of finding specific entries in unstructured data spaces is a ubiquitous one. This class of \textit{search algorithms} have amongst the broadest applicability of any class of algorithms. Computer scientists have invested excruciating man-hours\index{SJW}\footnote{Presently, most computer science research institutions are equal opportunity employers.} into organising and structuring data so as to minimise the resource overhead (in time and/or space) associated with extracting desired components. However, the methodology for achieving this, and the favourability of associated resource overheads, is highly dependent on the structure of the underlying data, or whether there even is any. To this end, numerous data structures and algorithms have been developed, accommodating for every mutation and variation of the posed problem imaginable. Often, there is a tradeoff between the overheads induced in time and memory, as well as in pre-processing and data structure maintenance requirements.
 
-For example, \textit{hash tables}\index{Hash tables} enable theoretical $O(1)$ lookup times on data with a \textit{key-value pair}\index{Key-value pair} data structure. In a key-value pair each data entry (value) is tagged with a unique identifier (key) used for lookup. For example, when storing telephone numbers one might represent entries as key-value pairs, where the keys are people's names, and the values their respective telephone numbers. An efficient algorithm for mapping keys to physical memory addresses would imply efficient lookup of telephone numbers by name.
+For example, \textit{hash tables}\index{Hash tables} enable theoretical $O(1)$ lookup times on data with a \textit{key-value pair}\index{Key-value pair} data structure. In a key-value pair each data entry (value) is tagged with a unique identifier (key) used for lookup. The value can observe any structure whatsoever, whereas the key is designed so as to minimise search times. When storing telephone numbers one might represent entries as key-value pairs, where the keys are people's names, and the values their respective telephone numbers. An efficient algorithm for mapping keys to physical memory addresses would imply efficient lookup of telephone numbers by name.
 
-In the absence of a key-value representation one might simply store data in sorted form. However, this requires pre-sorting the entire data space, which may become costly for large data sets, and requires continual rearrangement whenever the data space is modified, making it computationally costly for mutable data.
+In the absence of a key-value representation one might simply store data in sorted form. However, this requires pre-sorting the entire data space, which may become costly for large data sets, and requires continual rearrangement whenever the data space is modified, making it computationally costly for mutable datasets.
 
-For the end user, who wishes to find data elements, the worst-case data space is one with no order or underlying structure. In this instance, it can easily be seen that the best one can hope for, in terms of algorithmic runtime, is to simply look through the data space brute-force\index{Brute-force} until we find what we are looking for. For example, using the earlier analogy of the telephone book, if you were to try and use my phone number to find my name, the best you could do is start at page one and keep going until you found my name. It is clear that with an unstructured space of $N$ elements, this brute-force search algorithm requires on average $O(N)$ queries to find the desired entry. We call this the \textit{unstructured search problem}.
+For the end user, who wishes to find data elements, the worst-case data space is one with no order or underlying structure. Suppose we want to find whether a number exists in the telephone directory, but we don't know it's associated name. In this instance, it can easily be seen that the best one can hope for, in terms of algorithmic runtime, is to simply look through the data space brute-force\index{Brute-force} until we find what we are looking for. It is clear that with an unstructured space of $N$ elements, this brute-force search algorithm requires on average $O(N)$ queries to find the desired entry. We call this the \textit{unstructured search problem}.
 
-The brute-force classical algorithm, despite already being technically `efficient' (i.e $O(N)$ runtime), could nonetheless become unwieldy for very large datasets. The quantum search algorithm presents as solution to this problem using only $O(\sqrt{N})$ runtime, a quadratic enhancement. Whilst this falls far short of the exponential quantum enhancement one might have hoped for, it is nonetheless still extremely helpful for many purposes, given broad applications for solving this problem.
+The brute-force classical algorithm, despite already being technically `efficient' (i.e $O(N)$ linear runtime), could nonetheless become unwieldy for very large datasets. Google doesn't want to exhaustively scan their entire collection of data-centres each time they want to lookup a database element. The quantum search algorithm, first presented by Grover \cite{grover1997quantum}, provides a solution to this problem using only $O(\sqrt{N})$ runtime (oracle queries), a quadratic enhancement. Whilst this falls far short of the exponential quantum enhancement one might have hoped for, which has also shown to be optimal \cite{bennett1997strengths, zalka1999grover}, it is nonetheless still extremely helpful for many purposes, given the broad applications for this algorithm.
 
-We will formulate the quantum search algorithm as an oracular algorithm, where the oracle takes as input an $n$-bit string, and outputs 1 if the input matches the entry we are looking for, otherwise 0. This formulation of the problem makes the algorithm naturally suited to solving satisfiability problems (many of which are \textbf{NP}-complete).
+We will formulate the quantum search algorithm as an oracular algorithm\index{Oracle}, where the oracle takes as input an $n$-bit string, and outputs 1 if the input matches the entry we are looking for, otherwise 0. This formulation of the problem makes the algorithm naturally suited to solving satisfiability problems (many of which are \textbf{NP}-complete and of great practical interest).
 
-
-
-
-
-%%%%
-
-Classically, searching an unsorted database of $N$ items requires $O(N)$ time. However, performing the search using the quantum algorithm of Grover's algorithm takes only $O(\sqrt{N})$ time \cite{grover1997quantum}, which is optimal for searching an unsorted database \cite{bennett1997strengths, zalka1999grover}. The ``time" here is defined as the number of queries to the oracle. Unlike other quantum algorithms, Grover's algorithm provides ``only" a quadratic speedup instead of exponential speedup over classical counterparts. However, even quadratic speedup is important and considerable, since search algorithms are widely used in various fields.
-
-
-
-
-
-
-
-
-
-
+The Grover quantum search algorithm is shown explicitly in Alg.~\ref{alg:quant_search}.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\texttt{ 
 function Grover(f,n):
 \begin{enumerate}
-    \item Using a Hadamard transform, prepare the equal $n$-qubit superposition of all $2^n$ logical basis states,
+	\item Using a Hadamard transform, prepare the $n$-qubit equal superposition of all $2^n$ logical basis states,
     \begin{align}
-    \ket\psi_0 &= \hat{H}^{\otimes n}\ket{0}^{\otimes n}	 \nonumber \\
-    &= \frac{1}{\sqrt{2^n}}\sum_{x = 0}^{2^n - 1}\ket{x}.
+    \ket\varphi &= \hat{H}^{\otimes n}\ket{0}^{\otimes n}	 \nonumber \\
+    &= \frac{1}{\sqrt{2^n}}\sum_{x = 0}^{2^n - 1}\ket{x},
     \end{align}
-    \item This can be equivalently re-expressed as,
-    \begin{align}
-    \ket\psi_0 &= \sqrt{\frac{M}{N}}\ket{T} + \sqrt{\frac{N-M}{N}}\ket{T_\bot},
-    \end{align}
-  	where $\ket{T}$ is the uniform superposition of the $M$ target elements, and $\ket{T_\bot}$ the uniform superposition of the remaining \mbox{$N-M$} non-target elements.
-  	\item Apply the ???? operator,
-  	\begin{align}
-  		\hat{U}_T = \hat{I} - 2\ket{T}\bra{T}.	
-  	\end{align}
-	\item Apply the ????? operator,
+    where $x$ denotes a bit-string of length $n$.
+	\item The oracle is defined as a unitary black-box, which tags a target element $T$ using a phase-flip,
 	\begin{align}
-		\hat{U}_\varphi = 2\ket\varphi\bra\varphi - \hat{I}.
+		\hat{U}_T \ket{x} &= (-1)^{f(x)}\ket{x} \nonumber \\
+		&= (\hat{I} - 2\ket{T}\bra{T})\ket{x},
 	\end{align}
-	\item Measure the $n$ qubits to obtain a sample from the target elements.
+	where $f(x)=\{0,1\}$ is the black-box function determining whether input $x$ is the target element $T$ (\mbox{$f(x)=1$}) or not (\mbox{$f(x)=0$}).
+	\item The Grover diffusion operator\index{Grover diffusion operator} is defined to implement,
+	\begin{align}
+	\hat{U}_s = \hat{I} - 2\ket{T}\bra{T}.
+	\end{align}
+    \item repeat $O(N)$ times:
+    \item $\ket{\varphi_{i+1}} = \hat{U}_s\cdot\hat{U}_T\ket{\varphi_i}$.
 	\item ???$BOX$
 \end{enumerate}
 }}}
 \caption{.} \label{alg:quant_search}
 \end{table}
 
+%Since $M$ denotes the number of targets in the search space, when \mbox{$M=1$} (\mbox{$M>1$}) we refer to this as the single (multiple) target quantum search algorithm.
 
 
-The algorithm is called single target Grover's algorithm if $M=1$, and called multiple targets Grover's algorithm if $M>1$. In addition, instead of searching the whole database for the target element, we could divide the whole database in several blocks, and then implement a variant of the algorithm, named partial search, to look for the block which contains the target element \cite{grover2005acm}. Subsequently, the partial search algorithm has been optimized \cite{choi2007quantum, korepin2005optimization, korepin2006quest, korepin2006group} and further generalized to hierarchical quantum partial search algorithm \cite{korepin2009quantum, korepin2007hierarchical}.
 
-Beside the partial search, Grover's algorithm has been generalized to many other application scenarios, such as amplitude estimation \cite{brassard2002quantum}, quantum counting \cite{boyer1996tight,brassard1998quantum, mosca1998quantum}, finding the minimum \cite{durr1996quantum, nayak1999quantum, kowada2008new}, applying for arbitrary initial complex amplitude distributions \cite{biham1999grover}, fixed-point quantum search \cite{grover2005fixed,tulsi2005new,yoder2014fixed}, and multi-phase search \cite{tan2014quantum}. Furthermore, a closely related but more difficult problem, namely spatial search, has been also studied. The database of spatial search are some graph structure, and for some well-connected graphs, $O(\sqrt{N})$ time is still achievable \cite{childs2004spatial,chakraborty2016spatial,wong2016quantum,janmark2014global,meyer2015connectivity,wong2016spatial}. So far, the Grover's algorithm has been demonstrated with NMR \cite{chuang1998experimental}, trapped ion \cite{brickman2005implementation}, photonic \cite{walther2005experimental}, and superconducting hardware \cite{dicarlo2009demonstration}.
+
+
+
+
+
+
+ %In addition, instead of searching the whole database for the target element, we could divide the whole database in several blocks, and then implement a variant of the algorithm, named partial search, to look for the block which contains the target element \cite{grover2005acm}. Subsequently, the partial search algorithm has been optimized \cite{choi2007quantum, korepin2005optimization, korepin2006quest, korepin2006group} and further generalized to hierarchical quantum partial search algorithm \cite{korepin2009quantum, korepin2007hierarchical}.
+
+%Beside the partial search, Grover's algorithm has been generalized to many other application scenarios, such as amplitude estimation \cite{brassard2002quantum}, quantum counting \cite{boyer1996tight,brassard1998quantum, mosca1998quantum}, finding the minimum \cite{durr1996quantum, nayak1999quantum, kowada2008new}, applying for arbitrary initial complex amplitude distributions \cite{biham1999grover}, fixed-point quantum search \cite{grover2005fixed,tulsi2005new,yoder2014fixed}, and multi-phase search \cite{tan2014quantum}. Furthermore, a closely related but more difficult problem, namely spatial search, has been also studied. The database of spatial search are some graph structure, and for some well-connected graphs, $O(\sqrt{N})$ time is still achievable \cite{childs2004spatial,chakraborty2016spatial,wong2016quantum,janmark2014global,meyer2015connectivity,wong2016spatial}. So far, the Grover's algorithm has been demonstrated with NMR \cite{chuang1998experimental}, trapped ion \cite{brickman2005implementation}, photonic \cite{walther2005experimental}, and superconducting hardware \cite{dicarlo2009demonstration}.
 
 \section{Integer factorisation}
 
