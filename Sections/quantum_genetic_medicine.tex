@@ -131,11 +131,16 @@ These approaches borrowed from quantum chemistry allow simulation of the interac
 
 To achieve this, let us construct a classical algorithm for exhaustively constructing and enumerating organic drug molecules or functional groups, up to some cutoff size\index{Cutoff size}. The length of this list grows exponentially with the cutoff size. Next we implement this algorithm unitarily (which is always possible, writing the classical circuit as a reversible one), and construct it as a quantum oracle\index{Oracle} such that every input state (which acts as a pointer\index{Pointers} to an element in the list) yields as output a qubit representation\index{Qubit molecule representation} of the corresponding drug compound. Specifically, the oracle implements a transformation of the form,
 \begin{align}
-\hat{U}_\mathrm{oracle}\ket{i}\ket{0}^{\otimes n} \to \ket{i}\ket{\psi_i}_\mathrm{molecule}^{(n)},
+\hat{U}_\mathrm{oracle}\ket{i}_\mathrm{pointer}\ket{0}_\mathrm{drug}^{\otimes n} \to \ket{i}_\mathrm{pointer}\ket{\psi_i}_\mathrm{drug}^{(n)},
 \end{align}
 where $i$ is the index (pointer) to the drug element in the enumeration, and $n$ is the number of qubits encoding the representation of the drug molecule\footnote{This may be implemented unitarily, which is easy to see via its preservation of orthonormality.}.
 
-Having constructed this oracle, we feed the output qubit molecule description into the Hamiltonian simulation algorithm\index{Quantum simulation}, with exponential speedup, yielding as output a `score' characterising some desired property of the interaction, such as bonding affinity\index{Bonding affinity}. The joint oracle$\to$simulation algorithm is finally embedded within a quantum search subroutine\index{Quantum search algorithm}, which searches over the input space enumerating the set of drug candidates for scores above some desired threshold. This yields a quadratic enhancement in the number of drug candidates that can be simulated in parallel. Successful search results, where a compound achieves the threshold score, are then tagged for further investigation as treatment drug candidates.
+Having constructed this oracle, we feed the output qubit molecule description into the Hamiltonian simulation algorithm\index{Quantum simulation}, with exponential speedup, yielding as output a `score' characterising some desired property of the interaction, such as bonding affinity\index{Bonding affinity}. This implements the simulate-and-score unitary,
+\begin{align}
+\hat{U}_\mathrm{sim} \ket{\psi_i}_\mathrm{drug}\ket{0}_\mathrm{score} \to \ket{\psi_i}_\mathrm{drug}\ket{s_i}_\mathrm{score}	
+\end{align}
+
+The joint oracle$\to$simulation algorithm is finally embedded within a quantum search subroutine\index{Quantum search algorithm}, which searches over the input space enumerating the set of drug candidates for scores above some desired threshold. This yields a quadratic enhancement in the number of drug candidates that can be simulated in parallel. Successful search results, where a compound achieves the threshold score, are then tagged for further investigation as treatment drug candidates.
 
 The complete algorithmic pipeline is shown in Fig.~\ref{fig:genetic_med_pipe}.
 
