@@ -18,7 +18,7 @@ It turns out that there is one particularly useful quantum resource, that finds 
 
 Foremost, Bell-pairs (Sec.~\ref{sec:bell_state_res}) -- the simplest entangled states -- are an utterly indispensable resource for countless quantum protocols. In brief, Bell-pairs find applicability in, amongst many others, the following key protocols:
 \begin{itemize}
-\item Cluster states (Sec.~\ref{sec:CSQC})\index{Cluster states}: a Bell-pair is also a two-qubit cluster state, a supply of which can be employed in fusion strategies to prepare larger cluster states, enabling universal MBQC.
+\item Cluster states (Sec.~\ref{sec:CSQC})\index{Cluster states}: a Bell-pair is also a two-qubit cluster state, a supply of which can be employed in fusion strategies to prepare larger cluster states, enabling universal, distributed MBQC.
 \item Quantum state teleportation (Sec.~\ref{sec:teleport})\index{Quantum state teleportation}: a shared Bell-pair between Alice and Bob forms the elementary quantum resource upon which the state teleportation protocol is constructed.
 \item QKD (Sec.~\ref{sec:QKD})\index{Quantum key distribution}: the E91 QKD\index{E91 QKD protocol} protocol is built upon a reliable stream of distributed Bell-pairs, enabling private communication with perfect information theoretic security.
 \item Modularised quantum computation (Sec.~\ref{sec:module})\index{Modularised quantum computation}: using Bell-pairs, entanglement swapping (Sec.~\ref{sec:swapping})\index{Entanglement swapping} can be employed to fuse neighbouring, but potentially distant modules together using operations local to each module.
@@ -37,7 +37,7 @@ Beyond Bell-pairs, multi-qubit GHZ states\index{GHZ state} (Sec.~\ref{sec:GHZ_st
 
 For the purposes of quantum anonymous broadcasting\index{Quantum anonymous broadcasting} (Sec.~\ref{sec:anon_broad}), multi-party GHZ entanglement is the primitive resource upon which the cryptographic protocol is constructed. As with Bell-pairs, GHZ states are a known state and infinitely reproducible. They can also be purified. Thus, GHZ entanglement distribution is another useful primitive, which future quantum hubs might specialise in preparing and distributing.
 
-Additionally, quantum gate teleportation (Sec.~\ref{sec:teleport_gate})\index{Quantum gate teleportation} of a maximally-entangling two-qubit gate (e.g a CNOT or CZ gate) is mediated via a shared 4-qubit GHZ state. In a distributed environment the sharing of such a state between two parties (2 qubits per party) enables implementation of a truly distributed 2-qubit gate.
+Additionally, quantum gate teleportation (Sec.~\ref{sec:teleport_gate})\index{Quantum gate teleportation} of a maximally-entangling two-qubit gate (e.g a CNOT or CZ gate) is mediated via a shared 4-qubit GHZ state. In a distributed environment the sharing of such a state between two parties (2 qubits per party) enables implementation of a truly distributed 2-qubit entangling gate.
 
 \comment{Any other uses?}
 
@@ -57,9 +57,10 @@ Finally, cluster states\index{Cluster states} (Sec.~\ref{sec:CSQC}) are a primit
 
 These observations warrant special treatment of entanglement distribution as a fundamental building block in the quantum era. One might envisage a quantum internet in which a central server(s), who specialises in only entangled state preparation and distribution, serves the sole role of pumping out Bell-pairs or other entangled states across the quantum internet to whomever requests them, who subsequently use them for protocols such as those mentioned above. This could be in the form of a server transmitting over fibre networks, across free-space, or via a satellite in orbit, transmitting at an intercontinental level.
 
-What's the advantage of this approach to quantum networking? Why specialise in entanglement distribution, rather than implementing more capable networks with the ability to perform arbitrary operations? There are several:
-\begin{itemize}
+What's the advantage of this approach to quantum networking? Why specialise in entanglement distribution, rather than implementing more capable networks with the ability to perform arbitrary operations? There are numerous:
+\begin{enumerate}
 \item Dedicated servers can specialise in this one particular task, as can be the transmission infrastructure.
+\item The entanglement servers are entirely passive, not involved interactively with clients.
 \item The server needn't concern itself with the nitty-gritty of the protocols implemented by the end-user. It acts purely as a provider of a single resource, remaining uninvolved in their subsequent applications.
 \item Because servers are providing a single standardised product, they can be commodified, enabling mass production of the hardware devices and the associated economy of scale. For example, mass production of simple ground-based Bell state relays, or the construction of a comprehensive globe-enveloping constellation of satellites, would inevitably improve economies of scale.
 \item Unlike generic quantum states, Bell-pairs, GHZ states and cluster states are known states that are infinitely reproducible, without having to worry about no-cloning limitations.
@@ -69,7 +70,7 @@ What's the advantage of this approach to quantum networking? Why specialise in e
 \item Rather than transmitting quantum states between distant parties directly, if we instead use state teleportation mediated by Bell states, the state to be transmitted will not be corrupted if the communications channel fails (e.g via loss). Instead we can wait for the next successfully transmitted Bell-pair until we are ready to teleport the state, which then proceeds without directly utilising the quantum communications channel, accumulating its associated costs, or risking losing the state altogether should link failure occur. Only classical communication is required to complete the protocol, which can be regarded as error-free for all intents and purposes.
 \item Entanglement purification may be employed by parties to improve the cost metrics associated with their shared entanglement, thereby partially overcoming the limitations imposed by the quantum communication channels.
 \item If no direct link exists between server and clients, bootstrapped entanglement swapping can be employed to concatenate servers to create longer-distance `virtual' links. This is the basis for \textit{quantum repeater networks}, to be discussed next in Sec.~\ref{sec:rep_net}.
-\end{itemize}
+\end{enumerate}
 
 \comment{Any other advantages?}
 
@@ -81,17 +82,32 @@ What's the advantage of this approach to quantum networking? Why specialise in e
 
 In addition to entanglement distribution, entangling measurements, e.g Bell state projections (Sec.~\ref{sec:bell_proj}), may be used as a primitive for many protocols. This is effectively entangled state distribution in reverse\index{Distributed entangling measurements}, whereby two clients transmit states to a host, who performs a joint entangling measurement upon them. For example, in the modularised model for cluster state quantum computing, two adjacent but distant modules might transmit optical qubits to a satellite, which projects them into the Bell basis, thereby creating a link between the respective modules via entanglement swapping. This isn't as powerful as entangled state distribution, since it cannot be used for, for example, E91 QKD\index{E91 QKD}, but nonetheless remains a powerful primitive for many protocols.
 
-So which ought our quantum hubs specialise in, entanglement distribution, entangling measurements, or both? For most practical purposes the former is far more powerful and robust. Let us take the example of fusing two remote cluster states together to form a larger virtual cluster. Imagine that their fusion operations are optically mediated by a satellite overhead. The options for satellite-mediated state fusion are:
+So which ought our quantum hubs specialise in, entanglement distribution, entangling measurements, or both? For most practical purposes the former is far more powerful and robust. Let us take the example of fusing two remote cluster states together to form a larger virtual cluster. Imagine that their fusion operations are optically mediated by a satellite overhead. The options for satellite-mediated state fusion are (see Fig.~\ref{fig:sat_up_down}):
 \begin{itemize}
-	\item The satellite uses the downlink to distribute an entangled Bell-pair between the two nodes. Each node performs a Bell projection between their half of the Bell-pair and their respective qubit from their local cluster state, creating a link. See Fig.~\ref{fig:sat_up_down}(a).
-	\item Each node takes an optical qubit from their cluster state (or entangles their cluster state qubit with an optical qubit), which is uplinked to the satellite. The satellite performs a Bell projection between the two received optical qubits, thereby implementing entanglement swapping between the two nodes, creating a link. See Fig.~\ref{fig:sat_up_down}(b).
+	\item Downlink mode\index{Satellite downlink} --- The satellite uses the downlink to distribute an entangled Bell-pair between the two nodes. Each node performs a Bell projection between their half of the Bell-pair and their respective qubit from their local cluster state, creating a link. See Fig.~\ref{fig:sat_up_down}(a).
+	\item Uplink mode\index{Satellite uplink} --- Each node takes an optical qubit from their cluster state (or entangles their cluster state qubit with an optical qubit), which is uplinked to the satellite. The satellite performs a Bell projection between the two received optical qubits, thereby implementing entanglement swapping between the two nodes, creating a link. See Fig.~\ref{fig:sat_up_down}(b).
 \end{itemize}
 
 \begin{figure}[!htb]
 	\includegraphics[width=0.47\textwidth]{satellite_downlink_uplink}
-	\caption{Satellite-mediated cluster state fusion operations for creating a link between two cluster states held by distant ground nodes. (a) Via entanglement distribution over a downlink channel. (b) Via distributed Bell projection over an uplink channel. When performing a distributed Bell measurement it is essential that the optical qubits arrive synchronously at the entangling measurement device (e.g a PBS), which is technologically challenging to implement on satellite given the unpredictable nature of the atmospheric quantum channel, necessitating on-board quantum memories to synchronise the qubits.} \label{fig:sat_up_down}
+	\caption{Satellite-mediated cluster state fusion operations for creating a link between two cluster states held by distant ground nodes. (a) Via entanglement distribution over a downlink channel. (b) Via distributed Bell projection over an uplink channel. When performing a distributed Bell measurement it is essential that the optical qubits arrive synchronously at the entangling measurement device, denoted \mbox{$\ket{\Psi^+}\bra{\Psi^+}$} (e.g a PBS), which is technologically challenging to implement on satellite given the unpredictable nature of the atmospheric quantum channel, necessitating on-board quantum memories to synchronise the qubits. This is likely to make (a) cheaper, faster and more efficient than (b).} \label{fig:sat_up_down}
 \end{figure}
 
-Mathematically, these two processes are almost identical in their operation, differing only in direction. However, the former has the key advantage that it requires no time-synchronisation, whereas the latter does. In the former case the time ordering of the Bell projections performed locally on the ground nodes is irrelevant. However, in the latter case it is essential that both optical qubits arrive at the entangling measurement device (typically a PBS) simultaneously such that there is high HOM-visibility. This requires synchronisation of the qubits to the order of the coherence length of the photons, which is extremely difficult to enforce when our quantum channels are tracking moving targets in low-Earth orbit and traversing a turbulent atmospheric channel. The solution of course would be a quantum memory on the satellite to capture the optical qubits and store them until both are available. However, this is obviously far more technologically challenging. We therefore anticipate that distributed entangling operations are likely to be mediated via entanglement distribution rather than distributed entangling measurements in the future quantum internet.
+Mathematically, these two processes are almost identical in their operation, differing only in direction. However, the former has the key advantage that it requires no time-synchronisation operations on the server side, whereas the latter does.
+
+Both scenarios involve Bell projections. These entangling measurements require active synchronisation to ensure that the measured qubits arrive at the entangling measurement device (typically a PBS) simultaneously, so as to achieve high HOM-visibility\index{HOM-visibility}, requiring synchronisation on the order of the photons' coherence length\index{Coherence length}. This can be achieved either using brute-force {\sc Repeat-Until-Success} operation (post-selecting on events where both qubits arrive within a required temporal window), or storing one qubit in quantum memory\index{Quantum memory} until the other arrives. However, post-selection is expensive, requiring a massive overhead in the number of trials, and quantum memory is technologically challenging to implement.
+
+In the former case, the time ordering of the Bell projections performed locally on the ground nodes is irrelevant. Although within each ground station the two qubits being projected must be synchronised, requiring quantum memories within ground stations.
+
+On the other hand, in the latter case it is essential that both optical qubits arrive at the satellite's entangling measurement device simultaneously, which is extremely difficult to enforce when our quantum channels are tracking moving targets in low-Earth orbit and traversing a turbulent atmospheric channel. And an on-satellite quantum memory would be extremely costly.
+
+This yields several key advantages in favour of entanglement distribution as opposed to server-side joint entangling measurements.
+\begin{enumerate}
+	\item The challenging prospect of quantum memory may operate on Earth, far less onerous than incorporating it into a satellite in low-Earth orbit.
+	\item Because the server is not storing any qubits in quantum memory, it does not suffer downtime associated with the periods between receiving the first photon and waiting for the second -- it can continue to spit out Bell-pairs at maximum capacity.
+	\item The satellite remains passive, implementing only the simplest of possible operations, reducing mass-production costs. It does not require any interaction with its clients.
+\end{enumerate}
+
+We therefore anticipate that distributed entangling operations are likely to be mediated via entanglement distribution rather than distributed entangling measurements in the future quantum internet.
 
 These observations lead us to naturally conclude that a quantum network specialised to this one particular task -- entanglement distribution -- would already be immensely useful, and on its own enable many key applications.
