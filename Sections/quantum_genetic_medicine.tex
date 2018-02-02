@@ -4,8 +4,6 @@
 
 \section{Quantum genetic medicine}\index{Genetic medicine}
 
-\comment{Add equations to what Hamiltonian simulation subroutine does, or reference back to algorithms section.}
-
 \comment{Add subsections for each of the subroutines/oracles}
 
 \comment{Add to essays}
@@ -137,10 +135,14 @@ To achieve this, let us construct a classical algorithm for exhaustively constru
 \end{align}
 where $i$ is the index (pointer) to the drug element in the enumeration, and $n$ is the number of qubits encoding the representation of the drug molecule\footnote{This may be implemented unitarily, which is easy to see via its preservation of orthonormality.}.
 
+This oracle might be constructed by writing a classical algorithm that generates a search tree\index{Search tree} for exhaustively enumerating physically allowed drug compounds via brute-force. Writing this as a reversible quantum circuit then yields the oracle, where the output pointer register is entangled with the output drug description register, uniquely mapping them to one another.
+
 Having constructed this oracle, we feed the output qubit molecule description into the Hamiltonian simulation algorithm\index{Quantum simulation}, with exponential speedup, yielding as output a `score' characterising some desired property of the interaction, such as bonding affinity\index{Bonding affinity}. This implements the simulate-and-score unitary,
 \begin{align}
 \hat{U}_\mathrm{sim} \ket{\psi_i}_\mathrm{drug}\ket{0}_\mathrm{score} \to \ket{\psi_i}_\mathrm{drug}\ket{s_i}_\mathrm{score}	
 \end{align}
+
+\comment{How does one make this unitary?}
 
 The joint oracle$\to$simulation algorithm is finally embedded within a quantum search subroutine\index{Quantum search algorithm}, which searches over the input space enumerating the set of drug candidates for scores above some desired threshold. This yields a quadratic enhancement in the number of drug candidates that can be simulated in parallel. Successful search results, where a compound achieves the threshold score, are then tagged for further investigation as treatment drug candidates.
 
@@ -157,7 +159,7 @@ The complete algorithmic pipeline is shown in Fig.~\ref{fig:genetic_med_pipe}.
 
 \subsection{In the cloud}\index{Cloud quantum computing}
 
-This quantum processing pipeline lends itself well to several important cloud-based protocols. The pipeline comprises several distinct subroutines\index{Subroutines}, which might be outsourced or distributed independently of one another\index{Outsourced quantum computation}\index{Distributed quantum computation}.
+This quantum genetic medicine processing pipeline lends itself well to several important cloud-based protocols. The pipeline comprises several distinct subroutines\index{Subroutines}, which might be outsourced or distributed independently of one another\index{Outsourced quantum computation}\index{Distributed quantum computation}.
 
 An R\&D organisation might specialise in the algorithmic generation\index{Algorithmic generation} (or hard-coding\index{Hard-coding}) of candidate drug compounds\index{Compounds}, which they would like to retain as a trade secret\index{Trade secrets}, but desire to license\index{Outsourced quantum computation} to third-party drug designers\index{Drug designers}, who wish to employ them in their computational pipeline\index{Quantum drug trial simulation}. The quantum search\index{Quantum search algorithm} and Hamiltonian simulation\index{Quantum simulation} subroutines might similarly be outsourced or distributed over the cloud to vendors specialising in the implementation of these particular subroutines.
 
