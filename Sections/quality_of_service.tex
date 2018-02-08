@@ -25,6 +25,7 @@ As discussed previously in Sec.~\ref{sec:QOS}\index{Quality of service}, quality
 \subsection{3-qubit code}\index{3-qubit code}
 
 \comment{To do}
+\comment{Syndrome extraction}\index{Syndrome extraction}
 
 %
 % 9-Qubit Code
@@ -137,20 +138,58 @@ Importantly, the stabilisers are all defined over geometrically localised neighb
 \comment{Tree horticultural scheme Rudolph et al.}
 
 %
+% Decoherence-Free Subspaces
+%
+
+\subsection{Decoherence-free subspaces}\index{Decoherence-free subspaces}
+
+The QoS techniques discussed previously were based on the notion of performing measurements on quantum systems to project them into subspaces devoid of errors. For example, in the 3-qubit code, measurement of the syndrome qubits projects the encoded state into a subspace where there was either no error, or in which an error occurred whose location is known and may therefore be corrected.
+
+An alternate approach is to encode quantum information into Hilbert spaces which are invariant under a given error model. Such spaces are referred to as \textit{decoherence-free subspaces} (DFSs). In this instance we assume the error model is known, for example a dephasing channel, such that we can choose the appropriate DFS. To illustrate this idea we will consider encoding a single logical qubit into two physical qubits. The error model we will encode against is a collective $Z$-rotation, where the two physical qubits are subject to perfectly correlated $Z$ errors. This arises naturally in the context of, say, atomic qubits subject to the same external electromagnetic field, and therefore accumulate the associated phase errors in tandem.
+
+A single-qubit $Z$-rotation of angle $\phi$ is given by $e^{i\phi\hat{Z}}$, which operates on logical basis states as,
+\begin{align}
+	e^{i\phi\hat{Z}} \ket{0} &\to \ket{0}, \nonumber \\
+	e^{i\phi\hat{Z}} \ket{1} &\to e^{i\phi}\ket{1}.
+\end{align}
+
+Now we employ the encoding for logical basis states,
+\begin{align}
+\ket{0}_L &\equiv \ket{0}\ket{1},\nonumber \\
+\ket{1}_L &\equiv \ket{1}\ket{0}.
+\end{align}
+Note that under a common $Z$-rotation, both logical basis states evolve identically by acquiring the same phase,
+\begin{align}
+	e^{i\phi\hat{Z}_1}e^{i\phi\hat{Z}_2}\ket{0}_L &= e^{i\phi}\ket{0}_L,\nonumber\\
+	e^{i\phi\hat{Z}_1}e^{i\phi\hat{Z}_2}\ket{1}_L &= e^{i\phi}\ket{1}_L.
+\end{align}
+Thus, when acting on an arbitrary linear combination of these basis states (i.e a logical qubit),
+\begin{align}
+\ket\psi_L = \alpha \ket{0}_L + \beta\ket{1}_L,
+\end{align}
+the action of the error model is to acquire a global phase factor,
+\begin{align}
+	e^{i\phi\hat{Z}_1}e^{i\phi\hat{Z}_2} \ket\psi_L &= e^{i\phi}(\alpha\ket{0}_L + \beta\ket{1}_L) \nonumber \\
+	&= e^{i\phi}\ket\psi_L,
+\end{align}
+which is physically irrelevant. This type of DFS encoding therefore protects a logical qubit against arbitrary correlated $Z$-rotations.
+
+The same principle can be logically extended to many other correlated error models. For example, operating in a rotated basis (under a Hadamard transform), one could similarly protect against correlated $X$-rotations using the encoding,
+\begin{align}
+\ket{0}_L &\equiv \ket{-}\ket{+},\nonumber \\
+\ket{1}_L &\equiv \ket{+}\ket{-},
+\end{align}
+where \mbox{$\ket\pm=\frac{1}{\sqrt{2}}(\ket{0}\pm\ket{1})$}.
+
+One can conceptually think of the DFS encoding as being a type of `symmetry encoding', whereby the robustness against a particular error model arises due to the symmetry invariance of the action of the correlated errors on the encoded state. This idea, although very simple, is very powerful, since it is a completely passive form of error correction, requiring no syndrome measurements or correction operations. It also arises quite naturally in some systems where external fields act roughly uniformly across the physical qubits within a system.
+
+%
 % Dynamical Decoupling
 %
 
 \subsection{Dynamical decoupling}
 
-\comment{To do}
-
-%
-% Decoherence-Free Subspaces
-%
-
-\subsection{Decoherence-free subspaces}
-
-\comment{To do}
+\comment{To do, bang-bang, time-reversal}
 
 %
 % Continuous-Variable Quantum Error Correction
