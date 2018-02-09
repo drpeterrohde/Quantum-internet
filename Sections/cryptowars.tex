@@ -14,7 +14,7 @@ Undoubtedly, quantum technologies will be most impactful (and disruptive) in the
 
 In Sec.~\ref{sec:homo_blind} we discussed encrypted outsourced quantum computation as an important concept in future cloud quantum computing. In this section we will step back from full-fledged distributed quantum computation, instead focussing on more elementary protocols for simple secure communication.
 
-Today, the ability to communicate secretly with others is completely taken for granted in all but a few nations and resides in every smartphone and desktop PC. Furthermore, the encryption technologies available to the average consumer are extremely strong, the same as those used by large organisations including governments.
+Today, the ability to communicate secretly with others is completely taken for granted in all but a few nations and resides in every smartphone and desktop PC. Furthermore, the encryption technologies available to the average consumer are extremely strong, the same as those used by large organisations, including world governments.
 
 \subsection{Classical cryptography}\index{Classical cryptography}
 
@@ -59,9 +59,9 @@ While private-key cryptography solves the problem of end-to-end cryptography, it
 
 Public- (or asymmetric-) key cryptography addresses this issue by replacing the private key with two keys, one used solely for \textit{encryption}, the other solely for \textit{decryption}. Then to send a message to a friend I can send him my encryption (public) key that he is only able to use for preparing an encrypted message for me. No security is required when sharing the public key since an eavesdropper can't use it for decryption. Finally, I am able to decrypt the message using my decryption (private) key, which I kept completely to myself and never shared with anyone.
 
-RSA \cite{bib:RSA} was the first published public-key cryptographic protocol. It achieves its security based on the belief that factorising large integers into constituent primes is a computationally hard problem. In this scheme, the private key comprises two prime numbers, which are the factors of a larger number, which acts as the public key. It is clear that to obtain the private key from the public key would require solving the integer factorisation problem.
+RSA \cite{bib:RSA} was the first published public-key cryptographic protocol, and forms the backbone for most encryption used on the internet today. It achieves its security based on the belief that factorising large integers into constituent primes is a computationally hard problem -- a so-called `trapdoor function'\index{Trapdoor function}. The private key comprises two prime numbers, which are multiplied together to obtain the public key. It is clear that to obtain the private key from the public key would require solving the integer factorisation problem, which is presumed to be intractable.
 
-\comment{Trapdoor function}
+Since RSA, numerous other public-key crypto-systems have been developed, based on different choices of trapdoor function. However, RSA remains the most widely used public-key cipher.
 
 \subsection{Attacks on classical cryptography}
 
@@ -69,7 +69,7 @@ RSA \cite{bib:RSA} was the first published public-key cryptographic protocol. It
 
 \paragraph{Brute-force}\index{Brute-force}\label{sec:brute_force_attack}
 
-\comment{Note that when performing a brute-force attack against a private encryption key\index{Private-key encryption}, a quadratic speedup effectively halves the key length in terms of algorithmic runtime. Thus, in the quantum era private key lengths will need to be doubled.}
+The most obvious approach to cracking a crypto-system is to systematically try out all possible keys until we find one that correctly decodes the encrypted message. This is also the most na\"ive approach, and one which is computationally intractable for real-world key lengths. Specifically, for a key length of $k$ bits (\mbox{$k=256$} for AES), there are $2^k$ possible keys to try, and on average we will wait for $2^{k-1}$ trials before choosing the right one. Clearly an average waiting time of $2^{128}$ is not plausible!
 
 \paragraph{Cryptanalysis}\index{Cryptanalysis}
 
@@ -78,6 +78,12 @@ RSA \cite{bib:RSA} was the first published public-key cryptographic protocol. It
 \subsubsection{Quantum attacks}
 
 \paragraph{Brute-force}
+
+A brute-force attack by a quantum computer does not offer us the exponential improvement attacker Eve might hope for. However, we can gain a quadratic improvement by cleverly exploiting Grover's search algorithm (Sec.~\ref{sec:quantum_algs}).
+
+To do this, we treat the brute-force cracking algorithm as a satisfiability problem, similar to how Grover's is employed to enhance \textbf{NP}-complete problems. Specifically, our oracle implements the code's decryption operation, taking as input a qubit string representing the key. After decoding the message with the key, the oracle runs an appropriate test on the decrypted message to determine whether it is a legitimate decoded message. For example, it could run an English language test -- a message decoded incorrectly with the wrong key will appear very random and almost certainly won't pass such a test.
+
+\comment{Note that when performing a brute-force attack against a private encryption key\index{Private-key encryption}, a quadratic speedup effectively halves the key length in terms of algorithmic runtime. Thus, in the quantum era private key lengths will need to be doubled.}
 
 \paragraph{Integer factorisation}
 
