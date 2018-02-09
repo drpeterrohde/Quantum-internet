@@ -145,51 +145,107 @@ Importantly, the stabilisers are all defined over geometrically localised neighb
 
 The QoS techniques discussed previously were based on the notion of performing measurements on quantum systems to project them into subspaces devoid of errors. For example, in the 3-qubit code, measurement of the syndrome qubits projects the encoded state into a subspace where there was either no error, or in which an error occurred whose location is known and may therefore be corrected.
 
-An alternate approach is to encode quantum information into Hilbert spaces which are invariant under a given error model. Such spaces are referred to as \textit{decoherence-free subspaces} (DFSs). In this instance we assume the error model is known, for example a dephasing channel, such that we can choose the appropriate DFS. To illustrate this idea we will consider encoding a single logical qubit into two physical qubits. The error model we will encode against is a collective $Z$-rotation, where the two physical qubits are subject to perfectly correlated $Z$ errors. This arises naturally in the context of, say, atomic qubits subject to the same external electromagnetic field, and therefore accumulate the associated phase errors in tandem.
+An alternate approach is to encode quantum information into Hilbert spaces which are invariant under a given error model. Such spaces are referred to as \textit{decoherence-free subspaces} (DFSs). In this instance we assume the error model is known, for example a dephasing channel, such that we can choose the appropriate DFS.
 
-A single-qubit $Z$-rotation of angle $\phi$ is given by $e^{i\phi\hat{Z}}$, which operates on logical basis states as,
+To illustrate this idea we will consider encoding a single logical qubit into two physical qubits. The error model we will encode against is a collective $Z$-rotation, where the two physical qubits are subject to perfectly correlated $Z$ errors. This arises naturally in the context of, say, atomic qubits subject to the same external electromagnetic field, and therefore accumulate the associated phase errors in tandem.
+
+A single-qubit $Z$-rotation of angle $\theta$ on the Bloch sphere\index{Bloch sphere} is given by,
 \begin{align}
-	e^{i\phi\hat{Z}} \ket{0} &\to \ket{0}, \nonumber \\
-	e^{i\phi\hat{Z}} \ket{1} &\to e^{i\phi}\ket{1}.
+	\hat{Z}(\theta) &= e^{i\frac{\theta}{2}\hat{Z}}\nonumber \\
+	&= \left(\begin{matrix}
+  e^{i\frac{\theta}{2}} & 1 \\
+  0 & e^{-i\frac{\theta}{2}}
+\end{matrix}\right).
+\end{align}
+where $\hat{Z}$ is the usual Pauli phase-flip operator\index{Pauli operators},
+\begin{align}
+\hat{Z}=\ket{0}\bra{0}-\ket{1}\bra{1}.	
+\end{align}
+This operates on the physical basis states as,
+\begin{align}
+	\hat{Z}(\theta) \ket{0} &\to e^{i\frac{\theta}{2}}\ket{0}, \nonumber \\
+	\hat{Z}(\theta) \ket{1} &\to e^{-i\frac{\theta}{2}}\ket{1}.
 \end{align}
 
 Now we employ the encoding for logical basis states,
 \begin{align}
-\ket{0}_L &\equiv \ket{0}\ket{1},\nonumber \\
-\ket{1}_L &\equiv \ket{1}\ket{0}.
+\ket{0}_L &\equiv \ket{0}_1\otimes\ket{1}_2,\nonumber \\
+\ket{1}_L &\equiv \ket{1}_1\otimes\ket{0}_2,
 \end{align}
-Note that under a common $Z$-rotation, both logical basis states evolve identically by acquiring the same phase,
+Note that both logical basis states are invariant under a common $Z$-rotation (the other two physical basis states, $\ket{0}_1\otimes\ket{0}_2$ and $\ket{1}_1\otimes\ket{1}_2$ do not observe this property),
 \begin{align}
-	e^{i\phi\hat{Z}_1}e^{i\phi\hat{Z}_2}\ket{0}_L &= e^{i\phi}\ket{0}_L,\nonumber\\
-	e^{i\phi\hat{Z}_1}e^{i\phi\hat{Z}_2}\ket{1}_L &= e^{i\phi}\ket{1}_L.
+	\hat{Z}_1(\theta)\hat{Z}_2(\theta)\ket{0}_L &= \ket{0}_L,\nonumber\\
+	\hat{Z}_1(\theta)\hat{Z}_2(\theta)\ket{1}_L &= \ket{1}_L.
 \end{align}
 Thus, when acting on an arbitrary linear combination of these basis states (i.e a logical qubit),
 \begin{align}
 \ket\psi_L = \alpha \ket{0}_L + \beta\ket{1}_L,
 \end{align}
-the action of the error model is to acquire a global phase factor,
+via linearity the logical qubit must also be invariant under the collective error,
 \begin{align}
-	e^{i\phi\hat{Z}_1}e^{i\phi\hat{Z}_2} \ket\psi_L &= e^{i\phi}(\alpha\ket{0}_L + \beta\ket{1}_L) \nonumber \\
-	&= e^{i\phi}\ket\psi_L,
+	\hat{Z}_1(\theta)\hat{Z}_2(\theta)\ket\psi_L = \ket\psi_L.
 \end{align}
-which is physically irrelevant. This type of DFS encoding therefore protects a logical qubit against arbitrary correlated $Z$-rotations.
+This type of DFS encoding therefore protects a logical qubit against arbitrary correlated $Z$-rotations.
 
 The same principle can be logically extended to many other correlated error models. For example, operating in a rotated basis (under a Hadamard transform), one could similarly protect against correlated $X$-rotations using the encoding,
 \begin{align}
-\ket{0}_L &\equiv \ket{-}\ket{+},\nonumber \\
-\ket{1}_L &\equiv \ket{+}\ket{-},
+\ket{0}_L &\equiv \ket{-}\otimes\ket{+},\nonumber \\
+\ket{1}_L &\equiv \ket{+}\otimes\ket{-},
 \end{align}
 where \mbox{$\ket\pm=\frac{1}{\sqrt{2}}(\ket{0}\pm\ket{1})$}.
 
-One can conceptually think of the DFS encoding as being a type of `symmetry encoding', whereby the robustness against a particular error model arises due to the symmetry invariance of the action of the correlated errors on the encoded state. This idea, although very simple, is very powerful, since it is a completely passive form of error correction, requiring no syndrome measurements or correction operations. It also arises quite naturally in some systems where external fields act roughly uniformly across the physical qubits within a system.
+This idea, although very simple, is very powerful, since it is a completely passive form of error correction, requiring no syndrome measurements, feedforward or correction operations. It also arises quite naturally in some systems where external fields act roughly uniformly across the physical qubits within a system.
 
 %
 % Dynamical Decoupling
 %
 
-\subsection{Dynamical decoupling}
+\subsection{Dynamical decoupling}\index{Dynamical decoupling}
 
-\comment{To do, bang-bang, time-reversal}
+An alternate mechanism by which errors could be introduced into our system is via coupling to an external environment (for example via an electromagnetic field) introducing a persistent evolution of our qubits, which is slow-moving compared to the rate at which the implemented computation is evolving the system. We can model this as a joint system/environment Hamiltonian of the form,
+\begin{align}\label{eq:dyn_dec_ham}
+\hat{H}_\mathrm{total} = \lambda_\mathrm{comp}\hat{H}_\mathrm{comp} + \lambda_\mathrm{env}\hat{H}_\mathrm{env} + \lambda_\mathrm{int}\hat{H}_\mathrm{int},	
+\end{align}
+where the different components represent, in order, the Hamiltonians of the: total joint system; quantum computer (or system of interest); environment; interaction between system and environment. We are specifically operating in the regime where \mbox{$\lambda_\mathrm{int}\ll\lambda_\mathrm{comp}$}, such that the computation is the dominant term in the evolution and the environmental coupling can be treated as a small perturbation from the desired evolution.
+
+The goal of dynamical decoupling is to minimise the influence of the system/environment interaction term, $\hat{H}_\mathrm{int}$, by manipulating the system in such a way that this term continuously cancels itself out over time.
+
+Let us illustrate how this can be achieved using a simple example, whereby a single-qubit system couples with an environment which introduces a slow, unknown phase evolution. Discretising time, we can write this phase evolution as a Pauli $Z$-rotation on the Bloch sphere\index{Bloch sphere},
+\begin{align}
+	\hat{Z}(\theta) &= e^{i\frac{\theta}{2}\hat{Z}}\nonumber \\
+	&= \left(\begin{matrix}
+  e^{i\frac{\theta}{2}} & 1 \\
+  0 & e^{-i\frac{\theta}{2}}
+\end{matrix}\right),
+\end{align}
+for some unknown, but small $\theta$. Next we observe that, quite obviously, a $Z$-rotation of angle $\theta$ can be trivially undone by applying another $Z$-rotation of angle $-\theta$, since,
+\begin{align}
+\hat{Z}(-\theta)\hat{Z}(\theta) = \hat{I}.	
+\end{align}
+
+Therefore, if the system/environment coupling introduced an evolution of $\hat{Z}(\theta)$ in the previous unit of time, our goal is to manipulate it into implementing $\hat{Z}(-\theta)$ during the next one. Alas, the environment is beyond our control and we cannot directly order it to reverse direction. We do, however, have complete control over our qubit system, so we will achieve the same outcome by flipping the direction of the Bloch sphere underneath the environments foot, allow it to take a step forward, before flipping it back.
+
+How do we achieve this flip in the Bloch sphere? Simply by using the following identity from the algebra of the Pauli matrices\index{Pauli operators},
+\begin{align}
+\hat{X}\hat{Z}(\theta)\hat{X} = 	\hat{Z}(-\theta).
+\end{align}
+That is, applying a bit-flip to a qubit, followed by an arbitrary phase-rotation, followed by another bit-flip is equivalent to having taken the same phase-rotation in the reverse direction. Effectively we are tricking the environment into time-reversal!
+
+Now if we proceed for two time-steps, once bit-flipped and another not, we have,
+\begin{align}
+\hat{Z}(\theta)\cdot[\hat{X}\hat{Z}(\theta)\hat{X}] = \hat{I},
+\end{align}
+and the unknown phase-rotation has been eliminated.
+
+Proceeding over the course of a lengthy evolution, we will implement the dynamical decoupling by continuously applying bit-flips to our qubit, such that in conclusion there are no accumulated unknown phase-evolutions. The control sequence for implementing this is sometimes referred to as `bang-bang' control\index{Bang-bang control}, since we are repeatedly implementing bit-flips at a fast rate.
+
+As described above, we have merely error corrected a quantum memory. Of course we wish to implement far more sophisticated evolutions. This requires breaking down the computational evolution (given by $\hat{H}_\mathrm{comp}$) into a large number of small, discrete steps. These are interspersed with our bang-bang control sequence so as to continuously remove any phase-errors accumulated during the course of the computation.
+
+Because the evolution implemented by the computation is constantly changing the state of our computational qubit, the change in trajectory introduced by the dephasing error model is also varying over time. But for the phase cancellation to work, the forward and backward erroneous steps ($\hat{Z}(\pm\theta)$) must be along the same path -- i.e they must all couple-up. This mandates that the bang-bang bit-flip control sequence be executed at a rate very fast compared to the rate of change in the phase-error -- if we fail to implement them fast enough, erroneous steps in the forward and backward directions will not pair up exactly, leaving some residual accumulated errors.
+
+Dynamical decoupling extends to all manner of error models, beyond the simple $Z$-error model presented above. They are therefore a very powerful tool in error correction. However, unfortunately they are only naturally suited to continuous evolutions governed by Hamiltonians of the form shown in (Eq.~\ref{eq:dyn_dec_ham}), not to the more common discretised models such as the circuit and cluster state models.
+
+\comment{Reference, Bloch sphere figures}
 
 %
 % Continuous-Variable Quantum Error Correction
