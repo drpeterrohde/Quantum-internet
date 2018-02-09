@@ -6,25 +6,25 @@
 
 \comment{To do, AES, DES, RSA}
 
+\comment{Add more advanced protocols? Decoy states, untrusted devices etc. etc.}
+
 \comment{Index}
 
 Undoubtedly, quantum technologies will be most impactful (and disruptive) in the area of information security, something of fundamental importance to us all on a daily basis. Quantum technologies will be important both in terms of breaking and maintaining security, with the former mandating interest in the latter.
 
-In Sec.~\ref{sec:homo_blind} we discussed encrypted outsourced quantum computation as an important concept in future cloud quantum computing. In this section we will step back from full-fledged distributed quantum computation, instead focussing on more elementary protocols for simple two-party secure communication, the most fundamental cryptographic primitive.
+In Sec.~\ref{sec:homo_blind} we discussed encrypted outsourced quantum computation as an important concept in future cloud quantum computing. In this section we will step back from full-fledged distributed quantum computation, instead focussing on more elementary protocols for simple secure communication.
 
-\subsection{Classical cryptography}
+Today, the ability to communicate secretly with others is completely taken for granted in all but a few nations and resides in every smartphone and desktop PC. Furthermore, the encryption technologies available to the average consumer are extremely strong, the same as those used by large organisations including governments.
+
+\subsection{Classical cryptography}\index{Classical cryptography}
 
 \subsubsection{Private-key cryptography}\index{Private-key cryptography}
 
 Private- (or symmetric-) key cryptography is perhaps the most basic (and useful) cryptographic primitive, enabling encryption of a channel between two parties who share a secret key. The same secret key is employed for both encryption and decryption operations, making it of utmost importance that it be retained secret.
 
-Private key cryptography has a long history, in fact going back to ancient times, enabling the secret sharing of diplomatic messages between statesmen. However it was a niche technology that very few utilised, since it had to be implemented by hand without computers. Today, however, the ability to communicate secretly with others is completely taken for granted in all but a few nations and resides in every smartphone.
+Private key cryptography has a long history, in fact going back to ancient times, enabling the secret sharing of diplomatic messages between emperors and empires. However it was a niche technology that very few utilised, since it had to be implemented by hand without computers.
 
-Today there are countless freely available private-key cryptographic protocols available online. 
-
-\comment{Note that when performing a brute-force attack against a private encryption key\index{Private-key encryption}, a quadratic speedup effectively halves the key length in terms of algorithmic runtime. Thus, in the quantum era private key lengths will need to be doubled.}
-
-\comment{Shift discussion of halving private keylength by half from footnote in early section.}
+Today there are countless freely available private-key cryptographic protocols available online, and some have been standardised by standards institutes. Currently, the Advanced Encryption Standard (AES) is a standard endorsed by the US government. AES is a block cipher, meaning that it divides data into small blocks of bits, each of which are encrypted independently, and operates with key lengths of up to 256 bits, making it very robust against brute-force attacks (Sec.~\ref{sec:brute_force_attack}).
 
 %
 % One-Time Pad Cipher
@@ -32,19 +32,26 @@ Today there are countless freely available private-key cryptographic protocols a
 
 \subsubsection{One-time pad cipher}\index{One-time pad cipher}
 
-\comment{Repetition}
-
-We now turn our attention to the technical implementation of QKD and its perfect security. There is only a single provably secure encryption protocol -- the \textit{one-time pad}\index{One-time pad cipher} \cite{bib:Schneier96}. This protocol requires Alice and Bob to share a random bit-string as long as the message (plaintext\index{Plaintext}) being communicated between them. The two bit-strings undergo bit-wise XOR operations to form the ciphertext\index{Ciphertext}. Mathematically,\index{One-time pad cipher}
+There is only a single provably secure encryption protocol -- the \textit{one-time pad}\index{One-time pad cipher} \cite{bib:Schneier96}. This protocol requires Alice and Bob to share a random bit-string as long as the message (plaintext\index{Plaintext}) being communicated between them. The two bit-strings undergo bit-wise XOR operations to form the ciphertext\index{Ciphertext}. Mathematically,\index{One-time pad cipher}
 \begin{align}
 c = s \oplus k,
 \end{align}
 where $\oplus$ is the bitwise XOR operation (equivalently addition modulo 2), and $c$, $s$ and $k$ are the ciphertext, plaintext and key strings respectively, all of which are of the same length, \mbox{$|c|=|s|=|k|$}.
 
-The security of this protocol is easy to see intuitively -- with an appropriate choice of key, \textit{any} plaintext of the same length could be inferred from the ciphertext. This means that there is no possibility of performing any kind of frequency analysis, as the ciphertext string has maximum entropy\index{Entropy} (inherited from the maximum entropy of the key, and assuming a strong cryptographic random number random bit generator) and thus no correlations. Alternately, suppose we were to try and crack this code by expressing the decryption as an oracle, where the input is a key bit-string. Then we use brute-force\index{Brute force} (or Grover's algorithm) to query the oracle for tagged elements, where by `tagged' we mean that it satisfies an appropriate test (e.g an English language test) to decide whether a decrypted message is valid. Since every possible valid plaintext can be recovered using an appropriate key, the protocol is unable to find a unique plaintext matching the ciphertext.
+The security of this protocol is easy to see intuitively -- with an appropriate choice of key, \textit{any} plaintext of the same length could be inferred from the ciphertext. This means that there is no possibility of performing any kind of frequency analysis, as the ciphertext string has maximum entropy\index{Entropy} (inherited from the maximum entropy of the key, and assuming a strong cryptographic random bit generator) and thus no correlations. Alternately, suppose we were to try and crack this code by expressing the decryption as an oracle, where the input is a key bit-string. Then we use brute-force\index{Brute force} (or Grover's algorithm\index{Grover's algorithm}) to query the oracle for tagged elements, where by `tagged' we mean that it satisfies an appropriate test (e.g an English language test) to decide whether a decrypted message is valid. Since every possible valid plaintext can be recovered using an appropriate key, the protocol is unable to find a unique plaintext matching the ciphertext.
 
-Importantly, the secrecy of the one-time-pad\index{One-time pad cipher} strictly requires that a key never be reused. A fresh key must be generated for each message sent, otherwise trivial frequency analysis\index{Frequency analysis} techniques can be employed to compromise security\footnote{If the same key $k$ is used to encode two messages $s_1$ and $s_2$, yielding ciphertexts \mbox{$c_1=s_1\oplus k$} and \mbox{$c_2=s_2\oplus k$}, then we trivially obtain \mbox{$c_1 \oplus c_2 = s_1 \oplus k \oplus s_2 \oplus k = s_1 \oplus s_2$}. Now a frequency analysis on the bitwise XOR of two plaintexts can be applied, without requiring any knowledge of the key whatsoever.}.
+Importantly, the secrecy of the one-time-pad\index{One-time pad cipher} strictly requires that a key never be reused. A fresh key must be generated for each message sent, otherwise trivial frequency analysis\index{Frequency analysis} techniques can be employed to compromise security. If the same key $k$ is used to encode two messages $s_1$ and $s_2$, yielding ciphertexts,
+\begin{align}
+c_1&=s_1\oplus k,\nonumber\\
+c_2&=s_2\oplus k,
+\end{align}
+then we trivially obtain,
+\begin{align}
+c_1 \oplus c_2 = s_1 \oplus k \oplus s_2 \oplus k = s_1 \oplus s_2.
+\end{align}
+Now a frequency analysis on the bitwise XOR of two plaintexts can be applied, without requiring any knowledge of the key whatsoever.
 
-Needless to say, the requirement for keys of the same length as the plaintexts, which cannot be reused, raises the obvious criticism that now secret key-sharing is as difficult as sharing a secret message in the first place. This reduces the problem of perfect secrecy of arbitrary messages to the secrecy of shared randomness. QKD protocols enable this by providing a shared source of randomness between Alice and Bob, where any intercept-resend attack\index{Intercept-resend attack} (or man-in-the-middle attack) may be detected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle\index{Heisenberg uncertainty principle} and no-cloning theorem\index{No-cloning theorem}).
+Needless to say, the requirement for keys of the same length as the plaintexts, which cannot be reused, raises the obvious criticism that now secret key-sharing is as difficult as sharing a secret message in the first place. This reduces the problem of perfect secrecy of arbitrary messages to the secrecy of shared randomness. 
 
 \subsubsection{Public-key cryptography}\index{Public-key cryptography}
 
@@ -52,17 +59,35 @@ While private-key cryptography solves the problem of end-to-end cryptography, it
 
 Public- (or asymmetric-) key cryptography addresses this issue by replacing the private key with two keys, one used solely for \textit{encryption}, the other solely for \textit{decryption}. Then to send a message to a friend I can send him my encryption (public) key that he is only able to use for preparing an encrypted message for me. No security is required when sharing the public key since an eavesdropper can't use it for decryption. Finally, I am able to decrypt the message using my decryption (private) key, which I kept completely to myself and never shared with anyone.
 
-RSA \cite{bib:RSA} was the first published public-key cryptographic protocol.
+RSA \cite{bib:RSA} was the first published public-key cryptographic protocol. It achieves its security based on the belief that factorising large integers into constituent primes is a computationally hard problem. In this scheme, the private key comprises two prime numbers, which are the factors of a larger number, which acts as the public key. It is clear that to obtain the private key from the public key would require solving the integer factorisation problem.
 
-\subsubsection{Post-quantum classical cryptography}\index{Post-quantum classical cryptography}
+\comment{Trapdoor function}
 
-\comment{Mcelise, NP-hard problem}
+\subsection{Attacks on classical cryptography}
 
-\subsection{Quantum attacks on classical cryptography}
+\subsubsection{Classical attacks}
+
+\paragraph{Brute-force}\index{Brute-force}\label{sec:brute_force_attack}
+
+\comment{Note that when performing a brute-force attack against a private encryption key\index{Private-key encryption}, a quadratic speedup effectively halves the key length in terms of algorithmic runtime. Thus, in the quantum era private key lengths will need to be doubled.}
+
+\paragraph{Cryptanalysis}\index{Cryptanalysis}
+
+\paragraph{Integer factorisation}
+
+\subsubsection{Quantum attacks}
+
+\paragraph{Brute-force}
+
+\paragraph{Integer factorisation}
 
 \subsection{The end of classical cryptography?}
 
+\subsection{Post-quantum classical cryptography}\index{Post-quantum classical cryptography}
+
 One of the main reasons quantum computation has received so much interest from nation states is their ability to efficiently crack some cryptographic protocols, most notably RSA.
+
+\comment{Mcelise, NP-hard problem}
 
 \subsection{The Blockchain}\index{Blockchain}
 
@@ -78,11 +103,13 @@ One of the main reasons quantum computation has received so much interest from n
 
 \subsubsection{Quantum key distribution (QKD)} \label{sec:QKD} \index{Quantum key distribution (QKD)}
 
-Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}.  The demand for secure cryptography is now extremely important in the context of electronic commerce and general security of information transmission in the internet age. Electronic currencies such as Bitcoin\index{Bitcoin} depend on cryptographic protocols in order to secure the value of assets, assign ownership certificates\index{Owner certificates}, and secure the currency against fraud. However such protocols are based upon the computational complexity of certain mathematical problems (\textit{computational security}\index{Computational security}), and are not fundamentally secure in the presence of limitless computational resources, or quantum computers. Therefore, using quantum mechanical protocols based on physical principles (\textit{information-theoretic security}\index{Information-theoretic security}) rather than computational limitations, are favourable in the sense of future-proofing security.
+Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. The demand for secure cryptography is now extremely important in the context of electronic commerce and general security of information transmission in the internet age. Electronic currencies such as Bitcoin\index{Bitcoin} depend on cryptographic protocols in order to secure the value of assets, assign ownership certificates\index{Owner certificates}, and secure the currency against fraud. However such protocols are based upon the computational complexity of certain mathematical problems (\textit{computational security}\index{Computational security}), and are not fundamentally secure in the presence of limitless computational resources, or quantum computers. Therefore, using quantum mechanical protocols based on physical principles (\textit{information-theoretic security}\index{Information-theoretic security}) rather than computational limitations, are favourable in the sense of future-proofing security.
+
+QKD protocols facilitate shared, secret randomness, where any intercept-resend attack\index{Intercept-resend attack} (or man-in-the-middle attack) may be detected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle\index{Heisenberg uncertainty principle} and no-cloning theorem\index{No-cloning theorem}).
 
 Quantum key distribution (QKD) is a relatively mature technology with already several commercial systems being available off-the-shelf\footnote{\cite{??? example companies}}. The main drawback is thus the ability to perform long-distance transmission of photons. For these reasons, current QKD networks have been limited to relatively small distances, on the order of $\sim100$km, including in Austria, Switzerland, Japan, USA, and China \cite{bib:lo2014secure}. The longest distance QKD network that is currently planned is the Beijing to Shanghai QKD link spanning a distance of 2,000km. This involves 32 trusted nodes\index{Trusted nodes} to break the total distance into shorter segments to convert the quantum information to classical information.
 
-Utilizing space communications for the purpose of QKD has been discussed in several works \cite{bib:hughes2000quantum, bib:rarity2002ground, bib:pfennigbauer2003free, bib:aspelmeyer2003long, bib:armengol08}. As already demonstrated in space-based entanglement experiments \cite{bib:yin2017satellite, bib:ren2017ground, bib:liao2017satellite} far lower attenuation rates are possible than ground-only approaches. Since cryptography schemes such as BB84\index{BB84 protocol} do not require entanglement, these would appear to be the first widespread commercial application for quantum technologies.  
+Utilising space communications for the purpose of QKD has been discussed in several works \cite{bib:hughes2000quantum, bib:rarity2002ground, bib:pfennigbauer2003free, bib:aspelmeyer2003long, bib:armengol08}. As already demonstrated in space-based entanglement experiments \cite{bib:yin2017satellite, bib:ren2017ground, bib:liao2017satellite} far lower attenuation rates are possible than ground-only approaches. Since cryptography schemes such as BB84\index{BB84 protocol} do not require entanglement, these would appear to be the first widespread commercial application for quantum technologies.  
 
 The ready realisability of space based QKD was already noted in a variety of configurations including ground-to-space\index{Ground-to-space communication} and space-to-ground\index{Space-to-ground communication} quantum communication \cite{bib:rarity2002ground, bib:aspelmeyer2003long}. In the context of security, the first long-distance experiments that are likely to be demonstrated will employ trusted nodes\index{Trusted nodes}. For example, after performing QKD between satellite\index{Satellites} and ground stations, a satellite could store the key for some time until another QKD can be performed to another ground station\index{Ground stations} using a one-time pad\index{One-time pad cipher} \cite{bib:liao2017satellite}. These types of experiments are planned to eventually perform intercontinental QKD\index{Intercontinental QKD} between China and Austria.  
 
@@ -100,7 +127,7 @@ Suppose an eavesdropper, Eve, were to perform an intercept-resend\index{Intercep
 \fbox{\parbox{0.965\columnwidth}{\texttt{ 
 function BB84():
 \begin{enumerate}
-\item Alice chooses a random bit $0$ or $1$.
+\item Alice chooses a random bit, $0$ or $1$.
 \item Alice randomly chooses a basis, $\hat{X}$ or $\hat{Z}$.
 \item Depending on the choice of basis, she encodes her bit into the polarisation of a single photon as:
 \begin{align}
