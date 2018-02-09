@@ -2,11 +2,13 @@
 % Quality of Service
 %
 
-\section{Quality of service (QoS)}\index{Quantum error correction (QEC)}\index{Quality of service}
+\section{Quality of service (QoS)}\index{Quantum error correction (QEC)}\index{Quality of service}\label{sec:QOS_chap}
 
 \comment{To do}
 
 As discussed previously in Sec.~\ref{sec:QOS}\index{Quality of service}, quality of service is a major consideration in any quantum network. If we are transmitting quantum states over a quantum channel, there will inevitably be deterioration in the form of decoherence, loss, and other undesirable effects we wish to mitigate. In this section we review some of the essential quantum error correction (QEC) techniques that can be used to achieve this.
+
+Different error correcting codes have different error correcting power, and different resource overheads, which must be taken into consideration. The appropriate choice of code will largely be determined by the final \textsc{Services \& Applications} layer. For some simple quantum communications protocols, simple error correction (or even no error correction) may suffice. A full-fledged quantum computation on the other hand will require error rates within a fault-tolerance threshold\index{Fault-tolerance threshold}.
 
 \comment{Latin quote}\index{Latin}
 
@@ -27,6 +29,48 @@ As discussed previously in Sec.~\ref{sec:QOS}\index{Quality of service}, quality
 \comment{To do}
 \comment{Syndrome extraction}\index{Syndrome extraction}
 
+The first described QEC\index{Quantum error correction (QEC)} code was the 3-qubit code\index{3-qubit code} by \cite{bib:Shor95} for redundantly encoding a single logical qubit into three encoded qubits, allowing the detection and correction of at most a single bit-flip error between the encoded qubits. This protocol is shown in Alg.~\ref{alg:three_QEC}. By switching into a Hadamard-rotated basis, the same code could equivalently correct against at most a single phase-flip error (since \mbox{$\hat{H}\hat{X}\hat{H}=\hat{Z}$}).
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{
+function ThreeQubitCode($\ket\psi$):
+\begin{enumerate}
+\item Using two CNOT gates, redundantly encode the logical single-qubit state,
+\begin{align}
+\ket\psi=\alpha\ket{0}+\beta\ket{1},
+\end{align}
+into the 3-qubit state,
+\begin{align}
+\ket\psi_R &= \hat{\text{CNOT}}_{1,2}\hat{\text{CNOT}}_{1,3}\ket\psi\ket{00} \nonumber \\
+&= \alpha\ket{000}+\beta\ket{111}.
+\end{align}
+\item Independently apply bit-flip channels $\mathcal{E}_X$ to each of the three encoded qubits.
+\item If exactly one bit-flip operation was applied in total, the three possible erroneous encoded states are,
+\begin{align}
+\ket\psi_1 &= \hat{X}_1 \ket\psi_R = \alpha\ket{001}+\beta\ket{110}, \nonumber \\
+\ket\psi_2 &= \hat{X}_2 \ket\psi_R = \alpha\ket{010}+\beta\ket{101}, \nonumber \\
+\ket\psi_3 &= \hat{X}_3 \ket\psi_R = \alpha\ket{100}+\beta\ket{011}.
+\end{align}
+\item Determine the parity of each of the three pairs of encoded qubits.
+\item Assuming at most a single bit-flip operation has occurred on the encoded state, the three parity outcomes uniquely determine which encoded qubit the bit-flip was applied to.
+\item Apply classically-controlled bit-flip recovery operations, $\mathcal{R}$, to correct the encoded state, recovering $\ket\psi_R$.
+\item Apply the inverse of the encoding operation to recover $\ket\psi$.
+\item $\Box$
+\end{enumerate}}
+\begin{align}
+\Qcircuit @C=1.3em @R=.6em {
+  & \lstick{\ket{\psi}} & \ctrl{2} & \gate{\mathcal{E}_X}  & \qw & \qw              & \ctrl{3}  & \qw       & \ctrl{4} & \qw & \multigate{2}{\ \mathcal{R}\ } & \qw \\
+  & \lstick{\ket{0}}    & \targ    & \gate{\mathcal{E}_X}  & \qw & \qw              & \ctrl{2}  & \ctrl{2}  & \qw      & \qw & \ghost{\ \mathcal{R}\ } \qw & \qw \\
+  & \lstick{\ket{0}}    & \targ    & \gate{\mathcal{E}_X}  & \qw & \qw              & \qw       & \ctrl{2}  & \ctrl{3} & \qw & \ghost{\ \mathcal{R}\ } \qw & \qw \\
+  &          &          &          & & \lstick{\ket{0}} & \targ \qw & \qw       & \qw      & \meter & \control \cw \cwx \\
+  &          &          &          & & \lstick{\ket{0}} & \qw       & \targ \qw & \qw      & \meter & \control \cw \cwx \\
+  &          &          &          & & \lstick{\ket{0}} & \qw       & \qw       & \targ    & \meter & \control \cw \cwx
+} \nonumber
+\end{align}
+}}
+\caption{3-qubit code for protecting against at most a single logical bit-flip error. The doubly-controlled CNOT gates represent parity measurements, \mbox{$n_3=n_1\oplus n_2$}, where $n_i$ represents the value of the $i$th qubit. In a Hadamard-rotated basis, the same circuit may be employed to protect against a single phase-flip error. And by concatenating the two we obtain a 9-qubit code protecting against a single depolarising error (i.e joint bit-flip/phase-flip), which is a universal single-qubit error model. \comment{Move to QOS section}} \label{alg:three_QEC}
+\end{table}
+
 %
 % 9-Qubit Code
 %
@@ -34,6 +78,8 @@ As discussed previously in Sec.~\ref{sec:QOS}\index{Quality of service}, quality
 \subsection{9-qubit code}\index{9-qubit code}
 
 \comment{To do}
+
+By concatenating these two codes a 9-qubit code\index{9-qubit code} correcting against a single depolarising error may be implemented.
 
 %
 % Stabiliser Codes
@@ -103,6 +149,8 @@ Importantly, the stabilisers are all defined over geometrically localised neighb
 
 \comment{Toric code}
 
+Currently, topological codes (Sec.~\ref{sec:topol_codes}) are considered the most favourable codes in terms of their elegance, simplicity, high error-correction thresholds, and efficiency in resource overhead. Some such topological codes are particularly enticing, as they can be readily prepared from cluster states (Sec.~\ref{sec:CSQC}), which lend themselves naturally to certain networking methods, such as distributed state preparation.
+
 %
 % Unitary Error Averaging
 %
@@ -151,17 +199,12 @@ To illustrate this idea we will consider encoding a single logical qubit into tw
 
 A single-qubit $Z$-rotation of angle $\theta$ on the Bloch sphere\index{Bloch sphere} is given by,
 \begin{align}
-	\hat{Z}(\theta) &= e^{i\frac{\theta}{2}\hat{Z}}\nonumber \\
-	&= \left(\begin{matrix}
-  e^{i\frac{\theta}{2}} & 1 \\
+	\hat{Z}(\theta) = e^{i\frac{\theta}{2}\hat{Z}} = \left(\begin{matrix}
+  e^{i\frac{\theta}{2}} & 0 \\
   0 & e^{-i\frac{\theta}{2}}
 \end{matrix}\right).
 \end{align}
-where $\hat{Z}$ is the usual Pauli phase-flip operator\index{Pauli operators},
-\begin{align}
-\hat{Z}=\ket{0}\bra{0}-\ket{1}\bra{1}.	
-\end{align}
-This operates on the physical basis states as,
+where $\hat{Z}$ is the usual Pauli phase-flip operator\index{Pauli operators} (Sec.~\ref{sec:circuit_model}). This operates on the physical basis states as,
 \begin{align}
 	\hat{Z}(\theta) \ket{0} &\to e^{i\frac{\theta}{2}}\ket{0}, \nonumber \\
 	\hat{Z}(\theta) \ket{1} &\to e^{-i\frac{\theta}{2}}\ket{1}.
@@ -185,16 +228,16 @@ via linearity the logical qubit must also be invariant under the collective erro
 \begin{align}
 	\hat{Z}_1(\theta)\hat{Z}_2(\theta)\ket\psi_L = \ket\psi_L.
 \end{align}
-This type of DFS encoding therefore protects a logical qubit against arbitrary correlated $Z$-rotations.
+This type of DFS encoding therefore protects a logical qubit against arbitrary, unknown but correlated $Z$-rotations.
 
 The same principle can be logically extended to many other correlated error models. For example, operating in a rotated basis (under a Hadamard transform), one could similarly protect against correlated $X$-rotations using the encoding,
 \begin{align}
-\ket{0}_L &\equiv \ket{-}\otimes\ket{+},\nonumber \\
-\ket{1}_L &\equiv \ket{+}\otimes\ket{-},
+\ket{0}_L &\equiv \ket{-}_1\otimes\ket{+}_2,\nonumber \\
+\ket{1}_L &\equiv \ket{+}_1\otimes\ket{-}_2,
 \end{align}
 where \mbox{$\ket\pm=\frac{1}{\sqrt{2}}(\ket{0}\pm\ket{1})$}.
 
-This idea, although very simple, is very powerful, since it is a completely passive form of error correction, requiring no syndrome measurements, feedforward or correction operations. It also arises quite naturally in some systems where external fields act roughly uniformly across the physical qubits within a system.
+This idea, although very simple, is very powerful, since it is a completely passive form of error correction, requiring no syndrome measurements, feedforward or correction operations. It also arises quite naturally in some systems where undesired external fields act roughly uniformly across the physical qubits within a system.
 
 %
 % Dynamical Decoupling
@@ -212,15 +255,14 @@ The goal of dynamical decoupling is to minimise the influence of the system/envi
 
 Let us illustrate how this can be achieved using a simple example, whereby a single-qubit system couples with an environment which introduces a slow, unknown phase evolution. Discretising time, we can write this phase evolution as a Pauli $Z$-rotation on the Bloch sphere\index{Bloch sphere},
 \begin{align}
-	\hat{Z}(\theta) &= e^{i\frac{\theta}{2}\hat{Z}}\nonumber \\
-	&= \left(\begin{matrix}
-  e^{i\frac{\theta}{2}} & 1 \\
+	\hat{Z}(\theta) = e^{i\frac{\theta}{2}\hat{Z}} = \left(\begin{matrix}
+  e^{i\frac{\theta}{2}} & 0 \\
   0 & e^{-i\frac{\theta}{2}}
 \end{matrix}\right),
 \end{align}
 for some unknown, but small $\theta$. Next we observe that, quite obviously, a $Z$-rotation of angle $\theta$ can be trivially undone by applying another $Z$-rotation of angle $-\theta$, since,
 \begin{align}
-\hat{Z}(-\theta)\hat{Z}(\theta) = \hat{I}.	
+\hat{Z}(-\theta)\hat{Z}(\theta) = \hat{\mathbb{I}}.	
 \end{align}
 
 Therefore, if the system/environment coupling introduced an evolution of $\hat{Z}(\theta)$ in the previous unit of time, our goal is to manipulate it into implementing $\hat{Z}(-\theta)$ during the next one. Alas, the environment is beyond our control and we cannot directly order it to reverse direction. We do, however, have complete control over our qubit system, so we will achieve the same outcome by flipping the direction of the Bloch sphere underneath the environments foot, allow it to take a step forward, before flipping it back.
@@ -233,17 +275,15 @@ That is, applying a bit-flip to a qubit, followed by an arbitrary phase-rotation
 
 Now if we proceed for two time-steps, once bit-flipped and another not, we have,
 \begin{align}
-\hat{Z}(\theta)\cdot[\hat{X}\hat{Z}(\theta)\hat{X}] = \hat{I},
+\underbrace{\hat{Z}(\theta)}_{\mathrm{forward}}\cdot\underbrace{[\hat{X}\hat{Z}(\theta)\hat{X}]}_{\mathrm{reverse}} = \hat{\mathbb{I}},
 \end{align}
 and the unknown phase-rotation has been eliminated.
 
-Proceeding over the course of a lengthy evolution, we will implement the dynamical decoupling by continuously applying bit-flips to our qubit, such that in conclusion there are no accumulated unknown phase-evolutions. The control sequence for implementing this is sometimes referred to as `bang-bang' control\index{Bang-bang control}, since we are repeatedly implementing bit-flips at a fast rate.
+The coupling to the external environment and the qubit state needn't be constant over time, but could be time-varying. In this instance, it is essential that the decoupling control sequence of bit-flip operations be much faster than the rate at which both the phase-rotations and computational operation are changing, such that consecutive unknown phase-rotations are approximately equal and thereby almost perfectly cancel. This rapid control sequence is sometimes referred to as `bang-bang' control\index{Bang-bang control}, since we are repeatedly implementing bit-flips at a fast rate. 
 
 As described above, we have merely error corrected a quantum memory. Of course we wish to implement far more sophisticated evolutions. This requires breaking down the computational evolution (given by $\hat{H}_\mathrm{comp}$) into a large number of small, discrete steps. These are interspersed with our bang-bang control sequence so as to continuously remove any phase-errors accumulated during the course of the computation.
 
-Because the evolution implemented by the computation is constantly changing the state of our computational qubit, the change in trajectory introduced by the dephasing error model is also varying over time. But for the phase cancellation to work, the forward and backward erroneous steps ($\hat{Z}(\pm\theta)$) must be along the same path -- i.e they must all couple-up. This mandates that the bang-bang bit-flip control sequence be executed at a rate very fast compared to the rate of change in the phase-error -- if we fail to implement them fast enough, erroneous steps in the forward and backward directions will not pair up exactly, leaving some residual accumulated errors.
-
-Dynamical decoupling extends to all manner of error models, beyond the simple $Z$-error model presented above. They are therefore a very powerful tool in error correction. However, unfortunately they are only naturally suited to continuous evolutions governed by Hamiltonians of the form shown in (Eq.~\ref{eq:dyn_dec_ham}), not to the more common discretised models such as the circuit and cluster state models.
+Dynamical decoupling extends to all manner of error models, beyond the simple $Z$-error model presented above. They are therefore a very powerful tool in error correction. However, unfortunately they are only naturally suited to continuous evolutions governed by Hamiltonians of the form shown in Eq.~(\ref{eq:dyn_dec_ham}), not to the more common discretised models such as the circuit and cluster state models.
 
 \comment{Reference, Bloch sphere figures}
 

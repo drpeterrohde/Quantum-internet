@@ -178,89 +178,15 @@ function Reconstruction(Packets):
 
 \subsubsection{Quality of service (QoS)} \label{sec:QOS} \index{Quality of service (QoS) layer}
 
-\comment{Summary here. Shift bulk to QOS chapter.}
-
-In classical networking theory, error detection is an important element of networking protocols. Communication links may be unreliable, or subject to external noise, which users must be able to detect so as to guarantee the quality of their data.
+In classical networking theory, error detection and correction is an important element of networking protocols. Communication links may be unreliable, or subject to external noise, which users must be able to detect so as to guarantee the quality of their data.
 
 Classically, error detection is typically performed using checksums (hash functions), which generate a short digest of a packet's data that can be recalculated upon arrival to verify integrity. The checksum can be included in the header component of each packet, allowing the remainder of the protocol to remain unchanged.
 
-In the quantum context the elegant notion of checksums is complicated by the fact that calculating a hash function of a quantum state would necessarily entangle the state with the hash function. This would have the undesired effect of causing measurement of the checksum to collapse the quantum state of the data, thereby altering it in an uncontrollable way.
+In the quantum context the elegant notion of checksums is complicated by the fact that calculating a hash function of a quantum state would necessarily entangle the state with the output hash. This would have the undesired effect of causing measurement of the checksum to collapse the quantum state of the data, thereby altering it in an uncontrollable way.
 
 As an alternative to checksums, we could borrow the notion of quantum error correction (QEC)\index{Quantum error correction (QEC)} and fault-tolerance from quantum computing theory \cite{???}. Here we encode a quantum state into a (polynomially) larger Hilbert space. \textit{Syndrome measurements}\index{Syndrome measurements} on some of the states in this larger space allow us to both detect and correct universal error models, such as depolarisation or dephasing, provided that error rates are within the fault-tolerance threshold of the code being employed.
 
-QEC codes have been described for protecting against universal error models, including:
-\begin{itemize}
-\item Pauli errors: encompassing dephasing, depolarising and amplitude damping \comment{Is A.D a Pauli channel?} error channels.
-\item Qubit loss: particularly useful in the optical context where photons are easily lost.
-\item Gate failure\index{Gate failure}: essential when gates are non-deterministic, necessarily the case when dealing with maximally entangling two-qubit photonic quantum gates.
-\end{itemize}
-
-The first described QEC\index{Quantum error correction (QEC)} code was the 3-qubit code\index{3-qubit code} by \cite{bib:Shor95} for redundantly encoding a single logical qubit into three encoded qubits, allowing the detection and correction of at most a single bit-flip error between the encoded qubits. This protocol is shown in Alg.~\ref{alg:three_QEC}. By switching into a Hadamard-rotated basis, the same code could equivalently correct against at most a single phase-flip error (since \mbox{$\hat{H}\hat{X}\hat{H}=\hat{Z}$}). By concatenating these two codes a 9-qubit code\index{9-qubit code} correcting against a single depolarising error may be implemented.
-
-Since these original ideas into QEC\index{Quantum error correction (QEC)}, countless further codes have been described, able to correct against larger numbers of errors, with far more efficient resource overheads. Currently, topological codes (Sec.~\ref{sec:topol_codes}) are considered the most favourable codes in terms of their elegance, simplicity, high error-correction thresholds, and efficiency in resource overhead. Some such topological codes are particularly enticing, as they can be readily prepared from cluster states (Sec.~\ref{sec:CSQC}), which lend themselves naturally to certain networking methods, such as distributed state preparation.
-
-\begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{
-function ThreeQubitCode($\ket\psi$):
-\begin{enumerate}
-\item Using two CNOT gates, redundantly encode the logical single-qubit state,
-\begin{align}
-\ket\psi=\alpha\ket{0}+\beta\ket{1},
-\end{align}
-into the 3-qubit state,
-\begin{align}
-\ket\psi_R &= \hat{\text{CNOT}}_{1,2}\hat{\text{CNOT}}_{1,3}\ket\psi\ket{00} \nonumber \\
-&= \alpha\ket{000}+\beta\ket{111}.
-\end{align}
-\item Independently apply bit-flip channels $\mathcal{E}_X$ to each of the three encoded qubits.
-\item If exactly one bit-flip operation was applied in total, the three possible erroneous encoded states are,
-\begin{align}
-\ket\psi_1 &= \hat{X}_1 \ket\psi_R = \alpha\ket{001}+\beta\ket{110}, \nonumber \\
-\ket\psi_2 &= \hat{X}_2 \ket\psi_R = \alpha\ket{010}+\beta\ket{101}, \nonumber \\
-\ket\psi_3 &= \hat{X}_3 \ket\psi_R = \alpha\ket{100}+\beta\ket{011}.
-\end{align}
-\item Determine the parity of each of the three pairs of encoded qubits.
-\item Assuming at most a single bit-flip operation has occurred on the encoded state, the three parity outcomes uniquely determine which encoded qubit the bit-flip was applied to.
-\item Apply classically-controlled bit-flip recovery operations, $\mathcal{R}$, to correct the encoded state, recovering $\ket\psi_R$.
-\item Apply the inverse of the encoding operation to recover $\ket\psi$.
-\item $\Box$
-\end{enumerate}}
-\begin{align}
-\Qcircuit @C=1.3em @R=.6em {
-  & \lstick{\ket{\psi}} & \ctrl{2} & \gate{\mathcal{E}_X}  & \qw & \qw              & \ctrl{3}  & \qw       & \ctrl{4} & \qw & \multigate{2}{\ \mathcal{R}\ } & \qw \\
-  & \lstick{\ket{0}}    & \targ    & \gate{\mathcal{E}_X}  & \qw & \qw              & \ctrl{2}  & \ctrl{2}  & \qw      & \qw & \ghost{\ \mathcal{R}\ } \qw & \qw \\
-  & \lstick{\ket{0}}    & \targ    & \gate{\mathcal{E}_X}  & \qw & \qw              & \qw       & \ctrl{2}  & \ctrl{3} & \qw & \ghost{\ \mathcal{R}\ } \qw & \qw \\
-  &          &          &          & & \lstick{\ket{0}} & \targ \qw & \qw       & \qw      & \meter & \control \cw \cwx \\
-  &          &          &          & & \lstick{\ket{0}} & \qw       & \targ \qw & \qw      & \meter & \control \cw \cwx \\
-  &          &          &          & & \lstick{\ket{0}} & \qw       & \qw       & \targ    & \meter & \control \cw \cwx
-} \nonumber
-\end{align}
-}}
-\caption{3-qubit code for protecting against at most a single logical bit-flip error. The doubly-controlled CNOT gates represent parity measurements, \mbox{$n_3=n_1\oplus n_2$}, where $n_i$ represents the value of the $i$th qubit. In a Hadamard-rotated basis, the same circuit may be employed to protect against a single phase-flip error. And by concatenating the two we obtain a 9-qubit code protecting against a single depolarising error (i.e joint bit-flip/phase-flip), which is a universal single-qubit error model. \comment{Move to QOS section}} \label{alg:three_QEC}
-\end{table}
-
-Different error correcting codes have different error correcting power, and different resource overheads, which must be taken into consideration. The appropriate choice of code will largely be determined by the final \textsc{Services \& Applications} layer. For some simple quantum communications protocols, simple error correction (or even no error correction) may suffice. A full-fledged quantum computation on the other hand will require error rates within a fault-tolerance threshold.
-
-The field of fault-tolerance is already extremely well developed and could be applied directly to QTCP as an abstraction layer directly below the \textsc{Services \& Application} layer of the protocol stack -- the \textsc{QoS} layer -- abstracting it away from the end-user. The transport layer protocol for applying it to the QTCP stack is shown in Alg.~\ref{alg:qos}.
-
-\begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
-function QoS(Packets):
-\begin{enumerate}
-    \item qec = Packets.ApplyQEC()
-    \item if(qec.success = true) \{
-    \setlength{\itemindent}{0.2in}
-    \item message.Receiver.Notify(qec.data)
-    \setlength{\itemindent}{0in}
-    \item \} else \{
-    \setlength{\itemindent}{0.2in}
-    \item message.Receiver.Notify(\textsc{Failure})
-    \setlength{\itemindent}{0in}
-    \item \}
-    \item $\Box$
-\end{enumerate}}}}
-\caption{QoS algorithm based on any appropriate existing QEC code.} \label{alg:qos}
-\end{table}
+Thus, enforcing QoS in fundamentally different for quantum data packets than for classical ones, requiring entirely different techniques. Given how large a field this has become in its own right, we dedicate Sec.~\ref{sec:QOS_chap} entirely to protocols suited to the implementation of quantum QoS requirements in quantum networks.
 
 %
 % Services & Applications
