@@ -2,15 +2,17 @@
 % CryptoWars (TM)
 %
 
-\section{Quantum cryptography}\index{Quantum key distribution}\label{sec:cryptowars}
+\section{CryptoWars\texttrademark -- Quantum cryptography}\index{Quantum key distribution}\index{Quantum cryptography}\index{CryptoWars}\label{sec:cryptowars}
 
 \comment{To do, AES, DES, RSA}
 
-\comment{Add more advanced protocols? CV? Decoy states, untrusted devices etc. etc.}
+\comment{Add more advanced protocols? CV? Decoy states, untrusted devices, device independent QKD, etc. etc.}
+
+\comment{Scaling of Shor's algorithm}
 
 \comment{Index}
 
-Undoubtedly, quantum technologies will be most impactful (and disruptive) in the area of information security, something of fundamental importance to us all on a daily basis. Quantum technologies will be important both in terms of breaking and maintaining security, with the former mandating interest in the latter.
+Undoubtedly, quantum technologies will be most impactful (and disruptive!) in the area of information security, something of fundamental importance to us all on a daily basis. Quantum technologies will be important both in terms of breaking and maintaining security, with the former mandating interest in the latter.
 
 In Sec.~\ref{sec:homo_blind} we discussed encrypted outsourced quantum computation as an important concept in future cloud quantum computing. In this section we will step back from full-fledged distributed quantum computation, instead focussing on more elementary protocols for simple secure communication.
 
@@ -22,9 +24,9 @@ Today, the ability to communicate secretly with others is completely taken for g
 
 Private- (or symmetric-) key cryptography is perhaps the most basic (and useful) cryptographic primitive, enabling encryption of a channel between two parties who share a secret key. The same secret key is employed for both encryption and decryption operations, making it of utmost importance that it be retained secret.
 
-Private key cryptography has a long history, in fact going back to ancient times, enabling the secret sharing of diplomatic messages between emperors and empires. However it was a niche technology that very few utilised, since it had to be implemented by hand without computers.
+Private key cryptography has a long history, in fact going back to ancient times, enabling the secret sharing of diplomatic messages between emperors and empires, e.g the so-called \textit{Caesar cipher}\index{Caesar cipher}, a simple substitution cipher\index{Substitution cipher} based on shifting the letters of the alphabet. However it was a niche technology that very few utilised, since it had to be implemented by hand without computers.
 
-Today there are countless freely available private-key cryptographic protocols available online, and some have been standardised by standards institutes. Currently, the Advanced Encryption Standard (AES) is a standard endorsed by the US government. AES is a block cipher, meaning that it divides data into small blocks of bits, each of which are encrypted independently, and operates with key lengths of up to 256 bits, making it very robust against brute-force attacks (Sec.~\ref{sec:attacks_on_class}).
+Today there are countless freely available private-key cryptographic protocols available online, and some have been standardised by standards institutes. Currently, the Advanced Encryption Standard (AES) is a standard endorsed by the US government, replacing the earlier standardised Data Encryption Standard (DES)\index{Data encryption standard}. AES is a block cipher\index{Block cipher}, meaning that it divides data into small blocks of bits, each of which are encrypted independently, and operates with key lengths of up to 256 bits, making it very robust against (even quantum) brute-force attacks (Sec.~\ref{sec:attacks_on_class}).
 
 %
 % One-Time Pad Cipher
@@ -36,9 +38,12 @@ There is only a single provably secure encryption protocol -- the \textit{one-ti
 \begin{align}
 c = s \oplus k,
 \end{align}
-where $\oplus$ is the bitwise XOR operation (equivalently addition modulo 2), and $c$, $s$ and $k$ are the ciphertext, plaintext and key strings respectively, all of which are of the same length, \mbox{$|c|=|s|=|k|$}.
+where $\oplus$ is the bitwise XOR operation (equivalently addition modulo 2), and $c$, $s$ and $k$ are the ciphertext, plaintext and key strings respectively, all of which are of the same length,
+\begin{align}
+	|c|=|s|=|k|.
+\end{align}
 
-The security of this protocol is easy to see intuitively -- with an appropriate choice of key, \textit{any} plaintext of the same length could be inferred from the ciphertext. This means that there is no possibility of performing any kind of frequency analysis, as the ciphertext string has maximum entropy\index{Entropy} (inherited from the maximum entropy of the key, and assuming a strong cryptographic random bit generator) and thus no correlations. Alternately, suppose we were to try and crack this code by expressing the decryption as an oracle, where the input is a key bit-string. Then we use brute-force\index{Brute force} (or Grover's algorithm\index{Grover's algorithm}) to query the oracle for tagged elements, where by `tagged' we mean that it satisfies an appropriate test (e.g an English language test) to decide whether a decrypted message is valid. Since every possible valid plaintext can be recovered using an appropriate key, the protocol is unable to find a unique plaintext matching the ciphertext.
+The security of this protocol is easy to see intuitively -- with an appropriate choice of key, \textit{any} plaintext of the same length could be inferred from the ciphertext. This means that there is no possibility of performing any kind of frequency analysis, as the ciphertext string has maximum entropy\index{Entropy} (inherited from the maximum entropy of the key, and assuming a strong cryptographic random bit generator) and thus no correlations. Since every possible valid plaintext can be recovered using an appropriate key, the protocol a cracking algorithm is unable to find a unique plaintext matching the ciphertext.
 
 Importantly, the secrecy of the one-time-pad\index{One-time pad cipher} strictly requires that a key never be reused. A fresh key must be generated for each message sent, otherwise trivial frequency analysis\index{Frequency analysis} techniques can be employed to compromise security. If the same key $k$ is used to encode two messages $s_1$ and $s_2$, yielding ciphertexts,
 \begin{align}
@@ -47,17 +52,21 @@ c_2&=s_2\oplus k,
 \end{align}
 then we trivially obtain,
 \begin{align}
-c_1 \oplus c_2 = s_1 \oplus k \oplus s_2 \oplus k = s_1 \oplus s_2.
+c_1 \oplus c_2 &= (s_1 \oplus k) \oplus (s_2 \oplus k) \nonumber \\
+&= (s_1 \oplus s_2) \oplus (k \oplus k) \nonumber \\
+&= s_1 \oplus s_2.
 \end{align}
 Now a frequency analysis on the bitwise XOR of two plaintexts can be applied, without requiring any knowledge of the key whatsoever.
 
 Needless to say, the requirement for keys of the same length as the plaintexts, which cannot be reused, raises the obvious criticism that now secret key-sharing is as difficult as sharing a secret message in the first place. This reduces the problem of perfect secrecy of arbitrary messages to the secrecy of shared randomness. 
 
+Although during the Cold War Soviet diplomats would literally carry briefcases full of paper with random data for use in a one-time-pad, it is clearly not suitable for everyday applications.
+
 \subsubsection{Public-key cryptography}\index{Public-key cryptography}
 
-While private-key cryptography solves the problem of end-to-end cryptography, it has one main downfall -- how does one share a private key between two parties? After all, if we had the ability to secretly share keys between ourselves, wouldn't we just use that method to directly communicate, bypassing the unnecessary cryptographic protocol.
+While private-key cryptography solves the problem of end-to-end cryptography, it has one main downfall -- how does one share a private key between two parties? After all, if we had the ability to secretly share keys between ourselves, wouldn't we just use that method to directly communicate, bypassing the unnecessary cryptographic protocol?
 
-Public- (or asymmetric-) key cryptography addresses this issue by replacing the private key with two keys, one used solely for \textit{encryption}, the other solely for \textit{decryption}. Then to send a message to a friend I can send him my encryption (public) key that he is only able to use for preparing an encrypted message for me. No security is required when sharing the public key since an eavesdropper can't use it for decryption. Finally, I am able to decrypt the message using my decryption (private) key, which I kept completely to myself and never shared with anyone.
+Public- (or asymmetric-) key cryptography addresses this issue by replacing the private key with two keys, one used solely for \textit{encryption}, the other solely for \textit{decryption}. Importantly, these two keys are non-trivially related and cannot be efficiently computed from one another. To send a message to a friend I can send him my encryption (public) key that he is only able to use for preparing an encrypted message for me. No security is required when sharing the public key since an eavesdropper can't use it for decryption. Finally, I am able to decrypt the message using my decryption (private) key, which I kept completely to myself and never shared with anyone.
 
 RSA \cite{bib:RSA} was the first published public-key cryptographic protocol, and forms the backbone for most encryption used on the internet today. It achieves its security based on the belief that factorising large integers into constituent primes is a computationally hard problem -- a so-called `trapdoor function'\index{Trapdoor function}. The private key comprises two prime numbers, which are multiplied together to obtain the public key. It is clear that to obtain the private key from the public key would require solving the integer factorisation problem, which is presumed to be intractable.
 
@@ -73,7 +82,7 @@ The most obvious approach to cracking a crypto-system is to systematically try o
 
 \paragraph{Cryptanalysis}\index{Cryptanalysis}
 
-Far better than waiting the age of the universe for the right key to turn up, is \textit{cryptanalysis}. Here we study patterns in input and output strings from a cipher utilising a particular key. There are many variations on this, but include techniques such as:
+Far better than waiting the age of the universe for the right key to turn up, is \textit{cryptanalysis}. Here we study patterns between input and output strings from a cipher utilising a particular key. There are many variations on this, but include techniques such as:
 \begin{itemize}
 	\item Known plaintext attacks: \comment{To do}
 	\item Linear cryptanalysis: \comment{To do}
@@ -82,9 +91,9 @@ Far better than waiting the age of the universe for the right key to turn up, is
  
 \paragraph{Integer factorisation}
 
-In the case of RSA encryption, whose security derives from the believed computational hardness of factorising large numbers, the most efficient known classical algorithm for integer factorisation is the general number field sieve (GNFS), which has time-complexity,
+In the case of RSA encryption, whose security derives from the believed computational hardness of factorising large numbers, the most efficient known classical algorithm for integer factorisation is the general number field sieve (GNFS), with time-complexity,
 \begin{align}
-	O(\mathrm{exp}(c (\log n)^{\frac{1}{3}}) (\log\log n)^{\frac{2}{3}}),
+	O(\mathrm{exp}[O(1) (\log n)^{\frac{1}{3}} (\log\log n)^{\frac{2}{3}}]),
 \end{align}
 which scales poorly for large $n$, keeping in mind that present-day implementations of RSA accommodate key lengths of up to 4,096 bits. \comment{Check this number}
 
@@ -94,21 +103,22 @@ which scales poorly for large $n$, keeping in mind that present-day implementati
 
 A brute-force attack by a quantum computer does not offer us the exponential improvement attacker Eve might hope for. However, we can gain a quadratic improvement by cleverly exploiting Grover's search algorithm (Sec.~\ref{sec:quantum_algs}).
 
-To do this, we treat the brute-force cracking algorithm as a satisfiability problem, similar to how Grover's is employed to enhance \textbf{NP}-complete problems. Specifically, our oracle implements the code's decryption operation, taking as input a qubit string representing the key. After decoding the message with the key, the oracle runs an appropriate test on the decrypted message to determine whether it is a legitimate decoded message. For example, it could run an English language test -- a message decoded incorrectly with the wrong key will appear very random and almost certainly won't pass such a test.
+To do this, we treat the brute-force cracking algorithm as a satisfiability problem, similar to how Grover's is employed to enhance \textbf{NP}-complete problems. Specifically, our oracle implements the code's decryption operation, taking as input a qubit string representing the key. After decoding the message with the key, the oracle runs an appropriate test on the decrypted message to determine whether it is a legitimate decoded message. For example, it could run an English language test -- a message decoded incorrectly with the wrong key will appear very random and almost certainly won't pass such a test. The oracle tags an element passing this test, which the Grover algorithm searches for, yielding the associated key.
 
-Note that when performing a brute-force attack against a private encryption key\index{Private-key encryption}, a quadratic speedup effectively halves the key length in terms of algorithmic runtime. Thus, in the quantum era private key lengths will need to be doubled to maintain the same security against brute-force attacks.
+Note that when performing a brute-force attack against a private encryption key\index{Private-key encryption}, a quadratic speedup effectively halves the key length in terms of algorithmic runtime, since \mbox{$O(\sqrt{2^k}) = O(2^{k/2})$}. Thus, in the quantum era private key lengths will need to be doubled to maintain the same security against brute-force attacks.
 
 \paragraph{Integer factorisation}
 
-\subsection{The end of classical cryptography?}
-
-\subsection{Post-quantum classical cryptography}\index{Post-quantum classical cryptography}
-
-One of the main reasons quantum computation has received so much interest from nation states is their ability to efficiently crack some cryptographic protocols, most notably RSA.
-
-\comment{Mcelise, NP-hard problem}
+In the case of RSA public-key cryptography the attack is more direct -- with access to a scalable quantum computer, Shor's algorithm can be employed to efficiently factorise large integers, allowing private keys to be retrieved from public keys. Unlike the brute-force attacks, which yielded only a quadratic enhancement, Shor's algorithm is exponentially faster than the classical GNFS, requiring runtime of only,
+\begin{align}
+	O([\log n]^2[\log\log n][\log\log\log n]).
+\end{align}
 
 \subsection{The Blockchain}\index{Blockchain}
+
+\subsection{The end of classical cryptography?}
+
+The vulnerability of RSA to attacks by quantum computers raises the question whether this spells the end of classical cryptography. Thankfully, there are two saving graces. First of all, much research is being carried out into \textit{post-quantum classical cryptography}\index{Post-quantum classical cryptography}. That is, public-key crypto-systems based upon trapdoor functions\index{Trapdoor function} that reside outside of \textbf{BQP} and are therefore not efficiently attacked by quantum computers. One such line of research is to construct crypto-systems based upon \textbf{NP}-complete problems. Recall from Fig.~\ref{fig:complexity_classes} that \textbf{NP}-complete is strongly believed to reside completely outside of \textbf{BQP}. However, while many computer scientists might be comfortable with such a level of security, it is nonetheless based on the unproven conjecture that \textbf{NP}-complete and \textbf{BQP} do not intersect, i.e \mbox{$\mathbf{NP}\nsubseteq\mathbf{BQP}$}. What would be much more satisfying would be protocols demonstrating information-theoretic security\index{Information-theoretic security} rather than computational security\index{Computational security}. Here quantum mechanics can help us -- \textit{quantum cryptography}.
 
 %
 % Quantum Cryptography
@@ -122,11 +132,11 @@ One of the main reasons quantum computation has received so much interest from n
 
 \subsubsection{Quantum key distribution (QKD)} \label{sec:QKD} \index{Quantum key distribution (QKD)}
 
-Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. The demand for secure cryptography is now extremely important in the context of electronic commerce and general security of information transmission in the internet age. Electronic currencies such as Bitcoin\index{Bitcoin} depend on cryptographic protocols in order to secure the value of assets, assign ownership certificates\index{Owner certificates}, and secure the currency against fraud. However such protocols are based upon the computational complexity of certain mathematical problems (\textit{computational security}\index{Computational security}), and are not fundamentally secure in the presence of limitless computational resources, or quantum computers. Therefore, using quantum mechanical protocols based on physical principles (\textit{information-theoretic security}\index{Information-theoretic security}) rather than computational limitations, are favourable in the sense of future-proofing security.
+%Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. The demand for secure cryptography is now extremely important in the context of electronic commerce and general security of information transmission in the internet age. Electronic currencies such as Bitcoin\index{Bitcoin} depend on cryptographic protocols in order to secure the value of assets, assign ownership certificates\index{Owner certificates}, and secure the currency against fraud. However such protocols are based upon the computational complexity of certain mathematical problems (\textit{computational security}\index{Computational security}), and are not fundamentally secure in the presence of limitless computational resources, or quantum computers. Therefore, using quantum mechanical protocols based on physical principles (\textit{information-theoretic security}\index{Information-theoretic security}) rather than computational limitations, are favourable in the sense of future-proofing security.
 
-QKD protocols facilitate shared, secret randomness, where any intercept-resend attack\index{Intercept-resend attack} (or man-in-the-middle attack) may be detected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle\index{Heisenberg uncertainty principle} and no-cloning theorem\index{No-cloning theorem}).
+Quantum key distribution (QKD) protocols facilitate shared, secret randomness, where any intercept-resend attack\index{Intercept-resend attack} (or man-in-the-middle attack) may be detected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle\index{Heisenberg uncertainty principle} and no-cloning theorem\index{No-cloning theorem}). This shared, secret randomness may subsequently be employed in a one-time-pad cipher\index{One-time-pad cipher}, presenting us with true information-theoretic security.
 
-Quantum key distribution (QKD) is a relatively mature technology with already several commercial systems being available off-the-shelf\footnote{\cite{??? example companies}}. The main drawback is thus the ability to perform long-distance transmission of photons. For these reasons, current QKD networks have been limited to relatively small distances, on the order of $\sim100$km, including in Austria, Switzerland, Japan, USA, and China \cite{bib:lo2014secure}. The longest distance QKD network that is currently planned is the Beijing to Shanghai QKD link spanning a distance of 2,000km. This involves 32 trusted nodes\index{Trusted nodes} to break the total distance into shorter segments to convert the quantum information to classical information.
+QKD is a relatively mature technology with already several commercial systems being available off-the-shelf\footnote{\cite{??? example companies}}. The main drawback is thus the ability to perform long-distance transmission of photons. For these reasons, current QKD networks have been limited to relatively small distances, on the order of $\sim100$km, including in Austria, Switzerland, Japan, USA, and China \cite{bib:lo2014secure}. The longest distance QKD network that is currently planned is the Beijing to Shanghai QKD link spanning a distance of 2,000km. This involves 32 trusted nodes\index{Trusted nodes} to break the total distance into shorter segments to convert the quantum information to classical information.
 
 Utilising space communications for the purpose of QKD has been discussed in several works \cite{bib:hughes2000quantum, bib:rarity2002ground, bib:pfennigbauer2003free, bib:aspelmeyer2003long, bib:armengol08}. As already demonstrated in space-based entanglement experiments \cite{bib:yin2017satellite, bib:ren2017ground, bib:liao2017satellite} far lower attenuation rates are possible than ground-only approaches. Since cryptography schemes such as BB84\index{BB84 protocol} do not require entanglement, these would appear to be the first widespread commercial application for quantum technologies.  
 
@@ -175,6 +185,8 @@ or,
 E91 is slightly different. Here Alice and Bob share an entangled Bell-pair provided by a central authority. Then both Alice \textit{and} Bob measure their qubits in random bases. As with BB84, after measuring all qubits, they compare their choices of random bases. When they coincide, they have a shared bit. When they don't, they discard their result. From here the remainder of the protocol is the same as for BB84.
 
 \comment{Explain E91 in detail}
+
+\comment{Explain privacy amplification}
 
 \comment{What's the other QKD protocol? Include it}
 
