@@ -84,18 +84,34 @@ Since RSA, numerous other public-key cryptosystems have been developed, based on
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function RSAGenerateKey():
+\begin{enumerate}
+\item $p$ = randomPrime()
+\item $q$ = randomPrime()
+\item Ensure $p\neq q$
+\item $n = pq$
+\item $\lambda = \mathrm{lcm}(p-1,q-1)$
+\item $e = \mathrm{coprime}(\lambda) \,\,\mathrm{s.t} \,\,e<\lambda$
+\item $d = e^{-1}\,(\mathrm{mod} \, \lambda)$
+\item publicKey = $\{n,e\}$
+\item privatKey = $\{n,d\}$
+\item return(publicKey,privateKey)
+\item $\Box$	
+\end{enumerate}
 function RSAEncrypt(plaintext, publicKey):
 \begin{enumerate}
-\item 
+\item $\mathrm{cipertext} = \mathrm{plaintext}^e \, (\mathrm{mod} \, n$)
+\item return ciphertext
 \item $\Box$
 \end{enumerate}
 function RSADecrypt(ciphertext, privateKey):
 \begin{enumerate}
-\item 
+\item $\mathrm{plaintext} = \mathrm{ciphertext}^d \, (\mathrm{mod} \, n)$
+\item return plaintext
 \item $\Box$
 \end{enumerate}
 }}}
-\caption{} \label{alg:RSA}
+\caption{Number-theoretic algorithms based on modular arithmetic for RSA key generation, encryption and decryption.} \label{alg:RSA}
 \end{table}
 
 %
@@ -339,7 +355,7 @@ function QuantumAnonymousBroadcasting(message, speaker):
 \item outcome$_i$ = measureInXBasis($\ket\psi_\mathrm{i}$)
 \setlength{\itemindent}{0in}
 \item \}
-\item parity = \big($\sum_i$ outcome$_i$\big)\,mod\,2
+\item parity = $\sum_i$ outcome$_i$\,(mod\,2)
 \item return(parity)
 \item $\Box$
 \end{enumerate}
