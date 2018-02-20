@@ -56,9 +56,9 @@ then we trivially obtain,
 \begin{align}
 c_1 \oplus c_2 &= (s_1 \oplus k) \oplus (s_2 \oplus k) \nonumber \\
 &= (s_1 \oplus s_2) \oplus (k \oplus k) \nonumber \\
-&= s_1 \oplus s_2.
+&= s_1 \oplus s_2,
 \end{align}
-Now a frequency analysis on the bitwise XOR of two plaintexts can be applied, without requiring any knowledge of the key whatsoever.
+which is independent of the key. Now a frequency analysis on the bitwise XOR of two plaintexts can be applied, without requiring any knowledge of the key whatsoever.
 
 Needless to say, the requirement for keys of the same length as the plaintexts, which cannot be reused, raises the obvious criticism that now secret key-sharing is as difficult as sharing a secret message in the first place. This reduces the problem of perfect secrecy of arbitrary messages to the secrecy of shared randomness. 
 
@@ -70,17 +70,11 @@ Although during the Cold War Soviet diplomats would literally carry briefcases b
 
 \subsubsection{Public-key cryptography}\index{Public-key cryptography}
 
-\comment{Explain RSA algorithm}
-
-\comment{Size of ciphertext is bigger than plaintext}
-
 While private-key cryptography solves the problem of end-to-end cryptography, it has one main downfall -- how does one share a private key between two parties? After all, if we had the ability to secretly share keys between ourselves, wouldn't we just use that method to directly communicate, bypassing the unnecessary cryptographic protocol?
 
 Public- (or asymmetric-) key cryptography addresses this issue by replacing the private key with two keys, one used solely for \textit{encryption}, the other solely for \textit{decryption}. Importantly, these two keys are non-trivially related and cannot be efficiently computed from one another. To send a message to a friend I can send him my encryption (public) key that he is only able to use for preparing an encrypted message for me. No security is required when sharing the public key since an eavesdropper can't use it for decryption. Finally, I am able to decrypt the message using my decryption (private) key, which I kept completely to myself and never shared with anyone.
 
-RSA \cite{bib:RSA} was the first published public-key cryptographic protocol, and forms the backbone for most encryption used on the internet today. It achieves its security based on the belief that factorising large integers into constituent primes is a computationally hard problem -- a so-called `trapdoor function'\index{Trapdoor function}. The private key comprises two prime numbers, which are multiplied together to obtain the public key. It is clear that to obtain the private key from the public key would require solving the integer factorisation problem, which is presumed to be intractable.
-
-Since RSA, numerous other public-key cryptosystems have been developed, based on different choices of trapdoor function. However, RSA remains the most widely used public-key cipher.
+RSA \cite{bib:RSA} was the first published public-key cryptographic protocol, and forms the backbone for most encryption used on the internet today. It achieves its security based on the belief that factorising large integers into constituent primes is a computationally hard problem -- a so-called `trapdoor function'\index{Trapdoor function}. The algorithm is built upon number theory using modular arithmetic, shown in Alg.~\ref{alg:RSA}.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\texttt{ 
@@ -100,19 +94,23 @@ function RSAGenerateKey():
 \end{enumerate}
 function RSAEncrypt(plaintext, publicKey):
 \begin{enumerate}
-\item $\mathrm{cipertext} = \mathrm{plaintext}^e \, (\mathrm{mod} \, n$)
-\item return ciphertext
+\item $\mathtt{cipertext} = \mathtt{plaintext}^e \, (\mathrm{mod} \, n$)
+\item return(ciphertext)
 \item $\Box$
 \end{enumerate}
 function RSADecrypt(ciphertext, privateKey):
 \begin{enumerate}
-\item $\mathrm{plaintext} = \mathrm{ciphertext}^d \, (\mathrm{mod} \, n)$
-\item return plaintext
+\item $\mathtt{plaintext} = \mathtt{ciphertext}^d \, (\mathrm{mod} \, n)$
+\item return(plaintext)
 \item $\Box$
 \end{enumerate}
 }}}
 \caption{Number-theoretic algorithms based on modular arithmetic for RSA key generation, encryption and decryption.} \label{alg:RSA}
 \end{table}
+
+A downside of RSA is that ciphertexts are in general much longer than plaintexts, unlike private-key protocols where the ciphertext is always the same length as the plaintextx. For this reason it is typically not used to directly encrypt long messages, since the memory overhead would be undesirable. Instead, RSA is typically employed in conjunction with private-key cryptography in a key exchange protocol\index{Key exchange protocol}. Here the public-key system communicates a private \textit{session key}\index{Session key} between parties, which is subsequently employ in a private-key protocol, without incurring the memory overhead that RSA does.  
+
+Since RSA, numerous other public-key cryptosystems have been developed, based on different choices of trapdoor function. Most notably, elliptic curve cryptography\index{Elliptic curve cryptography} has gained much attention. However, RSA remains the most widely used and well studied public-key cipher.
 
 %
 % Attacks On Classical Cryptography
@@ -315,7 +313,7 @@ As discussed above, the RSA public-key cryptosystem is vulnerable to an efficien
 
 Why would we combine quantum and classical encryption techniques when QKD is already provably secure, whereas the classical schemes are not?
 
-In the near future, as QKD schemes begin their rollout in space and on Earth, random bits from the QKD implementation will be very expensive and exhibit low bandwidth. Suppose we wanted to securely videoconference across the globe. For just a single user this would require megabits per second of shared random bits, which will quickly saturate the capacity of overhead quantum satellites. Instead, let us use the QKD system to securely share just a 256-bit private \textit{session key}\index{Session key} between two users. This is subsequently employed for AES-256 encryption that operates entirely over the classical network, which we regard as extremely cheap. Importantly, unlike one-time-pad implementations, this session key may be reused. Now we have a hybrid system which is not quantum-compromised, but which overcomes the cost and bandwidth issues associated with upcoming QKD networks.
+In the near future, as QKD schemes begin their rollout in space and on Earth, random bits from the QKD implementation will be very expensive and exhibit low bandwidth. Suppose we wanted to securely videoconference across the globe. For just a single user this would require megabits per second of shared random bits, which will quickly saturate the capacity of overhead quantum satellites. Instead, let us use the QKD system to securely share just a 256-bit private session key\index{Session key} between two users. This is subsequently employed for AES-256 encryption that operates entirely over the classical network, which we regard as extremely cheap. Importantly, unlike one-time-pad implementations, this session key may be reused. Now we have a hybrid system which is not quantum-compromised, but which overcomes the cost and bandwidth issues associated with upcoming QKD networks.
 
 While such a hybrid scheme is not information-theoretically secure (AES is not proven to be quantum-safe), the computational security assumptions are far stronger than for say RSA, since there are no known efficient quantum attacks against strong private-key schemes.
 
@@ -333,9 +331,9 @@ Let there be a (trusted) server that distributes GHZ states (of arbitrary number
 
 On the other hand, if a $\hat{Z}$ gate were applied to any one qubit, this would flip the parity outcome. Note that a GHZ transforms according to,
 \begin{align}
-	\hat{Z}_i \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n} + \ket{1}^{\otimes n}) \to \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n} - \ket{1}^{\otimes n}),
+	\hat{Z}_i \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n} + \ket{1}^{\otimes n}) \to \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n} - \ket{1}^{\otimes n})\,\,\forall \, i,
 \end{align}
-for any qubit $i$. This invariance in the location of the $\hat{Z}$ gate is the basis for the anonymity of the protocol. If a user wishes to broadcast `0' he does nothing, whereas if we wishes to broadcast `1' he applies the $\hat{Z}$ gate to his local qubit.
+for any qubit $i$. This invariance in the location of the $\hat{Z}$ gate is the basis for the anonymity of the protocol. If a user wishes to broadcast `0' he does nothing, whereas if he wishes to broadcast `1' he applies the $\hat{Z}$ gate to his local qubit.
 
 Finally, all users measure their qubits in the $\pm$-basis and publicly (without encryption) broadcast their measurement outcomes. All users now see all other users' measurement outcomes and are able to calculate the collective parity of the measurements. Now if the parity is even, the speaker must have said `0', whereas if it is odd he must have said `1'. The protocol is shown in Fig.~\ref{fig:QAB} and described in detail in Alg.~\ref{alg:QAB}
 
@@ -372,3 +370,11 @@ Because of the time invariance in the measurements, distribution and measurement
 Since the parity-sharing can be isolated from the broadcasting stage it is unimportant if the GHZ source is non-deterministic or the channels for distributing it lossy. We can instead simply repeat GHZ distribution over and over at high repetition rate, post-selecting upon measurement outcomes where all users signal that they successfully received and measured their photons.
 
 For these reasons, this scheme lends itself readily to photonic implementation, provided a reliable GHZ preparation circuit. The scheme has since been ported to operate on toric codes\index{Toric code} to facilitate error correction of the distributed GHZ states.
+
+%
+% Attacks On Quantum Cryptography
+%
+
+\subsection{Attacks on quantum cryptography}
+
+\comment{To do}
