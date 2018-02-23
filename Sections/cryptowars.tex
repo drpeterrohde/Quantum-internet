@@ -235,13 +235,15 @@ Thankfully, there are two saving graces. First of all, much research is being ca
 
 \comment{Add more advanced protocols? CV? Decoy states, untrusted devices, device independent QKD, etc. etc.}
 
-Quantum key distribution (QKD) protocols facilitate shared, secret randomness, where any intercept-resend attack\index{Intercept-resend attack} (or man-in-the-middle attack) may be detected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle\index{Heisenberg uncertainty principle} and no-cloning theorem\index{No-cloning theorem}). This shared, secret randomness may subsequently be employed in a one-time-pad cipher\index{One-time-pad cipher}, presenting us with true information-theoretic security\index{Information-theoretic security}.
+Quantum key distribution (QKD) protocols facilitate shared, secret randomness, where any intercept-resend attack\index{Intercept-resend attack} (or man-in-the-middle attack) may be detected and rejected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle\index{Heisenberg uncertainty principle} and no-cloning theorem\index{No-cloning theorem}). This shared, secret randomness may subsequently be employed in a one-time-pad cipher\index{One-time-pad cipher}, presenting us with true information-theoretic security\index{Information-theoretic security}.
 
-QKD is a relatively mature technology with already several commercial systems being available off-the-shelf\footnote{\cite{??? example companies}}. The main drawback is thus the ability to perform long-distance transmission of photons. For these reasons, current QKD networks have been limited to relatively small distances, on the order of $\sim100$km, including in Austria, Switzerland, Japan, USA, and China \cite{bib:lo2014secure}. The longest distance QKD network that is currently planned is the Beijing to Shanghai QKD link spanning a distance of $\sim2,000$km. This involves 32 trusted nodes\index{Trusted nodes} to break the total distance into shorter segments to convert the quantum information to classical information.
+The central notion to QKD protocols, in their numerous manifestations, is that measurement of quantum states invokes a wavefunction collapse. When measuring a state in a basis for which that state is not an eigenstate, this necessarily changes the state. QKD relies on this simple result from quantum mechanics to reveal any eavesdropper performing an intercept-resend attack\index{Intercept-resend attack} via the changes to transmitted quantum states that this would induce.
+
+QKD is a relatively mature technology with already several commercial systems being available off-the-shelf\footnote{\cite{??? example companies}}. The main drawback is thus the ability to perform long-distance transmission of photons. Current QKD networks have been limited to relatively small distances, on the order of $\sim100$km, including in Austria, Switzerland, Japan, USA, and China \cite{bib:lo2014secure}. The longest distance QKD network that is currently planned is the Beijing to Shanghai QKD link, spanning a distance of $\sim2,000$km. This involves 32 trusted nodes\index{Trusted nodes} to break the full route into shorter segments.
 
 Utilising space communications for the purpose of QKD has been discussed in several works \cite{bib:hughes2000quantum, bib:rarity2002ground, bib:pfennigbauer2003free, bib:aspelmeyer2003long, bib:armengol08}. As already demonstrated in space-based entanglement experiments \cite{bib:yin2017satellite, bib:ren2017ground, bib:liao2017satellite} far lower attenuation rates are possible than ground-only approaches. Since cryptography schemes such as BB84\index{BB84 protocol} do not require entanglement, these would appear to be the first widespread commercial application for quantum technologies.  
 
-The ready realisability of space based QKD was already noted in a variety of configurations including ground-to-space\index{Ground-to-space communication} and space-to-ground\index{Space-to-ground communication} quantum communication \cite{bib:rarity2002ground, bib:aspelmeyer2003long}. In the context of security, the first long-distance experiments that are likely to be demonstrated will employ trusted nodes\index{Trusted nodes}. For example, after performing QKD between satellite\index{Satellites} and ground stations, a satellite could store the key for some time until another QKD can be performed to another ground station\index{Ground stations} using a one-time pad\index{One-time pad cipher} \cite{bib:liao2017satellite}. These types of experiments are planned to eventually perform intercontinental QKD\index{Intercontinental QKD} between China and Austria.  
+The ready realisability of space based QKD was already noted in a variety of configurations including ground-to-space\index{Ground-to-space communication} and space-to-ground\index{Space-to-ground communication} quantum communication \cite{bib:rarity2002ground, bib:aspelmeyer2003long}. In the context of security, the first long-distance experiments that are likely to be demonstrated will employ trusted nodes\index{Trusted nodes}. For example, after performing QKD between satellite\index{Satellites} and ground stations\index{Ground stations}, a satellite could store the key for some time in a quantum memory\index{Quantum memory} until another QKD can be performed to another ground station using a one-time pad\index{One-time pad cipher} \cite{bib:liao2017satellite}. These types of experiments are currently planned to eventually facilitate intercontinental QKD\index{Intercontinental QKD} between China and Austria.  
 
 QKD has been widely experimentally demonstrated over long distances \cite{bib:Muller96}, and unlike quantum computing, QKD is at the stage of commercial viability. Thus, a quantum internet with low cost metrics would already find substantial utility with today's technology. Currently, great progress in being made in the implementation of QKD in fibre \cite{???}, over free-space \cite{bib:Buttler00}, and even over intercontinental satellite uplinks \cite{JWP}. It seems extremely likely that some government agencies would be rolling out QKD systems \cite{bib:Secret}, especially in light of the paranoia surrounding quantum codebreaking.
 
@@ -255,9 +257,11 @@ In Sec.~\ref{sec:state_of_the_art} we summarise the state-of-the-art in the phys
 
 \paragraph{BB84 protocol}\index{BB84 protocol}
 
-The two original QKD protocols, known as the \textit{BB84} \cite{bib:BennetBrassard84}\index{BB84 protocol}, and \textit{E91} \cite{bib:Ekert91}\index{E91 protocol} protocols, are based on polarisation encoding in photons. BB84 requires only the transmission of a sequence of single photons, polarisation-encoded\index{Polarisation encoding} with random data. E91, on the other hand, requires a server that distributes entangled Bell-pairs between Alice and Bob. Since then, numerous other protocols for QKD have been proposed, for example, using CV (continuous variable) states\index{Continuous variable QKD}.
+The first described QKD scheme was the \textit{BB84} \cite{bib:BennetBrassard84}\index{BB84 protocol} protocol, which exploits the fact that states encoded in the 0/1-basis but measured in the $\pm$-basis (and vice versa) collapse randomly, yielding completely random measurement outcomes, whereas states measured in the same basis in which they were encoded always correctly communicate a single bit of information.
 
-The BB84 protocol is described in detail in Alg.~\ref{alg:bb84}. Suppose an eavesdropper, Eve, were to perform an intercept-resend\index{Intercept-resend attack} attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of bases, and Eve will not know the bases in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. By sacrificing a some of their shared bits, via openly communicating them to one another for comparison, such an attack will be detected with asymptotically high security. Thus, Alice and Bob have great confidence that they have a shared, secret, random bit-string, which may subsequently be employed in a one-time-pad\index{One-time-pad protocol}.
+Implemented photonically, BB84 requires only the transmission of a sequence of single photons, polarisation-encoded\index{Polarisation encoding} with random data.
+
+The BB84 protocol is described in detail in Alg.~\ref{alg:bb84} in the context of polarisation-encoded photons, which is the most natural (but not only) setting for this protocol.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\texttt{ 
@@ -289,7 +293,9 @@ or,
 \caption{BB84\index{BB84 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photons. Upon completion of the protocol, Alice and Bob share a random bit-string.\index{One-time pad cipher}}\label{alg:bb84}
 \end{table}
 
-The BB84 protocol has no measurement timing, mode-matching or interferometric stability requirements, making it a very robust protocol, readily achievable with present-day technology.
+To understand the secrecy of the protocol, suppose an eavesdropper, Eve, were to perform an intercept-resend\index{Intercept-resend attack} attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of encoding bases, and Eve will not know the bases in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. Thus, by sacrificing some of their shared bits, via openly communicating them to one another for comparison, such an attack will be detected with asymptotically high security. Now Alice and Bob have great confidence that they have a shared, secret, random bit-string, which may subsequently be employed in a one-time-pad\index{One-time-pad protocol} with perfect secrecy.
+
+The BB84 protocol has no measurement timing, mode-matching or interferometric stability requirements, making it a very robust protocol, readily achievable with present-day photonics technology. The scheme has been adapted to physical architectures beyond just polarisation-encoded photons, such as CV encodings\index{Continuous variable QKD} \cite{???}.
 
 %
 % E91 Protocol
@@ -297,7 +303,7 @@ The BB84 protocol has no measurement timing, mode-matching or interferometric st
 
 \paragraph{E91 protocol}\index{E91 protocol}
 
-E91 is slightly different to BB84. Here Alice and Bob share an entangled Bell-pair provided by a central authority. Then both Alice \textit{and} Bob measure their qubits in random bases. As with BB84, after measuring all qubits, they compare their choices of random bases. When they coincide, they have a shared bit. When they don't, they discard their result. From here the remainder of the protocol is the same as for BB84.
+E91 is slightly different to BB84. Here Alice and Bob share an entangled Bell-pair provided by a central authority. Then both Alice \textit{and} Bob measure their qubits in random bases. As with BB84, after measuring all qubits, they compare their choices of random bases. When they coincide, they have a shared, random bit. When they don't, they discard their result. From here the remainder of the protocol is the same as for BB84.
 
 \comment{Explain E91 in detail}
 
@@ -310,12 +316,20 @@ Like BB84, E91 has no mode-matching\index{Mode-matching} or interferometric stab
 An advantage of E91 over BB84 is that it does not require a direct quantum communications link between Alice and Bob. The protocol could be mediated from above by a Bell-pair-producing satellite within line-of-sight of both Alice and Bob.
 
 %
+% Continuous Variable Protocols
+%
+
+\paragraph{Continuous variable protocols}
+
+\comment{To do. Zixin perhaps??}
+
+%
 % Security
 %
 
 \paragraph{Security}\index{Security of QKD}
 
-Importantly, unlike classical cryptographic protocols, QKD makes no assumptions about the computational complexity of inverting encoding algorithms. The protocol is information-theoretically secure\index{Information-theoretic security}, and therefore no physically realisable computer, even a quantum computer, can compromise it. Thus, usual cryptanalytic techniques, like linear and differential cryptanalysis \cite{bib:Schneier96}\index{Linear cryptanalysis}\index{Differential cryptanalysis}, or the ability to factor large numbers, that are employed to attack other encryption protocols, do not compromise QKD.
+Importantly, unlike classical cryptographic protocols, QKD makes no assumptions about the computational complexity of inverting encoding algorithms. The protocols are information-theoretically secure\index{Information-theoretic security}, and therefore no physically realisable computer, even a quantum computer, can compromise them. Thus, usual cryptanalytic techniques, like linear and differential cryptanalysis \cite{bib:Schneier96}\index{Linear cryptanalysis}\index{Differential cryptanalysis}, or the ability to factor large numbers\index{Integer factorisation}, that are employed to attack other encryption protocols, do not compromise QKD.
 
 %
 % Hybrid Quantum/Classical Cryptography
@@ -323,7 +337,7 @@ Importantly, unlike classical cryptographic protocols, QKD makes no assumptions 
 
 \subsubsection{Hybrid quantum/classical cryptography}\index{Hybrid quantum/classical cryptography}
 
-As discussed above, the RSA public-key cryptosystem is vulnerable to an efficient quantum attack, whereas private-key schemes like AES are not (believed to be). Thus, combining QKD schemes with private-key classical schemes does not compromise security in the quantum era.
+As discussed, the RSA public-key cryptosystem is vulnerable to an efficient quantum attack, whereas private-key schemes like AES are not (believed to be). Thus, combining QKD schemes with private-key classical schemes does not compromise security in the quantum era.
 
 Why would we combine quantum and classical encryption techniques when QKD is already provably secure, whereas the classical schemes are not?
 
@@ -353,14 +367,14 @@ Finally, all users measure their qubits in the $\pm$-basis and publicly (without
 
 \begin{figure}[!htb]
 \includegraphics[width=0.47\textwidth]{QAB}
-\caption{Protocol for quantum anonymous broadcasting. (a) A central trusted server prepares GHZ states and distributes them amongst a group of users, one qubit per user. All users measure in the $\pm$-basis. (b) All users classically broadcast their measurement outcomes yielding shared random parity. During broadcast, the broadcaster lies about his measurement outcome to flip the joint parity if he wishes to transmit `1', or tells the truth to transmit `0'. The joint parity encodes the message of the anonymous user, which all listeners are able to recover.} \label{fig:QAB}	
+\caption{Protocol for quantum anonymous broadcasting. (a) A central trusted server prepares GHZ states and distributes them amongst a group of users, one qubit per user. All users measure in the $\pm$-basis. (b) All users classically broadcast their measurement outcomes yielding shared random parity. During broadcast, the broadcaster lies about his measurement outcome to flip the joint parity if he wishes to transmit `1', or tells the truth to transmit `0'. The joint parity encodes the message of the anonymous user, which all listeners are able to recover.} \label{fig:QAB}
 \end{figure}
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\texttt{ 
 function QuantumAnonymousBroadcasting(message, speaker):
 \begin{enumerate}
-\item $\ket\psi = \ket{\mathrm{GHZ}}$
+\item $\ket\psi = \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n}+\ket{1}^{\otimes n})$
 \item $\ket\psi \to (\hat{Z}_\mathrm{speaker})^\mathrm{message}\ket\psi$
 \item for(i$\in$users) \{
 	\setlength{\itemindent}{.2in}
@@ -392,3 +406,5 @@ For these reasons, this scheme lends itself readily to photonic implementation, 
 \subsection{Attacks on quantum cryptography}
 
 \comment{To do}
+
+\comment{Attackes based on bad implementation rather than bad theory}
