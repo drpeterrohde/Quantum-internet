@@ -202,12 +202,13 @@ In the case of RSA public-key cryptography the attack is more direct -- with acc
 Compare this with Eq.~(\ref{eq:GNFS_scaling}).
 
 %
-% The Blockchain
+% Bitcoin & The Blockchain
 %
 
-\subsection{The Blockchain}\index{Blockchain}\index{Bitcoin}
+\subsection{Bitcoin \& the Blockchain}\index{Blockchain}\index{Bitcoin}
 
 \comment{To do}
+\cite{bib:TomamichelBlockchain}
 
 %
 % The End Of Classical Cryptography?
@@ -239,13 +240,7 @@ Quantum key distribution (QKD) protocols facilitate shared, secret randomness, w
 
 The central notion to QKD protocols, in their numerous manifestations, is that measurement of quantum states invokes a wavefunction collapse. When measuring a state in a basis for which that state is not an eigenstate, this necessarily changes the state. QKD relies on this simple result from quantum mechanics to reveal any eavesdropper performing an intercept-resend attack\index{Intercept-resend attack} via the changes to transmitted quantum states that this would induce.
 
-QKD is a relatively mature technology with already several commercial systems being available off-the-shelf\footnote{\cite{??? example companies}}. The main drawback is thus the ability to perform long-distance transmission of photons. Current QKD networks have been limited to relatively small distances, on the order of $\sim100$km, including in Austria, Switzerland, Japan, USA, and China \cite{bib:lo2014secure}. The longest distance QKD network that is currently planned is the Beijing to Shanghai QKD link, spanning a distance of $\sim2,000$km. This involves 32 trusted nodes\index{Trusted nodes} to break the full route into shorter segments.
-
-Utilising space communications for the purpose of QKD has been discussed in several works \cite{bib:hughes2000quantum, bib:rarity2002ground, bib:pfennigbauer2003free, bib:aspelmeyer2003long, bib:armengol08}. As already demonstrated in space-based entanglement experiments \cite{bib:yin2017satellite, bib:ren2017ground, bib:liao2017satellite} far lower attenuation rates are possible than ground-only approaches. Since cryptography schemes such as BB84\index{BB84 protocol} do not require entanglement, these would appear to be the first widespread commercial application for quantum technologies.  
-
-The ready realisability of space based QKD was already noted in a variety of configurations including ground-to-space\index{Ground-to-space communication} and space-to-ground\index{Space-to-ground communication} quantum communication \cite{bib:rarity2002ground, bib:aspelmeyer2003long}. In the context of security, the first long-distance experiments that are likely to be demonstrated will employ trusted nodes\index{Trusted nodes}. For example, after performing QKD between satellite\index{Satellites} and ground stations\index{Ground stations}, a satellite could store the key for some time in a quantum memory\index{Quantum memory} until another QKD can be performed to another ground station using a one-time pad\index{One-time pad cipher} \cite{bib:liao2017satellite}. These types of experiments are currently planned to eventually facilitate intercontinental QKD\index{Intercontinental QKD} between China and Austria.  
-
-QKD has been widely experimentally demonstrated over long distances \cite{bib:Muller96}, and unlike quantum computing, QKD is at the stage of commercial viability. Thus, a quantum internet with low cost metrics would already find substantial utility with today's technology. Currently, great progress in being made in the implementation of QKD in fibre \cite{???}, over free-space \cite{bib:Buttler00}, and even over intercontinental satellite uplinks \cite{JWP}. It seems extremely likely that some government agencies would be rolling out QKD systems \cite{bib:Secret}, especially in light of the paranoia surrounding quantum codebreaking.
+QKD is a relatively mature technology with already several commercial systems being available off-the-shelf\footnote{\cite{??? example companies}} and initial space-based implementations have been successfully demonstrated \cite{Pan}.
 
 It is easy to see the utility of quantum networks in enabling commodity deployment of QKD -- users desire to communicate photons across long-range ad hoc networks, with low loss and dephasing. A global quantum internet would allow quantum cryptography to truly supersede classical cryptography, bypassing the vulnerabilities faced by classical cryptography in the era of quantum computing.
 
@@ -257,7 +252,7 @@ In Sec.~\ref{sec:state_of_the_art} we summarise the state-of-the-art in the phys
 
 \paragraph{BB84 protocol}\index{BB84 protocol}
 
-The first described QKD scheme was the \textit{BB84} \cite{bib:BennetBrassard84}\index{BB84 protocol} protocol, which exploits the fact that states encoded in the 0/1-basis but measured in the $\pm$-basis (and vice versa) collapse randomly, yielding completely random measurement outcomes, whereas states measured in the same basis in which they were encoded always correctly communicate a single bit of information.
+The first described QKD scheme was the \textit{BB84} \cite{bib:BennetBrassard84}\index{BB84 protocol} protocol, which exploits the fact that states encoded in the $\hat{Z}$-basis but measured in the $\hat{X}$-basis (and vice versa) collapse randomly, yielding completely random measurement outcomes, whereas states measured in the same basis in which they were encoded always correctly communicate a single bit of information.
 
 Implemented photonically, BB84 requires only the transmission of a sequence of single photons, polarisation-encoded\index{Polarisation encoding} with random data.
 
@@ -290,7 +285,7 @@ or,
 \item Alice and Bob sacrifice some of their bits by publicly communicating them to check for consistency. This rules out intercept-resend attacks.
 \item Privacy amplification may be used to distill the partially compromised key into a shorter but more secret one.
 \end{enumerate}}}}
-\caption{BB84\index{BB84 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photons. Upon completion of the protocol, Alice and Bob share a random bit-string.\index{One-time pad cipher}}\label{alg:bb84}
+\caption{BB84\index{BB84 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photons. Upon completion of the protocol, Alice and Bob share a random bit-string for use in a one-time-pad cipher\index{One-time pad cipher}.}\label{alg:bb84}
 \end{table}
 
 To understand the secrecy of the protocol as described in Alg.~\ref{alg:bb84}, suppose an eavesdropper, Eve, were to perform an intercept-resend\index{Intercept-resend attack} attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of encoding bases, and Eve will not know the bases in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. Thus, by sacrificing some of their shared bits, via openly communicating them to one another for comparison, such an attack will be detected with asymptotically high security. Now Alice and Bob have great confidence that they have a shared, secret, random bit-string, which may subsequently be employed in a one-time-pad\index{One-time-pad protocol} with perfect secrecy.
@@ -303,9 +298,25 @@ The BB84 protocol has no measurement timing, mode-matching or interferometric st
 
 \paragraph{E91 protocol}\index{E91 protocol}
 
-E91 is slightly different to BB84. Here Alice and Bob share an entangled Bell-pair provided by a central authority. Then both Alice \textit{and} Bob measure their qubits in random bases. As with BB84, after measuring all qubits, they compare their choices of random bases. When they coincide, they have a shared, random bit. When they don't, they discard their result. From here the remainder of the protocol is the same as for BB84.
+E91 is slightly different to BB84. Here Alice and Bob share an entangled Bell-pair provided by a central authority. Then both Alice \textit{and} Bob measure their qubits in random bases. As with BB84, after measuring all qubits, they compare their choices of random bases. When they coincide, they have a shared, random bit. When they don't, they discard their result. From here the remainder of the protocol is the same as for BB84. Thre protocol is summarised in Alg.~\ref{alg:e91}.
 
-\comment{Explain E91 in detail}
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function E91():
+\begin{enumerate}
+\item A central server shares a Bell-pair between Alice and Bob,
+\begin{align}
+\ket{\Phi^+} = \frac{1}{\sqrt{2}}(\ket{0}_A\ket{0}_B+\ket{1}_A\ket{1}_B).
+\end{align}
+\item Alice randomly measures her qubit in either the $\hat{X}$ or $\hat{Z}$ basis.
+\item Bob randomly measures his qubit in either the $\hat{X}$ or $\hat{Z}$ basis.
+\item Alice and Bob share what their measurement bases were (classically and unencrypted).
+\item When Alice and Bob's bases were consistent they store the measurement outcomes as a shared random bit.
+\item Alice and Bob sacrifice some of their bits by publicly communicating them to check for consistency. This rules out intercept-resend attacks.
+\item Privacy amplification may be used to distill the partially compromised key into a shorter but more secret one.
+\end{enumerate}}}}
+\caption{E91\index{E91 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photonic Bell-pairs. Upon completion of the protocol, Alice and Bob share a random bit-string of ruse in a one-time-pad cipher\index{One-time pad cipher}.}\label{alg:e91}
+\end{table}
 
 \comment{Explain privacy amplification}
 
