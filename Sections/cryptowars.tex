@@ -120,15 +120,35 @@ Since RSA, numerous other public-key cryptosystems have been developed, based on
 
 \subsubsection{Digital signatures} \label{sec:dig_sig} \index{Digital signatures}
 
-\comment{To do}
+Rather than cryptographically ensuring the secrecy of messages, a user may wish to prove their identity when sending a message, such that the recipient can be certain it originated from who it says it does. This is achieved using \textit{digital signatures}.
+
+Digital signatures can be easily implemented using the RSA protocol\index{RSA protocol}, but swapping the role of the public and private keys. Now the public key can only be used for decrypting a message, and the private key can only be used for encrypting it.
+
+First, Alice prepares a short \textit{digest}\index{Digest} of the message she wishes to send (unencrypted). This may be implemented using a cryptographic hash function\index{Hash function}, such as SHA256\index{SHA256} (Sec.~\ref{sec:hashing}). She encrypts the digest using her private key and transmits the encrypted digest (her `digital signature') along with the original message to Bob. Bob is then able to take the received message, hash it, decrypt Alice's hash, and compares the two hashes for consistency to determine the validity of the message.
+
+The key point from the security perspective is that the private key cannot be efficiently inferred from the public key. So although everyone has access to Alice's public key, no one is able to counterfeit messages since they cannot create encrypted signatures without access to her private key.
+
+Because this protocol is implemented using ordinary RSA, albeit with reversed roles for the key-pair, it shares the same strengths and vulnerabilities as RSA public-key cryptography.
 
 %
 % Hashing
 %
 
-\subsubsection{Hashing} \label{sec:hashing} \index{Hashing} 
+\subsubsection{Hashing} \label{sec:hashing} \index{Hash functions}
 
-\comment{To do. Collisions.}
+Hash functions are functions that map a long string of arbitrary length to a short, fixed-size string with quasi-random behaviour,
+\begin{align}
+	f(\{0,1\}^n) \to \{0,1\}^m,
+\end{align}
+for an $n$-bit input and $m$-bit hash, where $n$ is variable and $m$ is fixed. They are an example of `one-way functions'\index{One-way functions} that are computationally easy to compute in the forward direction, but extremely hard to invert. That is, given a hash it is computationally difficult to find strings that map to that value.
+
+Hash functions have broad applicability throughout computer science, but here we are most interested in \textit{cryptographic hash functions} for use in cryptography, which impose strong conditions on the difficulty of inversion and their quasi-random characteristics.
+
+The standard cryptographic hash function with mainstream adoption is the 256-bit Secure Hashing Algorithm (SHA256\index{SHA256}), which generates 256-bit hashes.
+
+Cryptographically, hash functions are useful for creating message digests, which act as a highly condensed checksum\index{Checksum} of a document that can be utilised as a digital signature (Sec.~\ref{sec:dig_sig}).
+
+Note that because the function in general maps longer strings to shorter ones, there are necessarily \textit{collisions}\index{Collisions} -- multiple inputs for a given output. However, for strong cryptographic hash functions their behaviour is sufficiently random that two distinct messages will yield completely different hashes (even if the messages are very similar), making it all but impossible for someone to make the claim that Alice said something she did not. This property is extremely important for the security of digital signatures.
 
 %
 % Attacks On Classical Cryptography
@@ -197,6 +217,8 @@ To do this, we treat the brute-force cracking algorithm as a satisfiability prob
 
 Note that when performing a brute-force attack against a private encryption key\index{Private-key encryption}, a quadratic speedup effectively halves the key length in terms of algorithmic runtime, since \mbox{$O(\sqrt{2^k}) = O(2^{k/2})$}. Thus, in the quantum era private key lengths will need to be doubled to maintain the same security against brute-force attacks.
 
+This same technique of treating encryption as an oracle within a quantum search algorithm can be utilised to invert hash functions. However, in this case there will necessarily be multiple solutions.
+
 %
 % Cryptanalysis
 %
@@ -229,7 +251,7 @@ In the Blockchain protocol, the validity of contracts and transactions is recogn
 
 The Bitcoin protocol builds on top of the Blockchain to create a secure digital cryptocurrency. This requires the introduction of another sub-protocol, \textit{mining}\index{Bitcoin mining}, where units of currency (`coins'\index{Coins}) are created. The protocol cryptographically ensures that there is an upper-bound on the number of coins that can exist, thereby preventing forgery and an inflationary blowout in the money supply.
 
-The mining process is based upon the computational hardness of inverting SHA256 hashing\index{Hashing}\index{SHA256}. A legitimate Bitcoin is defined by a string with a hash satisfying a thoughtfully chosen constraint, which associates computational complexity with the mining process, and hence computational integrity of the money supply.
+The mining process is based upon the computational hardness of inverting SHA256 hashing\index{Hash functions}\index{SHA256}. A legitimate Bitcoin is defined by a string with a hash satisfying a thoughtfully chosen constraint, which associates computational complexity with the mining process, and hence computational integrity of the money supply.
 
 The two key algorithms for Bitcoin and the Blockchain are therefore hashing and public-key digital signatures. Both of these are subject to enhanced quantum attacks.
 
