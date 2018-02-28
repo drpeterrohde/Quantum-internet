@@ -74,7 +74,7 @@ Although during the Cold War Soviet diplomats would literally carry briefcases b
 
 While private-key cryptography solves the problem of end-to-end cryptography, it has one main downfall -- how does one share a private key between two parties? After all, if we had the ability to secretly share keys between ourselves, wouldn't we just use that method to directly communicate, bypassing the unnecessary cryptographic protocol?
 
-Public- (or asymmetric-) key cryptography addresses this issue by replacing the private key with two keys, one used solely for \textit{encryption}, the other solely for \textit{decryption}. Importantly, these two keys are non-trivially related and cannot be efficiently computed from one another. To send a message to a friend I can send him my encryption (public) key that he is only able to use for preparing an encrypted message for me. No security is required when sharing the public key since an eavesdropper can't use it for decryption. Finally, I am able to decrypt the message using my decryption (private) key, which I kept completely to myself and never shared with anyone.
+Public- (or asymmetric-) key cryptography addresses this issue by replacing the private key with two keys (known as a key-pair\index{Key-pair}), one used solely for \textit{encryption}, the other solely for \textit{decryption}. Importantly, these two keys are non-trivially related and cannot be efficiently computed from one another. To send a message to a friend I can send him my encryption (public) key that he is only able to use for preparing an encrypted message for me. No security is required when sharing the public key since an eavesdropper can't use it for decryption. Finally, I am able to decrypt the message using my decryption (private) key, which I kept completely to myself and never shared with anyone.
 
 RSA \cite{bib:RSA} was the first published public-key cryptographic protocol, and forms the backbone for most encryption used on the internet today. It achieves its security based on the belief that factorising large integers into constituent primes is a computationally hard problem -- a so-called `trapdoor function'\index{Trapdoor function}. The algorithm is built upon number theory using modular arithmetic, described in detail in Alg.~\ref{alg:RSA}.
 
@@ -84,14 +84,15 @@ function RSAGenerateKey():
 \begin{enumerate}
 \item $p$ = randomPrime()
 \item $q$ = randomPrime()
-\item Ensure $p\neq q$
+\item if($p=q$) goto 1
 \item $n = pq$
 \item $\lambda = \mathrm{lcm}(p-1,q-1)$
 \item $e = \mathrm{coprime}(\lambda) \,\,\mathrm{s.t} \,\,e<\lambda$
 \item $d = e^{-1}\,(\mathrm{mod} \, \lambda)$
 \item publicKey = $\{n,e\}$
-\item privatKey = $\{n,d\}$
-\item return(publicKey,privateKey)
+\item privateKey = $\{n,d\}$
+\item keyPair = \{publicKey,privateKey\}
+\item return(keyPair)
 \item $\Box$	
 \end{enumerate}
 function RSAEncrypt(plaintext, publicKey):
@@ -120,15 +121,44 @@ Since RSA, numerous other public-key cryptosystems have been developed, based on
 
 \subsubsection{Digital signatures} \label{sec:dig_sig} \index{Digital signatures}
 
-Rather than cryptographically ensuring the secrecy of messages, a user may wish to prove their identity when sending a message, such that the recipient can be certain it originated from who it says it does. This is achieved using \textit{digital signatures}.
+Rather than cryptographically ensuring the secrecy of messages, a user may wish to prove their identity when sending a message, such that the recipient can be certain it originated from who it says it does, and accurately conveys what they said. This is achieved using \textit{digital signatures}.
 
-Digital signatures can be easily implemented using the RSA protocol\index{RSA protocol}, but swapping the role of the public and private keys. Now the public key can only be used for decrypting a message, and the private key can only be used for encrypting it.
+Digital signatures can be easily implemented using the RSA protocol\index{RSA protocol}, but swapping the role of the public and private keys. Now the public key can only be used for decrypting a message, and the private key can only be used for encrypting it. As before, it is computationally hard to infer one from the other. The protocol for sending and verifying a digitally signed message is shown in Alg.~\ref{alg:dig_sig}.
 
-First, Alice prepares a short \textit{digest}\index{Digest} of the message she wishes to send (unencrypted). This may be implemented using a cryptographic hash function\index{Hash function}, such as SHA256\index{SHA256} (Sec.~\ref{sec:hashing}). She encrypts the digest using her private key and transmits the encrypted digest (her `digital signature') along with the original message to Bob. Bob is then able to take the received message, hash it, decrypt Alice's hash, and compares the two hashes for consistency to determine the validity of the message.
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function DigitalSignature(message,keyPair):
+\begin{enumerate}
+\item Alice prepares a short \textit{digest}\index{Digest} of her message using a cryptographic hash function\index{Hash function}, such as SHA256\index{SHA256} (Sec.~\ref{sec:hashing}),\\
+	\vspace{1mm} 
+	$\mathrm{digest=SHA256(message)}$
+	\item Alice encrypts the digest using her private key. This forms the `digital signature',\\
+	\vspace{1mm} 
+	$\mathrm{signature = RSAEncrypt(digest,privateKey)}$
+	\item Alice transmits the digital signature and original message to Bob,\\
+	\vspace{1mm} 
+	$\mathrm{signedMessage = \{message,signature\}}$
+	\item Bob hashes the received message,\\
+	\vspace{1mm} 	
+	$\mathrm{hash=SHA256(message)}$
+	\item Bob uses Alice's public-key to decrypt her digital signature,\\
+	\vspace{1mm} 
+	$\mathrm{decryptedHash = RSADecrypt(signature,publicKey)}$
+	\item Bob compares his calculated hash with Alice's decrypted hash for consistency. If the two hashes are identical, Bob concludes the message was authentic,\\
+	\vspace{1mm} 
+	$\mathrm{if(decryptedHash=hash)}$\\
+	$\,\,\mathrm{return(pass)}$\\
+	$\mathrm{else}$\\
+	$\,\,\mathrm{return(fail)}$
+	\item $\Box$
+\end{enumerate}
+}}}
+\caption{Protocol for digitally signing a message using public-key cryptography (RSA) and a cryptographic hash function (SHA256).} \label{alg:dig_sig}
+\end{table}
 
-The key point from the security perspective is that the private key cannot be efficiently inferred from the public key. So although everyone has access to Alice's public key, no one is able to counterfeit messages since they cannot create encrypted signatures without access to her private key.
+The key point from the security perspective is that the private key cannot be efficiently inferred from the public key. So although everyone has access to Alice's public key, no one is able to counterfeit messages since they cannot create encrypted signatures without access to her private key -- signatures can be easily verified but not created.
 
-Because this protocol is implemented using ordinary RSA, albeit with reversed roles for the key-pair, it shares the same strengths and vulnerabilities as RSA public-key cryptography.
+Because this protocol is implemented using ordinary RSA\index{RSA protocol}, albeit with reversed roles for the key-pair, it shares the same security strengths and vulnerabilities as RSA public-key cryptography (Sec.~\ref{sec:attacks_on_class}).
 
 %
 % Hashing
@@ -138,17 +168,17 @@ Because this protocol is implemented using ordinary RSA, albeit with reversed ro
 
 Hash functions are functions that map a long string of arbitrary length to a short, fixed-size string with quasi-random behaviour,
 \begin{align}
-	f(\{0,1\}^n) \to \{0,1\}^m,
+	f_\mathrm{hash}:\,\{0,1\}^n \to \{0,1\}^m,
 \end{align}
-for an $n$-bit input and $m$-bit hash, where $n$ is variable and $m$ is fixed. They are an example of `one-way functions'\index{One-way functions} that are computationally easy to compute in the forward direction, but extremely hard to invert. That is, given a hash it is computationally difficult to find strings that map to that value.
+for an $n$-bit input and $m$-bit output hash, where $n$ is variable and $m$ is fixed. They are an example of `one-way functions'\index{One-way functions} that are computationally easy to compute in the forward direction, but extremely hard to invert. That is, given a hash, it is computationally difficult to find input strings that map to that value.
 
 Hash functions have broad applicability throughout computer science, but here we are most interested in \textit{cryptographic hash functions} for use in cryptography, which impose strong conditions on the difficulty of inversion and their quasi-random characteristics.
 
 The standard cryptographic hash function with mainstream adoption is the 256-bit Secure Hashing Algorithm (SHA256\index{SHA256}), which generates 256-bit hashes.
 
-Cryptographically, hash functions are useful for creating message digests, which act as a highly condensed checksum\index{Checksum} of a document that can be utilised as a digital signature (Sec.~\ref{sec:dig_sig}).
+Cryptographically, hash functions are useful for creating message digests\index{Message digests}, which act as a highly condensed checksum\index{Checksum} of a document that can be utilised as a digital signature (Sec.~\ref{sec:dig_sig}).
 
-Note that because the function in general maps longer strings to shorter ones, there are necessarily \textit{collisions}\index{Collisions} -- multiple inputs for a given output. However, for strong cryptographic hash functions their behaviour is sufficiently random that two distinct messages will yield completely different hashes (even if the messages are very similar), making it all but impossible for someone to make the claim that Alice said something she did not. This property is extremely important for the security of digital signatures.
+Note that because the function in general maps longer strings to shorter ones, there are necessarily \textit{collisions}\index{Collisions} -- multiple inputs for a given output. However, for strong cryptographic hash functions their behaviour is sufficiently random that two distinct messages will almost certainly yield completely different hashes (even if the messages are very similar), making it all but impossible for someone to make the claim that Alice said something she did not. This property is extremely important for the security of digital signatures.
 
 %
 % Attacks On Classical Cryptography
@@ -245,7 +275,7 @@ Compare this with Eq.~(\ref{eq:GNFS_scaling}).
 
 \subsection{Bitcoin \& the Blockchain}\index{Blockchain}\index{Bitcoin}
 
-One of the most exciting new cryptographic applications that has emerged in recent years is the Blockchain, a secure distributed ledger\index{Distributed ledger} for recording the execution of contracts and transactions. This has enabled cryptocurrencies\index{Cryptocurrencies}, most notably Bitcoin, to emerge as a secure digital alternative to conventional fiat currencies. More recent developments, such as the Ethereum project\index{Ethereum}, develop the distributed ledger further to allow executable code to be committed to the Blockchain, opening the prospects for self-enforcement and -execution of completely arbitrary contracts, a potential game-changer for the operation of financial markets.
+One of the most exciting new cryptographic applications that has emerged in recent years is the Blockchain, a secure distributed ledger\index{Distributed ledger} for recording the execution of contracts and transactions. This has enabled cryptocurrencies\index{Cryptocurrencies}, most notably Bitcoin, to emerge as a secure digital alternative to conventional fiat currencies. More recent developments, such as the Ethereum project\index{Ethereum}, develop the distributed ledger further to allow executable code to be committed to the Blockchain, opening the prospects for self-enforcement and -execution of completely arbitrary contracts, a potential game-changer for the operation of financial and derivative markets.
 
 In the Blockchain protocol, the validity of contracts and transactions is recognised collectively by participants using an encrypted digital ledger. The ledger records the complete history of all Blockchain transactions, which are digitally signed (Sec.~\ref{sec:hashing}) by network participants using elliptic curve public-key cryptography\index{Digital signatures}\index{Elliptic curve cryptography}. A democratic process ensures that, provided a single user doesn't monopolise the network, recorded transactions are legitimate, recognised collectively. This is secured by network participants digitally signing off on transactions as they take place.
 
@@ -255,7 +285,7 @@ The mining process is based upon the computational hardness of inverting SHA256 
 
 The two key algorithms for Bitcoin and the Blockchain are therefore hashing and public-key digital signatures. Both of these are subject to enhanced quantum attacks.
 
-Hashing does not have any known quantum algorithm with exponential improvement, however using a Grover search one can achieve a quadratic speedup, using the same idea as for enhancing \textbf{NP}-complete problems by treating the hash function as a search oracle\index{Oracle}. This however does not pose a fundamental security concern as it will speed up the Bitcoin mining process, but does not circumvent the upper-bound on the number of coins that may be in existence. Already classical mining has pushed the Bitcoin money supply close to its asymptotic maximum and there is limited room for additional mining.
+Hashing does not have any known quantum algorithm with exponential improvement, however using a Grover search\index{Grover's algorithm} one can achieve a quadratic speedup, using the same idea as for enhancing \textbf{NP}-complete problems by treating the hash function as a search oracle\index{Oracle}. This however does not pose a fundamental security concern as it will speed up the Bitcoin mining process, but does not circumvent the upper-bound on the number of coins that may be in existence. Already classical mining has pushed the Bitcoin money supply close to its asymptotic maximum and there is limited room for additional mining.
 
 Elliptic curve public-key cryptography, like RSA, has a known efficient quantum attack via Shor's algorithm\index{Shor's algorithm}. In the context of implementing digital signatures this implies that an adversary could fraudulently sign off on illegitimate transactions, thereby committing falsified contracts to the Blockchain.
 
@@ -437,7 +467,7 @@ On the other hand, if a $\hat{Z}$ gate were applied to any one qubit, this would
 \end{align}
 for any qubit $i$. This invariance in the location of the $\hat{Z}$ gate is the basis for the anonymity of the protocol. If a user wishes to broadcast `0' he does nothing, whereas if he wishes to broadcast `1' he applies the $\hat{Z}$ gate to his local qubit.
 
-Finally, all users measure their qubits in the $\pm$-basis and publicly (without encryption) broadcast their measurement outcomes. All users now see all other users' measurement outcomes and are able to calculate the collective parity of the measurements. Now if the parity is even, the speaker must have said `0', whereas if it is odd he must have said `1'. The protocol is shown in Fig.~\ref{fig:QAB} and described in detail in Alg.~\ref{alg:QAB}
+Finally, all users measure their qubits in the $\pm$-basis and publicly (without encryption) broadcast their measurement outcomes. All users now see all other users' measurement outcomes and are able to calculate the collective parity of the measurements. Now if the parity is even, the speaker must have said `0', whereas if it is odd he must have said `1'. The protocol is shown in Fig.~\ref{fig:QAB} and described in detail in Alg.~\ref{alg:QAB}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.47\textwidth]{QAB}
