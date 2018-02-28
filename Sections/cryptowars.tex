@@ -207,14 +207,31 @@ Compare this with Eq.~(\ref{eq:GNFS_scaling}).
 
 \subsection{Bitcoin \& the Blockchain}\index{Blockchain}\index{Bitcoin}
 
-\comment{To do}
-\cite{bib:TomamichelBlockchain}
+One of the most exciting new cryptographic applications that has emerged in recent years is the Blockchain, a secure distributed ledger\index{Distributed ledger} for recording the execution of contracts and transactions. This has enabled cryptocurrencies\index{Cryptocurrencies}, most notably Bitcoin, to emerge as a secure digital alternative to conventional fiat currencies. More recent developments, such as the Ethereum project\index{Ethereum}, develop the distributed ledger further to allow executable code to be committed to the Blockchain, opening the prospects for self-enforcement and execution of completely arbitrary contracts, a potential game-changer for the operation of financial markets.
+
+In the Blockchain protocol, the validity of contracts and transactions is recognised collectively by participants using an encrypted digital ledger. The ledger records the complete history of all Blockchain transactions, which are digitally signed by network participants using elliptic curve public-key cryptography\index{Digital signatures}\index{Elliptic curve cryptography}. A democratic process ensures that, provided a single user doesn't monopolise the network, recorded transactions are legitimate, recognised collectively. This is secured by network participants digitally signing off on transactions as they take place.
+
+The Bitcoin protocol builds on top of the Blockchain to create a secure digital cryptocurrency. This requires the introduction of another sub-protocol, \textit{mining}\index{Bitcoin mining}, where units of currency (`coins'\index{Coins}) are created. The protocol cryptographically ensures that there is an upper-bound on the number of coins that can exist, thereby preventing forgery and an inflationary blowout in the money supply.
+
+The mining process is based upon the computational hardness of implementing SHA256 hashing\index{Hashing}\index{SHA256}. A legitimate Bitcoin is defined by a string with a hash satisfying a thoughtfully chosen constraint, which associates computational complexity with the mining process, and hence computational integrity of the money supply.
+
+The two key algorithms for Bitcoin and the Blockchain are therefore hashing and public-key digital signatures. Both of these are subject to enhanced quantum attacks.
+
+Hashing does not have any known quantum algorithm with exponential improvement, however using a Grover search one can achieve a quadratic speedup, using the same idea as for enhancing \textbf{NP}-complete problems by treating the hash function as a search oracle\index{Oracle}. This however does not pose a fundamental security concern as it will speed up the Bitcoin mining process, but does not circumvent the upper-bound on the number of coins that may be in existence. Already classical mining has pushed the Bitcoin money supply close to its asymptotic maximum and there is limited room for additional mining.
+
+Elliptic curve public-key cryptography, like RSA, has a known efficient quantum attack via Shor's algorithm\index{Shor's algorithm}. In the context of implementing digital signatures this implies that an adversary could fraudulently sign off on illegitimate transactions, thereby committing falsified contracts to the Blockchain.
+
+A detailed investigation into the vulnerability of the Blockchain to quantum attacks was performed by \cite{bib:TomamichelBlockchain}. However, it is near impossible to predict the future rate of growth in quantum computer technology and hence over what kind of timescale the Blockchain will be compromised. But it is certain that a full compromise is inevitable at some point in the future.
+
+To address this security threat, quantum-resistant hashing and public-key cryptographic protocols will need to be developed. In the former case this can easily be achieved by increasing hash lengths so as to offset the quadratic enhancement offered by Grover's algorithm. In the latter case this will require post-quantum public-key cryptosystems (to be discussed in the next section).
+
+Evidently, the lifespan of exisiting Blockchain technologies is limited and in the quantum future post-quantum Blockchain algorithms will be required to ensure the survival of cryptocurrencies.
 
 %
 % The End Of Classical Cryptography?
 %
 
-\subsection{The end of classical cryptography?}
+\subsection{The end of classical cryptography?} \label{sec:end_of_class_crypto}
 
 The vulnerability of RSA to attacks by quantum computers raises the question whether this spells the end of classical cryptography and compromises the security of much of the present-day internet.
 
@@ -360,7 +377,7 @@ As discussed, the RSA public-key cryptosystem is vulnerable to an efficient quan
 
 Why would we combine quantum and classical encryption techniques when QKD is already provably secure, whereas the classical schemes are not?
 
-In the near future, as QKD schemes begin their rollout in space and on Earth, random bits from the QKD implementation will be very expensive and exhibit low bandwidth. Suppose we wanted to securely videoconference across the globe. For just a single user this would require megabits per second of shared random bits, which will quickly saturate the capacity of overhead quantum satellites. Instead, let us use the QKD system to securely share just a 256-bit private session key\index{Session key} between two users. This is subsequently employed for AES-256 encryption that operates entirely over the classical network, which we regard as extremely cheap. Importantly, unlike one-time-pad implementations, this session key may be reused. Now we have a hybrid system which is not quantum-compromised, but which overcomes the cost and bandwidth issues associated with upcoming QKD networks.
+In the near future, as QKD schemes begin their rollout in space and on Earth, random bits from the QKD implementation will be very expensive and exhibit low bandwidth. Suppose we wanted to securely videoconference across the globe. For just a single user this would require megabits per second of shared random bits, which will quickly saturate the capacity of overhead quantum satellites. Instead, let us use the QKD system to securely share just a 256-bit private session key\index{Session key} between two users. This is subsequently employed for AES256 encryption that operates entirely over the classical network, which we regard as extremely cheap. Importantly, unlike one-time-pad implementations, this session key may be reused. Now we have a hybrid system which is not quantum-compromised, but which overcomes the cost and bandwidth issues associated with upcoming QKD networks.
 
 While such a hybrid scheme is not information-theoretically secure (AES is not proven to be quantum-safe), the computational security assumptions are far stronger than for say RSA, since there are no known efficient quantum attacks against strong private-key schemes.
 
