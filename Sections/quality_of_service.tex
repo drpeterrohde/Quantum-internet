@@ -152,11 +152,24 @@ Currently, topological codes (Sec.~\ref{sec:topol_codes}) are considered the mos
 
 \subsection{Unitary error averaging} \index{Quantum error correction}\index{Unitary error averaging}\label{sec:error_averaging}
 
-\comment{Redundant copies could in principle be distributed}
+Aside from the \textit{active} QoS techniques discussed until now, there is also a recently described \textit{passive} technique that requires no feedforward to operate. This technique, called \textit{unitary error averaging}, is formulated specifically in the linear optical context. It is an open question whether it generalises to other models, such as conventional quantum circuits.
 
-\comment{To do}
+Suppose we desire to implement some linear optics unitary network, $\hat{U}_\text{target}$, but our fabrication techniques are imperfect and we instead implement a close approximation to it. How can we overcome this?
 
-\comment{Add figure}
+\cite{MarshmanLundRohdeRalph} showed that by using an optical fanout operation, which splits a set of optical modes equally across multiple sets of modes in a type of redundant encoding, and passing each set through an independently manufactured copy of the imperfect unitary, $\tilde{U}_i$, upon post-selection on detecting all photons in the desired output modes, the output state will behave as if it had evolved through a network given by the arithmetic average of each of the imperfect copies of $\hat{U}_\text{target}$,
+\begin{align}
+\hat{U}_\text{av} = \frac{1}{M}\sum_{i=1}^M \tilde{U}_i.	
+\end{align}
+A schematic for the optical circuit is shown in Fig.~\ref{fig:error_av_circuit}.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.47\textwidth]{unitary_error_averaging}
+\caption{Protocol for error correction via unitary error averaging. Here our computation resides across \mbox{$N=2$} modes, and there are \mbox{$M=2$} redundant copies of the manufactured unitary, which straightforwardly generalises to arbitrary $M$ and $N$. A fanout operation splits the wave amplitudes from the set of $N$ input modes uniformly across $M$ sets of $N$ modes. Each set of $N$ evolves through an independent copy of the manufactured imperfect unitary, $\tilde{U}_i$. A reverse fanout operation recollects the bundles of modes. Upon post-selecting upon detecting all photons within the first $N$ modes, and none in the other ancillary modes, the state is projected into the subspace as if it had been acted upon by the arithmetic average of the imperfect unitaries.} \label{fig:error_av_circuit}	
+\end{figure}
+
+Note that the protocol doesn't require that the $M$ instances of the unitary be held locally. They could be distributed, with the independent copies held by entirely different parties in distant locations.
+
+The protocol is necessarily non-deterministic, since sometimes photons will be measured in the error modes, signalling that the output state has been projected onto an erroneous subspace. However, when post-selection succeeds we have effectively evolved via the averaged operator, which statistically ought to more closely approximate $\hat{U}_\text{target}$ than the individual $\tilde{U}_i$.
 
 %
 % Qubit Loss Codes
