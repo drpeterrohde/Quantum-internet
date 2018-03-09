@@ -61,7 +61,11 @@ Significant progress is being made on reconfigurable, integrated LOQC devices \c
 
 \subsection{Cluster state linear optics} \label{sec:CS_LO} \index{Cluster states}
 
-Although the original KLM scheme is universal, resource usage can be reduced by orders of magnitude by combining concepts from LOQC with the cluster state formalism (Sec.~\ref{sec:CSQC}) or related concepts \cite{bib:YoranReznik03, bib:Nielsen04, bib:BrowneRudolph05, bib:GilchristHayes05, bib:Lim05, bib:LimBarrett05}. Specifically, instead of using our non-deterministic KLM CZ gates within the circuit model formalism, they could be employed for the preparation of cluster states, since a CZ gate creates an edge in a cluster state graph. Cluster state preparation using non-deterministic entangling gates is discussed in more detail in Sec.~\ref{sec:module}.
+Although the original KLM scheme is universal, and `efficient' (from a purely computer scientist's definition of `efficient=polynomial'\index{Efficiency}), resource usage can be reduced by orders of magnitude by combining concepts from LOQC with the cluster state formalism (Sec.~\ref{sec:CSQC}) or related concepts \cite{bib:YoranReznik03, bib:Nielsen04, bib:BrowneRudolph05, bib:GilchristHayes05, bib:Lim05, bib:LimBarrett05}.
+
+Specifically, instead of using our non-deterministic KLM CZ gates within the circuit model formalism, they could be employed for the preparation of cluster states, since a CZ gate creates an edge in a cluster state graph.
+
+We now review approaches for cluster state-based LOQC using non-deterministic entangling gates. A further discussion of this topic continues in Sec.~\ref{sec:module}, where we introduce modularised quantum computing from a cluster state perspective also using non-deterministic gates. We recommend beginning this topic here, and then skipping ahead to Sec.~\ref{sec:module} for continued discussion if interested.
 
 %
 % Fusion Gates
@@ -71,14 +75,14 @@ Although the original KLM scheme is universal, resource usage can be reduced by 
 
 As introduced in Sec.~\ref{sec:CSQC}, a cluster state may be defined by the action of CZ gates upon a graph of qubits initialised into the $\ket{+}$ state. As we saw in the previous section, implementing these CZ gates is troublesome using linear optics, as it is non-deterministic and carries the burden of a large resource overhead. Nonetheless, it was shown early on \cite{NielsenOptCS} that by combining non-deterministic CZ gates with the cluster state formalism yields LOQC protocols far more efficient than the original KLM protocol for LOQC.
 
-It was then noted \cite{BrowneRudolph} that CZ gates aren't required at all for the preparation of optical cluster states. Instead, parity measurements (Sec.~\ref{sec:bell_proj}) operating in a rotated basis may be used to fuse smaller cluster states into larger ones, albeit acting destructively on two of the qubits, and also being non-deterministic, with a success probability of $1/2$. These gates have become known as \textit{fusion gates}, of which there are two types:
+It was then noted \cite{BrowneRudolph} that CZ gates aren't required at all for the preparation of optical cluster states. Instead, parity measurements (Sec.~\ref{sec:bell_proj})\index{Bell measurements} operating in a rotated basis may be used to fuse smaller cluster states into larger ones, albeit acting destructively on two of the qubits, and also being non-deterministic, with a success probability of $1/2$. These gates have become known as \textit{fusion gates}, of which there are two types:
 \begin{itemize}
 	\item Type-I: destroy only a single photon, but require efficient number-resolved detection.
-	\item Type-II: destroy two photons, but only require on/off detectors, since the gate succeeds upon coincidence events only.
+	\item Type-II: destroy two photons, but only require on/off detectors, since the gate succeeds upon coincidence events only and preserves photon-number.
 \end{itemize}
 Both types of gates have several highly favourable characteristics:
 \begin{itemize}
-	\item Only HOM stability is required (Sec.~\ref{sec:opt_stab}). At no stage in the cluster state preparation procedure is any interferometric (i.e wavelength-scale) stability required.
+	\item Unlike the KLM CZ gate, only HOM stability is required (Sec.~\ref{sec:opt_stab}). At no stage in the cluster state preparation procedure is any interferometric (i.e wavelength-scale) stability required.
 	\item Gate failure is heralded by measurement of the wrong photon-number.
 	\item Gate failure measures the respective qubits in the computational basis, thereby simply removing those qubits from the cluster state graph, whilst preserving the remainder of the state, which can be `recycled'\index{Cluster state recycling} for reuse.
 \end{itemize}
@@ -96,6 +100,8 @@ The explicit construction of the linear optics fusion gates is shown in Fig.~\re
 
 \subsubsection{Fusion strategies} \index{Cluster state fusion strategies}
 
+If a large cluster state has $n$ edges in its graph, single-shot state preparation will succeed with probability $p^n$ if individual gates succeed with probability $p$, implying that on average $1/p^n$ attempts will need to be made until success. Clearly this exponentiality doesn't lend itself to efficient implementation. Thankfully, cluster states needn't be prepared in a single shot, since individual gate failures do not destroy the entire graph, but rather only cause localised damage to the graph in the vicinity of the gate.
+
 Despite their non-determinism, numerous authors have examined approaches for efficiently preparing arbitrarily large cluster states using these destructive, non-deterministic gates \cite{nielsen, kieling, rohdebarrett, kokBuffer, ???}. We refer to these schemes as `fusion strategies' -- simple algorithms for how to arrange qubits geometrically and the order in which to attempt bonding them.
 
 These principles can be extended beyond LO to other schemes where entangling gates are inherently non-deterministic or sometimes fail in a heralded manner, e.g hybrid architectures (Sec.~\ref{sec:hybrid}), where a beamsplitter mediates entanglement via which-path erasure, but only successfully projects onto an entangled state with probability 1/2.
@@ -108,19 +114,19 @@ The key feature of all these fusion strategies is to employ `micro-clusters'\ind
 
 \paragraph{Linear clusters}\index{Linear cluster states}
 
-\comment{Enhance intro}
+We begin with discussion of linear clusters as these are a particularly useful primitive resource for more advanced strategies. We briefly sketch out the formalism introduced by \cite{bib:RohdeBarrett07} for linear state preparation, which is applicable to a number of different variants of entangling gates.
 
-We will now briefly sketch out the formalism introduced by \cite{bib:RohdeBarrett07} for performing a theoretical analysis of such cluster state preparation schemes. This formalism was initially only presented in the context of linear clusters. However, these act as a primitive resource from which less trivial clusters may be constructed, such as rectangular lattices, which are universal for MBQC.
+A key observation was that although numerous strategies yield efficient state preparation, exact efficiencies are highly dependent on the ordering of bonding operations -- which clusters do we choose to bond together first?
 
-Consider a non-deterministic KLM-type CZ gate\footnote{In reality, no one would use KLM-type gates for preparing cluster states, owing to their complexity compared to fusion gates. Rather, we use this gate for illustrative purposes, since its operation upon success and failure are very simple for exposition.}, which upon failure destroys its two input photons by measuring them in the computational basis, and leaves the number of qubits unchanged upon success and bonds them together.
+Consider a non-deterministic KLM-type CZ gate\footnote{In reality, no one would use KLM-type gates for preparing cluster states, owing to their complexity compared to fusion gates. Rather, we use this gate for illustrative purposes, since its operation upon success and failure are very simple for exposition.}, which upon failure destroys its two input photons by measuring them in the computational $\hat{Z}$-basis, and leaves the number of qubits unchanged upon success and bonds them together.
 
-To analyse the operation of such a non-deterministic protocol, we begin by defining a vector $\vec{n}_t$ at time $t$, which stores purely classical information. Specifically, the vector tells us how many clusters of every length we have stored in memory (except single qubit clusters, which we assume `come for free'\footnote{As in beer.\index{Beer}}). For example, the second element of the vector tell us how many 3-qubit linear clusters we have in our possession.
+To analyse the operation of such a non-deterministic protocol, we begin by defining a vector $\vec{n}_t$ at time $t$, which stores purely classical information. Specifically, the vector tells us how many clusters of every length we have stored in memory (except single qubit clusters, which we assume `come for free'\footnote{As in beer.\index{Beer}}). For example, the second element of the vector tells us how many 3-qubit linear clusters we have in our possession.
 
-We then define a strategy, $f_s$\index{Fusion strategies}, for choosing clusters we have stored and bonding them together to form larger clusters. Note that a key result from this study was that different strategies are hugely different in their ability to prepare long clusters. The strategy acts on our cluster vector and updates it accordingly,
+We then define a strategy, $f_s$\index{Fusion strategies}, for choosing clusters we have stored and bonding them together to form larger clusters. The strategy acts on our cluster vector and updates it accordingly,
 \begin{align}\index{Fusion strategy update rules}
 \vec{n}_{t+1} = f_s(\vec{n}_t).
 \end{align}
-That is, the length vector can be thought of as a series of `buckets' containing clusters of different lengths, and the strategy simply shifts the contents of the buckets around between buckets each time it is applied.
+That is, the length vector can be thought of as a series of `buckets' containing clusters of different lengths, and the strategy simply probabilistically shuffles the contents of the buckets around each time it is applied. The process can be thought of as a random walk\index{Random walk}, guided by a probabilistic update rule.
 
 The strategy description, $f_s$, is also responsible for taking care of updating the elements of $\vec{n}$ according to an update rule, which dictates how many photons are lost or gained upon success or failure of the non-deterministic gate. For example, the CZ gate we have employed here for our toy model destroys two qubits upon failure, but upon success creates a cluster of length given by the sum of the lengths of the clusters acted upon by the gate.
 
@@ -132,11 +138,9 @@ where $N_t$ is the total number of clusters of length greater than the target le
 
 This completes the theoretical analysis for different strategies and gate types, allowing us to explore different approaches tailored to different physical systems and their varying gate implementations.
 
-One of the key outcomes of this research was that a {\sc Balanced} strategy\index{Balanced strategy} is optimal in terms of preparation rate. This is simply a strategy which preferentially always bonds clusters of equal length.
+One of the key outcomes was that a {\sc Balanced} strategy\index{Balanced strategy} is optimal in terms of preparation rate. This is simply a strategy which preferentially always bonds clusters of equal length, beginning with the largest ones available. Asymmetric strategies, which bond clusters of differing lengths were found to be far less efficient.
 
-\comment{These form a resource for more elaborate topology constructions}
-
-\comment{Show Markov chain process diagram. Show algorithm in box.}
+\comment{Figure of rates. Figure of buckets. Show algorithm in box.}
 
 %
 % Lattice Clusters
@@ -146,7 +150,7 @@ One of the key outcomes of this research was that a {\sc Balanced} strategy\inde
 
 As we learnt from Sec.~\ref{sec:CSQC}, linear cluster states are not universal for quantum computation. What is required is lattices, where the rows and columns respectively map to logical qubits and time in the circuit model. There are numerous approaches one could employ to assemble such lattice clusters using non-deterministic gates, however the easiest to treat for illustrative purposes is to take a resource of linear clusters, prepared as described earlier, and weld them together according to some algorithm, enabling more complex two-dimensional topologies.
 
-The central strategy is similar as for linear clusters -- we construct recyclable micro-clusters, which enable multiple bonding attempts. The key difference now is that these redundant vertices must emanate in multiple directions so as to allow the more complex 2D topology.
+The central strategy is similar as for linear clusters -- we construct recyclable micro-clusters, which enable multiple bonding attempts, since gate failures only cause localised damage. The key difference now is that these redundant vertices must emanate in multiple directions so as to allow the more complex 2D topology.
 
 Fig.~\ref{fig:micro_clusters} illustrates several topologies for micro-clusters, beginning with the linear micro-cluster that we employed previously for preparing 1D clusters, and two variations of micro-clusters that can be employed for 2D state preparation.
 
@@ -155,13 +159,17 @@ Fig.~\ref{fig:micro_clusters} illustrates several topologies for micro-clusters,
 \caption{Linear, plus ($+$), and star micro-cluster states.}\label{fig:micro_clusters}\index{Linear micro-cluster states}\index{Plus micro-cluster states}\index{Star micro-cluster states}\index{Micro-cluster states}
 \end{figure*}
 
-The $+$-cluster simply comprises four linear clusters emanating in the four directions, welded together at a central vertex. It's self-evident how this is subsequently applied to 2D state preparation -- we lay out the $+$-clusters in a grid, and attempt nearest neighbour bonding in each direction for every neighbouring pair of micro-clusters.
+The $+$-cluster\index{Plus micro-cluster states} simply comprises four linear clusters emanating in the four directions, welded together at a central vertex. It's self-evident how this is subsequently applied to 2D state preparation -- we lay out the $+$-clusters in a grid, and attempt nearest neighbour bonding in each direction for every neighbouring pair of micro-clusters.
 
-The star-cluster similarly allows multiple bonding attempts in each direction. But now the dangling bonds are not uniquely associated with a particular direction, and may therefore be utilised when bonding to a neighbouring micro-cluster in any direction. This implies a modest efficiency improvement, since leftover vertices in any given direction needn't be wasted upon a successful bond in that direction. However, these micro-clusters are not as efficient to prepare as the $+$-clusters, since they do not straightforwardly arise from two fused linear-clusters, which are highly efficient to prepare. Rather they must be prepared via a sequence of repeated successful bonding operations to the central node, where a single gate failure destroys the entire state.
+The star-cluster\index{Star micro-cluster states} similarly allows multiple bonding attempts in each direction. But now the dangling bonds are not uniquely associated with a particular direction, and may therefore be utilised when bonding to a neighbouring micro-cluster in any direction. This implies a modest efficiency improvement, since leftover vertices in any given direction needn't be wasted upon a successful bond in that direction. However, these micro-clusters are not as efficient to prepare as the $+$-clusters, since they do not straightforwardly arise from two fused linear clusters, which are highly efficient to prepare. Rather they must be prepared via a sequence of repeated successful bonding operations to the central node, where a single gate failure destroys the entire state.
 
 In addition to an efficiency improvement in terms of the number of required physical qubits, minimising the number of redundant qubits that must be removed via $\hat{Y}$ measurements upon completion of the bonding strategy has another key benefit -- error accumulation \cite{RohdeMunroEtal}. Whenever a cluster state qubit is measured, the action of any error process that acted on that qubit will be teleported to its neighbour(s). For example, if we measure the first qubit in a linear cluster, which was previously acted upon by a depolarising channel\index{Depolarising channel}, the depolarisation process will be teleported to the neighbouring second qubit in the cluster. Thus, with high levels of redundancy, although this increases our chances of successfully joining two micro-clusters, it similarly increases the accumulation of errors. There is therefore a direct tradeoff between two undesirable error mechanisms -- gate failure, and logical errors. This tradeoff must be carefully managed in a real-world implementation.
 
-Having made this observation about error accumulation, is there a topology that is optimal? Yes there is -- the so-called snowflake cluster, shown in Fig.~\ref{fig:snowflake_graph}. He we take the $+$-cluster topology and replace the linear clusters emanating in each direction with binary tree graphs of some depth, $d$. The endpoints (leaves) of each tree now provide the bonding opportunities for joining to neighbouring micro-clusters. There are $O(2^d)$ such opportunities. The bonding attempts proceed as expected, always exploiting the trees' outermost leaves. When two sub-trees are successfully bonded via their leaves we do not need to measure out \textit{all} the leftover redundant vertices to reduce the graph to the desired residual topology. Instead we can `prune' away entire sub-trees by performing $\hat{Z}$ measurements at the base of their trunks. All vertices above the trunk will thereby be detached from the graph and needn't all be individually measured. Correspondingly, any error processes that had acted on the pruned vertices will not be teleported onto the main cluster, only the measurements acting on the trunks will accumulate.
+Having made this observation about error accumulation, is there a topology that is optimal? Yes there is -- the so-called snowflake cluster, shown in Fig.~\ref{fig:snowflake_graph}. He we take the $+$-cluster topology and replace the linear clusters emanating in each direction with binary tree graphs of some depth, $d$.
+
+The endpoints (leaves) of each tree now provide the bonding opportunities for joining two neighbouring micro-clusters. There are $O(2^d)$ such opportunities. The bonding attempts proceed as expected, always exploiting the trees' outermost leaves.
+
+Now the key feature is that when two sub-trees are successfully bonded via their leaves we do not need to measure out \textit{all} the leftover redundant vertices to reduce the graph to the desired residual topology. Instead we can `prune' away entire sub-trees by performing $\hat{Z}$ measurements at the base of their trunks. All vertices above the trunk will thereby be detached from the graph and needn't all be individually measured. Correspondingly, any error processes that had acted on the pruned vertices will not be teleported onto the main cluster, only the measurements acting on the trunks will contribute.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.47\textwidth]{microcluster_snowflake}
@@ -180,9 +188,9 @@ Keeping in mind that for an error process with error rate $p$, the net probabili
 
 \paragraph{On-demand cluster state preparation}\index{On-demand cluster state preparation}
 
-A beautiful feature of the cluster state model is that the entire cluster needn't be prepared in its entirety for computation to proceed. Instead the state can be grown via the fusion of additional qubits on-demand as the computation proceeds. So long as a gate failure doesn't lay its fingers on the leftmost column of qubits in the cluster we are in business. This means fewer quantum memories are required, which are very challenging optically. In non-optical, specifically matter qubit systems, this additionally means that physical qubits can be reused on-the-fly.
+A beautiful feature of the cluster state model is that the entire cluster needn't be prepared in its entirety for computation to proceed. Instead the state can be grown via the fusion of additional qubits on-demand as the computation proceeds. This arises simply because all the entanglement in the graph is nearest neighbour only, i.e very short-range. So long as a gate failure doesn't lay its fingers on the leftmost column of qubits in the cluster we are in business. This means fewer quantum memories are required, which are very challenging optically. In non-optical, specifically matter qubit systems, this additionally means that physical qubits can be reused on-the-fly.
 
-The computation therefore proceeds as alternating applications of: (1) measuring the leftmost column of physical qubits to evolve the computation by a single step; (2) bond on a new column of qubits to the rightmost column. The qubits in between the left and rightmost columns act as a buffer to give us some leeway when bonding operations fail.
+The computation therefore proceeds as alternating applications of: (1) measuring the leftmost column of physical qubits to evolve the computation by a single step; (2) bond on a new column of qubits to the rightmost column. The qubits in between the left and rightmost columns act as a buffer to give us some leeway when bonding operations fail. The architecture is shown in Fig.~\ref{fig:on_demand_cs}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.47\textwidth]{on_demand_cluster_states}
@@ -440,13 +448,13 @@ While such negative results might be somewhat depressing, it is extremely insigh
 
 \comment{Cite Saleh/Carlton paper on most optical states generating entanglement. Is it exponential entanglement? If so, is this a necessary but not sufficient condition for computational complexity.}
 
-The simplest example of an easy such problem is coherent state linear optics\index{Coherent state linear optics}, as discussed in Sec.~\ref{sec:coherent_state_QC}. Taking this notion further, recall from Sec.~\ref{sec:exotic} that one of the phase-space\index{Phase-space} representations for generic optical states is the $P$-function\index{$P$-function}, which represents a density operator as a sum over coherent state,
+The simplest example of an easy such problem is coherent state linear optics\index{Coherent state linear optics}, as discussed in Sec.~\ref{sec:coherent_state_QC}. Taking this notion further, recall from Sec.~\ref{sec:exotic} that one of the phase-space\index{Phase-space} representations for generic optical states is the $P$-function\index{$P$-function}, which represents a density operator as a sum over coherent states,
 \begin{align}
 \hat\rho = \int\!\!\!\int P(\alpha) \ket{\alpha}\bra{\alpha} d^2\alpha.
 \end{align}
 Here $P(\alpha)$ is a quasi-probability function\index{Quasi-probability function}. Importantly, iff the $P$-function is strictly non-negative, \mbox{$P(\alpha)\geq 0 \,\,\forall \,\alpha$}, the optical state may be trivially interpreted as a purely classical mixture of coherent states ($P(\alpha)$ would be a delta function for pure coherent states). If, on the other hand, the $P$-function exhibits negativity for any $\alpha$, this interpretation breaks down and is indicative of the state exhibiting non-classical\index{Non-classical states} behaviour.
 
-Alg.~\ref{alg:positive_P_sim} describes an efficient classical algorithm for simulating the output photo-statistics of a linear optics sampler fed with strictly non-negative $P$-function input states.
+Alg.~\ref{alg:positive_P_sim} describes an efficient classical algorithm for simulating the output photo-statistics of a linear optics sampler fed with strictly non-negative $P$-function input states \cite{SalehAustinTim}.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\texttt{ 
@@ -476,8 +484,6 @@ function SimulatePositiveP($\vec{P}$):
 \end{enumerate}}}}
 \caption{Efficient classical algorithm for simulating any linear optics sampling problem whose input states have strictly non-negative $P$-functions, with output measured via photon-counting. $\vec{P}$ is the vector of $P$-functions for all modes.} \label{alg:positive_P_sim}
 \end{table}
-
-\comment{Cite Saleh/Ralph etc on positivity of P-function}
 
 %
 % Quantum Walks

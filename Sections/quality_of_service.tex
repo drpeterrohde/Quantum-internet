@@ -4,13 +4,9 @@
 
 \section{Quality of service (QoS)}\index{Quantum error correction (QEC)}\index{Quality of service}\label{sec:QOS_chap}
 
-\comment{To do}
-
 As discussed previously in Sec.~\ref{sec:QOS}\index{Quality of service}, quality of service is a major consideration in any quantum network. If we are transmitting quantum states over a quantum channel, there will inevitably be deterioration in the form of decoherence, loss, and other undesirable effects we wish to mitigate. In this section we review some of the essential quantum error correction (QEC) techniques that can be used to achieve this.
 
 Different error correcting codes have different error correcting power, and different resource overheads, which must be taken into consideration. The appropriate choice of code will largely be determined by the final \textsc{Services \& Applications} layer. For some simple quantum communications protocols, simple error correction (or even no error correction) may suffice. A full-fledged quantum computation on the other hand will require error rates within a fault-tolerance threshold\index{Fault-tolerance threshold}.
-
-\comment{Latin quote}\index{Latin}
 
 %
 % Entanglement Purification
@@ -26,10 +22,9 @@ Different error correcting codes have different error correcting power, and diff
 
 \subsection{3-qubit code}\index{3-qubit code}
 
-\comment{To do}
-\comment{Syndrome extraction}\index{Syndrome extraction}
+The first described QEC\index{Quantum error correction (QEC)} code was the 3-qubit code\index{3-qubit code} by \cite{bib:Shor95} for redundantly encoding a single logical qubit into three encoded qubits, allowing the detection and correction of at most a single bit-flip error between the encoded qubits. Measurement of the three ancillary qubits yields a \textit{syndrome}\index{Syndrome}, which identifies where the error took place, allowing it to be subsequently corrected with feedforward. This protocol is shown in Alg.~\ref{alg:three_QEC}.
 
-The first described QEC\index{Quantum error correction (QEC)} code was the 3-qubit code\index{3-qubit code} by \cite{bib:Shor95} for redundantly encoding a single logical qubit into three encoded qubits, allowing the detection and correction of at most a single bit-flip error between the encoded qubits. This protocol is shown in Alg.~\ref{alg:three_QEC}. By switching into a Hadamard-rotated basis, the same code could equivalently correct against at most a single phase-flip error (since \mbox{$\hat{H}\hat{X}\hat{H}=\hat{Z}$}).
+By switching into a Hadamard-rotated basis, the same code could equivalently correct against at most a single phase-flip error (since \mbox{$\hat{H}\hat{X}\hat{H}=\hat{Z}$}).
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\texttt{
@@ -68,7 +63,7 @@ into the 3-qubit state,
 } \nonumber
 \end{align}
 }}
-\caption{3-qubit code for protecting against at most a single logical bit-flip error. The doubly-controlled CNOT gates represent parity measurements, \mbox{$n_3=n_1\oplus n_2$}, where $n_i$ represents the value of the $i$th qubit. In a Hadamard-rotated basis, the same circuit may be employed to protect against a single phase-flip error. And by concatenating the two we obtain a 9-qubit code protecting against a single depolarising error (i.e joint bit-flip/phase-flip), which is a universal single-qubit error model. \comment{Move to QOS section}} \label{alg:three_QEC}
+\caption{3-qubit code for protecting against at most a single logical bit-flip error. The doubly-controlled CNOT gates represent parity measurements, \mbox{$n_3=n_1\oplus n_2$}, where $n_i$ represents the value of the $i$th qubit. In a Hadamard-rotated basis, the same circuit may be employed to protect against a single phase-flip error. And by concatenating the two we obtain a 9-qubit code protecting against a single depolarising error (i.e joint bit-flip/phase-flip), which is a universal single-qubit error model.} \label{alg:three_QEC}
 \end{table}
 
 %
@@ -77,9 +72,9 @@ into the 3-qubit state,
 
 \subsection{9-qubit code}\index{9-qubit code}
 
-\comment{To do}
+By taking two instances of the 3-qubit code, one implementing bit-flip correction and the other implementing phase-flip correction, and concatenating them, we can define a 9-qubit code, which protects against at most a single bit-flip and a single phase-flip. Joint protection against both the bit-flip and phase-flip operators ($\hat{X}$ and $\hat{Z}$) in turn allows error correction against a single depolarising error, the most general type of logical error, which completely destroys a single qubit.
 
-By concatenating these two codes a 9-qubit code\index{9-qubit code} correcting against a single depolarising error may be implemented.
+This is the simplest construction of a code which protects against a single depolarising event. But it is not the most efficient, and numerous more resource-savvy codes for protecting against Pauli errors exist, such as Steane's 7-qubit code\index{Steane code} \cite{SteaneCode}.
 
 %
 % Stabiliser Codes
