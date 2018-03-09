@@ -40,7 +40,7 @@ Clearly this non-determinism is of immediate concern, since concatenating multip
 
 The first key observation then is that gate teleportation can be used to shift this non-determinism to a resource state preparation stage, as described in detail in Sec.~\ref{sec:teleport_gate}. However, this is not the end of the story, since gate teleportation requires Bell state projections, which are themselves non-deterministic using purely linear optics (either using PBSs or CNOT gates). --- \textit{Ignotum per ignotius}.
 
-The final insight provided by KLM is that by concatenating these non-deterministic CNOT gates, we can inductively build up higher-level CNOT gates with ever increasing success probabilities, asymptoting to unity with high-depth (but polynomial) concatenation. By combining these key insights, KLM were able to show that near-deterministic CNOT gates can be constructed using an efficient resource overhead, thereby enabling efficient universal quantum computation\footnote{Note that all single-qubit gates are trivially and deterministically implemented using wave-plates or beamsplitters, for polarisation or dual-rail encoding respectively. Thus, we need only concern ourselves with the challenges associated with implementing two-qubit entangling gates.}. A sketch of the general KLM formalism is shown in Fig.~\ref{fig:KLM_protocol}.
+The final insight provided by KLM is that by concatenating these non-deterministic CNOT gates, we can inductively build up higher-level CNOT gates with ever increasing success probabilities, asymptoting to unity with high- (but polynomial-) depth concatenation. By combining these key insights, KLM were able to show that near-deterministic CNOT gates can be constructed using an efficient (polynomial) resource overhead, thereby enabling efficient universal quantum computation\footnote{Note that all single-qubit gates are trivially and deterministically implemented using wave-plates or beamsplitters, for polarisation or dual-rail encoding respectively. Thus, we need only concern ourselves with the challenges associated with implementing two-qubit entangling gates.}. A sketch of the general KLM formalism is shown in Fig.~\ref{fig:KLM_protocol}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.25\textwidth]{KLM}
@@ -53,9 +53,7 @@ The measurements are implemented simply by number-resolved photo-detectors, impl
 
 Since the original presentation of a universal LOQC gate set by KLM, numerous alternate implementations have been presented and experimentally demonstrated, with various pros and cons \cite{bib:Ralph01, bib:Pittman01, bib:Ralph02, bib:Knill02, bib:Pittman03, bib:MorYoran06}.
 
-Although the original KLM scheme is universal, resource usage can be reduced by orders of magnitude by combining concepts from LOQC with the cluster state formalism (Sec.~\ref{sec:CSQC}) or related concepts \cite{bib:YoranReznik03, bib:Nielsen04, bib:BrowneRudolph05, bib:GilchristHayes05, bib:Lim05, bib:LimBarrett05}. Specifically, instead of using our non-deterministic KLM CZ gates within the circuit model formalism, they could be employed for the preparation of cluster states. Cluster state preparation using non-deterministic entangling gates is discussed in more detail in Sec.~\ref{sec:module}.
-
-Significant progress is being made on reconfigurable, integrated LOQC devices \cite{bib:UniversalLOOBrien}, but switching times remain orders of magnitude slower than that required for fast-feedforward. The resource overhead associated with overcoming the non-determinism of entangling gates is substantial in the original KLM proposal. But despite being improved upon by cluster state approaches, resource scaling remains daunting. It therefore seems most likely that certain elements from LOQC might be combined into hybrid architectures, to be discussed in detail in Sec.~\ref{sec:hybrid}.
+Significant progress is being made on reconfigurable, integrated LOQC devices \cite{bib:UniversalLOOBrien}, but switching times remain orders of magnitude slower than that required for fast-feedforward. The resource overhead associated with overcoming the non-determinism of entangling gates is substantial in the original KLM proposal. But despite being improved upon by cluster state approaches, to be discussed next (Sec.~\ref{sec:CS_LO}), resource scaling remains daunting. It therefore seems most likely that certain elements from LOQC might be combined into hybrid architectures, to be discussed in detail in Sec.~\ref{sec:hybrid}.
 
 %
 % Cluster State Linear Optics
@@ -63,10 +61,7 @@ Significant progress is being made on reconfigurable, integrated LOQC devices \c
 
 \subsection{Cluster state linear optics} \label{sec:CS_LO} \index{Cluster states}
 
-Sec.~\ref{sec:opt_stab}
-Sec.~\ref{sec:module}
-
-\comment{To do! Talk about different gate types. Show update table. Reference from fusion strategies section.}
+Although the original KLM scheme is universal, resource usage can be reduced by orders of magnitude by combining concepts from LOQC with the cluster state formalism (Sec.~\ref{sec:CSQC}) or related concepts \cite{bib:YoranReznik03, bib:Nielsen04, bib:BrowneRudolph05, bib:GilchristHayes05, bib:Lim05, bib:LimBarrett05}. Specifically, instead of using our non-deterministic KLM CZ gates within the circuit model formalism, they could be employed for the preparation of cluster states, since a CZ gate creates an edge in a cluster state graph. Cluster state preparation using non-deterministic entangling gates is discussed in more detail in Sec.~\ref{sec:module}.
 
 %
 % Fusion Gates
@@ -101,11 +96,11 @@ The explicit construction of the linear optics fusion gates is shown in Fig.~\re
 
 \subsubsection{Fusion strategies} \index{Cluster state fusion strategies}
 
-Despite their non-determinism, numerous authors have examined approaches for efficiently preparing arbitrarily large cluster states using these destructive, non-deterministic gates \cite{nielsen, kieling, rohdebarrett, kokBuffer, ???}. 
+Despite their non-determinism, numerous authors have examined approaches for efficiently preparing arbitrarily large cluster states using these destructive, non-deterministic gates \cite{nielsen, kieling, rohdebarrett, kokBuffer, ???}. We refer to these schemes as `fusion strategies' -- simple algorithms for how to arrange qubits geometrically and the order in which to attempt bonding them.
 
-\comment{These principles can be extended beyond LO to other schemes where entangling gates are inherently non-deterministic or sometimes fail in a heralded manner. E.g hybrid architectures (Sec.~\ref{sec:hybrid}), where a beamsplitter mediates entanglement via which-path erasure, but only successfully projects onto an entangled state with probability 1/2.}
+These principles can be extended beyond LO to other schemes where entangling gates are inherently non-deterministic or sometimes fail in a heralded manner, e.g hybrid architectures (Sec.~\ref{sec:hybrid}), where a beamsplitter mediates entanglement via which-path erasure, but only successfully projects onto an entangled state with probability 1/2.
 
-\comment{Use micro-clusters as primitives}
+The key feature of all these fusion strategies is to employ `micro-clusters'\index{Micro-clusters} as a primitive resource, which enable multiple bonding attempts between them via redundant vertices. We will now outline several of these schemes.
 
 %
 % Linear Clusters
@@ -151,41 +146,33 @@ One of the key outcomes of this research was that a {\sc Balanced} strategy\inde
 
 As we learnt from Sec.~\ref{sec:CSQC}, linear cluster states are not universal for quantum computation. What is required is lattices, where the rows and columns respectively map to logical qubits and time in the circuit model. There are numerous approaches one could employ to assemble such lattice clusters using non-deterministic gates, however the easiest to treat for illustrative purposes is to take a resource of linear clusters, prepared as described earlier, and weld them together according to some algorithm, enabling more complex two-dimensional topologies.
 
-\comment{Micro-clusters}
+The central strategy is similar as for linear clusters -- we construct recyclable micro-clusters, which enable multiple bonding attempts. The key difference now is that these redundant vertices must emanate in multiple directions so as to allow the more complex 2D topology.
 
-
-\comment{Error teleportation upon measuring out leftover qubits. Cite Rohde et al.}
-
-\ref{sec:cs_error_tele}
-
-$n$ bonding attempts, $O(n)$ redundant qubits to measure out
+Fig.~\ref{fig:micro_clusters} illustrates several topologies for micro-clusters, beginning with the linear micro-cluster that we employed previously for preparing 1D clusters, and two variations of micro-clusters that can be employed for 2D state preparation.
 
 \begin{figure*}[!htb]
 \includegraphics[width=0.8\textwidth]{micro_clusters}
-\caption{Linear, plus (+), and star micro-cluster states.}\label{fig:micro_clusters}\index{Linear micro-cluster states}\index{Plus micro-cluster states}\index{Star micro-cluster states}\index{Micro-cluster states}
+\caption{Linear, plus ($+$), and star micro-cluster states.}\label{fig:micro_clusters}\index{Linear micro-cluster states}\index{Plus micro-cluster states}\index{Star micro-cluster states}\index{Micro-cluster states}
 \end{figure*}
 
-$n$ bonding attempts, $O(\text{log}(n))$ redundant qubits to measured out.
+The $+$-cluster simply comprises four linear clusters emanating in the four directions, welded together at a central vertex. It's self-evident how this is subsequently applied to 2D state preparation -- we lay out the $+$-clusters in a grid, and attempt nearest neighbour bonding in each direction for every neighbouring pair of micro-clusters.
+
+The star-cluster similarly allows multiple bonding attempts in each direction. But now the dangling bonds are not uniquely associated with a particular direction, and may therefore be utilised when bonding to a neighbouring micro-cluster in any direction. This implies a modest efficiency improvement, since leftover vertices in any given direction needn't be wasted upon a successful bond in that direction. However, these micro-clusters are not as efficient to prepare as the $+$-clusters, since they do not straightforwardly arise from two fused linear-clusters, which are highly efficient to prepare. Rather they must be prepared via a sequence of repeated successful bonding operations to the central node, where a single gate failure destroys the entire state.
+
+In addition to an efficiency improvement in terms of the number of required physical qubits, minimising the number of redundant qubits that must be removed via $\hat{Y}$ measurements upon completion of the bonding strategy has another key benefit -- error accumulation \cite{RohdeMunroEtal}. Whenever a cluster state qubit is measured, the action of any error process that acted on that qubit will be teleported to its neighbour(s). For example, if we measure the first qubit in a linear cluster, which was previously acted upon by a depolarising channel\index{Depolarising channel}, the depolarisation process will be teleported to the neighbouring second qubit in the cluster. Thus, with high levels of redundancy, although this increases our chances of successfully joining two micro-clusters, it similarly increases the accumulation of errors. There is therefore a direct tradeoff between two undesirable error mechanisms -- gate failure, and logical errors. This tradeoff must be carefully managed in a real-world implementation.
+
+Having made this observation about error accumulation, is there a topology that is optimal? Yes there is -- the so-called snowflake cluster, shown in Fig.~\ref{fig:snowflake_graph}. He we take the $+$-cluster topology and replace the linear clusters emanating in each direction with binary tree graphs of some depth, $d$. The endpoints (leaves) of each tree now provide the bonding opportunities for joining to neighbouring micro-clusters. There are $O(2^d)$ such opportunities. The bonding attempts proceed as expected, always exploiting the trees' outermost leaves. When two sub-trees are successfully bonded via their leaves we do not need to measure out \textit{all} the leftover redundant vertices to reduce the graph to the desired residual topology. Instead we can `prune' away entire sub-trees by performing $\hat{Z}$ measurements at the base of their trunks. All vertices above the trunk will thereby be detached from the graph and needn't all be individually measured. Correspondingly, any error processes that had acted on the pruned vertices will not be teleported onto the main cluster, only the measurements acting on the trunks will accumulate.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.47\textwidth]{microcluster_snowflake}
-\caption{Snowflake micro-cluster comprising a regular tree structure, with branching parameter \mbox{$b=3$} and depth \mbox{$d=4$}. Multiple copies of this micro-cluster can be placed side-by-side and fused together via attempting to bond the most outward available qubits from neighbouring clusters. The tree structure allows excess qubits to be `pruned' via their trunks rather than leaves, bypassing the need to measure out every single leftover qubit, as is the case, for example, for $+$-clusters. This reduces the number of required pruning measurements from linear to logarithmic, similarly reducing the accumulation of errors associated with pruned qubits.} \label{fig:snowflake_graph}\index{Snowflake micro-cluster state}
+\caption{Snowflake micro-cluster comprising a binary tree structure, with depth \mbox{$d=7$}. Multiple copies of this micro-cluster can be placed side-by-side and fused together via attempting to bond the most outward available qubits from neighbouring clusters. The tree structure allows excess qubits to be `pruned' via their trunks rather than leaves, bypassing the need to measure out every single leftover qubit, as is the case, for example, for $+$-clusters. This reduces the number of required pruning measurements from linear to logarithmic, similarly reducing the accumulation of errors associated with pruned qubits.} \label{fig:snowflake_graph}\index{Snowflake micro-cluster state}
 \end{figure}
 
+Formally, for a linear subgraph of length $n$, there will be $O(n)$ leftover redundant qubits on average, which must \textit{all} be measured out using $\hat{Y}$ measurements. Thus, the residual state will have accumulated the action of $O(n)$ independent error processes. On the other hand, for a snowflake subgraph, the trees' depth scales as \mbox{$d=O(\text{log}(n))$}, and at most \mbox{$O(\text{log}(n))$} qubits must be measured to prune away unwanted branches.
+
+Keeping in mind that for an error process with error rate $p$, the net probability of an error occurring for $m$ independent channels is \mbox{$1-p^m$}, thus reducing $m$ from linear to logarithmic is highly favourable.
+
 \comment{Figure: pruning trees}
-
-\comment{Honeycomb lattice}
-\comment{To do!}
-
-%
-% Error Teleportation
-%
-
-\paragraph{Error teleportation}\label{sec:cs_error_tele}\index{Error teleportation}
-
-\comment{To do}
-
-\cite{RohdeMunroEtal}
 
 %
 % On-Demand Cluster State Preparation
@@ -193,15 +180,18 @@ $n$ bonding attempts, $O(\text{log}(n))$ redundant qubits to measured out.
 
 \paragraph{On-demand cluster state preparation}\index{On-demand cluster state preparation}
 
-\comment{To do!}
+A beautiful feature of the cluster state model is that the entire cluster needn't be prepared in its entirety for computation to proceed. Instead the state can be grown via the fusion of additional qubits on-demand as the computation proceeds. So long as a gate failure doesn't lay its fingers on the leftmost column of qubits in the cluster we are in business. This means fewer quantum memories are required, which are very challenging optically. In non-optical, specifically matter qubit systems, this additionally means that physical qubits can be reused on-the-fly.
 
-%
-% Advantages
-%
+The computation therefore proceeds as alternating applications of: (1) measuring the leftmost column of physical qubits to evolve the computation by a single step; (2) bond on a new column of qubits to the rightmost column. The qubits in between the left and rightmost columns act as a buffer to give us some leeway when bonding operations fail.
 
-\subsubsection{Advantages}\index{Cluster state advantages}
+\begin{figure}[!htb]
+\includegraphics[width=0.47\textwidth]{on_demand_cluster_states}
+\caption{On-demand cluster state preparation. Every time a column of computational qubits are measured away from the lefthand side, thereby evolving the computation by a single step, we dynamically bond on a fresh column of qubits to the righthand side. The buffer in between provides the redundancy necessary when using non-deterministic gates.}\label{fig:on_demand_cs}
+\end{figure}
 
-\comment{To do! Talk about efficiency}
+\cite{KokBuffer} performed an analysis of this approach in the optical context and found that high-depth MBQC can be efficiently implemented using non-deterministic entangling operations, with significantly reduced quantum memory requirements compared to full in-advance state preparation.
+
+In addition to technologically simplifying the architecture by reducing the number of required quantum memories, physical qubits are in existence within the computation for substantially reduced periods of time, since they are only prepared on-demand. This correspondingly reduces error rates.
 
 %
 % Weak Cross-Kerr Non-Linearities
