@@ -607,12 +607,111 @@ Because of the graph structure of the walk, it lends itself naturally to distrib
 
 \subsection{Continuous variables (CV)} \label{sec:CV_QC} \index{Continuous variable quantum computation}
 
-\rohit{Zixin, Rohit to do}
+Until now we have focussed on optical systems where quantum information is encoded into discrete variables\index{Discrete variables}, such as photon-number and polarisation. However, quantum states of light can also be considered in terms of continuous variables (CVs)\index{Continuous variables} in phase-space\index{Phase-space}.
 
-Sec.~\ref{sec:CV_enc}
-\cite{bib:Menicucci06, lund, ralph, weedbrook}
-Cat states
-Gaussian states
+In this picture, using squeezed states\index{Squeezed states} as a resource, a universal gate set can be constructed, enabling universal quantum computation to be implemented. All the necessary elements may be readily implemented using present-day quantum optics technology and numerous CV quantum protocols have been demonstrated \cite{bib:RevModPhys.77.513}.
+
+In the CV picture, instead of representing states using photonic creation operators ($\hat a^\dag$), we express them in terms of the \textit{position} ($\hat x$)\index{Position operator} and \textit{momentum} ($\hat p$)\index{Momentum operator} operators, which can expressed in terms of creation and annihilation operators as,
+\begin{align}
+\hat x &=    \sqrt{\frac{\hbar}{2 \omega}}(\hat a + \hat a^\dag), \nonumber \\
+\hat p &= -i \sqrt{\frac{\hbar  \omega}{2}}(\hat a - \hat a^\dag), 
+\end{align}
+where $\omega$ is the optical frequency. These operators obey the commutation relation,
+\begin{align}
+[\hat x, \hat p] = i \hbar.
+\end{align}
+
+The position and momentum operators represent the quadratures\index{Quadratures} of a mode, and correspond to the real and imaginary components of a harmonic oscillator's\index{Harmonic oscillator} amplitude.
+
+The position representation corresponds to expressing a state vector $\ket{\psi}$ in the position basis\index{Position basis representation},
+\begin{align}
+\ket{\psi} = \int \psi(x)\ket{x}\, dx,
+\end{align}
+\noindent where $\ket{x}$ are the eigenstates of the position operator. Here the wave function in the position representation is defined as,
+\begin{align}
+\psi(x) = \langle x|\psi\rangle.
+\end{align}
+The state can similarly be expressed in the momentum basis.\index{Momentum basis representation}
+
+The quadrature eigenstates are mutually related to each other by a Fourier transform,
+\begin{align}
+\ket{x} &= \frac{1}{\sqrt{\pi}} \int_{-\infty} ^\infty e^{-2 i x p} \ket{p} \,dp,\nonumber \\
+\ket{p} &= \frac{1}{\sqrt{\pi}} \int_{-\infty} ^\infty e^{+2 i x p} \ket{x} \,dx.
+\end{align}
+
+Position and momentum eigenstates are orthogonal and may therefore be employed to encode a single qubit. However, these eigenstates have infinite energy. That is, they are infinitely squeezed in phase-space (Sec.~\ref{sec:squeezed},\ref{sec:non_lin_opt}). However, position and momentum eigenstates can be closely approximated using finite, but large squeezing. The squeezed states\index{Squeezed states} in the two quadratures will now no longer be orthogonal, but will have overlap that asymptotes to zero as squeezing is increased. Thus, squeezed states can be used to approximate qubits using non-orthogonal basis states. Squeezed states may be prepared directly using a spontaneous parametric down-conversion (SPDC)\index{Spontaneous parametric down-conversion} process (Sec.~\ref{sec:single_phot_src}) \cite{bib:PhysRevLett.75.4337, bib:o2009photonic}.
+
+Squeezing simply corresponds to a dilation along a particular axis in phase-space. Squeezing is represented using the squeezing operator\index{Squeezing operator},
+\begin{align}
+\hat{S}(\xi) = \text{exp}\left[ \frac{1}{2}(\xi^*\hat{a}^2 - \xi{\hat{a}^{\dag 2}})\right],
+\end{align}
+where \mbox{$\xi  = r e^{i \varphi}$}, $r$ is known as the squeezing parameter, which will determine the size of the squeezing and \mbox{$\varphi \in [0, 2\pi]$} denotes that axis along which the squeezing is taking place.
+
+A phase-shifter\index{Phase-shifter}, implementing the unitary operation,
+\begin{align}
+\hat{R}(\theta) = e^{i\theta \hat a^\dag \hat a},
+\end{align}
+rotates a state in phase-space by angle $\theta$, implementing the transformation between the position and momentum operators,
+\begin{align}
+\begin{pmatrix}
+\hat x_{\theta}\\
+\hat p_{\theta}
+\end{pmatrix}
+=
+\begin{pmatrix}\cos\theta & \sin\theta \\
+-\sin\theta & \cos\theta
+\end{pmatrix}
+\begin{pmatrix}
+\hat x\\
+\hat p
+\end{pmatrix}.
+\end{align}
+It is evident upon inspection that this can be thought of as a single-qubit rotation in the position/momentum basis.
+
+Measurement of CV states may be performed using homodyne detection\index{Homodyne detection} (Sec.~\ref{sec:homodyne}), which perform a projection along some axis in phase-space, allowing $\hat{x}$ and $\hat{p}$, or any linear combination of the two, to be directly sampled.
+
+In the position/momentum picture, the logical generalisations of the Pauli $\hat{X}$ and $\hat{Z}$ qubit gates may be thought of as displacements (Sec.~\ref{sec:non_lin_opt}) in the real and imaginary directions in phase-space \cite{bib:KokLovettBook},
+\begin{align}
+\hat{X}(s) \equiv \hat{D}(s)	, \, s\in\mathbb{R},\nonumber\\
+\hat{Z}(t) \equiv \hat{D}(it), \, t\in\mathbb{R},
+\end{align}
+where,
+\begin{align}
+\hat{D}(\alpha) = \text{exp}\left[\alpha\hat{a}^\dag - \alpha^*\hat{a}\right],
+\end{align}
+is the phase-space displacement operator\index{Displacement operator}.
+
+These have the action,
+\begin{align}
+	\hat{X}(s)\ket{x} &= \ket{x+s},\nonumber \\
+	\hat{Z}(t)\ket{p} &= \ket{p+t}. 
+\end{align}
+
+The logical generalisation of the CZ gate is,
+\begin{align}
+\hat{U}_\mathrm{CZ} = e^{\frac{i}{2} \hat x_1 \hat x_2},
+\end{align}
+which transforms two-mode quadrature eigenstates as,
+\begin{align}
+\hat{U}_\mathrm{CZ} \ket{s}_1 \ket{t}_2 = e^{\frac{i}{2} s_1 t_2} \ket{s}_1\ket{t}_2.
+\end{align}
+
+A full set of circuit model CV gates, universal for CV quantum computing is summarised in Table.~\ref{tab:CV_gates} \cite{bib:RevModPhys.84.621}.
+\begin{table}[!htb]
+\begin{tabular}{ |c|c| } 
+ \hline
+ Qubit model gate &  CV equivalent \\ 
+  \hline\hline
+ Pauli $X$ & $\hat{X}(s) = \exp[-i s \hat p]$  \\ 
+ Pauli $Z$ & $\hat{Z}(t) = \exp[i t \hat q]$  \\ 
+ Phase gate & $\hat{P}(\eta) = \exp[i \eta \hat x^2]$ \\
+Hadamard   & $\hat{F}=\exp[i \frac{\pi}{8}(\hat p^2+\hat q^2)]$ \\
+CZ		   & $\hat{U}_\mathrm{CZ}= \exp[\frac{i}{2}\hat q_1 \hat q_2]$ \\
+CNOT 	   & $\hat{U}_\mathrm{CNOT} = \exp[-2i\hat x_1 \hat p_2]$\\
+\hline
+\end{tabular}
+\caption{Logical generalisations of a universal gate set to the CV model for quantum computing.\label{tab:CV_gates}}
+\end{table}
 
 %
 % Hybrid Light-Matter Architectures
