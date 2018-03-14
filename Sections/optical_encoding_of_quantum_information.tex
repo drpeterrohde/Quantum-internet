@@ -102,19 +102,64 @@ These schemes can be very resource efficient, since a single source operating at
 In the schemes of \cite{bib:RohdeLoop15, bib:RohdeUnivLoop15}, entire optical quantum computing protocols can be efficiently constructed using only a single source, a single detector, two delay-lines, and three dynamically-controlled beamsplitters, irrespective of the size of the computation, an enormous resource saving compared to traditional spatial encodings. Furthermore, in these schemes, there is only a single point of interference, greatly simplifying optical interferometric alignment, which would ordinarily require simultaneously aligning a large number of optical elements, as many as $O(m^2)$ elements for an $m$-mode network \cite{bib:Reck94}.
 
 %
-% Coherent States
+% Thermal State Encoding
 %
 
-\subsection{Coherent states} \label{sec:coherent_state_enc} \index{Coherent state encoding}
+\subsection{Thermal states} \index{Thermal state encoding}\label{sec:thermal_states}
+
+In some quantum protocols, although the inner workings may be quantum mechanical in nature, the inputs and outputs needn't capture any quantum coherence -- sometimes \textit{classical} information is sufficient for communications. As discussed above, coherent states are the archetypal example of this, and this is in fact the norm in present-day classical fibre-optic communication, where coherent states prepared from laser diodes are employed.
+
+Another, and even simpler option, is thermal states. These are obtained by fully dephasing a coherent state, retaining the amplitudes, while nullifying all the coherence terms,
+\begin{align}
+\hat\rho_\text{thermal}(\alpha) = e^{-|\alpha|^2} \sum_{n=0}^\infty \frac{|\alpha|^2}{n!}\ket{n}\bra{n}.
+\end{align}
+
+Thermal states can encode classical information into their amplitudes, polarisations, or time-bins, as before. The advantage of this type of encoding is that thermal states are trivial to prepare and measure (a normal incandescent lightbulb produces thermal states of light). However, they are purely classical states, do not undergo interference with one another, and are therefore useless for, for example, entangling qubits via which-path erasure, any other type of coherent interferometric process, or for representing quantum information such as qubits.
+
+%
+% Phase-Space
+%
+
+\subsection{Phase-space} \label{sec:exotic} \index{Phase-space encoding}
 
 When encoding information optically, we needn't restrict ourselves to photon-number states. We also have a lot of flexibility to encode information in phase-space using continuous variable (CV) states, where phase and amplitude relations encode quantum information \cite{bib:CahillGlauber69}.
 
-As a simple example, consider coherent states. These are particularly useful since they are pure states, with well defined coherence relationships, and are closely approximated by laser sources, and therefore readily available in the lab.
+In phase-space, the most common representations of optical states are in terms of quasi-probability functions\index{Quasi-probability functions}\footnote{The term `quasi-probablity' arises because in some regimes (for example, strictly non-negative $P$-functions), the function has a true probabilistic interpretation. However this interpretation breaks down for any negativity in the $P(\alpha)$, since negative probabilities have no meaningful classical interpretation.}:
+\begin{itemize}\index{$P$-function}\index{$Q$-function}\index{Wigner function}
+\item $P$-function: represents a state as a quasi-mixture of coherent states. When the $P$-function is strictly non-negative, it can be interpreted as a perfect classical mixture of coherent states. However, with any negativity this classical interpretation breaks down, hence `quasi'-probability. In general, the $P$-function representation for a state is not unique.
+\begin{align}
+\hat\rho = \int\!\!\!\int P(\alpha) \ket{\alpha}\bra{\alpha} d^2\alpha.
+\end{align}
+\item $Q$-function: represents a state in terms of its overlap with the complete set of all coherent states, which form an over-complete basis.
+\begin{align}
+Q(\alpha) = \frac{1}{\pi} \bra{\alpha}\hat\rho\ket{\alpha}.
+\end{align}
+\item Wigner function: also has a quasi-probability interpretation, and negativity is qualitatively associated with `quantumness'. The Wigner function of a state is unique, and isomorphic to the density operator, making it perhaps the most useful phase-space representation for quantum states of light.
+\begin{align}
+W(x,p) = \int e^{ips/\hbar} \left\langle{x-\frac{s}{2}}\right| \hat\rho \left|{x+\frac{s}{2}}\right\rangle ds.
+\end{align}
+\end{itemize}
+These representations, whilst entirely equivalent to a photon-number basis representation, are far easier to work with for many types of states. Most notably, Gaussian states are conveniently represented and manipulated using phase-space representations.
+
+%
+% Coherent States
+%
+
+\subsubsection{Coherent states} \label{sec:coherent_state_enc} \index{Coherent state encoding}
+
+As the most trivial CV encoding of quantum information, consider coherent states. These are particularly useful since they are pure states, with well defined coherence relationships, and are closely approximated by laser sources, and therefore readily available in the lab.
 
 A coherent state, $\ket\alpha$, is parameterised by a single complex parameter, $\alpha$, given by a phase and amplitude,
 \begin{align}\index{Coherent states}
 \ket{\alpha} = e^{-\frac{|\alpha|^2}{2}} \sum_{n=0}^\infty \frac{\alpha^n}{\sqrt{n!}} \ket{n}.
 \end{align}
+Fig.~\ref{fig:coherent_state_encoding} illustrates the phase-space representation for two approximately orthogonal coherent state basis states.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.4\textwidth]{coherent_state_encoding}
+\caption{Phase-space representation of a coherent state with complex amplitudes $\pm\alpha$. For sufficiently large amplitude one can approximate orthogonality, enabling a qubit encoding.} \label{fig:coherent_state_encoding}	
+\end{figure}
+
 By manipulating these parameters, information can be encoded into coherent states. We could, for example, define two coherent states of opposite phase to represent qubit basis states,
 \begin{align}
 \ket{0} &\equiv \ket{\alpha}, \nonumber \\
@@ -140,7 +185,7 @@ Coherent states are useful in that they are easy to prepare using modern lasers,
 % Cat States
 %
 
-\subsection{Cat states} \label{sec:cat_enc} \index{Cat state encoding}\index{Cat states}
+\subsubsection{Cat states} \label{sec:cat_enc} \index{Cat state encoding}\index{Cat states}
 
 Another type of CV state, which can in fact encode quantum information, is superpositions of coherent states (colloquially known as `cat' states), with the encoding \cite{???},
 \begin{align}
@@ -160,46 +205,19 @@ Unfortunately, cat states are notoriously difficult to prepare, and extremely se
 However, modulo these difficulties, with a resource of cat states at one's disposal, universal quantum computation may be realised using post-selected linear optics \cite{bib:JeongRalph05, bib:Gilchrist04}.
 
 %
-% Thermal State Encoding
+% Squeezed States
 %
 
-\subsection{Thermal states} \index{Thermal state encoding}\label{sec:thermal_states}
+\subsubsection{Squeezed states}\index{Squeezed states}
 
-In some quantum protocols, although the inner workings may be quantum mechanical in nature, the inputs and outputs needn't capture any quantum coherence -- sometimes \textit{classical} information is sufficient for communications. As discussed above, coherent states are the archetypal example of this, and this is in fact the norm in present-day classical fibre-optic communication, where coherent states prepared from laser diodes are employed.
+Coherent state encoding can be regarded as encoding via the displacement operator, which implements translations in phase-space. Alternately, we can encode via the squeezing operator, which implements dilations about an axis in phase-space. Squeezing the vacuum state along the $\hat{x}$ or $\hat{p}$ directions yields two states that are approximately orthogonal for large squeezing amplitudes, as shown in Fig.~\ref{fig:squeezed_state_encoding}. Thus, with sufficient squeezing they can be used as a basis for approximately encoding a qubit.
 
-Another, and even simpler option, is thermal states. These are obtained by fully dephasing a coherent state, retaining the amplitudes, while nullifying all the coherence terms,
-\begin{align}
-\hat\rho_\text{thermal}(\alpha) = e^{-|\alpha|^2} \sum_{n=0}^\infty \frac{|\alpha|^2}{n!}\ket{n}\bra{n}.
-\end{align}
+\comment{Show maths}
 
-Thermal states can encode classical information into their amplitudes, polarisations, or time-bins, as before. The advantage of this type of encoding is that thermal states are trivial to prepare and measure (a normal incandescent lightbulb produces thermal states of light). However, they are purely classical states, do not undergo interference with one another, and are therefore useless for, for example, entangling qubits via which-path erasure, any other type of coherent interferometric process, or for representing quantum information such as qubits.
-
-%
-% Phase-Space
-%
-
-\subsection{Phase-space} \label{sec:exotic} \index{Phase-space encoding}
-
-The optical encodings presented thus far are the main textbook examples. However, many other encodings, particularly in phase-space, can also be used to encode both quantum or classical information and perform quantum computations upon them. The aforementioned coherent states and cat states are classic examples of states well-suited to a phase-space representation. But this extends to many other states, such as Gaussian states more generally.
-
-In phase-space, the most common representations of optical states are in terms of quasi-probability functions\index{Quasi-probability functions}\footnote{The term `quasi-probablity' arises because in some regimes (for example, strictly non-negative $P$-functions), the function has a true probabilistic interpretation. However this interpretation breaks down for any negativity in the $P(\alpha)$, since negative probabilities have no meaningful classical interpretation.}:
-\begin{itemize}\index{$P$-function}\index{$Q$-function}\index{Wigner function}
-\item $P$-function: represents a state as a quasi-mixture of coherent states. When the $P$-function is strictly non-negative, it can be interpreted as a perfect classical mixture of coherent states. However, with any negativity this classical interpretation breaks down, hence `quasi'-probability. In general, the $P$-function representation for a state is not unique.
-\begin{align}
-\hat\rho = \int\!\!\!\int P(\alpha) \ket{\alpha}\bra{\alpha} d^2\alpha.
-\end{align}
-\item $Q$-function: represents a state in terms of its overlap with the complete set of all coherent states, which form an over-complete basis.
-\begin{align}
-Q(\alpha) = \frac{1}{\pi} \bra{\alpha}\hat\rho\ket{\alpha}.
-\end{align}
-\item Wigner function: also has a quasi-probability interpretation, and negativity is qualitatively associated with `quantumness'. The Wigner function of a state is unique, and isomorphic to the density operator, making it perhaps the most useful phase-space representation for quantum states of light.
-\begin{align}
-W(x,p) = \int e^{ips/\hbar} \left\langle{x-\frac{s}{2}}\right| \hat\rho \left|{x+\frac{s}{2}}\right\rangle ds.
-\end{align}
-\end{itemize}
-These representations, whilst entirely equivalent to a photon-number basis representation, are far easier to work with for many types of states. Most notably, Gaussian states are conveniently represented and manipulated using phase-space representations.
-
-\comment{Squeezed states - refer back to CV section}
+\begin{figure}[!htb]
+\includegraphics[width=0.4\textwidth]{squeezed_state_encoding}
+\caption{Phase-space representation of two squeezed vacuum states, squeezed in the $\hat{x}$ (blue) and $\hat{p}$ (red) directions. In the limit of large squeezing these states become approximately orthogonal and may therefore approximate the encoding of a qubit.} \label{fig:squeezed_state_encoding}	
+\end{figure}
 
 %
 % Non-Optical Encoding
