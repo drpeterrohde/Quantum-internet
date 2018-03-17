@@ -145,7 +145,12 @@ Many readers will have heard of the \textit{travelling salesman problem}\index{T
 
 Many other algorithms are also known to be \textbf{NP}-complete, a number of which that are relevant to networking are discussed in detail in Sec.~\ref{sec:graph_theory}, summarised in Table.~\ref{tab:net_alg_sum}.
 
-Such \textbf{NP}-complete algorithms can be quadratically enhanced in runtime using Grover's algorithm. To see this, note that all \textbf{NP}-complete problems can be efficiently mapped to one another with polynomial resource overhead (see Fig.~\ref{fig:complexity_classes}). Thus, we can restrict ourselves to considering the satisfiability problems\index{Satisfiability problems} discussed above -- the archetypal \textbf{NP}-complete problems.
+Such \textbf{NP}-complete algorithms can be quadratically enhanced in runtime using Grover's algorithm. To see this, note that all \textbf{NP}-complete problems can be efficiently mapped to one another with polynomial resource overhead (see Fig.~\ref{fig:complexity_classes}). Thus, we can restrict ourselves to considering the satisfiability problems\index{Satisfiability problems} discussed above -- the archetypal \textbf{NP}-complete problems. An example of the {\sc 3-SAT} problem\index{3-\textsc{SAT} problem }, which is \textbf{NP}-complete, is shown in Fig.~\ref{fig:3SAT}.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.3\textwidth]{3SAT}
+\caption{Digital circuit for an instance of the {\sc 3-SAT} problem. Each or the OR gates is input with some combination of the input bits or their compliments (i.e with a NOT gate). Each of these is referred to as a `clause', of which there are 4 in this example, but could be any number in general. The final AND gate requires that all clauses be simultaneously satisfied in order to yield a final output of `1'. The goal of the problem is to find an input bit-string that yields an output of `1'. In general, this may require exhaustively searching over the entire space of input states via brute-force, which exhibits time-complexity exponential in the length of the bit-string. This problem is proven to be \textbf{NP}-complete.} \label{fig:3SAT}	
+\end{figure}
 
 Now, by defining an oracle that implements a polynomial-time algorithm on $n$ qubits, a Grover search over the input space of $2^n$ configurations will determine the satisfying input to the oracle for a given desired output, which acts as the tagged element within the search algorithm. The Grover search yields a quadratic speedup for this search compared to a brute-force classical search, therefore requiring only $O(2^{n/2})$ oracle calls. While this is short of the exponential speedup one might hope for, a quadratic speedup can nonetheless be very significant for large instances of the problems.
 
@@ -209,4 +214,13 @@ While this algorithm is known to reside in \textbf{BQP}, it is strongly believed
 
 \comment{To do}
 
+\index{Galton board}
+\index{Sampling problems}
+
+Sec.~\ref{sec:BS}
 \comment{Boson-sampling and IQP. Other sampling problems.}
+
+\begin{figure}[!htb]
+\includegraphics[width=0.4\textwidth]{galton_board}
+\caption{The Galton board yields a very simple classical sampling problem. Balls (red) are input at the top and allowed to fall freely through the pyramid network of pegs (grey), at which balls bounce to the left or right with 50\% probability. At the output the balls are collected into buckets, which populate according to a binomial distribution\index{Binomial distribution}. The computational problem is to produce statistically accurate samples from such a device, which classically is efficiently implemented by sampling the binomial distribution.}	\label{fig:galton_board}\index{Galton board}
+\end{figure}
