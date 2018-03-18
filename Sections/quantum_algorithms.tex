@@ -136,6 +136,14 @@ function Grover(f,n):
 \end{table}
 
 %
+% Phase-Estimation
+%
+
+\subsection{Phase-estimation}\index{Phase-estimation algorithm}\label{sec:phasea_est_alg}
+
+\comment{To do}
+
+%
 % Optimisation, Satisfiability & NP-Complete Problems
 %
 
@@ -166,6 +174,8 @@ We then apply a Grover search repeatedly, each time incrementing this threshold 
 
 \comment{To do - Zuen}
 
+\cite{bib:lloyd1996universal}
+
 \comment{Discuss quantum chemistry as leading application}
 
 %
@@ -186,6 +196,8 @@ While this algorithm is known to reside in \textbf{BQP}, it is strongly believed
 
 \subsection{Quantum machine learning} \index{Quantum machine learning}
 
+\cite{bib:lloyd2013quantum}
+
 \comment{To do - Chris}
 
 %
@@ -194,20 +206,63 @@ While this algorithm is known to reside in \textbf{BQP}, it is strongly believed
 
 \subsection{Topological data analysis} \index{Topological data analysis}
 
-\cite{SethTDA}
+The internet currently comprises extraordinary amounts of data, from which useful information must be extracted if this vast amount of data is to be utilised effectively. For example, firms like Google and Facebook must extract meaningful information from their databases of user behaviour in order to make appropriate advertising suggestions. This task is extremely valuable -- a small improvement in a recommendation engine\index{Recommendation engine}, for example, could be worth many millions of dollars in revenue.
+
+Performing analyses like these extremely computationally challenging when dealing with such enormous datasets as Facebook's user database or Google's website database, so-called \textit{big data analysis}\index{Big data analysis}.
+
+One avenue for the analysis of large, complex datasets is via homology theory\index{Homology theory}, which yields \textit{topological data analysis} (TDA)\index{Topological data analysis}. In particular, the so-called \textit{Betti numbers}\index{Betti numbers} characterise the nature of interconnectedness within a dataset. Specifically, the $k$ Betti number, $\beta_k$, is the number of $k$-dimensional holes and voids in a dataset. For example, $\beta_0$, $\beta_1$ and $\beta_2$ represents the number of connected components, 1-dimensional holes, and 2-dimensional voids in a dataset respectively.
+
+Calculating Betti numbers exactly is known to be \textbf{PSPACE}-complete\index{\textbf{PSPACE}-complete}\footnote{\textbf{PSPACE} is the complexity class of problems requiring polynomial memory with unbounded runtime, a class that is not classically efficient.}, and the best-known classical approximation algorithm has runtime,
+\begin{align}
+O(2^n \mathrm{log}(1/\delta)),
+\end{align}
+for accuracy $\delta$.
+
+Recently, improved quantum algorithms for approximating the Betti numbers have been presented \cite{bib:lloyd2016quantum, bib:PhysRevLett.113.130503, bib:GiovannettiLloyd08}, with runtime of only,
+\begin{align}
+O(n^5/\delta).
+\end{align}
+An elementary experimental demonstration of this algorithm has been performed using a small dataset \cite{bib:LuRohdeTDAopt}.
+
+Taking a dataset with well-defined distances between data-points (where `distance' could be any arbitrary metric in any dimension), we begin by applying a distance cutoff $\epsilon$\index{Distance cutoff} to define connections between data-points. We define $k$-simplices\index{Simplex} within the dataset, which are fully connected subsets of \mbox{$k+1$} data-points, with \mbox{$k(k+1)/2$} edges. The full set of simplices defines the dataset's \textit{simplicial complex}\index{Simplicial complex} for a given distance cutoff $\epsilon$. Construction of the so-called Vietoris-Rips simplicial complex is described in Fig.~\ref{fig:TDA_simplex}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.47\textwidth]{TDA}
-\caption{(top) Simplices are constructed as fully connected subgraphs of the data of different dimensions. (bottom) A distance cutoff is applied to create edges within a scatterplot of raw data, from which the simplicial complex is constructed.} \label{fig:TDA_simplex}	
+\caption{(top) Simplices\index{Simplex} are constructed as fully connected subgraphs of the data of different dimensions. (bottom) A distance cutoff is applied to create edges within a scatterplot of raw data, from which the simplicial complex\index{Simplicial complex} is constructed.} \label{fig:TDA_simplex}	
 \end{figure}
 
-\comment{To do}
+The first step in the algorithm is to construct the simplicial complex superposition state,
+\begin{align}
+\ket\psi_k^\epsilon = \frac{1}{\sqrt{|S_k^\epsilon|}} \sum_{s_k\in S_k^\epsilon} \ket{s_k},
+\end{align}
+where $s_k$ denotes a $k$-simplex from the simplicial complex $S_k^\epsilon$. This superposition can be constructed by employing a Grover search using a set-membership oracle function\index{Oracle},
+\begin{align}
+f_\epsilon(s_k) = \left\{ \begin{matrix}
+ 1, & \text{if}\,\,s_k\in S_k^\epsilon, \\
+ 0, & \text{otherwise,}
+\end{matrix}\right.
+\end{align}
+yielding quadratically enhanced efficiency in the simplicial complex state preparation.
+
+From the superposition state, the mixed state,
+\begin{align}
+\hat\rho_k^\epsilon = \frac{1}{|S_k^\epsilon|} \sum_{s_k\in S_k^\epsilon} \ket{s_k}\bra{s_k},
+\end{align}
+is easily prepared with the addition of CNOT gates and ancillary qubits.
+
+The quantum TDA algorithm then takes the simplicial complex mixed state and estimates the full set of Betti numbers by employing a phase-estimation algorithm\index{Phase-estimation algorithm} (Sec.~\ref{sec:phasea_est_alg}), which induces an exponential algorithmic runtime improvement.
+
+Performing the TDA across a range of $\epsilon$ yields a \textit{barcode}\index{Barcode} representation for the dataset's topology. Topological features which persist over large ranges of $\epsilon$ can then be regarded as robust features of the dataset, whereas ones which only persist over a small range of $\epsilon$ can be regarded as localised, non-persistent features, which might correspond to noise for example, and be filtered out prior to further analysis. The barcode representation thereby gives us an extremely robust characterisation of the topology of the data in a scale-dependent way.
+
+As an example for how this type of technique might be applied, consider Facebook's user database. The distance metric might relate to how similar users' interests are, or how closely related they are via their friendship networks. Then examining the barcode representation of the data by scanning over $\epsilon$ would provide insight into the persistence and robustness of these relationships at different scales within the network. At different scales we could investigate topological relationships and features at the level of individuals, family or friendship networks, communities, common interest groups, between cities, or nationally, for example.
 
 %
 % Linear Systems
 %
 
 \subsection{Linear systems} \index{Linear systems}
+
+\cite{bib:harrow2009quantum}
 
 \comment{To do}
 
