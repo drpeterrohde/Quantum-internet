@@ -172,7 +172,7 @@ We then apply a Grover search repeatedly, each time incrementing this threshold 
 
 \subsection{Quantum simulation} \index{Quantum chemistry}\index{Quantum simulation}\label{sec:quantum_sim_alg}
 
-The field of quantum computation was originally inspired by Feynman's observation that quantum systems cannot be efficiently classically simulated, and therefore maybe computers based on quantum principles could handle this problem. Indeed they can, as was shown by \cite{bib:lloyd1996universal}.
+The field of quantum computation was originally inspired by Feynman's\index{Feynman} observation that quantum systems cannot be efficiently classically simulated, and therefore maybe computers based on quantum principles could handle this problem. Indeed they can, as was shown by \cite{bib:lloyd1996universal}.
 
 It requires little imagination to recognise that the applications for quantum simulation are enormous, given the multitude of quantum systems under active investigation by researchers across countless fields.
 
@@ -196,13 +196,13 @@ This representation effectively decomposes the global evolution into $nN$ discre
 \end{align}
 each of which operates on an $m_i$-dimensional subspace, and may therefore be directly efficiently implemented as a unitary gate within the circuit model on a quantum computer. 
 
-Clearly the error terms vanish in the limit of \mbox{$n\to\infty$}, whereby the simulation becomes exact. However, this requires an infinite number of gates. We would rather approximate the solution using a finite number of gates. It follows from Eq.~(\ref{eq:CBH_lemma}) that for simulation accuracy $\epsilon$, the number of discrete steps scales as,
+Clearly the error terms vanish in the limit of \mbox{$n\to\infty$}, whereby the simulation becomes exact. However, this requires an infinite number of gates via infinitesimal discretisation. We would rather approximate the solution using a finite number of gates. It follows from Eq.~(\ref{eq:CBH_lemma}) that for simulation accuracy $\epsilon$, the number of discrete steps scales as,
 \begin{align}
 n = O\left(\frac{t^2}{\epsilon}\right),
 \end{align}
 which scales efficiently with the duration of time being simulated and the accuracy of the simulation.
 
-This approach is efficient and applies to any Hamiltonian which may be decomposed as per Eq.~(\ref{eq:Ham_sim_Ham}). However many other quantum simulation algorithms have since been described for simulating different types of quantum systems with different Hamiltonian structures \cite{bib:JLP, bib:BrennenWavelets}.
+This approach is efficient and applies to any Hamiltonian which may be decomposed into local terms as per Eq.~(\ref{eq:Ham_sim_Ham}). However many other quantum simulation algorithms have since been described for simulating different types of quantum systems with different Hamiltonian structures \cite{bib:JLP, bib:BrennenWavelets}.
 
 %
 % Integer Factorisation
@@ -248,7 +248,7 @@ O(n^5/\delta).
 \end{align}
 An elementary photonic experimental demonstration of this algorithm has been performed using a small dataset \cite{bib:LuRohdeTDAopt}.
 
-Taking a dataset with well-defined distances between data-points (where `distance' could be any arbitrary metric\index{Distance metric} of any dimension), we begin by applying a distance cutoff $\epsilon$\index{Distance cutoff} to define connections between data-points. We define $k$-simplices\index{Simplex} within the dataset, which are fully connected subsets of \mbox{$k+1$} data-points, with \mbox{$k(k+1)/2$} undirected edges between them. The full set of simplices defines the dataset's \textit{simplicial complex}\index{Simplicial complex} for a given distance cutoff $\epsilon$. Construction of the so-called Vietoris-Rips simplicial complex is described in Fig.~\ref{fig:TDA_simplex}.
+Taking a dataset with well-defined distances between data-points\footnote{`Distance' could be any arbitrary metric\index{Distance metric} of any dimension.}, we begin by applying a distance cutoff $\epsilon$\index{Distance cutoff} to define connections between data-points. We define $k$-simplices\index{Simplex} within the dataset, which are fully connected subsets of \mbox{$k+1$} data-points, with \mbox{$k(k+1)/2$} undirected edges between them. The full set of simplices defines the dataset's \textit{simplicial complex}\index{Simplicial complex} for a given distance cutoff $\epsilon$. Construction of the so-called Vietoris-Rips simplicial complex is described in Fig.~\ref{fig:TDA_simplex}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.47\textwidth]{TDA}
@@ -272,7 +272,7 @@ From the superposition state, the uniform mixture of simplices state,
 \begin{align}
 \hat\rho_k^\epsilon = \frac{1}{|S_k^\epsilon|} \sum_{s_k\in S_k^\epsilon} \ket{s_k}\bra{s_k},
 \end{align}
-is easily prepared with the addition of CNOT gates and ancillary qubits.
+is easily prepared with the addition of CNOT gates and ancillary qubits\footnote{Using parallel CNOT gates one can transform an arbitrary superposition state into a redundantly encoded equivalent, \mbox{$\hat{U}_\text{CNOTs}\sum_i \lambda_i \ket{\psi_i}\ket{0} \to \sum_i \lambda_i \ket{\psi_i}\ket{\psi_i}$}, following which tracing out the redundant copy takes us to its uniform mixture, \mbox{$\sum_i |\lambda_i|^2\ket{\psi_i}\bra{\psi_i}$}.}.
 
 The quantum TDA algorithm then takes the simplicial complex mixed state and estimates the full set of Betti numbers by employing a phase-estimation algorithm\index{Phase-estimation algorithm} (Sec.~\ref{sec:phasea_est_alg}), which induces an exponential algorithmic runtime improvement.
 
@@ -293,20 +293,67 @@ As an example for how this type of technique might be applied, consider Facebook
 \comment{Example: recommendation algorithm where sampling the vector yields, with high probability, a recommendation that is a good one, without having to explicitly know the entire solution vector.}
 
 %
-% Intermediate Models for Quantum Computation
+% Sampling Problems
 %
 
-\subsection{Intermediate models for quantum computation}
+\subsection{Sampling problems}\index{Sampling problems}
 
-\comment{To do}
+The algorithms described previously are examples of \textit{decision problems}\index{Decision problems}, whereby the computation answers a question, providing a well-defined output for a well-defined input. Another entirely different class of problems are the so-called \textit{sampling problems}, whereby the goal is to accurately reproduce samples taken from some probability distribution. By their nature, these algorithms are statistical and generally their output cannot be associated with the answer to a decision problem. Nonetheless, despite being an entirely different category of problems, such problems reside in distinct sampling complexity classes, some of which are classically efficient to simulate, others not.
 
-\index{Galton board}
-\index{Sampling problems}
-
-Sec.~\ref{sec:BS}
-\comment{Boson-sampling and IQP. Other sampling problems.}
+The simplest example of a classical sampling problem is the propagation of balls through a Galton board\index{Galton board}, as shown in Fig.~\ref{fig:galton_board}. This is a computationally easy problem, whose simulation requires only calculating a binomial distribution, which is classically straightforward.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.3\textwidth]{galton_board}
 \caption{The Galton board yields a very simple classical sampling problem. Balls (red) are input at the top and allowed to fall freely through the pyramid network of pegs (grey), at which balls bounce to the left or right with 50\% probability. At the output the balls are collected into buckets, which populate according to a binomial distribution\index{Binomial distribution}. The computational problem is to produce statistically accurate samples from such a device, which classically is efficiently implemented by sampling the binomial distribution.}	\label{fig:galton_board}\index{Galton board}
 \end{figure}
+
+An equivalent quantum sampling problem would be to replace the pegs in the Galton board with beamsplitters, and the balls with photons. Now we have an analogous problem, but defined in terms of photonic wave-function amplitudes rather than classical transition probabilities. When generalised to the multi-photon context, this problem turns into the so-called {\sc BosonSampling}\index{Boson-sampling} problem, which is discussed in detail in Sec.~\ref{sec:BS}, a problem believed to not have an efficient classical simulation algorithm \cite{bib:AaronsonArkhipovBS}.
+
+Countless other quantum sampling problems have been described. Most notably, the IQP (instantaneous quantum protocol)\index{Instantaneous quantum protocol} sampling problem is a very simple prescription for a quantum algorithm that has been shown to likely be classically hard \cite{bib:BremnerIQP}.
+
+Although not as obviously algorithmically useful as decision problems, sampling problems have received much interest owing to their generally very simple construction. For example, {\sc BosonSampling} requires only single-photon inputs, evolved via a passive linear optics\index{Linear optics} beamsplitter network, and measured using photo-detection\index{Photo-detection}. IQP sampling requires only single-qubit Hadamard gates\index{Hadamard gate} and generalised multi-qubit controlled-phase gates\index{Generalised controlled-phase gates}\footnote{Generalised CZ gates are simply gates diagonal in the logical basis, where the diagonal elements are arbitrary phases, \mbox{$\hat{U}_\text{CZ} = \text{diag}(e^{i\theta_1},\dots,e^{i\theta_n})$}.}, thereby sampling from the logical state,
+\begin{align}
+\ket{\psi_\text{out}} = \hat{H}^{\otimes n} \hat{U}_\text{CZs} \hat{H}^{\otimes n} \ket{0}^{\otimes n}.	
+\end{align}
+Because CZ gates commute, they can be performed in parallel, giving the IQP circuit construction very low circuit depth\index{Circuit depth}. The IQP protocol is shown in Alg.~\ref{alg:IQP_samp}.
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function IQPsampling():
+\begin{enumerate}
+    \item Prepare the $n$-qubit state,
+    \begin{align}
+    \ket{\psi_\text{in}} = \ket{0}^{\otimes n}.
+    \end{align} 
+    \item Apply the $n$-qubit Hadamard transform,
+    \begin{align}
+	\hat{H}^{\otimes n}.
+	\end{align}
+    \item Apply some choice of generalised CZ gates,
+	\begin{align}
+	\hat{U}_\text{CZs} = \text{diag}(e^{i\theta_1},\dots,e^{i\theta_n}).
+	\end{align}
+	\item Apply another $n$-qubit Hadamard transform,
+    \begin{align}
+	\hat{H}^{\otimes n}.
+	\end{align}
+	\item The output state is,
+	\begin{align}
+		\ket{\psi_\text{out}} = \hat{H}^{\otimes n} \hat{U}_\text{CZs} \hat{H}^{\otimes n} \ket{0}^{\otimes n}.	
+	\end{align}
+	\item Measure all qubits in the computational basis.
+	\item Repeat protocol $O(\text{poly}(n))$ times.
+	\item $\Box$
+\end{enumerate}
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {
+    \lstick{\ket{0}} & \gate{\hat{H}} & \multigate{2}{\hat{U}_\text{CZs}} & \gate{\hat{H}} & \meter \\
+    \lstick{\vdots} & \gate{\hat{H}} & \ghost{\hat{U}_\text{CZs}} & \gate{\hat{H}} & \meter \\
+    \lstick{\ket{0}} & \gate{\hat{H}} & \ghost{\hat{U}_\text{CZs}} & \gate{\hat{H}} & \meter \\
+} \nonumber
+\end{align}
+}}}
+\caption{The IQP sampling problem, which is believed to be a classically hard problem.} \label{alg:IQP_samp}
+\end{table}
+
+These reduced resource requirements makes both analysis and physical construction of some sampling problems far simpler than a universal quantum computer, yet nonetheless they implement computationally hard problems. For these reasons, many researchers regard non-universal sampling problems as being likely candidates for the first demonstration of quantum supremacy\index{Quantum supremacy}.
