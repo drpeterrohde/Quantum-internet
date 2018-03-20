@@ -141,10 +141,36 @@ function Grover(f,n):
 
 \subsection{Phase-estimation}\index{Phase-estimation algorithm}\label{sec:phase_est_alg}
 
+The goal of the phase-estimation algorithm \cite{bib:PhaseEstAlg} is to calculate the eigenvalue of a given unitary operator for a given eigenvector of that unitary. Since the eigenvalues of unitary operators are always phases of amplitude 1, we can write,
+\begin{align}
+	\hat{U}\ket\psi = e^{2\pi i\theta}\ket\psi,
+\end{align}
+where $\theta$ parameterises the phase of the eigenvalue and $\ket\psi$ is an eigenvector of $\hat{U}$.
+
+The algorithm for this is baked from several ingredients: a Hadamard transform\index{Hadamard transform}; controlled $\hat{U}$s\footnote{Any unitary has a coherently controlled unitary equivalent, of the form $\hat{U}_\text{controlled} = \ket{0}\bra{0}\otimes \hat{\mathbb{I}} + \ket{1}\bra{1}\otimes\hat{U}$. These always have an efficient circuit construction, given $\hat{U}$.}; and, an inverse quantum Fourier transform (QFT)\index{Quantum Fourier transform}.
+
+The QFT matrix contains elements taken from the discrete Fourier transform (DFT)\index{Discrete Fourier transform}. Specifically, the \mbox{$N\times N$} QFT matrix has elements,
+\begin{align}
+\hat{QFT}_{j,k} = \frac{1}{\sqrt{N}} \omega^{(j-1)(k-1)},	
+\end{align}
+where,
+\begin{align}
+\omega = e^{\frac{2\pi i}{N}},	
+\end{align}
+is a complex root of unity. Equivalently, this implements the map,
+\begin{align}
+	\hat{QFT} \ket{j} \to \frac{1}{\sqrt{N}}\sum_{k=0}^{N-1} \omega^{jk}\ket{k},
+\end{align}
+on the $N$ basis states. The QFT of any dimension has an efficient circuit implementation, making it an important subroutine in many algorithms.
+
+Alg.~\ref{alg:q_phase_est} shows the circuit implementation of the phase-estimation algorithm. The output is a binary representation of \mbox{$2^n\theta$}, where the precision is determined entirely by the number of qubits in the output register, which can be arbitrarily large in principle.
+
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\texttt{ 
-function PhaseEstimation($\hat{U}$):
+function PhaseEstimation($\hat{U}$, $\ket\psi$):
 \begin{enumerate}
+	\item For unitary $\hat{U}$ with eigenvector $\ket\psi$, apply the circuit below.
+	\item The register of qubits at the output to the QFT encodes $2^n\theta$ in binary representation.
 	\item $\Box$
 \end{enumerate}
 \begin{align}
@@ -159,7 +185,7 @@ function PhaseEstimation($\hat{U}$):
 \caption{The quantum phase-estimation algorithm.} \label{alg:q_phase_est}
 \end{table}
 
-\comment{To do}
+The phase-estimation algorithm is not extremely useful as a standalone product, but acts as a necessary subroutine in many important algorithms, such as Shor's algorithm\index{Shor's algorithm} (Sec.~\ref{sec:shors_alg}) and topological data analysis\index{Topological data analysis} (Sec.~\ref{sec:TDA}).
 
 %
 % Optimisation, Satisfiability & NP-Complete Problems
@@ -226,7 +252,7 @@ This approach is efficient and applies to any Hamiltonian which may be decompose
 % Integer Factorisation
 %
 
-\subsection{Integer factorisation} \index{Shor's algorithm}\index{Hidden subgroup problem}\index{Period-finding algorithm}\index{Discrete logarithm algorithm}
+\subsection{Integer factorisation} \index{Shor's algorithm}\index{Hidden subgroup problem}\index{Period-finding algorithm}\index{Discrete logarithm algorithm}\label{sec:shors_alg}
 
 \comment{To do - Heliang}
 
@@ -246,7 +272,7 @@ With present-day classical computing power becoming ever more powerful, the desi
 % Topological Data Analysis
 %
 
-\subsection{Topological data analysis} \index{Topological data analysis}
+\subsection{Topological data analysis} \index{Topological data analysis}\label{sec:TDA}
 
 The internet currently comprises extraordinary amounts of data, from which useful information must be extracted if this vast amount of data is to be utilised effectively. For example, firms like Google and Facebook must extract meaningful information from their databases of user behaviour in order to make appropriate advertising suggestions. This task is extremely valuable -- a small improvement in a recommendation engine\index{Recommendation engine}, for example, could be worth many millions of dollars in revenue.
 
