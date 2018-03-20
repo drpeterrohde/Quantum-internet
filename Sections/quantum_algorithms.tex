@@ -139,7 +139,25 @@ function Grover(f,n):
 % Phase-Estimation
 %
 
-\subsection{Phase-estimation}\index{Phase-estimation algorithm}\label{sec:phasea_est_alg}
+\subsection{Phase-estimation}\index{Phase-estimation algorithm}\label{sec:phase_est_alg}
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function PhaseEstimation($\hat{U}$):
+\begin{enumerate}
+	\item $\Box$
+\end{enumerate}
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {
+    \lstick{\ket{0}} & \gate{\hat{H}} & \qw &\qw & \dots && \ctrl{3} & \multigate{2}{\hat{QFT}^{-1}} & \meter \\
+    \lstick{\vdots} & \gate{\hat{H}} & \qw &\qw & \dots & & \qw & \ghost{\hat{QFT}^{-1}} & \meter \\
+    \lstick{\ket{0}} & \gate{\hat{H}} & \ctrl{1} &\qw & \dots && \qw & \ghost{\hat{QFT}^{-1}} & \meter \\
+    \lstick{\ket{\psi}} & \qw & \gate{\hat{U}^{2^0}} &\qw & \dots & &\gate{\hat{U}^{2^{n-1}}} & \qw & \qw \\
+} \nonumber
+\end{align}
+}}}
+\caption{The quantum phase-estimation algorithm.} \label{alg:q_phase_est}
+\end{table}
 
 \comment{To do}
 
@@ -313,7 +331,7 @@ Countless other quantum sampling problems have been described. Most notably, the
 
 Although not as obviously algorithmically useful as decision problems, sampling problems have received much interest owing to their generally very simple construction. For example, {\sc BosonSampling} requires only single-photon inputs, evolved via a passive linear optics\index{Linear optics} beamsplitter network, and measured using photo-detection\index{Photo-detection}. IQP sampling requires only single-qubit Hadamard gates\index{Hadamard gate} and generalised multi-qubit controlled-phase gates\index{Generalised controlled-phase gates}\footnote{Generalised CZ gates are simply gates diagonal in the logical basis, where the diagonal elements are arbitrary phases, \mbox{$\hat{U}_\text{CZ} = \text{diag}(e^{i\theta_1},\dots,e^{i\theta_n})$}.}, thereby sampling from the logical state,
 \begin{align}
-\ket{\psi_\text{out}} = \hat{H}^{\otimes n} \hat{U}_\text{CZs} \hat{H}^{\otimes n} \ket{0}^{\otimes n}.	
+\ket{\psi_\text{out}} = \hat{H}^{\otimes n} \cdot \hat{U}_\text{CZs} \cdot \hat{H}^{\otimes n} \ket{0}^{\otimes n}.	
 \end{align}
 Because CZ gates commute, they can be performed in parallel, giving the IQP circuit construction very low circuit depth\index{Circuit depth}. The IQP protocol is shown in Alg.~\ref{alg:IQP_samp}.
 
@@ -339,9 +357,12 @@ function IQPsampling():
 	\end{align}
 	\item The output state is,
 	\begin{align}
-		\ket{\psi_\text{out}} = \hat{H}^{\otimes n} \hat{U}_\text{CZs} \hat{H}^{\otimes n} \ket{0}^{\otimes n}.	
+		\ket{\psi_\text{out}} = \hat{H}^{\otimes n} \cdot \hat{U}_\text{CZs} \cdot \hat{H}^{\otimes n} \ket{0}^{\otimes n}.	
 	\end{align}
-	\item Measure all qubits in the computational basis.
+	\item Measure all qubits in the computational basis, yielding bit-string $\vec{x}$, which occurs with probability,
+	\begin{align}
+		P_{\vec{x}} = |\langle \vec{x} | \hat{H}^{\otimes n} \cdot \text{diag}(e^{i\theta_1},\dots,e^{i\theta_n}) \cdot \hat{H}^{\otimes n} \ket{0}^{\otimes n}|^2.
+	\end{align}
 	\item Repeat protocol $O(\text{poly}(n))$ times.
 	\item $\Box$
 \end{enumerate}
