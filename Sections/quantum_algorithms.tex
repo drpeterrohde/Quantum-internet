@@ -214,7 +214,7 @@ function PhaseEstimation($\hat{U}$, $\ket\psi$):
 } \nonumber
 \end{align}
 }}}
-\caption{The quantum phase-estimation algorithm.} \label{alg:q_phase_est}
+\caption{Quantum phase-estimation algorithm.} \label{alg:q_phase_est}
 \end{table}
 
 The phase-estimation algorithm is not extremely useful as a standalone product, but acts as a necessary subroutine in many important algorithms, such as Shor's algorithm\index{Shor's algorithm} (Sec.~\ref{sec:shors_alg}) and topological data analysis\index{Topological data analysis} (Sec.~\ref{sec:TDA}).
@@ -233,7 +233,7 @@ Such \textbf{NP}-complete algorithms can be quadratically enhanced in runtime us
 
 \begin{figure}[!htb]
 \includegraphics[width=0.3\textwidth]{3SAT}
-\caption{Digital circuit for an instance of the 3-\textsc{SAT} problem, with input variables $\{x_i\}$. Each of the OR gates is input with some combination of 3 of the input bits or their compliments (i.e with a NOT gate). Each of these is referred to as a `clause', of which there are 4 in this example, but could be any number in general. The final AND gate requires that all clauses be simultaneously satisfied in order to yield a final output of `1'. The goal of the problem is to find an input bit-string $x$ that yields an output of `1'. In general, this may require exhaustively searching over the entire space of input states via brute-force, which exhibits time-complexity exponential in the length of the bit-string. This problem is proven to be \textbf{NP}-complete. Note that the similarly-defined 2-\textsc{SAT}\index{2-\textsc{SAT} problem} problem (i.e clauses each contain 2 input bits) is \textbf{P}, making 3-\textsc{SAT} the simplest model to consider in the study of \textbf{NP}-complete problems.} \label{fig:3SAT}	
+\caption{Digital circuit for an instance of the 3-\textsc{SAT} problem, with 4 clauses acting on input variables $\{x_i\}$. Each of the OR gates is input with some combination of 3 of the input bits or their compliments (i.e with a NOT gate). Each of these is referred to as a `clause', of which there are 4 in this example, but could be any number in general. The final AND gate requires that all clauses be simultaneously satisfied in order to yield a final output of `1'. The goal of the problem is to find an input bit-string $x$ that yields an output of `1'. In general, this may require exhaustively searching over the entire space of input states via brute-force, which exhibits time-complexity exponential in the length of the bit-string. This problem is proven to be \textbf{NP}-complete. Note that the similarly-defined 2-\textsc{SAT}\index{2-\textsc{SAT} problem} problem (i.e clauses each contain 2 input bits) is \textbf{P}, making 3-\textsc{SAT} the simplest model to consider in the study of \textbf{NP}-complete problems.} \label{fig:3SAT}	
 \end{figure}
 
 Now, by defining an oracle that implements a polynomial-time algorithm on $n$ qubits, a Grover search over the input space of $2^n$ configurations will determine the satisfying input to the oracle for a given desired output, which acts as the tagged element within the search algorithm. The Grover search yields a quadratic speedup for this search compared to a brute-force classical search, therefore requiring only $O(2^{n/2})$ oracle calls. While this is short of the exponential speedup one might hope for, a quadratic speedup can nonetheless be very significant for large instances of the problems.
@@ -279,6 +279,8 @@ n = O\left(\frac{t^2}{\epsilon}\right),
 which scales efficiently with the duration of time being simulated and the accuracy of the simulation.
 
 This approach is efficient and applies to any Hamiltonian which may be decomposed into local terms as per Eq.~(\ref{eq:Ham_sim_Ham}). However many other quantum simulation algorithms have since been described for simulating different types of quantum systems with different Hamiltonian structures \cite{bib:JLP, bib:BrennenWavelets}.
+
+\comment{Show algorithm box}
 
 %
 % Integer Factorisation
@@ -327,7 +329,7 @@ An elementary photonic experimental demonstration of this algorithm has been per
 Taking a dataset with well-defined distances between data-points\footnote{`Distance' could be any arbitrary metric\index{Distance metric} of any dimension.}, we begin by applying a distance cutoff $\epsilon$\index{Distance cutoff} to define connections between data-points. We define $k$-simplices\index{Simplex} within the dataset, which are fully connected subsets of \mbox{$k+1$} data-points, with \mbox{$k(k+1)/2$} undirected edges between them. The full set of simplices defines the dataset's \textit{simplicial complex}\index{Simplicial complex} for a given distance cutoff $\epsilon$. Construction of the so-called Vietoris-Rips simplicial complex is described in Fig.~\ref{fig:TDA_simplex}.
 
 \begin{figure}[!htb]
-\includegraphics[width=0.47\textwidth]{TDA}
+\includegraphics[width=0.47\textwidth]{TDA_simplices_complex}
 \caption{(top) $k$-simplices\index{Simplex} are constructed as fully connected subsets of the data of different dimensions $k$. (bottom) A distance cutoff is applied to create edges within a scatterplot of raw data, from which the simplicial complex\index{Simplicial complex} is constructed. The shown example of a simplicial complex contains two 2-simplices (coloured triangles), and 6 1-simplices (edges). The final simplicial complex is highly dependent on the choice of cutoff $\epsilon$. In general, as $\epsilon$ is increased the complex will contain more simplices of higher dimension, since vertices will have more immediate neighbours.} \label{fig:TDA_simplex}	
 \end{figure}
 
@@ -338,9 +340,9 @@ The first step in the algorithm is to construct the simplicial complex superposi
 where $s_k$ denotes a $k$-simplex from the simplicial complex $S_k^\epsilon$. This superposition can be constructed by employing a Grover search\index{Grover's algorithm} using a set-membership oracle function\index{Oracle},
 \begin{align}
 f_\epsilon(s_k) = \left\{ \begin{matrix}
- 1, & \text{if}\,\,s_k\in S_k^\epsilon, \\
- 0, & \text{otherwise,}
-\end{matrix}\right.
+ 1, & \text{if}\,\,s_k\in S_k^\epsilon \\
+ 0, & \text{otherwise}
+\end{matrix}\right.,
 \end{align}
 yielding quadratically enhanced efficiency in the simplicial complex state preparation.
 
@@ -350,13 +352,44 @@ From the superposition state, the uniform mixture of simplices state,
 \end{align}
 is easily prepared with the addition of CNOT gates and ancillary qubits\footnote{Using parallel CNOT gates one can transform an arbitrary superposition state into a redundantly encoded equivalent, \mbox{$\hat{U}_\text{CNOTs}\sum_i \lambda_i \ket{\psi_i}\ket{0} \to \sum_i \lambda_i \ket{\psi_i}\ket{\psi_i}$}, following which tracing out the redundant copy takes us to its uniform mixture, \mbox{$\sum_i |\lambda_i|^2\ket{\psi_i}\bra{\psi_i}$}.}.
 
-The quantum TDA algorithm then takes the simplicial complex mixed state and estimates the full set of Betti numbers by employing a phase-estimation algorithm\index{Phase-estimation algorithm} (Sec.~\ref{sec:phase_est_alg}), which induces an exponential algorithmic runtime improvement.
+The quantum TDA algorithm then takes the simplicial complex mixed state and estimates the full set of Betti numbers by employing a phase-estimation algorithm\index{Phase-estimation algorithm} (Sec.~\ref{sec:phase_est_alg}), which induces an exponential algorithmic runtime improvement. The full TDA algorithm is summarised in Alg.~\ref{alg:TDA}.
 
 Performing the TDA across a range of $\epsilon$ yields a \textit{barcode}\index{Barcode} representation for the dataset's topology. Topological features which persist over large ranges of $\epsilon$ can then be regarded as robust features of the dataset, whereas ones which only persist over a small range of $\epsilon$ can be regarded as localised, non-persistent features, which might correspond to noise for example, and be filtered out prior to further analysis. The barcode representation thereby gives us an extremely robust characterisation of the topology of the data in a scale-dependent way.
 
 As an example for how this type of technique might be applied, consider Facebook's\index{Facebook} user database. The distance metric might relate to how similar users' interests are, or how closely related they are via their friendship networks. Then examining the barcode representation of the data by scanning over $\epsilon$ would provide insight into the persistence and robustness of these relationships at different scales within the network. At different scales we could investigate topological relationships and features at the level of individuals, family or friendship networks, communities, common interest groups, between cities, across demographic characteristics, or between nations, for example.
 
-\comment{Show algorithm box}
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function TDA(dataPoints):
+\begin{enumerate}
+	\item Implement a Grover search with set-membership oracle function,
+	\begin{align}
+f_\epsilon(s_k) = \left\{ \begin{matrix}
+ 1, & \text{if}\,\,s_k\in S_k^\epsilon \\
+ 0, & \text{otherwise}
+\end{matrix}\right.,
+\end{align}
+which prepares the simplicial complex superposition state,
+\begin{align}
+\ket\psi_k^\epsilon = \frac{1}{\sqrt{|S_k^\epsilon|}} \sum_{s_k\in S_k^\epsilon} \ket{s_k},
+\end{align}
+	\item Using ancillary qubits, CNOT gates and a trace-out operation, prepare the simplicial complex uniform mixed state,
+	\begin{align}
+\hat\rho_k^\epsilon = \frac{1}{|S_k^\epsilon|} \sum_{s_k\in S_k^\epsilon} \ket{s_k}\bra{s_k},
+\end{align}
+	\item Perform quantum phase-estimation on the simplicial complex mixed state.
+	\item \comment{To do - show how Betti numbers are calculated. Formulas.}
+	\item Algorithm has runtime,
+\begin{align}
+O(n^5/\delta),
+\end{align}
+for accuracy $\delta$.
+\item $\Box$
+\end{enumerate}
+\includegraphics[width=0.47\textwidth]{TDA_circuit}
+}}}
+\caption{Quantum topological data analysis algorithm for calculating Betti numbers.} \label{alg:TDA}
+\end{table}
 
 %
 % Linear Systems
