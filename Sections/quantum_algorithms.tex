@@ -136,6 +136,47 @@ function Grover(f,n):
 \end{table}
 
 %
+% Quantum Fourier Transform
+%
+
+\subsection{Quantum Fourier transform}\index{Quantum Fourier transform}\label{sec:QFT_alg}
+
+The quantum Fourier transform (QFT) is not an algorithm per se, but rather a unitary operator that finds widespread use in other quantum algorithms. The QFT operator is so ubiquitous that it warrants special treatment.
+
+The QFT matrix simply contains coefficients taken from the discrete Fourier transform (DFT)\index{Discrete Fourier transform}. Specifically, the \mbox{$N\times N$} QFT matrix has elements,
+\begin{align}
+\hat{QFT}_{j,k} = \frac{1}{\sqrt{N}} \omega^{(j-1)(k-1)},	
+\end{align}
+where,
+\begin{align}
+\omega = e^{\frac{2\pi i}{N}},	
+\end{align}
+is a complex root of unity. In matrix form the $N$-dimensional QFT is therefore,
+\begin{align}
+\hat{QFT}_N = \frac{1}{\sqrt{N}} \left(\begin{matrix}
+  1 & 1 & 1 & \dots & 1\\
+  1 & \omega & \omega^2 & \dots & \omega^{N-1} \\
+  1 & \omega^2 & \omega^4 & \dots & \omega^{2(N-1)} \\
+  \vdots & \vdots & \vdots & \ddots & \vdots \\
+  1 & \omega^{N-1} & \omega^{2(N-1)} &\dots &\omega^{(N-1)(N-1)}
+\end{matrix}\right),
+\end{align}
+which is symmetric, \mbox{$\hat{QFT}=\hat{QFT}^\top$}. Note that all matrix elements are phases with magnitude $1/\sqrt{N}$,
+\begin{align}
+	|\hat{QFT}_{i,j}|=\frac{1}{\sqrt{N}}\,\,\forall\, i,j.
+\end{align}
+
+Equivalently, in terms of basis state transformations this implements the map,
+\begin{align}
+	\hat{QFT} \ket{j} \to \frac{1}{\sqrt{N}}\sum_{k=0}^{N-1} \omega^{jk}\ket{k},
+\end{align}
+on the $N$ basis states.
+
+Unlike the closely-related Hadamard transform\index{Hadamard transform}, $\hat{H}^{\otimes n}$, which shares many properties with the QFT, the QFT is a highly entangling operation. The QFT of any dimension has an efficient circuit implementation, making it an important subroutine in many algorithms. Specifically, the $n$-qubit QFT (i.e a transformation on $2^n$ amplitudes) requires only $O(n^2)$ elementary gates (Hadamards and CZs). If an approximation of the QFT is sufficient for one's purposes, this can be further reduced to only \mbox{$O(n\,\text{log}\,n)$}.
+
+\comment{Show algorithm box with circuit}
+
+%
 % Phase-Estimation
 %
 
@@ -147,21 +188,12 @@ The goal of the phase-estimation algorithm \cite{bib:PhaseEstAlg} is to calculat
 \end{align}
 where $\theta$ parameterises the phase of the eigenvalue and $\ket\psi$ is an eigenvector of $\hat{U}$.
 
-The algorithm for this is baked from several ingredients: a Hadamard transform\index{Hadamard transform}; controlled $\hat{U}$s\footnote{Any unitary has a coherently controlled unitary equivalent, of the form $\hat{U}_\text{controlled} = \ket{0}\bra{0}\otimes \hat{\mathbb{I}} + \ket{1}\bra{1}\otimes\hat{U}$. These always have an efficient circuit construction, given $\hat{U}$.}; and, an inverse quantum Fourier transform (QFT)\index{Quantum Fourier transform}.
-
-The QFT matrix contains elements taken from the discrete Fourier transform (DFT)\index{Discrete Fourier transform}. Specifically, the \mbox{$N\times N$} QFT matrix has elements,
-\begin{align}
-\hat{QFT}_{j,k} = \frac{1}{\sqrt{N}} \omega^{(j-1)(k-1)},	
-\end{align}
-where,
-\begin{align}
-\omega = e^{\frac{2\pi i}{N}},	
-\end{align}
-is a complex root of unity. Equivalently, this implements the map,
-\begin{align}
-	\hat{QFT} \ket{j} \to \frac{1}{\sqrt{N}}\sum_{k=0}^{N-1} \omega^{jk}\ket{k},
-\end{align}
-on the $N$ basis states. The QFT of any dimension has an efficient circuit implementation, making it an important subroutine in many algorithms.
+The algorithm for this is baked from several ingredients. To implement phase-estimation with $n$ bits of precision, we require:
+\begin{itemize}
+	\item An $n$-qubit Hadamard transform, $\hat{H}^{\otimes n}$\index{Hadamard transform}.
+	\item $n$ controlled-$\hat{U}$s\footnote{Any unitary has a coherently controlled unitary equivalent, of the form $\hat{U}_\text{controlled} = \ket{0}\bra{0}\otimes \hat{\mathbb{I}} + \ket{1}\bra{1}\otimes\hat{U}$. These always have an efficient circuit construction, given $\hat{U}$.}.
+	\item An $n$-qubit inverse QFT\index{Quantum Fourier transform}, $\hat{QFT}_n^\dag$ (Sec.~\ref{sec:QFT_alg}).
+\end{itemize}
 
 Alg.~\ref{alg:q_phase_est} shows the circuit implementation of the phase-estimation algorithm. The output is a binary representation of \mbox{$2^n\theta$}, where the precision is determined entirely by the number of qubits in the output register, which can be arbitrarily large in principle.
 
@@ -296,7 +328,7 @@ Taking a dataset with well-defined distances between data-points\footnote{`Dista
 
 \begin{figure}[!htb]
 \includegraphics[width=0.47\textwidth]{TDA}
-\caption{(top) $k$-simplices\index{Simplex} are constructed as fully connected subsets of the data of different dimensions $k$. (bottom) A distance cutoff is applied to create edges within a scatterplot of raw data, from which the simplicial complex\index{Simplicial complex} is constructed.} \label{fig:TDA_simplex}	
+\caption{(top) $k$-simplices\index{Simplex} are constructed as fully connected subsets of the data of different dimensions $k$. (bottom) A distance cutoff is applied to create edges within a scatterplot of raw data, from which the simplicial complex\index{Simplicial complex} is constructed. The shown example of a simplicial complex contains two 2-simplices (coloured triangles), and 6 1-simplices (edges). The final simplicial complex is highly dependent on the choice of cutoff $\epsilon$. In general, as $\epsilon$ is increased the complex will contain more simplices of higher dimension, since vertices will have more immediate neighbours.} \label{fig:TDA_simplex}	
 \end{figure}
 
 The first step in the algorithm is to construct the simplicial complex superposition state,
@@ -318,11 +350,13 @@ From the superposition state, the uniform mixture of simplices state,
 \end{align}
 is easily prepared with the addition of CNOT gates and ancillary qubits\footnote{Using parallel CNOT gates one can transform an arbitrary superposition state into a redundantly encoded equivalent, \mbox{$\hat{U}_\text{CNOTs}\sum_i \lambda_i \ket{\psi_i}\ket{0} \to \sum_i \lambda_i \ket{\psi_i}\ket{\psi_i}$}, following which tracing out the redundant copy takes us to its uniform mixture, \mbox{$\sum_i |\lambda_i|^2\ket{\psi_i}\bra{\psi_i}$}.}.
 
-The quantum TDA algorithm then takes the simplicial complex mixed state and estimates the full set of Betti numbers by employing a phase-estimation algorithm\index{Phase-estimation algorithm} (Sec.~\ref{sec:phasea_est_alg}), which induces an exponential algorithmic runtime improvement.
+The quantum TDA algorithm then takes the simplicial complex mixed state and estimates the full set of Betti numbers by employing a phase-estimation algorithm\index{Phase-estimation algorithm} (Sec.~\ref{sec:phase_est_alg}), which induces an exponential algorithmic runtime improvement.
 
 Performing the TDA across a range of $\epsilon$ yields a \textit{barcode}\index{Barcode} representation for the dataset's topology. Topological features which persist over large ranges of $\epsilon$ can then be regarded as robust features of the dataset, whereas ones which only persist over a small range of $\epsilon$ can be regarded as localised, non-persistent features, which might correspond to noise for example, and be filtered out prior to further analysis. The barcode representation thereby gives us an extremely robust characterisation of the topology of the data in a scale-dependent way.
 
 As an example for how this type of technique might be applied, consider Facebook's\index{Facebook} user database. The distance metric might relate to how similar users' interests are, or how closely related they are via their friendship networks. Then examining the barcode representation of the data by scanning over $\epsilon$ would provide insight into the persistence and robustness of these relationships at different scales within the network. At different scales we could investigate topological relationships and features at the level of individuals, family or friendship networks, communities, common interest groups, between cities, across demographic characteristics, or between nations, for example.
+
+\comment{Show algorithm box}
 
 %
 % Linear Systems
