@@ -278,9 +278,39 @@ n = O\left(\frac{t^2}{\epsilon}\right),
 \end{align}
 which scales efficiently with the duration of time being simulated and the accuracy of the simulation.
 
-This approach is efficient and applies to any Hamiltonian which may be decomposed into local terms as per Eq.~(\ref{eq:Ham_sim_Ham}). However many other quantum simulation algorithms have since been described for simulating different types of quantum systems with different Hamiltonian structures \cite{bib:JLP, bib:BrennenWavelets}.
+This approach is efficient and applies to any Hamiltonian which may be decomposed into local terms as per Eq.~(\ref{eq:Ham_sim_Ham}). However many other quantum simulation algorithms have since been described for simulating different types of quantum systems with different Hamiltonian structures \cite{bib:JLP, bib:RohdeWavelet15}. The algorithm is summarised in Alg.~\ref{alg:ham_sim}.
 
-\comment{Show algorithm box}
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function HamiltonianSimulation($\hat{H}$, $t$, $\epsilon$):
+\begin{enumerate}
+	\item Hamiltonian to be simulated is of the form,
+    \begin{align} \label{eq:Ham_sim_Ham}
+\hat{H} = \sum_{i=1}^N \hat{H}_i	,
+\end{align}
+where $\hat{H}_i$ are local Hamiltonians operating on low-dimensional spaces, and $\hat{H}$ is the global Hamiltonian for the entire system.
+\item For each $\hat{H}_i$ construct a quantum circuit implementing the unitary,
+\begin{align}
+	\hat{U}_j = e^{i\hat{H}_j\frac{t}{n}}.
+\end{align}
+\item The degree of discretisation, $n$, is chosen according to,
+\begin{align}
+n = O\left(\frac{t^2}{\epsilon}\right),
+\end{align}
+where $t$ is evolution time and $\epsilon$ is the accuracy.
+\item Apply the circuits for simulating the local Hamiltonians according to the sequence,
+\begin{align}
+	\hat{U} = \left(\prod_{j=1}^N \hat{U}_j \right)^n.
+\end{align}
+\item The algorithm has runtime,
+\begin{align}
+	O\left(\frac{Nt^2}{\epsilon}\right).
+\end{align}
+\item $\Box$
+\end{enumerate}
+}}}
+\caption{Quantum Hamiltonian simulation algorithm.} \label{alg:ham_sim}
+\end{table}
 
 %
 % Integer Factorisation
@@ -362,7 +392,7 @@ As an example for how this type of technique might be applied, consider Facebook
 \fbox{\parbox{0.965\columnwidth}{\texttt{ 
 function TDA(dataPoints):
 \begin{enumerate}
-	\item Implement a Grover search with set-membership oracle function,
+	\item Implement a Grover search on the set of data-points with set-membership oracle function,
 	\begin{align}
 f_\epsilon(s_k) = \left\{ \begin{matrix}
  1, & \text{if}\,\,s_k\in S_k^\epsilon \\
