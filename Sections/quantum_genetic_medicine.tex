@@ -99,6 +99,7 @@ These Hamiltonians can be constructed \textit{ab initio}, combining relevant one
 \begin{align}
 	\hat{H}_\mathrm{int} = \sum_i \hat{H}_i + \sum_{j>k} \hat{H}_{j,k}.
 \end{align}
+This structure is of the form of Eq.~(\ref{eq:Ham_sim_Ham}) and thus lends itself to the quantum Hamiltonian simulation algorithm\index{Hamiltonian simulation} (Sec.~\ref{sec:quantum_sim_alg}).
 
 The dominant one-body interactions are kinetic energy\index{Kinetic energy Hamiltonian} terms, of the form,
 \begin{align}
@@ -121,7 +122,7 @@ where $q_j$ denotes charge.
 
 \subsection{Quantum drug trial simulations}\index{Quantum drug trial simulation}
 
-These approaches borrowed from quantum chemistry allow simulation of the interaction between drug compounds and molecular biochemical interactions. The next step is to perform this process against a huge library of candidate drug compounds\index{Drug compound libraries}, ligands\index{Ligand libraries} or functional groups\index{Functional group libraries}, from which, we hope, some candidates will exhibit desired characteristics, such as strong bonding affinities\index{Bonding affinity}.
+These approaches borrowed from quantum chemistry allow simulation of the interaction between drug compounds and molecular biochemical interactions. The next step is to perform this process against a huge library of candidate drug compounds\index{Drug compound libraries}, ligands or functional groups, from which, we hope, some candidates will exhibit desired characteristics, such as strong bonding affinities\index{Bonding affinity}.
 
 To achieve this, let us construct a classical algorithm for exhaustively constructing and enumerating organic drug molecules or functional groups, up to some cutoff size\index{Cutoff size}. The length of this list grows exponentially with the cutoff size. Next we implement this algorithm unitarily (which is always possible, writing the classical circuit as a reversible one), and construct it as a quantum oracle\index{Oracle} such that every input state (which acts as a pointer\index{Pointers} to an element in the list) yields as output a qubit representation\index{Qubit molecule representation} of the corresponding drug compound. Specifically, the oracle implements a transformation of the form,
 \begin{align}
@@ -137,6 +138,12 @@ Having constructed this oracle, we feed the output qubit molecule description in
 \end{align}
 
 The joint oracle$\to$simulation algorithm is finally embedded within a quantum search subroutine\index{Grover's algorithm}, which searches over the input space enumerating the set of drug candidates for scores above some desired threshold. This yields a quadratic enhancement in the number of drug candidates that can be simulated in parallel. Successful search results, where a compound achieves the threshold score, are then tagged for further investigation as treatment drug candidates.
+
+Combining the Grover search and quantum simulation subroutines, the total time-complexity of the entire (unencrypted) algorithmic pipeline is,
+\begin{align}
+	O\left(\frac{N\sqrt{M}t^2}{\epsilon}\right),
+\end{align}
+where $t$ is simulation time, $\epsilon$ is the simulation accuracy, $N$ is the number of local terms in the global Hamiltonian, and $M$ is the number of drug compound candidates in the algorithmic drug search space.
 
 The complete algorithmic pipeline is shown in Fig.~\ref{fig:genetic_med_pipe}.
 
