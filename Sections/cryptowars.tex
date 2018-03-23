@@ -98,9 +98,9 @@ function RSAGenerateKey():
 \item $q$ = randomPrime()
 \item if($p=q$) goto 1
 \item $n = pq$
-\item $\lambda = \mathrm{lcm}(p-1,q-1)$
-\item $e = \mathrm{coprime}(\lambda) \,\,\mathrm{s.t} \,\,e<\lambda$
-\item $d = e^{-1}\,(\mathrm{mod} \, \lambda)$
+\item $\lambda = \text{lcm}(p-1,q-1)$
+\item $e = \text{coprime}(\lambda) \,\,\text{s.t} \,\,e<\lambda$
+\item $d = e^{-1}\,(\text{mod} \, \lambda)$
 \item publicKey = $\{n,e\}$
 \item privateKey = $\{n,d\}$
 \item keyPair = \{publicKey,privateKey\}
@@ -109,13 +109,13 @@ function RSAGenerateKey():
 \end{enumerate}
 function RSAEncrypt(plaintext, publicKey):
 \begin{enumerate}
-\item $\mathtt{cipertext} = \mathtt{plaintext}^e \, (\mathrm{mod} \, n$)
+\item $\mathtt{cipertext} = \mathtt{plaintext}^e \, (\text{mod} \, n$)
 \item return(ciphertext)
 \item $\Box$
 \end{enumerate}
 function RSADecrypt(ciphertext, privateKey):
 \begin{enumerate}
-\item $\mathtt{plaintext} = \mathtt{ciphertext}^d \, (\mathrm{mod} \, n)$
+\item $\mathtt{plaintext} = \mathtt{ciphertext}^d \, (\text{mod} \, n)$
 \item return(plaintext)
 \item $\Box$
 \end{enumerate}
@@ -145,25 +145,25 @@ function DigitalSignature(message,keyPair):
 \begin{enumerate}
 \item Alice prepares a short \textit{digest}\index{Digest} of her message using a cryptographic hash function\index{Hash function}, such as SHA256\index{SHA256} (Sec.~\ref{sec:hashing}),\\
 	\vspace{1mm} 
-	$\mathrm{digest=SHA256(message)}$
+	$\text{digest=SHA256(message)}$
 	\item Alice encrypts the digest using her private key. This forms the `digital signature',\\
 	\vspace{1mm} 
-	$\mathrm{signature = RSAEncrypt(digest,privateKey)}$
+	$\text{signature = RSAEncrypt(digest,privateKey)}$
 	\item Alice transmits the digital signature and original message to Bob,\\
 	\vspace{1mm} 
-	$\mathrm{signedMessage = \{message,signature\}}$
+	$\text{signedMessage = \{message,signature\}}$
 	\item Bob hashes the received message,\\
 	\vspace{1mm} 	
-	$\mathrm{hash=SHA256(message)}$
+	$\text{hash=SHA256(message)}$
 	\item Bob uses Alice's public-key to decrypt her digital signature,\\
 	\vspace{1mm} 
-	$\mathrm{decryptedHash = RSADecrypt(signature,publicKey)}$
+	$\text{decryptedHash = RSADecrypt(signature,publicKey)}$
 	\item Bob compares his calculated hash with Alice's decrypted hash for consistency. If the two hashes are identical, Bob concludes the message was authentic,\\
 	\vspace{1mm} 
-	$\mathrm{if(decryptedHash=hash)}$\\
-	$\,\,\mathrm{return(pass)}$\\
-	$\mathrm{else}$\\
-	$\,\,\mathrm{return(fail)}$
+	$\text{if(decryptedHash=hash)}$\\
+	$\,\,\text{return(pass)}$\\
+	$\text{else}$\\
+	$\,\,\text{return(fail)}$
 	\item $\Box$
 \end{enumerate}
 }}}
@@ -184,7 +184,7 @@ Like RSA cryptography, key servers\index{Key servers} exist, maintaining databas
 
 Hash functions are functions that map a long string of arbitrary length to a short, fixed-size string with quasi-random behaviour,
 \begin{align}
-	f_\mathrm{hash}:\,\{0,1\}^n \to \{0,1\}^m,
+	f_\text{hash}:\,\{0,1\}^n \to \{0,1\}^m,
 \end{align}
 for an $n$-bit input and $m$-bit output hash, where $n$ is variable and $m$ is fixed. They are an example of `one-way functions'\index{One-way functions} that are computationally easy to compute in the forward direction, but extremely hard to invert. That is, given a hash, it is computationally difficult to find input strings that map to that value.
 
@@ -241,7 +241,7 @@ Far better than waiting the age of the universe for the right key to turn up, is
 
 In the case of RSA encryption, whose security derives from the believed computational hardness of factorising large numbers, the most efficient known classical algorithm for integer factorisation is the general number field sieve (GNFS)\index{General number field sieve}, with time-complexity,
 \begin{align} \label{eq:GNFS_scaling}
-	O(\mathrm{exp}[O(1) (\log n)^{\frac{1}{3}} (\log\log n)^{\frac{2}{3}}]),
+	O(\text{exp}[O(1) (\log n)^{\frac{1}{3}} (\log\log n)^{\frac{2}{3}}]),
 \end{align}
 which scales poorly for large $n$, keeping in mind that present-day implementations of RSA accommodate key lengths of up to 4,096 bits, as for example is implemented by the Pretty Good Privacy (PGP)\index{Pretty Good Privacy} package.
 
@@ -506,10 +506,10 @@ Finally, all users measure their qubits in the $\pm$-basis and publicly (without
 function QuantumAnonymousBroadcasting(message, speaker):
 \begin{enumerate}
 \item $\ket\psi = \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n}+\ket{1}^{\otimes n})$
-\item $\ket\psi \to (\hat{Z}_\mathrm{speaker})^\mathrm{message}\ket\psi$
+\item $\ket\psi \to (\hat{Z}_\text{speaker})^\text{message}\ket\psi$
 \item for(i$\in$users) \{
 	\setlength{\itemindent}{.2in}
-\item outcome$_i$ = measureInXBasis($\ket\psi_\mathrm{i}$)
+\item outcome$_i$ = measureInXBasis($\ket\psi_\text{i}$)
 \setlength{\itemindent}{0in}
 \item \}
 \item parity = $\sum_i$ outcome$_i$\,(mod\,2)
