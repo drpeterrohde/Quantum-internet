@@ -80,7 +80,7 @@ This is the simplest construction of a code which protects against a single depo
 % Stabiliser Codes
 %
 
-\subsection{Stabiliser codes}\index{Stabiliser codes}
+\subsection{Stabiliser codes}\index{Stabiliser codes}\label{sec:stab_code}
 
 \comment{To do}
 
@@ -98,8 +98,8 @@ These codes have been shown to have very favourable fault-tolerance thresholds i
 
 Importantly, topological codes do not require joint measurements across the entire graph state, instead requiring only operations localised to small regions within the graph. Thanks to this, computation using such topological codes can remain distributed, without requiring the entire state to be held locally by a particular host, or requiring full access to the entire state by any particular user.
 
-The most common topological code, which we will use here as an example, is the toric code\index{Toric code}, which resides on a lattice graph over the surface of a torus\footnote{As with cluster states, this graph needn't (but could) correspond to a network graph.}. As with cluster states (Sec.~\ref{sec:CSQC}), the toric code is most easily visualised in the stabiliser formalism\index{Stabiliser formalism}. Consider a rectangular sub-graph of the torus. We place a qubit on each edge (not vertex) of the graph. Now we define two sets of stabiliser operators: \textit{star} ($\hat{S}_+$) and \textit{plaquette} ($\hat{S}_\square$) operators,
-\begin{align} \index{Topological code stabilisers}\index{Star operator}\index{Plaquette operator}
+The most common topological code, which we will use here as an example, is the toric code\index{Toric code}, which resides on a lattice graph over the surface of a torus\footnote{As with cluster states, this graph needn't (but could) correspond to a network graph.}. As with cluster states (Sec.~\ref{sec:CSQC}), the toric code is most easily visualised in the stabiliser formalism\index{Stabiliser formalism}, and the toric code is an example of a stabiliser code\index{Stabiliser code} (Sec.~\ref{sec:stab_code}). Consider a rectangular sub-graph of the torus. We place a qubit on each edge (not vertex) of the graph. Now we define two sets of stabiliser operators: \textit{star} ($\hat{S}_+$) and \textit{plaquette} ($\hat{S}_\square$) operators,
+\begin{align} \index{Surface code stabilisers}\index{Star operator}\index{Plaquette operator}
 	\hat{S}_+(v) &= \prod_{i\in e(v)} \hat{X}_i, \nonumber \\
 	\hat{S}_\square(p) &= \prod_{i\in e(p)} \hat{Z}_i,
 \end{align}
@@ -108,27 +108,28 @@ where $e(v)$ are the edges neighbouring vertex $v$, and $e(p)$ are the edges sur
 	\hat{S}_+(v) \ket\psi_\text{toric} &= \ket\psi_\text{toric} \,\forall\, v, \nonumber \\
 	\hat{S}_\square(p) \ket\psi_\text{toric} &= \ket\psi_\text{toric} \,\forall\, p.
 \end{align}
-Unlike the cluster state stabilisers from Eq.~(\ref{eq:CS_stab}), these stabilisers are insufficient to fully characterise a unique quantum state. Rather, there are two unspecified degrees of freedom, which allows for a single qubit to be represented. Modifications of the topology, in the form of holes in the lattice (the genus of the topology), allow larger numbers of qubits to be encoded. Logical operations are implemented by performing gates and measurements across topologies over the surface.
+The stabilisers can be visualised graphically as per Fig.~\ref{fig:toric_code}.
+
+\begin{figure}[!htb]
+	\includegraphics[width=0.35\textwidth]{torus}\\
+	\includegraphics[width=0.4\textwidth]{toric_code}
+	\caption{Graph representation of the toric QEC code, and its associated stabilisers. The graph resides on a torus (top), while the physical qubits reside on the embedded lattice. The star and plaquette stabilisers across all vertices, jointly specify the state of the graph up to two missing degrees of freedom, which encode a single logical qubit. Thus, a logical qubit is encoded jointly across the entire graph, not at any specific vertex. Logical operations are performed via operations following topological paths through the lattice (not shown). The graph may be distributed across multiple hosts for distributed quantum computation.} \label{fig:toric_code}
+\end{figure}
+
+Unlike the cluster state stabilisers from Eq.~(\ref{eq:CS_stab}), these stabilisers are insufficient to fully characterise a unique quantum state. Rather, there are two unspecified degrees of freedom, which allows for a single qubit to be represented. Modifications of the topology, in the form of holes in the lattice (the genus of the topology), allow larger numbers of qubits to be encoded. Logical operations are implemented by performing sequences of local gates and measurements across topologies over the surface.
 
 The important feature to note is that logical qubits encoded into the toric code do not reside locally at any of the physical qubits in the topology. Rather, they reside jointly across the entire graph, which, like cluster states, might be partitioned across multiple hosts, enabling distributed computation.
 
-This is all summarised in Fig.~\ref{fig:toric_code}.
+Having defined the toric code as such, QEC proceeds in a similar manner to any other stabiliser code -- we measure all the stabilisers, yielding a syndrome\index{Error syndrome}, from which we can determine geometrically where errors took place in the graph, which can subsequently be corrected (if below threshold).
+
+The simplest example of error detection is the scenario where a single bit-flip ($\hat{X})$ error has occurred in the graph. Now exactly two plaquette stabilisers (the ones upon which the respective qubit acts) will yield the $-1$ measurement outcome, instead of the expected $+1$ outcome. These two stabilisers will necessarily be neighbouring ones, overlapping at the qubit where the error took place. Thus, using this geometric reasoning, we are able to identify the location of the single $\hat{X}$ error and subsequently correct it. On the other hand, if there were too many errors, it is possible they could conspire against us to create ambiguity in the geometric argument for the location of the errors. The QEC procedure is illustrated in Fig.~\ref{fig:toric_code}.
 
 \begin{figure}[!htb]
-	\includegraphics[width=0.47\textwidth]{toric_code}
-	\caption{Graph representation of the toric QEC code, and its associated stabilisers. The star and plaquette stabilisers across all vertices, jointly specify the state of the graph up to two missing degrees of freedom, which encode a single logical qubit. Thus, a logical qubit is encoded jointly across the entire graph, not at any specific vertex. Logical operations are performed via operations following topological paths through the lattice (not shown). The graph may be distributed across multiple hosts for distributed quantum computation.} \label{fig:toric_code}
+	\includegraphics[width=0.3\textwidth]{toric_code_correction}
+	\caption{QEC of a single bit-flip (top) and phase-flip (bottom) error via measuring two overlapping stabilisers. If there is at most one bit- or phase-flip error, as per this graphic, then upon measuring all the star and plaquette stabilisers, only those whose qubits are affected by the error channel will yield the $-1$ measurement outcome, the others all yielding $+1$. Such an error will affect exactly two stabilisers, whose qubit in common must have been the one affected by the respective error, which can subsequently be corrected since the type of the error and its location are known. Thus, in this example, all of the $\hat{S}_+^{(1)}$, $\hat{S}_+^{(2)}$, $\hat{S}_\square^{(1)}$ and $\hat{S}_\square^{(2)}$ stabilisers will yield $-1$ outcomes for the shown $\hat{X}$ and $\hat{Z}$ errors, whereas any of the remaining (not shown) $\hat{S}_k^{(j)}$ will yield $+1$ outcomes, which uniquely specifies where those errors took place.}\label{fig:toric_corr}	
 \end{figure}
 
-\begin{figure}[!htb]
-	\includegraphics[width=0.35\textwidth]{toric_code_correction}
-	\caption{QEC of a single bit-flip (top) and phase-flip (bottom) error via measuring two overlapping stabilisers. If there is at most one bit- or phase-flip error, as per this graphic, then upon measuring all the star and plaquette stabilisers, only those whose qubits are affected by the error channel will yield the $-1$ measurement outcome, the others all yielding $+1$. Such an error will affect exactly two stabilisers, whose qubit in common must have been the one affected by the respective error, which can subsequently be corrected since the nature of the error (bit- or phase-flip) and its location are known.}\label{fig:toric_corr}	
-\end{figure}
-
-Having defined the toric code as such, QEC proceeds in a similar manner to any other stabiliser code -- we measure all the stabilisers, yielding a syndrome, from which we can determine geometrically where errors took place in the graph, which can subsequently be corrected (if below threshold).
-
-The simplest example of error detection is the scenario where a single bit-flip ($\hat{X})$ error has occurred in the graph. Now exactly two plaquette stabilisers will yield the $-1$ measurement outcome, instead of the expected $+1$ outcome. These two stabilisers will necessarily be neighbouring ones, overlapping at the qubit where the error took place. Thus, using this geometric property, we are able to identify the location of the single $\hat{X}$ error and subsequently correct it. On the other hand, if there were too many errors, it is possible they could conspire against us to create ambiguity in the geometric argument for the location of the errors.
-
-Importantly, the stabilisers are all defined over geometrically localised neighbourhood regions, and do not require long-range measurements, making this type of code suitable to distributed models for quantum computation.
+Importantly, the stabilisers are all defined over geometrically localised neighbourhood regions, and do not require long-range measurements, making this type of code suitable to distributed models for quantum computation, much like cluster states.
 
 \comment{What about the actual computation? Can this still be distributed when we do the topological gates etc?}
 
@@ -144,10 +145,8 @@ Importantly, the stabilisers are all defined over geometrically localised neighb
 
 \comment{Figure for both examples of this -- under and over threshold!}
 
-\comment{These are a particular example of stabiliser codes with an elegant graphical interpretation}
-
 \comment{Missing degree of freedom in stabilisers defines qubit. How does topology (genus) relate to number of logical qubits?}
- 
+
 %
 %
 % Topological Codes
@@ -155,7 +154,7 @@ Importantly, the stabilisers are all defined over geometrically localised neighb
 
 \subsection{Topological codes} \label{sec:topol_codes} \index{Topological codes}
 
-\comment{Toric code}
+\comment{Toric code -- shift this to surface code section}
 
 Currently, topological codes (Sec.~\ref{sec:topol_codes}) are considered the most favourable codes in terms of their elegance, simplicity, high error-correction thresholds, and efficiency in resource overhead. Some such topological codes are particularly enticing, as they can be readily prepared from cluster states (Sec.~\ref{sec:CSQC}), which lend themselves naturally to certain networking methods, such as distributed state preparation.
 
@@ -190,17 +189,22 @@ The protocol is necessarily non-deterministic, since sometimes photons will be m
 
 \subsection{Qubit loss codes}\index{Qubit loss codes}
 
-\cite{RohdeHaselgrove}
+More severe than a simple, say, dephasing channel is qubit loss, whereby an entire physical qubit is lost to the environment, effectively tracing it out of the system. Depending on physical architecture, there are two ways in which qubit loss might manifest itself:
+\begin{itemize}
+\item Located errors\index{Located errors}: We know that a loss occurred and which physical qubit was affected.
+\item Unlocated errors\index{Unlocated errors}: We do not know that a physical qubit was lost.
+\end{itemize}
 
-\comment{Located vs unlocated errors}
+These manifestations arise naturally in different architectural contexts. For example, it is relatively easy to look at an atomic qubit to see whether it's still where it should be, whereas observing a photonic qubit typically requires destroying it, making the former vulnerable to located errors and the latter to unlocated errors.
 
-\comment{Nondegenerate codes. Generalised quantum Hamming bound. $t_u$ unlocated errors and $t_l$ located errors. Encode $k$ qubits into $n$-qubit code.}
+It turns out that the distinction between these two modes of error can have a significant effect on the error correction thresholds of QECs. Specifically, a located error effectively gives us an additional classical bit of information diagnosing that an error took place, which we are not privy to for unlocated errors. This additional bit of information can be exploited by QEC codes to improve thresholds for located errors.
+
+In \cite{RohdeHaselgrove} a derivation of a generalisation of the quantum Hamming bound\index{Quantum Hamming bound} was presented, where the number of located and unlocated errors were treated as independent parameters. They found that for non-degenerate codes the Hamming bound allows exactly twice as many located as unlocated errors. Specifically, for $t_l$ located errors and $t_u$ unlocated errors in an $n$-qubit non-degenerate code encoding $k$ logical qubits, QEC is possible provided that the number of errors satisfied,
 \begin{align}
 \sum_{i=0}^{t_u + \lfloor t_l/2 \rfloor} \binom{n}{i}3^i 2^k \leq 2^n.
 \end{align}
 
-\comment{Barrett/Stace/Doherty surface codes}
-\comment{Tree horticultural scheme Rudolph et al.}
+Subsequently, using surface codes \cite{bib:StaceBarrettDohertyLoss} arrived at the similar conclusion that QEC codes are more robust against located than unlocated errors.
 
 %
 % Gate Failure Codes
