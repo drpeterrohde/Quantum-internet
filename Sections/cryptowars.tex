@@ -145,25 +145,26 @@ function DigitalSignature(message,keyPair):
 \begin{enumerate}
 \item Alice prepares a short \textit{digest}\index{Digest} of her message using a cryptographic hash function\index{Hash function}, such as SHA256\index{SHA256} (Sec.~\ref{sec:hashing}),\\
 	\vspace{1mm} 
-	$\text{digest=SHA256(message)}$
+	$digest=SHA256(message)$
 	\item Alice encrypts the digest using her private key. This forms the `digital signature',\\
 	\vspace{1mm} 
-	$\text{signature = RSAEncrypt(digest,privateKey)}$
+	$signature = RSAEncrypt(digest,privateKey)$
 	\item Alice transmits the digital signature and original message to Bob,\\
 	\vspace{1mm} 
-	$\text{signedMessage = \{message,signature\}}$
+	$signedMessage = \{message,signature\}$
 	\item Bob hashes the received message,\\
 	\vspace{1mm} 	
-	$\text{hash=SHA256(message)}$
+	$hash=SHA256(message)$
 	\item Bob uses Alice's public-key to decrypt her digital signature,\\
 	\vspace{1mm} 
-	$\text{decryptedHash = RSADecrypt(signature,publicKey)}$
+	$decryptedHash =$\\
+	$RSADecrypt(signature,publicKey)$
 	\item Bob compares his calculated hash with Alice's decrypted hash for consistency. If the two hashes are identical, Bob concludes the message was authentic,\\
 	\vspace{1mm} 
-	$\text{if(decryptedHash=hash)}$\\
-	$\,\,\text{return(pass)}$\\
-	$\text{else}$\\
-	$\,\,\text{return(fail)}$
+	$if(decryptedHash=hash)$\\
+	$\,\,return(pass)$\\
+	$else$\\
+	$\,\,return(fail)$
 	\item $\Box$
 \end{enumerate}
 }}}
@@ -337,17 +338,17 @@ Thankfully, there are two saving graces. First of all, much research is being ca
 % Quantum Key Distribution (QKD)
 %
 
-\subsubsection{Quantum key distribution (QKD)} \label{sec:QKD} \index{Quantum key distribution (QKD)}
+\subsubsection{Quantum key distribution} \label{sec:QKD} \index{Quantum key distribution}
 
 %Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. The demand for secure cryptography is now extremely important in the context of electronic commerce and general security of information transmission in the internet age. Electronic currencies such as Bitcoin\index{Bitcoin} depend on cryptographic protocols in order to secure the value of assets, assign ownership certificates\index{Owner certificates}, and secure the currency against fraud. However such protocols are based upon the computational complexity of certain mathematical problems (\textit{computational security}\index{Computational security}), and are not fundamentally secure in the presence of limitless computational resources, or quantum computers. Therefore, using quantum mechanical protocols based on physical principles (\textit{information-theoretic security}\index{Information-theoretic security}) rather than computational limitations, are favourable in the sense of future-proofing security.
 
-\comment{Add more advanced protocols? CV? Decoy states, untrusted devices, device independent QKD, etc. etc.}
+\comment{Add more advanced protocols? Decoy states, untrusted devices, device independent QKD, etc. etc.}
 
 Quantum key distribution (QKD) protocols facilitate shared, secret randomness, where any intercept-resend\index{Intercept-resend attack} (or man-in-the-middle attack) attack may be detected and rejected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle\index{Heisenberg uncertainty principle} and no-cloning theorem\index{No-cloning theorem}). This shared, secret randomness may subsequently be employed in a one-time pad cipher\index{One-time pad cipher}, presenting us with true information-theoretic security\index{Information-theoretic security}.
 
 The central notion to QKD protocols, in their numerous manifestations, is that measurement of quantum states invokes a wavefunction collapse. When measuring a state in a basis for which that state is not an eigenstate, this necessarily changes the state. QKD relies on this simple result from quantum mechanics to reveal any eavesdropper performing an intercept-resend attack\index{Intercept-resend attack} via the changes to transmitted quantum states that this would induce.
 
-QKD is a relatively mature technology with already several commercial systems being available off-the-shelf\footnote{\cite{??? example companies}} and initial space-based implementations have been successfully demonstrated \cite{Pan}.
+QKD is a relatively mature technology with already several commercial systems being available off-the-shelf\footnote{Examples of companies selling off-the-shelf QKD hardware include \href{http://www.magiqtech.com}{MagiQ} and \href{http://www.idquantique.com}{ID Quantique}.} and initial space-based implementations have been successfully demonstrated \cite{Pan}.
 
 It is easy to see the utility of quantum networks in enabling commodity deployment of QKD -- users desire to communicate photons across long-range ad hoc networks, with low loss and dephasing. A global quantum internet would allow quantum cryptography to truly supersede classical cryptography, bypassing the vulnerabilities faced by classical cryptography in the era of quantum computing.
 
@@ -391,6 +392,7 @@ or,
 \item Remaining is roughly half as many bits as were sent, which are random, but guaranteed to be identical between Alice and Bob.
 \item Alice and Bob sacrifice some of their bits by publicly communicating them to check for consistency. This rules out intercept-resend attacks.
 \item Privacy amplification may be used to distill the partially compromised key into a shorter but more secret one.
+\item $\Box$
 \end{enumerate}}}}
 \caption{BB84\index{BB84 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photons. Upon completion of the protocol, Alice and Bob share a random bit-string for use in a one-time pad cipher\index{One-time pad cipher}.}\label{alg:bb84}
 \end{table}
@@ -412,6 +414,8 @@ The BB84 protocol has no measurement timing, mode-matching or interferometric st
 
 E91 is slightly different to BB84. Here Alice and Bob share an entangled Bell-pair provided by a central authority. Then both Alice \textit{and} Bob measure their qubits in random bases. As with BB84, after measuring all qubits, they compare their choices of random bases. When they coincide, they have a shared, random bit. When they don't, they discard their result. From here the remainder of the protocol is the same as for BB84. Thre protocol is summarised in Alg.~\ref{alg:e91}.
 
+\comment{Fix this up. Discuss using Bell violation to prove security.}
+
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\texttt{ 
 function E91():
@@ -426,6 +430,7 @@ function E91():
 \item When Alice and Bob's bases were consistent they store the measurement outcomes as a shared random bit.
 \item Alice and Bob sacrifice some of their bits by publicly communicating them to check for consistency. This rules out intercept-resend attacks.
 \item Privacy amplification may be used to distill the partially compromised key into a shorter but more secret one.
+\item $\Box$
 \end{enumerate}}}}
 \caption{E91\index{E91 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photonic Bell-pairs. Upon completion of the protocol, Alice and Bob share a random bit-string of ruse in a one-time pad cipher\index{One-time pad cipher}.}\label{alg:e91}
 \end{table}
@@ -442,9 +447,37 @@ An advantage of E91 over BB84 is that it does not require a direct quantum commu
 % Continuous-Variable Protocols
 %
 
-\paragraph{Continuous-variable protocols}
+\paragraph{Continuous-variable protocols}\index{Continuous-variable QKD}
 
-\comment{To do. Zixin perhaps??}
+Like quantum computing, QKD protocols may be adapted to the CV domain also. Alg.~\ref{alg:cv_qkd} describes a simple such scheme based on encoding in phase-space\index{Phase-space}, where the basis states are coherent states of different amplitudes and phases. The goal is the same as BB84 -- to securely share a random bit-string for use in a one-time-pad\index{One-time-pad}.
+
+Note that this protocol provides information-theoretic security\index{Information-theoretic security}, as per BB84\index{BB84 protocol}, despite the fact that coherent states are non-orthogonal, forming an over-complete basis in phase-space.
+
+Conceptually, the operation of the CV QKD protocol is virtually identical to photonic BB84, differing only in that now the different choices of encodings correspond to phase-space transformations. Like BB84, if Eve were to perform an intercept-resend attack\index{Intercept-resend attack} she would probabilistically re-encode in the wrong quadrature, thereby revealing herself to Alice and Bob, who could then terminate. 
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function CVQKD():
+\begin{enumerate}
+\item Alice two Gaussian-distributed random numbers with mean zero,
+\begin{align}
+x_A &= \mathcal{N}(0,V_\text{mod}),\nonumber \\
+p_A &= \mathcal{N}(0,V_\text{mod}),
+\end{align}
+where $V_\text{mod}$ is the modulation variance\index{Modulation variance}.
+\item Alice prepares the coherent state,
+\begin{align}
+\ket\alpha = \ket{x_A+ip_A}.	
+\end{align}
+\item Alice transmits $\ket\alpha$ to Bob.
+\item Bob randomly measures either $\hat{x}$ or $\hat{p}$ using homodyne detection.
+\item Alice and Bob use classical communication to determine for which transmissions their preparation and measurement were consistent \comment{I don't get this, Alice is deterministically encoding x+ip, where's the randomness in the choice of basis? Are we adding a randomised phase that puts us into a diagonal basis sometimes, or something like that}
+\item \comment{Complete the rest of this}
+\end{enumerate}}}}
+\caption{CV QKD protocol using coherent states, encoded in the quadrature basis.}\label{alg:cv_qkd}
+\end{table}
+
+\comment{To do.}
 
 %
 % Security

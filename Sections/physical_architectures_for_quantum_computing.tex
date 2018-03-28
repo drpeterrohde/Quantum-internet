@@ -608,10 +608,10 @@ It was shown by \cite{bib:RohdeMultiWalk11} that any such walk can be efficientl
 Because of the graph structure of the walk, it lends itself naturally to distributed implementation. We might imagine that different subgraphs -- or `widgets' \cite{bib:Lovett10, bib:Childs09} -- implement different computational primitives or subroutines. These widgets might be proprietary or expensive to implement, and are therefore best outsourced over a network.
 
 %
-% Continuous-Variables (CV)
+% Continuous-Variables
 %
 
-\subsection{Continuous-variables (CV)} \label{sec:CV_QC} \index{Continuous-variable quantum computation}
+\subsection{Continuous-variables} \label{sec:CV_QC} \index{Continuous-variable quantum computation}
 
 Until now we have focussed on optical systems where quantum information is encoded into discrete variables\index{Discrete variables}, such as photon-number and polarisation. However, quantum states of light can also be considered in terms of continuous-variables (CVs)\index{Continuous-variables} in phase-space\index{Phase-space}.
 
@@ -622,7 +622,7 @@ In the CV picture, instead of representing states using photonic creation operat
 \hat x &=    \sqrt{\frac{\hbar}{2 \omega}}(\hat a + \hat a^\dag), \nonumber \\
 \hat p &= -i \sqrt{\frac{\hbar  \omega}{2}}(\hat a - \hat a^\dag), 
 \end{align}
-where $\omega$ is the optical frequency. These operators obey the commutation relation,
+where $\omega$ is the optical frequency\index{Optical frequency}. These operators obey the commutation relation,
 \begin{align}
 [\hat x, \hat p] = i \hbar.
 \end{align}
@@ -633,27 +633,46 @@ The position representation corresponds to expressing a state vector $\ket{\psi}
 \begin{align}
 \ket{\psi} = \int \psi(x)\ket{x}\, dx,
 \end{align}
-\noindent where $\ket{x}$ are the eigenstates of the position operator. Here the wave function in the position representation is defined as,
+\noindent where $\ket{x}$ are the eigenstates of the position operator. Here the wave function in the position representation\index{Position basis representation} is defined as,
 \begin{align}
 \psi(x) = \langle x|\psi\rangle.
 \end{align}
 The state can similarly be expressed in the momentum basis.\index{Momentum basis representation}
 
-The quadrature eigenstates are mutually related to each other by a Fourier transform,
+The quadrature eigenstates\index{Quadrature eigenstates} are mutually related to each other by a Fourier transform\index{Fourier transform},
 \begin{align}
 \ket{x} &= \frac{1}{\sqrt{\pi}} \int_{-\infty} ^\infty e^{-2 i x p} \ket{p} \,dp,\nonumber \\
 \ket{p} &= \frac{1}{\sqrt{\pi}} \int_{-\infty} ^\infty e^{+2 i x p} \ket{x} \,dx.
 \end{align}
 
-Position and momentum eigenstates are orthogonal and may therefore be employed to encode a single qubit. However, these eigenstates have infinite energy. That is, they are infinitely squeezed in phase-space (Sec.~\ref{sec:squeezed},\ref{sec:non_lin_opt}). However, position and momentum eigenstates can be closely approximated using finite, but large squeezing. The squeezed states\index{Squeezed states} in the two quadratures will now no longer be orthogonal, but will have overlap that asymptotes to zero as squeezing is increased. Thus, squeezed states can be used to approximate qubits using non-orthogonal basis states. Squeezed states may be prepared directly using a spontaneous parametric down-conversion (SPDC)\index{Spontaneous parametric down-conversion} process (Sec.~\ref{sec:single_phot_src}) \cite{bib:PhysRevLett.75.4337, bib:o2009photonic}.
+%
+% Encoding Quantum Information Using Squeezed States
+%
+
+\subsubsection{Encoding quantum information using squeezed state}\index{Squeezed state encoding}
+
+Position and momentum eigenstates are orthogonal and may therefore be employed to encode a single qubit. However, these eigenstates have infinite energy. That is, they are infinitely squeezed in phase-space (Sec.~\ref{sec:squeezed}, \ref{sec:non_lin_opt})\index{Infinite squeezing}. However, position and momentum eigenstates can be closely approximated using finite, but large squeezing. The squeezed states\index{Squeezed states} in the two quadratures will now no longer be orthogonal, but will have overlap that asymptotes to zero as squeezing is increased. Thus, squeezed states can be used to approximate qubits using non-orthogonal basis states. Squeezed states may be prepared directly using a spontaneous parametric down-conversion (SPDC)\index{Spontaneous parametric down-conversion} process (Sec.~\ref{sec:single_phot_src}) \cite{bib:PhysRevLett.75.4337, bib:o2009photonic}. CV encoding using squeezed states is illustrated in phase-space in Fig.~\ref{fig:squeezed_state_encoding}.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.3\textwidth]{squeezed_state_encoding}
+\caption{Phase-space representation of two squeezed vacuum states, squeezed in the $\hat{x}$ (blue) and $\hat{p}$ (red) directions. In the limit of large squeezing these states become approximately orthogonal and may therefore approximate the encoding of a qubit.} \label{fig:squeezed_state_encoding}	
+\end{figure}
 
 Squeezing simply corresponds to a dilation along a particular axis in phase-space. Squeezing is represented using the squeezing operator\index{Squeezing operator},
 \begin{align}\label{eq:sq_op}
 \hat{S}(\xi) = \text{exp}\left[ \frac{1}{2}(\xi^*\hat{a}^2 - \xi{\hat{a}^{\dag 2}})\right],
 \end{align}
-where \mbox{$\xi  = r e^{i \varphi}$}, $r$ is known as the squeezing parameter, which will determine the size of the squeezing and \mbox{$\varphi \in [0, 2\pi]$} denotes that axis along which the squeezing is taking place.
+where \mbox{$\xi  = r e^{i \varphi}$}, $r$ is known as the squeezing parameter\index{Squeezing parameter}, which will determine the size of the squeezing and \mbox{$\varphi \in [0, 2\pi]$} denotes that axis along which the squeezing is taking place.
 
-A phase-shifter\index{Phase-shifter}, implementing the unitary operation,
+\comment{How is squeezing implemented physically in the lab?}
+
+%
+% Phase-Shifters
+%
+
+\subsubsection{Phase-shifters}\index{Phase-shifters}
+
+A phase-shifter\index{Phase-shifters}, implementing the unitary operation,
 \begin{align}
 \hat{R}(\theta) = e^{i\theta \hat a^\dag \hat a},
 \end{align}
@@ -672,9 +691,42 @@ rotates a state in phase-space by angle $\theta$, implementing the transformatio
 \hat p
 \end{pmatrix}.
 \end{align}
-It is evident upon inspection that this can be thought of as a single-qubit rotation in the position/momentum basis.
+It is evident upon inspection that this can be thought of as a single-qubit rotation in the position/momentum basis. \comment{Is it right that this is a single qubit operation in the x/p basis?}
 
-Measurement of CV states may be performed using homodyne detection\index{Homodyne detection} (Sec.~\ref{sec:homodyne}), which perform a projection along some axis in phase-space, allowing $\hat{x}$ and $\hat{p}$, or any linear combination of the two, to be directly sampled.
+%
+% Bell-Pairs
+%
+
+\subsubsection{Bell-pairs}\index{Bell-pairs}\label{sec:CV_bell_pairs}
+
+In the squeezed basis one can prepare Bell-pairs in an analogous manner to doing so using single-photon encoding. Namely, mixing two orthogonally squeezed states (squeezed and anti-squeezed states) on a 50:50 beamsplitter generates Bell-type entanglement. This is shown in Fig.~\ref{fig:CV_bell_pair}.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.47\textwidth]{CV_bell_pair}
+\caption{Preparation of a CV Bell-pair using a 50:50 beamsplitter to entangled two  squeezed states, squeezed in orthogonal directions in phase-space.}\label{fig:CV_bell_pair}	
+\end{figure}
+
+\comment{This is deterministic?}
+
+%
+% Measurement
+%
+
+\subsubsection{Measurement}
+
+Measurement of CV states may be performed using homodyne detection\index{Homodyne detection} (Sec.~\ref{sec:homodyne}), which perform a projection along an arbitrary axis in phase-space, allowing $\hat{x}$ and $\hat{p}$, or any linear combination of the two, to be directly sampled.
+
+Using a 50:50 beamsplitter to implement the reverse of Bell-pair preparation (described previously in Sec.~\ref{sec:CV_bell_pairs}), one can construct a Bell analyser for performing projections in the Bell basis\index{Bell projections}.
+
+\comment{Is this right?}
+
+\comment{Can we distinguish all 4 Bell states, or just 2 like LOQC?}
+
+%
+% Logical Operations
+%
+
+\subsubsection{Logical operations}
 
 In the position/momentum picture, the logical generalisations of the Pauli $\hat{X}$ and $\hat{Z}$ qubit gates may be thought of as displacements (Sec.~\ref{sec:non_lin_opt}) in the real and imaginary directions in phase-space \cite{bib:KokLovettBook},
 \begin{align}
@@ -709,15 +761,29 @@ A full set of circuit model CV gates, universal for CV quantum computing is summ
  Qubit model gate &  CV equivalent \\ 
   \hline\hline
  Pauli $X$ & $\hat{X}(s) = \exp[-i s \hat p]$  \\ 
- Pauli $Z$ & $\hat{Z}(t) = \exp[i t \hat q]$  \\ 
+ Pauli $Z$ & $\hat{Z}(t) = \exp[i t \hat x]$  \\ 
  Phase gate & $\hat{P}(\eta) = \exp[i \eta \hat x^2]$ \\
-Hadamard   & $\hat{F}=\exp[i \frac{\pi}{8}(\hat p^2+\hat q^2)]$ \\
-CZ		   & $\hat{U}_\text{CZ}= \exp[\frac{i}{2}\hat q_1 \hat q_2]$ \\
+Hadamard   & $\hat{F}=\exp[i \frac{\pi}{8}(\hat p^2+\hat x^2)]$ \\
+CZ		   & $\hat{U}_\text{CZ}= \exp[\frac{i}{2}\hat x_1 \hat x_2]$ \\
 CNOT 	   & $\hat{U}_\text{CNOT} = \exp[-2i\hat x_1 \hat p_2]$\\
 \hline
 \end{tabular}
 \caption{Logical generalisations of a universal gate set to the CV model for quantum computing.\label{tab:CV_gates}}
 \end{table}
+
+\comment{Here explicitly show construction of a CZ gate.}
+
+\comment{Reference to work by Menicucci on fault tolerant implementation of CV QC.}
+
+%
+% Cluster States
+%
+
+\subsubsection{Cluster states}
+
+\comment{Describe the basic building blocks in a squeezed state cluster state architecture}
+
+\comment{Please add any citations necessary for this entire section. Both theory and experimental work.}
 
 %
 % Hybrid Light-Matter Architectures
