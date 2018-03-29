@@ -123,11 +123,19 @@ function RSADecrypt(ciphertext, privateKey):
 \caption{Number-theoretic algorithms based on modular arithmetic for RSA key generation, encryption and decryption.} \label{alg:RSA}
 \end{table}
 
-A downside of RSA is that ciphertexts are in general much longer than plaintexts, unlike private-key protocols where the ciphertext is always the same length as the plaintext. For this reason it is typically not used to directly encrypt long messages, since the memory and bandwidth overheads would be undesirable. Instead, RSA is typically employed in conjunction with private-key cryptography in a key exchange protocol\index{Key exchange protocol}. Here the public-key system communicates a private \textit{session key}\index{Session key} between parties, which is subsequently employed in a private-key protocol, without incurring the memory overhead that RSA does.  
-
 Since RSA, numerous other public-key cryptosystems have been developed, based on different choices of trapdoor function. Most notably, elliptic curve cryptography\index{Elliptic curve cryptography} has gained much attention. However, RSA remains the most widely used and well studied public-key cipher.
 
 To mitigate the need for constant one-on-one exchange of public-keys, many key servers\index{Key servers} exist around the globe, which maintain databases of people's public-keys. These servers are in a position of trust, vouching for the identities associated with their stored public-keys.
+
+%
+% Key Exchange Protocols
+%
+
+\subsubsection{Key exchange protocols}
+
+A downside of RSA is that ciphertexts are in general much longer than plaintexts, unlike private-key protocols where the ciphertext is always the same length as the plaintext. For this reason it is typically not used to directly encrypt long messages, since the memory and bandwidth overheads would be undesirable. Instead, RSA is typically employed in conjunction with private-key cryptography in a key exchange protocol\index{Key exchange protocol}. Here the public-key system communicates a private \textit{session key}\index{Session key} between parties, which is subsequently employed in a private-key protocol, without incurring the time and memory overhead that RSA does.
+
+Numerous key exchange protocols have been formulated, the best known being the Diffie-Hellman\index{Diffie-Hellman protocol} protocol, which has been widely adopted on the internet.
 
 %
 % Digital Signatures
@@ -176,6 +184,8 @@ The key point from the security perspective is that the private key cannot be ef
 Because this protocol is implemented using ordinary RSA\index{RSA protocol}, albeit with reversed roles for the key-pair, it shares the same security strengths and vulnerabilities as RSA public-key cryptography (Sec.~\ref{sec:attacks_on_class}).
 
 Like RSA cryptography, key servers\index{Key servers} exist, maintaining databases of people's public-keys and their associated identities.
+
+Because RSA-encrypted messages are long, digital signature protocols do not sign the full document directly. Instead they create a message digest\index{Message digest} of the document using a cryptographic hash function, which is signed using RSA. These hash functions have the property that they cannot for forged or manipulated, providing an accurate summary of a document, but with extremely low memory overhead (256 bits is typical). Hash functions are discussed next in Sec.~\ref{sec:hashing}.
 
 %
 % Hashing
@@ -304,7 +314,7 @@ The mining process is based upon the computational hardness of inverting (double
 \begin{align}
 	\epsilon_\text{lower}\leq \text{SHA256}(\text{SHA256}(x_\text{coin})) \leq \epsilon_\text{upper}.
 \end{align}
-This is slightly weaker than inverting hash functions, but is nonetheless a task that can only be approached via brute-force hashing in the forward direction. This associates computational complexity with the mining process, and hence computational integrity of the money supply, whilst upper bounding the number of unique coins that can exist. This technique is known as `proof-of-work'\index{Proof-of-work}, for associating something of value with proof that certain amounts of computation were required to achieve it\footnote{In future implementations of Blockchain protocols, the proof-of-work required for a given protocol can be arbitrarily manipulated to accommodate for technological changes in computational power, for example via the adoption of quantum computing. The amount of work required to satisfy the constraint grows exponentially as we narrow the range \mbox{$\epsilon_\text{upper}-\epsilon_\text{lower}$}, providing us with much leverage to manipulate the complexity of proof-of-work, and hence the rate of inflation\index{Inflation rate} in the money supply.}. This idea was originally borrowed from the Hashcash protocol\index{Hashcash}, where proof-of-work is employed to associate work (and hence monetary value) with sending emails so as to eliminate automated spamming bots.
+This is slightly weaker than inverting hash functions, but is nonetheless a task that can only be approached via brute-force hashing in the forward direction. This associates computational complexity with the mining process, and hence computational integrity of the money supply, whilst upper bounding the number of unique coins that can exist. This technique is known as `proof-of-work'\index{Proof-of-work}, for associating something of value with proof that certain amounts of computation were required to achieve it\footnote{In future implementations of Blockchain protocols, the proof-of-work required for a given protocol can be arbitrarily manipulated to accommodate for technological advances in computational power, for example via the adoption of quantum computing. The amount of work required to satisfy the constraint grows exponentially as we narrow the range \mbox{$\epsilon_\text{upper}-\epsilon_\text{lower}$}, providing us with much leverage to manipulate the complexity of the proof-of-work, and hence the rate of inflation\index{Inflation rate} in the money supply.}. This idea was originally borrowed from the Hashcash protocol\index{Hashcash}, where proof-of-work is employed to associate work (and hence monetary value) with sending emails so as to eliminate automated spamming bots.
 
 The two key algorithms for Bitcoin and the Blockchain are therefore hashing and public-key digital signatures. Both of these are subject to enhanced quantum attacks.
 
