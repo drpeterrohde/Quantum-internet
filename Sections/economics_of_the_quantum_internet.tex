@@ -130,9 +130,11 @@ Given that the quantum marketplace doesn't actually exist yet, it isn't immediat
 	\item Perfect price competition --- there is sufficient competition that profits from quantum hardware and the execution of quantum computations is marginal.\index{Price competition}
 	\item Arbitrage-free --- market rates for different assets and derivatives are perfectly consistent, with no opportunity for `free money' by trading on market discrepancies.\index{Arbitrage-free}
 	\item Perfect information --- all market participants have complete knowledge of all market variables, including one another.\index{Perfect information}
-	\item Rational markets --- all market participants act rationally\footnote{i.e with perfect economic self-interest --- \textit{Avaritia}.} upon available information.\index{Rational markets}
+	\item Rational markets --- all market participants act rationally\footnote{i.e with perfect economic self-interest \latinquote{Avaritia}.} upon available information.\index{Rational markets}
 	\item Indefinite asset lifetime --- there is no deterioration or death of quantum hardware over time.\index{Asset lifetime}
-\end{itemize}
+	\item There is a risk-free rate of return ($r_\text{rf}$)\index{Risk-free rate of return}
+-- the rate of growth exhibited by an investment into an optimal risk-free asset\footnote{Historically these risk-free assets are taken as being US government bonds\index{US government bonds}\index{Risk-free asset}, with the bond yield being the risk-free RoR.}
+	\end{itemize}
 \end{postulate}
 
 %
@@ -221,58 +223,50 @@ Note that the collective value of the network appreciates exponentially if the r
 \end{figure}
 
 %
+% Rate of Return
+%
+
+\subsection{Rate of return}\index{Rate of return}
+
+The execution of computations typically has monetary value to the consumer. After all, they are paying hard-earned money for access to the technology!
+
+Suppose the owners of the quantum hardware are not running computations themselves, but rather are collectively licensing out their joint compute-time to end-users. The hardware owners will of course be demanding a profit from their enterprise. The rate at which they earn back their investment into hardware via the licensing of compute-time, we will refer to as the rate of return (RoR), $\gamma_\text{ror}$. We define this as,
+
+\begin{postulate}[Rate of return]\label{post:RoR}\index{Rate of return}
+The RoR is defined as,
+\begin{align}
+e^{-\gamma_\text{ror}} = \frac{n_\text{return}}{n_\text{cost}},
+\end{align}
+where $n_\text{return}$ is the profit made by licensing out the network's joint compute-power for a single unit of time, given a present-day network value of $n_\text{cost}$.
+\end{postulate}
+
+A higher $\gamma_\text{ror}$ implies a faster payback on hardware investment. We have parameterised the RoR as an exponential for convenience when performing derivations with compounding.
+
+In an ideal market, where hardware cost is completely predictable, e.g perfectly follows Pos.~\ref{post:hardware_cost}, the risk asymptotes to zero and perfect arbitrage (Pos.~\ref{post:market_eff}) will drive the RoR to asymptote to the risk-free RoR, $\gamma_\text{ror} \to r_\text{rf}$. Of course, real markets necessarily exhibit uncertainties, and the RoR on quantum hardware will never be truly risk-free, meaning that upon trading off risk for return, we will always observe $\gamma_\text{ror} > r_\text{rf}$.
+
+%
 % Cost Of Computation
 %
 
 \subsection{Cost of computation}\label{sec:cost_of_comp} \index{Cost of computation}
 
-The execution of computations typically has monetary value to the consumer. After all, they are paying hard-earned money for access to the technology!
+In the same scenario as before, where compute-time is being licensed out to end-users, the hardware owners return over a single unit of time equates to the cost of computation over that period.
 
-Let $L_t$ be the dollar-value of classical-equivalent FLOPS per qubit at time $t$. The exact form of this will be highly market-dependent. However, as a toy model we present a derivation for the value of quantum computation under our idealised efficient market assumptions (Pos.~\ref{post:market_eff}).
-
-We begin by defining the ratio $Q_t$ between the economic return from executing computations, and the cost of the investment into physical hardware performing them,
-\begin{align}
-Q_t=\frac{n_\text{return}(t)}{n_\text{invest}(t)}.
-\end{align}
-
-Now, if \mbox{$Q=1$} we have the breakeven point, whereby investment into physical hardware is profit-neutral in payback. If \mbox{$Q<1$} we spend more on hardware than we gain from its use and run at a loss. But if \mbox{$Q>1$} we can make guaranteed profit by investing in new hardware. The perfect price competition assumption (Pos.~\ref{post:market_eff}) will drive the market price towards the zero-profit breakeven point (but not quite -- someone has to make money!), such that \mbox{$Q\gtrapprox 1$}. That is, the economic gain approximates the hardware investment, with \mbox{$Q\to 1$} driven ever closer to unity as market competition increases, thereby closing the gap between investment and reward,
-\begin{align} \label{sec:gain_eq_invest}
-	n_\text{return}(t) \gtrapprox n_\text{invest}(t).
-\end{align}
-
-The total computational power of the entire network now scales as,
-\begin{align}
-n_\text{FLOPS}(t) = f_\text{sc}(N_0{\gamma_N}^t),
-\end{align}
-based on the network growth postulate (Pos.~\ref{post:net_growth})\index{Network growth postulate} and employing a combined computational scaling function\index{Combined computational scaling functions} (Def.~\ref{def:comb_sc_func}). The dollar-value of current net computational power of the entire network scales as,
-\begin{align}
-	n_\text{gain}(t) &= N_t L_t \cdot n_\text{FLOPS}(t) \nonumber \\
-	&= N_0 {\gamma_N}^t L_t\cdot f_\text{sc}(N_0 {\gamma_N}^t).
-\end{align}
-And the present-day dollar-value of the physical hardware is given by the network value (Pos.~\ref{post:network_value}),
-\begin{align}
-	n_\text{cost}(t) &= P_t.
-\end{align}
-Equating these, as per Eq.~(\ref{sec:gain_eq_invest}), yields,
-\begin{align}
-N_0 {\gamma_N}^t L_t\cdot f_\text{sc}(N_0 {\gamma_N}^t) \gtrapprox N_0 C_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t,
-\end{align}
-which yields the time-dependent cost of computation postulate,
-
+Let $L_t$ be the dollar-value of utilising the network's computing resources for a single unit of time. This is obtained as the return made on the value of the network per FLOP,
 \begin{postulate}[Cost of computation]\label{post:cost_comp}
-The efficient-market dollar-value of a computation, measured in FLOPs per qubit, decreases over time as,
+The efficient-market dollar-value of a computation for a single unit of time, per FLOP is,
 \begin{align}\index{Cost of computation postulate}
-	L_t \gtrapprox \frac{C_0 {\gamma_C}^{-t}}{f_\text{sc}(N_0 {\gamma_N}^t)}.
+	L_t &= \frac{e^{-\gamma_\text{ror}} P_t}{n_\text{FLOPS}(t)} \nonumber\\
+	&= \frac{e^{-\gamma_\text{ror}} C_0{\gamma_C}^{-t}}{\chi_\text{sc}(N_0 {\gamma_N}^t)},
 \end{align}
 \end{postulate}
-
-This implies,
-\begin{postulate}[Spot price of computation]\index{Spot price of computation} The present-day (\mbox{$t=0$}) spot price of a computation is, measured in FLOPS per qubit,
+which implies,
+\begin{postulate}[Spot price of computation]\index{Spot price of computation} The present-day (\mbox{$t=0$}) spot price of a computation per FLOP is,
 \begin{align}
-L_0 \gtrapprox \frac{C_0}{f_\text{sc}(N_0)}.	
+L_0 = \frac{e^{-\gamma_\text{ror}}C_0}{\chi_\text{sc}(N_0)}.	
 \end{align}
 \end{postulate}
-That is, the initial value of computations simply approximates the initial hardware investment, scaled by its initial computational power, as is intuitively expected.
+That is, the value of computations simply approximates the return on initial hardware investment, scaled by its initial computational power, as is intuitively expected.
 
 Note that if $f_\text{sc}$ scales linearly, as per classical computation, we observe a regular exponential decay in the cost of computation, consistent with the classical Moore's Law. On the opposing extreme, for exponentially quantum-enhanced $f_\text{sc}$, the cost of computation decreases super-exponentially with time, an economic behaviour unique to post-classical computation with no classical analogue.
 
@@ -282,7 +276,7 @@ Examples of the temporal dynamics of the cost of computation are shown in Fig.~\
 \includegraphics[width=0.4\textwidth]{cost_of_comp_n} \\
 \includegraphics[width=0.4\textwidth]{cost_of_comp_n2} \\
 \includegraphics[width=0.4\textwidth]{cost_of_comp_2n}
-\caption{Examples of the temporal dynamics of the cost of computation for different scaling functions and exponential growth rates. Units are \mbox{$C_0=N_0=n=1$}.}\label{fig:econ_cost_of_comp}
+\caption{Examples of the temporal dynamics of the cost of computation for different scaling functions and exponential growth rates. Units are \mbox{$C_0=N_0=n=1$}.\comment{Redo these}}\label{fig:econ_cost_of_comp}
 \end{figure}
 
 %
@@ -423,44 +417,10 @@ Examples of the temporal dynamics of the time-dependent single-qubit QCL are sho
 \end{figure}
 
 %
-% Time-Share Spot Price
-%
-
-\subsection{Time-share spot price}\label{sec:time_share_spot}\index{Time-share spot price}
-
-Let the spot price of a time-share (for the duration of a single unit of time), $D_0$, be the initial price of FLOPS times the respective share of computing power held by the qubits under transaction, $c_n(0)$,
-\begin{definition}[Time-share spot price] \index{Spot price}
-The spot price of a time-share in the quantum network is,
-\begin{align}
-D_0 &= L_0 c_n(0) \nonumber \\
-&= \frac{C_0}{\chi_\text{sc}(N_0)} \cdot \frac{n}{N_0} \cdot f_\text{sc}(N_0) \nonumber \\
-&= n C_0.
-\end{align}
-\end{definition}
-
-%
-% Computational Dividend
-%
-
-\subsection{Computational dividend}\label{sec:comp_div}\index{Computational dividend}
-
-The computational dividend at future time $t$, $D_t$, is masterfully baked using the same recipe as the spot price\index{Jamie Oliver}, adjusted for extrapolated qubit growth and decay in the cost of computation,
-\begin{definition}[Computational dividend]\label{def:dividend_formula}
-The dollar-equivalent dividend paid by a time-share in the quantum network at future time $t$, for the duration of a single unit of time, is,
-\begin{align} \label{eq:dividend}\index{Dividend}
-D_t &= L_t c_n(t) \nonumber \\
-&= n \frac{C_0{\gamma_C}^t}{N_0{\gamma_N}^t}.
-\end{align}
-\end{definition}
-Up to normalisation this is equivalent to the network value (Pos.~\ref{post:network_value}). Note that the spot price, $D_0$, is the dividend at time \mbox{$t=0$}.
-
-%
 % Forward Contract Pricing Model
 %
 
 \subsection{Forward contract pricing model}\label{sec:for_contr}\index{Forward contract pricing model}
-
-%Unlike conventional securities traded on the financial markets, the dividends paid by a computer are measured in units of computation, FLOPS say, rather than dollars. However, of course there will always be some market rate for trading FLOPS for dollars, $L_t$. We envisage a derivatives market where the currency is in terms of present and future units of computation, expressed in its dollar-equivalent. Specifically, units of computation at different points in time, for a given duration, are traded as a financial instrument.
 
 Forward contracts are immensely useful in conventional markets, as a means by which to secure future use or ownership of an asset at predictable points in time. For example, farmers make heavy use of forward contracts to lock in sale of their produce before it has been harvested, such that the value is locked in in advance and the sale guaranteed, providing a very valuable hedging instrument\index{Hedging} for managing risk\index{Risk management}.
 
@@ -468,72 +428,21 @@ We envisage similar utility in the context of quantum computing. A company engag
 
 Now let us price forward contracts on qubits, whereby we wish to agree upon a price today, to be paid in the future, in exchange for ownership of qubits.
 
-The standard forward pricing model is \cite{???},
-\begin{align} \label{eq:orig_for_contr} \index{Forward contract pricing model} 
-F_T = D_0 e^{rT} - \sum_{t=1}^T D_t e^{r(T-t)},
-\end{align}
-where,
-\begin{itemize}
-	\item $F_T$ is the forward price at time $T$.\index{Forward price}
-	\item $D_0$ is the spot price at time \mbox{$t=0$} (i.e present-day value).
-	\item $T$ is the time of maturity, at which time the contract is executed and the transaction is made.\index{Maturity}
-	\item $r$ is the risk-free rate of return. \index{Risk-free rate of return}
-	\item The usual cost of carry, $q$, is neglected. We assume this is zero since maintenance of physical computer assets is somewhat negligible and the goods are effectively non-perishable. Furthermore, in the context of a global network, transactions may be executed entirely over the network, with no direct exchange in physical assets, making transactions very transparent and liquid, with little transaction overhead.\index{Cost of carry}
-	\item $D_t$ is the expected dividend at time $t$. In our case this will be the dollar-equivalent value of units of computation.\index{Dividend}
-\end{itemize}
-
-The intuitive interpretation of this formula is that the strike price is given by the spot price, discounted by the compounded dividends paid before maturation, and marked-up by the compounded risk-free rate of return. 
-
-In our case, the spot price is that given by the qubit asset pricing model, and the dividends are the computational dividends in dollars. Then, from Eq.~(\ref{eq:orig_for_contr}), the forward price for qubits is,
+The key observation is that a unit of computation (FLOP) does not carry over time. It must be utilised immediately and cannot be stored for future use. This simplifies the forward price of a unit of computation to simply be the future spot price, discounted by the risk-free RoR, yielding the forward contract pricing model for quantum computing time-shares,
 \begin{definition}[Forward contract pricing model] \label{def:forward_cont}\index{Forward contract pricing model}
 The efficient market price for a forward contract in qubits is,
 \begin{align}
-F_T &= D_0 e^{rT} - \sum_{t=1}^T D_t e^{r(T-t)} \nonumber \\
-&= n C_0 \left[e^{rT} + \frac{\gamma_C(e^{rT}-{\gamma_C}^T{\gamma_N}^{-T})}{N_0(\gamma_C - e^r\gamma_N)}\right].
+F_T &= e^{-r_\text{rf}T} L_T\nonumber\\
+&=\frac{e^{-\gamma_\text{ror}-r_\text{rf}T} C_0{\gamma_C}^{-T}}{\chi_\text{sc}(N_0 {\gamma_N}^T)}
 \end{align}
 \end{definition}
 
-Note that in the limit of \mbox{$T\to 0$} this reduces to \mbox{$F_0 = D_0 = nC_0$}, which is simply the spot price of the asset.
+Note that in the limit of \mbox{$T\to 0$} this reduces to $L_0$, which is simply the spot price of the asset.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.4\textwidth]{forward_cont_pricing_mod}
 \caption{Forward contract price on a single physical qubit to be delivered at time $T$ in the future. Units are \mbox{$C_0=1$}.\comment{Redo fig, outdated}}\label{fig:forward_cont_pricing_mod}
 \end{figure}
-
-%
-% Return On Investment
-%
-
-\subsection{Return on investment}\label{sec:ROI}\index{Return on investment (RoI)}
-
-As with any asset, a purchase may be for the purposes of investment rather than direct utility -- most transactions in soya bean derivatives are traded for their use as a financial instrument, not because the day-trader was feeling particularly hungry. \comment{Latin: God is hungry for slaves} Similarly, it is to be expected that owners of future quantum hardware may not simultaneously be the consumers -- they may be purchasing it to reap the dividends, and later sell the asset at (hopefully) an appreciated market price.
-
-The return on investment (RoI) is a means by which to characterise this. We define the RoI at a given time in the future, $R(T)$, as the ratio between its profits up until that point and its initial cost,
-\begin{align}
-R_T = \frac{c_\text{profit}(T)}{c_\text{cost}(0)}.
-\end{align}
-
-Let the cost of the asset be the current spot price,
-\begin{align}
-c_\text{cost}(0) &= C_0.
-\end{align}
-Let the profit be the accumulated dividends, paid up until time $T$,
-\begin{align}\index{Profit}
-c_\text{profit}(T) &= \sum_{t=0}^T D_t e^{-rt}. \nonumber \\
-\end{align}
-Then the RoI is given by,
-\begin{align}
-	R_T = \frac{\sum_{t=0}^T D_t e^{-rt}}{C_0}.
-\end{align}
-
-\begin{definition}[Return on investment]\index{Return on investment formula}
-The net return on investment at time $T$, on the purchase of qubits, is given by,
-\begin{align}
-	R_T &= \frac{\sum_{t=0}^T D_t e^{-rt}}{C_0}\nonumber \\
-	&=\frac{e^{-rT}\gamma_C\left(\frac{\gamma_C}{\gamma_N}
-	\right)^T - e^r\gamma_N}{N_0(\gamma_C-\gamma_N)}.
-\end{align}
-\end{definition}
 
 %
 % Economic Implications
@@ -640,17 +549,17 @@ No doubt, market manipulation and all the usual nonsense will ensue.
 \renewcommand{\arraystretch}{0.5}
 
 \begin{table*}[!htb]
-\caption{Summary of the dynamics of various economic models under several computational scaling functions of interest, where there are $n$ qubits held by the respective node and \mbox{$n_\text{global}=\sum_{j\in \text{nodes}} n_j$} qubits in the global network.} \label{tab:summary_ec_models}
+\caption{Summary of the dynamics of various economic models under several computational scaling functions of interest, where there are $n$ qubits held by the respective node and \mbox{$n_\text{global}=\sum_{j\in \text{nodes}} n_j$} qubits in the global network.\comment{Complete}} \label{tab:summary_ec_models}
 \begin{tabular}{|p{0.255\linewidth}|p{0.22\linewidth}|p{0.155\linewidth}|p{0.155\linewidth}|p{0.155\linewidth}|}
 	\hline
 	\[\text{Model}\] & \[\text{General form}\] & \[f_\text{sc}(n)=n^{}\] & \[f_\text{sc}(n)=n^p\] & \[f_\text{sc}(n)=e^n\]\\
 	\hline \hline
 	Network price scaling factor (Sec.~\ref{sec:NPSF}) & \[\chi_\text{sc}(n)=\frac{f_\text{sc}(n)}{n}\] & \[1\] & \[n^{p-1}\] & \[\frac{e^n}{n}\]\\
 	\hline
-	Spot price of computation (Sec.~\ref{sec:cost_of_comp}) & \[L_0=\frac{C_0}{f_\text{sc}(N_0)}\] & \[\frac{C_0}{N_0}\] & \[\frac{C_0}{{N_0}^p}\] & \[\frac{C_0}{e^{N_0}}\]\\
+	Spot price of computation (Sec.~\ref{sec:cost_of_comp}) & \[L_0=\frac{e^{-\gamma_\text{ror}} C_0}{\chi_\text{sc}(N_0)}\] & &  & \\
 	\hline
-	Future cost of computation (Sec.~\ref{sec:cost_of_comp}) & \[L_t=\frac{C_0 {\gamma_C}^{-t}}{f_\text{sc}(N_0 {\gamma_N}^t)}
-\] & \[\frac{C_0}{N_0{\gamma_N}^{t}{\gamma_C}^{t}}\] & \[\frac{C_0}{{N_0}^p{\gamma_N}^{pt}{\gamma_C}^t}\] & \[\frac{C_0}{\text{exp}(N_0{\gamma_N}^t){\gamma_C}^t}\]\\
+	Future cost of computation (Sec.~\ref{sec:cost_of_comp}) & \[L_t=\frac{e^{-\gamma_\text{ror}} C_0{\gamma_C}^{-t}}{\chi_\text{sc}(N_0 {\gamma_N}^t)}
+\] &  &  & \\
 	\hline
 	Time-share computational power (Sec.~\ref{sec:arb_free_time_share}) & \[c_n=n \cdot \chi_\text{sc}(n_\text{global})
 \] & \[n\] & \[n\cdot{n_\text{global}}^{p-1}\] & \[\frac{n e^{n_\text{global}}}{n_\text{global}}\]\\
@@ -661,15 +570,8 @@ No doubt, market manipulation and all the usual nonsense will ensue.
 	\hline
 	Time-dependent leverage (Sec.~\ref{sec:quant_ec_lev}) & \[\lambda_n(t)=\frac{\chi_\text{sc}(N_0{\gamma_N}^t)}{\chi_\text{sc}(n)}\] &  \[1\] & \[\left(\frac{N_0{\gamma_N}^t}{n}\right)^{p-1}\] & \[\frac{n \cdot \text{exp}(N_0{\gamma_N}^t)}{N_0{\gamma_N}^t e^n}\]\\
 	\hline
-	Time-share spot price (Sec.~\ref{sec:time_share_spot}) & \[D_0=n C_0\] & \[nC_0\] & \[nC_0\] & \[nC_0\]\\
-	\hline
-	Computational dividend (Sec.~\ref{sec:comp_div}) & \[D_t=n C_0 {\gamma_C}^{-t}\] & \[n C_0 {\gamma_C}^{-t}\] & \[n C_0 {\gamma_C}^{-t}\] & \[n C_0 {\gamma_C}^{-t}\]\\
-	%\hline
-	%Qubit asset price (Sec.~\ref{sec:qubit_pricing_model}) & \[S_0=n C_0 \frac{e^r \gamma_C}{e^r \gamma_C - 1}\] & \[n C_0 \frac{e^r \gamma_C}{e^r \gamma_C - 1}\] & \[n C_0 \frac{e^r \gamma_C}{e^r \gamma_C - 1}\] & \[n C_0 \frac{e^r \gamma_C}{e^r \gamma_C - 1}\]\\
-	\hline
-	Forward contract price (Sec.~\ref{sec:for_contr}) & \[F_T\]=??? & ??? & ??? & ??? \\
-	\hline
-	Return on investment (Sec.~\ref{sec:ROI}) & \[R_T\]=??? & ??? & ??? & ???\\
+	Forward contract price (Sec.~\ref{sec:for_contr}) & \[F_T=\frac{e^{-\gamma_\text{ror}-r_\text{rf}T} C_0{\gamma_C}^{-T}}{\chi_\text{sc}(N_0 {\gamma_N}^T)}\]
+ &  & & \\
 	\hline
 	Tax performance multiplier (Sec.~\ref{sec:taxation}) & \[M(N_\text{tax})=\frac{f_\text{sc}(N_\text{tax})}{f_\text{sc}(N_\text{tax} \gamma_T)}\] & \[{\gamma_T}^{-1}\] & \[{\gamma_T}^{-p}\] & \[e^{N_\text{tax}(1-\gamma_T)}\]\\
 	\hline
