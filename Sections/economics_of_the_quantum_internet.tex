@@ -88,9 +88,9 @@ The network price scaling factor is defined as the computational power per qubit
 This parameter acts as an overall, network size-dependent price scaling factor on:
 \begin{itemize}
 \item Quantum computational leverage (Sec.~\ref{sec:quant_ec_lev}).
-\item Time-share spot price (Sec.~\ref{sec:time_share_spot}).
-\item Computational dividend (Sec.~\ref{sec:comp_div}).
-\item Qubit asset price (Sec.~\ref{sec:qubit_pricing_model}).
+\item Cost of computation (Sec.~\ref{sec:cost_of_comp}).
+\item Time-shared computational power (Sec.~\ref{sec:arb_free_time_share}).
+\item Quantum computational leverage (Sec.~\ref{sec:quant_ec_lev}).
 \item Forward contracts (Sec.~\ref{sec:for_contr}).
 \end{itemize}
 
@@ -98,7 +98,7 @@ This lends itself to the elegant interpretation as a cost multiplier on qubit as
 
 \begin{figure}[htb!]\index{Network price scaling factor}
 	\includegraphics[width=0.47\textwidth]{network_price_scaling_factor}
-	\caption{Scaling of the network price scaling factor, $\chi_\text{sc}$, as a function of several representative computational scaling functions, $f_\text{sc}$, where $n$ is network size.\comment{Colours are fucked.}} \label{fig:NPSF}
+	\caption{Scaling of the network price scaling factor, $\chi_\text{sc}$, as a function of several representative computational scaling functions, $f_\text{sc}$, where $n$ is network size.} \label{fig:NPSF}
 \end{figure}
 
 %
@@ -109,6 +109,7 @@ This lends itself to the elegant interpretation as a cost multiplier on qubit as
 
 Before proceeding with explicit derivations of economic models, we state some assumptions about the dynamics of a marketplace in quantum assets. These assumptions are largely based on historical observations surrounding classical technologies that we might reasonably expect to also apply in the quantum era. However, given that the quantum marketplace is one that hasn't been explored in detail until now, it may be the case that some of these assumptions will require revision. Nonetheless, the general techniques we employ could readily be adapted to some relaxations and variations in these assumptions.
 
+%
 % Efficient Markets
 %
 
@@ -187,14 +188,14 @@ This is consistent with the observed evolution of classical hardware since the b
 % Network Power
 %
 
-\subsection{Network power}
+\subsection{Network power}\index{Network power}\label{sec:network_power}
 
 First and foremost, with a fully interconnected quantum computational network, what is the projection of its net computational power now and into the future? This is simply obtained via the joint computational scaling function applied to projected network size,
 
 \begin{postulate}[Network power]\label{post:network_power}\index{Network power}
 The combined computational power of the entire network, measured in FLOPS, is given by,
 \begin{align}
-n_\text{FLOPS}(t) &= f_\text{sc}(n_\text{global})\nonumber \\
+P(t) &= f_\text{sc}(n_\text{global})\nonumber \\
 &= f_\text{sc}(N_0{\gamma_N}^t).
 \end{align}
 \end{postulate}
@@ -210,7 +211,7 @@ The simplest economic metric one might define is the collective dollar value of 
 \begin{postulate}[Network value]\label{post:network_value}\index{Network value}
 The dollar-value of the entire network is given by,
 \begin{align}
-	P_t &= C_t N_t \nonumber \\
+	V(t) &= C_t N_t \nonumber \\
 	&= C_0 N_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t.
 \end{align}
 \end{postulate}
@@ -256,14 +257,14 @@ Let $L_t$ be the dollar-value of utilising the network's computing resources for
 \begin{postulate}[Cost of computation]\label{post:cost_comp}
 The efficient-market dollar-value of a computation for a single unit of time, per FLOP is,
 \begin{align}\index{Cost of computation postulate}
-	L_t &= \frac{e^{-\gamma_\text{ror}} P_t}{n_\text{FLOPS}(t)} \nonumber\\
+	L(t) &= \frac{e^{-\gamma_\text{ror}} P_t}{V_t} \nonumber\\
 	&= \frac{e^{-\gamma_\text{ror}} C_0{\gamma_C}^{-t}}{\chi_\text{sc}(N_0 {\gamma_N}^t)},
 \end{align}
 \end{postulate}
 which implies,
 \begin{postulate}[Spot price of computation]\index{Spot price of computation} The present-day (\mbox{$t=0$}) spot price of a computation per FLOP is,
 \begin{align}
-L_0 = \frac{e^{-\gamma_\text{ror}}C_0}{\chi_\text{sc}(N_0)}.	
+L(0) = \frac{e^{-\gamma_\text{ror}}C_0}{\chi_\text{sc}(N_0)}.	
 \end{align}
 \end{postulate}
 That is, the value of computations simply approximates the return on initial hardware investment, scaled by its initial computational power, as is intuitively expected.
@@ -316,11 +317,14 @@ is the total number of qubits in the network, and,
 0\leq r_n \leq 1.	
 \end{align}
 \mbox{$r_n=1$} iff the node has a complete monopoly over qubits, i.e \mbox{$n=n_\text{global}$}.
+\end{definition}
 
-The net computing power\index{Time-shared compute-time} allocated to the node is then given by,
+Based on this equitable model for time-sharing,
+\begin{definition}[Time-shared computing power]\index{Time-shared computing power}
+The computing power allocated to each user under the arbitrage-free time-sharing model is,
 \begin{align}
 	c_n &= r_n \cdot f_\text{sc}(n_\text{global}) \nonumber \\
-	&= n \cdot \chi_\text{sc}(n_\text{global})
+	&= n \cdot \chi_\text{sc}(n_\text{global}).
 \end{align}
 \end{definition}
 
@@ -432,7 +436,7 @@ The key observation is that a unit of computation (FLOP) does not carry over tim
 \begin{definition}[Forward contract pricing model] \label{def:forward_cont}\index{Forward contract pricing model}
 The efficient market price for a forward contract in qubits is,
 \begin{align}
-F_T &= e^{-r_\text{rf}T} L_T\nonumber\\
+F(T) &= e^{-r_\text{rf}T} L(T)\nonumber\\
 &=\frac{e^{-\gamma_\text{ror}-r_\text{rf}T} C_0{\gamma_C}^{-T}}{\chi_\text{sc}(N_0 {\gamma_N}^T)}
 \end{align}
 \end{definition}
@@ -491,8 +495,8 @@ The tax performance multiplier effectively gives us a factor by which computatio
 
 Using our illustrative examples of computational scaling functions (linear, polynomial and exponential), the respective tax performance multipliers are given by,
 \begin{align}
-M_\text{linear}(N_\text{tax}) &= {\gamma_T}^{-1}, \nonumber \\
-M_\text{poly}(N_\text{tax}) &= {\gamma_T}^{-p}, \nonumber \\
+M_\text{linear}(N_\text{tax}) &= \frac{1}{\gamma_T}, \nonumber \\
+M_\text{poly}(N_\text{tax}) &= \frac{1}{{\gamma_T}^p}, \nonumber \\
 M_\text{exp}(N_\text{tax}) &= e^{N_\text{tax}(1-\gamma_T)}.
 \end{align}
 
@@ -534,7 +538,7 @@ This will give rise to a marketplace for tradable units of quantum computation, 
 
 The relative market value of computation will subsequently drive the direction of investment into quantum hardware, with carry-over effects on future market prices. If investment stagnates, so too will growth in computational dividends, driving up market rates by limiting supply (assuming positive growth in demand). This will, after market adjustment, drive investment back into the system to satisfy increasing demand. Thus, despite the present uncertainty into the future dynamics of the quantum stock market, we expect this positive feedback loop to ensure consistent, ongoing investment into the quantum network, and at least some marginal degree of price stability.
 
-What is likely to arise is that most owners of quantum hardware will not be consumers, but rather investors, who float their resources on the quantum stock market, betting on changes in demand for computation and their associated subjective cost. This trading could involve transactions in the direct underlying asset (Sec.~\ref{sec:qubit_pricing_model}), future contracts (Sec.~\ref{sec:for_contr}) for locking in required computational power at future points in time, or more complex derivatives. For example, an investor anticipating a surge in high-value computations is likely to invest more heavily into hardware with the expectation of an uptrend in market rates. And their RoI will reflect these market dynamics.
+What is likely to arise is that most owners of quantum hardware will not be consumers, but rather investors, who float their resources on the quantum stock market, betting on changes in demand for computation and their associated subjective cost. This trading could involve transactions in the direct underlying asset, future contracts (Sec.~\ref{sec:for_contr}) for locking in required computational power at future points in time, or more complex derivatives. For example, an investor anticipating a surge in high-value computations is likely to invest more heavily into hardware with the expectation of an uptrend in market rates. And their RoI will reflect these market dynamics.
 
 As all markets for tradable assets do, sophisticated derivative markets will inevitably emerge, whereby people can speculate on or hedge against market dynamics, taking long, short, or more complex market positions, potentially in a highly-leveraged manner. As discussed in Sec.~\ref{sec:for_contr}, derivatives such as future contracts can be extremely helpful in enabling consumers to lock in future prices, creating a stable business climate. Similarly, other derivatives will enable market participants to hedge\index{Hedging} other quantum-related investments. For example, suppose an investor held a stake in an R\&D lab, highly reliant on quantum computing resources. By taking a leveraged long position on the market value for computation, he may limit losses on his R\&D investment associated with the higher price (and hence lower profit) they will be paying for computation.
 
@@ -548,53 +552,66 @@ No doubt, market manipulation and all the usual nonsense will ensue.
 
 The advent of cryptocurrencies\index{Cryptocurrency} (Sec.~\ref{sec:bitcoin_blockchain}) places the death of fiat currency\index{Fiat currency} on the horizon. Central banks around the world have been consistently inflating and devaluing national currencies, destroying their integrity through loose print-on-demand monetary policies.
 
-What makes a sound currency\index{Sound currency}? First of all, it must exhibit scarcity\index{Scarcity} and be difficult or impossible to counterfeit\index{Counterfeit} -- it should not be possible to forge unlimited quantities out of thin air, a quality not inherent to fiat currency. Second, its abundance should exhibit relative stablility and predictability over time, so as to create a stable money supply\index{Money supply}. For these reasons, gold for thousands of years was accepted as legal tender, since it is naturally scarce and much work must be invested into its production. For the same reasons, emerging cryptocurrencies have become widely adopted and even the norm in hyper-inflating countries like Venezuela where fiat currency has lost all integrity, as they exhibit these same traits. But rather than scarcity of a natural resource, we are dealing with artificial scarcity of bit-strings, cryptographically enforced to satisfy certain mathematical properties that cannot be easily counterfeited.
+What makes a sound currency\index{Sound currency}? First of all, it must exhibit scarcity\index{Scarcity} and be difficult or impossible to counterfeit\index{Counterfeit} -- it should not be possible to forge unlimited quantities out of thin air, a quality not inherent to fiat currency. Second, its abundance and demand should exhibit relative stablility and predictability over time, so as to create a stable money supply\index{Money supply} and inflationary rate. For these reasons, gold\index{Gold standard} for thousands of years was accepted as legal tender, since it is naturally scarce and much work must be invested into its production. For the same reasons, emerging cryptocurrencies have become widely adopted and even the norm in hyper-inflating countries like Venezuela where fiat currency has lost all integrity, as they exhibit these same traits. But rather than scarcity of a natural resource, we are dealing with artificial scarcity of bit-strings, cryptographically enforced to satisfy certain mathematical properties that cannot be easily counterfeited.
 
 We propose that units of quantum computation meet these criteria very well. The only way to forge new computations is via investment into infrastructure, which has direct monetary cost and cannot be mitigated. Recent history has shown us that Moore's Law\index{Moore's Law} has made the growth in classical computing power highly predictable and relatively stable over time, and it is to be expected that a quantum Moore's Law will hold.
 
-Time-shares in unified computing power over the quantum network, via licensing out qubits from hardware owners, would provide all these essential desired qualities of a sound currency. It can be envisaged that forward contracts in compute-time (Sec.~\ref{sec:for_contr}) would act as a good basis for backing a currency. Since these are simple paper contracts, they lend themselves to highly fluid, low-overhead trading on international markets.
+Time-shares in unified computing power over the quantum network, via licensing out qubits from hardware owners, would provide all these essential desired qualities of a sound currency. It can be envisaged that forward contracts in compute-time (Sec.~\ref{sec:for_contr}) would act as a good basis for backing a currency. Since these are nothing but simple forward contracts, they lend themselves to highly fluid, low-overhead trading on international markets.
 
 Were a computation-backed currency to emerge -- QuantCoin\texttrademark\index{QuantCoin\texttrademark} -- this would immediately further incentivise investment into expansion of quantum computational hardware, as it could be directly exchanged for currency. The implications for compute-intensive industries would be immense, as there would be negligible transaction costs associated with the purchase of computation -- since contracts in computation \textit{are} the accepted currency -- thereby driving forward investment into the next technological revolution.
 
-\textit{--- \href{https://www.youtube.com/watch?v=lhyaiOZhpSg}{End the Fed.}}
+Unlike fiat currency, this monetary system would not be inflationary since the commodity backing the currency is one which cannot be counterfeited -- the only way to make more currency is to provide more genuine, functional, online qubits, which increases the money supply in tandem with the underlying asset backing it. This would in effect be a full-reserve banking system\index{Full-reserve banking}, where the direct one-to-one interchangeability between currency (forward contracts on computation) and it backing asset (physical qubits) eliminates the money multiplier\index{Money multiplier}, a system essentially immune to bank runs\index{Bank runs}.
+
+Because the currency is forward contracts in computing time-shares, not ownership of the physical underlying qubits, the qubits needn't change hands upon being utilised in monetary transactions. The currency could reside entirely on a distributed digital ledger\index{Distributed ledger} recording transactions in the future contracts, independent of trading in physical qubits, who owns them, or where they reside.
+
+In a strategically fractured world, where multiple, independent quantum internets may exist in isolation to one another, each with their own local QuantCoin\texttrademark currencies, there would be an enormous monetary incentive to breaking down trade barriers and globalising the network by unifying smaller ones. This is contrary to nationalised fiat currencies, where there is little incentive for, yet much to lose by unifying currencies. Greed on behalf of those owning QuantCoins\texttrademark would therefore directly incentivise harmony and integration amongst all the world's leading players in the technological realm, making QuantCoin\texttrademark a major driver of peace and prosperity in the quantum world of tomorrow.
+
+Importantly, a computation-backed currency would be largely immune to political interference. Politicians would have zero ability to directly manipulate the money supply, short of suicidally self-destructive policies like shutting down or curtailing the quantum internet. Having a sound monetary system, immunised against political interference, will play an important role in constraining the power of government and extending personal liberty.
+
+\latinquote{\href{https://www.youtube.com/watch?v=lhyaiOZhpSg}{End the Fed!} Libertas justitia veritas. Libertas perfundet omnia luce.}
 
 %
-% Summary
+% Summary of Economic Models
 %
 
-\subsection{Summary}
+\subsection{Summary of economic models}
 
 \renewcommand{\tablename}{TABLE}
 \renewcommand{\arraystretch}{0.5}
 
 \begin{table*}[!htb]
-\caption{Summary of the dynamics of various economic models under several computational scaling functions of interest, where there are $n$ qubits held by the respective node and \mbox{$n_\text{global}=\sum_{j\in \text{nodes}} n_j$} qubits in the global network.\comment{Complete}} \label{tab:summary_ec_models}
-\begin{tabular}{|p{0.255\linewidth}|p{0.22\linewidth}|p{0.155\linewidth}|p{0.155\linewidth}|p{0.155\linewidth}|}
+\begin{tabular}{|m{0.21\linewidth}|m{0.22\linewidth}|m{0.155\linewidth}|m{0.155\linewidth}|m{0.2\linewidth}|}
 	\hline
-	\[\text{Model}\] & \[\text{General form}\] & \[f_\text{sc}(n)=n^{}\] & \[f_\text{sc}(n)=n^p\] & \[f_\text{sc}(n)=e^n\]\\
+	\[\text{Model}\] & \[\text{General form}\] & \[f_\text{sc}(n)=n\] & \[f_\text{sc}(n)=n^p\] & \[f_\text{sc}(n)=e^n\]\\
 	\hline \hline
-	Network price scaling factor (Sec.~\ref{sec:NPSF}) & \[\chi_\text{sc}(n)=\frac{f_\text{sc}(n)}{n}\] & \[1\] & \[n^{p-1}\] & \[\frac{e^n}{n}\]\\
+	\begin{flushleft}Network price scaling factor (Sec.~\ref{sec:NPSF})\end{flushleft} & \[\chi_\text{sc}(n)=\frac{f_\text{sc}(n)}{n}\] & \[1\] & \[n^{p-1}\] & \[\frac{e^n}{n}\]\\
 	\hline
-	Spot price of computation (Sec.~\ref{sec:cost_of_comp}) & \[L_0=\frac{e^{-\gamma_\text{ror}} C_0}{\chi_\text{sc}(N_0)}\] & &  & \\
+	\begin{flushleft}Network power (Sec.~\ref{sec:network_power})\end{flushleft} & \[P(t)=f_\text{sc}(N_0{\gamma_N}^t)\] & \[N_0{\gamma_N}^t\] & \[\left(N_0{\gamma_N}^t\right)^p\] & \[ e^{N_0{\gamma_N}^t}\] \\
 	\hline
-	Future cost of computation (Sec.~\ref{sec:cost_of_comp}) & \[L_t=\frac{e^{-\gamma_\text{ror}} C_0{\gamma_C}^{-t}}{\chi_\text{sc}(N_0 {\gamma_N}^t)}
-\] &  &  & \\
+	\begin{flushleft}Network value (Sec.~\ref{sec:network_value})\end{flushleft} & \[V(t)=C_0 N_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t\] & \[C_0 N_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t\] & \[C_0 N_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t\] & \[C_0 N_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t\] \\
 	\hline
-	Time-share computational power (Sec.~\ref{sec:arb_free_time_share}) & \[c_n=n \cdot \chi_\text{sc}(n_\text{global})
+	\begin{flushleft}Spot price of computation (Sec.~\ref{sec:cost_of_comp})\end{flushleft} & \[L(0)=\frac{e^{-\gamma_\text{ror}} C_0}{\chi_\text{sc}(N_0)}\] & \[e^{-\gamma_\text{ror}} C_0\] &  \[\frac{e^{-\gamma_\text{ror}}C_0}{{N_0}^{p-1}}\] & \[\frac{e^{-\gamma_\text{ror}}N_0C_0}{e^{N_0}}\] \\
+	\hline
+	\begin{flushleft}Future cost of computation (Sec.~\ref{sec:cost_of_comp})\end{flushleft} & \[L(t)=\frac{e^{-\gamma_\text{ror}} C_0{\gamma_C}^{-t}}{\chi_\text{sc}(N_0 {\gamma_N}^t)}
+\] & \[e^{-\gamma_\text{ror}} C_0{\gamma_C}^{-t} \] & \[ \frac{e^{-\gamma_\text{ror}} C_0{\gamma_C}^{-t}}{(N_0 {\gamma_N}^t)^{p-1}}
+\] & \[ \frac{e^{-\gamma_\text{ror}} C_0N_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t}{e^{N_0 {\gamma_N}^t}}\] \\
+	\hline
+	\begin{flushleft}Time-share computational power (Sec.~\ref{sec:arb_free_time_share})\end{flushleft} & \[c_n=n \cdot \chi_\text{sc}(n_\text{global})
 \] & \[n\] & \[n\cdot{n_\text{global}}^{p-1}\] & \[\frac{n e^{n_\text{global}}}{n_\text{global}}\]\\
 	\hline
-	Quantum computational leverage (Sec.~\ref{sec:quant_ec_lev}) & \[\lambda_n=\frac{\chi_\text{sc}(n_\text{global})}{\chi_\text{sc}(n)}\] & \[1\] & \[\left(\frac{n_\text{global}}{n}\right)^{p-1}\] & \[\frac{n e^{n_\text{global}}}{n_\text{global}e^n}\]\\
+	\begin{flushleft}Quantum computational leverage (Sec.~\ref{sec:quant_ec_lev})\end{flushleft} & \[\lambda_n=\frac{\chi_\text{sc}(n_\text{global})}{\chi_\text{sc}(n)}\] & \[1\] & \[\left(\frac{n_\text{global}}{n}\right)^{p-1}\] & \[\frac{n e^{n_\text{global}}}{n_\text{global}e^n}\]\\
 	\hline
-	Single qubit leverage (Sec.~\ref{sec:quant_ec_lev}) & \[\lambda_\text{qubit}=\frac{\chi_\text{sc}(n_\text{global})}{\chi_\text{sc}(1)}\] & \[1\] & \[{n_\text{global}}^{p-1}\] & \[\frac{e^{n_\text{global}-1}}{n_\text{global}}\]\\
+	\begin{flushleft}Single-qubit leverage (Sec.~\ref{sec:quant_ec_lev})\end{flushleft} & \[\lambda_\text{qubit}=\frac{\chi_\text{sc}(n_\text{global})}{\chi_\text{sc}(1)}\] & \[1\] & \[{n_\text{global}}^{p-1}\] & \[\frac{e^{n_\text{global}-1}}{n_\text{global}}\]\\
 	\hline
-	Time-dependent leverage (Sec.~\ref{sec:quant_ec_lev}) & \[\lambda_n(t)=\frac{\chi_\text{sc}(N_0{\gamma_N}^t)}{\chi_\text{sc}(n)}\] &  \[1\] & \[\left(\frac{N_0{\gamma_N}^t}{n}\right)^{p-1}\] & \[\frac{n e^{N_0{\gamma_N}^t-n}}{N_0{\gamma_N}^t}\]\\
+	\begin{flushleft}Time-dependent leverage (Sec.~\ref{sec:quant_ec_lev})\end{flushleft} & \[\lambda_n(t)=\frac{\chi_\text{sc}(N_0{\gamma_N}^t)}{\chi_\text{sc}(n)}\] &  \[1\] & \[\left(\frac{N_0{\gamma_N}^t}{n}\right)^{p-1}\] & \[\frac{n e^{N_0{\gamma_N}^t-n}}{N_0{\gamma_N}^t}\]\\
 	\hline
-	Forward contract price (Sec.~\ref{sec:for_contr}) & \[F_T=\frac{e^{-\gamma_\text{ror}-r_\text{rf}T} C_0{\gamma_C}^{-T}}{\chi_\text{sc}(N_0 {\gamma_N}^T)}\]
- &  & & \\
+	\begin{flushleft}Forward contract price (Sec.~\ref{sec:for_contr})\end{flushleft} & \[F(T)=\frac{e^{-\gamma_\text{ror}-r_\text{rf}T} C_0{\gamma_C}^{-T}}{\chi_\text{sc}(N_0 {\gamma_N}^T)}\]
+ & \[e^{-\gamma_\text{ror}-r_\text{rf}T} C_0{\gamma_C}^{-T}\] & \[\frac{e^{-\gamma_\text{ror}-r_\text{rf}T} C_0{\gamma_C}^{-T}}{(N_0 {\gamma_N}^T)^{p-1}}\] & \[\frac{e^{-\gamma_\text{ror}-r_\text{rf}T} C_0N_0\left(\frac{\gamma_N}{\gamma_C}\right)^T}{e^{N_0 {\gamma_N}^T}}\] \\
 	\hline
-	Tax performance multiplier (Sec.~\ref{sec:taxation}) & \[M(N_\text{tax})=\frac{f_\text{sc}(N_\text{tax})}{f_\text{sc}(N_\text{tax} \gamma_T)}\] & \[{\gamma_T}^{-1}\] & \[{\gamma_T}^{-p}\] & \[e^{N_\text{tax}(1-\gamma_T)}\]\\
+	\begin{flushleft}Tax performance multiplier (Sec.~\ref{sec:taxation})\end{flushleft} & \[M(N_\text{tax})=\frac{f_\text{sc}(N_\text{tax})}{f_\text{sc}(N_\text{tax} \gamma_T)}\] & \[\frac{1}{\gamma_T}\] & \[\frac{1}{{\gamma_T}^p}\] & \[e^{N_\text{tax}(1-\gamma_T)}\]\\
 	\hline
 \end{tabular}
+\caption{Summary of the dynamics of various economic models under several computational scaling functions ($f_\text{sc}$) of interest, where there are $n$ qubits held by the respective node and \mbox{$n_\text{global}=\sum_{j\in \text{nodes}} n_j$} qubits in the global network. $N_0$ is the initial number of qubits, undergoing growth rate $\gamma_N$. $C_0$ is the initial monetary cost per qubit, undergoing decay rate $\gamma_C$. $\gamma_\text{ror}$ is the rate of return on the licensing of compute-time on qubits, and $r_\text{rf}$ is the risk-free rate of return. $\gamma_T$ is the rate of taxation, and $N_\text{tax}$ is the number of qubits that would exist on the network in the absence of taxation.} \label{tab:summary_ec_models}
 \end{table*}
 
 \renewcommand{\arraystretch}{1}
