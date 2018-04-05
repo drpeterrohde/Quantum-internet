@@ -236,7 +236,7 @@ Suppose the owners of the quantum hardware are not running computations themselv
 \begin{postulate}[Rate of return]\label{post:RoR}\index{Rate of return}
 The RoR is defined as,
 \begin{align}
-e^{-\gamma_\text{ror}} = \frac{n_\text{return}}{n_\text{cost}},
+e^{\gamma_\text{ror}} = \frac{n_\text{return}}{n_\text{cost}},
 \end{align}
 where $n_\text{return}$ is the profit made by licensing out the network's joint compute-power for a single unit of time, given a present-day network value of $n_\text{cost}$.
 \end{postulate}
@@ -257,14 +257,14 @@ Let $L_t$ be the dollar-value of utilising the network's computing resources for
 \begin{postulate}[Cost of computation]\label{post:cost_comp}
 The efficient-market dollar-value of a computation for a single unit of time, per FLOP is,
 \begin{align}\index{Cost of computation postulate}
-	L(t) &= \frac{e^{-\gamma_\text{ror}} P(t)}{V(t)} \nonumber\\
-	&= \frac{e^{-\gamma_\text{ror}} C_0{\gamma_C}^{-t}}{\chi_\text{sc}(N_0 {\gamma_N}^t)},
+	L(t) &= \frac{e^{\gamma_\text{ror}} P(t)}{V(t)} \nonumber\\
+	&= \frac{e^{\gamma_\text{ror}} C_0{\gamma_C}^{-t}}{\chi_\text{sc}(N_0 {\gamma_N}^t)},
 \end{align}
 \end{postulate}
 which implies,
 \begin{postulate}[Spot price of computation]\index{Spot price of computation} The present-day (\mbox{$t=0$}) spot price of a computation per FLOP is,
 \begin{align}
-L(0) = \frac{e^{-\gamma_\text{ror}}C_0}{\chi_\text{sc}(N_0)}.	
+L(0) = \frac{e^{\gamma_\text{ror}}C_0}{\chi_\text{sc}(N_0)}.	
 \end{align}
 \end{postulate}
 That is, the value of computations simply approximates the return on initial hardware investment, scaled by its initial computational power, as is intuitively expected.
@@ -283,7 +283,7 @@ Examples of the temporal dynamics of the cost of computation are shown in Fig.~\
 \includegraphics[width=0.4\textwidth]{cost_of_comp_n} \\
 \includegraphics[width=0.4\textwidth]{cost_of_comp_n2} \\
 \includegraphics[width=0.4\textwidth]{cost_of_comp_2n}
-\caption{Examples of the temporal dynamics of the cost of computation for different scaling functions and exponential growth rates. Units are \mbox{$C_0=N_0=n=1$}.}\label{fig:econ_cost_of_comp}
+\caption{Examples of the temporal dynamics of the cost of computation for different scaling functions and exponential growth rates. Units are \mbox{$C_0=N_0=n=1$}, with RoR \mbox{$\gamma_\text{ror}=0$}.}\label{fig:econ_cost_of_comp}
 \end{figure}
 
 %
@@ -443,7 +443,7 @@ The key observation is that a unit of computation (FLOP) does not carry over tim
 The efficient market price for a forward contract in qubits is,
 \begin{align}
 F(T) &= e^{-r_\text{rf}T} L(T)\nonumber\\
-&=\frac{e^{-\gamma_\text{ror}-r_\text{rf}T} C_0{\gamma_C}^{-T}}{\chi_\text{sc}(N_0 {\gamma_N}^T)}
+&=\frac{e^{\gamma_\text{ror}-r_\text{rf}T} C_0{\gamma_C}^{-T}}{\chi_\text{sc}(N_0 {\gamma_N}^T)}
 \end{align}
 \end{definition}
 
@@ -576,11 +576,11 @@ In Table.~\ref{tab:summary_ec_models} we summarise the economic models and param
 	\hline
 	\begin{flushleft}Network value (Sec.~\ref{sec:network_value})\end{flushleft} & \[V(t)=C_0 N_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t\] & \[C_0 N_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t\] & \[C_0 N_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t\] & \[C_0 N_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t\] \\
 	\hline
-	\begin{flushleft}Spot price of computation (Sec.~\ref{sec:cost_of_comp})\end{flushleft} & \[L(0)=\frac{e^{-\gamma_\text{ror}} C_0}{\chi_\text{sc}(N_0)}\] & \[e^{-\gamma_\text{ror}} C_0\] &  \[\frac{e^{-\gamma_\text{ror}}C_0}{{N_0}^{p-1}}\] & \[\frac{e^{-\gamma_\text{ror}}N_0C_0}{e^{N_0}}\] \\
+	\begin{flushleft}Spot price of computation (Sec.~\ref{sec:cost_of_comp})\end{flushleft} & \[L(0)=\frac{e^{\gamma_\text{ror}} C_0}{\chi_\text{sc}(N_0)}\] & \[e^{\gamma_\text{ror}} C_0\] &  \[\frac{e^{\gamma_\text{ror}}C_0}{{N_0}^{p-1}}\] & \[\frac{e^{\gamma_\text{ror}}N_0C_0}{e^{N_0}}\] \\
 	\hline
-	\begin{flushleft}Future cost of computation (Sec.~\ref{sec:cost_of_comp})\end{flushleft} & \[L(t)=\frac{e^{-\gamma_\text{ror}} C_0{\gamma_C}^{-t}}{\chi_\text{sc}(N_0 {\gamma_N}^t)}
-\] & \[e^{-\gamma_\text{ror}} C_0{\gamma_C}^{-t} \] & \[ \frac{e^{-\gamma_\text{ror}} C_0{\gamma_C}^{-t}}{(N_0 {\gamma_N}^t)^{p-1}}
-\] & \[ \frac{e^{-\gamma_\text{ror}} C_0N_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t}{e^{N_0 {\gamma_N}^t}}\] \\
+	\begin{flushleft}Future cost of computation (Sec.~\ref{sec:cost_of_comp})\end{flushleft} & \[L(t)=\frac{e^{\gamma_\text{ror}} C_0{\gamma_C}^{-t}}{\chi_\text{sc}(N_0 {\gamma_N}^t)}
+\] & \[e^{\gamma_\text{ror}} C_0{\gamma_C}^{-t} \] & \[ \frac{e^{\gamma_\text{ror}} C_0{\gamma_C}^{-t}}{(N_0 {\gamma_N}^t)^{p-1}}
+\] & \[ \frac{e^{\gamma_\text{ror}} C_0N_0 \left(\frac{\gamma_N}{\gamma_C}\right)^t}{e^{N_0 {\gamma_N}^t}}\] \\
 	\hline
 	\begin{flushleft}Time-share computational power (Sec.~\ref{sec:arb_free_time_share})\end{flushleft} & \[c_n=n \cdot \chi_\text{sc}(n_\text{global})
 \] & \[n\] & \[n\cdot{n_\text{global}}^{p-1}\] & \[\frac{n e^{n_\text{global}}}{n_\text{global}}\]\\
@@ -591,8 +591,8 @@ In Table.~\ref{tab:summary_ec_models} we summarise the economic models and param
 	\hline
 	\begin{flushleft}Time-dependent leverage (Sec.~\ref{sec:quant_ec_lev})\end{flushleft} & \[\lambda_n(t)=\frac{\chi_\text{sc}(N_0{\gamma_N}^t)}{\chi_\text{sc}(n)}\] &  \[1\] & \[\left(\frac{N_0{\gamma_N}^t}{n}\right)^{p-1}\] & \[\frac{n e^{N_0{\gamma_N}^t-n}}{N_0{\gamma_N}^t}\]\\
 	\hline
-	\begin{flushleft}Forward contract price (Sec.~\ref{sec:for_contr})\end{flushleft} & \[F(T)=\frac{e^{-\gamma_\text{ror}-r_\text{rf}T} C_0{\gamma_C}^{-T}}{\chi_\text{sc}(N_0 {\gamma_N}^T)}\]
- & \[e^{-\gamma_\text{ror}-r_\text{rf}T} C_0{\gamma_C}^{-T}\] & \[\frac{e^{-\gamma_\text{ror}-r_\text{rf}T} C_0{\gamma_C}^{-T}}{(N_0 {\gamma_N}^T)^{p-1}}\] & \[\frac{e^{-\gamma_\text{ror}-r_\text{rf}T} C_0N_0\left(\frac{\gamma_N}{\gamma_C}\right)^T}{e^{N_0 {\gamma_N}^T}}\] \\
+	\begin{flushleft}Forward contract price (Sec.~\ref{sec:for_contr})\end{flushleft} & \[F(T)=\frac{e^{\gamma_\text{ror}-r_\text{rf}T} C_0{\gamma_C}^{-T}}{\chi_\text{sc}(N_0 {\gamma_N}^T)}\]
+ & \[e^{\gamma_\text{ror}-r_\text{rf}T} C_0{\gamma_C}^{-T}\] & \[\frac{e^{\gamma_\text{ror}-r_\text{rf}T} C_0{\gamma_C}^{-T}}{(N_0 {\gamma_N}^T)^{p-1}}\] & \[\frac{e^{\gamma_\text{ror}-r_\text{rf}T} C_0N_0\left(\frac{\gamma_N}{\gamma_C}\right)^T}{e^{N_0 {\gamma_N}^T}}\] \\
 	\hline
 	\begin{flushleft}Tax performance multiplier (Sec.~\ref{sec:taxation})\end{flushleft} & \[M(N_\text{tax})=\frac{f_\text{sc}(N_\text{tax})}{f_\text{sc}(N_\text{tax} \gamma_T)}\] & \[\frac{1}{\gamma_T}\] & \[\frac{1}{{\gamma_T}^p}\] & \[e^{N_\text{tax}(1-\gamma_T)}\]\\
 	\hline
