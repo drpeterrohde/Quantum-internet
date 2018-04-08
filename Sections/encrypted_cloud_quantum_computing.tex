@@ -10,13 +10,11 @@ Extremely important to many high-performance data-processing applications is sec
 
 In both cases, Alice has secret data$^\copyright$, and wishes to not only ensure that an interceptor is unable to read it, but that even the server performing the computation isn't able to either -- she trusts no one. That is, she wishes the data to be processed in encrypted form, without first requiring decryption.
 
-The difference between the two protocols lies in the treatment of algorithms. In homomorphic encryption, Alice provides only the data, whereas Bob provides the processing and the algorithm it implements (which \sihui{in some cases} he would also like to keep to himself). \sihui{When any boolean circuit is allowed, the protocol is said to be a {\it fully} homomorphic encryption protocol (FHE). Otherwise, it is a somewhat-homomorphic encryption protocol.} In blind computing, Alice provides both the algorithm \textit{and} the data, and wishes \textit{both} to remain secret. Both of these protocols seem like very challenging goals, yet significant developments have been made on both fronts.
+The difference between the two protocols lies in the treatment of algorithms. In homomorphic encryption, Alice provides only the data, whereas Bob provides the processing and the algorithm it implements (which \sihui{in some cases} he would also like to keep to himself). \sihui{When any circuit is allowed, the protocol is said to be a {\it fully} homomorphic encryption protocol (FHE). Otherwise, it is a somewhat-homomorphic encryption protocol. \sihui{Although homomorphic encryption protocols have been around for a few decades in the form of privacy homomorphisms \cite{Rivest1978}, classical FHE} has only been described very recently \cite{bib:gentry2009fully, bib:van2010fully}.} In blind computing, Alice provides both the algorithm \textit{and} the data, and wishes \textit{both} to remain secret. Both of these protocols seem like very challenging goals, yet significant developments have been made on both fronts \sihui{in the quantum world. Interestingly, there are no classical analogue for universal blind computation. Classical FHE will be discussed in the next subsection.}
 
-\sihui{Although homomorphic encryption protocols have been around for a few decades [cite], classical FHE} has only been described very recently \cite{bib:gentry2009fully, bib:van2010fully}. \sihui{In Gentry's seminal paper, he showed that if a homomorphic encryption scheme can evaluate its own decryption circuit, and also slightly augmented versions of it--a feature he calls {\it bootstrapping}, one can construct a FHE scheme from it. Then he constructed a homomorphic encryption protocol using ideal lattices, and via a clever transformation that decreases the complexity of its decryption circuit, showed that it is bootstrappable with respect to a universal set of gates. For a security parameter $\lambda$, Gentry's scheme has a $\widetilde{O}(\lambda^6)$ \footnote{The tilde in the big O notation means that we are ignoring logarithmic factors.} bit bound on complexity for refreshing a ciphertext corresponding to a 1-bit plaintext \cite{bib:Gentrythesis}. This was subsequently reduced to $\widetilde{O}(\lambda^{3.5})$ \cite{bib:Damien2010}, $\widetilde{O}(\lambda)$ \cite{bib:Brakerski2011}, and ${\rm polylog (\lambda)}$ for any width-$\Omega(\lambda)$ circuit with $t$ gates \cite{bib:Craig2012}. }
 
- \sihui{[Comment: Classical blind computation is impossible.  ]}
 
-In the usual circuit model, blind quantum computation has been shown to be viable, and optimal bounds derived. Equivalently, such protocols have been described in the cluster state model (Sec.~\ref{sec:CSQC}). For universal computation, such protocols necessarily require classical interaction between the client and host. However, it was shown that in some restricted (i.e non-universal) models for optical quantum computation, specifically \textsc{BosonSampling}, quantum walks and coherent state passive linear optics, non-interactive (partial) homomorphic encryption may be implemented.
+In the usual circuit model, blind quantum computation has been shown to be viable, and optimal bounds derived. Equivalently, such protocols have been described in the cluster state model (Sec.~\ref{sec:CSQC}). For universal computation, such protocols necessarily require classical interaction between the client and host. However, it was shown that in some restricted (i.e non-universal) models for optical quantum computation, specifically \textsc{BosonSampling}, quantum walks and coherent state passive linear optics, non-interactive \sihui{(somewhat-)}homomorphic encryption may be implemented.
 
 These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver (at least partially) information-theoretically secure (Sec.~\ref{sec:comp_vs_inf_th_sec}) data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
 
@@ -25,9 +23,6 @@ These encryption protocols induce a resource overhead in circuit size and number
 %
 
 \subsection{Classical computation} \index{Classical encrypted computation}
-
-To set the stage for our upcoming treatment of encrypted quantum computation protocols, we begin by reviewing recent developments in \textit{classical} encrypted computation, paying especial interest to resource scaling and information-theoretic security. We discuss both classical homomorphic encryption and blind classical computation.
-
 \comment{To do!}
 
 \comment{Summarise state of knowledge on homomorphic classical computation, and blind computation. How much do they hide? What is the scaling of computational resource overhead? What limitations do they face?}
@@ -35,7 +30,12 @@ To set the stage for our upcoming treatment of encrypted quantum computation pro
 \comment{If not too complicated, sketch an outline of the protocol in an Alg. box.}
 
 \comment{A universal QC can implement any classical algorithm. So QCs with homo/BQC give us the means by which to perform encrypted classical computations, bypassing limitations imposed by purely classical protocols.}
+\sihui{[Comment: The polynomial hierarchy is not contained in BQP. In fact, NP-complete problems are not contained in BQP.]}
 
+
+To set the stage for our upcoming treatment of encrypted quantum computation protocols, we begin by reviewing recent developments in \textit{classical} homomorphic encryption, paying special interest to resource scaling and information-theoretic security.
+
+\sihui{The first FHE scheme was reported in Gentry's seminal paper \cite{bib:gentry2009fully}. He showed that if a homomorphic encryption scheme can evaluate its own decryption circuit, and also slightly augmented versions of it--a feature he calls {\it bootstrapping}, one can construct a FHE scheme from it. Then he constructed a homomorphic encryption protocol using ideal lattices, and via a clever transformation that decreases the complexity of its decryption circuit, showed that it is bootstrappable with respect to a universal set of gates. For a security parameter $\lambda$, Gentry's scheme has a $\widetilde{O}(\lambda^6)$ \footnote{The tilde in the big O notation means that we are ignoring logarithmic factors.} bit bound on complexity for refreshing a ciphertext corresponding to a 1-bit plaintext \cite{bib:Gentrythesis}. This was subsequently reduced to $\widetilde{O}(\lambda^{3.5})$ \cite{bib:Damien2010}, $\widetilde{O}(\lambda)$ \cite{bib:Brakerski2011}, and ${\rm polylog (\lambda)}$ for any width-$\Omega(\lambda)$ circuit with $t$ gates \cite{bib:Craig2012}. }
 %
 % Homomorphic Encryption
 %
