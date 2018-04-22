@@ -357,6 +357,69 @@ The computing power allocated to each user under the arbitrage-free time-sharing
 This model is intuitively unsurprising, since it is analogous to the case of classical computer clusters -- nodes receive a time-share proportional to the proportion of the hardware they are contributing to the network. However, it is important to point out that the arbitrage is taking place in the cost of physical qubits, but not in terms of the dollar value of their classical-equivalent processing power, since this is in general non-linearly related to the number of qubits. Arbitrage in computational power per se is complicated by the fact that it is a non-fungible asset that cannot be directly traded, or uniquely associated with a tangible, tradable asset -- its computational value is a function of other assets.
 
 %
+% Problem Size Scaling Functions
+%
+
+\subsection{Problem size scaling functions}\index{Problem size scaling functions}\label{sec:prob_sc_func}
+
+The computational scaling function introduced previously expresses the power of a quantum computer in terms of its classical-equivalent runtime, or equivalently FLOPs. However, this may not be the metric of interest when considering a computers algorithmic power. In many situations, of far greater interest is the size of a problem instance that can be solved in a given timespan. For example, the FLOPs associated with solving an instance of a 3-\textsc{SAT} problem\index{3-SAT problem} grows exponentially with the number of clauses. When discussing the execution of this problem on a given computer, what we really want to know is how many clauses our device can cope with, rather than what the classical-equivalent runtime is.
+
+This observation motivates us to re-parameterise the power of quantum computers in terms of the problem size of a given algorithm that can be solved. Employing the same methodology as for computational scaling functions, we define the \textit{problem size scaling function}, which relates the size of an algorithmic problem to it's classical equivalent runtime. Then equating the computational and problem size scaling function yields,
+
+\begin{definition}[Problem size scaling function]\index{Problem size scaling functions}
+The problem size scaling function relates the size of a problem instance, in some arbitrary metric, to its classical-equivalent runtime under a time-shared model,
+\begin{align}
+t = f_\text{size}(s).
+\end{align}
+Equating this with the computational scaling function yields,
+\begin{align}
+	n\cdot \chi_\text{sc}(n_\text{global}) = f_\text{size}(s).
+\end{align}
+Isolating the problem size yields,
+\begin{align}
+s = f_\text{size}^{-1}(n\cdot \chi_\text{sc}(n_\text{global})).
+\end{align}
+\end{definition}
+
+We now consider several choices of scaling functions.
+
+First let us consider the classical case of linear scaling functions (for both the computational and problem size scaling function),
+\begin{align}
+	f_\text{sc}(n) &= \alpha_\text{sc} n,\nonumber\\
+	f_\text{size}(s) &= \alpha_\text{size} s.
+\end{align}
+Solving for the problem size simply yields,
+\begin{align}
+s &= \frac{n}{\alpha_\text{size}} \nonumber\\
+&= O(1),
+\end{align}
+where $n$ is regarded as a constant, and $n_\text{global}$ is a variable parameter of the network. That is, the problem sizes of solvable instances is independent of the size of the external network with whom we are time-sharing. This is to be expected, since these scaling functions are typical of classical computers.
+
+For polynomial scaling functions,
+\begin{align}
+f_\text{sc}(n) &= n^{p_\text{sc}},\nonumber\\
+f_\text{size}(s) &= s^{p_\text{size}}.
+\end{align}
+This yields problem size,
+\begin{align}
+	s &= n^{\frac{1}{p_\text{size}}} \cdot {n_\text{global}}^\frac{p_\text{sc}-1}{p_\text{size}} \nonumber\\
+	&= O(\mathrm{poly}(n_\text{global})),
+\end{align}
+demonstrating polynomial scaling in our solvable problem size against the size of the network.
+
+For exponential scaling functions,
+\begin{align}
+f_\text{sc}(n) &= e^{\alpha_\text{sc}n},\nonumber\\
+f_\text{size}(s) &= e^{\alpha_\text{size}s},
+\end{align}
+we obtain,
+\begin{align}
+s &= \log\left(n \frac{e^{\alpha_\text{sc}n_\text{global}}}{\alpha_\text{sc}n_\text{global}}\right) \nonumber\\
+&= O(n_\text{global}),
+\end{align}
+demonstrating that the solvable problem size grows linearly with network size.
+
+%
 % Quantum Computational Leverage
 %
 
@@ -596,6 +659,8 @@ In Table.~\ref{tab:summary_ec_models} we summarise the economic models and param
 	\hline
 	\begin{flushleft}Time-share computational power (Sec.~\ref{sec:arb_free_time_share})\end{flushleft} & \[c_n=n \cdot \chi_\text{sc}(n_\text{global})
 \] & \[n\] & \[n\cdot{n_\text{global}}^{p-1}\] & \[\frac{n e^{n_\text{global}}}{n_\text{global}}\]\\
+	\hline
+	\begin{flushleft}Problem size scaling function (Sec.~\ref{sec:prob_sc_func})\end{flushleft} & \[s = f_\text{size}^{-1}(n\cdot \chi_\text{sc}(n_\text{global}))\] & \[\frac{n}{\alpha_\text{size}}\] & \[n^{\frac{1}{p_\text{size}}} \cdot {n_\text{global}}^\frac{p_\text{sc}-1}{p_\text{size}}\] & \[\log\left(n \frac{e^{\alpha_\text{sc}n_\text{global}}}{\alpha_\text{sc}n_\text{global}}\right)\]\\
 	\hline
 	\begin{flushleft}Quantum computational leverage (Sec.~\ref{sec:quant_ec_lev})\end{flushleft} & \[\lambda_n=\frac{\chi_\text{sc}(n_\text{global})}{\chi_\text{sc}(n)}\] & \[1\] & \[\left(\frac{n_\text{global}}{n}\right)^{p-1}\] & \[\frac{n e^{n_\text{global}}}{n_\text{global}e^n}\]\\
 	\hline
