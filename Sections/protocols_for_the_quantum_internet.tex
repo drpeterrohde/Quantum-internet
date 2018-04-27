@@ -259,6 +259,24 @@ With the ability to perform measurements over a complete basis for the respectiv
 Perhaps the most useful, and ubiquitous, type of optical state measurement is photo-detection \cite{bib:RohdePDReview}, where we would like to count photon-number. Broadly, there are two main classes of photo-detectors -- \textit{number-resolved}\index{Number-resolved photo-detectors} and \textit{non-number-resolved}\index{Non-number-resolved photo-detectors} (or `bucket' detectors). These behave exactly as the names suggest, with the former typically being more expensive and technologically demanding than the latter.
 
 %
+% Mathematical Representation
+%
+
+\paragraph{Mathematical representation}
+
+A completely general detector can be modelled as a POVM\index{POVM},
+\begin{align}
+\hat\Pi_m = \sum_{n=0}^\infty P(m|n) \ket{n}\bra{n},	
+\end{align}
+where $P(m|n)$ is the conditional probability of measuring $m$ photons given $n$ incident photons. The POVM\index{POVM} is fully characterised by the conditional probabilities, which must be inferred from the specifics of the architecture. Alternately, a quantum process\index{Quantum process} formalism can be constructed as,
+\begin{align}
+\mathcal{E}(\hat\rho) = \sum_{n=0}^\infty P(m|n) \hat{E}_n\hat\rho\hat{E}_n^\dag,	
+\end{align}
+where \mbox{$\hat{E}_n=\hat{E}_n^\dag=\ket{n}\bra{n}$} are the Kraus operators\index{Kraus operators}.
+
+These mathematical representations very conveniently reduce the characterisation and representation of photo-detectors to calculating the matrix of conditional probabilities, $P(m|n)$. This readily allows various experimental effects and imperfections to be accommodated.
+
+%
 % Avalanche Photo-Diodes (APDs)
 %
 
@@ -316,16 +334,6 @@ for measurement outcome $n$, in the photon-number basis. And for non-number-reso
 \end{align}
 Thus, inefficiency results in projection onto the wrong photon-number, making measurement outcomes incorrect.
 
-A completely general detector can be modelled as a POVM\index{POVM},
-\begin{align}
-\hat\Pi_m = \sum_{n=0}^\infty P(m|n) \ket{n}\bra{n},	
-\end{align}
-where $P(m|n)$ is the conditional probability of measuring $m$ photons given $n$ incident photons. The POVM is fully characterised by the conditional probabilities, which must be inferred from the specifics of the architecture. Alternately, a quantum process formalism can be constructed as,
-\begin{align}
-\mathcal{E}(\hat\rho) = \sum_{n=0}^\infty P(m|n) \hat{E}_n\hat\rho\hat{E}_n,	
-\end{align}
-where \mbox{$\hat{E}_n=\ket{n}\bra{n}$} are the Kraus operators\index{Kraus operators}.
-
 In addition to their operation in the photon-number basis, photo-detectors exhibit spatio-temporal characteristics, which affect their operation in quantum information processing protocols \cite{RohdePDReview}. For example, imperfect spectral response can undermine photonic interference, affecting which-path erasure protocols, such as Bell state projection (Sec.~\ref{sec:bell_proj}). However, in many cases this can be improved upon using spectral filtering or time-gating techniques, also at the expense of experimental complexity and resource overhead.
 
 Furthermore, photo-detectors are subject to `dead-time'\index{Dead-time}, which renders them inactive for a finite recovery period following a detection event. This is of especial importance in time-bin-encoded schemes (Sec.~\ref{sec:time_bin}), where detectors must resolve photons over very short timescales on the order of nanoseconds.
@@ -348,13 +356,13 @@ Number-resolved detectors are the more challenging ones to experimentally realis
 
 Specifically, there is a direct tradeoff between the confidence in photon-number outcomes, and experimental overhead. The idea behind this is simple. We spread out an $n$-photon state evenly across a large number of modes, $m$, and detect each one independently using a non-number-resolved photo-detector. If \mbox{$m\gg n$}, it is unlikely that more than a single photon will reach any given detector. Thus, by summing the total number of clicks across all detectors, we closely approximate the true photon-number. This multiplexing can be performed in the spatial- or temporal-domains, shown in Fig.~\ref{fig:det_mult}, and has been a widely employed technique in laboratories without access to expensive number-resolved detectors.
 
-Mathematically, we are interested in the probability \mbox{$P(n_\text{meas}=n_\text{inc})$} that the measured number of photons ($n_\text{meas}$) matches the actual number of incident photons ($n_\text{inc}$). The structure of this expression will vary enormously depending on the details of the architecture (e.g multi-port interferometer vs fibre-loop). However, \cite{rohdeHuntington} presented a very general mathematical formalism applicable to all architectural variants. The simplest case to consider is the multi-port interferometer, owing to its perfect symmetry. The probability is simply the probability that no output mode from the multi-port contain multiple photons. A quick calculation yields,
-\begin{align}
-	P(n_\text{meas}=n_\text{inc}) = \binom{m}{n_\text{inc}}\left(\frac{\eta}{m}\right)^{n_\text{inc}},
-\end{align}
-not accounting for other lesser errors such as dark-counts.
+Mathematically, we are interested in the probability \mbox{$P(n_\text{meas}=n_\text{inc})$} that the measured number of photons ($n_\text{meas}$) matches the actual number of incident photons ($n_\text{inc}$). The structure of this expression will vary enormously depending on the details of the architecture (e.g multi-port interferometer vs fibre-loop). However, \cite{rohdeHuntington} presented a very general mathematical formalism applicable to all architectural variants. The simplest case to consider is the multi-port interferometer, owing to its perfect symmetry. The probability is simply the probability that no output mode from the multi-port contain multiple photons. %A quick calculation yields,
+%\begin{align}
+%	P(n_\text{meas}=n_\text{inc}) = \binom{m}{n_\text{inc}}\left(\frac{\eta}{m}\right)^{n_\text{inc}},
+%\end{align}
+%not accounting for other lesser errors such as dark-counts.
 
-\comment{Check this}
+%\comment{Check this}
 
 \begin{figure}[!htb]
 \includegraphics[width=0.35\textwidth]{detector_multiplexing}
