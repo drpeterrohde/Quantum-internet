@@ -6,7 +6,7 @@
 
 Any form of computation comes at an economic cost, but also brings with it a payoff. A key consideration in any model for computation is the tradeoff between the two. Because the computational power of quantum computers scales inherently differently than classical computers, we expect economic indicators to exhibit different scaling characteristics and dynamics also, thereby fundamentally altering the economic landscape of the post-quantum world.
 
-We will now treat some of these economic issues in the context of a global network of unified quantum computing resources, which are then equitably time-shared\index{Time-sharing}. We argue in Sec.~\ref{sec:time_share} that this time-shared model for quantum computation is always more computationally efficient than having distinct quantum computers operating independently in parallel, owing to the super-linear scaling in their joint computational power. While this section provides mathematical details of various economic models, Secs.~\ref{sec:economics} \& \ref{sec:quantcoin} provide a popular, high-level discussion surrounding these issues.
+We will now treat some of these economic issues in the context of a global network of unified quantum computing resources, which are then equitably time-shared\index{Time-sharing}. We argue in Sec.~\ref{sec:time_share} that this time-shared model for quantum computation is always more computationally efficient than having distinct quantum computers operating independently in parallel, owing to the super-linear scaling in their joint computational power. While this section provides mathematical details of various economic models, Secs.~\ref{sec:economics} \& \ref{sec:quant_coin_essay} provide a popular, high-level discussion surrounding these issues.
 
 %
 % Classical-Equivalent Computational Power & Computational Scaling Functions
@@ -628,27 +628,19 @@ What is likely to arise is that most owners of quantum hardware will not be cons
 
 As all markets for tradable assets do, sophisticated derivative markets will inevitably emerge, whereby people can speculate on or hedge against market dynamics, taking long, short, or more complex market positions, potentially in a highly-leveraged manner. As discussed in Sec.~\ref{sec:for_contr}, derivatives such as future contracts can be extremely helpful in enabling consumers to lock in future prices, creating a stable business climate. Similarly, other derivatives will enable market participants to hedge\index{Hedging} other quantum-related investments. For example, suppose an investor held a stake in an R\&D lab, highly reliant on quantum computing resources. By taking a leveraged long position on the market value for computation, he may limit losses on his R\&D investment associated with the higher price (and hence lower profit) they will be paying for computation. No doubt, market manipulation and all the usual nonsense and shenanigans will ensue.
 
-In Sec.~\ref{sec:quantcoin} we present a high-level argument that forward contracts in quantum computer runtime could form the basis of a sound currency, backed by the economy's desire for computation.
-
 %
 % QuantCoin - A Quantum Computation-Backed Cryptocurrency
 %
 
-\subsection{QuantCoin\texttrademark --- A quantum computation-backed cryptocurrency}
+\subsection{QuantCoin\texttrademark\,--- A quantum computation-backed cryptocurrency}\label{sec:quant_coin_technical}
 
-\comment{To do}
+As discussed in Sec.~\ref{sec:bitcoin_blockchain}, the Bitcoin mining process involves finding bit-strings that hash to a value within some relatively small range. This so-called `proof-of-work' principle associates computational complexity with the mining process, and since the hashing functions are one-way functions, they must be evaluated via brute-force trial-and-error to find hits.
 
-\comment{Thus with this sequence the execution of the QC is equivalent to mining, where the verification protocol acts as the proof of work. The protocol acts as a currency converter, allowing Alice to convert dollars into coins.
+However, what a waste this is! Our proof-of-work is nothing more than hashing a huge number of random bit-strings, computations which are of no intrinsic value to anyone. The market value in turn has nothing to do with any inherent value earned during the mining process. Rather it is based purely on the psychology of scarcity, since there is an upper bound on the number of Bitcoins that satisfy the legitimacy constraint.
 
-In an efficient market we have the relationship:
+What if we were to replace brute-force hashing of random data with computations of genuine monetary value? Then we would have a sounder currency, whose value derives from the monetary cost of executing computations. While it is not so easy to invent such a protocol for classical computation, the idea lends itself very naturally to quantum computation, owing to their ability to undergo encrypted computation and be subject to verification protocols.
 
-(Dollar value of a QuantCoin) + (cash paid by Alice for execution) = (Dollar value of cost associated with physically executing the protocol on the QC by Bob).
-
-Alternately we could replace dollars with any other asset or existing QuantCoins. In the latter case one would have relationships like:
-
-(value of QuantCoin) =  (Dollar value of cost associated with executing the protocol on the QC by Bob) / 2.
-
-This represents expansion in the money supply associated with each successful computation.}
+In Alg.~\ref{alg:quant_coin} we provide a very rough sketch for how such a protocol might be constructed. We do so in a very high-level manner, abstracting away the implementation details of the computation, encryption, and verification protocols.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\texttt{ 
@@ -664,7 +656,10 @@ function QuantCoin($\hat{U}_\text{comp}$, blockchain, data, reward):
 	\begin{align}
 	blockchain.commit(encryptedInput)	
 	\end{align}
-	\item Alice pays Bob the $reward$ to process her data.
+	\item Alice pays Bob the $reward$ to process her data,
+	\begin{align}
+		give(reward, Alice\to Bob)
+	\end{align}
 	\item Bob processes the $encryptedInput$ on his quantum computer,
 	\begin{align}
 		encryptedOutput = \hat{U}_\text{comp}(encryptedInput)
@@ -677,12 +672,43 @@ function QuantCoin($\hat{U}_\text{comp}$, blockchain, data, reward):
 	\begin{align}
 	proof = verify(encryptedOutput)	
 	\end{align}
-	\item The $proof$ is committed to the $blockchain$ (as is every step of the proof if it is an interactive one).
+	\item The $proof$ is committed to the $blockchain$ (as is every step of the proof if it is an interactive one),
+	\begin{align}
+		blockchain.commit(proof)
+	\end{align}
 	\item The $blockchain$ network inspects that the verification is valid.
-	\item If it is valid, the $blockchain$ cryptographically hashes the data and proof, encapsulating it into a QuantCoin\texttrademark token, which is given to Bob.
+	\item If it is valid, the $blockchain$ cryptographically hashes the data and proof, encapsulating it into a QuantCoin\texttrademark\,token, which is given to Bob,
+	\begin{align}
+		&token = SHA256(encryptedInput + encryptedOutput + proof)\nonumber\\
+		&Bob.receive(token)
+	\end{align}
 \end{enumerate}}}}
-\caption{A rough high-level outline for how a quantum computation-backed cryptocurrency might be implemented. We have abstracted away the underlying Blockchain protocol, interfacing with it using of a high-level API, so as to abstract away the underlying Blockchain technology, which is liable to change substantially in the coming years -- it might even be a natively quantum Blockchain. We similarly call upon verification subroutines using a high-level implementation-dependent API.} \label{alg:quant_coin}
+\caption{A rough high-level outline for how a quantum computation-backed cryptocurrency might be implemented\footnote{Note this is merely a highly simplified toy model in which all computations are of equal value, which will typically not be the case in the real world. A consumer-ready implementation would have to handle these and other additional details. However, we expect these finer details oughtn't alter the overall flavour of the protocol as described.}. We have abstracted away the underlying Blockchain protocol, interfacing with it using of a high-level API, so as to abstract away the underlying Blockchain technology, which is liable to change substantially in the coming years -- it might even be a natively quantum Blockchain. We similarly call upon verification subroutines using a high-level implementation-dependent API.} \label{alg:quant_coin}
 \end{table}
+
+It is evident from the flow of Alg.~\ref{alg:quant_coin} that the mining process now comprises solving an actual quantum computation of intrinsic value to Alice, since she is exchanging assets (e.g dollars or already-existing QuantCoins) in exchange for the computation. Completion of the computation followed by successful verification then further rewards Bob with a fresh QuantCoin\texttrademark\, courtesy of the distributed Blockchain algorithm.
+
+The described protocol, in addition to mining a new coin, associated with the execution of a computation, acts as a currency converter for converting traditional assets (e.g dollars) into QuantCoins. This ability to currency convert is necessary, and completely differs from the original Bitcoin mining process, where coins are fabricated out of thin air by anyone and everyone, independent of their pre-existing monetary wealth -- Bitcoins are not created via conversion from any existing asset. The fact that the computation associated with each QuantCoin\texttrademark\, is of intrinsic value on the other hand, implies that Alice ought to be paying something for the service.
+
+Note that we observe an expansion in the money supply with each successfully executed and verified computation. There is no inherent theoretical upper limit on the number of coins that can exist. However the QuantCoin\texttrademark\, money supply will be limited for the practical reason that mining each one is associated with a monetary transaction between Alice and Bob, and Alice will eventually run out of assets to exchange for computations.
+
+What relationships characterise the value of QuantCoins? First, in a perfectly efficient market we have,
+\begin{align}\label{eq:value_quantcoins}
+	&(\text{Dollar value of a QuantCoin\texttrademark\,}) \nonumber\\
+	&+ (\text{Dollar value of reward paid by Alice for execution}) \nonumber\\
+	&= (\text{Dollar value of cost of execution for Bob}).
+\end{align}
+ 
+Alternately, rather than Alice paying Bob's reward in dollars, she might pay for them in already-existing QuantCoins. Suppose Alice pays $\lambda$ QuantCoins\texttrademark\, as Bob's reward. Then Eq.~(\ref{eq:value_quantcoins}) reduces to,
+\begin{align}
+&(\text{Dollar value of a QuantCoin\texttrademark\,)}\\
+&=\frac{1}{\lambda}(\text{Dollar value of cost of execution for Bob}),\nonumber
+\end{align}
+providing us with a simple financial model relating the market price of QuantCoins\texttrademark\, and the monetary cost of execution of computations.
+
+\comment{More here}
+
+A popular-level essay on the future of quantum cryptocurrencies is presented in Sec.~\ref{sec:quant_coin_essay}.
 
 %
 % Summary of Economic Models
