@@ -656,9 +656,9 @@ function QuantCoin($\hat{U}_\text{comp}$, blockchain, data, reward):
 	\begin{align}
 	blockchain.commit(encryptedInput)	
 	\end{align}
-	\item Alice pays Bob the $reward$ to process her data,
+	\item Alice places into escrow Bob's $reward$ for processing her data,
 	\begin{align}
-		give(reward, Alice\to Bob)
+		escrow.hold(reward)
 	\end{align}
 	\item Bob processes the $encryptedInput$ on his quantum computer,
 	\begin{align}
@@ -682,9 +682,18 @@ function QuantCoin($\hat{U}_\text{comp}$, blockchain, data, reward):
 		&token = SHA256(encryptedInput + encryptedOutput + proof)\nonumber\\
 		&Bob.receive(token)
 	\end{align}
+	\item The reward held in escrow is released to Bob,
+	\begin{align}
+		escrow.release(Bob)
+	\end{align}
 \end{enumerate}}}}
-\caption{A rough high-level outline for how a quantum computation-backed cryptocurrency might be implemented\footnote{This is merely a highly simplified toy model in which all computations are of equal value. A consumer-ready implementation would have to handle these and other additional implementation details. However, we expect these finer details ought not alter the overall flavour of the protocol.}. We have abstracted away the underlying Blockchain protocol, interfacing with it using a high-level API. We do this since Blockchain technology is highly liable to change substantially in the coming years -- it might even be a natively quantum Blockchain. We similarly call upon verification subroutines using a high-level implementation-dependent API.} \label{alg:quant_coin}
+\caption{Sketch for how a quantum computation-backed cryptocurrency might be implemented\footnote{In this toy model all computations are of equal value. We expect that addressing these finer details ought not alter the overall flavour of the protocol.}. We have abstracted away the underlying Blockchain protocol, interfacing with it using a high-level API, since Blockchain technology is highly liable to evolve. We similarly call upon verification subroutines using a high-level implementation-independent API.} \label{alg:quant_coin}
 \end{table}
+
+\begin{figure}[!htb]
+\includegraphics[width=0.47\textwidth]{quantcoin_protocol}
+\caption{\comment{To do}}\label{fig:quantcoin_protocol}	
+\end{figure}
 
 It is evident from the flow of Alg.~\ref{alg:quant_coin} that the mining process now comprises solving an actual quantum computation of intrinsic value to Alice, since she is exchanging assets (e.g dollars or already-existing QuantCoins) in exchange for the computation. Completion of the computation followed by successful verification then further rewards Bob with a fresh QuantCoin\texttrademark\, courtesy of the distributed Blockchain algorithm.
 
