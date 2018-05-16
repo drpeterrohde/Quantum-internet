@@ -638,9 +638,19 @@ As discussed in Sec.~\ref{sec:bitcoin_blockchain}, the Bitcoin mining process in
 
 However, what a waste this is! Our proof-of-work is nothing more than hashing a huge number of random bit-strings, computations which are of no intrinsic value to anyone. The market value in turn has nothing to do with any inherent value earned during the mining process. Rather it is based purely on the psychology of scarcity, since there is an upper bound on the number of Bitcoins that satisfy the legitimacy constraint.
 
-What if we were to replace brute-force hashing of random data with computations of genuine monetary value? Then we would have a sounder currency, whose value derives from the monetary cost of executing computations. While it is not so easy to invent such a protocol for classical computation, the idea lends itself very naturally to quantum computation, owing to their ability to undergo encrypted computation and be subject to verification protocols.
+What if we were to replace brute-force hashing of random data with computations of genuine monetary value? Then we would have a sounder currency, whose value derives from the monetary cost of executing useful computations. While it is not so easy to invent such a protocol for classical computation, the idea lends itself very naturally to quantum computation, owing to their ability to undergo encrypted computation and be subject to verification protocols.
 
-In Alg.~\ref{alg:quant_coin} we provide a very rough sketch for how such a protocol might be constructed. A graphical flowchart is shown in Fig.~\ref{fig:quantcoin_protocol}. We do so in a very high-level manner, abstracting away the implementation details of the computation, encryption, and verification protocols.
+Building upon some of the pricing models introduced earlier in this section, there are two main candidates for backing a cryptocurrency with quantum compute-time: the spot market (i.e we execute the computation immediately); and the futures market (i.e we own the right to utilise the computer at some fixed time in the future). We consider the merits of both these candidates.
+
+A popular-level essay on the future of quantum cryptocurrencies is presented in Sec.~\ref{sec:quant_coin_essay}.
+
+%
+% Spot Market Model
+%
+
+\subsubsection{Spot market model}\index{Spot market}
+
+In Alg.~\ref{alg:quant_coin} we provide a very rough sketch for how a protocol based on the spot market might be constructed. A corresponding graphical flowchart is shown in Fig.~\ref{fig:quantcoin_protocol}. We the ideas in a very high-level manner, abstracting away the implementation details of the computation, encryption, and verification protocols, instead envisaging that we can interface with them using a very high-level API\index{API}.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\texttt{ 
@@ -699,7 +709,7 @@ It is evident from the flow of Alg.~\ref{alg:quant_coin} that the mining process
 
 The described protocol, in addition to mining a new coin, associated with the execution of a computation, acts as a currency converter for converting traditional assets (e.g dollars) into QuantCoins. This ability to currency convert is necessary, and completely differs from the original Bitcoin mining process, where coins are fabricated out of thin air by anyone and everyone, independent of their pre-existing monetary wealth -- Bitcoins are not created via conversion from any existing asset. The fact that the computation associated with each QuantCoin\texttrademark\, is of intrinsic value on the other hand, implies that Alice ought to be paying something for the service.
 
-Note that we observe an expansion in the money supply with each successfully executed and verified computation. There is no inherent theoretical upper limit on the number of coins that can exist. However the QuantCoin\texttrademark\, money supply will be limited for the practical reason that mining each one is associated with a monetary transaction between Alice and Bob, and Alice will eventually run out of assets to exchange for computations.
+Note that we observe an expansion in the money supply with each successfully executed and verified computation -- one additional unit of QuantCoins\texttrademark\, is mined for every unit of computation implemented. Unlike Bitcoin, there is no inherent theoretical upper limit on the number of coins that can exist. However the QuantCoin\texttrademark\, money supply\index{Money supply} will be limited for the practical reason that mining each one is associated with a monetary transaction between Alice and Bob, and Alice will eventually run out of assets to exchange for computations.
 
 What relationships characterise the value of QuantCoins? First, in a perfectly efficient market (Sec.~\ref{post:market_eff}) we have,
 \begin{align}\label{eq:value_quantcoins}
@@ -708,22 +718,30 @@ What relationships characterise the value of QuantCoins? First, in a perfectly e
 	&= (\text{Dollar value of cost of execution for Bob}).
 \end{align}
  
-Alternately, rather than Alice paying Bob's reward in dollars, she might pay for them in already-existing QuantCoins. Suppose Alice pays $\lambda$ QuantCoins\texttrademark\, as Bob's reward. Then Eq.~(\ref{eq:value_quantcoins}) reduces to,
+Alternately, rather than Alice paying Bob's reward in dollars, she might pay for them in already-existing QuantCoins\texttrademark. Suppose Alice pays $\lambda$ QuantCoins\texttrademark\, as Bob's reward. Then Eq.~(\ref{eq:value_quantcoins}) reduces to,
 \begin{align}
 &(\text{Dollar value of a QuantCoin\texttrademark\,)}\\
 &=\frac{1}{\lambda}(\text{Dollar value of cost of execution for Bob}),\nonumber
 \end{align}
 providing us with a simple financial model relating the market price of QuantCoins\texttrademark\, and the monetary cost of execution of computations.
 
-Note that with exception to the scenario where Alice buys into QuantCoins\texttrademark\, using dollar currency, the entire protocol is self-enforcing via Blockchain transactions. Bob doesn't get paid his newly earned and freshly printed QuantCoin\texttrademark\, until the verification of the computation has completed and the proof committed to the Blockchain. He therefore cannot get paid until he has executed the computation he promised to, and proven to the network that he actually did.
+Note that with exception to the scenario where Alice buys into QuantCoins\texttrademark\, using dollar currency (or any non-electronic asset that cannot be committed to the Blockchain), the entire protocol is self-enforcing via Blockchain transactions. Bob doesn't get paid his newly earned and freshly printed QuantCoin\texttrademark\, until the verification of the computation has completed and the proof committed to the Blockchain. He therefore cannot get paid until he has executed the computation he promised to, and proven to the network that he actually did.
 
 The main security risk is that of Bob taking Alice's dollars and running, upon receiving the upfront reward in dollars, which necessarily don't reside on the Blockchain since they are not crypto-assets. This could be addressed by introducing trusted third-party escrow agents into the protocol. 
 
-However, if the upfront payment were being made in pre-existing QuantCoins\texttrademark\,, the Blockchain might be programmed to not release the reward until completion of the final verification stage of the protocol -- effectively an escrow programmed directly into the Blockchain for execution.
+However, if the upfront payment were being made in pre-existing QuantCoins\texttrademark\,, the Blockchain might be programmed to not release the reward until completion of the final verification stage of the protocol -- effectively an escrow programmed directly into the Blockchain for self-execution.
 
-As described above, the cryptocurrency is effectively backed by the spot market in computation -- we exchange currency for the execution of computations \textit{immediately}. However, one might also envisage more complex cryptocurrencies being backed by the futures market in the licensing of quantum compute-time. Intuitively, one would expect such a form of cryptocurrency to be sounder than the one backed by the spot market. This is because our spot market-derived coins, once mined are not guaranteed to be convertible to anything of value, including computations. Recall that the execution of the computation takes place immediately when the coin is created. On the other hand, a QuantCoin\texttrademark\, backed by a guarantee to access quantum compute-time at a designated point in the future necessarily has value, so long as the demand for compute-time does, and maintains value until the contract matures and converts into compute-time at which point it becomes worthless.
+%
+% Futures Market Model
+%
 
-A popular-level essay on the future of quantum cryptocurrencies is presented in Sec.~\ref{sec:quant_coin_essay}.
+\subsubsection{Futures market model}
+
+As described above, the cryptocurrency is effectively backed by the spot market in computation -- we exchange currency for the execution of computations \textit{immediately}. However, one might also envisage more complex cryptocurrencies being backed by the futures market in the licensing of quantum compute-time.
+
+Intuitively, one would expect such a form of cryptocurrency to be sounder than the one backed by the spot market. This is because our spot market-derived coins, once mined are not guaranteed to be convertible to anything of value, including computations. Recall that the execution of the computation takes place immediately when the coin is created.
+
+On the other hand, a QuantCoin\texttrademark\, backed by a guarantee to access quantum compute-time at a designated point in the future necessarily has value, so long as the demand for compute-time does, and maintains value until the contract matures and converts into compute-time at which point it becomes worthless.
 
 %
 % Summary of Economic Models
