@@ -314,7 +314,7 @@ The mining process is based upon the computational hardness of inverting (double
 \begin{align}
 	\epsilon_\text{lower}\leq \text{SHA256}(\text{SHA256}(x_\text{coin})) \leq \epsilon_\text{upper}.
 \end{align}
-This is slightly weaker than inverting hash functions, but is nonetheless a task that can only be approached via brute-force hashing in the forward direction. This associates computational complexity with the mining process, and hence computational integrity of the money supply, whilst upper bounding the number of unique coins that can exist. This technique is known as `proof-of-work'\index{Proof-of-work}, for associating something of value with proof that certain amounts of computation were required to achieve it\footnote{In future implementations of Blockchain protocols, the proof-of-work required for a given protocol can be arbitrarily manipulated to accommodate for technological advances in computational power, for example via the adoption of quantum computing. The amount of work required to satisfy the constraint grows exponentially as we narrow the range \mbox{$\epsilon_\text{upper}-\epsilon_\text{lower}$}, providing us with much leverage to manipulate the complexity of the proof-of-work, and hence the rate of inflation\index{Inflation rate} in the money supply.}. This idea was originally borrowed from the Hashcash protocol\index{Hashcash}, where proof-of-work is employed to associate work (and hence monetary value) with sending emails so as to eliminate automated spamming bots.
+This is slightly weaker than inverting hash functions, but is nonetheless a task that can only be approached via brute-force hashing in the forward direction. This associates computational complexity with the mining process, and hence computational integrity of the money supply, whilst upper bounding the number of unique coins that can exist. This technique is known as `proof-of-work'\index{Proof-of-work}, for associating something of value with proof that certain amounts of computation were required to achieve it\footnote{In future implementations of Blockchain protocols, the proof-of-work required for a given protocol can be arbitrarily manipulated to accommodate for technological advances in computational power, for example via the adoption of quantum computing. The amount of work required to satisfy the constraint grows as we narrow the range \mbox{$\epsilon_\text{upper}-\epsilon_\text{lower}$}, providing us with much leverage to manipulate the complexity of the proof-of-work, and hence the rate of growth in the money supply, equivalently the rate of inflation\index{Inflation rate}.}. This idea was originally borrowed from the Hashcash protocol\index{Hashcash}, where proof-of-work is employed to associate work (and hence monetary value) with sending emails so as to eliminate automated spamming bots.
 
 The two key algorithms for Bitcoin and the Blockchain are therefore hashing and public-key digital signatures. Both of these are subject to enhanced quantum attacks.
 
@@ -417,6 +417,22 @@ To understand the secrecy of the protocol as described in Alg.~\ref{alg:bb84}, s
 The BB84 protocol has no measurement timing, mode-matching or interferometric stability requirements, making it a very robust protocol, readily achievable with present-day photonics technology. The scheme has been adapted to physical architectures beyond just polarisation-encoded photons, such as CV encodings\index{Continuous-variable QKD} \cite{???}.
 
 %
+% Privacy amplification
+%
+
+\paragraph{Privacy amplification}\index{Privacy amplification}
+
+When Alice and Bob sacrifice and compare a randomly chosen subset of their key bits to detect eavesdroppers, they also need to accept the inescapable fact that their qubits propagated through imperfect channels and were subject to noise en route. This has the same effect as an eavesdropper -- it corrupts some of the bits -- and it is impossible to distinguish which took place, a noisy channel (which is ok) or an eavesdropper (which is not).
+
+Because the channel was necessarily noisy, Alice and Bob \textit{must} tolerate some number of corrupt bits. But if the corruption came from Eve rather than the noisy channel they would effectively be tolerating her knowing some of the key. We don't want her to know any of the key!
+
+\textit{Privacy amplification} is a mathematical technique based on hashing algorithms for taking a shared key with a number of unknown compromised bits and distilling it to a shorter key of which Eve has almost zero knowledge.
+
+Specifically, if we know that Eve has compromised $t$ of our $n$ shared random bits, privacy amplification allows us to distill a new key from the compromised one of approximately length \mbox{$n-t$} over which Eve knows almost nothing.
+
+This is an information-theoretic security\index{Information-theoretic security} result, not a computational security\index{Computational security} one, thereby rescuing the perfect information-theoretic security of the BB84 QKD protocol.
+
+%
 % E91 Protocol
 %
 
@@ -444,10 +460,6 @@ function E91():
 \end{enumerate}}}}
 \caption{E91\index{E91 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photonic Bell-pairs. Upon completion of the protocol, Alice and Bob share a random bit-string of ruse in a one-time pad cipher\index{One-time pad cipher}.}\label{alg:e91}
 \end{table}
-
-\comment{Explain privacy amplification}
-
-\comment{What's the other QKD protocol? Include it}
 
 Like BB84, E91 has no mode-matching\index{Mode-matching} or interferometric stability\index{Interferometric stability} requirements, and Alice and Bob both only require single-photon detection. Unlike BB84, however, E91 requires a central authority that is able to prepare entanglement on-demand as a resource.
 
@@ -581,4 +593,6 @@ For these reasons, this scheme lends itself readily to photonic implementation, 
 
 \comment{To do}
 
-\comment{Attackes based on bad implementation rather than bad theory}
+\comment{Attacks based on bad implementation rather than bad theory}
+
+\comment{Side-channel attacks}
