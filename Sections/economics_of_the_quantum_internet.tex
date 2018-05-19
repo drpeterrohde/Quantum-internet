@@ -655,9 +655,9 @@ To the Machiavellian\index{Machiavelli} reader, this quantity can be thought of 
 % QuantCoin - A Quantum Computation-Backed Cryptocurrency
 %
 
-\subsection{QuantCoin\texttrademark\,--- A quantum computation-backed cryptocurrency}\label{sec:quant_coin_technical}
+\subsection{QuantCoin\texttrademark\,-- A quantum computation-backed cryptocurrency}\label{sec:quant_coin_technical}
 
-As discussed in Sec.~\ref{sec:bitcoin_blockchain}, the Bitcoin mining process involves finding bit-strings that hash to a value within some relatively small range. This so-called `proof-of-work' principle associates computational complexity with the mining process, and since the hashing functions are one-way functions, they must be evaluated via brute-force trial-and-error to find hits.
+As discussed in Sec.~\ref{sec:bitcoin_blockchain}, the Bitcoin mining process involves finding bit-strings that hash under SHA256\index{SHA256} to a value within some relatively small range. This so-called `proof-of-work' principle associates computational complexity with the mining process, and since the hashing functions are one-way functions, they must be evaluated via brute-force trial-and-error to find hits.
 
 However, what a waste this is! Our proof-of-work is nothing more than hashing a huge number of random bit-strings, computations which are of no intrinsic value to anyone. The market value in turn has nothing to do with any inherent value earned during the mining process. Rather it is based purely on the psychology of scarcity, since there is an upper bound on the number of Bitcoins that satisfy the legitimacy constraint.
 
@@ -673,15 +673,13 @@ A popular-level essay on the future of quantum cryptocurrencies is presented in 
 
 \subsubsection{Spot market model}\index{Spot market}
 
-In Alg.~\ref{alg:quant_coin} we provide a very rough sketch for how a protocol based on the spot market might be constructed. A corresponding graphical flowchart is shown in Fig.~\ref{fig:quantcoin_protocol}. We the ideas in a very high-level manner, abstracting away the implementation details of the computation, encryption, and verification protocols, instead envisaging that we can interface with them using a very high-level API\index{API}.
+In Alg.~\ref{alg:quant_coin} we provide a very rough sketch for how a protocol based on the spot market might be constructed. A corresponding graphical flowchart is shown in Fig.~\ref{fig:quantcoin_protocol}. We present the ideas in a very high-level manner, abstracting away the physical implementation details of the computation, encryption, and verification protocols, instead envisaging that we can interface with them using a very high-level API\index{API}.
 
 \begin{table}[!htb]
 \fbox{\parbox{0.965\columnwidth}{\texttt{ 
 function QuantCoin($\hat{U}_\text{comp}$, blockchain, data, reward):
 \begin{enumerate}
-	\item Alice possesses the raw input $data$, as well as a $reward$ to pay for its processing (in arbitrary units).
-	\item Bob possesses the universal quantum computer, which implements $\hat{U}_\text{comp}$.
-	\item Alice encrypts her data using either homomorphic encryption, or a blind quantum computing protocol,
+	\item Alice homomorphically/blindly encrypts $data$,
 		\begin{align}
 			encryptedInput = homoEncrypt(data)
 		\end{align}
@@ -689,15 +687,15 @@ function QuantCoin($\hat{U}_\text{comp}$, blockchain, data, reward):
 	\begin{align}
 	blockchain.commit(encryptedInput)	
 	\end{align}
-	\item Alice places into escrow Bob's $reward$ for processing her data,
+	\item Alice places into escrow Bob's $reward$,
 	\begin{align}
 		escrow.hold(reward)
 	\end{align}
-	\item Bob processes the $encryptedInput$ on his quantum computer,
+	\item Bob processes the $encryptedInput$ using $\hat{U}_\text{comp}$,
 	\begin{align}
 		encryptedOutput = \hat{U}_\text{comp}(encryptedInput)
 	\end{align}
-	\item Bob commits the encrypted output data to the public blockchain,
+	\item Bob commits encrypted output to the $blockchain$,
 	\begin{align}
 	blockchain.commit(encryptedOutput)	
 	\end{align}
@@ -712,10 +710,11 @@ function QuantCoin($\hat{U}_\text{comp}$, blockchain, data, reward):
 	\item The $blockchain$ network inspects that the verification is valid.
 	\item If valid, the $blockchain$ cryptographically hashes the data and proof, encapsulating it into a QuantCoin\texttrademark\,token, which is given to Bob,
 	\begin{align}
-		&token = SHA256(encryptedInput + encryptedOutput + proof)\nonumber\\
+		&token = SHA256(encryptedInput\nonumber\\
+		&+ encryptedOutput + proof)\nonumber\\
 		&Bob.receive(token)
 	\end{align}
-	\item The reward held in escrow is released to Bob,
+	\item The $reward$ held in escrow is released to Bob,
 	\begin{align}
 		escrow.release(Bob)
 	\end{align}
@@ -766,6 +765,8 @@ Intuitively, one would expect such a form of cryptocurrency to be sounder than t
 
 On the other hand, a QuantCoin\texttrademark\, backed by a guarantee to access quantum compute-time at a designated point in the future necessarily has value, so long as the demand for compute-time does, and maintains value until the contract matures and converts into compute-time at which point it becomes worthless.
 
+We leave explicit construction of a futures-based QuantCoin\texttrademark\, model as an exercise for the interested reader.
+
 %
 % Summary of Economic Models
 %
@@ -778,6 +779,7 @@ In Table.~\ref{tab:summary_ec_models} we summarise the economic models and param
 \renewcommand{\arraystretch}{0.5}
 
 \begin{table*}[!htb]
+{\footnotesize
 \begin{tabular}{|m{0.21\linewidth}|m{0.21\linewidth}|m{0.15\linewidth}|m{0.155\linewidth}|m{0.225\linewidth}|}
 	\hline
 	\[\text{Model}\] & \[\text{General form}\] & \[f_\text{sc}(n)=n\] & \[f_\text{sc}(n)=n^p\] & \[f_\text{sc}(n)=e^n\]\\
@@ -812,7 +814,7 @@ In Table.~\ref{tab:summary_ec_models} we summarise the economic models and param
 	\hline
 	\begin{flushleft}Political leverage (Sec.~\ref{sec:political_lev})\end{flushleft} & \[\gamma_{A,B}=\frac{\chi_\text{sc}(n_B)}{\chi_\text{sc}(n_A)}\] & \[1\] & \[\left(\frac{n_B}{n_A}\right)^{p-1}\] & \[\frac{e^{n_B}n_A}{e^{n_A}n_B}\] \\
 	\hline
-\end{tabular}
+\end{tabular}}
 \caption{Summary of the dynamics of various economic models under several computational scaling functions ($f_\text{sc}$) of interest, where there are $n$ qubits held by the respective node and \mbox{$n_\text{global}=\sum_{j\in \text{nodes}} n_j$} qubits in the global network. $N_0$ is the initial number of qubits, undergoing growth rate $\gamma_N$. $C_0$ is the initial monetary cost per qubit, undergoing decay rate $\gamma_C$. $\gamma_\text{ror}$ is the rate of return on the licensing of compute-time on qubits, and $r_\text{rf}$ is the risk-free rate of return. $\gamma_T$ is the rate of taxation, and $N_\text{tax}$ is the number of qubits that would exist on the network in the absence of taxation.} \label{tab:summary_ec_models}
 \end{table*}
 

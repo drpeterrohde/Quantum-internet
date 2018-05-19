@@ -33,12 +33,23 @@ Of course, real-world routers will not only switch optical paths, but also imple
     	Single-channel multi-port switch (linear) & \mbox{$N_\text{s}=2n-3$} & \mbox{$2\leq d\leq 2n-3$} \\
   		Single-channel multi-port switch (pyramid) & \mbox{$N_\text{s}=2n-3$} & \mbox{$d=2\,\text{log}_2(n)-1$} \\
   		Multi-channel multi-port switch & \mbox{$N_\text{s} = \left\lceil \frac{n^2}{2}\right\rceil - n + 1$} & \mbox{$\left\lceil \frac{n}{2} \right\rceil \leq d\leq n-1$} \\
+  		Crossbar switch & \mbox{$N_\text{s}=n^2$} & \mbox{$1\leq d\leq 2n-1$}\\
     	\hline
 	\end{tabular}
 	\caption{Summary of different primitives for constructing optical routers. $n$, $N_\text{bs}$, $N_\text{ps}$ and $N_\text{s}$ are the number of input/output ports, beamsplitters, phase-shifters, and two-port switches respectively. $d$ is the optical depth (in units of number of two-port switches). Since all of the multi-port devices are constructed from two-port switches, in all cases \mbox{$N_\text{bs} = 2 N_\text{s}$} and \mbox{$N_\text{ps} = N_\text{s}$}.} \label{tab:router_summary} \index{Optical routers}\index{Optical depth}\index{Router resource requirements}
 \end{table*}
 
 \renewcommand{\tablename}{ALG.}
+
+%
+% Mechanical Switches
+%
+
+\subsection{Mechanical switches}\index{Mechanical switches}
+
+Most obviously, optical switching could be performed mechanically, by physically displacing fibre endpoints, directing them towards different routes. Such switches have found use in other areas, but are not particularly appropriate for quantum information processing applications, as they are extremely slow compared to electro- or acousto-optic technologies. Certainly, mechanical switching would not be applicable to optical fast-feedforward, such as that required by optical quantum computing, on the order of nanoseconds.
+
+A second disadvantage of mechanical switches is that the introduction of moving parts into quantum optics protocols makes optical stabilisation extremely challenging. The mechanical control required to preserver wavelength-level coherence, for example, is effectively ruled out by moving parts.
 
 %
 % Interferometric Routers
@@ -198,11 +209,19 @@ where \mbox{$\sigma\in S_m$} is an arbitrary element of the symmetric group (i.e
 Note that this decomposition is more favourable than the completely general Reck \textit{et al.} decomposition presented in Fig.~\ref{fig:LO_archs}(a), since the circuit is balanced, with (almost!) identical optical depths across all input-to-output paths.
 
 %
-% Mechanical Switches
+% Crossbar Switches
 %
 
-\subsection{Mechanical switches}\index{Mechanical switches}
+\subsubsection{Crossbar switches}\index{Crossbar switches}
 
-Most obviously, optical switching could be performed mechanically, by physically displacing fibre endpoints, directing them towards different routes. Such switches have found use in other areas, but are not particularly appropriate for quantum information processing applications, as they are extremely slow compared to electro- or acousto-optic technologies. Certainly, mechanical switching would not be applicable to optical fast-feedforward, such as that required by optical quantum computing, on the order of nanoseconds.
+A general multi-port switching architecture, that gained popularity in the early days of channel-switched telecommunications networks\index{Channel-switched network}, is the crossbar architecture, whereby $n$ inputs are mapped to $n$ outputs via a binary permutation matrix, which controls a lattice of \mbox{$2\times 2$} switches. The general layout of the architecture is shown in Fig.~\ref{fig:crossbar_switch}, and an example of a routing sequence corresponding to a particular binary control matrix is shown in Fig.~\ref{fig:crossbar_example}. Clearly the scheme requires $n^2$ two-port switches to implement arbitrary \mbox{$n\times n$} mode permutations. The main disadvantage of this scheme is that different paths within a given permutation experience differing optical depth, ranging from 1 to \mbox{$2n-1$}.
 
-A second disadvantage of mechanical switches is that the introduction of moving parts into quantum optics protocols makes optical stabilisation extremely challenging. The mechanical control required to preserver wavelength-level coherence, for example, is effectively ruled out by moving parts.
+\begin{figure}[!htb]
+\includegraphics[width=0.3\textwidth]{crossbar_switch}
+\caption{Crossbar architecture for multi-port switching. Each orange box represents a \mbox{$2\times 2$} switch, of any physical implementation.} \label{fig:crossbar_switch}	
+\end{figure}
+
+\begin{figure}[!htb]
+\includegraphics[width=0.3\textwidth]{crossbar_example}
+\caption{Example switching configuration for a \mbox{$5\times 5$} crossbar switch. The switch colours represent whether the respective \mbox{$2\times 2$} switch is set to flip (red) the modes or not (orange).} \label{fig:crossbar_example}	
+\end{figure}
