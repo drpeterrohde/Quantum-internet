@@ -16,16 +16,49 @@ Different error correcting codes have different error correcting power, and diff
 
 As we will later see in Sec.~\ref{sec:ent_ultimate}, Bell pairs are a ubiquitous resource for many quantum information processing applications, and warrant special treatment in their own right.
 
-Entanglement purification (or distillation) a process by which two imperfect distributed Bell pairs can be condensed into a single Bell pair of higher quality (as measured by a fidelity metric, Sec.~\ref{sec:fid_metric}).
+Entanglement purification (or distillation) is a process by which two imperfect distributed Bell pairs can be condensed into a single Bell pair of higher quality (as measured by a fidelity metric, Sec.~\ref{sec:fid_metric}).
 
-More concretely, we distribute two Bell pairs of fidelity $F$ between Alice and Bob, who perform local operations to reduce them to a single Bell pair of higher fidelity,
+More concretely, we distribute two Bell pairs of fidelity $F$ between Alice and Bob. Let us assume a dephasing error model in this instance, in which case the imperfect Bell pairs are of the form,
 \begin{align}
-\ket{\Phi^+_F}_{A,B}\otimes\ket{\Phi^+_F}_{A,B} \to \ket{\Phi^+_{F'}}_{A,B},
+\hat\rho^F_{A,B} = F\ket{\Phi^+}\bra{\Phi^+} + (1-F)\hat{X}_1\ket{\Phi^+}\bra{\Phi^+}\hat{X}_1,	
+\end{align}
+which corresponds to a bit-flip error model (Sec.~\ref{sec:dephasing_error}). Alice and Bob then perform their entanglement purification protocol -- operations to reduce them to a single Bell pair of higher fidelity,
+\begin{align}
+\mathcal{E}_\text{purif}(\hat\rho^{F_\text{in}}_{A,B} \otimes \hat\rho^{F_\text{in}}_{A,B}) \to \hat\rho^{F_\text{out}}_{A,B},
 \end{align}
 where,
 \begin{align}
-F'>F.	
+F_\text{out}>F_\text{in}.
 \end{align}
+
+The purification process $\mathcal{E}_\text{purif}$ is realised very simply by Alice and Bob both performing Bell projections (Sec.~\ref{sec:bell_proj}) on their two qubits, classically communicating their measurement outcomes, and performing appropriate local corrections. This is best illustrated by example.
+
+For this model, we will assume our Bell projections destroy the first of their two input qubits, while the second one remains as the output. Then two such projections project a four-qubit state down to a two-qubit state as desired.
+
+Suppose there was no error. Then the input state was,
+\begin{align}
+\ket\psi_\text{in} &= \ket{\Phi^+}\bra{\Phi^+} \otimes \ket{\Phi^+}\bra{\Phi^+}\\
+&= \frac{1}{2}(\ket{0}_1\ket{0}_2+\ket{1}_1\ket{1}_2)(\ket{0}_3\ket{0}_4+\ket{1}_3\ket{1}_4).\nonumber
+\end{align}
+Now upon inspection it is evident that if a Bell projection between Alice's two qubits (1 and 3) yields the $\ket{\Phi^+}$ outcome, Bob's projection (2 and 4) must also yield $\ket{\Phi^+}$. Similarly, whatever Bell outcome Alice measures, Bob will measure the same outcome. Upon classically communicating that they measured consistent outcomes, they are satisfied the final state is error-free, and it is.
+
+Now suppose there was a bit-flip error on the first qubit of the first pair. Now the input state is,
+\begin{align}
+\ket\psi_\text{in} &= \hat{X}_1 \ket{\Phi^+}\bra{\Phi^+}\hat{X}_1 \otimes \ket{\Phi^+}\bra{\Phi^+}\\
+&= \frac{1}{2}(\ket{1}_1\ket{0}_2+\ket{0}_1\ket{1}_2)(\ket{0}_3\ket{0}_4+\ket{1}_3\ket{1}_4).\nonumber
+\end{align}
+Upon performing the Bell measurements as before, suppose Alice measures the $\ket{\Psi^+}$ outcome. Now Bob must measure the $\ket{\Phi^+}$ outcome, and a comparison of measurement outcomes diagnoses this single bit-flip error, which may subsequently be corrected with an additional bit-flip.
+
+In the above two scenarios (no error, or exactly one error), the state is correctable to a perfect Bell pair. What if there are two errors? Consider the input state with bit-flips affecting both Bell pairs. Then,
+\begin{align}
+\ket\psi_\text{in} &= \hat{X}_1 \ket{\Phi^+}\bra{\Phi^+}\hat{X}_1 \otimes \hat{X}_3\ket{\Phi^+}\bra{\Phi^+}\hat{X}_3\\
+&= \frac{1}{2}(\ket{1}_1\ket{0}_2+\ket{0}_1\ket{1}_2)(\ket{1}_3\ket{0}_4+\ket{0}_3\ket{1}_4).\nonumber
+\end{align}
+Upon performing the Bell projections, both Alice and Bob are guaranteed to measure the same outcome, as per the error-free case. However this isn't error-free at all since the remaining state is $\ket{\Psi^+}$ not $\ket{\Phi^+}$. That is, the bit-flip error has permeated through to the corrected state.
+
+Following this example it is evident that our rudimentary entanglement purification protocol can correct at most one bit-flip error. For this reason a mixed state is only correctable if \mbox{$F>1/2$} to begin with. Otherwise errors are more likely to permeate than be corrected, thereby reducing output fidelity.
+
+Similar reasoning as above can be employed to correct against phase-flip errors, and depolarising errors more generally.
 
 In Sec.~\ref{sec:ent_purif} we demonstrate a simple linear optics setup for implementing this, that was subject to experimental demonstration.
 
