@@ -25,14 +25,14 @@ NS: \alpha\ket{0}+\beta\ket{1}+\gamma\ket{2}\to\alpha\ket{0}+\beta\ket{1}-\gamma
 in the photon-number basis, up to normalisation (which is determined by the post-selection success probability). That is, it applies a $\pi$ phase-shift to only the $\ket{2}$ component of a photon-number superposition. The breakthrough result by KLM demonstrated that this is in fact not the case at all. Instead, the NS gate can be implemented non-deterministically using post-selected linear optics. Two such NS gates allow the construction of a single CZ gate. The construction of the KLM NS and CZ gates are shown in Figs.~\ref{fig:KLM_gate} \& \ref{fig:KLM_explain}. Equivalently, a CNOT gate may be trivially constructed via conjugation by Hadamard gates, based on the identity \mbox{$\hat{H}\hat{Z}\hat{H}=\hat{X}$}.
 
 \begin{figure}[!htb]
-\includegraphics[width=0.4\textwidth]{KLM_gate}
+\includegraphics[width=0.42\textwidth]{KLM_gate}
 \caption{(a) A KLM CZ gate, employing dual-rail encoding, constructed from two non-linear sign-shift (NS) gates, which apply a $\pi$ phase-shift to only $\ket{2}$ terms in the photon-number basis. (b) Construction of the non-deterministic linear optics NS gate. Two ancillary states -- one $\ket{1}$ and one $\ket{0}$ -- are employed, and two photo-detectors post-select upon detecting $\ket{1}\bra{1}$ and $\ket{0}\bra{0}$ respectively. The beamsplitter reflectivities in (a) are 50:50, and in (b) chosen such that the amplitudes obey Eq.~(\ref{eq:NS_trans}).}. \label{fig:KLM_gate} \index{Knill-Laflamme-Milburn (KLM)}\index{Non-linear sign-shift (NS) gate}
 \end{figure}
 
-\begin{figure}[!htb]
-\includegraphics[width=0.44\textwidth]{KLM_optical_paths}
+\begin{figure*}[!htb]
+\includegraphics[width=\textwidth]{KLM_optical_paths}
 \caption{Evolution of the four logical basis states through the KLM CZ gate. The NS gates do nothing in the first three cases, since they are operating only on vacuum and single-photon terms, which are left unchanged by the NS gate. In the last case, where both control and target are on, HOM interference results in photon bunching after the first beamsplitter, thereby creating two-photon terms. These terms inherit the $\pi$ phase-shift from the NS gate transformation, after which the final beamsplitter reverses the HOM photon bunching, yielding the same logical basis state with an acquired $\pi$ phase-shift.} \label{fig:KLM_explain} \index{Knill-Laflamme-Milburn (KLM)}\index{Controlled-Z (CZ) gate}
-\end{figure}
+\end{figure*}
 
 Clearly this non-determinism is of immediate concern, since concatenating multiple gates would have exponentially decreasing success probability, making the protocol inefficient -- if the probability of a single gate succeeding is $p$, and we require that a circuit comprising $n$ of them all succeed, the success probability is clearly $p^n$.
 
@@ -41,7 +41,7 @@ The first key observation then is that gate teleportation can be used to shift t
 The final insight provided by KLM is that by concatenating these non-deterministic CNOT gates, we can inductively build up higher-level CNOT gates with ever increasing success probabilities, asymptoting to unity with high- (but polynomial-) depth concatenation. By combining these key insights, KLM were able to show that near-deterministic CNOT gates can be constructed using an efficient (polynomial) resource overhead, thereby enabling efficient universal quantum computation\footnote{Note that all single-qubit gates are trivially and deterministically implemented using wave-plates or beamsplitters, for polarisation or dual-rail encoding respectively. Thus, we need only concern ourselves with the challenges associated with implementing 2-qubit entangling gates.}. A sketch of the general KLM formalism is shown in Fig.~\ref{fig:KLM_protocol}.
 
 \begin{figure}[!htb]
-\includegraphics[width=0.25\textwidth]{KLM}
+\includegraphics[width=0.28\textwidth]{KLM}
 \caption{KLM architecture for universal LOQC. $n_L$ optical modes are associated with logical qubits in the state $\ket{\psi_L}$, with the remaining $n_A$ modes acting as ancillary states, $\ket{\psi_A}$. A round of passive linear optics is applied, $\hat{U}_1$. Then the ancillary modes are measured, yielding some set of measurement outcomes $m_1$. These are classically processed to determine what the next round of passive linear optics, $\hat{U}_2$, ought to be. This repeats some polynomial number of times, from which an arbitrary quantum computation can be implemented. The \textsc{BosonSampling} and quantum walk models are equivalent to taking just the first stage of this protocol: one round of input state, passive linear optics, and measurement.} \label{fig:KLM_protocol}\index{Knill-Laflamme-Milburn (KLM)}
 \end{figure}
 
@@ -129,7 +129,7 @@ We then define a strategy, $\mathcal{S}$\index{Fusion strategies}, for choosing 
 That is, the length vector can be thought of as a series of `buckets' containing clusters of different lengths, and the strategy simply probabilistically shuffles the contents of the buckets around each time it is applied. The process can be thought of as a random walk\index{Random walk}, guided by a probabilistic update rule. Fig.~\ref{fig:linear_cs_strategy} outlines the protocol.
 
 \begin{figure}[!htb]
-	\includegraphics[width=0.4\textwidth]{linear_cluster_state_strategies}
+	\includegraphics[width=0.47\textwidth]{linear_cluster_state_strategies}
 	\caption{Protocol for preparing linear cluster states using non-deterministic entangling gates and quantum memory. Each `bucket' holds a resource of micro-clusters of a given length, represented by the vector $\vec n$. Beginning with a resource of single qubits we repeatedly attempt bonding operations between micro-clusters in the buckets, according to a fusion strategy, $\mathcal{S}$. Proceeding as a biased random walk, the contents of the buckets shuffle around until ultimately (hopefully) clusters of the target length $N$ are prepared and steadily flow out as output at rate $r$ clusters per update operation. We assume a free supply of single qubits as a resource.}\label{fig:linear_cs_strategy}
 \end{figure}
 
@@ -148,7 +148,7 @@ One of the key outcomes was that a \textsc{Balanced} strategy\index{Balanced str
 Example simulated state preparation rate results are shown in Fig.~\ref{fig:linear_cluster_state_r} for various types of entangling gates and gate success probabilities.
 
 \begin{figure}[!htb]
-\includegraphics[width=0.4\textwidth]{linear_cluster_state_rates}
+\includegraphics[width=0.47\textwidth]{linear_cluster_state_rates}
 \caption{Linear micro-cluster preparation rates for three different types of entangling gates as described in \cite{bib:RohdeBarrett07}, against gate success probability, $p_\text{gate}$. Here a \textsc{Balanced} fusion strategy is employed, whereby we only attempt to join clusters of equal length, always prioritising the largest ones available. This strategy was empirically found to perform better than any asymmetric strategies.}\label{fig:linear_cluster_state_r}
 \end{figure}
 

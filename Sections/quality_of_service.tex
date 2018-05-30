@@ -136,6 +136,8 @@ This is the simplest construction of a code which protects against a single depo
 
 \subsection{Surface codes}\index{Surface codes}
 
+\comment{Discuss genus and how this adds logical qubits.}
+
 If the intention is to perform quantum computations using cluster states shared over a network, QEC and fault-tolerance \textit{must} be taken into consideration, or catastrophic algorithmic failure will inevitably follow -- the cluster state model is no different from the circuit model in this respect. Fault-tolerance theory places hard thresholds on the amount of noise (typically depolarising errors and loss) qubits may be subject to in order for fault-tolerance to be possible and computations to succeed. This places strict QoS (Sec.~\ref{sec:QOS}) constraints on the network, which can be accommodated for using the usual depolarising and efficiency cost metrics when developing networking strategies and link performance requirements.
 
 It has been shown that fault-tolerance is possible within the cluster state model \cite{bib:NielsenDawson04, bib:Dawson06} using variations of conventional QEC codes. However, more importantly, from cluster states certain \textit{topological QEC codes} \cite{???} can be readily constructed. This implements a form of QEC-encoded measurement-based quantum computing protocol, where the computation proceeds in a measurement-based fashion, but is `natively' fault-tolerant.
@@ -156,11 +158,11 @@ where $e(v)$ are the edges neighbouring vertex $v$, and $e(p)$ are the edges sur
 \end{align}
 The stabilisers can be visualised graphically as per Fig.~\ref{fig:toric_code}.
 
-\begin{figure}[!htb]
-	\includegraphics[width=0.4\textwidth]{torus}\\
-	\includegraphics[width=0.4\textwidth]{toric_code}
-	\caption{Graph representation of the toric QEC code, and its associated stabilisers. The graph resides on a torus (top), while the physical qubits reside on the embedded lattice. The star and plaquette stabilisers across all vertices, jointly specify the state of the graph up to two missing degrees of freedom, which encode a single logical qubit. Thus, a logical qubit is encoded jointly across the entire graph, not at any specific vertex. Logical operations are performed via operations following topological paths through the lattice (not shown). The graph may be distributed across multiple hosts for distributed quantum computation.} \label{fig:toric_code}
-\end{figure}
+\begin{figure*}[!htb]
+	\includegraphics[width=0.47\textwidth]{torus}
+	\includegraphics[width=0.47\textwidth]{toric_code}
+	\caption{Graph representation of the toric QEC code, and its associated stabilisers. The graph resides on a torus (left), while the physical qubits reside on the embedded lattice (right). The star and plaquette stabilisers across all vertices, jointly specify the state of the graph up to two missing degrees of freedom, which encode a single logical qubit. Thus, a logical qubit is encoded jointly across the entire graph, not at any specific vertex. Logical operations are performed via operations following topological paths through the lattice (not shown). The graph may be distributed across multiple hosts for distributed quantum computation.} \label{fig:toric_code}
+\end{figure*}
 
 Unlike the cluster state stabilisers from Eq.~(\ref{eq:CS_stab}), these stabilisers are insufficient to fully characterise a unique quantum state. Rather, there are two unspecified degrees of freedom, which allows for a single qubit to be represented. Modifications of the topology, in the form of holes in the lattice (the genus of the topology), allow larger numbers of qubits to be encoded. Logical operations are implemented by performing sequences of local gates and measurements across topologies over the surface.
 
@@ -245,6 +247,7 @@ In \cite{RohdeHaselgrove} a derivation of a generalisation of the quantum Hammin
 \begin{align}
 \sum_{i=0}^{t_u + \lfloor t_l/2 \rfloor} \binom{n}{i}3^i 2^k \leq 2^n.
 \end{align}
+\comment{Explain Hamming bound, potentially in footnote. Explain what degenerate and non-degenerate codes are.}
 
 Subsequently, using surface codes \cite{bib:StaceBarrettDohertyLoss} arrived at the similar conclusion that QEC codes are more robust against located than unlocated errors.
 
@@ -352,10 +355,10 @@ Now if we proceed for two time-steps, once bit-flipped and another not, we have,
 \end{align}
 and the unknown phase-rotation has been eliminated. The sequence is illustrated on the Bloch sphere\index{Bloch sphere} in Fig.~\ref{fig:bloch_sphere_dyn_dec}.
 
-\begin{figure}[!htb]
-\includegraphics[width=0.47\textwidth]{bloch_sphere_dyn_dec}
+\begin{figure*}[!htb]
+\includegraphics[width=\textwidth]{bloch_sphere_dyn_dec}
 \caption{Bloch sphere representation of a sequence to dynamically decouple an unknown $\hat{Z}$ rotation from a qubit. (a) Blue dot represents the initial state. (b) The state undergoes an unknown $\hat{Z}(\theta)$ rotation. (c) A bit-flip ($\hat{X}$) flips the Bloch sphere upside down. (d) Waiting for the same time as before such that the same unknown $\hat{Z}$-rotation takes place, the state ends up in its initial state, independent of the $\hat{Z}$-rotation angle $\theta$, but assuming it was the same on both occasions in (b) and (d).} \label{fig:bloch_sphere_dyn_dec}	
-\end{figure}
+\end{figure*}
 
 The coupling to the external environment and the qubit state needn't be constant over time, but could be time-varying. In this instance, it is essential that the decoupling control sequence of bit-flip operations be much faster than the rate at which both the phase-rotations and computational operation are changing, such that consecutive unknown phase-rotations are approximately equal and thereby almost perfectly cancel. This rapid control sequence is sometimes referred to as `bang-bang' control\index{Bang-bang control}, since we are repeatedly implementing bit-flips at a fast rate. 
 
