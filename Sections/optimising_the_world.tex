@@ -98,7 +98,7 @@ How do current classical computers play chess? They construct a \textit{search t
 
 \begin{figure}[!htb]
 	\includegraphics[width=0.47\textwidth]{search_tree}
-	\caption{A search tree\index{Search tree} is an outwardly-directed tree graph in which each vertex represents a state of the system (i.e `board position' in chess). Edges represent actions (or `moves') available from the position from which the edge emanates. The root node represents the current position, and the depth of a vertex (i.e it's distance from the root node) represents its future time. A path through the tree therefore represents a sequence of moves up to some point in future time. If the tree had maximum depth, a route (from root to leaf) would represent an entire single game, and the complete set of routes would represent all possible ways in which the game can be played. A complete analysis of a complete search tree with maximum depth would therefore allow us to exhaustively analyse all possible ways in which a game could be played to completion, enabling optimal gameplay. However, since the number of vertices/edges in a tree graph grows exponentially with depth, the configuration search space in a game grows exponentially with how may moves into the future we wish to explore, thereby strongly limiting tree depth in practical implementations.}\label{fig:search_tree}
+	\caption{A search tree\index{Search tree} is an outwardly-directed tree graph in which each vertex represents a state of the system (i.e `board position' in chess\index{Chess}). Edges represent actions (or `moves') available from the position from which the edge emanates. The root node represents the current position, and the depth of a vertex (i.e it's distance from the root node) represents its future time. A path through the tree therefore represents a sequence of moves up to some point in future time. If the tree had maximum depth, a route (from root to leaf) would represent an entire single game, and the complete set of routes would represent all possible ways in which the game can be played. A complete analysis of a complete search tree with maximum depth would therefore allow us to exhaustively analyse all possible ways in which a game could be played to completion, enabling optimal gameplay. However, since the number of vertices/edges in a tree graph grows exponentially with depth, the configuration search space in a game grows exponentially with how may moves into the future we wish to explore, thereby strongly limiting tree depth in practical implementations.}\label{fig:search_tree}
 \end{figure}
 
 This approach lends itself ideally to approximation via Grover. We take the same classical board-position-scoring algorithm, and implement it as an oracle. Grover is then able to search through a quadratically larger search tree, querying the oracle for scores above threshold.
@@ -110,6 +110,25 @@ Indeed this intuitive example is a very powerful one -- since all \textbf{EXP}-c
 %The optimisation problems discussed until now have been satisfiability problems residing in \textbf{NP}-complete, limited to only quadratic quantum enhancement. Are there any other optimisation problems that natively reside in \textbf{BQP}, and therefore inherently offer exponential quantum speedup? There are, although the examples are far less ubiquitous than the plethora of satisfiability-based optimisation problems.
 
 %\comment{To do!}
+
+\subsection{How beneficial is quantum-enhanced optimisation?}
+
+The utilisation of Grover's\index{Grover's algorithm} algorithm as the basis for improving optimisation problems may seem a little depressing, given that quantum search algorithms only confer a modest quadratic enhancement. By comparison, so many other quantum algorithms offer exponential speedup! How significant is such a quadratic enhancement actually?
+
+In the context of a search tree\index{Search tree}, the size of the search space\index{Search space} is,
+\begin{align}
+s=b^d,
+\end{align}
+where $b$ is the tree's branching parameter (assumed uniform here for simplicity) and $d$ is tree depth. A quadratic enhancement in the searchable search space to,
+\begin{align}
+s'=s^2,
+\end{align}
+effectively doubles the search tree depth that can be accommodated by a given number of oracle calls to,
+\begin{align}
+d'=2d.
+\end{align}
+
+Needless to say, doubling one's foresight in planning for the future is highly advantageous and could lead to huge improvements in competitive advantage and efficiency in resource allocation. Doubling the number of moves a competitive chess\index{Chess} player could look ahead would result in their complete and utter dominance of the game!
 
 \subsection{Implications for the future}
 
