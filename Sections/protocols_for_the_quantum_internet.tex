@@ -74,7 +74,7 @@ assuming ideal photo-detection. Thus, the perfect photon-number correlation enab
 Transitioning from heralded state preparation to quasi-deterministic state preparation may then be achieved by operating a bank of such sources in parallel, and multiplexing their outputs, such that when all sources are triggered simultaneously, if any one succeeds, the respective single photon is routed to the desired output mode \cite{???}, as shown in Fig.~\ref{fig:SPDC_multiplexing_arch}.
 
 \begin{figure}[!htb]
-\includegraphics[width=0.375\textwidth]{SPDC_multiplexing_arch}\index{Multiplexed single-photon sources}
+\includegraphics[width=0.38\textwidth]{SPDC_multiplexing_arch}\index{Multiplexed single-photon sources}
 \caption{Quasi-deterministic single photon state preparation using $N$-fold multiplexing of heralded SPDC sources (or any other non-deterministic, but heralded source). All $N$ SPDC sources are triggered simultaneously. The heralding detectors feedforward to the multiplexer, which routes a successfully heralded single photon state (if there is one) to the output mode. With a sufficiently large bank of sources in parallel, the probability of successfully preparing a single photon state approaches unity.} \label{fig:SPDC_multiplexing_arch}
 \end{figure}
 
@@ -92,7 +92,7 @@ where there are $N$ sources in parallel. This relationship is shown in Fig.~\ref
 The multiplexing approach needn't be restricted to the spatial domain, but could also be equivalently implemented in the temporal domain \cite{bib:RohdeLoopMulti15, mosley, othersSeePaper}, as shown in Fig.~\ref{fig:SPDC_time_multiplexing}.
 
 \begin{figure}[!htb]
-\includegraphics[width=0.375\textwidth]{SPDC_time_multiplexing}
+\includegraphics[width=0.4\textwidth]{SPDC_time_multiplexing}
 \caption{Multiplexed single-photon state preparation in the temporal domain. An SPDC source operating at high repetition rate, with time-bin separation $\tau$, enters a fibre-loop with an in/out coupling switch classically controlled by the heralding outcomes. The fibre-loop acts as a quantum memory, keeping the most recent successfully heralded time-bin in memory until the procedure terminates. The output is a pulse-train where the last time-bin closely approximates a single-photon.} \label{fig:SPDC_time_multiplexing}
 \end{figure}
 
@@ -259,6 +259,24 @@ With the ability to perform measurements over a complete basis for the respectiv
 Perhaps the most useful, and ubiquitous, type of optical state measurement is photo-detection \cite{bib:RohdePDReview}, where we would like to count photon-number. Broadly, there are two main classes of photo-detectors -- \textit{number-resolved}\index{Number-resolved photo-detectors} and \textit{non-number-resolved}\index{Non-number-resolved photo-detectors} (or `bucket' detectors). These behave exactly as the names suggest, with the former typically being more expensive and technologically demanding than the latter.
 
 %
+% Mathematical Representation
+%
+
+\paragraph{Mathematical representation}
+
+A completely general detector can be modelled as a POVM\index{POVM},
+\begin{align}
+\hat\Pi_m = \sum_{n=0}^\infty P(m|n) \ket{n}\bra{n},	
+\end{align}
+where $P(m|n)$ is the conditional probability of measuring $m$ photons given $n$ incident photons. The POVM\index{POVM} is fully characterised by the conditional probabilities, which must be inferred from the specifics of the architecture. Alternately, a quantum process\index{Quantum process} formalism can be constructed as,
+\begin{align}
+\mathcal{E}(\hat\rho) = \sum_{n=0}^\infty P(m|n) \hat{E}_n\hat\rho\hat{E}_n^\dag,	
+\end{align}
+where \mbox{$\hat{E}_n=\hat{E}_n^\dag=\ket{n}\bra{n}$} are the Kraus operators\index{Kraus operators}.
+
+These mathematical representations very conveniently reduce the characterisation and representation of photo-detectors to calculating the matrix of conditional probabilities, $P(m|n)$. This readily allows various experimental effects and imperfections to be accommodated.
+
+%
 % Avalanche Photo-Diodes (APDs)
 %
 
@@ -318,7 +336,14 @@ Thus, inefficiency results in projection onto the wrong photon-number, making me
 
 In addition to their operation in the photon-number basis, photo-detectors exhibit spatio-temporal characteristics, which affect their operation in quantum information processing protocols \cite{RohdePDReview}. For example, imperfect spectral response can undermine photonic interference, affecting which-path erasure protocols, such as Bell state projection (Sec.~\ref{sec:bell_proj}). However, in many cases this can be improved upon using spectral filtering or time-gating techniques, also at the expense of experimental complexity and resource overhead.
 
-Furthermore, photo-detectors are subject to `dead-time'\index{Dead-time}, which renders them inactive for a finite recovery period following a detection event. This is of especial importance in time-bin-encoded schemes (Sec.~\ref{sec:time_bin}), where detectors must resolve photons over very short timescales on the order of nanoseconds.
+Furthermore, photo-detectors are subject to `dead-time'\index{Dead-time}, which renders them inactive for a finite recovery period following a detection event. This is of especial importance in time-bin-encoded schemes (Sec.~\ref{sec:time_bin}), where detectors must resolve photons over very short timescales on the order of nanoseconds. Dead-time can be modelled as a time-dependent efficiency of the form,
+\begin{align}
+\eta(t) = \left\{\begin{array}{cc}
+ 0, & t<\tau_\text{dt} \\
+ \eta_\text{ss}, & t\geq\tau_\text{dt} \\
+\end{array}\right.,
+\end{align}
+where $t$ is time, $\tau_\text{dt}$ is the detector's deadtime, and $\eta_\text{ss}$ is the detector's steady-state efficiency (i.e when not dead).
 
 Photo-detectors of all types are inevitably subject to `dark-counts'\index{Dark-counts}, whereby thermal noise\index{Thermal noise}, either within the detector or coupled from the noisy external environment, triggers non-existent detection events. The distribution follows exactly that of the thermal state photon-number distribution (Sec.~\ref{sec:thermal_states}). Thus, the probability of $n$ dark-counts occurring is,
 \begin{align} \index{Thermal distribution}
@@ -334,13 +359,27 @@ Finally, all photo-detection techniques are subject to some degree of `time-jitt
 
 \subsubsection{Multiplexed photo-detection}\index{Multiplexed photo-detection}
 
-Number-resolved detectors are the more challenging ones to experimentally realise. However, using multiplexing techniques\index{Multiplexed photo-detection}, non-number-resolved detectors can be used to closely approximate number-resolution \cite{bib:Fitch03, bib:Banaszek03, bib:Achilles04, bib:RohdeCompDet07}, at the expense of an (efficient) overhead in the complexity of the experiment, which comes at a cost. Specifically, there is a direct tradeoff between the confidence in photon-number outcomes, and experimental overhead. The idea behind this is simple. We spread out an $n$-photon state evenly across a large number of modes, $m$, and detect each one independently using a non-number-resolved photo-detector. If \mbox{$m\gg n$}, it is unlikely that more than a single photon will reach any given detector. Thus, by summing the total number of clicks across all detectors, we closely approximate the true photon-number. This multiplexing can be performed in the spatial- or temporal-domains, shown in Fig.~\ref{fig:det_mult}, and has been a widely employed technique in laboratories without access to expensive number-resolved detectors.
+Number-resolved detectors are the more challenging ones to experimentally realise. However, using multiplexing techniques\index{Multiplexed photo-detection}, non-number-resolved detectors can be used to closely approximate number-resolution \cite{bib:Fitch03, bib:Banaszek03, bib:Achilles04, bib:RohdeCompDet07}, at the expense of an (efficient) overhead in the complexity of the experiment, which comes at a cost. 
 
-\comment{Include some equations}
+Specifically, there is a direct tradeoff between the confidence in photon-number outcomes, and experimental overhead. The idea behind this is simple. We spread out an $n$-photon state evenly across a large number of modes, $m$, and detect each one independently using a non-number-resolved photo-detector. If \mbox{$m\gg n$}, it is unlikely that more than a single photon will reach any given detector. Thus, by summing the total number of clicks across all detectors, we closely approximate the true photon-number. This multiplexing can be performed in the spatial- or temporal-domains, shown in Fig.~\ref{fig:det_mult}, and has been a widely employed technique in laboratories without access to expensive number-resolved detectors.
+
+Mathematically, we are interested in the probability \mbox{$P(n_\text{meas}=n_\text{inc})$} that the measured number of photons ($n_\text{meas}$) matches the actual number of incident photons ($n_\text{inc}$). The structure of this expression will vary enormously depending on the details of the architecture (e.g multi-port interferometer vs fibre-loop). However, \cite{rohdeHuntington} presented a very general mathematical formalism applicable to all architectural variants. The simplest case to consider is the multi-port interferometer, owing to its perfect symmetry. The probability is simply the probability that no output mode from the multi-port contain multiple photons. A quick calculation yields,
+\begin{align}
+	P(n_\text{meas}=n_\text{inc}) = \frac{\eta^n m!}{m^n(m-n)!},
+\end{align}
+for efficiency $\eta$, not accounting for other lesser errors such as dark-counts. This is shown in Fig.~\ref{fig:multiplexed_pd}. For perfect efficiency, \mbox{$\eta=1$}, this probability always approaches unity in the limit of a large number of modes,
+\begin{align}
+\lim_{m\to\infty}P(n_\text{meas}=n_\text{inc})=1.
+\end{align}
 
 \begin{figure}[!htb]
 \includegraphics[width=0.35\textwidth]{detector_multiplexing}
-\caption{Multiplexed number-resolved photo-detection using non-number-resolved photo-detectors. The principle is to spread out (as uniformly as possible) a multi-photon state across a large number of modes, sufficiently large that it is unlikely that more than one photon will be present in any given mode. Then, the sum of the number of clicks at each mode closely approximates the incident photon-number. (a) In the spatial domain. (b) In the temporal domain. The advantage of employing the temporally multiplexed architecture is that only a single detector is required, unlike the $N$ detectors required in the spatially multiplexed scheme. However this requires that the dead-time\index{Dead-time} of the detector is less than the round-trip time of the fibre loop.} \label{fig:det_mult}
+\caption{Multiplexed number-resolved photo-detection using non-number-resolved photo-detectors. The principle is to spread out (as uniformly as possible) a multi-photon state across a large number of modes, sufficiently large that it is unlikely that more than one photon will be present in any given mode. Then, the sum of the number of clicks at each mode closely approximates the incident photon-number. (a) In the spatial domain. (b) In the temporal domain. The advantage of employing the temporally multiplexed architecture is that only a single detector is required, unlike the multiple independent detectors required in the spatially multiplexed scheme. However this requires that the dead-time\index{Dead-time} of the detector is less than the round-trip time of the fibre loop. An alternate, but conceptually equivalent approach is to spatially disperse the optical field across a charge-coupled device (CCD)\index{Charge-coupled device}, much like that found in a regular digital camera, except with single-photon resolution per-pixel. This achieves an effectively very large number of optical modes.} \label{fig:det_mult}
+\end{figure}
+
+\begin{figure}[!htb]
+	\includegraphics[width=0.47\textwidth]{multiplexed_detector}
+	\caption{Probability of a balanced multiplexed detector inferring the correct number of photons with $n$ incident photons across $m$ modes. The detectors have perfect efficiency, \mbox{$\eta=1$}, and all other errors are ignored. The number of incident photons ranges from \mbox{$n=1$} (top) to \mbox{$n=5$} (bottom). All curves asymptotically approach \mbox{$P_n=1$} for large $m$.}\label{fig:multiplexed_pd}
 \end{figure}
 
 %
@@ -920,7 +959,7 @@ One of the most widely demonstrated class of quantum protocols is the cryptograp
 
 \subsubsection{Superdense coding}\label{sec:superdense}\index{Superdense coding}
 
-\textit{Superdense coding} is a communications protocol, which utilises shared entanglement between two parties to increase the rate at which classical information may be transmitted between them.
+\textit{Superdense coding} is a hybrid quantum/classical communications protocol for increasing classical bit-rates between two parties, who share entanglement as a resource.
 
 Suppose Alice wishes to send classical information to Bob over a quantum channel. The HSW Theorem\index{HSW theorem}\cite{bib:holevo1998capacity, bib:schumacher1997sending} tells us that Alice can send information to Bob at a maximum rate of one bit per qubit. However, if Alice and Bob share Bell-pairs, superdense coding allows information to be transmitted at a maximum rate of two bits per qubit.
 

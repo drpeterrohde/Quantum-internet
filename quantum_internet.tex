@@ -4,26 +4,40 @@
 %
 
 % Publication mode:
-%   0 = Preprint (for Red Pen of Death - Dowling's eyes only)
-%   1 = Two-column article
-%   2 = Single-column book
+%   0 = Draft (figures disabled, quicker compiling)
+%   1 = Preprint (for Red Pen of Death - Dowling's eyes only)
+%   2 = Two-column article
+%   3 = Single-column book
 
-\def\pubmode{1} % Set number here
+% Sketches mode:
+%	0 = off
+%	1 = on
+
+% Set numbers here
+
+\def\pubmode{2}
+\def\sketchesmode{0}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\if 0\pubmode % Preprint (Dowling's eyes only)
+\if 0\pubmode % Draft mode (figures disabled)
+	\documentclass[draft, twocolumn, aps, rmp, amsmath, amssymb, nofootinbib, superscriptaddress, longbibliography, floatfix, table-of-contents, eqsecnum]{revtex4-1}
+	\let\stdsection\section
+	\renewcommand\section{\newpage\stdsection}
+\fi
+
+\if 1\pubmode % Preprint (Dowling's eyes only)
 	\documentclass[preprint, aps, rmp, singlecolumn, amsmath, amssymb, nofootinbib, superscriptaddress, longbibliography, floatfix, table-of-contents, eqsecnum]{revtex4-1}
 \fi
 
-\if 1\pubmode % Two-column article
+\if 2\pubmode % Two-column article
 	\documentclass[twocolumn, aps, rmp, amsmath, amssymb, nofootinbib, superscriptaddress, longbibliography, floatfix, table-of-contents, eqsecnum]{revtex4-1}
 \fi
 
-\if 2\pubmode % Single-column book
+\if 3\pubmode % Single-column book
 	\documentclass[singlecolumn, aps, rmp, amsmath, amssymb, nofootinbib, superscriptaddress, longbibliography, floatfix, table-of-contents, eqsecnum]{revtex4-1}
-	\let\stdsection\section
-	\renewcommand\section{\newpage\stdsection}
+	\let\stdpart\part
+	\renewcommand\part{\newpage\stdpart}
 \fi
 
 \input{Sections/packages}
@@ -51,6 +65,12 @@
 
 \input{Sections/table_of_contents}
 
+%
+% Introduction
+%
+
+\part{Introduction}\label{part:introduction}
+
 \input{Sections/foreword}
 \sketch{sketch_1}
 \latinquote{Liber magnus est.}
@@ -59,17 +79,11 @@
 \sketch{sketch_4}
 \latinquote{Vincit qui se vincit.}
 
-\input{Sections/models_for_quantum_computation}
-\sketch{sketch_5}
-\latinquote{Aqua vitae.}
+%
+% Classical networks
+%
 
-\input{Sections/quantum_algorithms}
-\sketch{sketch_25}
-\latinquote{Sic semper tyrannis.}
-
-\input{Sections/physical_architectures_for_quantum_computing}
-\sketch{sketch_6}
-\latinquote{Acta deos numquam mortalia fallunt.}
+\part{Classical networks}\label{part:class_net}
 
 \input{Sections/classical_networking_protocols}
 \sketch{sketch_7}
@@ -79,6 +93,12 @@
 \sketch{sketch_8}
 \latinquote{Nil sine magno labore.}
 
+%
+% Quantum networks
+%
+
+\part{Quantum networks}\label{part:quant_net}
+
 \input{Sections/quantum_networks}
 \sketch{sketch_9}
 \latinquote{Gladiator in arena consilium capit.}
@@ -86,7 +106,6 @@
 \input{Sections/quantum_channels}
 \sketch{sketch_10}
 \latinquote{Bulla crustulum.}
-
 
 \input{Sections/optical_encoding_of_quantum_information}
 \sketch{sketch_11}
@@ -152,21 +171,21 @@
 \sketch{sketch_24}
 \latinquote{Dum inter homines sumus, colamus humanitatem.}
 
+%
+% Protocols for the quantum internet
+%
+
+\part{Protocols for the quantum internet}\label{part:protocols}
+
 \input{Sections/protocols_for_the_quantum_internet}
 \sketch{sketch_26}
 \latinquote{Etiam capillus unus habet umbram.}
 
-\input{Sections/cloud_quantum_computing}
-\sketch{sketch_27}
-\latinquote{Timendi causa est nescire.}
+%
+% Entanglement distribution
+%
 
-\input{Sections/encrypted_cloud_quantum_computing}
-\sketch{sketch_28}
-\latinquote{Audentes fortuna iuvat.}
-
-\input{Sections/verification_of_cloud_quantum_computing}
-\sketch{sketch_29}
-\latinquote{Semper fidelis.}
+\part{Entanglement distribution}\label{part:ent_dist}
 
 \input{Sections/entanglement_the_ultimate_quantum_resource}
 \sketch{sketch_30}
@@ -180,17 +199,85 @@
 \sketch{sketch_38}
 \latinquote{Veritas vos liberabit.}
 
-\input{Sections/the_quantum_space_race}
-\sketch{sketch_32}
-\latinquote{Volens et potens.}
+%
+% Quantum cryptography
+%
+
+\part{Quantum cryptography}\label{part:quant_crypto}
+
+\input{Sections/cryptowars}
+\sketch{sketch_39}
+\latinquote{A mari usque ad mare.}
+
+%
+% Quantum computing
+%
+
+\part{Quantum computing}\label{part:QC}
+
+\input{Sections/models_for_quantum_computation}
+\sketch{sketch_5}
+\latinquote{Aqua vitae.}
+
+\input{Sections/quantum_algorithms}
+\sketch{sketch_25}
+\latinquote{Sic semper tyrannis.}
+
+\input{Sections/physical_architectures_for_quantum_computing}
+\sketch{sketch_6}
+\latinquote{Acta deos numquam mortalia fallunt.}
+
+%
+% Cloud quantum computing
+%
+
+\part{Cloud quantum computing}\label{part:cloud_QC}
+
+\input{Sections/cloud_quantum_computing}
+\sketch{sketch_27}
+\latinquote{Timendi causa est nescire.}
+
+\input{Sections/encrypted_cloud_quantum_computing}
+\sketch{sketch_28}
+\latinquote{Audentes fortuna iuvat.}
+
+\input{Sections/verification_of_cloud_quantum_computing}
+\sketch{sketch_29}
+\latinquote{Semper fidelis.}
+
+%
+% Economics & Politics
+%
+
+\part{Economics \& politics}\label{part:economics}
 
 \input{Sections/economics_of_the_quantum_internet}
 \sketch{sketch_2}
 \latinquote{Errare humanum est.}
 
-\input{Sections/cryptowars}
-\sketch{sketch_39}
-\latinquote{A mari usque ad mare.}
+%
+% State of the art
+%
+
+\part{State-of-the-art}\label{part:SotA}
+
+\input{Sections/state_of_the_art}
+\sketch{sketch_34}
+\latinquote{Om mani padme hum.}
+
+%
+% To the future & beyond
+%
+
+\part{To the future \& beyond}\label{part:future_beyond}
+
+\input{Sections/to_the_future_and_beyond}
+
+\latinquote{Excelsior.}
+
+\input{Sections/the_quantum_space_race}
+\sketch{sketch_32}
+\latinquote{Volens et potens.}
 
 \input{Sections/quantum_genetic_medicine}
 \sketch{sketch_40}
@@ -200,13 +287,28 @@
 \sketch{sketch_33}
 \latinquote{Grandescunt aucta labore.}
 
-\input{Sections/state_of_the_art}
-\sketch{sketch_34}
-\latinquote{Om mani padme hum.}
+\input{Sections/quantum_biology}
+
+\latinquote{Credo in unum deum.}
+
+\input{Sections/optimising_the_world}
+
+\latinquote{Ceteris paribus.}
+
+%
+% Essays
+%
+
+\part{Essays}\label{part:essays}
 
 \input{Sections/a_new_frontier_towards_the_singularity}
 \sketch{sketch_35}
-\latinquote{Benedictus benedicat. Per jesum christum dominum nostrum. Amen.}
+
+%
+% The end
+%
+
+\part{The end}\label{part:the_end}
 
 \input{Sections/conclusion_the_vision_of_the_quantum_internet}
 \sketch{sketch_3}

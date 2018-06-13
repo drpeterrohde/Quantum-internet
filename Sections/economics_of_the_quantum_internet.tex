@@ -1,12 +1,12 @@
 %
-% Economics of the Quantum Internet
+% Economics & Politics of the Quantum Internet
 %
 
-\section{Economics of the quantum internet} \index{Economics}
+\section{The economics \& politics of the quantum internet} \index{Economics}
 
 Any form of computation comes at an economic cost, but also brings with it a payoff. A key consideration in any model for computation is the tradeoff between the two. Because the computational power of quantum computers scales inherently differently than classical computers, we expect economic indicators to exhibit different scaling characteristics and dynamics also, thereby fundamentally altering the economic landscape of the post-quantum world.
 
-We will now treat some of these economic issues in the context of a global network of unified quantum computing resources, which are then equitably time-shared\index{Time-sharing}. We argue in Sec.~\ref{sec:time_share} that this time-shared model for quantum computation is always more computationally efficient than having distinct quantum computers operating independently in parallel, owing to the super-linear scaling in their joint computational power. While this section provides mathematical details of various economic models, Secs.~\ref{sec:economics} \& \ref{sec:quantcoin} provide a popular, high-level discussion surrounding these issues.
+We will now treat some of these economic issues in the context of a global network of unified quantum computing resources, which are then equitably time-shared\index{Time-sharing}. We argue in Sec.~\ref{sec:time_share} that this time-shared model for quantum computation is always more computationally efficient than having distinct quantum computers operating independently in parallel, owing to the super-linear scaling in their joint computational power. While this section provides mathematical details of various economic models, Secs.~\ref{sec:economics} \& \ref{sec:quant_coin_essay} provide a popular, high-level discussion surrounding these issues.
 
 %
 % Classical-Equivalent Computational Power & Computational Scaling Functions
@@ -236,7 +236,7 @@ The dollar-value of the entire network is given by,
 \end{align}
 \end{postulate}
 
-Note that the collective value of the network appreciates exponentially if the rate of network growth is greater than the rate of decay in the value of physical qubits, otherwise it depreciates. At \mbox{$\gamma_C=\gamma_N$} the network's value remains constant over time. This is shown in Fig.~\ref{fig:network_value}.
+Note that the collective value of the network appreciates exponentially if the rate of network growth is greater than the rate of decay in the value of physical qubits, otherwise it depreciates. At \mbox{$\gamma_C=\gamma_N$} the network's dollar value remains constant over time. This is shown in Fig.~\ref{fig:network_value}.
 
 \begin{figure}[!htb]
 	\includegraphics[width=0.4\textwidth]{network_value}
@@ -299,12 +299,12 @@ which implies monotonic reduction in the cost of computation over time, unless n
 
 Examples of the temporal dynamics of the cost of computation are shown in Fig.~\ref{fig:econ_cost_of_comp} for representative computational scaling functions.
 
-\begin{figure}[!htb]
-\includegraphics[width=0.4\textwidth]{cost_of_comp_n} \\
-\includegraphics[width=0.4\textwidth]{cost_of_comp_n2} \\
-\includegraphics[width=0.4\textwidth]{cost_of_comp_2n}
+\begin{figure*}[!htb]
+\includegraphics[width=0.325\textwidth]{cost_of_comp_n}
+\includegraphics[width=0.325\textwidth]{cost_of_comp_n2}
+\includegraphics[width=0.325\textwidth]{cost_of_comp_2n}
 \caption{Examples of the temporal dynamics of the cost of computation for different scaling functions and exponential growth rates. Units are \mbox{$C_0=N_0=n=1$}, with RoR \mbox{$\gamma_\text{ror}=0$}. A non-zero RoR would simply scale these figures by a constant factor of $e^{\gamma_\text{ror}}$.}\label{fig:econ_cost_of_comp}
-\end{figure}
+\end{figure*}
 
 %
 % Arbitrage-Free Time-Sharing
@@ -357,6 +357,70 @@ The computing power allocated to each user under the arbitrage-free time-sharing
 This model is intuitively unsurprising, since it is analogous to the case of classical computer clusters -- nodes receive a time-share proportional to the proportion of the hardware they are contributing to the network. However, it is important to point out that the arbitrage is taking place in the cost of physical qubits, but not in terms of the dollar value of their classical-equivalent processing power, since this is in general non-linearly related to the number of qubits. Arbitrage in computational power per se is complicated by the fact that it is a non-fungible asset that cannot be directly traded, or uniquely associated with a tangible, tradable asset -- its computational value is a function of other assets.
 
 %
+% Problem Size Scaling Functions
+%
+
+\subsection{Problem size scaling functions}\index{Problem size scaling functions}\label{sec:prob_sc_func}
+
+The computational scaling function\index{Computational scaling functions} introduced previously expresses the power of a quantum computer in terms of its classical-equivalent runtime, or equivalently FLOPs\index{FLOPs}. However, this may not be the metric of interest when considering a computer's algorithmic power. In many situations, of far greater interest is the size of a problem\index{Problem size} instance that can be solved in a given timespan. For example, the FLOPs associated with solving an instance of a 3-\textsc{SAT} problem\index{3-SAT problem} grows exponentially with the number of clauses. When discussing the execution of this problem on a given computer, what we really want to know is how many clauses our device can cope with, rather than what the classical-equivalent runtime is.
+
+This observation motivates us to re-parameterise the power of quantum computers in terms of the problem size of a given algorithm to be solved. Employing the same methodology as for computational scaling functions, we define the \textit{problem size scaling function}, which relates the size of an algorithmic problem to it's classical equivalent runtime. Then equating the computational and problem size scaling function yields,
+
+\begin{definition}[Problem size scaling function]\index{Problem size scaling functions}
+The problem size scaling function relates the size of a problem instance, in some arbitrary metric, to its classical-equivalent runtime under a time-shared model,
+\begin{align}
+t = f_\text{size}(s).
+\end{align}
+Equating this with the time-shared computational power yields,
+\begin{align}
+	n\cdot \chi_\text{sc}(n_\text{global}) = f_\text{size}(s).
+\end{align}
+Isolating the problem size yields,
+\begin{align}
+s = f_\text{size}^{-1}(n\cdot \chi_\text{sc}(n_\text{global})).
+\end{align}
+\end{definition}
+
+We now consider several choices of scaling functions.
+
+First let us consider the classical case of linear scaling functions (for both the computational and problem size scaling functions),
+\begin{align}
+	f_\text{sc}(n) &= \alpha_\text{sc} n,\nonumber\\
+	f_\text{size}(s) &= \alpha_\text{size} s.
+\end{align}
+Solving for the problem size simply yields,
+\begin{align}
+s &= \frac{n}{\alpha_\text{size}} \nonumber\\
+&= O(1),
+\end{align}
+where $n$ is regarded as a constant, and $n_\text{global}$ is a variable parameter of the network. That is, the problem sizes of solvable instances is independent of the size of the external network with whom we are time-sharing. This is to be expected, since these scaling functions are typical of classical computers.
+
+For polynomial scaling functions,
+\begin{align}
+f_\text{sc}(n) &= n^{p_\text{sc}},\nonumber\\
+f_\text{size}(s) &= s^{p_\text{size}}.
+\end{align}
+This yields problem size,
+\begin{align}
+	s &= (n \cdot {n_\text{global}}^{p_\text{sc}-1})^\frac{1}{p_\text{size}} \nonumber\\
+	&= O(\mathrm{poly}(n_\text{global})),
+\end{align}
+demonstrating polynomial scaling in our solvable problem size against the size of the network.
+
+For exponential scaling functions,
+\begin{align}
+f_\text{sc}(n) &= e^{\alpha_\text{sc}n},\nonumber\\
+f_\text{size}(s) &= e^{\alpha_\text{size}s},
+\end{align}
+we obtain,
+\begin{align}
+s &= \log\left(n \frac{e^{\alpha_\text{sc}n_\text{global}}}{\alpha_\text{sc}n_\text{global}}\right) \nonumber\\
+&= \alpha_\text{sc}n_\text{global} + \log(n)-\log(\alpha_\text{sc}n_\text{global}) \nonumber\\
+&= O(n_\text{global}),
+\end{align}
+demonstrating that the solvable problem size grows linearly with network size. That is to say, waiting for a doubling in the external network's size will also double the size of a \textbf{BQP}-complete\index{\textbf{BQP}-complete} problem that can be solved in the same time.
+
+%
 % Quantum Computational Leverage
 %
 
@@ -388,6 +452,8 @@ where,
 \end{align}
 is the total number of qubits in the network.
 \end{definition}
+
+Effectively, the QCL tells us how much additional computational power we `get for free' by consolidating with the network.
 
 It is extremely important to note that the QCL is asymmetric, in the sense that the leverage achieved by a given node is larger than the leverage achieved by the network, upon the user joining the network (assuming the remainder of the network comprises more qubits than the respective user).
 
@@ -434,7 +500,7 @@ The leverage is not merely a function of the hardware, but also of the software 
 Examples of the temporal dynamics of the time-dependent single-qubit QCL are shown in Fig.~\ref{fig:time_dep_QCL}.
 
 \begin{figure}[!htb]
-\includegraphics[width=0.42\textwidth]{single_qubit_QCL}
+\includegraphics[width=0.47\textwidth]{single_qubit_QCL}
 \caption{Time-dependent quantum computational leverage for a single qubit (\mbox{$n=1$}) with different computational scaling functions, under the assumption of exponential network growth in units of \mbox{$N_0=1$}.}\label{fig:time_dep_QCL}
 \end{figure}
 
@@ -459,17 +525,17 @@ F(T) &= e^{-r_\text{rf}T} L(T)\nonumber\\
 \end{align}
 \end{definition}
 
-Note that in the limit of \mbox{$T\to 0$} this reduces to the spot price of the asset. That is,
+Note that in the limit of \mbox{$T\to 0$} this reduces to the spot price of the asset,
 \begin{align}
 	F(0)=L(0),
 \end{align}
 as expected.
 
-\begin{figure}[!htb]
-\includegraphics[width=0.4\textwidth]{forward_cont_pricing_mod_1}\\
-\includegraphics[width=0.4\textwidth]{forward_cont_pricing_mod_2}
+\begin{figure*}[!htb]
+\includegraphics[width=0.47\textwidth]{forward_cont_pricing_mod_1}
+\includegraphics[width=0.47\textwidth]{forward_cont_pricing_mod_2}
 \caption{Forward price on a computation to be delivered at time $T$ in the future, in units \mbox{$C_0=N_0=1$}, where we are assuming an exponential scaling function, \mbox{$f_\text{sc}(n)=e^n$}.}\label{fig:forward_cont_pricing_mod}
-\end{figure}
+\end{figure*}
 
 %
 % Economic Implications
@@ -528,11 +594,11 @@ This implies that as the quantum network expands over time, its joint processing
 
 However, taxation could also be negative, in the form of subsidisation. In Fig.~\ref{fig:tax_exp}(bottom) we focus on the region surrounding neutral taxation, showing small degrees of taxation and subsidisation on either side. Evidently, even small degrees of subsidisation have a very strong effect on the performance multiplier (more pronounced than the same rate of positive taxation!). This makes subsidisation of qubit expansion highly tempting.
 
-\begin{figure}[!htb]
-\includegraphics[width=0.47\textwidth]{tax_exp} \\
+\begin{figure*}[!htb]
+\includegraphics[width=0.47\textwidth]{tax_exp}
 \includegraphics[width=0.47\textwidth]{tax_subsidy}
 \caption{(top) Relationship between the tax performance multiplier, (positive) tax rate, and network size, assuming an exponential computational scaling function, in the regime of positive taxation, \mbox{$\gamma_T>1$}. (bottom) For \mbox{$N_\text{tax}=10$}, a zoom into the region around neutral taxation, where \mbox{$\gamma_T\approx 1$}, showing slight degrees of both taxation (\mbox{$\gamma_T>1$}) and subsidisation (\mbox{$\gamma_T<1$}). Neutral taxation, \mbox{$\gamma_T=1$}, is shown in orange.}\label{fig:tax_exp}\index{Tea party}\index{Don't tread on me}
-\end{figure}
+\end{figure*}
 
 %
 % Regulatory Frameworks
@@ -564,7 +630,144 @@ What is likely to arise is that most owners of quantum hardware will not be cons
 
 As all markets for tradable assets do, sophisticated derivative markets will inevitably emerge, whereby people can speculate on or hedge against market dynamics, taking long, short, or more complex market positions, potentially in a highly-leveraged manner. As discussed in Sec.~\ref{sec:for_contr}, derivatives such as future contracts can be extremely helpful in enabling consumers to lock in future prices, creating a stable business climate. Similarly, other derivatives will enable market participants to hedge\index{Hedging} other quantum-related investments. For example, suppose an investor held a stake in an R\&D lab, highly reliant on quantum computing resources. By taking a leveraged long position on the market value for computation, he may limit losses on his R\&D investment associated with the higher price (and hence lower profit) they will be paying for computation. No doubt, market manipulation and all the usual nonsense and shenanigans will ensue.
 
-In Sec.~\ref{sec:quantcoin} we present a high-level argument that forward contracts in quantum computer runtime could form the basis of a sound currency, backed by the economy's desire for computation.
+%
+% Political Leverage
+%
+
+\subsection{Political leverage}\index{Political leverage}\label{sec:political_lev}
+
+The asymmetry in computational leverage observed by parties of different sizes -- specifically, that parties possessing a smaller number of qubits observe greater leverage than those possessing a larger number of qubits -- inevitably will bring with it some power politics, with potentially interesting geo-political implications.
+
+This asymmetry implies that in a globally unified network, were a large party to expel a small party from the network, it would be far more devastating to the computational power of the small party than the larger one. This suggests that inclusion in the global network could be a powerful tool of diplomacy\index{Diplomacy} in the quantum era, where threats of expulsion or resistance to inclusion is the modern day era of gunboat diplomacy\index{Gunboat diplomacy}.
+
+To quantify this we introduce the \textit{political leverage} quantity -- the ratio between the computational leverages observed by two parties belonging to the same network. This directly quantifies the power asymmetry between them.
+
+\begin{definition}[Political leverage]\index{Political leverage}
+The political leverage is the ratio between the computational leverages of two parties residing on the same shared network,
+\begin{align}
+	\gamma_{A,B} &= \frac{\lambda_A}{\lambda_B}\nonumber\\
+	&= \frac{\chi_\text{sc}(n_B)}{\chi_\text{sc}(n_A)}.
+\end{align}
+\end{definition}
+Note that when two parties are of equal size, there is no power asymmetry and \mbox{$\gamma_{A,B}=1$}. Otherwise, when $A$ and $B$ are unequal, then \mbox{$\gamma_{A,B}\neq 1$}, indicative of power asymmetry. With linear (classical) scaling functions, the political leverage is always unity, \mbox{$\gamma_{A,B}=1$}, regardless of any size asymmetry, whereas for super-linear scaling functions the political leverage diverges.
+
+To the Machiavellian\index{Machiavelli} reader, this quantity can be thought of as answering the question `if I were to expel a party from the network, how much more would it hurt them than it would hurt me?'.
+
+%
+% QuantCoin - A Quantum Computation-Backed Cryptocurrency
+%
+
+\subsection{QuantCoin\texttrademark\,-- A quantum computation-backed cryptocurrency}\label{sec:quant_coin_technical}
+
+As discussed in Sec.~\ref{sec:bitcoin_blockchain}, the Bitcoin\index{Bitcoin} mining\index{Mining (cryptocurrencies)} process involves finding bit-strings that hash\index{Hash functions} under SHA256\index{SHA256} to a value within some relatively small range. This so-called `proof-of-work'\index{Proof-of-work} principle associates computational complexity with the mining process, and since the hashing functions are one-way functions, they must be evaluated via brute-force trial-and-error to find hits.
+
+However, what a waste this is! Our proof-of-work is nothing more than hashing a huge number of random bit-strings, computations which are of no intrinsic value to anyone. The market value in turn has nothing to do with any inherent value earned during the mining process. Rather it is based purely on the psychology of scarcity\index{Scarcity}, since there is an upper bound on the number of Bitcoins that satisfy the legitimacy constraint.
+
+What if we were to replace brute-force hashing of random data with computations of genuine monetary value? Then we would have a sounder currency, whose value derives from the monetary cost of executing useful computations. While it is not so easy to invent such a protocol for classical computation, the idea lends itself very naturally to quantum computation, owing to their ability to undergo encrypted computation\index{Encrypted quantum computation} and be subject to verification protocols\index{Verification protocols}.
+
+Building upon some of the pricing models introduced earlier in this section, there are two main candidates for backing a cryptocurrency with quantum compute-time: the spot market\index{Spot market} (i.e we execute the computation immediately); and the futures market\index{Futures market} (i.e we own the right to utilise the computer at some fixed time in the future). We consider the merits of both these candidates.
+
+A popular-level essay on the future of quantum cryptocurrencies is presented in Sec.~\ref{sec:quant_coin_essay}.
+
+%
+% Spot Market Model
+%
+
+\subsubsection{Spot market model}\index{Spot market}
+
+In Alg.~\ref{alg:quant_coin} we provide a very rough sketch for how a protocol based on the spot market might be constructed. A corresponding graphical flowchart is shown in Fig.~\ref{fig:quantcoin_protocol}. We present the ideas in a very high-level manner, abstracting away the physical implementation details of the computation, encryption, and verification protocols, instead envisaging that we can interface with them using a very high-level API\index{API}.
+
+\begin{table}[!htb]
+\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+function QuantCoin($\hat{U}_\text{comp}$, blockchain, data, reward):
+\begin{enumerate}
+	\item Alice homomorphically/blindly encrypts $data$,
+		\begin{align}
+			encryptedInput = homoEncrypt(data)
+		\end{align}
+	\item Alice commits the $encryptedInput$ to the public $blockchain$,
+	\begin{align}
+	blockchain.commit(encryptedInput)	
+	\end{align}
+	\item Alice places into escrow Bob's $reward$,
+	\begin{align}
+		escrow.hold(reward)
+	\end{align}
+	\item Bob processes the $encryptedInput$ using $\hat{U}_\text{comp}$,
+	\begin{align}
+		encryptedOutput = \hat{U}_\text{comp}(encryptedInput)
+	\end{align}
+	\item Bob commits encrypted output to the $blockchain$,
+	\begin{align}
+	blockchain.commit(encryptedOutput)	
+	\end{align}
+	\item Alice and Bob execute a verification protocol,
+	\begin{align}
+	proof = verify(encryptedOutput)	
+	\end{align}
+	\item The $proof$ is committed to the $blockchain$ (as is every step of the proof if it is an interactive one),
+	\begin{align}
+		blockchain.commit(proof)
+	\end{align}
+	\item The $blockchain$ network inspects that the verification is valid.
+	\item If valid, the $blockchain$ hashes and signs the data and proof, encapsulating it into a QuantCoin\texttrademark\,token, which is given to Bob,
+	\begin{align}
+		&token = \text{SHA256}(encryptedInput\nonumber\\
+		&+ encryptedOutput + proof)\nonumber\\
+		&token.sign(blockchain)\nonumber\\
+		&Bob.receive(token)
+	\end{align}
+	\item The $reward$ held in escrow is released to Bob,
+	\begin{align}
+		escrow.release(Bob)
+	\end{align}
+\end{enumerate}}}}
+\caption{Sketch for how a quantum computation-backed cryptocurrency might be implemented. We have abstracted away the underlying Blockchain protocol, interfacing with it using a high-level API, since Blockchain technology is highly liable to evolve. We similarly call upon verification subroutines using a high-level implementation-independent API.} \label{alg:quant_coin}
+\end{table}
+
+\begin{figure}[!htb]
+\includegraphics[width=0.47\textwidth]{quantcoin_protocol}
+\caption{Flowchart for the QuantCoin\texttrademark\, protocol, introduced in Alg.~\ref{alg:quant_coin}.}\label{fig:quantcoin_protocol}	
+\end{figure}
+
+It is evident from the flow of Alg.~\ref{alg:quant_coin} that the mining process now comprises solving an actual quantum computation of intrinsic value to Alice, since she is exchanging assets (e.g dollars or already-existing QuantCoins\texttrademark) in exchange for the computation. Completion of the computation followed by successful verification then further rewards Bob with a fresh QuantCoin\texttrademark\, courtesy of the distributed Blockchain algorithm.
+
+The described protocol, in addition to mining a new coin, associated with the execution of a computation, acts as a currency converter for converting traditional assets (e.g dollars) into QuantCoins\texttrademark. This ability to currency convert is necessary, and completely differs from the original Bitcoin mining process, where coins are fabricated out of thin air by anyone and everyone, independent of their pre-existing monetary wealth -- Bitcoins are not created via conversion from any existing asset. The fact that the computation associated with each QuantCoin\texttrademark\, is of intrinsic value on the other hand, implies that Alice ought to be paying something for the service.
+
+Note that we observe an expansion in the money supply with each successfully executed and verified computation -- one additional unit of QuantCoins\texttrademark\, is mined for every unit of computation implemented\footnote{To provide an analogy with the gold standard\index{Gold standard}, think of the physical quantum computer as the goldmine, and each unit of gold it produces as being a QuantCoin\texttrademark. The production of each unit of gold is associated with the utilisation of the mine for a particular amount of time, but the mine can in principle operate indefinitely, with no hard upper-bound on its total future gold yield.}. Unlike Bitcoin, there is no inherent theoretical upper limit on the number of coins that can exist. However the QuantCoin\texttrademark\, money supply\index{Money supply} will be limited for the practical reason that mining each one is associated with a monetary transaction between Alice and Bob, and Alice will eventually run out of assets to exchange for computations.
+
+What relationships characterise the value of QuantCoins\texttrademark? First, in a perfectly efficient market (Sec.~\ref{sec:eff_markets}) we have,
+\begin{align}\label{eq:value_quantcoins}
+	P_\text{coin} + P_\text{reward} = P_\text{exec},
+\end{align}
+where, 
+$P_\text{coin}$ is the dollar value of a QuantCoin\texttrademark\,, $P_\text{reward}$ is the dollar value of the reward paid by Alice for execution, and $P_\text{exec}$ is the dollar value of cost of execution for Bob.
+ 
+Alternately, rather than Alice paying Bob's reward in dollars, she might pay for them in already-existing QuantCoins\texttrademark. Suppose Alice pays $\lambda$ QuantCoins\texttrademark\, as Bob's reward. Then Eq.~(\ref{eq:value_quantcoins}) reduces to,
+\begin{align}
+P_\text{coin} =\frac{1}{\lambda+1}P_\text{exec},
+\end{align}
+providing us with a simple financial model relating the market price of QuantCoins\texttrademark\, and the monetary cost of execution of computations.
+
+Note that with exception to the scenario where Alice buys into QuantCoins\texttrademark\, using dollar currency (or any non-electronic asset that cannot be committed to the Blockchain), the entire protocol is self-enforcing via programmed Blockchain transactions. Bob doesn't get paid his newly earned and freshly printed QuantCoin\texttrademark\, until the verification of the computation has completed and the proof committed to the Blockchain. He therefore cannot get paid until he has executed the computation he promised to, and proven to the network that he actually did.
+
+The main security risk is that of Bob taking Alice's dollars and running, upon receiving the upfront reward in dollars, which necessarily don't reside on the Blockchain since they are not crypto-assets. This could be addressed by introducing trusted third-party escrow agents into the protocol. 
+
+However, if the upfront payment were being made in pre-existing QuantCoins\texttrademark\,, the Blockchain might be programmed to not release the reward until completion of the final verification stage of the protocol -- effectively an escrow programmed directly into the Blockchain for self-execution.
+
+%
+% Futures Market Model
+%
+
+\subsubsection{Futures market model}
+
+As described above, the cryptocurrency is effectively backed by the spot market in computation -- we exchange currency for the execution of computations \textit{immediately}. However, one might also envisage more complex cryptocurrencies being backed by the futures market in the licensing of quantum compute-time.
+
+Intuitively, one would expect such a form of cryptocurrency to be sounder than the one backed by the spot market. This is because our spot market-derived coins, once mined are not guaranteed to be convertible to anything of value, including computations. Recall that the execution of the computation takes place immediately when the coin is created.
+
+On the other hand, a QuantCoin\texttrademark\, backed by a guarantee to access quantum compute-time at a designated point in the future necessarily has value, so long as the demand for compute-time does, and maintains value until the contract matures and converts into compute-time at which point it becomes worthless.
+
+We leave explicit construction of a futures-based QuantCoin\texttrademark\, model as an exercise for the interested reader.
 
 %
 % Summary of Economic Models
@@ -574,11 +777,12 @@ In Sec.~\ref{sec:quantcoin} we present a high-level argument that forward contra
 
 In Table.~\ref{tab:summary_ec_models} we summarise the economic models and parameters we developed, and applied them to several illustrative scaling functions of particular interest: linear, polynomial, and exponential.
 
-\renewcommand{\tablename}{TABLE}
+\startnormtable
 \renewcommand{\arraystretch}{0.5}
 
 \begin{table*}[!htb]
-\begin{tabular}{|m{0.21\linewidth}|m{0.22\linewidth}|m{0.155\linewidth}|m{0.155\linewidth}|m{0.2\linewidth}|}
+{\footnotesize
+\begin{tabular}{|m{0.21\linewidth}|m{0.21\linewidth}|m{0.15\linewidth}|m{0.155\linewidth}|m{0.225\linewidth}|}
 	\hline
 	\[\text{Model}\] & \[\text{General form}\] & \[f_\text{sc}(n)=n\] & \[f_\text{sc}(n)=n^p\] & \[f_\text{sc}(n)=e^n\]\\
 	\hline \hline
@@ -597,6 +801,8 @@ In Table.~\ref{tab:summary_ec_models} we summarise the economic models and param
 	\begin{flushleft}Time-share computational power (Sec.~\ref{sec:arb_free_time_share})\end{flushleft} & \[c_n=n \cdot \chi_\text{sc}(n_\text{global})
 \] & \[n\] & \[n\cdot{n_\text{global}}^{p-1}\] & \[\frac{n e^{n_\text{global}}}{n_\text{global}}\]\\
 	\hline
+	\begin{flushleft}Problem size scaling function (Sec.~\ref{sec:prob_sc_func})\end{flushleft} & \[s = f_\text{size}^{-1}(n\cdot \chi_\text{sc}(n_\text{global}))\] & \[\frac{n}{\alpha_\text{size}}\] & \[(n \cdot {n_\text{global}}^{p_\text{sc}-1})^\frac{1}{p_\text{size}}\] & \[\alpha_\text{sc}n_\text{global} + \log(n)\]\[-\log(\alpha_\text{sc}n_\text{global})\] \\
+	\hline
 	\begin{flushleft}Quantum computational leverage (Sec.~\ref{sec:quant_ec_lev})\end{flushleft} & \[\lambda_n=\frac{\chi_\text{sc}(n_\text{global})}{\chi_\text{sc}(n)}\] & \[1\] & \[\left(\frac{n_\text{global}}{n}\right)^{p-1}\] & \[\frac{n e^{n_\text{global}}}{n_\text{global}e^n}\]\\
 	\hline
 	\begin{flushleft}Single-qubit leverage (Sec.~\ref{sec:quant_ec_lev})\end{flushleft} & \[\lambda_\text{qubit}=\frac{\chi_\text{sc}(n_\text{global})}{\chi_\text{sc}(1)}\] & \[1\] & \[{n_\text{global}}^{p-1}\] & \[\frac{e^{n_\text{global}-1}}{n_\text{global}}\]\\
@@ -608,11 +814,13 @@ In Table.~\ref{tab:summary_ec_models} we summarise the economic models and param
 	\hline
 	\begin{flushleft}Tax performance multiplier (Sec.~\ref{sec:taxation})\end{flushleft} & \[M(N_\text{tax})=\frac{f_\text{sc}(N_\text{tax})}{f_\text{sc}(N_\text{tax} \gamma_T)}\] & \[\frac{1}{\gamma_T}\] & \[\frac{1}{{\gamma_T}^p}\] & \[e^{N_\text{tax}(1-\gamma_T)}\]\\
 	\hline
-\end{tabular}
+	\begin{flushleft}Political leverage (Sec.~\ref{sec:political_lev})\end{flushleft} & \[\gamma_{A,B}=\frac{\chi_\text{sc}(n_B)}{\chi_\text{sc}(n_A)}\] & \[1\] & \[\left(\frac{n_B}{n_A}\right)^{p-1}\] & \[\frac{e^{n_B}n_A}{e^{n_A}n_B}\] \\
+	\hline
+\end{tabular}}
 \caption{Summary of the dynamics of various economic models under several computational scaling functions ($f_\text{sc}$) of interest, where there are $n$ qubits held by the respective node and \mbox{$n_\text{global}=\sum_{j\in \text{nodes}} n_j$} qubits in the global network. $N_0$ is the initial number of qubits, undergoing growth rate $\gamma_N$. $C_0$ is the initial monetary cost per qubit, undergoing decay rate $\gamma_C$. $\gamma_\text{ror}$ is the rate of return on the licensing of compute-time on qubits, and $r_\text{rf}$ is the risk-free rate of return. $\gamma_T$ is the rate of taxation, and $N_\text{tax}$ is the number of qubits that would exist on the network in the absence of taxation.} \label{tab:summary_ec_models}
 \end{table*}
 
 \renewcommand{\arraystretch}{1}
-\renewcommand{\tablename}{ALG.}
+\startalgtable
 
 \clearpage

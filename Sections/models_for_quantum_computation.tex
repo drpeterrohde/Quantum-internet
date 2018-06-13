@@ -61,7 +61,7 @@ Fig.~\ref{fig:eg_circuit} illustrates a simple 3-qubit quantum circuit comprisin
 		0 & 0 & 1 & 0
 		\end{pmatrix}.
 	\end{align}
-	This is the quantum equivalent of the classical XOR gate.
+	This is the quantum equivalent of the classical XOR gate, flipping the target ($\hat{X}$) if the control is on.
 	\item All quantum gates have the same number of input as output qubits. This is a necessary condition for the unitarity of quantum gates (\mbox{$\hat{U}^\dag \hat{U} = \hat{\mathbb{I}}$}).
 	\item The maximally-entangling 2-qubit controlled-phase (CZ)\index{Controlled-Z (CZ) gate} gate is denoted by two targets ($\bullet$) (the gate operates symmetrically on its two qubits),
 	\begin{align}
@@ -70,8 +70,9 @@ Fig.~\ref{fig:eg_circuit} illustrates a simple 3-qubit quantum circuit comprisin
 		0 & 1 & 0 & 0 \\
 		0 & 0 & 1 & 0 \\
 		0 & 0 & 0 & -1
-		\end{pmatrix}.
+		\end{pmatrix},
 	\end{align}
+	applying a phase-gate ($\hat{Z}$) to the target if the control is on.
 	\item The `meter' symbol represents a classical measurement in the Pauli $\hat{Z}$-basis (the computational or logical basis).
 	\item Double lines represent classical feedforward of measurement outcomes, controlling a subsequent gate.
 \end{itemize}
@@ -187,3 +188,21 @@ The second approach is to borrow techniques from percolation theory\index{Percol
 \comment{To do}
 
 \comment{Talk about Preskill's NISQ or whatever they're called QCs}
+
+%
+% Fault-Tolerance
+%
+
+\subsection{Fault-tolerance}\index{Fault-tolerance}
+
+\comment{To do. Help from Simon Devitt.}
+
+In Sec.~\ref{sec:QOS_chap} we discussed QoS\index{Quality of service} in the context of quantum networks, where we wish to protect the quantum information being communicated via packets of quantum data. In particular, QEC\index{Quantum error correction} allows us to detect and correct errors introduced into quantum data during transmission across noisy channels.
+
+Much more broadly, in the context of an entire quantum computation we will want to achieve the same goal, except that our techniques will need to extend far beyond defending individual quantum states against errors during transmission, but defending an entire computation and all the information residing within it at every stage throughout its execution.
+
+This is achieved by extending techniques from QEC to achieve \textit{fault-tolerant quantum computing}. The primary difficulty here is that a quantum computation is not a passive operation, but involves the successive application of a potentially enormous number of quantum gates, each of which subject to its own error processes, all of which must be mitigated for the computation to succeed.
+
+Because a quantum computation is not a passive operation but highly active, fault-tolerance protocols are also active and it does not suffice to simply perform an encoding at the beginning and error correction at the end. Instead, error correction procedures must be applied repeatedly throughout execution, at each stage projecting the encoded computation onto an error-free state.
+
+As with conventional QEC, this introduces (potentially large, but efficient) overheads associated with encoding logical qubits into fault-tolerant codes. Similarly, there is the notion of \textit{fault-tolerance thresholds}\index{Fault-tolerance thresholds} -- thresholds on gate error rates that must be achieved if fault-tolerant execution is to be successful. These thresholds are typically depressingly low (well below 1\%) and are the primary reason humanity has not yet achieved scalable quantum computing.

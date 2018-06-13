@@ -14,7 +14,53 @@ Different error correcting codes have different error correcting power, and diff
 
 \subsection{Entanglement purification}\index{Entanglement purification}
 
-\comment{To do - move from protocols section. Here do circuit description. Leave optical implementation in protocols section.}
+As we will later see in Sec.~\ref{sec:ent_ultimate}, Bell pairs are a ubiquitous resource for many quantum information processing applications, and warrant special treatment in their own right.
+
+Entanglement purification (or distillation) is a process by which two imperfect distributed Bell pairs can be condensed into a single Bell pair of higher quality (as measured by a fidelity metric, Sec.~\ref{sec:fid_metric}).
+
+More concretely, we distribute two Bell pairs of fidelity $F$ between Alice and Bob. Let us assume a dephasing error model in this instance, in which case the imperfect Bell pairs are of the form,
+\begin{align}
+\hat\rho^F_{A,B} = F\ket{\Phi^+}\bra{\Phi^+} + (1-F)\hat{X}_1\ket{\Phi^+}\bra{\Phi^+}\hat{X}_1,	
+\end{align}
+which corresponds to a bit-flip error model (Sec.~\ref{sec:dephasing_error}). Alice and Bob then perform their entanglement purification protocol -- operations to reduce them to a single Bell pair of higher fidelity,
+\begin{align}
+\mathcal{E}_\text{purif}(\hat\rho^{F_\text{in}}_{A,B} \otimes \hat\rho^{F_\text{in}}_{A,B}) \to \hat\rho^{F_\text{out}}_{A,B},
+\end{align}
+where,
+\begin{align}
+F_\text{out}>F_\text{in}.
+\end{align}
+
+The purification process $\mathcal{E}_\text{purif}$ is realised very simply by Alice and Bob both performing Bell projections (Sec.~\ref{sec:bell_proj}) on their two qubits, classically communicating their measurement outcomes, and performing appropriate local corrections. This is best illustrated by example.
+
+For this model, we will assume our Bell projections destroy the first of their two input qubits, while the second one remains as the output. Then two such projections project a four-qubit state down to a two-qubit state as desired.
+
+Suppose there was no error. Then the input state was,
+\begin{align}
+\ket\psi_\text{in} &= \ket{\Phi^+}\bra{\Phi^+} \otimes \ket{\Phi^+}\bra{\Phi^+}\\
+&= \frac{1}{2}(\ket{0}_1\ket{0}_2+\ket{1}_1\ket{1}_2)(\ket{0}_3\ket{0}_4+\ket{1}_3\ket{1}_4).\nonumber
+\end{align}
+Now upon inspection it is evident that if a Bell projection between Alice's two qubits (1 and 3) yields the $\ket{\Phi^+}$ outcome, Bob's projection (2 and 4) must also yield $\ket{\Phi^+}$. Similarly, whatever Bell outcome Alice measures, Bob will measure the same outcome. Upon classically communicating that they measured consistent outcomes, they are satisfied the final state is error-free, and it is.
+
+Now suppose there was a bit-flip error on the first qubit of the first pair. Now the input state is,
+\begin{align}
+\ket\psi_\text{in} &= \hat{X}_1 \ket{\Phi^+}\bra{\Phi^+}\hat{X}_1 \otimes \ket{\Phi^+}\bra{\Phi^+}\\
+&= \frac{1}{2}(\ket{1}_1\ket{0}_2+\ket{0}_1\ket{1}_2)(\ket{0}_3\ket{0}_4+\ket{1}_3\ket{1}_4).\nonumber
+\end{align}
+Upon performing the Bell measurements as before, suppose Alice measures the $\ket{\Psi^+}$ outcome. Now Bob must measure the $\ket{\Phi^+}$ outcome, and a comparison of measurement outcomes diagnoses this single bit-flip error, which may subsequently be corrected with an additional bit-flip.
+
+In the above two scenarios (no error, or exactly one error), the state is correctable to a perfect Bell pair. What if there are two errors? Consider the input state with bit-flips affecting both Bell pairs. Then,
+\begin{align}
+\ket\psi_\text{in} &= \hat{X}_1 \ket{\Phi^+}\bra{\Phi^+}\hat{X}_1 \otimes \hat{X}_3\ket{\Phi^+}\bra{\Phi^+}\hat{X}_3\\
+&= \frac{1}{2}(\ket{1}_1\ket{0}_2+\ket{0}_1\ket{1}_2)(\ket{1}_3\ket{0}_4+\ket{0}_3\ket{1}_4).\nonumber
+\end{align}
+Upon performing the Bell projections, both Alice and Bob are guaranteed to measure the same outcome, as per the error-free case. However this isn't error-free at all since the remaining state is $\ket{\Psi^+}$ not $\ket{\Phi^+}$. That is, the bit-flip error has permeated through to the corrected state.
+
+Following this example it is evident that our rudimentary entanglement purification protocol can correct at most one bit-flip error. For this reason a mixed state is only correctable if \mbox{$F>1/2$} to begin with. Otherwise errors are more likely to permeate than be corrected, thereby reducing output fidelity.
+
+Similar reasoning as above can be employed to correct against phase-flip errors, and depolarising errors more generally.
+
+In Sec.~\ref{sec:ent_purif} we demonstrate a simple linear optics setup for implementing this, that was subject to experimental demonstration.
 
 %
 % 3-Qubit Code
@@ -90,6 +136,8 @@ This is the simplest construction of a code which protects against a single depo
 
 \subsection{Surface codes}\index{Surface codes}
 
+\comment{Discuss genus and how this adds logical qubits.}
+
 If the intention is to perform quantum computations using cluster states shared over a network, QEC and fault-tolerance \textit{must} be taken into consideration, or catastrophic algorithmic failure will inevitably follow -- the cluster state model is no different from the circuit model in this respect. Fault-tolerance theory places hard thresholds on the amount of noise (typically depolarising errors and loss) qubits may be subject to in order for fault-tolerance to be possible and computations to succeed. This places strict QoS (Sec.~\ref{sec:QOS}) constraints on the network, which can be accommodated for using the usual depolarising and efficiency cost metrics when developing networking strategies and link performance requirements.
 
 It has been shown that fault-tolerance is possible within the cluster state model \cite{bib:NielsenDawson04, bib:Dawson06} using variations of conventional QEC codes. However, more importantly, from cluster states certain \textit{topological QEC codes} \cite{???} can be readily constructed. This implements a form of QEC-encoded measurement-based quantum computing protocol, where the computation proceeds in a measurement-based fashion, but is `natively' fault-tolerant.
@@ -110,11 +158,11 @@ where $e(v)$ are the edges neighbouring vertex $v$, and $e(p)$ are the edges sur
 \end{align}
 The stabilisers can be visualised graphically as per Fig.~\ref{fig:toric_code}.
 
-\begin{figure}[!htb]
-	\includegraphics[width=0.4\textwidth]{torus}\\
-	\includegraphics[width=0.4\textwidth]{toric_code}
-	\caption{Graph representation of the toric QEC code, and its associated stabilisers. The graph resides on a torus (top), while the physical qubits reside on the embedded lattice. The star and plaquette stabilisers across all vertices, jointly specify the state of the graph up to two missing degrees of freedom, which encode a single logical qubit. Thus, a logical qubit is encoded jointly across the entire graph, not at any specific vertex. Logical operations are performed via operations following topological paths through the lattice (not shown). The graph may be distributed across multiple hosts for distributed quantum computation.} \label{fig:toric_code}
-\end{figure}
+\begin{figure*}[!htb]
+	\includegraphics[width=0.47\textwidth]{torus}
+	\includegraphics[width=0.47\textwidth]{toric_code}
+	\caption{Graph representation of the toric QEC code, and its associated stabilisers. The graph resides on a torus (left), while the physical qubits reside on the embedded lattice (right). The star and plaquette stabilisers across all vertices, jointly specify the state of the graph up to two missing degrees of freedom, which encode a single logical qubit. Thus, a logical qubit is encoded jointly across the entire graph, not at any specific vertex. Logical operations are performed via operations following topological paths through the lattice (not shown). The graph may be distributed across multiple hosts for distributed quantum computation.} \label{fig:toric_code}
+\end{figure*}
 
 Unlike the cluster state stabilisers from Eq.~(\ref{eq:CS_stab}), these stabilisers are insufficient to fully characterise a unique quantum state. Rather, there are two unspecified degrees of freedom, which allows for a single qubit to be represented. Modifications of the topology, in the form of holes in the lattice (the genus of the topology), allow larger numbers of qubits to be encoded. Logical operations are implemented by performing sequences of local gates and measurements across topologies over the surface.
 
@@ -199,6 +247,7 @@ In \cite{RohdeHaselgrove} a derivation of a generalisation of the quantum Hammin
 \begin{align}
 \sum_{i=0}^{t_u + \lfloor t_l/2 \rfloor} \binom{n}{i}3^i 2^k \leq 2^n.
 \end{align}
+\comment{Explain Hamming bound, potentially in footnote. Explain what degenerate and non-degenerate codes are.}
 
 Subsequently, using surface codes \cite{bib:StaceBarrettDohertyLoss} arrived at the similar conclusion that QEC codes are more robust against located than unlocated errors.
 
@@ -306,10 +355,10 @@ Now if we proceed for two time-steps, once bit-flipped and another not, we have,
 \end{align}
 and the unknown phase-rotation has been eliminated. The sequence is illustrated on the Bloch sphere\index{Bloch sphere} in Fig.~\ref{fig:bloch_sphere_dyn_dec}.
 
-\begin{figure}[!htb]
-\includegraphics[width=0.47\textwidth]{bloch_sphere_dyn_dec}
+\begin{figure*}[!htb]
+\includegraphics[width=\textwidth]{bloch_sphere_dyn_dec}
 \caption{Bloch sphere representation of a sequence to dynamically decouple an unknown $\hat{Z}$ rotation from a qubit. (a) Blue dot represents the initial state. (b) The state undergoes an unknown $\hat{Z}(\theta)$ rotation. (c) A bit-flip ($\hat{X}$) flips the Bloch sphere upside down. (d) Waiting for the same time as before such that the same unknown $\hat{Z}$-rotation takes place, the state ends up in its initial state, independent of the $\hat{Z}$-rotation angle $\theta$, but assuming it was the same on both occasions in (b) and (d).} \label{fig:bloch_sphere_dyn_dec}	
-\end{figure}
+\end{figure*}
 
 The coupling to the external environment and the qubit state needn't be constant over time, but could be time-varying. In this instance, it is essential that the decoupling control sequence of bit-flip operations be much faster than the rate at which both the phase-rotations and computational operation are changing, such that consecutive unknown phase-rotations are approximately equal and thereby almost perfectly cancel. This rapid control sequence is sometimes referred to as `bang-bang' control\index{Bang-bang control}, since we are repeatedly implementing bit-flips at a fast rate. 
 

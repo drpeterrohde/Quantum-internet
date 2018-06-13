@@ -25,14 +25,14 @@ NS: \alpha\ket{0}+\beta\ket{1}+\gamma\ket{2}\to\alpha\ket{0}+\beta\ket{1}-\gamma
 in the photon-number basis, up to normalisation (which is determined by the post-selection success probability). That is, it applies a $\pi$ phase-shift to only the $\ket{2}$ component of a photon-number superposition. The breakthrough result by KLM demonstrated that this is in fact not the case at all. Instead, the NS gate can be implemented non-deterministically using post-selected linear optics. Two such NS gates allow the construction of a single CZ gate. The construction of the KLM NS and CZ gates are shown in Figs.~\ref{fig:KLM_gate} \& \ref{fig:KLM_explain}. Equivalently, a CNOT gate may be trivially constructed via conjugation by Hadamard gates, based on the identity \mbox{$\hat{H}\hat{Z}\hat{H}=\hat{X}$}.
 
 \begin{figure}[!htb]
-\includegraphics[width=0.4\textwidth]{KLM_gate}
+\includegraphics[width=0.42\textwidth]{KLM_gate}
 \caption{(a) A KLM CZ gate, employing dual-rail encoding, constructed from two non-linear sign-shift (NS) gates, which apply a $\pi$ phase-shift to only $\ket{2}$ terms in the photon-number basis. (b) Construction of the non-deterministic linear optics NS gate. Two ancillary states -- one $\ket{1}$ and one $\ket{0}$ -- are employed, and two photo-detectors post-select upon detecting $\ket{1}\bra{1}$ and $\ket{0}\bra{0}$ respectively. The beamsplitter reflectivities in (a) are 50:50, and in (b) chosen such that the amplitudes obey Eq.~(\ref{eq:NS_trans}).}. \label{fig:KLM_gate} \index{Knill-Laflamme-Milburn (KLM)}\index{Non-linear sign-shift (NS) gate}
 \end{figure}
 
-\begin{figure}[!htb]
-\includegraphics[width=0.44\textwidth]{KLM_optical_paths}
+\begin{figure*}[!htb]
+\includegraphics[width=\textwidth]{KLM_optical_paths}
 \caption{Evolution of the four logical basis states through the KLM CZ gate. The NS gates do nothing in the first three cases, since they are operating only on vacuum and single-photon terms, which are left unchanged by the NS gate. In the last case, where both control and target are on, HOM interference results in photon bunching after the first beamsplitter, thereby creating two-photon terms. These terms inherit the $\pi$ phase-shift from the NS gate transformation, after which the final beamsplitter reverses the HOM photon bunching, yielding the same logical basis state with an acquired $\pi$ phase-shift.} \label{fig:KLM_explain} \index{Knill-Laflamme-Milburn (KLM)}\index{Controlled-Z (CZ) gate}
-\end{figure}
+\end{figure*}
 
 Clearly this non-determinism is of immediate concern, since concatenating multiple gates would have exponentially decreasing success probability, making the protocol inefficient -- if the probability of a single gate succeeding is $p$, and we require that a circuit comprising $n$ of them all succeed, the success probability is clearly $p^n$.
 
@@ -41,7 +41,7 @@ The first key observation then is that gate teleportation can be used to shift t
 The final insight provided by KLM is that by concatenating these non-deterministic CNOT gates, we can inductively build up higher-level CNOT gates with ever increasing success probabilities, asymptoting to unity with high- (but polynomial-) depth concatenation. By combining these key insights, KLM were able to show that near-deterministic CNOT gates can be constructed using an efficient (polynomial) resource overhead, thereby enabling efficient universal quantum computation\footnote{Note that all single-qubit gates are trivially and deterministically implemented using wave-plates or beamsplitters, for polarisation or dual-rail encoding respectively. Thus, we need only concern ourselves with the challenges associated with implementing 2-qubit entangling gates.}. A sketch of the general KLM formalism is shown in Fig.~\ref{fig:KLM_protocol}.
 
 \begin{figure}[!htb]
-\includegraphics[width=0.25\textwidth]{KLM}
+\includegraphics[width=0.28\textwidth]{KLM}
 \caption{KLM architecture for universal LOQC. $n_L$ optical modes are associated with logical qubits in the state $\ket{\psi_L}$, with the remaining $n_A$ modes acting as ancillary states, $\ket{\psi_A}$. A round of passive linear optics is applied, $\hat{U}_1$. Then the ancillary modes are measured, yielding some set of measurement outcomes $m_1$. These are classically processed to determine what the next round of passive linear optics, $\hat{U}_2$, ought to be. This repeats some polynomial number of times, from which an arbitrary quantum computation can be implemented. The \textsc{BosonSampling} and quantum walk models are equivalent to taking just the first stage of this protocol: one round of input state, passive linear optics, and measurement.} \label{fig:KLM_protocol}\index{Knill-Laflamme-Milburn (KLM)}
 \end{figure}
 
@@ -122,18 +122,18 @@ Consider a non-deterministic KLM-type CZ gate\footnote{In reality, no one would 
 
 To analyse the operation of such a non-deterministic protocol, we begin by defining a vector $\vec{n}_t$ at time $t$, which stores purely classical information. Specifically, the vector tells us how many clusters of every length we have stored in memory (except single-qubit clusters, which we assume `come for free'\footnote{As in beer.\index{Beer}}). For example, the second element of the vector tells us how many 3-qubit linear clusters we have in our possession.
 
-We then define a strategy, $f_\text{strat}$\index{Fusion strategies}, for choosing clusters we have stored and bonding them together to form larger clusters. The strategy acts on our cluster vector and updates it accordingly,
+We then define a strategy, $\mathcal{S}$\index{Fusion strategies}, for choosing clusters we have stored and bonding them together to form larger clusters. The strategy acts on our cluster vector and updates it accordingly,
 \begin{align}\index{Fusion strategy update rules}
-\vec{n}_{t+1} = f_\text{strat}(\vec{n}_t).
+\vec{n}_{t+1} = \mathcal{S}(\vec{n}_t).
 \end{align}
 That is, the length vector can be thought of as a series of `buckets' containing clusters of different lengths, and the strategy simply probabilistically shuffles the contents of the buckets around each time it is applied. The process can be thought of as a random walk\index{Random walk}, guided by a probabilistic update rule. Fig.~\ref{fig:linear_cs_strategy} outlines the protocol.
 
 \begin{figure}[!htb]
-	\includegraphics[width=0.4\textwidth]{linear_cluster_state_strategies}
-	\caption{Protocol for preparing linear cluster states using non-deterministic entangling gates and quantum memory. Each `bucket' holds a resource of micro-clusters of a given length, represented by the vector $\vec n$. Beginning with a resource of single qubits we repeatedly attempt bonding operations between micro-clusters in the buckets, according to a fusion strategy, $f_\text{strat}$. Proceeding as a biased random walk, the contents of the buckets shuffle around until ultimately (hopefully) clusters of the target length $N$ are prepared and steadily flow out as output at rate $r$ clusters per update operation. We assume a free supply of single qubits as a resource.}\label{fig:linear_cs_strategy}
+	\includegraphics[width=0.47\textwidth]{linear_cluster_state_strategies}
+	\caption{Protocol for preparing linear cluster states using non-deterministic entangling gates and quantum memory. Each `bucket' holds a resource of micro-clusters of a given length, represented by the vector $\vec n$. Beginning with a resource of single qubits we repeatedly attempt bonding operations between micro-clusters in the buckets, according to a fusion strategy, $\mathcal{S}$. Proceeding as a biased random walk, the contents of the buckets shuffle around until ultimately (hopefully) clusters of the target length $N$ are prepared and steadily flow out as output at rate $r$ clusters per update operation. We assume a free supply of single qubits as a resource.}\label{fig:linear_cs_strategy}
 \end{figure}
 
-The strategy description, $f_\text{strat}$, is also responsible for taking care of updating the elements of $\vec{n}$ according to an update rule, which dictates how many photons are lost or gained upon success or failure of the non-deterministic gate. For example, the CZ gate we have employed here for our toy model destroys two qubits upon failure, but upon success creates a cluster of length given by the sum of the lengths of the clusters acted upon by the gate.
+The strategy description, $\mathcal{S}$, is also responsible for taking care of updating the elements of $\vec{n}$ according to an update rule, which dictates how many photons are lost or gained upon success or failure of the non-deterministic gate. For example, the CZ gate we have employed here for our toy model destroys two qubits upon failure, but upon success creates a cluster of length given by the sum of the lengths of the clusters acted upon by the gate.
 
 We are then interested in the \textit{rate}\index{Cluster state preparation rate}, $r$, at which large clusters are output from the protocol. This is simply extracted by defining a single parameter which counts the number of clusters in $\vec{n}$ above some predetermined target length, and normalises it by the total time taken to reach that point. The rate parameter converges asymptotically for long runtimes. Formally, the rate of preparation is given by,
 \begin{align}
@@ -148,7 +148,7 @@ One of the key outcomes was that a \textsc{Balanced} strategy\index{Balanced str
 Example simulated state preparation rate results are shown in Fig.~\ref{fig:linear_cluster_state_r} for various types of entangling gates and gate success probabilities.
 
 \begin{figure}[!htb]
-\includegraphics[width=0.4\textwidth]{linear_cluster_state_rates}
+\includegraphics[width=0.47\textwidth]{linear_cluster_state_rates}
 \caption{Linear micro-cluster preparation rates for three different types of entangling gates as described in \cite{bib:RohdeBarrett07}, against gate success probability, $p_\text{gate}$. Here a \textsc{Balanced} fusion strategy is employed, whereby we only attempt to join clusters of equal length, always prioritising the largest ones available. This strategy was empirically found to perform better than any asymmetric strategies.}\label{fig:linear_cluster_state_r}
 \end{figure}
 
@@ -642,14 +642,14 @@ The state can similarly be expressed in the momentum basis.\index{Momentum basis
 The quadrature eigenstates\index{Quadrature eigenstates} are mutually related to each other by a Fourier transform\index{Fourier transform},
 \begin{align}
 \ket{x} &= \frac{1}{\sqrt{\pi}} \int_{-\infty} ^\infty e^{-2 i x p} \ket{p} \,dp,\nonumber \\
-\ket{p} &= \frac{1}{\sqrt{\pi}} \int_{-\infty} ^\infty e^{+2 i x p} \ket{x} \,dx.
+\ket{p} &= \frac{1}{\sqrt{\pi}} \int_{-\infty} ^\infty e^{2 i x p} \ket{x} \,dx.
 \end{align}
 
 %
 % Encoding Quantum Information Using Squeezed States
 %
 
-\subsubsection{Encoding quantum information using squeezed state}\index{Squeezed state encoding}
+\subsubsection{Encoding quantum information using squeezed states}\index{Squeezed state encoding}
 
 Position and momentum eigenstates are orthogonal and may therefore be employed to encode a single qubit. However, these eigenstates have infinite energy. That is, they are infinitely squeezed in phase-space (Sec.~\ref{sec:squeezed}, \ref{sec:non_lin_opt})\index{Infinite squeezing}. However, position and momentum eigenstates can be closely approximated using finite, but large squeezing. The squeezed states\index{Squeezed states} in the two quadratures will now no longer be orthogonal, but will have overlap that asymptotes to zero as squeezing is increased. Thus, squeezed states can be used to approximate qubits using non-orthogonal basis states. Squeezed states may be prepared directly using a spontaneous parametric down-conversion (SPDC)\index{Spontaneous parametric down-conversion} process (Sec.~\ref{sec:single_phot_src}) \cite{bib:PhysRevLett.75.4337, bib:o2009photonic}. CV encoding using squeezed states is illustrated in phase-space in Fig.~\ref{fig:squeezed_state_encoding}.
 
@@ -875,7 +875,31 @@ which is a Bell-pair between the matter qubits.
 
 \subsection{Microwave cavities}
 
-\comment{To do.}
+\comment{To do: Jon Dowling. Entirely new section, not subsection of another existing section. You have a lot of freedom here.}
+
+\comment{This is to be an introductory review of this field, starting from the beginning. Use previous sections on KLM and optical cluster states as a guideline for level of detail.}
+
+\comment{A novice should be able to get up to speed on all the important basic concepts starting with no previous knowledge, modulo an understanding of mathematics and quantum mechanics.}
+
+\comment{The following topics need to be included, and you're at full liberty to throw is as much other material as you think is appropriate to communicate the basic ideas of the approach. Feel free to deviate from this suggested structure if you have a clearer idea for structuring it.}
+
+\comment{* How are qubits defined - both physical and mathematical descriptions.}
+
+\comment{* How is state preparation performed?}
+
+\comment{* How are single- and two-qubit gates implemented?}
+
+\comment{* How is readout (measurement) performed?}
+
+\comment{* Scalability issues - anything important re scaling these architectures up arbitrarily.}
+
+\comment{* What are the dominant error models/mechanisms? (both mathematically and physically)}
+
+\comment{* Current obstacles - what needs to be overcome for this to succeed?}
+
+\comment{* Current state of the art with comprehensive referencing}
+
+\comment{* Anything else you decide is relevant or important}
 
 %
 % Adiabatic Quantum Computing & Quantum Annealing

@@ -1,15 +1,17 @@
+From the perspective of quantum computing, by far the most pressing goal for quantum networking is to facilitate \textit{cloud quantum computing}, whereby computations can be performed over a network via a client/server model. This will be of immense importance economically, allowing very expensive quantum computers to be accessible to end-users, who otherwise would have been priced out of the market. This economic model is critical to the early widespread adoption of quantum computation. Networking quantum computers is also of the immense importance to capitalise off the leverage associated with unifying quantum resources as opposed to utilising them in isolation (Sec.~\ref{sec:quant_ec_lev}).
+
+There are several protocols necessary to facilitate cloud quantum computing. First of all, we must have a means by which to remotely process data prepared by a host on a server(s). At the most basic level, this simply involves communicating quantum and/or classical data from a client to a single server for processing, which returns quantum or classical information to the client -- \textit{outsourced quantum computation}. In the most general case, a computation may be processed by multiple servers, each responsible for a different part of the computation -- \textit{distributed quantum computation}.
+
+Many real-world applications for quantum computing will involve sensitive data, in terms of both the information being processed and the algorithms being employed. This necessitates encryption protocols allowing computations to be performed securely over a network, such that intercept-resend attacks\index{Intercept-resend attack} are unable to infer the client's data, and even the host itself is unable to do so -- \textit{homomorphic encryption} and \textit{blind quantum computing}. These form the basic building blocks from which a secure cloud-based model for quantum computing may be constructed, and economic models based on the outsourcing of computations may emerge.
+
+The consumer of cloud quantum computing will of course need to be convinced that their data was processed correctly, according to the desired algorithm. This requires \textit{verification protocols} to allow the server to prove to the client that their data was correctly and honestly processed. 
+
 %
 % The Quantum Cloud
 %
 
 \section{The Quantum Cloud\texttrademark} \label{sec:cloud} 
 \index{Cloud quantum computing}
-
-From the perspective of quantum computing, by far the most pressing goal for quantum networking is to facilitate \textit{cloud quantum computing}, whereby computations can be performed over a network via a client/server model. This will be of immense importance economically, allowing very expensive quantum computers to be accessible to end-users, who otherwise would have been priced out of the market. This economic model is critical to the early widespread adoption of quantum computation.
-
-There are several protocols necessary to facilitate cloud quantum computing. First of all, we must have a means by which to remotely process data prepared by a host on a server(s). At the most basic level, this simply involves communicating quantum and/or classical data from a client to a single server for processing, which returns quantum or classical information to the client. In the most general case, a computation may be processed by multiple servers, each responsible for a different part of the computation -- \textit{distributed quantum computation}.
-
-Many real-world applications for quantum computing will involve sensitive data, in terms of both the information being processed and the algorithms being employed. This necessitates encryption protocols allowing computations to be performed securely over a network, such that intercept-resend attacks are unable to infer the client's data, and even the host itself is unable to do so -- \textit{homomorphic encryption} and \textit{blind quantum computing}. These form the basic building blocks from which a secure cloud-based model for quantum computing may be constructed, and economic models based on the outsourcing of computations may emerge.
 
 %
 % Outsourced Quantum Computation
@@ -122,10 +124,10 @@ The concept of this model is best explained using the optical cluster state form
 
 Let us first assume that we wish to construct a cluster state with $n_\text{logical}$ logical qubits. We additionally allow each logical qubit to be the root node of a graph with a $+$-structure, where each branch comprises a chain of $n_\text{ancilla}$ ancillary physical qubits. These are sometimes referred to as \textit{micro-clusters} \cite{bib:Nielsen04}\index{Micro-cluster states}. A single micro-cluster collectively forms a single \textit{module} in the topology. Our goal is to fuse modules via nearest neighbour entanglement to build up the desired distributed cluster state.
 
-\begin{figure}[!htb]
-\includegraphics[width=0.45\textwidth]{cluster_ident}
+\begin{figure*}[!htb]
+\includegraphics[width=\textwidth]{cluster_ident}
 \caption{Several cluster state identities for modularised quantum computation. (a) Two cluster states with a $+$-topology are fused together using an EO (dashed). (b) Upon success, an edge is created between the respective qubits. (c) Upon failure, both qubits are effectively measured in the $\hat{Z}$ basis, thereby removing them, and any associated edges, from the graph. (d) Following a successful EO, the unwanted ancillary qubits may be eliminated using measurements in the $\hat{Y}$ basis, creating edges between their neighbours. If the grey qubits represent the desired logical qubits, this can be used to remove the remainder of the branches emanating from them, thereby distilling the irregular graph down to a regular lattice.} \label{fig:plus_cluster_ident}
-\end{figure}
+\end{figure*}
 
 We arrange the modules to internally represent a $+$-topology where each node has neighbouring branches in each of the up/down/left/right directions. But we imagine the situation whereby each logical qubit, along with its respective ancillary branches, is held by a different server. Thus, the final cluster state is truly decentralised across all the servers, and in general entire computations cannot be performed locally.
 
@@ -139,10 +141,10 @@ Note, however, that longer ancillary arms provide more opportunity for errors to
 
 Upon successful bonding, any remaining ancillary qubits between the respective logical qubits are measured in the $\hat{Y}$ basis to remove them from the graph, whilst connecting their neighbours, leaving the two respective logical qubits as nearest neighbours in the graph. Now each module contains exactly one logical qubit, connected as desired to neighbouring modules. The relevant identities are shown in Fig.~\ref{fig:plus_cluster_ident}. Our goal is for the entire graph to have a lattice structure, once ancillary qubits have been measured out, as illustrated in Fig.~\ref{fig:module}.
 
-\begin{figure}[!htb]
-\includegraphics[width=0.4\textwidth]{module}
+\begin{figure*}[!htb]
+\includegraphics[width=\textwidth]{module}
 \caption{The modularised approach to scalable and economically efficient, distributed quantum computation using cluster states. The modules are all identical, and can be arbitrarily patched to one another, allowing the construction of arbitrary graph topologies. Because the modules are all identical, one might hope that mass production and economy of scale will drive down the cost of modules. We consider a simple \mbox{$2\times 2$} case where each module (rounded rectangles) comprises a single logical qubit (centre of each module in grey) and a number of ancillary qubits (white in each module), which facilitate bonding the logical qubits of nearest neighbours. The preparation of the modules is performed via nearest neighbour EOs (dashed ellipses), beginning at the end of branches, and working towards the root node upon each failure, until (hopefully) an EO is successful. (a) A \mbox{$2\times 2$} lattice of modules with their respective ancillary qubits. We attempt to bond the endpoints of chains using EOs. (b) Upon measuring the remaining ancillary qubits in the $\hat{Y}$ basis, only the logical qubits remain, with nearest neighbour bonds between adjacent modules, creating a distributed cluster state.} \label{fig:module}
-\end{figure}
+\end{figure*}
 
 This approach has been shown to be resource-efficient \cite{bib:YoranReznik03, bib:Nielsen04}. Let us perform a rudimentary analysis of the resource scaling of this type of approach. The probability of successfully creating an edge between two modules is,
 \begin{align}
@@ -201,3 +203,19 @@ Examples of how this type of model might be applied could include, but not be li
 \end{itemize}
 
 In some instances, such outsourced quantum protocols might be applicable to encryption protocols, like those discussed in the next section, Sec.~\ref{sec:homo_blind}, enabling highly valuable secrecy for the experiments being conducted by researchers and their hard-earned results\footnote{Note, however, that the upcoming protocols are designed for application to particular optical states and protocols, and encryption schemes involving more generic quantum assets are likely to require some rethinking and adaptation (if possible at all, which isn't guaranteed!).}.
+
+%
+% The Globally Unified Quantum Cloud
+%
+
+\subsection{The globally unified quantum cloud}\index{Globally unified quantum cloud}
+
+In Sec.~\ref{sec:economics} we argue that in the quantum era it will be optimal to unify the world's quantum computers into a single virtual, distributed device, rather than utilising smaller individual quantum computers in isolation. This owes to the super-linear scaling in the power of a quantum computer against its number of constituent qubits, a phenomena unique to quantum computers.
+
+This economic imperative implies that the world's many clients of quantum computing will all be interacting will a single vendor -- the globally unified quantum cloud. This will create a competitive online marketplace for the licensing of timeshares in the utilisation of the unified device.
+
+How this unified device will be managed, and by whom, is entirely open to speculation. Will a nation state or alliance of nation states monopolise it? Will a global consortium voluntarily emerge to manage the resources? Or will the whole thing be completely anarchic, potentially resulting in the fracturing of the unified device into several competing smaller ones? What policy and regulatory frameworks will emerge to oversee it? 
+
+The answers to these questions are entirely uncertain. But what is certain is that there will be an extremely high level of unification of quantum resources via the quantum internet, massively enhancing its collective computational power.
+
+The Quantum Cloud\texttrademark\, will be far more powerful than simply licensing compute-time from a single vendor. Its collective power will be far greater than the sum of its parts.
