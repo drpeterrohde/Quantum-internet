@@ -124,7 +124,8 @@ Additionally, the \textsc{Transport} layer is responsible for collision detectio
 The pseudo-code algorithm implemented by the \textsc{Transport} layer, including collision detection, is shown in Alg.~\ref{alg:transport_alg}.
 
 \begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ \
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function Transport(Packet):
 \begin{enumerate}
     \item nextNode = Packet.RoutingQueue.Pop()
@@ -148,7 +149,8 @@ function Transport(Packet):
     \item \}
     \setlength{\itemindent}{0in}
     \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{Algorithm implemented by the \textsc{Transport} layer of QTCP for each \textsc{Packet}. The \texttt{Attributes.Update()} function is left undefined. This is where arbitrary \textsc{Attribute} dynamics may take place.} \label{alg:transport_alg}
 \end{table}
 
@@ -161,14 +163,16 @@ function Transport(Packet):
 The \textsc{Reconstruction} layer only serves one purpose -- to chronologically reorder the received \textsc{Packets} based on the \textsc{Order} field in their \textsc{Packet Headers}. This stage is only performed by Bob -- the final recipient -- and not at any intermediate stage. In general this will require Bob to have a quantum memory, able to hold all \textsc{Packet Data} for a sufficient duration as to enable an arbitrary permutation of \textsc{Packets} to be applied, reproducing the correct chronological order.
 
 \begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function Reconstruction(Packets):
 \begin{enumerate}
     \item Packets.WaitUntilAllReceived()
     \item message = Packets.SortByOrderAscending().data
     \item Packets.Receiver.Notify(message)
      \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{The goal of the \textsc{Reconstruction} layer, is to take a collection of received \textsc{Packets} and reassemble them into the \textsc{Message}. \comment{Not referenced in text!}} \label{alg:reconstruction}
 \end{table}
 

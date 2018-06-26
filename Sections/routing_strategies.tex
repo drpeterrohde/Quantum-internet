@@ -16,7 +16,8 @@ Let us begin our discussion of strategies by considering the simplest case of ju
 
 The very trivial algorithm for this route finding is shown in Alg.~\ref{alg:single_user}, where the \texttt{ShortestPath()} function could be any of the existing, well-known shortest path algorithms (Sec.~\ref{sec:shortest_path}).
 \begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{ 
 function Strategy.SingleUser(Packets):
 \begin{enumerate}
     \item for(packet$\in$Packets) \{
@@ -29,7 +30,8 @@ function Strategy.SingleUser(Packets):
     \setlength{\itemindent}{0in}
     \item \}
     \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{For a single user, a simple shortest-path algorithm necessarily finds the optimal route, as there is no potential for packet collisions or competition for network resources.} \label{alg:single_user}
 \end{table}
 
@@ -86,7 +88,8 @@ Truly \textsc{Global} strategies could employ, for example, the vehicle routing 
 Perhaps the simplest and most elegant multi-user scheduling strategy is to borrow from the idea of time-division multiplexing for preemptive multitasking employed by UNIX operating systems. Here we simply put all live packets in a list, and go through the list, one-by-one, giving each packet an equal time-share of network resources, independent of costs. The algorithm for this is shown in Alg.~\ref{alg:round_robin}.
 
 \begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function Strategy.RoundRobin(Packets):
 \begin{enumerate}
     \item for(packet$\in$Packets) \{
@@ -98,7 +101,8 @@ function Strategy.RoundRobin(Packets):
         \item packet.RoutingQueue.Push(shortestRoute)
     \setlength{\itemindent}{0in} \}
     \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{In the \textsc{Round Robin} strategy we simply iterate through the list of active packets, with no regard for any metrics, or conflicts between them. Rather, we strive for perfect time-sharing equality, and every packet entirely ignores the actions of all other packets, performing a completely selfish optimisation strategy.} \label{alg:round_robin}
 \end{table}
 The \textsc{Round Robin} strategy can be considered base skeleton code for more sophistic algorithms to build upon, simply by reordering the packet queue.
@@ -136,7 +140,8 @@ The \textsc{Random} strategy overcomes one key problem facing any \textsc{Local}
 It isn't just the order in which routes are chosen, which creates imbalance between users. The costs and attributes of the routes themselves is inevitably biased more in favour of some users than others. To accommodate this we now introduce the \textsc{Cost Priority} strategy. Here, rather than prioritising packets on a random basis, or according to a fixed, predetermined priority attribute, we do so according to their net accumulated cost. Those who have accumulated the highest cost will subsequently be treated with highest priority. This strategy effectively introduces a negative feedback loop into resource allocation, creating a self-regulating (and hopefully stable!) time-multiplexed packet-switched network. The pseudo-code for the \textsc{Cost Priority} strategy is shown in Alg.~\ref{alg:cost_prior_alg}.
 
 \begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function Strategy.CostPriority(Packets):
 \begin{enumerate}
     \item packetsAndCosts = []
@@ -158,7 +163,8 @@ function Strategy.CostPriority(Packets):
     \setlength{\itemindent}{0in}
     \item \}
     \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{The \textsc{Cost Priority} strategy scheduling algorithm that gives highest routing priority to \textsc{Packets} with the highest accumulated cost (i.e which have suffered the most). The as-yet undefined \texttt{costFunction()}, which refers to $f_\text{cost}$ from Eq.~(\ref{eq:net_cost_R}), is where the details of the priority decisions are made, which could be entirely arbitrary. In this example, the shortest route is recalculated at each step, based on the expectation that network metrics are dynamic.} \label{alg:cost_prior_alg}
 \end{table}
 
@@ -196,7 +202,8 @@ This provides us with a simple illustration of how costs and attributes can comp
 In some cases, end-user applications may have strict QoS constraints associated with any data they receive. For example, in a time-critical enterprise, say high-frequency trading, receiving information a millisecond too late is worthless, and it would be best to discard the out of date information to free up bandwidth for the next round of information. Alternately, if the fidelity of a state is required to strictly fall within a fault-tolerance threshold, it will be useless if the threshold is violated. In such a context, the \textsc{Strategy} will apply hard boundaries on QoS metrics, discarding anything violating it, after which some other \textsc{Strategy} is applied. The algorithm is summarised in Alg.~\ref{alg:all_or_nothing}.
 
 \begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function Strategy.AllOrNothing(Packets, threshold):
 \begin{enumerate}
     \item for(packet$\in$Packets) \{
@@ -213,7 +220,8 @@ function Strategy.AllOrNothing(Packets, threshold):
     \item \}
     \item Strategy.SomeOtherStrategy(Packets)
     \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{The \textsc{All or Nothing} strategy. If the net cost of a packet exceeds a certain \texttt{threshold}, it is discarded outright, and the sender and recipient notified.} \label{alg:all_or_nothing}
 \end{table}
 
@@ -232,7 +240,8 @@ These scenarios are handled by flow network optimisation algorithms, of which th
 The routing strategy is very straightforward, shown in Alg.~\ref{alg:opt_flow}, since the \textsc{Global} flow-optimisation algorithm completely specifies the entire configuration of routes through the network.
 
 \begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function Strategy.OptimalFlow(Packets):
 \begin{enumerate}
     \item routes = Packets.OptimalFlowRoutes()
@@ -243,6 +252,7 @@ function Strategy.OptimalFlow(Packets):
                 \setlength{\itemindent}{0in} 
     \item \}
     \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{A generic optimal flow routing strategy. \textsc{Packets} is the array of all packets that ought to be transmitted simultaneously, which are collectively optimised using some flow optimisation algorithm before undergoing transport.} \label{alg:opt_flow}
 \end{table}

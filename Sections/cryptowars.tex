@@ -91,7 +91,8 @@ Public- (or asymmetric-) key cryptography addresses this issue by replacing the 
 RSA \cite{bib:RSA} was the first published public-key cryptographic protocol, and forms the backbone for most encryption used on the internet today. It achieves its security based on the belief that factorising large integers into constituent primes is a computationally hard problem -- a so-called `trapdoor function'\index{Trapdoor function}. The algorithm is built upon number theory using modular arithmetic, described in detail in Alg.~\ref{alg:RSA}.
 
 \begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function RSAGenerateKey():
 \begin{enumerate}
 \item $p$ = randomPrime()
@@ -119,7 +120,8 @@ function RSADecrypt(ciphertext, privateKey):
 \item return(plaintext)
 \item $\Box$
 \end{enumerate}
-}}}
+}
+\end{mdframed}
 \caption{Number-theoretic algorithms based on modular arithmetic for RSA key generation, encryption and decryption.} \label{alg:RSA}
 \end{table}
 
@@ -148,7 +150,8 @@ Rather than cryptographically ensuring the secrecy of messages, a user may wish 
 Digital signatures can be easily implemented using the RSA protocol\index{RSA protocol}, but swapping the role of the public and private keys. Now the public key can only be used for decrypting a message, and the private key can only be used for encrypting it. As before, it is computationally hard to infer one from the other. The protocol for sending and verifying a digitally signed message is shown in Alg.~\ref{alg:dig_sig}.
 
 \begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function DigitalSignature(message,keyPair):
 \begin{enumerate}
 \item Alice prepares a short \textit{digest}\index{Digest} of her message using a cryptographic hash function\index{Hash function}, such as SHA256\index{SHA256} (Sec.~\ref{sec:hashing}),\\
@@ -175,7 +178,8 @@ function DigitalSignature(message,keyPair):
 	$\,\,return(fail)$
 	\item $\Box$
 \end{enumerate}
-}}}
+}
+\end{mdframed}
 \caption{Protocol for digitally signing a message using public-key cryptography (RSA) and a cryptographic hash function (SHA256).} \label{alg:dig_sig}
 \end{table}
 
@@ -377,7 +381,8 @@ Implemented photonically, BB84 requires only the transmission of a sequence of s
 The BB84 protocol is described in detail in Alg.~\ref{alg:bb84} in the context of polarisation-encoded photons, which is the most natural (but not only) setting for this protocol. An example evolution of the protocol is illustrated in Fig.~\ref{fig:BB84_example}
 
 \begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function BB84():
 \begin{enumerate}
 \item Alice chooses a random bit, $0$ or $1$.
@@ -403,7 +408,8 @@ or,
 \item Alice and Bob sacrifice some of their bits by publicly communicating them to check for consistency. This rules out intercept-resend attacks.
 \item Privacy amplification may be used to distill the partially compromised key into a shorter but more secret one.
 \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{BB84\index{BB84 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photons. Upon completion of the protocol, Alice and Bob share a random bit-string for use in a one-time pad cipher\index{One-time pad cipher}.}\label{alg:bb84}
 \end{table}
 
@@ -443,7 +449,8 @@ E91 is slightly different to BB84. Here Alice and Bob share an entangled Bell-pa
 \comment{Fix this up. Discuss using Bell violation to prove security.}
 
 \begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function E91():
 \begin{enumerate}
 \item A central server shares a Bell-pair between Alice and Bob,
@@ -457,7 +464,8 @@ function E91():
 \item Alice and Bob sacrifice some of their bits by publicly communicating them to check for consistency. This rules out intercept-resend attacks.
 \item Privacy amplification may be used to distill the partially compromised key into a shorter but more secret one.
 \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{E91\index{E91 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photonic Bell-pairs. Upon completion of the protocol, Alice and Bob share a random bit-string of ruse in a one-time pad cipher\index{One-time pad cipher}.}\label{alg:e91}
 \end{table}
 
@@ -478,7 +486,8 @@ Note that this protocol provides information-theoretic security\index{Informatio
 Conceptually, the operation of the CV QKD protocol is virtually identical to photonic BB84, differing only in that now the different choices of encodings correspond to phase-space transformations. Like BB84, if Eve were to perform an intercept-resend attack\index{Intercept-resend attack} she would probabilistically re-encode in the wrong quadrature, thereby revealing herself to Alice and Bob, who could then terminate. 
 
 \begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function CVQKD():
 \begin{enumerate}
 \item Alice two Gaussian-distributed random numbers with mean zero,
@@ -495,7 +504,8 @@ where $V_\text{mod}$ is the modulation variance\index{Modulation variance}.
 \item Bob randomly measures either $\hat{x}$ or $\hat{p}$ using homodyne detection.
 \item Alice and Bob use classical communication to determine for which transmissions their preparation and measurement were consistent \comment{I don't get this, Alice is deterministically encoding x+ip, where's the randomness in the choice of basis? Are we adding a randomised phase that puts us into a diagonal basis sometimes, or something like that}
 \item \comment{Complete the rest of this}
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{CV QKD protocol using coherent states, encoded in the quadrature basis.}\label{alg:cv_qkd}
 \end{table}
 
@@ -557,7 +567,8 @@ Finally, all users measure their qubits in the $\pm$-basis and publicly (without
 \end{figure*}
 
 \begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function QuantumAnonymousBroadcasting(message, speaker):
 \begin{enumerate}
 \item $\ket\psi = \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n}+\ket{1}^{\otimes n})$
@@ -571,7 +582,8 @@ function QuantumAnonymousBroadcasting(message, speaker):
 \item return(parity)
 \item $\Box$
 \end{enumerate}
-}}}
+}
+\end{mdframed}
 \caption{Protocol for quantum anonymous broadcasting. The GHZ state is distributed in advance, one qubit per user. The measurement outcomes are classically broadcast without encryption. The final parity of the classical measurements reflects the message bit without identifying the speaker.} \label{alg:QAB}
 \end{table}
 
