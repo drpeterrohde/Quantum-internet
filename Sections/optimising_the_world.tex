@@ -22,17 +22,17 @@ Here are a mere few notable everyday applications for optimisation theory.
 
 Given our highly interconnected road networks, what is the best route to take to get home, given the  complex and often unpredictable dynamics of road traffic? And how does that answer change when potentially millions of travellers are simultaneously competing to minimise their individual travel times?
 
-To implement a straightforward {\sc Greedy} strategy, a simple application of Dijkstra's shortest path algorithm (Sec.~\ref{sec:shortest_path}) will yield the optimal route for an individual user, and very quickly since it has only $O(n^2)$ complexity (i.e a \textbf{P} algorithm).
+To implement a straightforward {\sc Greedy} strategy, a simple application of Dijkstra's shortest path algorithm (Sec.~\ref{sec:shortest_path}) will yield the optimal route for an individual user -- and very quickly too since it has only $O(n^2)$ complexity (i.e a \textbf{P} algorithm)!
 
 However, in such multi-user systems, with so many users, {\sc Greedy}\index{Greedy strategy} strategies, based on optimising users individually, are highly sub-optimal, and globally optimised algorithms must be pursued. For example, if there are a thousand drivers competing to get from Town Hall to Redfern, it makes no sense to optimise them individually, since then they will all be identically directed down George St, which will of course quickly saturate and congest. Obviously load-balancing across the various routes benefits everyone collectively \textit{and} individually.
 
 The complexities of a global multi-user optimisation are intuitively evident -- with countless competing interests, finding a set of routes that minimises net transit time yields an enormous space of possibilities and variations to consider, far beyond individual optimisations performed independently. Alas, Dijkstra's tempting algorithm is not very useful, and we must employ harder algorithms, many of which are \textbf{NP}-complete. Some of these were introduced in the context of network packet routing algorithms in Sec.~\ref{sec:route_strats}, a conceptually identical problem to road traffic routing.
 
-Fig.~\ref{fig:traffic_opt} provides a simple example illustrating how individual local optimisations can yield suboptimal routing, with a global optimisation yielding a better overall outcome.
+Fig.~\ref{fig:traffic_opt} provides a simple example illustrating how individual local optimisations can yield suboptimal routing, with a global optimisation yielding a better overall outcome, both collectively and individually.
 
 \begin{figure*}[!htb]
 	\includegraphics[width=0.6\textwidth]{traffic_optimisation}
-	\caption{Simple road network, where vertices represent intersections and edges represent roads. Edge weights indicate their associated travel time. The goal is for Alice and Bob to both drive home optimally, i.e minimising net commute time. Let us assume that the intersections do not delay single cars, but if they become congested (i.e more than one car simultaneously) they induce a time delay of 1 on all drivers present at the intersection. If Bob were to stay at work, and only Alice was attempting to drive home, her optimal route would be \mbox{$A\to D\to F$}, with a commute time of 2. Conversely, if Alice stayed at work and Bob was driving home, his optimal route would be \mbox{$B\to D\to G$}, also with a commute time of 2. However, if both Alice and Bob were driving home at the same time there would be congestion at intersection $D$, and their combined travel time would be 6, not the intended 4. Thus, by optimising their routes independently of one another their competition for intersection $D$ would penalise both of them by 1. On the other hand, a global optimisation would show that a more optimal routing would be for Alice to take \mbox{$A\to C\to F$} (time 2.5), with Bob remaining on \mbox{$B\to D\to G$} (time 2). This would penalise Alice by only 0.5 for taking the longer road, but both Alice and Bob would no longer be penalised at the congested intersection, reducing their collective transit time to 4.5, a saving of 1.5. Note that Alice and Bob are not only better off collectively (i.e their joint travel time), but also individually. That is, Alice making the sacrifice of taking the longer route home actually benefits her individually, with an individual saving of 0.5. In this trivial example there is only one point of conflict in the network. In general, as the number of users scales up, the distinct ways in which combinations of conflicts could emerge grows exponentially.}\label{fig:traffic_opt}
+	\caption{A simple road network, where vertices represent intersections and edges represent roads. Edge weights indicate their associated travel time. The goal is for Alice and Bob to both drive home optimally, i.e minimising net commute time. Let us assume that the intersections do not delay single cars, but if they become congested (i.e more than one car simultaneously) they induce a time delay of 1 on all drivers present at the intersection. If Bob were to stay at work, and only Alice was attempting to drive home, her optimal route would be \mbox{$A\to D\to F$}, with a commute time of 2. Conversely, if Alice stayed at work and Bob was driving home, his optimal route would be \mbox{$B\to D\to G$}, also with a commute time of 2. However, if both Alice and Bob were driving home at the same time there would be congestion at intersection $D$, and their combined travel time would be 6, not the intended 4. Thus, by optimising their routes independently of one another their competition for intersection $D$ would penalise both of them by 1. On the other hand, a global optimisation would show that a more optimal routing would be for Alice to take \mbox{$A\to C\to F$} (time 2.5), with Bob remaining on \mbox{$B\to D\to G$} (time 2). This would penalise Alice by only 0.5 for taking the longer road, but both Alice and Bob would no longer be penalised at the congested intersection, reducing their collective transit time to 4.5, a saving of 1.5. Note that Alice and Bob are not only better off collectively (i.e their joint travel time), but also individually. That is, Alice making the sacrifice of taking the longer route home actually benefits her individually, with an individual saving of 0.5. In this trivial example there is only one point of conflict in the network. In general, as the number of users scales up, the distinct ways in which combinations of conflicts could emerge grows exponentially.}\label{fig:traffic_opt}
 \end{figure*}
 
 \subsubsection{Public transport scheduling}\index{Public transport scheduling}
@@ -49,47 +49,15 @@ The importance of this problem is obvious. Minimising the resources required to 
 
 Governments inevitably have finite budgets\footnote{Except in Venezuela.}, and must therefore allocate tax revenue optimally. Public spending is associated with many of the same combinatorial difficulties as the previous examples.
 
-The countless sectors of the economy are all interdependent with one another, and raise their own demands (constraints), which must be mutually satisfied. A minor misallocation of funding to one government project could have flow-on effects to other interdependent programs, yielding another resource allocation nightmare.
+The countless sectors of the economy are all interdependent with one another, and raise their own demands (constraints), which must be mutually satisfied. A minor misallocation of funding to one project could have flow-on effects to other interdependent programs, yielding another resource allocation nightmare.
 
 Of course, these ideas don't just apply to government budgets, but also budgets at smaller scales, say within a large corporation with many distinct spending programs.
 
 \subsubsection{Supply chain networks}\index{Supply chain networks}
 
-The modern economic infrastructure for the production and distribution of goods is built upon supply chains -- complex, interdependent networks of the exchange of resources between entities as goods pass through their many stages of production before reaching the consumer. Each exchange of resources will typically be subject to its own constraints, such as strict time of arrival demands. Effectively this yields a massive instance of a complex satisfiability problem, where all, or as many as possible of the demands of the units in the chain must be simultaneously met. Conceivably, a single unsatisfied demand may break the functionality of the entire supply chain! 
+The modern economic infrastructure for the production and distribution of goods is built upon supply chains -- complex, interdependent networks of the exchange of resources between entities as goods pass through their many stages of production before reaching the consumer. Each exchange of resources will typically be subject to its own constraints, such as strict time of arrival demands, or age for perishable goods. Effectively this yields a massive instance of a complex satisfiability problem, where all, or as many as possible of the demands of the units in the chain must be simultaneously met. Conceivably, a single unsatisfied demand may break the functionality of the entire supply chain! 
 
 Bearing in mind that modern supply chains may be dealing with billions of dollars in resources at any given time, even minor improvements to their optimisation could be of enormous monetary value.
-
-\subsubsection{Graph colouring}\index{Graph colouring}
-
-One particularly useful approach to representing various optimisation problems is to relate them to the \textit{graph colouring problem}. This problem is known to be \textbf{NP}-complete, and when operating on a graph with $n$ vertices has $O(2^nn)$ classical runtime using the best known algorithm \cite{???}.
-
-The goal of the graph colouring problem is to take a graph $G$, and a set of $k$ colours, and assign a colour to each vertex such that no two vertices connected via an edge share the same colour. If such an assignment of colouring exists, we say the graph is $k$-colourable. The \textit{chromatic number}\index{Chromatic number} of $G$, denoted \mbox{$\chi(G)$}, is the smallest number $k$ such that the graph is $k$-colourable. An example is shown in Fig.~\ref{fig:graph_colouring}(top).
-
-\begin{figure}[!htb]
-\includegraphics[width=0.35\textwidth]{graph_colouring}\\
-\includegraphics[width=0.35\textwidth]{four_colouring}
-\caption{(top) Example of a graph with 3-colouring, such that no two vertices connected by an edge share the same colour. For this particular graph, 3-colouring is optimal (in the sense that the number of colours in minimised). It can easily be seen upon inspection that no 2-colouring is possible for this graph. Thus, this graph's chromatic number is \mbox{$\chi(G)=3$}\index{Chromatic number}. (bottom) A 4-colouring of the states of France\index{Elderberries}. Any planar map such as this has a chromatic number of at most 4 -- the `four colour theorem'.}\index{Graph colouring}\label{fig:graph_colouring}	
-\end{figure}
-
-This problem relates closely to the \textit{map colouring problem}\index{Map colouring}, where the goal is to assign colours to states within a map, such that no two neighbouring states share the same colour, e.g Fig.~\ref{fig:graph_colouring}(bottom). The map colouring problem is a subset of the graph colouring problem, since a map is merely a planar graph. As opposed to graph colouring, where the chromatic number could be arbitrarily high, for map colouring the chromatic number is provably at most 4 -- the `four colour theorem'\index{Four colour theorem}.
-
-How does this seemingly abstract mathematical problem relate to optimisation? Here are two simple examples illustrating the usefulness of the graph colouring problem in optimisation theory.
-
-\paragraph{Time-scheduling}\index{Time-scheduling}
-
-Our goal is to schedule the execution of a large number of tasks, so as to minimise total execution time. However, some tasks may conflict with others and cannot be executed simultaneously -- for example, they compete for access to a shared resource, which can only serve one task at a time.
-
-Let the vertices in the graph represent tasks, and colours represent distinct points in time. If two tasks are in competition with one another and cannot be executed simultaneously, we designate an edge between them. Thus, the set of edges in this `conflict graph'\index{Conflict graph} fully characterises all conflicts in resource allocation between tasks.
-
-Now finding a valid scheduling of tasks amounts to solving the graph colouring problem on the conflict graph, where the colouring specifies the temporal order in which tasks ought to be executed. The graph's chromatic number, $\chi(G)$, now tells us the minimum time in which all tasks can be executed subject to their constraints -- the optimised scheduling.
-
-\paragraph{Broadcast networks}\index{Broadcast networks}
-
-Consider a country comprising different regions, where each region is served by its own local radio station, operating at its own carrier frequency. But the radio signal within a region is strong enough to penetrate its immediate neighbouring regions also. For this reason, the frequency at which a regional station transmits should never be the same as that of its neighbours, so as to avoid signal interference.
-
-In this incarnation of the map colouring problem, a valid colouring specifies a set of transmission frequencies that avoid interregional signal interference, and the chromatic number specifies the smallest possible radio spectrum\index{Radio spectrum} that must be allocated\footnote{Spectrum is worth a lot of money!}.
-
-The same principles could apply to all manner of broadcast networks, such as the allocation of spectrum in cellular phone networks\index{Cellular phone networks}, where now map regions represent cellular transmission towers and their respective coverage.
 
 \subsection{Classical optimisation techniques}\index{Classical optimisation techniques}
 
@@ -122,6 +90,38 @@ However, such problems can be \textit{quadratically} enhanced in runtime by cunn
 \end{figure}
 
 By defining an oracle\index{Oracle} that implements a polynomial-time algorithm on $n$ qubits, a Grover search over the input space of $O(2^n)$ configurations will determine the satisfying input to the oracle for a given desired output, which acts as the tagged element within the search algorithm. The Grover search yields a quadratic speedup for this search compared to a brute-force classical search, therefore requiring only $O(2^{n/2})$ oracle calls. While this is short of the exponential speedup one might hope for, a quadratic speedup can nonetheless be very significant for large problem instances, where even minor improvements could be of enormous value.
+
+\subsubsection{Graph colouring}\index{Graph colouring}
+
+One particularly useful approach to representing various optimisation problems is to relate them to the \textit{graph colouring problem}. This problem is known to be \textbf{NP}-complete, and when operating on a graph with $n$ vertices has $O(2^nn)$ classical runtime using the best known algorithm \cite{???}. Since this approach is \textbf{NP}-complete in general, and can therefore be mapped to a satisfiability problem, the quadratic enhancement offered by Grover is directly applicable.
+
+The goal of the graph colouring problem is to take a graph $G$, and a set of $k$ colours, and assign a colour to each vertex such that no two vertices connected via an edge share the same colour. If such an assignment of colouring exists, we say the graph is $k$-colourable. The \textit{chromatic number}\index{Chromatic number} of $G$, denoted \mbox{$\chi(G)$}, is the smallest number $k$ such that the graph is $k$-colourable. An example is shown in Fig.~\ref{fig:graph_colouring}(top).
+
+\begin{figure}[!htb]
+\includegraphics[width=0.35\textwidth]{graph_colouring}\\
+\includegraphics[width=0.35\textwidth]{four_colouring}
+\caption{(top) Example of a graph with 3-colouring, such that no two vertices connected by an edge share the same colour. For this particular graph, 3-colouring is optimal (in the sense that the number of colours in minimised). It can easily be seen upon inspection that no 2-colouring is possible for this graph. Thus, this graph's chromatic number is \mbox{$\chi(G)=3$}\index{Chromatic number}. (bottom) A 4-colouring of the states of France\index{Elderberries}. Any planar map such as this has a chromatic number of at most 4 -- the `four colour theorem'.}\index{Graph colouring}\label{fig:graph_colouring}	
+\end{figure}
+
+This problem relates closely to the \textit{map colouring problem}\index{Map colouring}, where the goal is to assign colours to states within a map, such that no two neighbouring states share the same colour, e.g Fig.~\ref{fig:graph_colouring}(bottom). The map colouring problem is a subset of the graph colouring problem, since a map is merely a planar graph. As opposed to graph colouring, where the chromatic number could be arbitrarily high, for map colouring the chromatic number is provably at most 4 -- the `four colour theorem'\index{Four colour theorem}.
+
+How does this seemingly abstract mathematical problem relate to optimisation? Here are two simple examples illustrating the usefulness of the graph colouring problem in optimisation theory.
+
+\paragraph{Time-scheduling}\index{Time-scheduling}
+
+Our goal is to schedule the execution of a large number of tasks, so as to minimise total execution time. However, some tasks may conflict with others and cannot be executed simultaneously -- for example, they compete for access to a shared resource, which can only serve one task at a time.
+
+Let the vertices in the graph represent tasks, and colours represent distinct points in time. If two tasks are in competition with one another and cannot be executed simultaneously, we designate an edge between them. Thus, the set of edges in this `conflict graph'\index{Conflict graph} fully characterises all conflicts in resource allocation between tasks.
+
+Now finding a valid scheduling of tasks amounts to solving the graph colouring problem on the conflict graph, where the colouring specifies the temporal order in which tasks ought to be executed. The graph's chromatic number, $\chi(G)$, now tells us the minimum time in which all tasks can be executed subject to their constraints -- the optimised scheduling.
+
+\paragraph{Broadcast networks}\index{Broadcast networks}
+
+Consider a country comprising different regions, where each region is served by its own local radio station, operating at its own carrier frequency. But the radio signal within a region is strong enough to penetrate its immediate neighbouring regions also. For this reason, the frequency at which a regional station transmits should never be the same as that of its neighbours, so as to avoid signal interference.
+
+In this incarnation of the map colouring problem, a valid colouring specifies a set of transmission frequencies that avoid interregional signal interference, and the chromatic number specifies the smallest possible radio spectrum\index{Radio spectrum} that must be allocated\footnote{Spectrum is worth a lot of money!}.
+
+The same principles could apply to all manner of broadcast networks, such as the allocation of spectrum in cellular phone networks\index{Cellular phone networks}, where now map regions represent cellular transmission towers and their respective coverage.
 
 \subsubsection{Non-satisfiability-based optimisation algorithms}
 
@@ -176,9 +176,9 @@ where $b$ is the tree's branching parameter (assumed uniform here for simplicity
 
 Needless to say, doubling one's foresight in planning for the future is highly advantageous and could lead to huge improvements in competitive advantage and efficiency in resource allocation. Doubling the number of moves a competitive chess\index{Chess} player could look ahead would result in their complete and utter dominance of the game!
 
-Despite all this optimism, there remains one major concern, one shared by any quantum algorithm offering only polynomial enhancement. In any real-world quantum computer fault-tolerance\index{Fault-tolerance} is necessarily required to enable the algorithm to be executed faithfully in the inevitable presence of noise. However, fault-tolerant codes necessarily induce a time and space overhead (i.e in terms of the number of physical qubits, and algorithmic runtime). If this overhead is too large it could well overpower the   enhancement offered by the underlying algorithm. For this reason, real-world implementations of these types of algorithms will require very careful consideration of the construction of their associated error correction circuitry, such that there is still some net tangible algorithmic gain at the end. The quadratic enhancement in algorithmic runtime is actually a bound based on the ideal-case where there are no errors. In a fault-tolerant construction the actual achievable enhancement will necessarily be less than this. Specifically, for a given runtime, if the enhancement in the searchable search space is a polynomial of order $p$, this equates to an effective increase in search tree depth by a factor of $p$. For a useful quantum enhancement following fault-tolerance overhead, we obviously want \mbox{$p>1$}.
+Despite all this optimism, there remains one major concern, one shared by any quantum algorithm offering only polynomial enhancement. In any real-world quantum computer fault-tolerance\index{Fault-tolerance} is necessarily required to enable the algorithm to be executed faithfully in the inevitable presence of noise. However, fault-tolerant codes necessarily induce a time and space overhead (i.e in terms of the number of physical qubits, and algorithmic runtime). If this overhead is too large it could well overpower the   enhancement offered by the underlying algorithm. For this reason, real-world implementations of these types of algorithms will require very careful consideration of the construction of their associated error correction circuitry, such that there is still some net tangible algorithmic gain at the end. The quadratic enhancement in algorithmic runtime is actually a bound based on the ideal-case where there are no errors. In a fault-tolerant construction the actual achievable enhancement will necessarily be less than this. Specifically, for a given runtime, if the enhancement in the searchable search space is a polynomial of order $p$, this equates to an effective increase in search tree depth by a factor of $p$ \comment{Is this right?}. For a useful quantum enhancement following fault-tolerance overhead, we obviously want \mbox{$p>1$}.
 
-Note that for the quantum search method for enhancing \textbf{NP}-complete problems, a quadratic improvement is known to be optimal. Therefore, \mbox{$p\leq 2$}.
+Note that for the quantum search method for enhancing \textbf{NP}-complete problems, a quadratic improvement is known to be optimal. Therefore, strictly \mbox{$p\leq 2$}.
 
 \subsection{Implications for the future}
 
