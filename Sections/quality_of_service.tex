@@ -22,7 +22,17 @@ More concretely, we distribute two Bell pairs of fidelity $F$ between Alice and 
 \begin{align}
 \hat\rho^F_{A,B} = F\ket{\Phi^+}\bra{\Phi^+} + (1-F)\hat{X}_1\ket{\Phi^+}\bra{\Phi^+}\hat{X}_1,	
 \end{align}
-which corresponds to a bit-flip error model (Sec.~\ref{sec:dephasing_error}). Alice and Bob then perform their entanglement purification protocol -- operations to reduce them to a single Bell pair of higher fidelity,
+which corresponds to a bit-flip error model (Sec.~\ref{sec:dephasing_error}). That is, we have a mixture of,
+\begin{align}
+\ket{\Phi^+} = \frac{1}{\sqrt{2}}(\ket{0}_A\ket{0}_B + \ket{1}_A\ket{1}_B),	
+\end{align}
+with probability $F$, and,
+\begin{align}
+\ket{\Psi^+} = \frac{1}{\sqrt{2}}(\ket{0}_A\ket{1}_B + \ket{1}_A\ket{0}_B),	
+\end{align}
+with probability \mbox{$1-F$}. The goal is to `filter' out the latter of these.
+
+Alice and Bob then perform their entanglement purification protocol -- operations to reduce them to a single Bell pair of higher fidelity,
 \begin{align}
 \mathcal{E}_\text{purif}(\hat\rho^{F_\text{in}}_{A,B} \otimes \hat\rho^{F_\text{in}}_{A,B}) \to \hat\rho^{F_\text{out}}_{A,B},
 \end{align}
@@ -31,34 +41,51 @@ where,
 F_\text{out}>F_\text{in}.
 \end{align}
 
-The purification process $\mathcal{E}_\text{purif}$ is realised very simply by Alice and Bob both performing Bell projections (Sec.~\ref{sec:bell_proj}) on their two qubits, classically communicating their measurement outcomes, and performing appropriate local corrections. This is best illustrated by example.
+The purification process $\mathcal{E}_\text{purif}$ is realised very simply by Alice and Bob both performing parity measurements\index{Bell measurement} (see Sec.~\ref{sec:bell_proj} for an optical implementation) on their two qubits, whose measurement outcomes indicate whether two qubits were equal ($+$) or different ($-$). These are easily implemented using CNOT gates, using the construction shown in Fig.~\ref{fig:parity_meas}. They complete the protocol by classically communicating their measurement outcomes, and performing appropriate local corrections. This is best illustrated by example.
 
-For this model, we will assume our Bell projections destroy the first of their two input qubits, while the second one remains as the output. Then two such projections project a four-qubit state down to a two-qubit state as desired.
+\begin{figure}[!htb]
+	\begin{align}
+		\Qcircuit @C=.7em @R=.4em @! {
+		\lstick{} & \qw & \targ & \meter \\
+		\lstick{} & \qw & \ctrl{-1} & \qw
+		} \nonumber
+	\end{align}
+	\caption{Construction of a parity measurement circuit using a single CNOT gate and a single-qubit measurement. The measurement outcome indicates whether the two input qubits were the same (\mbox{$\ket{0}\ket{0}$}, \mbox{$\ket{1}\ket{1}$}) or different (\mbox{$\ket{0}\ket{1}$}, \mbox{$\ket{1}\ket{0}$}).}\label{fig:parity_meas}
+\end{figure}
+
+For this model, we will assume our parity projections destroy the first of their two input qubits, while the second one remains as the output. Then two such projections project a 4-qubit state down to a 2-qubit state as desired.
 
 Suppose there was no error. Then the input state was,
 \begin{align}
 \ket\psi_\text{in} &= \ket{\Phi^+}\bra{\Phi^+} \otimes \ket{\Phi^+}\bra{\Phi^+}\\
 &= \frac{1}{2}(\ket{0}_1\ket{0}_2+\ket{1}_1\ket{1}_2)(\ket{0}_3\ket{0}_4+\ket{1}_3\ket{1}_4).\nonumber
 \end{align}
-Now upon inspection it is evident that if a Bell projection between Alice's two qubits (1 and 3) yields the $\ket{\Phi^+}$ outcome, Bob's projection (2 and 4) must also yield $\ket{\Phi^+}$. Similarly, whatever Bell outcome Alice measures, Bob will measure the same outcome. Upon classically communicating that they measured consistent outcomes, they are satisfied the final state is error-free, and it is.
+Now upon inspection it is evident that if a parity projection between Alice's two qubits (1 and 3) yields the $+$ outcome, Bob's projection (2 and 4) must also yield $+$. Similarly, for the $-$ outcome. Upon classically communicating that they measured consistent outcomes, they are satisfied the final state is error-free, and it is, leaving them with a perfect $\ket{\Phi^+}$ state.
 
 Now suppose there was a bit-flip error on the first qubit of the first pair. Now the input state is,
 \begin{align}
 \ket\psi_\text{in} &= \hat{X}_1 \ket{\Phi^+}\bra{\Phi^+}\hat{X}_1 \otimes \ket{\Phi^+}\bra{\Phi^+}\\
 &= \frac{1}{2}(\ket{1}_1\ket{0}_2+\ket{0}_1\ket{1}_2)(\ket{0}_3\ket{0}_4+\ket{1}_3\ket{1}_4).\nonumber
 \end{align}
-Upon performing the Bell measurements as before, suppose Alice measures the $\ket{\Psi^+}$ outcome. Now Bob must measure the $\ket{\Phi^+}$ outcome, and a comparison of measurement outcomes diagnoses this single bit-flip error, which may subsequently be corrected with an additional bit-flip.
+Upon performing the parity measurements as before, suppose Alice measures the $+$ outcome. Now Bob must measure the $-$ outcome, and a comparison of measurement outcomes diagnoses this single bit-flip error, which may subsequently be corrected with an additional bit-flip.
 
 In the above two scenarios (no error, or exactly one error), the state is correctable to a perfect Bell pair. What if there are two errors? Consider the input state with bit-flips affecting both Bell pairs. Then,
 \begin{align}
 \ket\psi_\text{in} &= \hat{X}_1 \ket{\Phi^+}\bra{\Phi^+}\hat{X}_1 \otimes \hat{X}_3\ket{\Phi^+}\bra{\Phi^+}\hat{X}_3\\
 &= \frac{1}{2}(\ket{1}_1\ket{0}_2+\ket{0}_1\ket{1}_2)(\ket{1}_3\ket{0}_4+\ket{0}_3\ket{1}_4).\nonumber
 \end{align}
-Upon performing the Bell projections, both Alice and Bob are guaranteed to measure the same outcome, as per the error-free case. However this isn't error-free at all since the remaining state is $\ket{\Psi^+}$ not $\ket{\Phi^+}$. That is, the bit-flip error has permeated through to the corrected state.
+Upon performing the parity measurement, both Alice and Bob are guaranteed to measure the same outcome, as per the error-free case. However this isn't error-free at all since the remaining state is $\ket{\Psi^+}$ not $\ket{\Phi^+}$. That is, the bit-flip error has permeated through to the `corrected' state.
 
 Following this example it is evident that our rudimentary entanglement purification protocol can correct at most one bit-flip error. For this reason a mixed state is only correctable if \mbox{$F>1/2$} to begin with. Otherwise errors are more likely to permeate than be corrected, thereby reducing output fidelity.
 
-Similar reasoning as above can be employed to correct against phase-flip errors, and depolarising errors more generally.
+The full circuit for this entanglement purification protocol is shown in Fig.~\ref{fig:ent_purif_circ}.
+
+\begin{figure}[!htb]
+\includegraphics[width=0.39\textwidth]{entanglement_purification}
+\caption{Protocol for entanglement purification of two noisy Bell-pairs (blue) into a single less noisy Bell-pair. Not shown are trivial single-qubit local corrections that may need to be made, depending upon measurement outcomes.} \label{fig:ent_purif_circ}
+\end{figure}
+
+Similar reasoning as above can be employed to correct against phase-flip errors by operating in a Hadamard-rotated basis.
 
 In Sec.~\ref{sec:ent_purif} we demonstrate a simple linear optics setup for implementing this, that was subject to experimental demonstration.
 
