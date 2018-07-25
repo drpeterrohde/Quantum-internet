@@ -56,7 +56,7 @@ The basic operation of a repeater, as shown in Fig.~\ref{fig:repeaters_2}, works
 We begin our preparation of a long-range entangled link by creating multiple entangled pairs between adjacent repeater nodes (the number will depend both on the quality of the pairs we initially generate and also the target quality we want our final pair to have). Once we have enough pairs established between two repeater nodes, we perform entanglement purification\index{Entanglement purification}, which converts multiple entangled links (pairs) into a fewer number with higher quality. 
 \begin{figure}[!htb]
 \includegraphics[width=0.4\textwidth]{repeaters_2}
-\caption{Schematic illustration of the basic operation of a quantum repeater network. (a) Preparation of multiple entangled links between adjacent repeater nodes. (b) They are then purified to create higher fidelity links. (c) Entanglement swapping between adjacent pairs creates links of twice the original length. (d) These new links are purified to create higher fidelity ones. (e) Entanglement swapping in creates a link four times the original size. This process continues as necessary to reach target distance and purity.} 
+\caption{Basic operation of a (first generation) quantum repeater network. (a) Preparation of multiple entangled links between adjacent repeater nodes. (b) They are then purified to create higher fidelity links. (c) Entanglement swapping between adjacent pairs creates links of twice the original length. (d) These new links are purified to create higher fidelity ones. (e) Entanglement swapping in creates a link four times the original size. This process continues as necessary to reach target distance and purity.} 
 \label{fig:repeaters_2}
 \end{figure} 
 These purification steps, shown in Fig.~\ref{fig:repeaters_2}(a-b), are performed on the links between all adjacent repeaters, increasing the quality of the links between those adjacent repeater stations to the required degree. Entanglement swapping, as shown in Fig.~\ref{fig:repeaters_2}(c), then creates links twice as long. The resulting entanglement links can then be used for further rounds of purification and swapping until one generates a high quality link between the desired points in the network \cite{}. 
@@ -343,7 +343,7 @@ There is one immediate observation that can be made from this scheme. The matter
 
 The focus so far has been only on loss-based errors but this code is fault-tolerant to general errors as well \cite{bib:MKLLJ14}. Furthermore, this redundancy code was only an illustrative example that photon loss in the channel can be corrected. Many other codes can be used in a similar fashion \cite{bib:munro12, bib:Fowler10, bib:MKLLJ14}. Finally the scheme we have presented in Fig.~\ref{fig:repeaters_9} transmits a quantum signal from Alice and Bob. It can however be adapted to use the butterfly design from Fig.~\ref{fig:repeaters_8} to create remote entanglement between Alice and Bob while maintaining the performance advantages our direct transmission scheme gave. 
 
-\subsection{Scalings in the repeater generations}
+\subsection{Resource scalings across repeater generations}\index{Resource scaling}
 
 As can seen the various quantum repeater generations take quite different approaches as to how they distribute entanglement between Alice and Bob over a long distance \cite{bib:Muralidharan2016}. It is useful thus to summarise in Table.~\ref{tab:rep_nets_scale} the performance of the various repeater approaches and their requirements.
 
@@ -365,27 +365,31 @@ As can seen the various quantum repeater generations take quite different approa
 \end{center}
 \end{widetext}
 
-Table.~\ref{tab:rep_nets_scale} clearly shows that the average time to generate the Bell pair between the end nodes of the repeater network decreases significantly as we move to higher generation quantum repeaters. In the first generation our generation rate is $O(c/L_\mathrm{tot})$, which increases to $O(c/L)$ for the second generation schemes, and finally to $O(1/t_\mathrm{local})$ for the third generation ones. The difference here could be more than nine orders of magnitude. Next the number of quantum memories required decreases from $O(\mathrm{poly}(L_\mathrm{tot}))$ for the first generation approach to $O(\mathrm{polylog}(L_\mathrm{tot}))$ for the higher ones. The higher generation schemes however come at quite a cost, with the requirement for fully fault-tolerance (or near fault-tolerant) quantum gates within repeater nodes. In fact, it is likely that Alice and Bob will have multiple potential routes between themselves.
+Table.~\ref{tab:rep_nets_scale} clearly shows that the average time to generate the Bell pair between the end nodes of the repeater network decreases significantly as we move to higher generation quantum repeaters. In the first generation our generation rate is $O(c/L_\mathrm{tot})$, which increases to $O(c/L)$ for the second generation schemes, and finally to $O(1/t_\mathrm{local})$ for the third generation ones. The difference here could be more than nine orders of magnitude. Next the number of quantum memories required decreases from $O(\mathrm{poly}(L_\mathrm{tot}))$ for the first generation approach to $O(\mathrm{polylog}(L_\mathrm{tot}))$ for the higher ones. The higher generation schemes however come at quite a cost, with the requirement for fully fault-tolerant (or near fault-tolerant) quantum gates within nodes. In fact, it's likely that Alice and Bob will have multiple potential routes between themselves.
 
 \comment{Up to here}
 
 \subsection{The transition to quantum networks}
 
-The previous quantum repeater networks we have discussed have been simple point to point linear networks (Fig \ref{fig10}a). While there were a number fo ways to establish the end to end entangled links between Alice and Bob, they knew they were connected via a simple linear chain. 
+The previous quantum repeater networks we discussed have been simple point-to-point\index{Point-to-point network} linear networks\index{Linear network}, as shown in Fig.~\ref{fig:repeaters_10}(a). While there were a number of ways to establish the end-to-end entangled links between Alice and Bob, they knew they were connected via a simple linear chain.
+ 
 \begin{figure}[!htb]
 \includegraphics[width=0.475\textwidth]{repeaters_10}
-\caption{\comment{Redo fig}Schematic illustration of a quantum networks. In a) the typical simple point-to-point linear quantum repeater network is shown while in b) a more complex topology network  is depicted that could in principle support many simultaneous users. The thicker connecting lines represent links between nodes have more capacity.}
-\label{fig10}
+\caption{\comment{Redo fig}Schematic illustration of two quantum network topologies. (a) The typical simple point-to-point linear quantum repeater network. (b) A network with a more complex (and realistic) topology, that could in principle support many simultaneous users. The thicker connecting lines indicates that links between nodes have more capacity.}
+\label{fig:repeaters_10}
 \end{figure} 
-Of course this is highly unrealistic. Alice and Bob are likely to be members of a complex quantum network (Fig \ref{fig10}b) that supports multiple users  simultaneously. This leads to a number of interesting considerations going forward. 
-\begin{itemize}
-\item First for large scale networks the users may not know it's exact network topology or even the best route between themselves. In fact there could be multiple paths between Alice and Bob. Probing the entire network to establish the best route would be slow and costly (in practical). Still every node should have a unique identifier (quantum ip address) which indicates which part of the network it is part of. .
-\item Next most complex networks dynamically change in time as resources become congested or nodes break. This in turn means using a butter fly approach to create Alice and Bob's links is problematic as one does not know the middle point between them to start the entanglement creation process. If one has to determine the route in advantage and restrict access to those parts of the network required to establish the entire links, congestion will quickly follow. The generation rate will be very slow, 
-\item Last it is unlikely that the repeater nodes are equally spatially separated (making the first generation repeater schemes extremely hard to use in this situation). 
-\end{itemize}
-The above issues leads us to a network model where Alice and Bob suspect there is a route between them but not the exact route (it is llkely to change over time). In such a case if Alice wants to send a message) to Bob, she uses her knowledge of Bob rough location (form the quantum IP address) and her knowledge of the nodes close to her to send a message to a repeater node who will have more knowledge of  Bob part of the network. This node can then forward the message to further nodes (who know even more about Bob location) until it finally reaches Bob. The quantum ip address is essential here as that identifier indicates to the repeater node who to forward to next. In principle as the message (or entanglement) is being established node by node, those repeater nodes who have already been used are free to work for tasks for other users. 
 
-There is another interesting aspect of our general complex quantum networks. There are likely to be many paths between Alice and Bob which could be attempted in superposition fashion. This will not only increase the capacity between Alice and Bob but also it robustness. 
+Of course this is highly unrealistic. Alice and Bob are likely to be members of a complex quantum network, e.g Fig.~\ref{fig10}(b), that supports multiple users simultaneously. This leads to a number of interesting considerations going forward. 
+
+\begin{itemize}
+\item For large-scale networks the users may not know its exact network topology or even the best route between them. In fact there could be multiple paths between Alice and Bob. Probing the entire network to establish the best route would be slow and costly (in practice). Still, every node should have a unique identifier (quantum IP address), uniquely indicating its location in the network.
+\item Most complex networks dynamically change in time as resources become congested or nodes break. This in turn means using a butterfly approach to create Alice and Bob's links is problematic as one does not know the middle point between them to start the entanglement creation process. If one has to determine the route in advance and restrict access to those parts of the network required to establish the entire links, congestion will quickly follow. The generation rate will be very slow. 
+\item Finally, it's unlikely that repeater nodes will be equally spatially separated (making the first generation repeater schemes extremely hard to use in this situation). 
+\end{itemize}
+
+The above issues lead us to a network model where Alice and Bob suspect there is a route between them but not the exact route, which is likely to be dynamic, i.e the availability of routes and their relative costs are liable to change. In such a case if Alice wants to send a message to Bob, she uses her knowledge of Bob's rough location (from the quantum IP address) and her knowledge of the nodes close to her to send a message to a repeater node who will have more knowledge of Bob's part of the network. This node can then forward the message to further nodes (who know even more about Bob's location) until it finally reaches Bob. The quantum IP address is essential here as that identifier indicates to the repeater node who to forward to next. In principle as the message (or entanglement) is being established node by node, those repeater nodes who have already been used are free to work for tasks for other users. 
+
+There is another interesting aspect of our general complex quantum networks. There are likely to be many paths between Alice and Bob which could be attempted in superposition fashion. This will not only increase the capacity between Alice and Bob but also its robustness. 
 
 \bibliography{bill}
 
