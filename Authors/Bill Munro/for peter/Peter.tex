@@ -277,6 +277,8 @@ The use of error correcting codes significantly improves the performance of seco
 
 The only remaining avenue at our disposal is to move from probabilistic to deterministic entanglement distribution. Remembering that we have losses in the channel, the only way to achieve deterministic entanglement distribution will be by transmitting encoded error-correctable states between repeaters. This means we must turn to loss-based error correction codes \cite{bib:ralph05, bib:munro12, bib:Fowler10, bib:ATL13, bib:MKLLJ14}.  
 
+\subsubsection{Loss-tolerant codes}\index{Loss-tolerant codes}
+
 There are quite a number of error codes that can correct for loss events, but here for illustration we consider \textit{parity codes}\index{Parity codes} in their simplest form \cite{bib:ralph05, bib:munro12}. 
 
 Consider a four photon state of the form
@@ -287,11 +289,6 @@ Consider a four photon state of the form
 where $|0\rangle$ and $|1\rangle$ represent orthogonal degrees of freedom (e.g polarisation). This state can be rewritten in the form,
 \begin{align}\label{eq:third_gen_red_enc}
 |\Psi\rangle = \alpha |\Phi_{12}^+\rangle  |\Phi_{34}^+\rangle+\beta |\Psi_{12}^+\rangle  |\Psi_{34}^+\rangle
-\end{align}
-where,
-\begin{align}
-	|\Phi_{ij}^+\rangle &=|0\rangle_i |0\rangle_j+|1\rangle_i |1\rangle_j,\nonumber\\
-	|\Psi_{ij}^+\rangle &=|0\rangle_i |1\rangle_j+|1\rangle_i |0\rangle_j,
 \end{align}
 and thus the state has been encoded into terms of a tensor product of two redundantly encoded Bell states. Now photon loss will remove one of these photons. As an example, let us consider what happens when photon 4 is lost. The resultant state can be represented by the density matrix,
 \begin{align}
@@ -324,25 +321,32 @@ with \mbox{$|\pm\rangle=|0\rangle\pm |1\rangle$}. This redundancy-based parity c
 \item At least one logical qubit must arrive without photon loss.
 \item Every logical qubit must have at least one photon arrive successfully.
 \end{itemize}
-If these constraints are met, the loss events during transmission between adjacent repeater nodes can be corrected. Of course, such codes can not correct more than fifty percent errors and so the distance between repeater nodes is limited. Remembering that the probability of a photon being successfully transmitted through a channel of length $L$ with attenuation length $L_0$ is given by $p=e^{-L/L_0}$, the maximum distance between repeater nodes is $L/L_0\sim 0.69$ (which corresponds to approximately 17km in present-day commercial telecom fibre). This is much shorter than what we would typically consider for the first and second generation schemes.
+If these constraints are met, the loss events during transmission between adjacent repeater nodes can be corrected. Of course, such codes can not correct more than fifty percent errors and so the distance between repeater nodes is limited. Remembering that the probability of a photon being successfully transmitted through a channel of length $L$ with attenuation length $L_0$ is given by \mbox{$p=e^{-L/L_0}$}, the maximum distance between repeater nodes is \mbox{$L/L_0\sim 0.69$} (which corresponds to approximately 17km in present-day commercial telecom fibre). This is much shorter than what we would typically consider for the first and second generation schemes.
+
+\subsubsection{Operation}
 
 Let us now describe the operation of the third generation repeater scheme  depicted in Fig.~\ref{fig:repeaters_9} in detail \cite{bib:munro12, bib:MKLLJ14}.
 
 \comment{Up to here}
 
-It begins at the left hand node by Alice encoding her message into a redundancy parity code created on a series of matter qubits  using local quantum gates within that repeater node. 
+It begins at the left hand node by Alice encoding her message into a redundant parity code created on a series of matter qubits using local quantum gates within that repeater node.
+
 \begin{figure*}[!htb]
 \includegraphics[width=\textwidth]{repeaters_9}
 \caption{\comment{Redo fig}Schematic illustration of the transmission of a quantum signal using loss based error correction codes in a quantum network.}
 \label{fig:repeaters_9}
 \end{figure*}
-The quantum state is then transferred/teleported on photons which are transmitted through a lossy channel to the adjacent repeater node. Here two specific operations occur: first the information encoded on each photon is transferred to a matter qubit within that repeater node and then that photon is measured. The photon measurement is critical as it heralds which photons have been lost and allows us to measure the remaining qubit in that block in the $X$ basis. These  $X$ basis remove the damaged parity blocks from our redundancy based parity coded state leaving our information intact. We can now add the full redundancy back into our encoded state in the matter qubits.  The fully encoded state can then be transferred to photons and transmitted to the next repeater node where the same procedure occurs again. This continues until our state reaches the last repeater node where Bob is. There is one immediate observation that can be made from this scheme. The matter qubits (quantum memories) within the local nodes are only used to encode and error correct the redundancy code as well transmitting those quantum states to photons. Entanglement is not stored within the nodes while the photons are being send to the adjacent repeater nodes. This in turn means the resources within that repeater node can be used immediately again (once the photons have been transmitted) and so the rate of communication is now limited by the time to perform the local operations within a node, rather than the round trip time between adjacent nodes. 
 
-The focus so far has been only on loss based errors but this code is fault tolerance to general errors as well \cite{bib:MKLLJ14}. Further this redundancy code was only an illustrative example that photon loss in the channel can be corrected. Many other codes can be used in a similar fashion \cite{bib:munro12, bib:Fowler10, bib:MKLLJ14}. Finally the scheme we have presented in Figure \ref{fig9} transmits a quantum signal from Alice and Bob. It can however be adapted to use the butterfly design in Figure \ref{fig8} to create remote entanglement between  Alice and Bob while maintaining the performance advantages our direction transmission scheme gave. 
+The quantum state is then transferred/teleported via photons which are transmitted through a lossy channel to the adjacent repeater node. Here two specific operations occur: first the information encoded on each photon is transferred to a matter qubit within that repeater node and then that photon is measured. The photon measurement is critical as it heralds which photons have been lost and allows us to measure the remaining qubit in that block in the $\hat{X}$ basis, which removes the damaged parity blocks from our encoded state, leaving our information intact. We can now add the full redundancy back into our encoded state in the matter qubits. The fully encoded state can then be transferred to photons and transmitted to the next repeater node where the same procedure occurs again. This continues until our state reaches the last repeater node where Bob is.
 
-\section{Scalings in the repeater generations}
+There is one immediate observation that can be made from this scheme. The matter qubits (quantum memories) within the local nodes are only used to encode and error correct the redundancy code as well as transmitting those quantum states as photons. Entanglement is not stored within the nodes while the photons are being sent to the adjacent repeater nodes. This in turn means the resources within that repeater node can be used immediately again (once the photons have been transmitted), and so the rate of communication is now limited by the time to perform the local operations within a node, rather than the round trip time between adjacent nodes. 
 
-As can seen the various quantum repeater generations take quite a different approach to how they distribute entanglement between Alice and Bob over a long distance \cite{bib:Muralidharan2016}. It is useful thus to  summarize in Table \ref{qtable} the performance of the various repeater approaches and the requirements on them.
+The focus so far has been only on loss-based errors but this code is fault-tolerant to general errors as well \cite{bib:MKLLJ14}. Furthermore, this redundancy code was only an illustrative example that photon loss in the channel can be corrected. Many other codes can be used in a similar fashion \cite{bib:munro12, bib:Fowler10, bib:MKLLJ14}. Finally the scheme we have presented in Fig.~\ref{fig:repeaters_9} transmits a quantum signal from Alice and Bob. It can however be adapted to use the butterfly design from Fig.~\ref{fig:repeaters_8} to create remote entanglement between Alice and Bob while maintaining the performance advantages our direct transmission scheme gave. 
+
+\subsection{Scalings in the repeater generations}
+
+As can seen the various quantum repeater generations take quite different approaches as to how they distribute entanglement between Alice and Bob over a long distance \cite{bib:Muralidharan2016}. It is useful thus to summarise in Table.~\ref{tab:rep_nets_scale} the performance of the various repeater approaches and their requirements.
+
 \begin{widetext}
 \begin{center}
 \begin{table}[!htb]
@@ -355,12 +359,15 @@ As can seen the various quantum repeater generations take quite a different appr
 \multicolumn{1}{|l|}{Third generation}   & \multicolumn{1}{l|}{$O(t_\mathrm{local})$}     & \multicolumn{1}{l|}{$O(\mathrm{polylog}(L_\mathrm{tot}))$} & \multicolumn{1}{l|}{$L/L_0<0.69$}   & \multicolumn{1}{l|}{\rm fault tolerant levels}   \\
 \hline
 \end{tabular}
-\caption{Quantum repeater approaches and their expected performance scalings.  $T_\mathrm{av}$ corresponds to the time between which the protocol can be attempted (the time to generate a single Bell state is at least $L_\mathrm{tot}/c$) \cite{bib:Muralidharan2016}. The generation rate is $R\sim 1/T_\mathrm{av}$. Further given are the resources (quantum memories) required as well as the precision for the local gate operations within the repeater node. and $L_\mathrm{max}$ the maximum spacing between repeater nodes. Within the table  $L_\mathrm{tot}$ is the total distance between Alice and Bob while $L$ is the distance between adjacent repeater nodes. $t_\mathrm{local}$ is the time required to perform the local operations within the repeater node, while $L_0$ is the attenuation length of the channel/fiber.}
-\label{qtable}
+\caption{Quantum repeater approaches and their expected performance scalings.  $T_\mathrm{av}$ corresponds to the time between which the protocol can be attempted (the time to generate a single Bell state is at least $L_\mathrm{tot}/c$) \cite{bib:Muralidharan2016}. The generation rate is $R\sim 1/T_\mathrm{av}$. Further given are the resources (quantum memories) required as well as the precision for the local gate operations within repeater nodes. $L_\mathrm{max}$ is the maximum spacing between repeater nodes. $L_\mathrm{tot}$ is the total distance between Alice and Bob while $L$ is the distance between adjacent repeater nodes. $t_\mathrm{local}$ is the time required to perform the local operations within the repeater node, while $L_0$ is the attenuation length of the channel/fibre.}
+\label{tab:rep_nets_scale}
 \end{table}
 \end{center}
 \end{widetext}
-Table  \ref{qtable} clearly shows that the average time to generate the Bell pair between the end nodes of the repeater network decreases significantly as we move to higher generation quantum repeaters. In the first generation our generation rate is proportional to $O(c/L_\mathrm{tot})$ which increases to $O(c/L)$ for the second generation schemes and finally to $O(1/t_\mathrm{local})$ for the third generation ones. The difference here could be more than nine orders of magnitude. Next the number of quantum memories required decreases from $O(\mathrm{poly}(L_\mathrm{tot}))$ for the first generation approach to $O(\mathrm{polylog}(L_\mathrm{tot}))$ for the higher ones. The higher generation schemes however come at quite a cost, with the requirement for fully fault tolerance (or near fault tolerance) quantum gates within the repeater node. In fact it is likely that Alice and Bob will have multiple potential routes between themselves
+
+Table.~\ref{tab:rep_nets_scale} clearly shows that the average time to generate the Bell pair between the end nodes of the repeater network decreases significantly as we move to higher generation quantum repeaters. In the first generation our generation rate is $O(c/L_\mathrm{tot})$, which increases to $O(c/L)$ for the second generation schemes, and finally to $O(1/t_\mathrm{local})$ for the third generation ones. The difference here could be more than nine orders of magnitude. Next the number of quantum memories required decreases from $O(\mathrm{poly}(L_\mathrm{tot}))$ for the first generation approach to $O(\mathrm{polylog}(L_\mathrm{tot}))$ for the higher ones. The higher generation schemes however come at quite a cost, with the requirement for fully fault-tolerance (or near fault-tolerant) quantum gates within repeater nodes. In fact, it is likely that Alice and Bob will have multiple potential routes between themselves.
+
+\comment{Up to here}
 
 \subsection{The transition to quantum networks}
 
