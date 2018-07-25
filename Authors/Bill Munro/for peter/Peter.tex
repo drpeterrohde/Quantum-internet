@@ -41,7 +41,7 @@ As has been mentioned, any future quantum internet \cite{bib:Kimble2008} is goin
 
 The links are now over much shorter distances and so can be generated with far higher probability \cite{}. Then by stitching these together using entanglement swapping (Sec.~\ref{sec:ent_swap})\index{Entanglement swapping}, we can generate our required long-range entanglement link \cite{}.
 
-\subsection{Basic operation}
+\subsection{First generation repeaters}\index{First generation repeaters}
 
 The above description is very hand-wavy, and of course things are a little more complicated in practise. We now examine these ideas in a little more detail, starting with a simple linear chain of repeater stations. 
 
@@ -191,7 +191,7 @@ with,
 \end{align}
 where a local correction operation is performed on either $A_1$ or $B_1$ depending on the measurement outcome. It is clear that the longer range entangled state $\hat\rho_{F'}$ is less entangled that the states $\hat\rho_F$ used to generate it. In fact, to first order our fidelity drops from $F$ to $F^2$. This in turn means that we can not simply purify adjacent repeater pairs and swap them all to create the long range pairs. If we had $n$ links, our final fidelity from all the swapping would scale as $F^n$. For high fidelity end-to-end entangled links we need to follow the approach outlined in Fig.~\ref{fig:repeaters_2}. Finally, depending on how the Bell measurement is implemented, this process could be probabilistic (but heralded) or deterministic in nature. We assign the success probability as $p_\mathrm{ES}$.
 
-\subsection{Performance}\index{Repeater performance}
+\subsubsection{Performance}\index{Repeater performance}
 
 We now have all the operations required for a repeater to create long-range entanglement. The natural question to ask is how well it performs.
 
@@ -228,7 +228,7 @@ especially if probabilistic gates are included. Next the resources scale polynom
 \end{align}
 for the Deutsch protocol, which in turn implies it is efficient. However for long distances $L_\mathrm{tot}$, our normalised rate \mbox{$R(n,k,L_\mathrm{tot})\ll 1\mathrm{Hz}$}, especially when probabilistic CNOT gates and Bell state measurements are employed \cite{bib:jiang09, munro10}.
 
-\subsection{Second generation repeaters and error correction}
+\subsection{Second generation repeaters and error correction}\index{Second generation repeaters}
 
 The previous approach for entanglement distribution over long distances based on first generation quantum repeaters has its performance heavily constrained by both the probabilistic nature of the various quantum operations and the associated classical communication time. We know that the classical communication in entanglement distribution is only between the adjacent nodes, whereas for the purification and swapping operations it can be very long-range, potentially over the entire network length. This is the fundamental reason why the time to create a pair is of order $O(L_\mathrm{tot}/c)$ or longer. This will not change significantly even if we have deterministic CNOT gates and Bell measurements as the entanglement purification protocols will remain probabilistic in nature (even though the swapping operations will be deterministic). We thus need to replace our usual entanglement purification protocols with a similar operation that is deterministic in nature \cite{bib:jiang09, bib:munro10}.
 
@@ -249,7 +249,7 @@ It's important to state here that error correction-based purification is determi
 
 Mitigating having to wait for the measurement results to be sent and received in both the quantum error correction-based purification and entanglement swapping protocols has a profound effect on the rate of generating long-range entangled pairs. We still need to perform long-range classical messaging (potentially between end nodes), and thus it's immediately obvious that the preparation time can scale solely as,
 \begin{align}
-	T = 2 L_\mathrm{tot}/c,
+	T = \frac{2 L_\mathrm{tot}}{c},
 \end{align}
 which was the lower bound on the first generation schemes \cite{bib:munro10}.
 
@@ -273,48 +273,68 @@ This is quite a dramatic decrease in both $T$ and $M$ compared to the first gene
 
 \subsection{Third generation repeaters}
 
-The use of error correcting codes has helped in the significance performance improvement available for second generation quantum repeaters. Those second generation schemes are now limited by the communication time between adjacent repeater nodes to herald whether entanglement distribution was successful or not \cite{bib:munro10, bib:munro12}. The communication (both quantum and classical) is ultimately limited by the speed of light (either in the fiber or free space). The natural question is how we improve the performance further. The only remaining choice is to move from probabilistic to deterministic entanglement distribution. Remembering that we have losses in the channel, the only way to achieve deterministic entanglement distribution will be by transmitting error correctable encoded photon signal between the repeater nodes. This means one must turn to loss based error correction codes \cite{bib:ralph05, bib:munro12, bib:Fowler10, bib:ATL13, bib:MKLLJ14}.  
+The use of error correcting codes significantly improves the performance of second generation quantum repeaters compared to first generation ones. The second generation schemes are now limited by the communication time between adjacent repeater nodes to herald whether entanglement distribution was successful or not \cite{bib:munro10, bib:munro12}. The communication (both quantum and classical) is ultimately limited by the speed of light (either in fibre or over free space). The natural question is whether we can improve performance even further.
 
-Their are quite a number of error codes that can correct for loss events but here to illustrate how it works we will consider the parity codes in their simplest form \cite{bib:ralph05, bib:munro12}. Consider a four photon state of the form
+The only remaining avenue at our disposal is to move from probabilistic to deterministic entanglement distribution. Remembering that we have losses in the channel, the only way to achieve deterministic entanglement distribution will be by transmitting encoded error-correctable states between repeaters. This means we must turn to loss-based error correction codes \cite{bib:ralph05, bib:munro12, bib:Fowler10, bib:ATL13, bib:MKLLJ14}.  
+
+There are quite a number of error codes that can correct for loss events, but here for illustration we consider \textit{parity codes}\index{Parity codes} in their simplest form \cite{bib:ralph05, bib:munro12}. 
+
+Consider a four photon state of the form
 \begin{align}
 |\Psi\rangle &= \alpha \left[|0\rangle_1 |0\rangle_2+|1\rangle_1 |1\rangle_2\right] \otimes \left[|0\rangle_3 |0\rangle_4+|1\rangle_3 |1\rangle_4\right] \nonumber \\
 &+ \beta \left[|0\rangle_1 |1\rangle_2+|1\rangle_1 |0\rangle_2\right] \otimes \left[|0\rangle_3 |1\rangle_4+|1\rangle_3 |0\rangle_4\right]
 \end{align}
-where $|0\rangle$ and $|1\rangle$ represent orthogonal degrees of freedom (eg polarization). This state can be rewritten in the form
-\begin{align}
+where $|0\rangle$ and $|1\rangle$ represent orthogonal degrees of freedom (e.g polarisation). This state can be rewritten in the form,
+\begin{align}\label{eq:third_gen_red_enc}
 |\Psi\rangle = \alpha |\Phi_{12}^+\rangle  |\Phi_{34}^+\rangle+\beta |\Psi_{12}^+\rangle  |\Psi_{34}^+\rangle
 \end{align}
-where $ |\Phi_{ij}^+\rangle=|0\rangle_i |0\rangle_j+|1\rangle_i |1\rangle_j$ and $ |\Psi_{ij}^+\rangle=|0\rangle_i |1\rangle_j+|1\rangle_i |0\rangle_j$ and so one observes the state has been encoded into terms of a tensor product of two Bell states (our Bell state are redundantly encoded). Now photon loss will remove one of these photons and for instance, let us consider that photon 4 is lost. The resultant state can be represented by the density matrix
-$\rho= |\zeta_+\rangle \langle \zeta_+| +|\zeta_-\rangle \langle \zeta_-|$ where 
+where,
 \begin{align}
-|\zeta_+\rangle &=  \alpha |\Phi_{12}^+\rangle |0\rangle_3 + \beta  |\Psi_{12}^+\rangle |1\rangle_3 \nonumber \\
-|\zeta_-\rangle &=  \alpha |\Phi_{12}^+\rangle |1\rangle_3 + \beta  |\Psi_{12}^+\rangle |0\rangle_3 \nonumber
+	|\Phi_{ij}^+\rangle &=|0\rangle_i |0\rangle_j+|1\rangle_i |1\rangle_j,\nonumber\\
+	|\Psi_{ij}^+\rangle &=|0\rangle_i |1\rangle_j+|1\rangle_i |0\rangle_j,
 \end{align}
-We immediately notice that $|\zeta_-\rangle=X_3 |\zeta_+\rangle$ and so by measuring the third photon in the $X$ basis our state reduces to the pure state $\alpha |\Phi_{12}^+\rangle \pm \beta  |\Psi_{12}^+\rangle$ with the $\pm$ sign associated with the $X=\pm 1$ result respectively. A simple local operation for the $X=-1$ result transform it to the $X=+1$ case, and so after the loss event of photon 4 and the measurement of the third photon our states becomes 
+and thus the state has been encoded into terms of a tensor product of two redundantly encoded Bell states. Now photon loss will remove one of these photons. As an example, let us consider what happens when photon 4 is lost. The resultant state can be represented by the density matrix,
 \begin{align}
-\alpha |\Phi_{12}^+\rangle + \beta  |\Psi_{12}^+\rangle 
+	\hat\rho= |\zeta_+\rangle \langle \zeta_+| +|\zeta_-\rangle \langle \zeta_-|,
+	\end{align}
+where,
+\begin{align}
+|\zeta_+\rangle &=  \alpha |\Phi_{12}^+\rangle |0\rangle_3 + \beta  |\Psi_{12}^+\rangle |1\rangle_3, \nonumber \\
+|\zeta_-\rangle &=  \alpha |\Phi_{12}^+\rangle |1\rangle_3 + \beta  |\Psi_{12}^+\rangle |0\rangle_3.
 \end{align}
-which has exactly the same information in it as  $|\Psi\rangle$ but without the redundancy encoding. It is then straightforward to re-encode back to our original state $ \alpha |\Phi_{12}^+\rangle  |\Phi_{34}^+\rangle+\beta |\Psi_{12}^+\rangle  |\Psi_{34}^+\rangle$. Here we consider photon loss only on the fourth qubit, however it can in principle be any photon that is lost. For this example however the photon loss must be small.
 
-The above example illustrates how the smallest optical loss code work. The general code with $n - 1$ redundancy can be written as \cite{bib:ralph05, bib:munro12} 
+We immediately notice that $|\zeta_-\rangle=\hat{X}_3 |\zeta_+\rangle$ and so by measuring the third photon in the $\hat{X}$ basis our state reduces to the pure state $\alpha |\Phi_{12}^+\rangle \pm \beta |\Psi_{12}^+\rangle$, where the $\pm$ sign is given by the $\hat{X}$ measurement outcome. This is then correctable using local operations. After the loss event of photon 4 and the measurement of the third photon our state thus becomes,
+\begin{align}
+\alpha |\Phi_{12}^+\rangle + \beta  |\Psi_{12}^+\rangle,
+\end{align}
+which has exactly the same information in it as $|\Psi\rangle$ but without the redundant encoding.
+
+It is now straightforward to re-encode back to our original state, Eq.~(\ref{eq:third_gen_red_enc}). We considered photon loss only on the fourth qubit. However the same principle applies for any lost photon. Unfortunately we can only tolerate the loss of a single photon using this encoding, so the loss rate must be small.
+
+The above example illustrates how the smallest optical loss code work. The general code with \mbox{$n - 1$} redundancy can be written as \cite{bib:ralph05, bib:munro12},
 \begin{align}
 |\Psi\rangle = \alpha |\Phi_{e}\rangle_1 \ldots  |\Phi_{{e}}\rangle_n+\beta |\Psi_{o}\rangle_1 \ldots  |\Psi_{o}\rangle_n
 \end{align}
-where $|\Phi_{e,o}\rangle$ are the even and odd parity m photon states given by \begin{align}
+where $|\Phi_{e,o}\rangle$ are the even and odd parity m photon states given by,
+\begin{align}
 |\Phi_{e,o}\rangle =  |+\rangle_1 \ldots  |+\rangle_m\pm |-\rangle_1 \ldots  |-\rangle_m
 \end{align}
-with   $|\pm\rangle=|0\rangle\pm |1\rangle$. This redundancy based parity code is composed of $n$ logical qubits each containing m photons. For this code to correct loss errors we have two constraints
+with \mbox{$|\pm\rangle=|0\rangle\pm |1\rangle$}. This redundancy-based parity code is composed of $n$ logical qubits each containing $m$ photons. For this code to correct loss errors we have two constraints,
 \begin{itemize}
-\item First at least one logical qubit must arrive without photon loss,
-\item Second, every  logical qubit must have at least one photon arriving.
+\item At least one logical qubit must arrive without photon loss.
+\item Every logical qubit must have at least one photon arrive successfully.
 \end{itemize}
-If these constraints are meet, the loss events during transmission between adjacent repeater nodes can be corrected. Of course such codes can not correct more than fifty percent errors and so the distance between repeater nodes is limited. Remembering that the probability of a photon being successfully transmitted through a channel of length L with attenuation length $L_0$ is given by $p=e^{-L/L_0}$, the maximum distance between repeater nodes is $L/L_0\sim 0.69$ (which corresponds to approximately 17km in commercial telecom fiber). This is much shorter than what we would typically consider the first and second generation schemes.
+If these constraints are met, the loss events during transmission between adjacent repeater nodes can be corrected. Of course, such codes can not correct more than fifty percent errors and so the distance between repeater nodes is limited. Remembering that the probability of a photon being successfully transmitted through a channel of length $L$ with attenuation length $L_0$ is given by $p=e^{-L/L_0}$, the maximum distance between repeater nodes is $L/L_0\sim 0.69$ (which corresponds to approximately 17km in present-day commercial telecom fibre). This is much shorter than what we would typically consider for the first and second generation schemes.
 
-Let us now describe the operation of the third generation repeater scheme  depicted in Figure \ref{fig9} in detail \cite{bib:munro12, bib:MKLLJ14}. It begins at the left hand node by Alice encoding her message into a redundancy parity code created on a series of matter qubits  using local quantum gates within that repeater node. 
+Let us now describe the operation of the third generation repeater scheme  depicted in Fig.~\ref{fig:repeaters_9} in detail \cite{bib:munro12, bib:MKLLJ14}.
+
+\comment{Up to here}
+
+It begins at the left hand node by Alice encoding her message into a redundancy parity code created on a series of matter qubits  using local quantum gates within that repeater node. 
 \begin{figure*}[!htb]
 \includegraphics[width=\textwidth]{repeaters_9}
-\caption{\comment{Redo fig}Schematic illustration of the transmission of a quantum signal using loss based error correction codes in a quantum network. }
-\label{fig9}
+\caption{\comment{Redo fig}Schematic illustration of the transmission of a quantum signal using loss based error correction codes in a quantum network.}
+\label{fig:repeaters_9}
 \end{figure*}
 The quantum state is then transferred/teleported on photons which are transmitted through a lossy channel to the adjacent repeater node. Here two specific operations occur: first the information encoded on each photon is transferred to a matter qubit within that repeater node and then that photon is measured. The photon measurement is critical as it heralds which photons have been lost and allows us to measure the remaining qubit in that block in the $X$ basis. These  $X$ basis remove the damaged parity blocks from our redundancy based parity coded state leaving our information intact. We can now add the full redundancy back into our encoded state in the matter qubits.  The fully encoded state can then be transferred to photons and transmitted to the next repeater node where the same procedure occurs again. This continues until our state reaches the last repeater node where Bob is. There is one immediate observation that can be made from this scheme. The matter qubits (quantum memories) within the local nodes are only used to encode and error correct the redundancy code as well transmitting those quantum states to photons. Entanglement is not stored within the nodes while the photons are being send to the adjacent repeater nodes. This in turn means the resources within that repeater node can be used immediately again (once the photons have been transmitted) and so the rate of communication is now limited by the time to perform the local operations within a node, rather than the round trip time between adjacent nodes. 
 
