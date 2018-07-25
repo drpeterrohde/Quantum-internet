@@ -15,155 +15,185 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage{mdframed}
-
 \usepackage{dcolumn}% Align table columns on decimal point
+
+\newcommand{\comment}[1]{{\color{blue}{\textbf{#1}}}}
+
+\newcommand{\bra}[1]{\langle#1|}
+\newcommand{\ket}[1]{|#1\rangle}
 
 \begin{document}
 
+\title{Quantum repeater networks}
+
 \maketitle
 
-As has been mentioned, any future quantum internet \cite{Kimble2008} is going to require the communication of quantum information over arbitrary long distances.  While intercity communication may be able to be with point to point connections, intracity and intercontinental communication will require extremely long distances links, well beyond the attenuation length of the optical fibers connecting them. The natural solution to this is the use of quantum repeaters \cite{Gisin2007,SSRG09,WJM2015} which operate by dividing our long-distance link into a finite number of segments with a repeater at each node (see Figure \ref{fig1}). 
+\section{Quantum repeater networks}
+
+\tableofcontents 
+
+As has been mentioned, any future quantum internet \cite{Kimble2008} is going to require the communication of quantum information over arbitrarily long distances. While intercity communication might be implemented via point-to-point connections\index{Point-to-point}, intracity and intercontinental communication will require extremely long distance links, well beyond the attenuation length of the optical fibres connecting them. The natural solution to this is to employ quantum repeaters \cite{Gisin2007, SSRG09, WJM2015} which operate by dividing long-distance links into a finite number of segments interspersed with repeaters (see Fig.~\ref{fig:repeaters_1}). 
 \begin{figure}[!htb]
-\begin{center}
 \includegraphics[width=0.475\textwidth]{repeaters_1}
-\end{center}
-\caption{Schematic representation (a) of an entangled Bell pair $| \Psi\rangle_{A,B}$ shared between the remote parties Alice and Bob. The two solid dots linked by a solid line represent such an entangled link.  The link as  depicted in (b) may be over a long distance $L_{\rm tot}$.  However due to channel losses the link needs to be broken into $N$ smaller segments (c) of length $L$.The links for each of the smaller segments can be then independently generated and  combined to form the longer distance link.} 
-\label{fig1}
+\caption{(a) Schematic representation of an entangled Bell pair $| \Psi\rangle_{A,B}$ shared between remote parties Alice and Bob. The two solid dots represent physical qubits, while the edge represents entanglement. (b) The link may be over a long distance $L_{\rm tot}$. (c) Due to channel losses the link may be broken into $N$ smaller segments of length $L$. The links for each of the smaller segments can be independently generated and combined to form the longer distance link.} 
+\label{fig:repeaters_1}
 \end{figure} 
-The links are thus at a much shorter distance and so can be generated with a much higher probability \cite{}. Then by stitching these all of these together using entanglement swapping, we can generate our required long-range entanglement link \cite{}. Of course things are a little more complicated than this and so lets examine it in a little more detail starting with a simple linear chain of repeater stations. 
 
-In a quantum repeater network, there are three main operations required \cite{}
+The links are now over much shorter distances and so can be generated with far higher probability \cite{}. Then by stitching these together using entanglement swapping (Sec.~\ref{sec:ent_swap})\index{Entanglement swapping}, we can generate our required long-range entanglement link \cite{}.
+
+\subsection{Basic operation}
+
+The above description is very hand-wavy, and of course things are a little more complicated in practise. We now examine these ideas in a little more detail, starting with a simple linear chain of repeater stations. 
+
+In a quantum repeater network, there are three main operations required \cite{}:
+\begin{enumerate}
+\item Entanglement distribution (Sec.~\ref{sec:reps_ent_dist}): to create entangled links between adjacent repeater nodes \cite{}.
+\item Entanglement purification (Sec.~\ref{sec:reps_ent_purif}): to improve the quality of entanglement between nodes \cite{}\index{Entanglement purification}.
+\item Entanglement swapping (Sec.~\ref{sec:reps_ent_swap}): to join adjacent entangled links together to form longer distance links \cite{}\index{Entanglement swapping}.
+\end{enumerate}
+The basic operation of a repeater, as shown in Fig.~\ref{fig:repeaters_2}, works as follows:
+
+We begin our preparation of a long-range entangled link by creating multiple entangled pairs between adjacent repeater nodes (the number will depend both on the quality of the pairs we initially generate and also the target quality we want our final pair to have). Once we have enough pairs established between two repeater nodes, we perform entanglement purification\index{Entanglement purification}, which converts multiple entangled links (pairs) into a fewer number with higher quality. 
+\begin{figure}[!htb]
+\includegraphics[width=0.4\textwidth]{repeaters_2}
+\caption{Schematic illustration of the basic operation of a quantum repeater network. (a) Preparation of multiple entangled links between adjacent repeater nodes. (b) They are then purified to create higher fidelity links. (c) Entanglement swapping between adjacent pairs creates links of twice the original length. (d) These new links are purified to create higher fidelity ones. (e) Entanglement swapping in creates a link four times the original size. This process continues as necessary to reach target distance and purity.} 
+\label{fig:repeaters_2}
+\end{figure} 
+These purification steps, shown in Fig.~\ref{fig:repeaters_2}(a-b), are performed on the links between all adjacent repeaters, increasing the quality of the links between those adjacent repeater stations to the required degree. Entanglement swapping, as shown in Fig.~\ref{fig:repeaters_2}(c), then creates links twice as long. The resulting entanglement links can then be used for further rounds of purification and swapping until one generates a high quality link between the desired points in the network \cite{}. 
+
+\subsubsection{Entanglement distribution}\index{Entanglement distribution}\label{sec:reps_ent_dist}
+
+Probably the most important operation for any quantum repeater setup is entanglement distribution, the process of creating entanglement between two remote parties (Alice and Bob) connected by a quantum channel (generally an optical fibre or free-space link). This can be implemented in a number of ways \cite{Bennett96, nk98, bennett93, SSRG09, childress06, loock06, munro08}, but can be broadly categorised into three basic schemas:
 \begin{itemize}
-\item Entanglement distribution to create entangled links between adjacent repeater nodes \cite{}.
-\item Entanglement purification to improve the quality of the entanglement between various nodes \cite{}.
-\item Entanglement swapping to join adjacent entangled links together to form longer distance entangled links \cite{}.
+\item Photon emission from the quantum memories in the repeater nodes.
+\item Photon absorption by the quantum memories.
+\item Photon emission in one node and absorption in another.
 \end{itemize}
-The basic operation of a repeater as illustrated in Figure (\ref{fig2}) works as follows:
-We begin our creation of a long range entangled link but creating multiple entangled pairs between adjacent repeater nodes (the number will depend both on the quality of the pairs we initially generate and also the target quality we want our final pair to have). Once we have enough pairs established between two repeater nodes, we perform an operation know as entanglement purification, which converts multiple entangled links (pairs) into a fewer number with higher quality. 
+By far, the emission based schemes are the most common, which we concentrate on here. Such schemes operate by using an entanglement process to entangle a quantum memory with a single photon. Ideally one wants to generate a maximally entangled state of the form \cite{WJM2015},
+\begin{align}
+|\Psi\rangle=\frac{1}{\sqrt{2}} (|g\rangle |H\rangle + |e\rangle |V\rangle),
+\end{align}
+within the repeater node where $\ket{g}$ and $\ket{e}$ are the two states of the quantum memory, and $\ket{H}$ and $\ket{V}$ are the polarization states of light. 
 \begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=0.475\textwidth]{repeaters_2}
-\end{center}
-\caption{Schematic illustration of the basic operation of a quantum repeater network. It begins as depicted in (a)  with the creation of multiple entangled links between adjacent repeater nodes. These are then purified in (b) to create higher fidelity links before entanglement swapping between adjacent pairs in (c) creates links of twice the original length. These new links are purified in (d) to create higher fidelity ones before entanglement swapping in (e) creates a link four times the original size. } 
-\label{fig2}
+\includegraphics[width=0.3\textwidth]{repeaters_3}
+\caption{Entanglement distribution scheme based on quantum emitters and which-path erasure\index{Which-path erasure}. Each nodes emits a photon entangled with the quantum memories present within that nodes. The photons from the adjacent repeater nodes then interfere on a beamsplitter (or polarising beamsplitter)\index{Beamsplitter}\index{Polarising beamsplitter} which erases information about which path the photon took. The photons are then measured in an appropriate basis to project the quantum memories within the nodes onto an entangled state.} 
+\label{fig:repeaters_3}
 \end{figure} 
-These purification step as shown in Figure (\ref{fig2}a-b) is performed on the links between all adjacent repeater increasing the quality of the links between those adjacent repeater stations to the degree one requires (depends on the final application). Entanglement swapping (Figure (\ref{fig2}c) then creates links twice as long. The resulting entanglement links can then be used for further rounds of purification and swapping until one generates a high quality link between the desired points in the network \cite{}. 
-
-
-\subsection{Entanglement distribution}
-
-Probably the most important operation for any quantum repeater setup is entanglement distribution, the process where one creates entanglement between two remote parties (Alice and Bob for instance) connected by a quantum channel (generally an optical fiber). This can occur in a number of ways \cite{Bennett96,enk98,bennett93,SSRG09,childress06,loock06,munro08} but this can be characterized into three basic schemes:
-\begin{itemize}
-\item Photon emission from the quantum memories in the repeater nodes,
-\item Photon absorption by the quantum memories,
-\item Photon emission in one node and absorption in the second.
-\end{itemize}
-By far, the emission based schemes are the most common and so they will be the ones we concentrate on here. Such schemes operate by using an entanglement process to entangle a quantum memory and a single photon together. Ideally one want to generate a maximally entangled state of the form \cite{WJM2015}
+The photons from the two repeater nodes (Fig.~\ref{fig:repeaters_3}) are then transmitted to a beamsplitter (or PBS in this example). After the PBS the state of the system is,
 \begin{align}
-|\Psi\rangle=\frac{1}{\sqrt{2}} |g\rangle |H\rangle + \frac{1}{\sqrt{2}} |e\rangle |V\rangle
+|\Psi\rangle &= \frac{1}{2} |g\rangle |g\rangle |H\rangle |H\rangle +\frac{1}{2} |e\rangle |e\rangle |V\rangle |V\rangle \nonumber \\
+&+\frac{1}{2} |g\rangle |e\rangle |HV\rangle |0\rangle + \frac{1}{2} |e\rangle |g\rangle |0\rangle |HV\rangle 
 \end{align}
-within the repeater node where $|g\rangle,  |e\rangle$ are the two states of the quantum memory and $ |H\rangle, |V\rangle$ polarization states of light. 
-\begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=0.475\textwidth]{repeaters_3}
-\end{center}
-\caption{Entanglement distribution scheme based on quantum emitters and which path erasure. In the scheme each nodes emits a photon entangled with the quantum memories present within that nodes. The photon from the adjacent repeaters node then interfere on a beamsplitter (or polarising  beamsplitter) which erases information about which path the photon took. The photons are then measured in an appropriate basis to project the quantum memories  within the repeater nodes into an entangled state.} 
-\label{fig3}
-\end{figure} 
-The photons from the two repeater nodes (as shown in Figure \ref{fig3}) are then transmitted to a beamsplitter (polarising beamsplitter in this case). After this PBS the state of the system is
+One immediately notices that the $|e\rangle |e\rangle$ and  $|e\rangle |g\rangle$ contribution are associated with two photons in one of the PBS exit modes, the other being in the vacuum state. However the $|g\rangle |g\rangle$ and $|e\rangle |e\rangle$ terms have one photon in each of the output modes. They are however of opposite polarisation, but measuring those photons in the diagonal/anti-diagonal ($\hat{X}$) basis erases this information yielding an entangled state of the form,
 \begin{align}
-|\Psi\rangle&=&\frac{1}{2} |g\rangle |g\rangle |H\rangle |H\rangle +\frac{1}{2} |e\rangle |e\rangle |V\rangle |V\rangle \nonumber \\
-&\;&+\frac{1}{2} |g\rangle |e\rangle |HV\rangle |0\rangle + \frac{1}{2} |e\rangle |g\rangle |0\rangle |HV\rangle 
+|\Psi_\pm\rangle=\frac{1}{\sqrt{2}} (|g\rangle |g\rangle \pm |e\rangle |e\rangle),
 \end{align}
-One immediately notices that the $|e\rangle |e\rangle$ and  $|erangle |g\rangle$ contribution have had two photons in one of the mode exiting the polarizing beamsplitter with the other mode being empty. However the 
-$|g\rangle |g\rangle$ and $|e\rangle |e\rangle$ have one photon in each of the output modes. They are however of opposite polarization but measuring those photons in the diagonal/anti-diagonal basis erases this information leading to a generated entangled state of the form
-\begin{align}
-|\Psi_\pm\rangle=\frac{1}{\sqrt{2}} |g\rangle |g\rangle \pm \frac{1}{\sqrt{2}} |e\rangle |e\rangle
-\end{align}
-where the sign of that state is $+$ for the $DD,AA$ results and $-$ for the $DA,AD$ results. This entangled is stored in the quantum memories between nodes \cite{}. 
+where the sign is given by the parity of the two photo-detection outcomes in the $\hat{X}$ basis. This entangled state is stored in the quantum memories between nodes \cite{}. 
 
-Next the photon absorption by the quantum memories scheme is effectively the time reversal of the emission scheme \cite{}. Instead of using the beamsplitter to entangle the photons emitted from each memory, an entangled source of photons needs to be used \cite{}.  Of course the emission and absorption schemes can be used together as well.
+The scheme based on photon absorption by the quantum memories is effectively the time reversal of the emission-based scheme \cite{}. Instead of using the beamsplitter to entangle the photons emitted from each memory, an entangled source of photons needs to be used \cite{}. Of course, the emission and absorption schemes can be used together in a hybrid architecture.
 
-In any entanglement distribution scheme for quantum networks, the repeater nodes are spatially separated and so one must consider channel losses - which are the dominant error source. Channel loss in this situation means that we do not get our coincidence click on $D_1$, $D_2$  that heralds the entanglement and thus decreases our entangled distributions success probably. In fact the heralded probability of success can be expressed as \cite{}
+In any entanglement distribution scheme for quantum networks, the repeater nodes are spatially separated and one must consider channel losses, which are the dominant error source. Channel loss in this situation implies that we do not register a coincidence event between $D_1$ and $D_2$, which heralds the entanglement. Thus our entanglement distribution success probability is reduced. In fact, the heralded probability of success can be expressed as \cite{},
 \begin{align}
-p_{ED}= \frac{1}{2} \exp \left[-L/L_0\right] p_{\rm det}^2 
+p_\mathrm{ED}= \frac{1}{2} e^{-L/L_0} {p_\mathrm{det}}^2,
 \end{align} 
-where $L$ is the distance between the two repeater nodes with $L_0$ being the attenuation length of the channel while $p_{\rm det}$ is the detector efficiency. Here we have ignored the source and coupling efficiencies. It is immediately obvious from this expression that the further the repeater nodes are apart, the lower the probability of success. The attenuation length of typical telecom optical fiber is approximately 22.5 km and so the average time to generate the entangled pair is
+where $L$ is the distance between the two repeater nodes with $L_0$ being the attenuation length of the channel, while $p_\mathrm{det}$ is the detector efficiency. Here we have ignored the source and coupling efficiencies. It is immediately obvious from this expression that the further the repeater nodes are apart, the lower the probability of success, on an exponentially decaying trajectory. The attenuation length of typical telecom optical fibre is approximately 22.5km and so the average time to generate a distributed entangled pair is,
 \begin{align}
-T_{ave} \sim \frac{L}{ c\; p_{ED}}= \frac{2 L  \exp \left[L/L_0\right]}{ c\; p_{\rm det}^2}
+T_\mathrm{av} &\sim \frac{L}{ c \cdot p_\mathrm{ED}}\nonumber\\
+&= \frac{2 L e^{L/L_0}}{ c \cdot {p_\mathrm{det}}^2}
 \end{align} 
-where $c$ is the speed of light in the channel. This is growing exponential as the distance between the nodes increases and so places important constraints on the quantum memories lifetimes.  If we consider pure dephasing effects on our matter qubits for the $DD,AA$ coincidence clicks the state of our system can be represented by
+where $c$ is the speed of light in the channel. This grows exponentially against node separation and so places important constraints on the lifetime of the quantum memoryies. If we consider pure dephasing effects on our matter qubits, the state of our system can be represented by,
 \begin{align}
-\rho(F)=F |\Psi_+\rangle \langle \Psi_+|+(1-F) |\Psi_-\rangle \langle \Psi_-|
-\label{rho}
+\hat\rho(F) = F |\Psi_+\rangle \langle \Psi_+|+(1-F) |\Psi_-\rangle \langle \Psi_-|,
+\label{eq:rho_bell_fid}
 \end{align} 
-where $F$ is the fidelity of our entangled state given by
+where $F$ is the fidelity of our entangled state given by,
 \begin{align}
-F=\frac{1+e^{-t/\tau_D}}{2}
+F=\frac{1+e^{-t/\tau_\mathrm{D}}}{2},
 \end{align} 
-with $t$ being the amount of time the memories need to store the entangled state for while $\tau_D$ is the coherence time of the memory. If one only requires a single Bell pairs and no further operations will be undertaken on it, then $t=c/L$. However in a more general situation where multiple pairs are required, the time will likely equal $T_{ave}$ which will be inversely proportional to the probability of generating the entangled state. This in turn means the quality of the remote entangled state generated may not be sufficient for the tasks it is required for due to these finite memory life times or operational gate errors. One needs to be able to purify these entangled resources. 
+with $t$ being the duration over which the entangled state is held in memory, while $\tau_\mathrm{D}$ is the coherence time of the memory. If one only requires a single Bell pair and no further operation are performed, then \mbox{$t=c/L$}. However in a more general setting where multiple pairs are required, the time will be $T_\mathrm{av}$ on average, which is inversely proportional to the probability of generating the entangled state. The quality of the prepared remote entangled state may therefore not be sufficient for the tasks it is required for due to these finite memory lifetimes or operational gate errors. One needs to be able to purify these entangled resources. 
 
+\subsubsection{Entanglement purification}\index{Entanglement purification}\label{sec:reps_ent_purif}
 
-\subsection{Entanglement purification}
-
-The finite coherent properties of quantum memories and operational errors causes by quantum gates means some mechanism will be needed to improve the fidelity of the distributed entangled state, especially if there spatial separation is quite large.  This is generally achieved by entanglement purification \cite{Bennett96,Deutsch98,dur98,pan01,dur07,Aschauer2004,jiang09,munro12,Stephens2013} which  as it name implies purifies the entanglement to a higher value. The purification operation uses either an error detection code (probabilistic but heralded operations) \cite{Bennett96,Deutsch98,dur98} or deterministic error correction codes \cite{Aschauer2004,jiang09,munro12}. While the error correction codes purify in a deterministic way, they place tough constraints on both the initial fidelity of entangled state required and also quality of the quantum gates required to perform the purification \cite{Aschauer2004}. Given this, we will focus on the simplest error detection code which requires only a pair of shared entangled quantum memories (as shown in Fig \ref{fig4}). 
-
+The finite coherence-time of quantum memories and operational errors caused by quantum gates means some mechanism will be required to improve the fidelity of the distributed entangled state, especially if the spatial separation is large. This is generally achieved by entanglement purification \cite{Bennett96, Deutsch98, dur98, pan01, dur07, Aschauer2004, jiang09, munro12, Stephens2013} which  as it name implies purifies the entanglement to a higher value. The purification operation uses either an error detection code (probabilistic but heralded operations) \cite{Bennett96, Deutsch98, dur98} or deterministic error correction codes \cite{Aschauer2004, jiang09, munro12}. While the error correction codes purify in a deterministic way, they place tough constraints on both the required initial fidelity of entangled states and also the quality of the quantum gates implementing the purification \cite{Aschauer2004}. Given this, we will focus on the simplest error detection code which requires only a pair of shared entangled quantum memories (as shown in Fig.~\ref{fig:repeaters_4}). This scheme is equivalent to the entanglement purification protocol described in Sec.~\ref{sec:ent_purif}, although the graphical notation is somewhat different.
 
 \begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=0.475\textwidth]{repeaters_4}
-\end{center}
-\caption{Quantum Purification: In (a) we illustrate the simplest purification scheme which involves two pairs of shared remote entangled quantum memories ($A_1-B_1$ and $A_2-B_2$). The purification operations begins by Alice performing a CNOT operation between memories $A_!$ and $B_1$. Similarly Bob performs a  CNOT operation between his memories. Alice and Bob then measure qubits $A_2$ and $B_2$ in the computational $0,1$ basis and send the results to each other. They discard the resulting state if between them they measured odd parity $0,1$ or $1,0$. They keep the state if they measured an even parity between themselves $0,0$ or $1,1$ which should have higher fidelity. The resulting state is shown in (b).  } 
-\label{fig4}
+\includegraphics[width=0.4\textwidth]{repeaters_4}
+\caption{Entanglement purification: (a) The simplest purification scheme involving two pairs of shared remote entangled quantum memories (\mbox{$A_1-B_1$} and \mbox{$A_2-B_2$}). The purification operation begins with Alice performing a CNOT operation between memories $A_1$ and $B_1$. Similarly Bob performs a CNOT operation between his memories. Alice and Bob then measure qubits $A_2$ and $B_2$ in the computational ($0$, $1$) basis and share their results. They discard the resulting state if between them they measured odd parity ($0,1$ or $1,0$). They keep the state if they measured an even parity between them ($0,0$ or $1,1$) which should have higher fidelity. (b) Two qubits are removed, leaving a residual two-qubit state between $A_1$ and $B_1$ with improved fidelity.} 
+\label{fig:repeaters_4}
 \end{figure} 
 
-In this simplest purification protocol, Alice and Bob share two pairs of entangled states of the form given by (\ref{rho}). These states are a mixture of only two Bell states. We begin our purification protocol by using local operations to transform $\rho$ to  
-\begin{align}
-\rho(F')=F |\Psi_+\rangle \langle \Psi_+|+(1-F) |\Phi_+\rangle \langle \Phi_+|
-\label{rho'}
+In this simplest purification protocol, Alice and Bob share two pairs of entangled states of the form given by Eq.~(\ref{eq:rho_bell_fid}). These states are a mixture of only two Bell states. We begin our purification protocol by using local operations to transform $\hat\rho$ to,
+\begin{align}\label{eq:rho_bell_fid_dash}
+\hat\rho(F)=F |\Psi_+\rangle \langle \Psi_+|+(1-F) |\Phi_+\rangle \langle \Phi_+|,
 \end{align}
-with $|\Phi_+\rangle=\frac{1}{\sqrt{2}} |g\rangle |e\rangle+ \frac{1}{\sqrt{2}} |e\rangle |g\rangle$. As shown in Fig \ref{fig4}) we then apply a CNOT gate between Alice's two memories and Bob's two memories following by measuring $A_2,B_2$ in the computational basis. When the parity of these measurements is equal ($0,0$ or $1,1$), our resulting state has the form 
+
+As shown in Fig.~\ref{fig:repeaters_4} we then apply a CNOT gate between Alice's two memories and Bob's two memories following by measuring $A_2,B_2$ in the computational basis. Upon measurement of even parity our resulting state $\hat\rho(F')$ has the form, but with new fidelity,
 \begin{align}
-\rho=F |\Psi_+\rangle \langle \Psi_+|+(1-F) |\Phi_+\rangle \langle \Phi_+|
-\label{rho2}
+	F'=\frac{F^2}{F^2+(1-F)^2}.
 \end{align}
-with $F'=F^2/(F^2+(1-F)^2)$. It is immediately obvious that our resulting state $\rho(F')$ is more entangled that $\rho(F)$ where $F>1/2$ (see Fig \ref{purification}). In fact the degree of entanglement as measured by the concurrence increases from $C=2 F-1$ to $C=2 F'-1 =  2 F^2/(F^2+(1-F)^2)-1 $. It is important to mention that the entanglement purification can not allow one to create a perfect Bell state instead one asymptotically approaches it under ideal conditions. Next the probability of obtaining the $0,0$ or $1,1$ results is  $p_{P}=(F^2+(1-F)^2)/2$. 
+
+It is immediately obvious that our resulting state $\hat\rho(F')$ is more entangled that $\hat\rho(F)$ when \mbox{$F>1/2$} (see Fig.~\ref{fig:rep_purification}). In fact the degree of entanglement as measured by the concurrence\index{Concurrence} increases from,
+\begin{align}
+	C=2 F-1,
+\end{align}
+to,
+\begin{align}
+C' &=2 F'-1 \nonumber\\
+&= \frac{2 F^2}{F^2+(1-F)^2}-1.
+\end{align}
+
 \begin{figure}[!htb]
-\begin{center}
 \includegraphics[width=0.475\textwidth]{repeaters_5}
-\end{center}
-\caption{Plot of the increased fidelity and success probability for entanglement purification for a mixture of  two Bell states with initial fidelity $F$. The dashes lines show how multiple pairs with an initial fidelity $F=0.7$ can be purified iteratively to a final fidelity above 0.95.} 
-\label{purification}
+\caption{Plot of the increased fidelity and success probability for entanglement purification for a mixture of two Bell states with initial fidelity $F$. The dashed lines show how multiple pairs with an initial fidelity $F=0.7$ can be purified iteratively to a final fidelity above 0.95.} 
+\label{fig:rep_purification}
 \end{figure} 
-Alternatively for the odd parity measurement results ($0,1$ or $1,0$) which occur with probability $F (1-F)$, the resulting state is an equal mixture of $|\Psi_+\rangle$ and $|\Phi_+\rangle$ and is not entangled at all. In such a case one need to start again with the entanglement distribution.  Each odd parity measurement result occurs with probability $F (1-F)$. So far we have discussed one round of entanglement purification but the protocol naturally works in a recursive way where two copies of the same fidelity are used for the next purification step. Using this recursive approach one can in principle generate a near unit fidelity entangled pair from a finite F fidelity pair (as long as $F>1/2$). 
 
-Now there are two common variants of these purification protocols: the Deutsch  and Dur variants:
+It is important to mention that the entanglement purification doesn't allow one to distribute a \textit{perfect} Bell state. Rather it \textit{asymptotically} approaches perfection (under ideal conditions) with repetition of the protocol.
+
+The probability of obtaining the even parity outcome is,
+\begin{align}
+	p_\mathrm{even}=\frac{F^2+(1-F)^2}{2}.
+\end{align}
+Alternatively for the odd parity measurement results, which occur with probability,
+\begin{align}
+	p_\mathrm{odd}=F(1-F),
+\end{align}
+the resulting state is an equal mixture of $|\Psi_+\rangle$ and $|\Phi_+\rangle$ and is not entangled at all. In this case we must start again from scratch with the entanglement distribution.
+
+So far we have discussed one round of entanglement purification but the protocol naturally works in a recursive way where two copies of a state with the same fidelity are used for the next purification round. Using this bootstrapped approach one can in principle generate a near unit fidelity entangled pair from a finite fidelity pair (provided initial input fidelity \mbox{$F>1/2$}). 
+
+There are two common variants of these purification protocols: the Deutsch and Dur variants:
 \begin{itemize}
-\item {\it The Deutsch protocol} \cite{Deutsch98} is an efficient purification protocol utilizing Bell diagonal states that reaches a high fidelity in a few purification rounds. It is assumed that both entangled pairs needed in it have the same form. The purification protocol is the same at the one described above in Figure (\ref{fig4}) but begins with Alice (Bob) applying $\pi/2\;(-\pi/2)$ rotation about the X axis on their qubits before the usual CNOT gates and measurements are performed. Two copies of the successfully purified pair can then be used in a recursive approach to purify either further. This in turns means multiple copies of the entangled state originally distributed are required. One must have enough entangled pairs available to perform the multiple rounds of purification that are required (this grows exponentially with the number of purification rounds). 
+\item \textit{Deutsch protocol} \cite{Deutsch98}: This is an efficient purification protocol utilising Bell diagonal states that reaches a high fidelity in a few purification rounds. It is assumed that both entangled pairs have the same form. The purification protocol is the same at the one described above in Fig.~\ref{fig:repeaters_4}, but begins with Alice (Bob) applying $\pi/2$ $(-\pi/2)$ rotations about the $X$-axis on their qubits before the usual CNOT gates and measurements are performed. Two copies of the successfully purified pair can then be used in a recursive approach to purify either further. This in turns means multiple copies of the originally distributed states are required. We must have enough entangled pairs available to perform the multiple rounds of purification that are required, which grows exponentially with the number of purification rounds. 
 
-\item {\it The Dur protocol} \cite{dur98} use the same core purification elements shown in Figure (\ref{fig4}) but relaxes the traditional constraint that both Bell pairs must have the same fidelity. Instead one begins with two pairs of the same fidelity (say F) and one performs the traditional purification. If it is successful then one does the next round of purification using the improved fidelity pair from the previous round and a new fidelity F pair. In effect this new auxiliary pair is used to pump up the fidelity of  your original pair higher. This can continue until one reaches a  limiting fidelity dependent on your  original F. This limiting fidelity may be above your desired resultant fidelity and so one can stop the purification protocol once that is reached. A significant difference between the Deutsch and Dur protocol is that the number of memories in the Dur situation is linear in the number of nesting levels.
+\item \textit{Dur protocol} \cite{dur98}: This uses the same core purification elements shown in Fig.~\ref{fig:repeaters_4} but relaxes the traditional constraint that both Bell pairs must have the same fidelity. Instead we begin with two pairs of the same fidelity $F$, and perform the traditional purification. If successful we perform the next round of purification using the improved fidelity pair from the previous round and a fresh fidelity $F$ pair. In effect this new auxiliary pair is used to boost the fidelity of the original pair higher. This can continue until we reach a limiting fidelity dependent on the original $F$. This limiting fidelity may be above the desired resultant fidelity, at which point we can terminate the purification protocol. A significant difference between the Deutsch and Dur protocols is that the number of memories in the Dur situation is linear in the number of nesting levels.
 \end{itemize}
-It is critical in repeater protocols to also discuss how fast these purification protocols can be performed. Even with ideal gates one  has to wait for the parity information to be shared between the repeaters nodes. For nodes separated by a distance $L$, the communication time for a single trial is $L/c$. However remembering that  purification is probabilistic but heralded in nature our waiting time could be many multiples of  $L/c$. This will have a dramatric effect on the performance especially is done at many different stages in a repeater network with increasing distanes between the nodes.
 
-\subsection{Entanglement swapping}
+It is critical in repeater protocols to also discuss how fast these purification protocols can be performed. Even with ideal gates one has to wait for the parity information to be shared between the repeater nodes. For nodes separated by a distance $L$, the communication time for a single trial is $L/c$. However, remembering that purification is probabilistic but heralded in nature our waiting time could be many multiples of $L/c$. This will have a dramatic effect on performance, especially if performed at many different stages in the network with increasing distances between nodes.
 
-The entanglement distribution and purification scheme discussed previously allow one in principle to create high fidelity entangled states (Bell pairs) between adjacent repeaters nodes. The next task is to extend the rate of our entangled states and this occurs via simple entanglement swapping \cite{BDCZ98,Zukowski93,goebel08,duan01}. 
+\subsubsection{Entanglement swapping}\label{sec:reps_ent_swap}\index{Entanglement swapping}
+
+The entanglement distribution and purification scheme discussed previously allow one in principle to create high fidelity entangled states between adjacent repeaters nodes. The next task is to extend the range of our entangled states, and this occurs via simple entanglement swapping \cite{BDCZ98, Zukowski93, goebel08, duan01}. This was described previously in Sec.~\ref{sec:ent_swap}, although the notation is modified.
 
 \begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=0.475\textwidth]{repeaters_6}
-\end{center}
-\caption{Entanglement swapping:  In (a) an entangled state is shared between Alice and a repeater station ($A_1-A_2$) and also between the repeater station to Bob ($B_2-B_1$).  The entanglement operation begins by performing a Bell state measurement between $A_2$ and $B_2$ using a CNOT gate and measurements at $D_1$, $D_2$.  The measurements indicate which Bell state we have projected our state $A_1$, $B_1$ on to. In b) we show the resultant entangled state between $A_1$, $B_1$ with the qubits $A_2$ and $B_2$ disentangled from it.  }
-\label{fig6}
+\includegraphics[width=0.4\textwidth]{repeaters_6}
+\caption{\comment{Smaller labels, others too}Entanglement swapping: (a) An entangled state is shared between Alice and a repeater station ($A_1-A_2$), and also between the repeater station and Bob ($B_2-B_1$). The entanglement operation begins by performing a Bell state measurement between $A_2$ and $B_2$ using a CNOT gate, and measurements at $D_1$, $D_2$.  The measurements indicate which Bell state we have projected our state $A_1$, $B_1$ onto. (b) The resultant entangled state between $A_1$, $B_1$ with the qubits $A_2$ and $B_2$ disentangled from it.}
+\label{fig:repeaters_6}
 \end{figure} 
 
-Consider the situation where we have an entangled Bell pairs between nodes $A_1$ and $A_2$ and also between $B_2$ and $B_1$. The entanglement swapping operation involves a Bell state measurement between the qubit $A_2$ and $B_2$ as depicted in Fig (\ref{fig6}).  In such a case after the Bell measurement gives the resultant state 
+Consider the situation where we have an entangled Bell pairs between nodes $A_1$ and $A_2$ and also between $B_2$ and $B_1$. The entanglement swapping operation involves a Bell state measurement between the qubits $A_2$ and $B_2$ as shown in Fig.~\ref{fig:repeaters_6}. After the Bell measurement we have the resultant state, 
 \begin{align}
-\rho_{A_1,A_2} (F)\otimes \rho_{B_2,B_1}(F)\rightarrow \rho_{A_1,B_1} (F')
+\hat\rho_{A_1,A_2} (F)\otimes \hat\rho_{B_2,B_1}(F)\rightarrow \hat\rho_{A_1,B_1} (F')
 \end{align}
-with $F'=F^2+(1-F)^2$ and where a local correction operation is performed on either $A_!$ or $B_1$ dependent on the Bell measurement result. It is clear that the longer range entangled state $\rho (F')$ is less entangled that the states $\rho (F)$ used to generate it. In fact to first order our fidelity drop from $F$ to $F^2$. This in turn means that we can not just purify adjacent repeater pairs and swap then all to create the long range pairs. If we had $n$ links our final fidelity from all the swapping would scale as $F^n$. For high fidelity end to end entangled links we need to follow the approach outlined in Figure (\ref{fig2}). Finally, depending on how the Bell state measurement is implemented, it could probabilistic (but heralded) or deterministic in nature. We assign the success probability as $p_{ES}$.
+with,
+\begin{align}
+	F'=F^2+(1-F)^2,
+\end{align}
+where a local correction operation is performed on either $A_1$ or $B_1$ depending on the measurement outcome. It is clear that the longer range entangled state $\hat\rho_{F'}$ is less entangled that the states $\hat\rho_F$ used to generate it. In fact, to first order our fidelity drops from $F$ to $F^2$. This in turn means that we can not simply purify adjacent repeater pairs and swap them all to create the long range pairs. If we had $n$ links, our final fidelity from all the swapping would scale as $F^n$. For high fidelity end-to-end entangled links we need to follow the approach outlined in Fig.~\ref{fig:repeaters_2}. Finally, depending on how the Bell measurement is implemented, this process could be probabilistic (but heralded) or deterministic in nature. We assign the success probability as $p_\mathrm{ES}$.
 
-\subsection{Performance}
+\comment{Up to here}
+
+\subsection{Performance}\index{Repeater performance}
 
 We now have all the operations required for a repeater to create long range entanglements. The natural question is what is the performance like? There are several important points to initially consider here. The majority of the repeater operations are probabilistic in nature (entanglement distribution and purification fundamentally and entanglement swapping can be dependent on how it is performed). While these probabilistic operations may be heralded, classical signaling must  be send between those nodes involved to inform them of the success or failure of that operation. For entanglement distribution this time is just that associated with that associated to signal between the adjacent nodes, however purification and swapping are likely to require such signaling over the entire length of the network. This has a dramatic effect on the over performance of this repeater network. The normalized rate for generating Bell pairs over a total distance $L_{tot}$ is given by
 \begin{align}
@@ -175,12 +205,11 @@ where $T_{n,k,L_{tot}}$ is the time to generate a Bell pair over the total dista
 Now it is straightforward but tedious to show that $T_{n,k,L_{tot}}$ is given by \cite{braztzik2013}
 \begin{widetext}
 \begin{align*}
- T_{n,k,L_{tot}}&\sim&\frac{3^n}{2^{n-1} p_{ED}} \prod_{i=0}^{n-1} \left(\frac{3}{2}\right)^{k}  \frac{1}{P_{ES}(n-i)  }\prod_{j=0}^{k-1} \frac{1}{p_P(k-j,n-i)}  \nonumber \\
- &&+\sum_{m=1}^n\left(\frac{3^{n-m}}{2^{n-1}}\right) \prod_{i=0}^{n-m}   \left(\frac{3}{2}\right)^{k} \frac{1}{P_{ES}(n-i)}  \prod_{j=0}^{k-1}  \frac{1}{p_P(k-j,n-i)}  \\
-&&+\sum_{m=1}^n {\sum_{q=0}^{k-1} \left(\frac{3^{n-m+q}}{2^{n- 2 m+q}}\right) \prod_{r=0}^{q}\frac{1}{p_P(k-r,m)}} 
+ T_{n,k,L_{tot}} &\sim \frac{3^n}{2^{n-1} p_{ED}} \prod_{i=0}^{n-1} \left(\frac{3}{2}\right)^{k}  \frac{1}{P_{ES}(n-i)  }\prod_{j=0}^{k-1} \frac{1}{p_P(k-j,n-i)}  \nonumber \\
+ &+\sum_{m=1}^n\left(\frac{3^{n-m}}{2^{n-1}}\right) \prod_{i=0}^{n-m}   \left(\frac{3}{2}\right)^{k} \frac{1}{P_{ES}(n-i)}  \prod_{j=0}^{k-1}  \frac{1}{p_P(k-j,n-i)}  \\
+&+\sum_{m=1}^n {\sum_{q=0}^{k-1} \left(\frac{3^{n-m+q}}{2^{n- 2 m+q}}\right) \prod_{r=0}^{q}\frac{1}{p_P(k-r,m)}} 
 \prod_{i=0}^{n-m-1}   \left(\frac{3}{2}\right)^{k} \frac{1}{P_{ES}(n-i)}  \prod_{j=0}^{k-1}  \frac{1}{p_P(k-j,n-i)} \nonumber 
-%!TEX encoding = UTF-8 Unicode&&+\sum_{m=1}^n {\sum_{q=0}^{k-1}\left(\frac{3^{n-m+q}}{2^{q-m}}\right)\prod_{r=0}^{q}\frac{1}{p_P(k-r,m)}}  \prod_{i=0}^{n-(m+1)} \prod_{j=0}^{k-1} \left(\frac{3}{2}\right)^{k}   \frac{1}{p_{ES}(n-i) p_P(k-j,n-i)} {\bf check}
- \end{align*}
+\end{align*}
 \end{widetext}
 where $p_{ED}$ is the probability of successfully distributing entanglement between adjacent repeater nodes while $p_P(j,i)$ [$p_{ES}(i)$] represents the purification [entanglement swapping] probability at the $i^{th}$ nesting level with $j$ rounds of purification.  The factors of (3/2) present in all entanglement distribution,  purification and swapping operations is a multiplicative factor associated with the extra time required for the two pairs to be available for the various quantum operations \cite{SSRG09}.
 
@@ -194,27 +223,23 @@ The previous approach for entanglement distribution over long distances based on
 The typical entanglement purification protocols are a form of quantum error detection code \cite{WJM2015,devitt2013}. Such codes herald whether an error has occurred or not, and in the situation considered above, the detection of errors means one must discard the entangled pairs associated with the purification protocol. No errors means the purification protocol has worked. Now error correction codes which operate in a deterministic fashion can also detect errors and so can be used in this fashion \cite{jiang09,munro10}. More critically error correction codes have the potential to correct some errors that have occurred.  For normal error correction protocols used in quantum computations, one encodes your physical qubits into a logical qubits using the error correcting code and then uses a syndrome measurement to determine where an error has potentially occurred.
 
 Quantum communication however is different in this case as we need to assume that we have generated a number of imperfect Bell pairs between the repeater nodes before we utilise the error correction schemes. The error correction protocol in this case operates by using the error correction encoding circuit on Alice's qubits and the decoding circuit on Bob's \cite{Aschauer2004} as is illustrated in Figure \ref{fig7} for the 5 qubit code \cite{Bennettr1996a,Knill97}.
-\begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=0.475\textwidth]{repeaters_7}
-\end{center}
-\caption{Schematic illustration of a purification circuit based on quantum error correction. The specific example shown is for the [[5,1,3]] code \cite{Bennettr1996a,Knill97}. In the circuit we assume that entanglement distribution has allowed Alice and Bob to create 5 copies of their imperfect Bell pairs. The error correction circuit is  executed independently between the two nodes. While we show the situation when the measurements at both sides are done directly on four pairs of entangled qubits (leaving us with one unencoded Bell pair), one can also use ancilla qubits to measure the appropriate syndromes.  As soon as the measurements are complete both nodes qubits are available for continued use as the error correction is deterministic and their are no failure events that need to be heralded. In this case the classical message between nodes just carries Alice?s measurement result allowing either node to interpret which Bell state was generated and for one of them to apply the bit flip or sign flip correction operation if needed to get back to the desired Bell state. In many cases this correction is classically tracked in the Pauli frame (the Pauli frame indicates whether an X, Z or both corrections need to be performed at some time \cite{jiang09,munro10}). We should also note that it is not necessary to measure out all but one of the qubits involved in the entangled links. Instead the logical qubit can be maintained by the use of ancilla qubits within that node with the syndrome being measured with the help of the ancilla qubits. Entanglement swapping could then be performed on the logical qubits enabling a much more error resilient system.
+
+\begin{figure*}[!htb]
+\includegraphics[width=\textwidth]{repeaters_7}
+\caption{\comment{Redo fig} Schematic illustration of a purification circuit based on quantum error correction. The specific example shown is for the [[5,1,3]] code \cite{Bennettr1996a,Knill97}. In the circuit we assume that entanglement distribution has allowed Alice and Bob to create 5 copies of their imperfect Bell pairs. The error correction circuit is  executed independently between the two nodes. While we show the situation when the measurements at both sides are done directly on four pairs of entangled qubits (leaving us with one unencoded Bell pair), one can also use ancilla qubits to measure the appropriate syndromes.  As soon as the measurements are complete both nodes qubits are available for continued use as the error correction is deterministic and their are no failure events that need to be heralded. In this case the classical message between nodes just carries Alice?s measurement result allowing either node to interpret which Bell state was generated and for one of them to apply the bit flip or sign flip correction operation if needed to get back to the desired Bell state. In many cases this correction is classically tracked in the Pauli frame (the Pauli frame indicates whether an X, Z or both corrections need to be performed at some time \cite{jiang09,munro10}). We should also note that it is not necessary to measure out all but one of the qubits involved in the entangled links. Instead the logical qubit can be maintained by the use of ancilla qubits within that node with the syndrome being measured with the help of the ancilla qubits. Entanglement swapping could then be performed on the logical qubits enabling a much more error resilient system.
 }
-\label{fig7}
-\end{figure} 
+\label{fig:repeaters_7}
+\end{figure*} 
 
 It is important to mention here that error correction based purification is deterministic in nature (there is however a significant cost that must be meet - the fidelity of the originally generated between adjacent nodes now has to be quite high) \cite{jiang09,Aschauer2004} . There are no measurement events that need to be discarded. Instead the measurement results only inform you of which particular imperfect Bell state you have and the correction operation required to get you to the particular state you wanted. In effect the measurement is updating you Pauli reference frame \cite{Knill2005}. This does not need to be done immediately and can be delayed until later. In turn this means once, the measurements have been performed, you can immediately use the purified Bell state without having to wait for the classical signaling (at some stage the correction operation needs to be done but this can be when the long distance entanglement has been generated). 
 
 The removal of having to wait for the measurement results to be sent and received in both the quantum error correction based purification and also entanglement swapping has a profound effect on the rate of generating long range entangled pairs. One still needs to perform long range classical messaging (potentially between the end nodes). and so it is immediately obvious that the time $T$ can scale solely as $2 L_{tot}/c$ which was the lower bound on the first generation schemes \cite{munro10}.  Naively this seem to imply that the generation rate between the end nodes Alice and Bob can not be faster than this. However one can do very much better! as we illustrate in Fig \ref{fig8} (and describe in the figure caption). The key issue is that the generation rate depends on how long the adjacent nodes need to keep part of an entangled state within them \cite{jiang09,munro10,Muralidharan2016}. 
 
-\begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=0.475\textwidth]{repeaters_8}
-\end{center}
-\caption{
-Schematic illustration of a butterfly design quantum repeater network protocol that reduces the requirements on all the quantum memories times  to only that associated with the signaling time between adjacent repeater nodes \cite{munro10}. Enough pairs must be generated between the node to ensure that we can use them in the error correction code in a single round trip time between adjacent nodes. The scheme relies multiple entangled pairs being generated temporally starting from the mid point of the network. The protocol begins with the middle or central node creating links to both the left and right nearest neighbor node in sufficient number to allow an error correction code to encoded on the successful pairs. One they are created the error correction circuits are applied to the links left and right of this central node (effectively creating encoded logical links). Entanglement swapping at the middle node is then applied  between these logical links creating a logical link between the left and right adjacent nodes. The left and right nodes can then do the same to their next adjacent repeater node, error correcting as they go, until the desired end to end entangled link is achieved.  }
-\label{fig8}
-\end{figure} 
+\begin{figure*}[!htb]
+\includegraphics[width=\textwidth]{repeaters_8}
+\caption{\comment{Redo fig} Schematic illustration of a butterfly design quantum repeater network protocol that reduces the requirements on all the quantum memories times  to only that associated with the signaling time between adjacent repeater nodes \cite{munro10}. Enough pairs must be generated between the node to ensure that we can use them in the error correction code in a single round trip time between adjacent nodes. The scheme relies multiple entangled pairs being generated temporally starting from the mid point of the network. The protocol begins with the middle or central node creating links to both the left and right nearest neighbor node in sufficient number to allow an error correction code to encoded on the successful pairs. One they are created the error correction circuits are applied to the links left and right of this central node (effectively creating encoded logical links). Entanglement swapping at the middle node is then applied  between these logical links creating a logical link between the left and right adjacent nodes. The left and right nodes can then do the same to their next adjacent repeater node, error correcting as they go, until the desired end to end entangled link is achieved.  }
+\label{fig:repeaters_8}
+\end{figure*} 
 
 Fundamentally we know that the time to attempt to generate a single entangled Bell pair between two nodes is scaling as $L/c$ (where L is the distance between those two nodes) and with channel losses we need to make
 \begin{align}
@@ -262,13 +287,12 @@ with   $|\pm\rangle=|0\rangle\pm |1\rangle$. This redundancy based parity code i
 If these constraints are meet, the loss events during transmission between adjacent repeater nodes can be corrected. Of course such codes can not correct more than fifty percent errors and so the distance between repeater nodes is limited. Remembering that the probability of a photon being successfully transmitted through a channel of length L with attenuation length $L_0$ is given by $p=\exp \left[ -L/L_0\right]$, the maximum distance between repeater nodes is $L/L_0\sim 0.69$ (which corresponds to approximately 17Km in commercial telecom fiber). This is much shorter than what we would typically consider the first and second generation schemes.
 
 Let us now describe the operation of the third generation repeater scheme  depicted in Figure \ref{fig9} in detail \cite{munro12,MKLLJ14}. It begins at the left hand node by Alice encoding her message into a redundancy parity code created on a series of matter qubits  using local quantum gates within that repeater node. 
-\begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=0.475\textwidth]{repeaters_9}
-\end{center}
-\caption{Schematic illustration of the transmission of a quantum signal using loss based error correction codes in a quantum network. }
+\begin{figure*}[!htb]
+\includegraphics[width=\textwidth]{repeaters_9}
+\caption{\comment{Redo fig}Schematic illustration of the transmission of a quantum signal using loss based error correction codes in a quantum network. }
 \label{fig9}
-\end{figure} The quantum state is then transferred/teleported on photons which are transmitted through a lossy channel to the adjacent repeater node. Here two specific operations occur: first the information encoded on each photon is transferred to a matter qubit within that repeater node and then that photon is measured. The photon measurement is critical as it heralds which photons have been lost and allows us to measure the remaining qubit in that block in the $X$ basis. These  $X$ basis remove the damaged parity blocks from our redundancy based parity coded state leaving our information intact. We can now add the full redundancy back into our encoded state in the matter qubits.  The fully encoded state can then be transferred to photons and transmitted to the next repeater node where the same procedure occurs again. This continues until our state reaches the last repeater node where Bob is. There is one immediate observation that can be made from this scheme. The matter qubits (quantum memories) within the local nodes are only used to encode and error correct the redundancy code as well transmitting those quantum states to photons. Entanglement is not stored within the nodes while the photons are being send to the adjacent repeater nodes. This in turn means the resources within that repeater node can be used immediately again (once the photons have been transmitted) and so the rate of communication is now limited by the time to perform the local operations within a node, rather than the round trip time between adjacent nodes. 
+\end{figure*}
+The quantum state is then transferred/teleported on photons which are transmitted through a lossy channel to the adjacent repeater node. Here two specific operations occur: first the information encoded on each photon is transferred to a matter qubit within that repeater node and then that photon is measured. The photon measurement is critical as it heralds which photons have been lost and allows us to measure the remaining qubit in that block in the $X$ basis. These  $X$ basis remove the damaged parity blocks from our redundancy based parity coded state leaving our information intact. We can now add the full redundancy back into our encoded state in the matter qubits.  The fully encoded state can then be transferred to photons and transmitted to the next repeater node where the same procedure occurs again. This continues until our state reaches the last repeater node where Bob is. There is one immediate observation that can be made from this scheme. The matter qubits (quantum memories) within the local nodes are only used to encode and error correct the redundancy code as well transmitting those quantum states to photons. Entanglement is not stored within the nodes while the photons are being send to the adjacent repeater nodes. This in turn means the resources within that repeater node can be used immediately again (once the photons have been transmitted) and so the rate of communication is now limited by the time to perform the local operations within a node, rather than the round trip time between adjacent nodes. 
 
 The focus so far has been only on loss based errors but this code is fault tolerance to general errors as well \cite{MKLLJ14}. Further this redundancy code was only an illustrative example that photon loss in the channel can be corrected. Many other codes can be used in a similar fashion \cite{munro12,Fowler10,MKLLJ14}. Finally the scheme we have presented in Figure \ref{fig9} transmits a quantum signal from Alice and Bob. It can however be adapted to use the butterfly design in Figure \ref{fig8} to create remote entanglement between  Alice and Bob while maintaining the performance advantages our direction transmission scheme gave. 
 
@@ -277,16 +301,15 @@ The focus so far has been only on loss based errors but this code is fault toler
 As can seen the various quantum repeater generations take quite a different approach to how they distribute entanglement between Alice and Bob over a long distance \cite{Muralidharan2016}. It is useful thus to  summarize in Table \ref{qtable} the performance of the various repeater approaches and the requirements on them.
 \begin{widetext}
 \begin{center}
-\begin{table}[h]
+\begin{table}[!htb]
 \centering
 \begin{tabular}{ccccc}
-\hline \hline
-\multicolumn{1}{|l|}{\bf Repeater Generation} &  \multicolumn{1}{l|}{} &  \multicolumn{1}{l|}{}    &  \multicolumn{1}{l|}{}    &\multicolumn{1}{l|}{}    \\ \hline
-\multicolumn{1}{|l|}{} & \multicolumn{1}{l|}{\rm $T_{\rm ave}$}   & \multicolumn{1}{l|}{\rm Resources consumed}    & \multicolumn{1}{l|}{\rm  $L_{max}$}     & \multicolumn{1}{l|}{\rm  Local gate precision}     \\ \hline
-\multicolumn{1}{|l|}{First Generation}    & \multicolumn{1}{l|}{$O(L_{tot}/c)$} & \multicolumn{1}{l|}{$O({\rm Poly}[L_{tot}])$} & \multicolumn{1}{l|}{\rm arbitrary}  & \multicolumn{1}{l|}{\rm arbitrary}    \\ \hline
-\multicolumn{1}{|l|}{Second Generation}   & \multicolumn{1}{l|}{$O(2 L/c)$}     & \multicolumn{1}{l|}{$O({\rm PolyLog}[L_{tot}])$} & \multicolumn{1}{l|}{\rm arbitrary}  & \multicolumn{1}{l|}{\rm high}   \\ \hline
-\multicolumn{1}{|l|}{Third Generation}   & \multicolumn{1}{l|}{$O(t_{local})$}     & \multicolumn{1}{l|}{$O({\rm PolyLog}[L_{tot}])$} & \multicolumn{1}{l|}{$L/L_0<0.69$}   & \multicolumn{1}{l|}{\rm fault tolerant levels}   \\
-\hline \hline
+\hline
+\multicolumn{1}{|l|}{\textbf{Repeater generation}} & \multicolumn{1}{l|}{\rm $T_\mathrm{av}$}   & \multicolumn{1}{l|}{\rm Resources consumed}    & \multicolumn{1}{l|}{\rm  $L_\mathrm{max}$}     & \multicolumn{1}{l|}{\rm  Local gate precision}     \\ \hline \hline
+\multicolumn{1}{|l|}{First generation}    & \multicolumn{1}{l|}{$O(L_\mathrm{tot}/c)$} & \multicolumn{1}{l|}{$O(\mathrm{poly}(L_\mathrm{tot}))$} & \multicolumn{1}{l|}{\rm arbitrary}  & \multicolumn{1}{l|}{\rm arbitrary}    \\ \hline
+\multicolumn{1}{|l|}{Second generation}   & \multicolumn{1}{l|}{$O(2 L/c)$}     & \multicolumn{1}{l|}{$O(\mathrm{polylog}(L_\mathrm{tot}))$} & \multicolumn{1}{l|}{\rm arbitrary}  & \multicolumn{1}{l|}{\rm high}   \\ \hline
+\multicolumn{1}{|l|}{Third generation}   & \multicolumn{1}{l|}{$O(t_\mathrm{local})$}     & \multicolumn{1}{l|}{$O(\mathrm{polylog}(L_\mathrm{tot}))$} & \multicolumn{1}{l|}{$L/L_0<0.69$}   & \multicolumn{1}{l|}{\rm fault tolerant levels}   \\
+\hline
 \end{tabular}
 \caption{Quantum repeater approaches and their expected performance scalings.  $T_{\rm ave}$ corresponds to the time between which the protocol can be attempted (the time to generate a single Bell state is at least $L_{tot}/c$) \cite{Muralidharan2016}. The generation rate is $R\sim 1/ _{\rm ave}$. Further given are the resources (quantum memories) required as well as the precision for the local gate operations within the repeater node. and $L_{max}$ the maximum spacing between repeater nodes. Within the table  $L_{tot}$ is the total distance between Alice and Bob while $L$ is the distance between adjacent repeater nodes. $t_{local}$ is the time required to perform the local operations within the repeater node, while $L_0$ is the attenuation length of the channel/fiber.}
 \label{qtable}
@@ -299,10 +322,8 @@ Table  \ref{qtable} clearly shows that the average time to generate the Bell pai
 
 The previous quantum repeater networks we have discussed have been simple point to point linear networks (Fig \ref{fig10}a). While there were a number fo ways to establish the end to end entangled links between Alice and Bob, they knew they were connected via a simple linear chain. 
 \begin{figure}[!htb]
-\begin{center}
 \includegraphics[width=0.475\textwidth]{repeaters_10}
-\end{center}
-\caption{Schematic illustration of a quantum networks. In a) the typical simple point to point linear quantum repeater network is shown while in b) a more complex topology network  is depicted that could in principle support many simultaneous users. The thicker connecting lines represent links between nodes have more capacity.}
+\caption{\comment{Redo fig}Schematic illustration of a quantum networks. In a) the typical simple point to point linear quantum repeater network is shown while in b) a more complex topology network  is depicted that could in principle support many simultaneous users. The thicker connecting lines represent links between nodes have more capacity.}
 \label{fig10}
 \end{figure} 
 Of course this is highly unrealistic. Alice and Bob are likely to be members of a complex quantum network (Fig \ref{fig10}b) that supports multiple users  simultaneously. This leads to a number of interesting considerations going forward. 
