@@ -32,6 +32,10 @@
 
 \tableofcontents 
 
+\comment{What to do about missing refs?}
+
+\comment{Make new figs where needed}
+
 In the previous section (Sec.~\ref{sec:ent_ultimate}) we concluded that quantum networks specialising purely in entanglement distribution (Bell-pairs in the simplest case), would already be extremely capable in enabling many distributed quantum protocols. This motivates the development of protocols for entanglement distribution over noisy, long-distance quantum networks.
 
 Any useful future quantum internet is going to require the communication of quantum information over arbitrarily long distances. While intercity communication might be implemented via point-to-point connections\index{Point-to-point}, intracity and intercontinental communication will require extremely long distance links, well beyond the attenuation length of the optical fibres connecting them.
@@ -48,7 +52,7 @@ Any useful future quantum internet is going to require the communication of quan
 
 The links are now over much shorter distances and so can be generated with far higher probability \cite{}. Then by stitching these together using entanglement swapping (Sec.~\ref{sec:ent_swap})\index{Entanglement swapping}, we can generate our required long-range entanglement link \cite{}.
 
-\comment{Mention generations here in advance}
+Beginning from this simple principle, the field of quantum repeater networks has grown enormously, leading to several generations of repeater designs, of ever increasing power and sophistication, and ever increasing technological demands.
 
 \subsection{First generation repeaters}\index{First generation repeaters}
 
@@ -78,7 +82,7 @@ Probably the most important operation for any quantum repeater setup is entangle
 \item Absorption of entangled photons by quantum memories.
 \item Photon emission at one node and absorption at another.
 \end{itemize}
-By far, the emission based schemes are the most common, which we concentrate on here. Such schemes operate by using an entanglement process -- \textit{which-path erasure} -- to entangle a quantum memory with a single photon.
+By far, the emission based schemes are the most common, which we concentrate on here. Such schemes operate by using an entanglement process -- \textit{which-path erasure} -- to entangle two quantum memories via photons to which they were coupled.
 
 We now describe such a which-path entangling operation in the context of 2-level quantum memories coupled to polarisation-encoded photons. A closely related scheme for preparing cluster states on $\lambda$-configuration systems for the purposes of quantum computation is discussed in Sec.~\ref{sec:barrettkok_lambda}.
 
@@ -86,7 +90,7 @@ Ideally one wants to generate a maximally entangled state of the form \cite{bib:
 \begin{align}
 |\Psi\rangle=\frac{1}{\sqrt{2}} (|g\rangle |H\rangle + |e\rangle |V\rangle),
 \end{align}
-within the repeater node where $\ket{g}$ and $\ket{e}$ are the two states (ground and excited) of the quantum memory, and $\ket{H}$ and $\ket{V}$ are the polarisation states of light. 
+within the repeater node, where $\ket{g}$ and $\ket{e}$ are the two states (ground and excited) of the quantum memory, and $\ket{H}$ and $\ket{V}$ are the polarisation states of light. 
 \begin{figure}[!htb]
 \includegraphics[width=0.3\textwidth]{repeaters_3}
 \caption{Entanglement distribution scheme based on quantum emitters and which-path erasure\index{Which-path erasure}. Each node emits a photon entangled with the quantum memories present within that nodes. The photons from the adjacent repeater nodes then interfere on a beamsplitter (or polarising beamsplitter)\index{Beamsplitter}\index{Polarising beamsplitter} which erases information about which path the photon took. The photons are then measured in an appropriate basis to project the quantum memories within the nodes onto an entangled state.} 
@@ -95,9 +99,10 @@ within the repeater node where $\ket{g}$ and $\ket{e}$ are the two states (groun
 The photons from the two repeater nodes (Fig.~\ref{fig:repeaters_3}) are then transmitted to a beamsplitter (or PBS in this example), after which the state of the system is,
 \begin{align}
 |\Psi\rangle &= \frac{1}{2} |g\rangle |g\rangle |H\rangle |H\rangle +\frac{1}{2} |e\rangle |e\rangle |V\rangle |V\rangle \nonumber \\
-&+\frac{1}{2} |g\rangle |e\rangle |HV\rangle |0\rangle + \frac{1}{2} |e\rangle |g\rangle |0\rangle |HV\rangle 
+&+\frac{1}{2} |g\rangle |e\rangle |HV\rangle |0\rangle + \frac{1}{2} |e\rangle |g\rangle |0\rangle |HV\rangle. 
 \end{align}
-One immediately notices that the $|e\rangle |e\rangle$ and $|e\rangle |g\rangle$ contributions are associated with two photons in one of the PBS exit modes, the other being in the vacuum state. However, the $|g\rangle |g\rangle$ and $|e\rangle |e\rangle$ terms have one photon in each of the output modes. They are of opposite polarisation, but measuring those photons in the diagonal/anti-diagonal ($\hat{X}$) basis erases this `which-path' information yielding an equal superposition of the two alternative histories -- an entangled state of the form,
+
+One immediately notices that the $|g\rangle |e\rangle$ and $|e\rangle |g\rangle$ contributions are associated with two photons in one of the PBS exit modes, the other being in the vacuum state. However, the $|g\rangle |g\rangle$ and $|e\rangle |e\rangle$ terms have one photon in each of the output modes. They are of opposite polarisation, but measuring those photons in the diagonal/anti-diagonal ($\hat{X}$) basis erases this `which-path' information yielding an equal superposition of the two alternative histories -- an entangled state of the form,
 \begin{align}
 |\Psi_\pm\rangle=\frac{1}{\sqrt{2}} (|g\rangle |g\rangle \pm |e\rangle |e\rangle),
 \end{align}
@@ -116,7 +121,7 @@ T_\mathrm{av} &\sim \frac{L}{ c \cdot p_\mathrm{ED}}\nonumber\\
 \end{align} 
 where $c$ is the speed of light in the channel. This grows exponentially against node separation and so places important constraints on the lifetime of the quantum memories. If we consider pure dephasing effects on our matter qubits, the state of our system can be represented by,
 \begin{align}
-\hat\rho(F) = F |\Psi_+\rangle \langle \Psi_+|+(1-F) |\Psi_-\rangle \langle \Psi_-|,
+\hat\rho(F) = F |\Psi^+\rangle \langle \Psi^+|+(1-F) |\Psi^-\rangle \langle \Psi^-|,
 \label{eq:rho_bell_fid}
 \end{align} 
 where $F$ is the fidelity of our entangled state given by,
@@ -137,7 +142,7 @@ The finite coherence-time of quantum memories and operational errors caused by q
 
 In this simplest purification protocol, Alice and Bob share two pairs of entangled states of the form given by Eq.~(\ref{eq:rho_bell_fid}). These states are a mixture of only two Bell states. We begin our purification protocol by using local operations to transform $\hat\rho$ to,
 \begin{align}\label{eq:rho_bell_fid_dash}
-\hat\rho(F)=F |\Psi_+\rangle \langle \Psi_+|+(1-F) |\Phi_+\rangle \langle \Phi_+|,
+\hat\rho(F)=F |\Psi^+\rangle \langle \Psi^+|+(1-F) |\Phi^+\rangle \langle \Phi^+|,
 \end{align}
 
 As shown in Fig.~\ref{fig:repeaters_4} we then apply a CNOT gate between Alice's two memories and Bob's two memories following by measuring $A_2,B_2$ in the computational basis. Upon measurement of even parity our resulting state $\hat\rho(F')$ has the form, but with new fidelity,
@@ -171,7 +176,7 @@ Alternatively for the odd parity measurement results, which occur with probabili
 \begin{align}
 	p_\mathrm{odd}=F(1-F),
 \end{align}
-the resulting state is an equal mixture of $|\Psi_+\rangle$ and $|\Phi_+\rangle$ and is not entangled at all. In this case we must start again from scratch with the entanglement distribution.
+the resulting state is an equal mixture of $|\Psi^+\rangle$ and $|\Phi^+\rangle$ and is not entangled at all. In this case we must start again from scratch with the entanglement distribution.
 
 So far we have discussed one round of entanglement purification but the protocol naturally works in a recursive way where two copies of a state with the same fidelity are used for the next purification round. Using this bootstrapped approach one can in principle generate a near unit fidelity entangled pair from a finite fidelity pair (provided initial input fidelity \mbox{$F>1/2$}). 
 
@@ -305,15 +310,15 @@ where $|0\rangle$ and $|1\rangle$ represent orthogonal degrees of freedom (e.g p
 \end{align}
 and thus the state has been encoded into terms of a tensor product of two redundantly encoded Bell states. Now photon loss will remove one of these photons. As an example, let us consider what happens when photon 4 is lost. The resultant state can be represented by the density matrix,
 \begin{align}
-	\hat\rho= |\zeta_+\rangle \langle \zeta_+| +|\zeta_-\rangle \langle \zeta_-|,
+	\hat\rho= |\zeta^+\rangle \langle \zeta^+| +|\zeta^-\rangle \langle \zeta^-|,
 	\end{align}
 where,
 \begin{align}
-|\zeta_+\rangle &=  \alpha |\Phi_{12}^+\rangle |0\rangle_3 + \beta  |\Psi_{12}^+\rangle |1\rangle_3, \nonumber \\
-|\zeta_-\rangle &=  \alpha |\Phi_{12}^+\rangle |1\rangle_3 + \beta  |\Psi_{12}^+\rangle |0\rangle_3.
+|\zeta^+\rangle &=  \alpha |\Phi_{12}^+\rangle |0\rangle_3 + \beta  |\Psi_{12}^+\rangle |1\rangle_3, \nonumber \\
+|\zeta^-\rangle &=  \alpha |\Phi_{12}^+\rangle |1\rangle_3 + \beta  |\Psi_{12}^+\rangle |0\rangle_3.
 \end{align}
 
-We immediately notice that $|\zeta_-\rangle=\hat{X}_3 |\zeta_+\rangle$ and so by measuring the third photon in the $\hat{X}$ basis our state reduces to the pure state $\alpha |\Phi_{12}^+\rangle \pm \beta |\Psi_{12}^+\rangle$, where the $\pm$ sign is given by the $\hat{X}$ measurement outcome. This is then correctable using local operations. After the loss event of photon 4 and the measurement of the third photon our state thus becomes,
+We immediately notice that $|\zeta^-\rangle=\hat{X}_3 |\zeta^+\rangle$ and so by measuring the third photon in the $\hat{X}$ basis our state reduces to the pure state $\alpha |\Phi_{12}^+\rangle \pm \beta |\Psi_{12}^+\rangle$, where the $\pm$ sign is given by the $\hat{X}$ measurement outcome. This is then correctable using local operations. After the loss event of photon 4 and the measurement of the third photon our state thus becomes,
 \begin{align}
 \alpha |\Phi_{12}^+\rangle + \beta  |\Psi_{12}^+\rangle,
 \end{align}
@@ -329,7 +334,7 @@ where $|\Phi_{e,o}\rangle$ are the even and odd parity m photon states given by,
 \begin{align}
 |\Phi_{e,o}\rangle =  |+\rangle_1 \ldots  |+\rangle_m\pm |-\rangle_1 \ldots  |-\rangle_m
 \end{align}
-with \mbox{$|\pm\rangle=|0\rangle\pm |1\rangle$}. This redundancy-based parity code is composed of $n$ logical qubits each containing $m$ photons. For this code to correct loss errors we have two constraints,
+with \mbox{$|\pm\rangle=|0\rangle\pm |1\rangle$} \comment{Norms}. This redundancy-based parity code is composed of $n$ logical qubits each containing $m$ photons. For this code to correct loss errors we have two constraints,
 \begin{itemize}
 \item At least one logical qubit must arrive without photon loss.
 \item Every logical qubit must have at least one photon arrive successfully.
