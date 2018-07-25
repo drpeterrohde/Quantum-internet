@@ -191,30 +191,44 @@ with,
 \end{align}
 where a local correction operation is performed on either $A_1$ or $B_1$ depending on the measurement outcome. It is clear that the longer range entangled state $\hat\rho_{F'}$ is less entangled that the states $\hat\rho_F$ used to generate it. In fact, to first order our fidelity drops from $F$ to $F^2$. This in turn means that we can not simply purify adjacent repeater pairs and swap them all to create the long range pairs. If we had $n$ links, our final fidelity from all the swapping would scale as $F^n$. For high fidelity end-to-end entangled links we need to follow the approach outlined in Fig.~\ref{fig:repeaters_2}. Finally, depending on how the Bell measurement is implemented, this process could be probabilistic (but heralded) or deterministic in nature. We assign the success probability as $p_\mathrm{ES}$.
 
-\comment{Up to here}
-
 \subsection{Performance}\index{Repeater performance}
 
-We now have all the operations required for a repeater to create long range entanglements. The natural question is what is the performance like? There are several important points to initially consider here. The majority of the repeater operations are probabilistic in nature (entanglement distribution and purification fundamentally and entanglement swapping can be dependent on how it is performed). While these probabilistic operations may be heralded, classical signaling must  be send between those nodes involved to inform them of the success or failure of that operation. For entanglement distribution this time is just that associated with that associated to signal between the adjacent nodes, however purification and swapping are likely to require such signaling over the entire length of the network. This has a dramatic effect on the over performance of this repeater network. The normalized rate for generating Bell pairs over a total distance $L_{tot}$ is given by
-\begin{align}
-R(n,k,L_{tot})= \frac{1}{T_{n,k,L_{tot}} M_{n,k}}
-\label{resources}
-\end{align}
-where $T_{n,k,L_{tot}}$ is the time to generate a Bell pair over the total distance using an $n$ nested repeater configuration with $k$ rounds of purification per nesting level. The distance between repeater nodes is given by $L=L_{tot}/2^n$ meaning there are $2^n-1$ intermediate repeater nodes with Alice and Bob are the end points. In (\ref{resources}) we we  our rate by $M_{n,k}$ the total of quantum memories used . The justification for this is that is provides a fairer comparison when different purification approaches are used. The Deutsch protocol for instances achieves it target fidelity much faster (less rounds) that the Dur protocol but consumes more resources doing it. 
+We now have all the operations required for a repeater to create long-range entanglement. The natural question to ask is how well it performs.
 
-Now it is straightforward but tedious to show that $T_{n,k,L_{tot}}$ is given by \cite{braztzik2013}
+There are several important points to initially consider here. The majority of the repeater operations are probabilistic in nature (entanglement distribution and purification fundamentally, and entanglement swapping dependent upon implementation). While these probabilistic operations may be heralded, classical signalling must be performed between involved nodes  to inform them of successes or failures. For entanglement distribution this time is just that associated with the signalling between adjacent nodes. However, purification and swapping are likely to require such signalling over the entire length of the network. This has a dramatic effect on the performance of the repeater network. The normalised rate for generating Bell-pairs over a total distance $L_\mathrm{tot}$ is given by,
+\begin{align}
+R(n,k,L_\mathrm{tot})= \frac{1}{T_{n,k,L_\mathrm{tot}} M_{n,k}}
+\label{eq:rep_net_resources}
+\end{align}
+where $T_{n,k,L_\mathrm{tot}}$ is the time to generate a Bell-pair over the total distance using an $n$-nested repeater configuration with $k$ rounds of purification per nesting level. The distance between repeater nodes is given by,
+\begin{align}
+	L=\frac{L_\mathrm{tot}}{2^n},
+\end{align}
+meaning there are \mbox{$2^n-1$} intermediate repeater nodes with Alice and Bob at the endpoints. In Eq.~(\ref{eq:rep_net_resources}) we discount our rate by $M_{n,k}$, the total number of quantum memories used. The justification for this is that this provides a fairer comparison when different purification approaches are used. The Deutsch protocol for instance achieves its target fidelity much faster (fewer rounds) than the Dur protocol, but consumes far more resources doing so. \comment{Did I correct this paragraph correctly?}
+
+Now it is straightforward but tedious to show that $T_{n,k,L_{tot}}$ is given by \cite{braztzik2013},
 \begin{widetext}
 \begin{align*}
- T_{n,k,L_{tot}} &\sim \frac{3^n}{2^{n-1} p_{ED}} \prod_{i=0}^{n-1} \left(\frac{3}{2}\right)^{k}  \frac{1}{P_{ES}(n-i)  }\prod_{j=0}^{k-1} \frac{1}{p_P(k-j,n-i)}  \nonumber \\
- &+\sum_{m=1}^n\left(\frac{3^{n-m}}{2^{n-1}}\right) \prod_{i=0}^{n-m}   \left(\frac{3}{2}\right)^{k} \frac{1}{P_{ES}(n-i)}  \prod_{j=0}^{k-1}  \frac{1}{p_P(k-j,n-i)}  \\
-&+\sum_{m=1}^n {\sum_{q=0}^{k-1} \left(\frac{3^{n-m+q}}{2^{n- 2 m+q}}\right) \prod_{r=0}^{q}\frac{1}{p_P(k-r,m)}} 
-\prod_{i=0}^{n-m-1}   \left(\frac{3}{2}\right)^{k} \frac{1}{P_{ES}(n-i)}  \prod_{j=0}^{k-1}  \frac{1}{p_P(k-j,n-i)} \nonumber 
+ T_{n,k,L_\mathrm{tot}} &\sim \frac{3^n}{2^{n-1} p_\mathrm{ED}} \prod_{i=0}^{n-1} \left(\frac{3}{2}\right)^{k}  \frac{1}{P_\mathrm{ES}(n-i)  }\prod_{j=0}^{k-1} \frac{1}{p_\mathrm{P}(k-j,n-i)}  \nonumber \\
+ &+\sum_{m=1}^n\left(\frac{3^{n-m}}{2^{n-1}}\right) \prod_{i=0}^{n-m}   \left(\frac{3}{2}\right)^{k} \frac{1}{P_\mathrm{ES}(n-i)}  \prod_{j=0}^{k-1}  \frac{1}{p_\mathrm{P}(k-j,n-i)}  \\
+&+\sum_{m=1}^n {\sum_{q=0}^{k-1} \left(\frac{3^{n-m+q}}{2^{n- 2 m+q}}\right) \prod_{r=0}^{q}\frac{1}{p_\mathrm{P}(k-r,m)}} 
+\prod_{i=0}^{n-m-1}   \left(\frac{3}{2}\right)^{k} \frac{1}{P_\mathrm{ES}(n-i)}  \prod_{j=0}^{k-1}  \frac{1}{p_\mathrm{P}(k-j,n-i)} \nonumber 
 \end{align*}
 \end{widetext}
-where $p_{ED}$ is the probability of successfully distributing entanglement between adjacent repeater nodes while $p_P(j,i)$ [$p_{ES}(i)$] represents the purification [entanglement swapping] probability at the $i^{th}$ nesting level with $j$ rounds of purification.  The factors of (3/2) present in all entanglement distribution,  purification and swapping operations is a multiplicative factor associated with the extra time required for the two pairs to be available for the various quantum operations \cite{SSRG09}.
+where $p_\mathrm{ED}$ is the probability of successfully distributing entanglement between adjacent repeater nodes, while $p_\mathrm{P}(j,i)$ [$p_\mathrm{ES}(i)$] represents the purification [entanglement swapping] probability at the $i$th nesting level with $j$ rounds of purification. The factors of $3/2$ present in all entanglement distribution,  purification and swapping operations is a multiplicative factor associated with the extra time required for the two pairs to be available for the various quantum operations \cite{SSRG09}.
 
+It can be easily seen from this formula that,
+\begin{align}
+	T_{n,k,L_\mathrm{tot}} \gg \frac{2 L_\mathrm{tot}}{c},
+\end{align}
+especially if probabilistic gates are included. Next the resources scale polynomially with,
+\begin{align}
+	M_{n,k} &\sim 2^{(k+1)n}\nonumber\\
+	&\sim \left(\frac{L_\mathrm{tot}}{L}\right)^{k+1},
+\end{align}
+for the Deutsch protocol, which in turn implies it is efficient. However for long distances $L_\mathrm{tot}$, our normalised rate \mbox{$R(n,k,L_\mathrm{tot})\ll 1\mathrm{Hz}$}, especially when probabilistic CNOT gates and Bell state measurements are employed \cite{jiang09, munro10}.
 
-It can be easily seen from this formula that $ T_{n,k,L_{tot}} \gg 2 L_{tot} / c$ especially if probabilistic gates are included. Next the resources scale polynomially with  $M_{n,k}\sim 2^{(k+1)n}\sim (L_{tot}/L)^{(k+1)}$ for the Deutsch protocol, which in turn implies it is efficient. However for long distances $L_{tot}$, our normalized rate $R(n,k,L_{tot})\ll 1 Hz$ especially when probabilistic CNOT gates and Bell state measurements are used \cite{jiang09,munro10}.
+\comment{Up to here}
 
 \subsection{Second generation repeaters and error correction}
 
@@ -336,92 +350,18 @@ The above issues leads us to a network model where Alice and Bob suspect there i
 
 There is another interesting aspect of our general complex quantum networks. There are likely to be many paths between Alice and Bob which could be attempted in superposition fashion. This will not only increase the capacity between Alice and Bob but also it robustness. 
 
-\begin{thebibliography}{99}
-%
-\bibitem{Kimble2008} H.J. Kimble, The quantum internet, Nature 453, 1023 (2008)
-%
-\bibitem{Gisin2007} N. Gisin and R. Thew, Quantum Communication, Nature Photon {\bf 1}, 165 - 171 (2007).
-%
-\bibitem{SSRG09} N. Sangouard, C. Simon,  N. de Riedmatten and N. Gisin, Quantum repeaters based on atomic ensembles and linear optics, Rev. Mod. Phys. {\bf 83}, 33-80 (2011).
-%
-\bibitem{WJM2015} William J. Munro, Koji Azuma, Kiyoshi Tamaki and Kae Nemoto, Inside Quantum Repeaters, IEEE Journal of Selected Topics in Quantum Electronics 21, 6400813 (2015)
-%
-
-
-
-\bibitem{enk98} S. Enk, J.I. Cirac and P. Zoller, Photonic channels for quantum communication, Science {\bf 279}, 205-208 (1998).
-%
-\bibitem{bennett93}  C.H. Bennett, G. Brassard, C. Crepeau, R. Jozsa, A. Peres, and W.K. Wootters,  Teleporting an unknown quantum state via dual classical and Einstein-Podolsky-Rosen channels, Phys. Rev. Lett. {\bf 70}, 1895 (1993). 
-%
-\bibitem{childress06} L. Childress, J.M.  Taylor, A.S. S{\o}rensen and M. D.  Lukin, Fault-tolerant quantum communication based on solid-state photon emitters, Phys. Rev. Lett. {\bf 96}, 070504 (2006).
-%
-\bibitem{loock06} P. Van Loock, T. D. Ladd, K. Sanaka, F. Yamaguchi, K. Nemoto, W. J. Munro and Y.  Yamamoto, Hybrid quantum repeater using bright coherent light, Phys. Rev. Lett. {\bf 96}, 240501 (2006).
-%
-\bibitem{munro08} W.J. Munro, R. Van Meter, S.G.R. Louis and K.Nemoto, High-bandwidth hybrid quantum repeater, Phys.Rev.Lett. {\bf 101}, 040502 (2008).
-%
-
-\bibitem{Bennett96} C.H. Bennett, G. Brassard, S. Popescu, B. Schumacher, J. Smolin and W. K.  Wootters, Purification of Noisy Entanglement and Faithful Teleportation via Noisy Channels, Phys. Rev. Lett. {\bf 76}, 722 - 726 (1996).
-%
-\bibitem{Deutsch98} D.~Deutsch, A.~Ekert, R.~Jozsa, C.~Macchiavello, S.~Popescu, and A.~Sanpera. Phys. Rev. Lett. {\bf 77}, 2818 (1996).
-%
-\bibitem{dur98} W. D\"ur, H. J. Briegel, J.I. Cirac,  and P. Zoller, Quantum repeaters based on entanglement purification, Phys. Rev. A {\bf 59}, 169-181 (1999).
-%
-\bibitem{pan01}
- {J.-W. Pan, S. Simon, C. Brukner, and A. Zeilinger}, Entanglement purification for quantum communication. \textit{Nature} {\bf 410}, 1067-1070 (2001).
-%
-\bibitem{dur07} 
- {W. D\"ur and H. J. Briegel,} Entanglement purification and quantum error correction. \textit{Rep. Prog. Phys.} {\bf 70}, 1381-1424 (2007).
-%
-\bibitem{Stephens2013} Ashley M. Stephens, Jingjing Huang, Kae Nemoto, and William J. Munro, Hybrid-system approach to fault-tolerant quantum communication, Phys. Rev. A 87, 052333 (2013).
-
-
-
-
-
-%
-\bibitem{BDCZ98} H.J. Briegel, W. D\"{u}r, J.I. Cirac and P Zoller, Quantum repeaters: The role of imperfect local operations in quantum communication. Phys. Rev. Lett. {\bf 81}, 5932-5935 (1998).
-%
-\bibitem{Zukowski93} M. Zukowski, A. Zeilinger, M. A. Horne, and A. K. Ekert, Event-ready-detectors Bell experiment via entanglement swapping, Phys. Rev. Lett. {\bf 71}, 4287 (1993).
-%
-\bibitem{duan01} L. M. Duan , M. D. Lukin, J. I. Cirac and P. Zoller, Long-distance quantum communication with atomic ensembles and linear optics, Nature {\bf 414}, 413-418 (2001).
-%
-\bibitem{goebel08} A.M. Goebel, G. Wagenknecht, Q. Zhang, Y. Chen, K. Chen, J. Schmiedmayer and J. W. Pan, Multistage Entanglement Swapping, Phys. Rev. Lett. {\bf 101}, 080403 (2008).
-%
-\bibitem{braztzik2013} Sylvia Bratzik, Silvestre Abruzzo, Hermann Kampermann, and Dagmar Brub, Quantum repeaters and quantum key distribution: The impact of entanglement
-distillation on the secret key rate, PRA 86, 062335 (2013)
-%
-\bibitem{devitt2013} Simon J Devitt, William J Munro and Kae Nemoto, Quantum error correction for beginners, Rep. Prog. Phys. {\bf 76}, 076001 (2013)
-%
-\bibitem{jiang09} L.~Jiang, J.M. Taylor, K.~Nemoto, W.J Munro, R. Van Meter, and M.D. Lukin, Quantum repeater with encoding, Phys.Rev. A {\bf 79}, 032325 (2009).
-%
-\bibitem{munro10} W. J. Munro, K. A. Harrison, A. M. Stephens, S. J. Devitt and K. Nemoto, From quantum multiplexing to high-performance quantum networking, Nature Photon. {\bf 4} , 792-796 (2010). 
-%
-\bibitem{munro12}  W.~J.~Munro, A.~M.~Stephens, S.~J.~Devitt, K.~A.~Harrison, K.~Nemoto, Quantum communication without the necessity
- of quantum memories, Nature Photon {\bf 6}, 777 (2012).
- %
-\bibitem{Aschauer2004} H. Aschauer, PhD. thesis, Ludwig Maximilians Universitat, Munchen, 2004.
-%
-\bibitem{Bennettr1996a} C. H. Bennett, D. P. DiVincenzo, J. A. Smolin, and W. K. Wootters,
-Mixed state entanglement and quantum error correction,?Phys.Rev. A. 54, 3824?3851 (1996).
-%
-\bibitem{Knill97}E. Knill and R. Laflamme,Theory of quantum error-correcting codes, Phys. Rev. A, 55, 900?911 (1997)
-%
-\bibitem{Knill2005} Emanuel Knill, Quantum computing with realistically noisy devices, Nature 434, 39?44, 2005.
-%
-\bibitem{ralph05} T.C. Ralph, A. Hayes and A. Gilchrist, Loss-tolerant optical qubits, Phys. Rev. Lett. 95, 100501 (2005).
-%
-\bibitem{Fowler10} A.G. Fowler, D.S, Wang, C. D. Hill, T. D. Ladd, R. Van Meter \& L. C. L. Hollenberg, Surface code quantum communication. Phys. Rev. Lett. {\bf  104}, 180503 (2010).
-%
-\bibitem{ATL13} K. Azuma, K. Tamaki and H. K. Lo, All photonic quantum repeaters. Preprint at $\langle$http://arxiv.org/abs/1309.7207$\rangle$.
-%
-\bibitem{MKLLJ14} S. Muralidharan, J Kim, N. L\"utkenhaus, N. M. D. Lukin and L. Jiang, Ultrafast and Fault-Tolerant Quantum Communication across Long Distances. Phys. Rev. Lett. {\bf 112}, 250501 (2014).
-%
-\bibitem{Muralidharan2016} Sreraman Muralidharan, Linshu Li,  Jungsang Kim, Norbert Lutkenhaus, Mikhail D. Lukin and Liang Jiang, Optimal architectures for long distance quantum communication, Scientific Reports 6, 20463 (2015)
-
-
-\end{thebibliography}
+\bibliography{bill}
 
 \end{document}
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
 \bibitem{Nei00}  M. A. Nielsen and I. L. Chuang,  \textit{Quantum Computation and Quantum Information} (Cambridge Univ. Press, 2000).
 %
