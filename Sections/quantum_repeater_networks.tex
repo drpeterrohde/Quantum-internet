@@ -18,7 +18,7 @@ Any useful future quantum internet is going to require the communication of quan
 \label{fig:repeaters_1}
 \end{figure} 
 
-The links are now over much shorter distances and so can be generated with far higher probability \cite{}. Then by stitching these together using entanglement swapping (Sec.~\ref{sec:ent_swap})\index{Entanglement swapping}, we can generate our required long-range entanglement link \cite{}.
+The links are now over much shorter distances and so can be generated with far higher probability \cite{}. Then by stitching these together using entanglement swapping (Sec.~\ref{sec:swapping})\index{Entanglement swapping}, we can generate our required long-range entanglement link \cite{}.
 
 Beginning from this simple principle, the field of quantum repeater networks has grown enormously, leading to several generations of repeater designs, of ever increasing power and sophistication, and ever increasing technological demands.
 
@@ -52,7 +52,7 @@ Probably the most important operation for any quantum repeater setup is entangle
 \end{itemize}
 By far, the emission based schemes are the most common, which we concentrate on here. Such schemes operate by using an entanglement process -- \textit{which-path erasure} -- to entangle two quantum memories via photons to which they were coupled.
 
-We now describe such a which-path entangling operation in the context of 2-level quantum memories coupled to polarisation-encoded photons. A closely related scheme for preparing cluster states on $\lambda$-configuration systems for the purposes of quantum computation is discussed in Sec.~\ref{sec:barrettkok_lambda}.
+We now describe such a which-path entangling operation in the context of 2-level quantum memories coupled to polarisation-encoded photons. A closely related scheme for preparing cluster states on $\lambda$-configuration systems for the purposes of quantum computation is discussed in Sec.~\ref{sec:hybrid}.
 
 Ideally one wants to generate a maximally entangled state of the form \cite{bib:WJM2015},
 \begin{align}
@@ -113,7 +113,7 @@ In this simplest purification protocol, Alice and Bob share two pairs of entangl
 \hat\rho(F)=F |\Psi^+\rangle \langle \Psi^+|+(1-F) |\Phi^+\rangle \langle \Phi^+|,
 \end{align}
 
-As shown in Fig.~\ref{fig:repeaters_4} we then apply a CNOT gate between Alice's two memories and Bob's two memories following by measuring $A_2,B_2$ in the computational basis. Upon measurement of even parity our resulting state $\hat\rho(F')$ has the form, but with new fidelity,
+As shown in Fig.~\ref{fig:repeaters_4} we then apply a CNOT gate between Alice's two memories and Bob's two memories following by measuring $A_2, B_2$ in the computational basis. Upon measurement of even parity our resulting state $\hat\rho(F')$ has the form, but with new fidelity,
 \begin{align}
 	F'=\frac{F^2}{F^2+(1-F)^2}.
 \end{align}
@@ -150,16 +150,16 @@ So far we have discussed one round of entanglement purification but the protocol
 
 There are two common variants of these purification protocols: the Deutsch and Dur variants:
 \begin{itemize}
-\item \textit{Deutsch protocol} \cite{bib:Deutsch98}: This is an efficient purification protocol utilising Bell diagonal states that reaches a high fidelity in a few purification rounds. It is assumed that both entangled pairs have the same form. The purification protocol is the same at the one described above in Fig.~\ref{fig:repeaters_4}, but begins with Alice (Bob) applying $\pi/2$ $(-\pi/2)$ rotations about the $X$-axis on their qubits before the usual CNOT gates and measurements are performed. Two copies of the successfully purified pair can then be used in a recursive approach to purify either further. This in turns means multiple copies of the originally distributed states are required. We must have enough entangled pairs available to perform the multiple rounds of purification that are required, which grows exponentially with the number of purification rounds. 
+\item \textit{Deutsch protocol} \cite{bib:Deutsch98}\index{Deutsch protocol}: This is an efficient purification protocol utilising Bell diagonal states that reaches a high fidelity in a few purification rounds. It is assumed that both entangled pairs have the same form. The purification protocol is the same at the one described above in Fig.~\ref{fig:repeaters_4}, but begins with Alice (Bob) applying $\pi/2$ $(-\pi/2)$ rotations about the $X$-axis on their qubits before the usual CNOT gates and measurements are performed. Two copies of the successfully purified pair can then be used in a recursive approach to purify either further. This in turns means multiple copies of the originally distributed states are required. We must have enough entangled pairs available to perform the multiple rounds of purification that are required, which grows exponentially with the number of purification rounds. 
 
-\item \textit{D{\"u}r protocol} \cite{bib:dur98}: This uses the same core purification elements shown in Fig.~\ref{fig:repeaters_4} but relaxes the traditional constraint that both Bell pairs must have the same fidelity. Instead we begin with two pairs of the same fidelity $F$, and perform the traditional purification. If successful we perform the next round of purification using the improved fidelity pair from the previous round and a fresh fidelity $F$ pair. In effect this new auxiliary pair is used to boost the fidelity of the original pair higher. This can continue until we reach a limiting fidelity dependent on the original $F$. This limiting fidelity may be above the desired resultant fidelity, at which point we can terminate the purification protocol. A significant difference between the Deutsch and Dur protocols is that the number of memories in the Dur situation is linear in the number of nesting levels.
+\item \textit{D{\"u}r protocol} \cite{bib:dur98}\index{D{\"ur} protocol}: This uses the same core purification elements shown in Fig.~\ref{fig:repeaters_4} but relaxes the traditional constraint that both Bell pairs must have the same fidelity. Instead we begin with two pairs of the same fidelity $F$, and perform the traditional purification. If successful we perform the next round of purification using the improved fidelity pair from the previous round and a fresh fidelity $F$ pair. In effect this new auxiliary pair is used to boost the fidelity of the original pair higher. This can continue until we reach a limiting fidelity dependent on the original $F$. This limiting fidelity may be above the desired resultant fidelity, at which point we can terminate the purification protocol. A significant difference between the Deutsch and Dur protocols is that the number of memories in the Dur situation is linear in the number of nesting levels.
 \end{itemize}
 
 It is critical in repeater protocols to also discuss how fast these purification protocols can be performed. Even with ideal gates one has to wait for the parity information to be shared between the repeater nodes. For nodes separated by a distance $L$, the communication time for a single trial is $L/c$. However, remembering that purification is probabilistic but heralded in nature our waiting time could be many multiples of $L/c$. This will have a dramatic effect on performance, especially if performed at many different stages in the network with increasing distances between nodes.
 
 \subsubsection{Entanglement swapping}\label{sec:reps_ent_swap}\index{Entanglement swapping}
 
-The entanglement distribution and purification scheme discussed previously allow one in principle to create high fidelity entangled states between adjacent repeaters nodes. The next task is to extend the range of our entangled states, and this occurs via simple entanglement swapping \cite{bib:BDCZ98, bib:Zukowski93, bib:goebel08, bib:duan01}. This was described previously in Sec.~\ref{sec:ent_swap}, although the notation is modified.
+The entanglement distribution and purification scheme discussed previously allow one in principle to create high fidelity entangled states between adjacent repeaters nodes. The next task is to extend the range of our entangled states, and this occurs via simple entanglement swapping \cite{bib:BDCZ98, bib:Zukowski93, bib:goebel08, bib:duan01}. This was described previously in Sec.~\ref{sec:swapping}, although the notation is modified.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.4\textwidth]{repeaters_6}
@@ -284,7 +284,7 @@ where,
 |\zeta^-\rangle &=  \alpha |\Phi_{12}^+\rangle |1\rangle_3 + \beta  |\Psi_{12}^+\rangle |0\rangle_3.
 \end{align}
 
-We immediately notice that $|\zeta^-\rangle=\hat{X}_3 |\zeta^+\rangle$ and so by measuring the third photon in the $\hat{X}$ basis our state reduces to the pure state $\alpha |\Phi_{12}^+\rangle \pm \beta |\Psi_{12}^+\rangle$, where the $\pm$ sign is given by the $\hat{X}$ measurement outcome. This is then correctable using local operations. After the loss event of photon 4 and the measurement of the third photon our state thus becomes,
+We immediately notice that \mbox{$|\zeta^-\rangle=\hat{X}_3 |\zeta^+\rangle$} and so by measuring the third photon in the $\hat{X}$ basis our state reduces to the pure state \mbox{$\alpha |\Phi_{12}^+\rangle \pm \beta |\Psi_{12}^+\rangle$}, where the $\pm$ sign is given by the $\hat{X}$ measurement outcome. This is then correctable using local operations. After the loss event of photon 4 and the measurement of the third photon our state thus becomes,
 \begin{align}
 \alpha |\Phi_{12}^+\rangle + \beta  |\Psi_{12}^+\rangle,
 \end{align}
@@ -314,8 +314,8 @@ Let us now describe the operation of the third generation repeater scheme  depic
 It begins at the left hand node by Alice encoding her message into a redundant parity code created on a series of matter qubits using local quantum gates within that repeater node.
 
 \begin{figure*}[!htb]
-\includegraphics[width=0.9\textwidth]{repeaters_9}
-\caption{Schematic illustration of the transmission of a quantum signal using loss based error correction codes in a quantum network.}
+\includegraphics[width=0.8\textwidth]{repeaters_9}
+\caption{Transmission of a quantum signal using loss based error correction codes in a quantum network.}
 \label{fig:repeaters_9}
 \end{figure*}
 
@@ -329,6 +329,7 @@ The focus so far has been only on loss-based errors but this code is fault-toler
 
 As can seen the various quantum repeater generations take quite different approaches as to how they distribute entanglement between Alice and Bob over a long distance \cite{bib:Muralidharan2016}. It is useful thus to summarise in Table.~\ref{tab:rep_nets_scale} the performance of the various repeater approaches and their requirements.
 
+\startnormtable
 \begin{widetext}
 \begin{center}
 \begin{table}[!htb]
@@ -346,24 +347,25 @@ As can seen the various quantum repeater generations take quite different approa
 \end{table}
 \end{center}
 \end{widetext}
+\startalgtable
 
 Table.~\ref{tab:rep_nets_scale} clearly shows that the average time to generate the Bell pair between the end nodes of the repeater network decreases significantly as we move to higher generation quantum repeaters. In the first generation our generation rate is $O(c/L_\mathrm{tot})$, which increases to $O(c/L)$ for the second generation schemes, and finally to $O(1/t_\mathrm{local})$ for the third generation ones. The difference here could be more than nine orders of magnitude. Next the number of quantum memories required decreases from $O(\mathrm{poly}(L_\mathrm{tot}))$ for the first generation approach to $O(\mathrm{polylog}(L_\mathrm{tot}))$ for the higher ones. The higher generation schemes however come at quite a cost, with the requirement for fully fault-tolerant (or near fault-tolerant) quantum gates within nodes. In fact, it's likely that Alice and Bob will have multiple potential routes between themselves.
 
-\subsection{The transition to quantum networks}
+%\subsection{The transition to quantum networks}
 
-The previous quantum repeater networks we discussed have been simple point-to-point\index{Point-to-point network} linear networks\index{Linear network}. While there were a number of ways to establish the end-to-end entangled links between Alice and Bob, they knew they were connected via a simple linear chain.
+%The previous quantum repeater networks we discussed have been simple point-to-point\index{Point-to-point network} linear networks\index{Linear network}. While there may have been a number of ways to establish end-to-end entangled links between Alice and Bob, they knew they were connected via a simple linear chain.
 
-Of course this is highly unrealistic. Alice and Bob are likely to be members of a complex quantum network, that supports multiple users simultaneously and offers multiple routes from a given source to given destination (see Sec.~\ref{sec:network_topologies}). This leads to a number of interesting considerations going forward. 
+%Of course this is highly unrealistic. Alice and Bob are likely to be members of a complex quantum network, that supports multiple users simultaneously and offers multiple routes from a given source to a given destination (see Sec.~\ref{sec:network_topologies}). This leads to a number of interesting considerations going forward. 
 
-\begin{itemize}
-\item For large-scale networks the users may not know its exact network topology or even the best route between them. In fact there could be multiple paths between Alice and Bob. Probing the entire network to establish the best route would be slow and costly (in practice). Still, every node should have a unique identifier (quantum IP address), uniquely indicating its location in the network.
-\item Most complex networks dynamically change in time as resources become congested or nodes break. This in turn means using a butterfly approach to create Alice and Bob's links is problematic as one does not know the middle point between them to start the entanglement creation process. If one has to determine the route in advance and restrict access to those parts of the network required to establish the entire links, congestion will quickly follow. The generation rate will be very slow. 
-\item Finally, it's unlikely that repeater nodes will be equally spatially separated (making the first generation repeater schemes extremely hard to use in this situation). 
-\end{itemize}
+%\begin{itemize}
+%\item For large-scale networks the users may not know its exact network topology or even the best route between them. In fact there could be multiple paths between Alice and Bob. Probing the entire network to establish the best route would be slow and costly (in practice). Still, every node should have a unique identifier (quantum IP address), uniquely indicating its location in the network.
+%\item Most complex networks dynamically change in time as resources become congested or nodes break. This in turn means using a butterfly approach to create Alice and Bob's links is problematic as one does not know the middle point between them to start the entanglement creation process. If one has to determine the route in advance and restrict access to those parts of the network required to establish the entire links, congestion will quickly follow. The generation rate will be very slow. 
+%\item Finally, it's unlikely that repeater nodes will be equally spatially separated (making the first generation repeater schemes extremely hard to use in this situation). 
+%\end{itemize}
 
-The above issues lead us to a network model where Alice and Bob suspect there is a route between them but not the exact route, which is likely to be dynamic, i.e the availability of routes and their relative costs are liable to change. In such a case if Alice wants to send a message to Bob, she uses her knowledge of Bob's rough location (from the quantum IP address) and her knowledge of the nodes close to her to send a message to a repeater node who will have more knowledge of Bob's part of the network. This node can then forward the message to further nodes (who know even more about Bob's location) until it finally reaches Bob. The quantum IP address is essential here as that identifier indicates to the repeater node who to forward to next. In principle as the message (or entanglement) is being established node by node, those repeater nodes who have already been used are free to work for tasks for other users. 
+%The above issues lead us to a network model where Alice and Bob suspect there is a route between them but do not know the exact route, which is likely to be dynamic, i.e the availability of routes and their relative costs are liable to change. In such a case, if Alice wants to send a message to Bob, she uses her knowledge of Bob's rough location (from the quantum IP address) and her knowledge of the nodes close to her to send a message to a repeater node who will have more knowledge of Bob's part of the network. This node can then forward the message to further nodes (who know even more about Bob's location) until it finally reaches Bob. The quantum IP address is essential here as that identifier indicates to the repeater node who to forward to next. In principle as the message (or entanglement) is being established node by node, those repeater nodes who have already been used are free to work for tasks for other users. 
 
-There is another interesting aspect of our general complex quantum networks. There are likely to be many paths between Alice and Bob which could be attempted in superposition fashion. This will not only increase the capacity between Alice and Bob but also its robustness.
+%There is another interesting aspect of our general complex quantum networks. There are likely to be many paths between Alice and Bob which could be attempted in superposition fashion. This will not only increase the capacity between Alice and Bob but also its robustness.
 
 %
 % Repeater Synchronisation
@@ -379,7 +381,7 @@ Consider a simple quantum repeater network, comprising a linear chain of alterna
 
 \begin{figure*}[!htb]
 \includegraphics[width=\textwidth]{racetime}
-\caption{A linear quantum repeater network comprising Bell-pair sources and Bell measurements. Upon success this yields a single Bell-pair between the leftmost and rightmost photonic qubits. $t_i$ is the triggering time of the $i$th source, and $\tau_i^\leftarrow$ ($\tau_i^\rightarrow$) are the channel propagation times between the $i$th source and the entanglement swapper to its immediate left (right). With push-button sources\index{Push-button source}, if the $t_i$ are chosen appropriately, as per Eq.~(\ref{eq:repeater_trig_time_sol}), we can satisfy the race-time condition\index{Race-time condition} of simultaneous arrival times of photons at Bell measurements, mitigating the need for quantum memories to synchronise them.}\label{fig:racetime}	
+\caption{A linear quantum repeater network comprising Bell-pair sources, and Bell measurements for entanglement swapping (there is no purification stage in this example). Upon success this yields a single Bell-pair between the leftmost and rightmost photonic qubits. $t_i$ is the triggering time of the $i$th source, and $\tau_i^\leftarrow$ ($\tau_i^\rightarrow$) are the channel propagation times between the $i$th source and the entanglement swapper to its immediate left (right). With push-button sources\index{Push-button source}, if the $t_i$ are chosen appropriately, as per Eq.~(\ref{eq:repeater_trig_time_sol}), we can satisfy the race-time condition\index{Race-time condition} of simultaneous arrival times of photons at Bell measurements, mitigating the need for quantum memories to synchronise them.}\label{fig:racetime}	
 \end{figure*}
 
 Let $t_i$ be the triggering time of the $i$th source, and $\tau_i^\leftarrow$ ($\tau_i^\rightarrow$) be the channel propagation times from the $i$th source to the entanglement swapper immediately to its left (right) in the chain. Imposing the race-time condition\index{Race-time condition} that two photons arriving at a measurement device are simultaneous,
