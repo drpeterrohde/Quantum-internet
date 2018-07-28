@@ -64,7 +64,7 @@ function DeutschJozsa(f,n):
     \end{align}
     \item The full evolution is thus given by,
     \begin{align}
-    	\ket\psi_\text{out} = (\hat{H}^{\otimes n}\otimes\hat{I}) \cdot \hat{U}_f \cdot \hat{H}^{\otimes (n+1)}\ket{0}^{\otimes n}\ket{1}.
+    	\ket\psi_\mathrm{out} = (\hat{H}^{\otimes n}\otimes\hat{I}) \cdot \hat{U}_f \cdot \hat{H}^{\otimes (n+1)}\ket{0}^{\otimes n}\ket{1}.
     \end{align}
 	\item Measure the first $n$ qubits to determine the probability of measurement outcome $\ket{0}^{\otimes n}$.
 	\item This probability is given by,
@@ -149,7 +149,7 @@ The quantum Fourier transform (QFT) is not an algorithm per se, but rather a uni
 
 The QFT matrix simply contains coefficients taken from the discrete Fourier transform (DFT)\index{Discrete Fourier transform}. Specifically, the \mbox{$N\times N$} QFT matrix has elements,
 \begin{align}
-\hat{\text{QFT}}_{j,k} = \frac{1}{\sqrt{N}} \omega^{(j-1)(k-1)},	
+\hat{\mathrm{QFT}}_{j,k} = \frac{1}{\sqrt{N}} \omega^{(j-1)(k-1)},	
 \end{align}
 where,
 \begin{align}
@@ -157,7 +157,7 @@ where,
 \end{align}
 is a complex root of unity. In matrix form the $N$-dimensional QFT is therefore,
 \begin{align}
-\hat{\text{QFT}}_N = \frac{1}{\sqrt{N}} \left(\begin{matrix}
+\hat{\mathrm{QFT}}_N = \frac{1}{\sqrt{N}} \left(\begin{matrix}
   1 & 1 & 1 & \dots & 1\\
   1 & \omega & \omega^2 & \dots & \omega^{N-1} \\
   1 & \omega^2 & \omega^4 & \dots & \omega^{2(N-1)} \\
@@ -165,18 +165,18 @@ is a complex root of unity. In matrix form the $N$-dimensional QFT is therefore,
   1 & \omega^{N-1} & \omega^{2(N-1)} &\dots &\omega^{(N-1)(N-1)}
 \end{matrix}\right),
 \end{align}
-which is symmetric, \mbox{$\hat{\text{QFT}}=\hat{\text{QFT}}^\top$}. Note that all matrix elements are phases with magnitude $1/\sqrt{N}$,
+which is symmetric, \mbox{$\hat{\mathrm{QFT}}=\hat{\mathrm{QFT}}^\top$}. Note that all matrix elements are phases with magnitude $1/\sqrt{N}$,
 \begin{align}
-	|\hat{\text{QFT}}_{i,j}|=\frac{1}{\sqrt{N}}\,\,\forall\, i,j.
+	|\hat{\mathrm{QFT}}_{i,j}|=\frac{1}{\sqrt{N}}\,\,\forall\, i,j.
 \end{align}
 
 Equivalently, in terms of basis state transformations this implements the map,
 \begin{align}
-	\hat{\text{QFT}} \ket{j} \to \frac{1}{\sqrt{N}}\sum_{k=0}^{N-1} \omega^{jk}\ket{k},
+	\hat{\mathrm{QFT}} \ket{j} \to \frac{1}{\sqrt{N}}\sum_{k=0}^{N-1} \omega^{jk}\ket{k},
 \end{align}
 on the $N$ basis states.
 
-Unlike the closely-related Hadamard transform\index{Hadamard transform}, $\hat{H}^{\otimes n}$, which shares many properties with the QFT, the QFT is a highly entangling operation. The QFT of any dimension has an efficient circuit implementation, making it an important subroutine in many algorithms. Specifically, the $n$-qubit QFT (i.e a transformation on $2^n$ amplitudes) requires only $O(n^2)$ elementary gates (Hadamards and CZs). If an approximation of the QFT is sufficient for one's purposes, this can be further reduced to only \mbox{$O(n\,\text{log}\,n)$}.
+Unlike the closely-related Hadamard transform\index{Hadamard transform}, $\hat{H}^{\otimes n}$, which shares many properties with the QFT, the QFT is a highly entangling operation. The QFT of any dimension has an efficient circuit implementation, making it an important subroutine in many algorithms. Specifically, the $n$-qubit QFT (i.e a transformation on $2^n$ amplitudes) requires only $O(n^2)$ elementary gates (Hadamards and CZs). If an approximation of the QFT is sufficient for one's purposes, this can be further reduced to only \mbox{$O(n\,\mathrm{log}\,n)$}.
 
 \comment{Show algorithm box with circuit}
 
@@ -195,8 +195,8 @@ where $\theta$ parameterises the phase of the eigenvalue and $\ket\psi$ is an ei
 The algorithm for this is baked from several ingredients. To implement phase-estimation with $n$ bits of precision, we require:
 \begin{itemize}
 	\item An $n$-qubit Hadamard transform, $\hat{H}^{\otimes n}$\index{Hadamard transform}.
-	\item $n$ controlled-$\hat{U}$s\footnote{Any unitary has a coherently controlled unitary equivalent, of the form $\hat{U}_\text{controlled} = \ket{0}\bra{0}\otimes \hat{\mathbb{I}} + \ket{1}\bra{1}\otimes\hat{U}$. These always have an efficient circuit construction, given $\hat{U}$.}.
-	\item An $n$-qubit inverse quantum Fourier transform\index{Quantum Fourier transform}, $\hat{\text{QFT}}_n^\dag$ (Sec.~\ref{sec:QFT_alg}).
+	\item $n$ controlled-$\hat{U}$s\footnote{Any unitary has a coherently controlled unitary equivalent, of the form $\hat{U}_\mathrm{controlled} = \ket{0}\bra{0}\otimes \hat{\mathbb{I}} + \ket{1}\bra{1}\otimes\hat{U}$. These always have an efficient circuit construction, given $\hat{U}$.}.
+	\item An $n$-qubit inverse quantum Fourier transform\index{Quantum Fourier transform}, $\hat{\mathrm{QFT}}_n^\dag$ (Sec.~\ref{sec:QFT_alg}).
 \end{itemize}
 
 Alg.~\ref{alg:q_phase_est} shows the circuit implementation of the phase-estimation algorithm. The output is a binary representation of \mbox{$2^n\theta$}, where the precision is determined entirely by the number of qubits in the output register, which can be arbitrarily large in principle.
@@ -331,7 +331,7 @@ One avenue for the analysis of large, complex datasets is via homology theory\in
 
 Calculating Betti numbers exactly is known to be \textbf{PSPACE}-complete\index{\textbf{PSPACE}-complete}\footnote{\textbf{PSPACE} is the complexity class of problems requiring polynomial memory with unbounded runtime, a class that is not classically efficient.}, and the best-known classical approximation algorithm has exponential runtime,
 \begin{align}
-O(2^n \text{log}(1/\delta)),
+O(2^n \mathrm{log}(1/\delta)),
 \end{align}
 for accuracy $\delta$ on $n$ data-points.
 
@@ -355,8 +355,8 @@ The first step in the algorithm is to construct the simplicial complex superposi
 where $s_k$ denotes a $k$-simplex from the simplicial complex $S_k^\epsilon$. This superposition can be constructed by employing a Grover search\index{Grover's algorithm} using a set-membership oracle function\index{Oracle},
 \begin{align}
 f_\epsilon(s_k) = \left\{ \begin{matrix}
- 1, & \text{if}\,\,s_k\in S_k^\epsilon \\
- 0, & \text{otherwise}
+ 1, & \mathrm{if}\,\,s_k\in S_k^\epsilon \\
+ 0, & \mathrm{otherwise}
 \end{matrix}\right.,
 \end{align}
 yielding quadratically enhanced efficiency in the simplicial complex state preparation.
@@ -365,7 +365,7 @@ From the superposition state, the uniform mixture of simplices state,
 \begin{align}
 \hat\rho_k^\epsilon = \frac{1}{|S_k^\epsilon|} \sum_{s_k\in S_k^\epsilon} \ket{s_k}\bra{s_k},
 \end{align}
-is easily prepared with the addition of CNOT gates and ancillary qubits\footnote{Using parallel CNOT gates one can transform an arbitrary superposition state into a redundantly encoded equivalent, \mbox{$\hat{U}_\text{CNOTs}\sum_i \lambda_i \ket{\psi_i}\ket{0} \to \sum_i \lambda_i \ket{\psi_i}\ket{\psi_i}$}, following which tracing out the redundant copy takes us to its uniform mixture, \mbox{$\sum_i |\lambda_i|^2\ket{\psi_i}\bra{\psi_i}$}.}.
+is easily prepared with the addition of CNOT gates and ancillary qubits\footnote{Using parallel CNOT gates one can transform an arbitrary superposition state into a redundantly encoded equivalent, \mbox{$\hat{U}_\mathrm{CNOTs}\sum_i \lambda_i \ket{\psi_i}\ket{0} \to \sum_i \lambda_i \ket{\psi_i}\ket{\psi_i}$}, following which tracing out the redundant copy takes us to its uniform mixture, \mbox{$\sum_i |\lambda_i|^2\ket{\psi_i}\bra{\psi_i}$}.}.
 
 The quantum TDA algorithm then takes the simplicial complex mixed state and estimates the full set of Betti numbers by employing a phase-estimation algorithm\index{Phase-estimation algorithm} (Sec.~\ref{sec:phase_est_alg}), which induces an exponential algorithmic runtime improvement. The full TDA algorithm is summarised in Alg.~\ref{alg:TDA}.
 
@@ -381,8 +381,8 @@ function TDA(dataPoints):
 	\item Implement a Grover search on the set of data-points with set-membership oracle function,
 	\begin{align}
 f_\epsilon(s_k) = \left\{ \begin{matrix}
- 1, & \text{if}\,\,s_k\in S_k^\epsilon \\
- 0, & \text{otherwise}
+ 1, & \mathrm{if}\,\,s_k\in S_k^\epsilon \\
+ 0, & \mathrm{otherwise}
 \end{matrix}\right.,
 \end{align}
 which prepares the simplicial complex superposition state,
@@ -441,9 +441,9 @@ An equivalent quantum sampling problem would be to replace the pegs in the Galto
 
 Countless other quantum sampling problems have been described. Most notably, the IQP (instantaneous quantum protocol)\index{Instantaneous quantum protocol} sampling problem is a very simple prescription for a quantum algorithm that has been shown to likely be classically hard \cite{bib:BremnerIQP}.
 
-Although not as obviously algorithmically useful as decision problems, sampling problems have received much interest owing to their generally very simple construction. For example, \textsc{BosonSampling} requires only single-photon inputs, evolved via a passive linear optics\index{Linear optics} beamsplitter network, and measured using photo-detection\index{Photo-detection}. IQP sampling requires only single-qubit Hadamard gates\index{Hadamard gate} and generalised multi-qubit controlled-phase gates\index{Generalised controlled-phase gates}\footnote{Generalised CZ gates are simply gates diagonal in the logical basis, where the diagonal elements are arbitrary phases, \mbox{$\hat{U}_\text{CZ} = \text{diag}(e^{i\theta_1},\dots,e^{i\theta_n})$}.}, thereby sampling from the logical state,
+Although not as obviously algorithmically useful as decision problems, sampling problems have received much interest owing to their generally very simple construction. For example, \textsc{BosonSampling} requires only single-photon inputs, evolved via a passive linear optics\index{Linear optics} beamsplitter network, and measured using photo-detection\index{Photo-detection}. IQP sampling requires only single-qubit Hadamard gates\index{Hadamard gate} and generalised multi-qubit controlled-phase gates\index{Generalised controlled-phase gates}\footnote{Generalised CZ gates are simply gates diagonal in the logical basis, where the diagonal elements are arbitrary phases, \mbox{$\hat{U}_\mathrm{CZ} = \mathrm{diag}(e^{i\theta_1},\dots,e^{i\theta_n})$}.}, thereby sampling from the logical state,
 \begin{align}
-\ket{\psi_\text{out}} = \hat{H}^{\otimes n} \cdot \hat{U}_\text{CZs} \cdot \hat{H}^{\otimes n} \ket{0}^{\otimes n}.	
+\ket{\psi_\mathrm{out}} = \hat{H}^{\otimes n} \cdot \hat{U}_\mathrm{CZs} \cdot \hat{H}^{\otimes n} \ket{0}^{\otimes n}.	
 \end{align}
 Because CZ gates commute, they can be performed in parallel, giving the IQP circuit construction very low circuit depth\index{Circuit depth}. The IQP protocol is shown in Alg.~\ref{alg:IQP_samp}.
 
@@ -454,7 +454,7 @@ function IQPsampling():
 \begin{enumerate}
     \item Prepare the $n$-qubit state,
     \begin{align}
-    \ket{\psi_\text{in}} = \ket{0}^{\otimes n}.
+    \ket{\psi_\mathrm{in}} = \ket{0}^{\otimes n}.
     \end{align} 
     \item Apply the $n$-qubit Hadamard transform,
     \begin{align}
@@ -462,7 +462,7 @@ function IQPsampling():
 	\end{align}
     \item Apply some choice of generalised CZ gates,
 	\begin{align}
-	\hat{U}_\text{CZs} = \text{diag}(e^{i\theta_1},\dots,e^{i\theta_n}).
+	\hat{U}_\mathrm{CZs} = \mathrm{diag}(e^{i\theta_1},\dots,e^{i\theta_n}).
 	\end{align}
 	\item Apply another $n$-qubit Hadamard transform,
     \begin{align}
@@ -470,20 +470,20 @@ function IQPsampling():
 	\end{align}
 	\item The output state is,
 	\begin{align}
-		\ket{\psi_\text{out}} = \hat{H}^{\otimes n} \cdot \hat{U}_\text{CZs} \cdot \hat{H}^{\otimes n} \ket{0}^{\otimes n}.	
+		\ket{\psi_\mathrm{out}} = \hat{H}^{\otimes n} \cdot \hat{U}_\mathrm{CZs} \cdot \hat{H}^{\otimes n} \ket{0}^{\otimes n}.	
 	\end{align}
 	\item Measure all qubits in the computational basis, yielding bit-string $\vec{x}$, which occurs with probability,
 	\begin{align}
-		P_{\vec{x}} = |\langle \vec{x} | \hat{H}^{\otimes n} \cdot \text{diag}(e^{i\theta_1},\dots,e^{i\theta_n}) \cdot \hat{H}^{\otimes n} \ket{0}^{\otimes n}|^2.
+		P_{\vec{x}} = |\langle \vec{x} | \hat{H}^{\otimes n} \cdot \mathrm{diag}(e^{i\theta_1},\dots,e^{i\theta_n}) \cdot \hat{H}^{\otimes n} \ket{0}^{\otimes n}|^2.
 	\end{align}
-	\item Repeat protocol $O(\text{poly}(n))$ times.
+	\item Repeat protocol $O(\mathrm{poly}(n))$ times.
 	\item $\Box$
 \end{enumerate}
 \begin{align}
 \Qcircuit @C=1em @R=1.6em {
-    \lstick{\ket{0}} & \gate{\hat{H}} & \multigate{2}{\hat{U}_\text{CZs}} & \gate{\hat{H}} & \meter \\
-    \lstick{\vdots} & \gate{\hat{H}} & \ghost{\hat{U}_\text{CZs}} & \gate{\hat{H}} & \meter \\
-    \lstick{\ket{0}} & \gate{\hat{H}} & \ghost{\hat{U}_\text{CZs}} & \gate{\hat{H}} & \meter \\
+    \lstick{\ket{0}} & \gate{\hat{H}} & \multigate{2}{\hat{U}_\mathrm{CZs}} & \gate{\hat{H}} & \meter \\
+    \lstick{\vdots} & \gate{\hat{H}} & \ghost{\hat{U}_\mathrm{CZs}} & \gate{\hat{H}} & \meter \\
+    \lstick{\ket{0}} & \gate{\hat{H}} & \ghost{\hat{U}_\mathrm{CZs}} & \gate{\hat{H}} & \meter \\
 } \nonumber
 \end{align}
 }

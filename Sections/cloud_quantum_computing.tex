@@ -48,12 +48,12 @@ In classical computing, parallel processing is widely employed to shorten algori
 
 Let $t_c$ be the time required by a classical algorithm to solve a given problem, and $t_q$ the time required to solve the same problem using a quantum algorithm. In the case of algorithms exhibiting exponential quantum speedup, we will have,
 \begin{align}
-t_c = O(\text{exp}(t_q)).
+t_c = O(\mathrm{exp}(t_q)).
 \end{align}
 If we now increase the quantum processing power $k$-fold, the equivalent classical processing time is (in the best case),
 \begin{align}
-t_c' &= O(\text{exp}(t_q k)) \nonumber \\
-&= O(\text{exp}(t_q)^{k}) \nonumber \\
+t_c' &= O(\mathrm{exp}(t_q k)) \nonumber \\
+&= O(\mathrm{exp}(t_q)^{k}) \nonumber \\
 &= O({t_c}^{k}).
 \end{align}
 Thus, $k$-fold quantum enhancement corresponds to a $k$th-order exponential enhancement in the equivalent classical processing time, which clearly scales much more favourably than the linear $k$-fold enhancement offered by classical parallelisation.
@@ -122,7 +122,7 @@ Instead, the motivation is one of economics. First, individual servers will have
 
 The concept of this model is best explained using the optical cluster state formalism (Sec.~\ref{sec:CSQC}), which lends itself naturally to this approach. A rectangular lattice graph is sufficient for universal quantum computation, even if the cluster state graph is not local (but classical communication between nodes is allowed).
 
-Let us first assume that we wish to construct a cluster state with $n_\text{logical}$ logical qubits. We additionally allow each logical qubit to be the root node of a graph with a $+$-structure, where each branch comprises a chain of $n_\text{ancilla}$ ancillary physical qubits. These are sometimes referred to as \textit{micro-clusters} \cite{bib:Nielsen04}\index{Micro-cluster states}. A single micro-cluster collectively forms a single \textit{module} in the topology. Our goal is to fuse modules via nearest neighbour entanglement to build up the desired distributed cluster state.
+Let us first assume that we wish to construct a cluster state with $n_\mathrm{logical}$ logical qubits. We additionally allow each logical qubit to be the root node of a graph with a $+$-structure, where each branch comprises a chain of $n_\mathrm{ancilla}$ ancillary physical qubits. These are sometimes referred to as \textit{micro-clusters} \cite{bib:Nielsen04}\index{Micro-cluster states}. A single micro-cluster collectively forms a single \textit{module} in the topology. Our goal is to fuse modules via nearest neighbour entanglement to build up the desired distributed cluster state.
 
 \begin{figure*}[!htb]
 \includegraphics[width=\textwidth]{cluster_ident}
@@ -135,7 +135,7 @@ Using the ancillary states in the respective directions, we attempt to fuse neig
 
 An alternate fusion strategy is not to directly communicate qubits to be bonded, but instead rely off Bell-pairs provided by a central authority. Each party then applies an EO between their half of the Bell-pair and their target module qubit, which swaps the Bell-pair entanglement onto the two respective module qubits (Sec.~\ref{sec:swapping}).
 
-When an EO is successful, we have fused two modules together, albeit potentially with some leftover ancillary states between the logical qubits. When it fails, we have lost the respective ancillary states, and we attempt again using the next ancillary qubits in each of the the respective branches -- a kind of \textsc{Repeat Until Success} strategy. The bonding only fails if all $n_\text{ancilla}$ EOs fail.
+When an EO is successful, we have fused two modules together, albeit potentially with some leftover ancillary states between the logical qubits. When it fails, we have lost the respective ancillary states, and we attempt again using the next ancillary qubits in each of the the respective branches -- a kind of \textsc{Repeat Until Success} strategy. The bonding only fails if all $n_\mathrm{ancilla}$ EOs fail.
 
 Note, however, that longer ancillary arms provide more opportunity for errors to accumulate \cite{bib:RohdeRalphMunro07}. Thus, despite its tolerance against gate failure, it is nonetheless highly desirable for EOs to be as deterministic as possible, so as to minimise the required number of ancillary qubits.
 
@@ -148,16 +148,16 @@ Upon successful bonding, any remaining ancillary qubits between the respective l
 
 This approach has been shown to be resource-efficient \cite{bib:YoranReznik03, bib:Nielsen04}. Let us perform a rudimentary analysis of the resource scaling of this type of approach. The probability of successfully creating an edge between two modules is,
 \begin{align}
-p_\text{success} = 1 - {p_\text{failure}}^{n_\text{ancilla}},
+p_\mathrm{success} = 1 - {p_\mathrm{failure}}^{n_\mathrm{ancilla}},
 \end{align}
-where $p_\text{success}$ is the probability of joining two modules, $p_\text{failure}$ is the probability that a single EO fails, and $n_\text{ancilla}$ is the number of ancillary qubits per chain. $p_\text{success}$ can be made arbitrarily close to unity with sufficiently long ancillary chains, the required length of whom scales as,
+where $p_\mathrm{success}$ is the probability of joining two modules, $p_\mathrm{failure}$ is the probability that a single EO fails, and $n_\mathrm{ancilla}$ is the number of ancillary qubits per chain. $p_\mathrm{success}$ can be made arbitrarily close to unity with sufficiently long ancillary chains, the required length of whom scales as,
 \begin{align}
-n_\text{ancilla} = \frac{\text{log}(1-p_\text{success})}{\text{log}(p_\text{failure})}.
+n_\mathrm{ancilla} = \frac{\mathrm{log}(1-p_\mathrm{success})}{\mathrm{log}(p_\mathrm{failure})}.
 \end{align}
 
 Now, for simplicity we will consider the preparation of linear cluster states, although these ideas can easily be extended to more complex topologies, such as 2D lattice graphs.
 
-Let us assume we have a `primary' linear topology of modules, which we will incrementally attempt to `grow' by tacking on new modules to the end. When we do so, with probability $p_\text{success}$ we grow the length of the primary by 1, otherwise we decrement it by 1. This proceeds as a random walk, with on average \mbox{$2p_\text{success}-1$} new qubits added to the primary per time-step. Provided this number is positive, i.e \mbox{$p_\text{success}>1/2$}, which can always be achieved with sufficient $n_\text{ancilla}$, the length of the primary grows linearly over time, allowing efficient state preparation.
+Let us assume we have a `primary' linear topology of modules, which we will incrementally attempt to `grow' by tacking on new modules to the end. When we do so, with probability $p_\mathrm{success}$ we grow the length of the primary by 1, otherwise we decrement it by 1. This proceeds as a random walk, with on average \mbox{$2p_\mathrm{success}-1$} new qubits added to the primary per time-step. Provided this number is positive, i.e \mbox{$p_\mathrm{success}>1/2$}, which can always be achieved with sufficient $n_\mathrm{ancilla}$, the length of the primary grows linearly over time, allowing efficient state preparation.
 
 This is just a very primitive model for preparing linear cluster states, using an equally primitive \textsc{Incremental} strategy for constructing them using non-deterministic gates. As discussed in Sec.~\ref{sec:CSQC}, much further work has been performed on the resource scaling of efficiently preparing cluster states of different graph topologies using different non-deterministic bonding strategies.
 

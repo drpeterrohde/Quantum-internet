@@ -99,9 +99,9 @@ function RSAGenerateKey():
 \item $q$ = randomPrime()
 \item if($p=q$) goto 1
 \item $n = pq$
-\item $\lambda = \text{lcm}(p-1,q-1)$
-\item $e = \text{coprime}(\lambda) \,\,\text{s.t} \,\,e<\lambda$
-\item $d = e^{-1}\,(\text{mod} \, \lambda)$
+\item $\lambda = \mathrm{lcm}(p-1,q-1)$
+\item $e = \mathrm{coprime}(\lambda) \,\,\mathrm{s.t} \,\,e<\lambda$
+\item $d = e^{-1}\,(\mathrm{mod} \, \lambda)$
 \item publicKey = $\{n,e\}$
 \item privateKey = $\{n,d\}$
 \item keyPair = \{publicKey,privateKey\}
@@ -110,13 +110,13 @@ function RSAGenerateKey():
 \end{enumerate}
 function RSAEncrypt(plaintext, publicKey):
 \begin{enumerate}
-\item $\mathtt{cipertext} = \mathtt{plaintext}^e \, (\text{mod} \, n$)
+\item $\mathtt{cipertext} = \mathtt{plaintext}^e \, (\mathrm{mod} \, n$)
 \item return(ciphertext)
 \item $\Box$
 \end{enumerate}
 function RSADecrypt(ciphertext, privateKey):
 \begin{enumerate}
-\item $\mathtt{plaintext} = \mathtt{ciphertext}^d \, (\text{mod} \, n)$
+\item $\mathtt{plaintext} = \mathtt{ciphertext}^d \, (\mathrm{mod} \, n)$
 \item return(plaintext)
 \item $\Box$
 \end{enumerate}
@@ -199,7 +199,7 @@ Because RSA-encrypted messages are long, digital signature protocols do not sign
 
 Hash functions are functions that map a long string of arbitrary length to a short, fixed-size string with quasi-random behaviour,
 \begin{align}
-	f_\text{hash}:\,\{0,1\}^n \to \{0,1\}^m,
+	f_\mathrm{hash}:\,\{0,1\}^n \to \{0,1\}^m,
 \end{align}
 for an $n$-bit input and $m$-bit output hash, where $n$ is variable and $m$ is fixed. They are an example of `one-way functions'\index{One-way functions} that are computationally easy to compute in the forward direction, but extremely hard to invert. That is, given a hash, it is computationally difficult to find input strings that map to that value.
 
@@ -256,7 +256,7 @@ Far better than waiting the age of the universe for the right key to turn up, is
 
 In the case of RSA encryption, whose security derives from the believed computational hardness of factorising large numbers, the most efficient known classical algorithm for integer factorisation is the general number field sieve (GNFS)\index{General number field sieve}, with time-complexity,
 \begin{align} \label{eq:GNFS_scaling}
-	O(\text{exp}[O(1) (\log n)^{\frac{1}{3}} (\log\log n)^{\frac{2}{3}}]),
+	O(\mathrm{exp}[O(1) (\log n)^{\frac{1}{3}} (\log\log n)^{\frac{2}{3}}]),
 \end{align}
 which scales poorly for large $n$, keeping in mind that present-day implementations of RSA accommodate key lengths of up to 4,096 bits, as for example is implemented by the Pretty Good Privacy (PGP)\index{Pretty Good Privacy} package.
 
@@ -316,9 +316,9 @@ The Bitcoin protocol builds on top of the Blockchain to create a secure digital 
 
 The mining process is based upon the computational hardness of inverting (double) SHA256 hashing\index{Hash functions}\index{SHA256}. A legitimate Bitcoin is defined by a string with a hash satisfying a thoughtfully chosen constraint, specifically one which hashes to a value within some range,
 \begin{align}
-	\epsilon_\text{lower}\leq \text{SHA256}(\text{SHA256}(x_\text{coin})) \leq \epsilon_\text{upper}.
+	\epsilon_\mathrm{lower}\leq \mathrm{SHA256}(\mathrm{SHA256}(x_\mathrm{coin})) \leq \epsilon_\mathrm{upper}.
 \end{align}
-This is slightly weaker than inverting hash functions, but is nonetheless a task that can only be approached via brute-force hashing in the forward direction. This associates computational complexity with the mining process, and hence computational integrity of the money supply, whilst upper bounding the number of unique coins that can exist. This technique is known as `proof-of-work'\index{Proof-of-work}, for associating something of value with proof that certain amounts of computation were required to achieve it\footnote{In future implementations of Blockchain protocols, the proof-of-work required for a given protocol can be arbitrarily manipulated to accommodate for technological advances in computational power, for example via the adoption of quantum computing. The amount of work required to satisfy the constraint grows as we narrow the range \mbox{$\epsilon_\text{upper}-\epsilon_\text{lower}$}, providing us with much leverage to manipulate the complexity of the proof-of-work, and hence the rate of growth in the money supply, equivalently the rate of inflation\index{Inflation rate}.}. This idea was originally borrowed from the Hashcash protocol\index{Hashcash}, where proof-of-work is employed to associate work (and hence monetary value) with sending emails so as to eliminate automated spamming bots.
+This is slightly weaker than inverting hash functions, but is nonetheless a task that can only be approached via brute-force hashing in the forward direction. This associates computational complexity with the mining process, and hence computational integrity of the money supply, whilst upper bounding the number of unique coins that can exist. This technique is known as `proof-of-work'\index{Proof-of-work}, for associating something of value with proof that certain amounts of computation were required to achieve it\footnote{In future implementations of Blockchain protocols, the proof-of-work required for a given protocol can be arbitrarily manipulated to accommodate for technological advances in computational power, for example via the adoption of quantum computing. The amount of work required to satisfy the constraint grows as we narrow the range \mbox{$\epsilon_\mathrm{upper}-\epsilon_\mathrm{lower}$}, providing us with much leverage to manipulate the complexity of the proof-of-work, and hence the rate of growth in the money supply, equivalently the rate of inflation\index{Inflation rate}.}. This idea was originally borrowed from the Hashcash protocol\index{Hashcash}, where proof-of-work is employed to associate work (and hence monetary value) with sending emails so as to eliminate automated spamming bots.
 
 The two key algorithms for Bitcoin and the Blockchain are therefore hashing and public-key digital signatures. Both of these are subject to enhanced quantum attacks.
 
@@ -492,10 +492,10 @@ function CVQKD():
 \begin{enumerate}
 \item Alice chooses two Gaussian-distributed random numbers with mean zero,
 \begin{align}
-x_A &= \mathcal{N}(0,V_\text{mod}),\nonumber \\
-p_A &= \mathcal{N}(0,V_\text{mod}),
+x_A &= \mathcal{N}(0,V_\mathrm{mod}),\nonumber \\
+p_A &= \mathcal{N}(0,V_\mathrm{mod}),
 \end{align}
-where $V_\text{mod}$ is the modulation variance\index{Modulation variance}.
+where $V_\mathrm{mod}$ is the modulation variance\index{Modulation variance}.
 \item Alice prepares the coherent state,
 \begin{align}
 \ket\alpha = \ket{x_A+ip_A}.	
@@ -572,10 +572,10 @@ Finally, all users measure their qubits in the $\pm$-basis and publicly (without
 function QuantumAnonymousBroadcasting(message, speaker):
 \begin{enumerate}
 \item $\ket\psi = \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n}+\ket{1}^{\otimes n})$
-\item $\ket\psi \to (\hat{Z}_\text{speaker})^\text{message}\ket\psi$
+\item $\ket\psi \to (\hat{Z}_\mathrm{speaker})^\mathrm{message}\ket\psi$
 \item for(i$\in$users) \{
 	\setlength{\itemindent}{.2in}
-\item outcome$_i$ = measureInXBasis($\ket\psi_\text{i}$)
+\item outcome$_i$ = measureInXBasis($\ket\psi_\mathrm{i}$)
 \setlength{\itemindent}{0in}
 \item \}
 \item parity = $\sum_i$ outcome$_i$\,(mod\,2)

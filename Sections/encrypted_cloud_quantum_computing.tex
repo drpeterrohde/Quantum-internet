@@ -137,18 +137,18 @@ Let \mbox{$k=\{k_1,\dots,k_m\}$} be a partition of the key $k$ into sub-keys $\{
 \end{align}
 For the protocol to hide information, the plaintext basis states must not be invariant under the encoding operations,
 \begin{align}
-\left[\bigotimes_{i=1}^m\hat{E}_i(k_i)\right]\ket\psi_\text{plaintext} \neq \ket\psi_\text{plaintext}.
+\left[\bigotimes_{i=1}^m\hat{E}_i(k_i)\right]\ket\psi_\mathrm{plaintext} \neq \ket\psi_\mathrm{plaintext}.
 \end{align}
 The state observed by Bob is the mixture of Alice's plaintext over the complete set of encoding operations, implementing a quantum process $\mathcal{E}$, with Kraus operators $\hat{E}(k)$,
 \begin{align} \label{eq:mix_over_enc_ops}
-\hat\rho_\text{encoded} &= \mathcal{E}(\ket\psi_\text{plaintext}\bra\psi_\text{plaintext}) \nonumber \\
-&= \sum_k \hat{E}(k)\ket\psi_\text{plaintext}\bra\psi_\text{plaintext} \hat{E}^\dag(k),
+\hat\rho_\mathrm{encoded} &= \mathcal{E}(\ket\psi_\mathrm{plaintext}\bra\psi_\mathrm{plaintext}) \nonumber \\
+&= \sum_k \hat{E}(k)\ket\psi_\mathrm{plaintext}\bra\psi_\mathrm{plaintext} \hat{E}^\dag(k),
 \end{align}
 where,
 \begin{align}
 \hat{E}(k) = \bigotimes_{i=1}^m\hat{E}_i(k_i).
 \end{align}
-To minimise Bob's chances of guessing Alice's state, we would like to maximise the von Neuman entropy of Bob's state. For \mbox{$S(\hat\rho_\text{encoded})=0$} we have no secrecy, whereas for maximal \mbox{$S(\hat\rho_\text{encoded})$} we have maximal secrecy (for the given plaintext basis state).
+To minimise Bob's chances of guessing Alice's state, we would like to maximise the von Neuman entropy of Bob's state. For \mbox{$S(\hat\rho_\mathrm{encoded})=0$} we have no secrecy, whereas for maximal \mbox{$S(\hat\rho_\mathrm{encoded})$} we have maximal secrecy (for the given plaintext basis state).
 \end{definition} 
 
 Intuitively, this simply says that a tensor product of single-mode encoding operations commutes through the passive computation to yield a (potentially different) tensor product of single-mode decoding operations. This way, Alice's operations are all separable, requiring no entangling gates (after all, if she had access to entangling gates she might be able to do quantum computations herself!). This relationship can be illustrated as shown in Fig.~\ref{fig:gen_pass_hom}.
@@ -174,7 +174,7 @@ However, we leave it as an open question for future work to fully characterise t
 
 \subsubsection{Polarisation-key encoding} \label{sec:phot_homo_enc} \index{Polarisation-key encoding}
 
-It was recently shown that processing photonic states using passive linear optics -- i.e \textsc{BosonSampling} or quantum walks (Secs.~\ref{sec:BS} \& \ref{sec:QW}) -- may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}, so-called \textit{polarisation-key encoding}. This encryption does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy, hiding $O(\text{log}(m))$ bits of information in an $m$-mode interferometer. Furthermore, it does not impose an overhead in circuit complexity, only in the number of input photons.
+It was recently shown that processing photonic states using passive linear optics -- i.e \textsc{BosonSampling} or quantum walks (Secs.~\ref{sec:BS} \& \ref{sec:QW}) -- may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}, so-called \textit{polarisation-key encoding}. This encryption does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy, hiding $O(\mathrm{log}(m))$ bits of information in an $m$-mode interferometer. Furthermore, it does not impose an overhead in circuit complexity, only in the number of input photons.
 
 For $m$ modes, the resource requirements are:
 \begin{enumerate}
@@ -193,7 +193,7 @@ function PolarisationKeyEncoding($S$,$k$):
 \begin{enumerate}
     \item Alice meditates upon, but needn't actually prepare the state,
     \begin{align}
-    \ket\psi_\text{number} = \ket{S_1,\dots,S_m},    
+    \ket\psi_\mathrm{number} = \ket{S_1,\dots,S_m},    
     \end{align}
     where,
     \begin{align}
@@ -205,32 +205,32 @@ is the photon-number of the $i$th mode.
    \ket{0}&\to\ket{H}, \nonumber \\
    \ket{1}&\to\ket{V},
    \end{align}
-   to obtain $\ket\psi_\text{pol}$, containing $m$ photons in total, one per mode.
+   to obtain $\ket\psi_\mathrm{pol}$, containing $m$ photons in total, one per mode.
    \item Alice chooses a random private key $k$ as a real number from the uniform distribution,
    \begin{align}
     k\in(0,2\pi).
     \end{align}
     \item Alice prepares the encoded state by applying the same polarisation rotation (using wave-plates), of angle $k$, to each mode,
    \begin{align}
-   \ket\psi_\text{enc} = \hat{R}(k)^{\otimes m}\ket\psi_\text{pol},
+   \ket\psi_\mathrm{enc} = \hat{R}(k)^{\otimes m}\ket\psi_\mathrm{pol},
    \end{align}
    where,
    \begin{align}
    \hat{R}(\theta) = \left(\begin{array}{cc}
-\text{cos}\,\theta & -\text{sin}\,\theta \\
-\text{sin}\,\theta & \text{cos}\,\theta \end{array}\right).
+\mathrm{cos}\,\theta & -\mathrm{sin}\,\theta \\
+\mathrm{sin}\,\theta & \mathrm{cos}\,\theta \end{array}\right).
    \end{align}
-    \item Alice sends $\ket\psi_\text{enc}$ to Bob.
+    \item Alice sends $\ket\psi_\mathrm{enc}$ to Bob.
     \item Bob applies processing using his linear optics computer, to obtain,
     \begin{align}
-    \ket\psi_\text{enc\,comp} = \hat{U} \ket\psi_\text{enc}.
+    \ket\psi_\mathrm{enc\,comp} = \hat{U} \ket\psi_\mathrm{enc}.
     \end{align}
-    \item Bob returns $\ket\psi_\text{enc\,comp}$ to Alice.
+    \item Bob returns $\ket\psi_\mathrm{enc\,comp}$ to Alice.
     \item Alice applies the inverse of the encoding operation,
     \begin{align}
-    \ket\psi_\text{comp} = \hat{R}(-k)^{\otimes m}\ket\psi_\text{enc\,comp}.
+    \ket\psi_\mathrm{comp} = \hat{R}(-k)^{\otimes m}\ket\psi_\mathrm{enc\,comp}.
     \end{align}
-    \item Alice applies polarisation filters to $\ket\psi_\text{comp}$, discarding horizontally polarised photons.
+    \item Alice applies polarisation filters to $\ket\psi_\mathrm{comp}$, discarding horizontally polarised photons.
     \item The remaining vertically polarised state is Alice's unencrypted output of the computation.
     \item $\Box$
 \end{enumerate}}
@@ -240,7 +240,7 @@ is the photon-number of the $i$th mode.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.425\textwidth]{BS_homo}
-\caption{Protocol for implementing homomorphic encryption on photonic passive linear optics. Horizontal bars are wave-plates, implementing polarisation rotations $\hat{R}(\theta)$ -- the encryption and decryption operations performed by Alice. $\ket\psi_\text{in}$ contains one photon per mode, polarisation-encoded such that vertically polarised photons belong to the desired computation, whilst the remaining horizontally polarised ones are dummies. The polarisation rotation angle, $k$, acts as Alice's private key. The photo-detectors are polarisation-resolving, discarding all dummy horizontally polarised photons at the output. The algorithm is described in detail in Alg.~\ref{alg:homo_LO}.} \label{fig:BS_homo}
+\caption{Protocol for implementing homomorphic encryption on photonic passive linear optics. Horizontal bars are wave-plates, implementing polarisation rotations $\hat{R}(\theta)$ -- the encryption and decryption operations performed by Alice. $\ket\psi_\mathrm{in}$ contains one photon per mode, polarisation-encoded such that vertically polarised photons belong to the desired computation, whilst the remaining horizontally polarised ones are dummies. The polarisation rotation angle, $k$, acts as Alice's private key. The photo-detectors are polarisation-resolving, discarding all dummy horizontally polarised photons at the output. The algorithm is described in detail in Alg.~\ref{alg:homo_LO}.} \label{fig:BS_homo}
 \end{figure}
 
 The key idea here is that orthogonal polarisations do not interfere with one another under linear optics evolution. Thus, by inserting additional orthogonally polarised `dummy' photons, and applying uniform, random polarisation rotations, we can confuse any eavesdropper as to which photons belong to the computation, thereby hiding the secret data from them. Note that the encryption protocol does not affect the computation, since uniform polarisation rotations commute through linear optics circuits,
@@ -256,7 +256,7 @@ Practically, $k$ could be chosen as some integer multiple of \mbox{$2\pi/d$}, wh
 
 \cite{bib:RohdeQWEnc12} provided two relationships for the security of this protocol. First, the probability of Bob guessing Alice's input string approaches,
 \begin{align}
-P_\text{guess} \leq \sqrt{\frac{8}{\pi m}},
+P_\mathrm{guess} \leq \sqrt{\frac{8}{\pi m}},
 \end{align}
 for sufficiently large $m$ and $d$, which asymptotically (but unfortunately only polynomially\footnote{Note that an exponentially small bound is actually prohibited by no-go theorems for oblivious transfer and bit commitment \cite{bib:HKLo97, bib:SpekkensRudolphSecure}}) approaches 0.
 
@@ -274,11 +274,11 @@ The upper-bound stipulated by the Holevo quantity is an information-theoretic bo
 
 For this protocol the Holevo quantity scales with the number of modes as,
 \begin{align}
-\chi(m) = m - \frac{1}{2}\text{log}_2\left(\frac{\pi e m}{2}\right) + O\left(\frac{1}{m}\right),
+\chi(m) = m - \frac{1}{2}\mathrm{log}_2\left(\frac{\pi e m}{2}\right) + O\left(\frac{1}{m}\right),
 \end{align}
 for sufficiently large $d$. Since there are $m$ bits of information in Alice's input state, this implies that the protocol hides at least,
 \begin{align}
-\frac{1}{2}\text{log}_2\left(\frac{\pi e m}{2}\right) + O\left(\frac{1}{m}\right),
+\frac{1}{2}\mathrm{log}_2\left(\frac{\pi e m}{2}\right) + O\left(\frac{1}{m}\right),
 \end{align}
 bits of information from Bob.
 
@@ -331,7 +331,7 @@ function PhaseKeyEncoding($\vec\alpha$,$k$):
 \begin{enumerate}
     \item Alice prepares the input multi-mode coherent state,
     \begin{align}
-    \ket\psi_\text{in} = \ket{\vec\alpha} = \ket{\alpha_1,\dots,\alpha_m}.
+    \ket\psi_\mathrm{in} = \ket{\vec\alpha} = \ket{\alpha_1,\dots,\alpha_m}.
     \end{align}
     \item Alice chooses a random private key $k$ as a real number from the uniform distribution,
     \begin{align}
@@ -339,26 +339,26 @@ function PhaseKeyEncoding($\vec\alpha$,$k$):
     \end{align}
     \item Alice prepares the encoded state by applying the same phase-shift, of angle $k$, to each mode,
     \begin{align}
-    \ket\psi_\text{enc} = \hat\Phi(k)^{\otimes m}\ket\psi_\text{in},
+    \ket\psi_\mathrm{enc} = \hat\Phi(k)^{\otimes m}\ket\psi_\mathrm{in},
     \end{align}
     where,
     \begin{align}
     \hat\Phi(\phi) = e^{i\phi\hat{n}},
     \end{align}
     is the phase-shift operator.
-    \item Alice sends $\ket\psi_\text{enc}$ to Bob.
+    \item Alice sends $\ket\psi_\mathrm{enc}$ to Bob.
     \item Bob applies processing using his linear optics computer, to obtain,
     \begin{align}
-    \ket\psi_\text{enc\,comp} = \hat{U}\ket\psi_\text{enc}.
+    \ket\psi_\mathrm{enc\,comp} = \hat{U}\ket\psi_\mathrm{enc}.
     \end{align}
-    \item Bob returns $\ket\psi_\text{enc\,comp}$ to Alice.
+    \item Bob returns $\ket\psi_\mathrm{enc\,comp}$ to Alice.
     \item Alice applies the inverse of the encoding operation,
     \begin{align}
-    \ket\psi_\text{comp} = \hat\Phi(-k)^{\otimes m}\ket\psi_\text{enc\,comp}.
+    \ket\psi_\mathrm{comp} = \hat\Phi(-k)^{\otimes m}\ket\psi_\mathrm{enc\,comp}.
     \end{align}
     \item The resulting state is,
     \begin{align}
-    \ket\psi_\text{comp} = \ket{\vec\beta} = \ket{\beta_1,\dots,\beta_m},
+    \ket\psi_\mathrm{comp} = \ket{\vec\beta} = \ket{\beta_1,\dots,\beta_m},
     \end{align}
     where,
     \begin{align}
@@ -372,11 +372,11 @@ function PhaseKeyEncoding($\vec\alpha$,$k$):
 
 In fact, this encryption technique applies to more than just linear optics, but extends to also include generalised non-linear phase-shift operations, generated by Hamiltonians that are polynomials in the photon-number operators,
 \begin{align}
-\hat{H} = O(\text{poly}(\hat{n}_1,\dots,\hat{n}_m)),
+\hat{H} = O(\mathrm{poly}(\hat{n}_1,\dots,\hat{n}_m)),
 \end{align}
 where $\hat{n}_i$ is the photon-number operator for the $i$th mode\index{Photon-number operator}. This observation follows trivially from the observation that the phase-shift encoding operations (which are generated by Hamiltonians linear in the photon-number operators) commute with any polynomial in the photon-number operators,
 \begin{align}
-[\hat{n}_i,\text{poly}(\hat{n}_1,\dots,\hat{n}_m)] = 0\,\,\forall \, i.
+[\hat{n}_i,\mathrm{poly}(\hat{n}_1,\dots,\hat{n}_m)] = 0\,\,\forall \, i.
 \end{align}
 This immediately significantly expands the class of operations available for the computation. In particular, while coherent states remain separable under linear optics evolution, the introduction of non-linear phase-shift operations enables quantum entanglement, and presumably a more powerful class of computations than simple matrix multiplication. It is unclear to us, however, exactly what this class of computations actually is.
 
@@ -384,26 +384,26 @@ This immediately significantly expands the class of operations available for the
 
 Let $\vec{x}$ be the binary input string, and $\vec{0}$ be the special case of the all-zero string. Then, for unencrypted states, we have the trace distance,
 \begin{align}
-D_\text{unenc} &= ||\hat\rho_{\vec{x}}-\hat\rho_{\vec{0}}||_\text{tr} \nonumber \\
-&= \sqrt{1-e^{-4\text{wt}(\vec{x})|\alpha|^2}},
+D_\mathrm{unenc} &= ||\hat\rho_{\vec{x}}-\hat\rho_{\vec{0}}||_\mathrm{tr} \nonumber \\
+&= \sqrt{1-e^{-4\mathrm{wt}(\vec{x})|\alpha|^2}},
 \end{align}
-where $\text{wt}(\vec{x})$ is the Hamming weight (number of 1s in the bit-string) of $\vec{x}$. On the other hand, for the encoded states, we have,
+where $\mathrm{wt}(\vec{x})$ is the Hamming weight (number of 1s in the bit-string) of $\vec{x}$. On the other hand, for the encoded states, we have,
 \begin{align}
-D_\text{enc} &= ||\mathcal{E}(\hat\rho_{\vec{x}})-\mathcal{E}(\hat\rho_{\vec{0}})||_\text{tr} \\
-&= \sum_{k=0}^{d-1} e^{-m|\alpha|^2}\frac{(m|\alpha|^2)^k}{k!}\sqrt{1-\left(\frac{m-2\text{wt}(\vec{x})}{m}\right)^{2k}}, \nonumber
+D_\mathrm{enc} &= ||\mathcal{E}(\hat\rho_{\vec{x}})-\mathcal{E}(\hat\rho_{\vec{0}})||_\mathrm{tr} \\
+&= \sum_{k=0}^{d-1} e^{-m|\alpha|^2}\frac{(m|\alpha|^2)^k}{k!}\sqrt{1-\left(\frac{m-2\mathrm{wt}(\vec{x})}{m}\right)^{2k}}, \nonumber
 \end{align}
 \comment{What's the limit as $d\to\infty$?} where $\mathcal{E}$ denotes the mixture over encoding operations observed by Bob, as per Eq.~(\ref{eq:mix_over_enc_ops}), and there are $d$ distinct keys. We also define the ratio between these two distances,
 \begin{align}
-R=\frac{D_\text{enc}}{D_\text{unenc}	},
+R=\frac{D_\mathrm{enc}}{D_\mathrm{unenc}	},
 \end{align}
 as an indicator of data-hiding. \mbox{$R<1$} is indicative that information is hidden from Bob.
 
-These relationships are illustrated in Figs.~\ref{fig:homo_coh_st_tr} \& \ref{fig:homo_coh_st_ratio}\footnote{Note that the distance between any arbitrary pair of codewords may be obtained by replacing $\text{wt}(\cdot)$ with their Hamming distance (in the simple case where one of the codewords is the $\vec{0}$ bit-string, the Hamming weight and Hamming distance are equivalent).}. Clearly, the encoded basis states exhibit greater indistinguishability than the unencoded ones, demonstrating that information is hidden from Bob. The trace distance does not have the elegant interpretation of `number of bits hidden' that the mutual information does. Rather, it gives us the probability of Bob correctly guessing Alice's state, demonstrating the degree of partial hiding of information.
+These relationships are illustrated in Figs.~\ref{fig:homo_coh_st_tr} \& \ref{fig:homo_coh_st_ratio}\footnote{Note that the distance between any arbitrary pair of codewords may be obtained by replacing $\mathrm{wt}(\cdot)$ with their Hamming distance (in the simple case where one of the codewords is the $\vec{0}$ bit-string, the Hamming weight and Hamming distance are equivalent).}. Clearly, the encoded basis states exhibit greater indistinguishability than the unencoded ones, demonstrating that information is hidden from Bob. The trace distance does not have the elegant interpretation of `number of bits hidden' that the mutual information does. Rather, it gives us the probability of Bob correctly guessing Alice's state, demonstrating the degree of partial hiding of information.
 
 \begin{figure*}[!htb]
 \includegraphics[width=0.47\textwidth]{coherent_state_homo_unenc}
 \includegraphics[width=0.47\textwidth]{coherent_state_homo_enc}
-\caption{Trace distance between unencoded (top) and encoded (bottom) basis states for coherent state computation using phase-key encoding, with \mbox{$d=50$} keys and \mbox{$m=10$} modes. Each mode is inputted with one of two basis coherent states, \mbox{$\ket{\pm\alpha}$}. \mbox{$\text{wt}(\vec{x})$} denotes the Hamming weight of bit-string $\vec{x}$. Two states are indistinguishable if their trace distance is 0, and distinguishable (orthogonal) if their trace distance is 1. Lower trace distance between encoded states implies a lower chance of Bob guessing Alice's plaintext input state.} \label{fig:homo_coh_st_tr}
+\caption{Trace distance between unencoded (top) and encoded (bottom) basis states for coherent state computation using phase-key encoding, with \mbox{$d=50$} keys and \mbox{$m=10$} modes. Each mode is inputted with one of two basis coherent states, \mbox{$\ket{\pm\alpha}$}. \mbox{$\mathrm{wt}(\vec{x})$} denotes the Hamming weight of bit-string $\vec{x}$. Two states are indistinguishable if their trace distance is 0, and distinguishable (orthogonal) if their trace distance is 1. Lower trace distance between encoded states implies a lower chance of Bob guessing Alice's plaintext input state.} \label{fig:homo_coh_st_tr}
 \end{figure*}
 
 \begin{figure}[!htb]
@@ -450,13 +450,13 @@ function DisplacementKeyEncoding($\ket\psi$,$k$):
     \end{align}
     \item Alice applies the displacements to each mode, yielding her encrypted state,
     \begin{align}
-    \ket\psi_\text{enc} = \left[\bigotimes_{i=1}^m \hat{D}_i(\alpha_i)\right] \ket\psi,
+    \ket\psi_\mathrm{enc} = \left[\bigotimes_{i=1}^m \hat{D}_i(\alpha_i)\right] \ket\psi,
     \end{align}
     where $\hat{D}_i(\alpha_i)$ is the displacement operator for the $i$th mode, with displacement amplitude $\alpha_i$.
     \item Alice sends the encrypted state to Bob.
     \item Bob applies the computation $\hat{U}$,
     \begin{align}
-    \ket\psi_\text{enc\, comp} = \hat{U}\ket\psi_\text{enc}.
+    \ket\psi_\mathrm{enc\, comp} = \hat{U}\ket\psi_\mathrm{enc}.
     \end{align}
     \item Bob returns the encrypted computed state to Alice.
     \item Alice calculates the inverse displacement amplitudes $\vec\beta$,
@@ -465,10 +465,10 @@ function DisplacementKeyEncoding($\ket\psi$,$k$):
     \end{align}
     \item Alice applies the inverse displacements to each mode,
     \begin{align}
-    \ket\psi_\text{comp} &= \left[\bigotimes_{i=1}^m \hat{D}^\dag_i(\beta_i)\right] \ket\psi_\text{enc\, comp} \nonumber \\
+    \ket\psi_\mathrm{comp} &= \left[\bigotimes_{i=1}^m \hat{D}^\dag_i(\beta_i)\right] \ket\psi_\mathrm{enc\, comp} \nonumber \\
     &= \hat{U}\ket\psi,
     \end{align}
-    \item $\ket\psi_\text{comp}$ is the unencrypted computed output state.
+    \item $\ket\psi_\mathrm{comp}$ is the unencrypted computed output state.
     \item $\Box$
 \end{enumerate}}
 \end{mdframed}
@@ -492,7 +492,7 @@ Intuitively we expect displacement-key encoding to potentially offer better secu
 
 \begin{figure}[!htb]
 \includegraphics[width=0.47\textwidth]{lo_displacement_homo}
-\caption{Circuit layout for displacement-key homomorphic encoding of passive linear optics, where \mbox{$\alpha_i'=\alpha_i/r$} and \mbox{$\beta_i'=\beta_i/r$}. Mixing the input modes with respective coherent states on a very low-reflectivity ($r$) beamsplitter implements the displacement operations. Following decoding, the output states is simply given by \mbox{$\ket{\psi_\text{out}} = \hat{U}\ket{\psi_\text{in}}$}, the computed input state.}\label{fig:lo_disp_key_circuit}	
+\caption{Circuit layout for displacement-key homomorphic encoding of passive linear optics, where \mbox{$\alpha_i'=\alpha_i/r$} and \mbox{$\beta_i'=\beta_i/r$}. Mixing the input modes with respective coherent states on a very low-reflectivity ($r$) beamsplitter implements the displacement operations. Following decoding, the output states is simply given by \mbox{$\ket{\psi_\mathrm{out}} = \hat{U}\ket{\psi_\mathrm{in}}$}, the computed input state.}\label{fig:lo_disp_key_circuit}	
 \end{figure}
 
 \comment{To do! Insert figures and equations.}

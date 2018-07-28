@@ -111,13 +111,13 @@ where $\hat{H}$ is the system's Hamiltonian\index{Hamiltonian}, describing the t
 
 These Hamiltonians can be constructed \textit{ab initio}, combining relevant one- and two-body interactions\index{One-body interactions}\index{Two-body interactions}, such as Coulomb potential\index{Coulomb potential}, kinetic energy\index{Kinetic energy}, spin- and spin-orbit\index{Spin coupling}\index{Spin-orbit coupling} coupling, and magnetic and electric dipole terms appropriately. A net interaction Hamiltonian may be obtained by summing over the different one- ($i$) and two-body (\mbox{$j,k$}) terms for all particles comprising the system,
 \begin{align}
-	\hat{H}_\text{int} = \sum_i \hat{H}_i + \sum_{j>k} \hat{H}_{j,k}.
+	\hat{H}_\mathrm{int} = \sum_i \hat{H}_i + \sum_{j>k} \hat{H}_{j,k}.
 \end{align}
 This structure is of the form of Eq.~(\ref{eq:Ham_sim_Ham}) and thus lends itself to the quantum Hamiltonian simulation algorithm\index{Hamiltonian simulation} (Sec.~\ref{sec:quantum_sim_alg}).
 
 The dominant one-body interactions are kinetic energy\index{Kinetic energy Hamiltonian} terms, of the form,
 \begin{align}
-\hat{H}_i^{(\text{kinetic})} &= \frac{\hat{p}^2}{2m} \nonumber \\
+\hat{H}_i^{(\mathrm{kinetic})} &= \frac{\hat{p}^2}{2m} \nonumber \\
 &= -\frac{\hbar^2}{2m_i}\nabla^2_{\vec{r}_i},
 \end{align}
 where $\hat{p}$ is the momentum operator, $m_i$ is mass, $\vec{r}_i$ is the position vector, and,
@@ -126,7 +126,7 @@ where $\hat{p}$ is the momentum operator, $m_i$ is mass, $\vec{r}_i$ is the posi
 \end{align}
 The dominant two-body terms are Coulomb (electrostatic) interactions\index{Coulomb interaction},
 \begin{align}
-\hat{H}_{j,k}^{(\text{Coulomb})} = \frac{q_j q_k}{4\pi\epsilon_0|\vec{r}_j-\vec{r}_k|},
+\hat{H}_{j,k}^{(\mathrm{Coulomb})} = \frac{q_j q_k}{4\pi\epsilon_0|\vec{r}_j-\vec{r}_k|},
 \end{align}
 where $q_j$ denotes charge.
 
@@ -140,7 +140,7 @@ These approaches borrowed from quantum chemistry allow simulation of the interac
 
 To achieve this, let us construct a classical algorithm for exhaustively constructing and enumerating organic drug molecules or functional groups, up to some cutoff size\index{Cutoff size}. The length of this list grows exponentially with the cutoff size. Next we implement this algorithm unitarily (which is always possible, writing the classical circuit as a reversible one), and construct it as a quantum oracle\index{Oracle} such that every input state (which acts as a pointer\index{Pointers} to an element in the list) yields as output a qubit representation\index{Qubit molecule representation} of the corresponding drug compound. Specifically, the oracle implements a transformation of the form,
 \begin{align}
-\hat{U}_\text{oracle}\ket{i}_\text{pointer}\ket{0}_\text{drug}^{\otimes n} \to \ket{i}_\text{pointer}\ket{\psi_i}_\text{drug}^{(n)},
+\hat{U}_\mathrm{oracle}\ket{i}_\mathrm{pointer}\ket{0}_\mathrm{drug}^{\otimes n} \to \ket{i}_\mathrm{pointer}\ket{\psi_i}_\mathrm{drug}^{(n)},
 \end{align}
 where $i$ is the index (pointer) to the drug element in the enumeration, and $n$ is the number of qubits encoding the representation of the drug molecule\footnote{This may be implemented unitarily, which is easy to see via its preservation of orthonormality.}.
 
@@ -148,7 +148,7 @@ This oracle may be constructed by writing a classical algorithm that generates a
 
 Having constructed this oracle, we feed the output qubit molecule description into the Hamiltonian simulation algorithm\index{Quantum simulation}, with exponential speedup, yielding as output a `score' characterising some desired property of the interaction, such as bonding affinity\index{Bonding affinity}. This implements the simulate-and-score unitary,
 \begin{align}
-\hat{U}_\text{sim} \ket{\psi_i}_\text{drug}\ket{0}_\text{score} \to \ket{\psi_i}_\text{drug}\ket{s_i}_\text{score}	
+\hat{U}_\mathrm{sim} \ket{\psi_i}_\mathrm{drug}\ket{0}_\mathrm{score} \to \ket{\psi_i}_\mathrm{drug}\ket{s_i}_\mathrm{score}	
 \end{align}
 
 The joint oracle$\to$simulation algorithm is finally embedded within a quantum search subroutine\index{Grover's algorithm}, which searches over the input space enumerating the set of drug candidates for scores above some desired threshold. This yields a quadratic enhancement in the number of drug candidates that can be simulated in parallel. Successful search results, where a compound achieves the threshold score, are then tagged for further investigation as treatment drug candidates.
