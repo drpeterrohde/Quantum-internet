@@ -4,7 +4,7 @@
 
 \section{Network algorithms} \label{sec:graph_theory} \index{Network algorithms}
 
-\dropcap{H}{aving} introduced some of the more relevant graph structures, we now introduce some of the key graph-theoretic algorithms of direct relevance to networking theory \cite{bib:RivestAlgBook}. In graph theory, many fundamental problems are believed to be computationally hard to solve, often \textbf{NP}-complete\index{\textbf{NP} \& \textbf{NP}-complete}. However, there are several important graph algorithms that are (very) classically efficient to solve, and which are of great utility to us as network architects.
+\dropcap{H}{aving} introduced some of the more relevant graph structures, we now introduce some of the key graph-theoretic algorithms of direct relevance to networking theory \cite{bib:RivestAlgBook}. In graph theory, many fundamental problems are believed to be computationally hard to solve, often \textbf{NP}-complete\index{NP \& NP-complete}. However, there are several important graph algorithms that are (very) classically efficient to solve, and which are of great utility to us as network architects.
 
 We will focus heavily on combinatorial optimisation techniques, where the goal is to allocate network resources so as to optimise some cost metric. This includes both single- and multi-user algorithms, the latter being the far more relevant ones in the context of shared networks like the internet.
 
@@ -57,7 +57,7 @@ In Table.~\ref{tab:net_alg_sum} we summarise the upcoming discussion on importan
 % Network Exploration & Pathfinding
 %
 
-\subsection{Network exploration \& pathfinding} \label{sec:path_exp} \index{Network exploration \& pathfinding}
+\subsection{Network exploration \& pathfinding} \label{sec:path_exp} \index{Network exploration}\index{Pathfinding}
 
 Here the goal is to systematically explore every vertex in an unknown graph exactly once, so as to reconstruct the entire network graph, or to find a target node with unknown location (which can obviously be achieved if the former can be). The two main approaches are \textit{breadth-first-search} (BFS) and \textit{depth-first-search} (DFS) algorithms\index{Breadth-first-search (BFS) algorithm} \index{Depth-first-search (DFS) algorithm}. In both cases we begin at a starting (root) node, from which we wish to explore the entire graph by only following edges to nearest neighbours one at a time.
 
@@ -94,7 +94,7 @@ The first proven shortest-path algorithm was by Dijkstra \cite{bib:Dijkstra59}, 
 \begin{align}
 	O(|V|^2),
 \end{align}
-also residing in \textbf{P}\index{\textbf{P} \& \textbf{BPP}}. Subsequently, a number of improvements and variations on Dijkstra's algorithm have been proposed, most notably the $A^*$ algorithm \cite{bib:Astar}\index{Shortest-path algorithm}, which has found widespread modern use, using a heuristic approach to improve performance over Dijkstra.
+also residing in \textbf{P}\index{P}. Subsequently, a number of improvements and variations on Dijkstra's algorithm have been proposed, most notably the $A^*$ algorithm \cite{bib:Astar}\index{Shortest-path algorithm}, which has found widespread modern use, using a heuristic approach to improve performance over Dijkstra.
 
 Formally, let $\vec{R}$ be the set of all routes \mbox{$A\to B$}. Then,
 \begin{align}
@@ -178,7 +178,7 @@ Clearly this is more complex than Dijkstra's algorithm for finding a particular 
 
 \subsection{Minimum spanning tree} \label{sec:min_tree} \index{Minimum spanning tree algorithm}
 
-MST algorithms find an MST\footnote{There may be multiple distinct MSTs for a given graph.} of some arbitrary graph. Like the shortest-path problem, it has a polynomial-time, deterministic algorithm (i.e it resides in \textbf{P}\index{\textbf{P} \& \textbf{BPP}}). The first MST algorithm \cite{bib:Boruvka26} required,
+MST algorithms find an MST\footnote{There may be multiple distinct MSTs for a given graph.} of some arbitrary graph. Like the shortest-path problem, it has a polynomial-time, deterministic algorithm (i.e it resides in \textbf{P}\index{P}). The first MST algorithm \cite{bib:Boruvka26} required,
 \begin{align}
 	O(|E|\log |V|),
 \end{align}
@@ -196,7 +196,7 @@ Fig.~\ref{fig:mst} shows an example of a graph with its MST.
 
 The \textit{minimum cost flow problem} \cite{???} is that of minimising costs through a network for a specified amount of flow (i.e total bandwidth or throughput), which acts as a constraint on the problem. The definition of `cost' in this context is compatible with our earlier definition of cost metrics (Def.~\ref{def:metric}).
 
-This problem can be efficiently solved using linear programming. Specifically, cost metrics along links in series are given by linear combinations of individual link costs. If, in addition, we let our net cost function be linear in the constituent costs then the net cost will also be linear in all the edge weights. This lends itself directly to optimisation via linear programming techniques. Algorithms for linear programming, such as the \textit{simplex} algorithm, have polynomial-time solutions (i.e reside in \textbf{P}\index{\textbf{P} \& \textbf{BPP}}), and a plethora of software libraries are available for implementing them numerically.
+This problem can be efficiently solved using linear programming. Specifically, cost metrics along links in series are given by linear combinations of individual link costs. If, in addition, we let our net cost function be linear in the constituent costs then the net cost will also be linear in all the edge weights. This lends itself directly to optimisation via linear programming techniques. Algorithms for linear programming, such as the \textit{simplex} algorithm, have polynomial-time solutions (i.e reside in \textbf{P}\index{P}), and a plethora of software libraries are available for implementing them numerically.
 
 One polynomial-time algorithm, by \cite{JAMES_B_ORLIN}, for solving this problem does so in, 
 \begin{align}
@@ -226,7 +226,7 @@ runtime, where $|E|$ is the number of links in the network and $c_\mathrm{max}$ 
 
 The \textit{multi-commodity flow problem} \cite{???} generalises the previous algorithms to be applicable to multi-user networks. The generalisation is that there may be a number of distinct senders, residing on different nodes, each transmitting to distinct recipients, residing on different nodes. This is the most realistic scenario we are likely to encounter in a real-world quantum internet, where networks will inevitably be shared by many users, residing at different nodes.
 
-Unfortunately the computational complexity of solving this problem is much harder than the previous algorithms in general. Specifically, solving the problem exactly is \textbf{NP}-complete\index{\textbf{NP} \& \textbf{NP}-complete} in general. However, in specific circumstances it can be approached using linear programming or polynomial-time approximation schemes.
+Unfortunately the computational complexity of solving this problem is much harder than the previous algorithms in general. Specifically, solving the problem exactly is \textbf{NP}-complete\index{NP \& NP-complete} in general. However, in specific circumstances it can be approached using linear programming or polynomial-time approximation schemes.
 
 %
 % Vehicle Routing Problem
@@ -236,7 +236,7 @@ Unfortunately the computational complexity of solving this problem is much harde
 
 The vehicle routing problem (VRP) is a multi-user generalisation of the shortest-path problem, where the goal is to minimise total network cost (i.e the sum of all individual users' costs) when there are multiple users sharing the network, each with distinct sources and destinations.
 
-Unlike the polynomial-time shortest-path algorithm, exactly solving the VRP is \textbf{NP}-hard\index{\textbf{NP} \& \textbf{NP}-complete} in general. However, heuristic methods can find approximate suboptimal solutions far more efficiently, and there is a multitude of software packages available for doing so.
+Unlike the polynomial-time shortest-path algorithm, exactly solving the VRP is \textbf{NP}-hard\index{NP \& NP-complete} in general. However, heuristic methods can find approximate suboptimal solutions far more efficiently, and there is a multitude of software packages available for doing so.
 
 The VRP has found widespread use in, for example, the routing of transport networks for delivery companies or public transportation networks (hence the name), and many commercial companies exist, which perform these kinds of optimisations on behalf of transport providers to enhance their efficiency.
 
@@ -252,7 +252,7 @@ A multitude of variations on the VRP exist, accommodating for different types of
 
 The vehicle rescheduling problem (VRSP) generalises the VRP to the case where properties of the network undergo changes dynamically within the course of transmissions over the network. To use the analogy of transport networks, this could entail, for example, a truck breaking down en route to its destination, requiring real-time rescheduling of the other vehicles.
 
-Solving the VRSP exactly is \textbf{NP}-complete\index{\textbf{NP} \& \textbf{NP}-complete} in general, but as with the VRP, heuristic methods can often be applied, which efficiently find approximate solutions.
+Solving the VRSP exactly is \textbf{NP}-complete\index{NP \& NP-complete} in general, but as with the VRP, heuristic methods can often be applied, which efficiently find approximate solutions.
 
 In the context of communications over networks, the VRSP has obvious applicability -- a quantum internet is likely going to be largely ad hoc in nature, with users coming and going, and many non-deterministic points of failure, requiring ongoing updating of routing decisions if resource allocation is to remain as efficient as possible.
 
@@ -262,9 +262,9 @@ In the context of communications over networks, the VRSP has obvious applicabili
 
 \subsection{Improving network algorithms using quantum computers} \index{Network algorithms on quantum computers}
 
-Given that we are directing this work at the upcoming quantum era, where quantum computing will become a reality, it is pertinent to ask whether quantum computers might improve the aforementioned network algorithms, some of which are computationally hard problems. Most notably, several of the discussed algorithms are \textbf{NP}-complete\index{\textbf{NP} \& \textbf{NP}-complete} in general, a complexity class strongly believed to be exponentially complex on classical computers. Can quantum computers help us out here, and improve network resource allocation? Can quantum computers help themselves?
+Given that we are directing this work at the upcoming quantum era, where quantum computing will become a reality, it is pertinent to ask whether quantum computers might improve the aforementioned network algorithms, some of which are computationally hard problems. Most notably, several of the discussed algorithms are \textbf{NP}-complete\index{NP \& NP-complete} in general, a complexity class strongly believed to be exponentially complex on classical computers. Can quantum computers help us out here, and improve network resource allocation? Can quantum computers help themselves?
 
-While it is not believed that quantum computers can efficiently solve such \textbf{NP}-complete\index{\textbf{NP} \& \textbf{NP}-complete} problems, it is known that they can offer a quadratic speedup using Grover's unstructured search algorithm. Specifically, \textbf{NP}-complete\index{\textbf{NP} \& \textbf{NP}-complete} problems can be treated as satisfiability problems, where we are searching for an input to a classical algorithm that yields a particular output.
+While it is not believed that quantum computers can efficiently solve such \textbf{NP}-complete\index{NP \& NP-complete} problems, it is known that they can offer a quadratic speedup using Grover's unstructured search algorithm. Specifically, \textbf{NP}-complete\index{NP \& NP-complete} problems can be treated as satisfiability problems, where we are searching for an input to a classical algorithm that yields a particular output.
 
 To gain a quantum advantage, we treat the classical algorithm as an oracle whose input configurations form an unstructured search space. Then, Grover's algorithm can perform a search over the space of input configurations to find a satisfying solution, with quadratically enhanced runtime.
 
