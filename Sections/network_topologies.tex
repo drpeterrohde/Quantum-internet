@@ -139,21 +139,32 @@ A \textit{spanning tree}\index{Spanning tree} $S$, of a graph $G$, is a tree sub
 The calculation of MSTs is most likely to come into consideration when actually performing the initial construction of networks, where we wish to connect all nodes in the network, but using the most frugal possible physical resources. MSTs serve this purpose, and since they are trees, inherit all the same properties of tree networks.
 
 %
-% Random
+% Percolation
 %
 
-\subsection{Random} \index{Random topologies}
+\subsection{Percolation}\index{Percolation graph}
 
-A variation on the complete graph, $K_{|V|}$, is to instead have a randomised implementation of it, whereby each of the possible edges in $K_{|V|}$ occurs with probability \mbox{$0\leq p_\mathrm{edge}\leq 1$}. We would thereby be able to tune between the complete graph and the completely disconnected graph, representing a randomly connected network with arbitrary average connectivity. Specifically, the average number of links emanating from any node is \mbox{$e_\mathrm{av} = (|V|-1)p_\mathrm{edge}$}. Note that random graphs might be disjoint, making them inappropriate for many networking applications. For asymptotically large random graphs, \textit{percolation theory} \cite{???} provides thresholds for $p_\mathrm{edge}$ such that they remain connected \cite{???}. Fig.~\ref{fig:random_graph} illustrates several graphs with different edge connectivity probabilities.
+A variation on any graph, $G$, is to instead have a randomised implementation of it, whereby each of the possible edges \mbox{$e\in E$} or vertices \mbox{$v\in V$} occurs with some probability \mbox{$0\leq p_\mathrm{perc}\leq 1$}. These are referred to as \textit{edge percolation} and \textit{site percolation} graphs respectively.
+
+Adjusting $p_\mathrm{perc}$ allows us to tune between the desired graph (when $p_\mathrm{perc}=1$) and the completely disconnected graph (when $p_\mathrm{perc}=0$). This model is very useful in real-world applications, allowing unreliable channels/nodes to be incorporated into our network model. The analysis of such percolation networks is invaluable for understanding the robustness of such networks to channel and node failures.
+
+%The average number of links emanating from any node is \mbox{$e_\mathrm{av} = (|V|-1)p_\mathrm{edge}$}.
+
+Note that percolation graphs might be disjoint with sufficient defects, in which case the respective network becomes unreliable. Specifically, with sufficiently low $p_\mathrm{perc}$, `islands' may form in the network topology -- small segregated networks, which are unable to interface with the remainder of the network.
+
+For asymptotically large percolation graphs, \textit{percolation theory}\index{Percolation theory} \cite{???} provides thresholds for $p_\mathrm{perc}$ such that routes across the network exist \cite{???}.
+
+Fig.~\ref{fig:perc_graph} illustrates several graphs with different percolation probabilities, and how the larger network segregates into smaller islands as failure rates increase.
 
 \begin{figure*}[!htb]
 \includegraphics[width=0.325\textwidth]{random_0}
 \includegraphics[width=0.325\textwidth]{random_05}
-\includegraphics[width=0.325\textwidth]{random_1}
-\caption{The 15-vertex randomly-connected graph. This is the same as $K_{15}$ in Fig.~\ref{fig:complete_graph}, but where edges are present with probabilities \mbox{$p_\mathrm{edge}=0,0.5,1$} (top to bottom).} \label{fig:random_graph}
+\includegraphics[width=0.325\textwidth]{random_1}\\
+\includegraphics[width=0.325\textwidth]{percolation_1}
+\includegraphics[width=0.325\textwidth]{percolation_2}
+\includegraphics[width=0.325\textwidth]{percolation_3}
+\caption{(top) The 15-vertex randomly-connected percolation graph. This is the same as $K_{15}$ in Fig.~\ref{fig:complete_graph}, but where edges are present with probabilities \mbox{$p_\mathrm{edge}=0,0.5,1$} (top to bottom). (bottom) A square lattice graph subject to different percolation rates (node defects). As the failure rate increases, the larger network segregates into smaller disjoint islands (denoted by colour).} \label{fig:perc_graph}
 \end{figure*}
-
-Random graphs capture the ad hoc nature of networks that exhibit no planned structure, but are rather cobbled together in a completely improvised manner.
 
 %
 % Hybrid
