@@ -37,7 +37,7 @@ The complete graph, denoted $K_{|V|}$, is a $|V|$-vertex graph where every verte
 \item Packet collisions can be mitigated entirely, thereby maximising network efficiency.
 \item Competition for the use of links can be eliminated, minimising congestion and the need for buffering (i.e quantum memory).
 \item Network costs can typically be minimised, as every route only traverses a single link, and there will be no accumulation of costs.
-\item The network has maximal route redundancy, making it the most tolerant against link failures\footnote{To disconnect a given node from the network, all \mbox{$|V|-1$} links emanating from it must be broken, otherwise redundant routes to the remainder of the network will exist.}.
+\item The network has maximal route redundancy, making it the most tolerant against link failures\footnote{To disconnect a given node $v$ from the network, all $|v|$ links emanating from it must be broken, otherwise redundant routes to the remainder of the network will exist.}.
 \item A trivial \textsc{First-Come First-Served} routing strategy can be employed, eliminating the need for any dynamic or computationally complex strategies.
 \item If the network allows indirect routes to be established, the maximal redundancy of the topology also maximises the ability for routing strategies to engage in load-balancing across routes.
 \item In the special case of a symmetric complete graph, whereby all edge weights are approximately equal, the shortest path between any two nodes is trivially the P2P link between them, and no complex scheduling algorithms are required.
@@ -72,7 +72,7 @@ In the case of a balanced lattice, in which all edges are of equal weight, the c
 \begin{align}
 L_1 = |x_\mathrm{start} - x_\mathrm{finish}| + |y_\mathrm{start} - y_\mathrm{finish}|.
 \end{align}
-In this case, route finding is simplified, since \textit{all} routes, which strictly traverse in one direction vertically and one direction horizontally, are optimal and of equal distance.
+In this case, route finding is simplified, since \textit{all} routes, which strictly traverse in one direction vertically and one direction horizontally, are optimal and of equal distance. Thus, the maximum number of hops between any two points in the network is \mbox{$O(m+n)$}.
 
 %
 % Tree
@@ -86,7 +86,7 @@ Trees are specified entirely by \textit{branching parameters} ($b_i$) -- the num
 
 The \textit{depth} ($d$) of a tree is the maximum number of steps from the root node to a terminating node with no children. The depth scales between \mbox{$d=O(|V|)$}, for the trivial linear tree (\mbox{$b_i=1$}), and \mbox{$d=O(\mathrm{log}|V|)$} for non-trivial branching parameters (i.e \mbox{$b_i\neq 1$}).
 
-The worst-case number of edges that must be traversed to reach any vertex from any other is $2d$, which implies that accumulated cost metrics scale as at most \mbox{$c=O(|V|)$}. Trees are the most frugal graphs in their number of edges, which are fixed at \mbox{$|E|=|V|-1$}, irrespective of the branching parameters, since because the graph is strictly acyclic, every addition of an edge requires the addition of exactly a single vertex. This makes tree graphs the cheapest to construct in terms of physical resource usage.
+The worst-case number of edges that must be traversed to reach any vertex from any other is \mbox{$2d=O(\mathrm{log}|V|)$}, which implies that accumulated cost metrics scale as \mbox{$c=O(\mathrm{log}|V|)$}. Trees are the most frugal graphs in their number of edges, which are fixed at \mbox{$|E|=|V|-1$}, irrespective of the branching parameters, since because the graph is strictly acyclic, every addition of an edge requires the addition of exactly a single vertex. This makes tree graphs the cheapest to construct in terms of physical resource usage.
 
 %
 % Balanced Tree
@@ -144,11 +144,14 @@ The calculation of MSTs is most likely to come into consideration when actually 
 
 \subsection{Percolation}\index{Percolation graph}
 
-A variation on any graph, $G$, is to instead have a randomised implementation of it, whereby each of the possible edges \mbox{$e\in E$} or vertices \mbox{$v\in V$} occurs with some probability \mbox{$0\leq p_\mathrm{perc}\leq 1$}. These are referred to as \textit{edge percolation} and \textit{site percolation} graphs respectively.
+A variation on any graph, $G$, is to instead have a randomised implementation of it, whereby each of the possible edges \mbox{$e\in E$} or vertices \mbox{$v\in V$} occurs with some probability \mbox{$0\leq p_\mathrm{perc}\leq 1$}. These are referred to as \textit{edge percolation} and \textit{site percolation} graphs respectively. For any given graph, its associated percolation graph has average vertex and edge counts,
+\begin{align}
+|E|_\mathrm{av} &= p_\mathrm{edge}\cdot |E|,\nonumber\\
+|V|_\mathrm{av} &= p_\mathrm{vertex}\cdot |V|,
+\end{align}
+for edge and vertex percolations respectively.
 
 Adjusting $p_\mathrm{perc}$ allows us to tune between the desired graph (when $p_\mathrm{perc}=1$) and the completely disconnected graph (when $p_\mathrm{perc}=0$). This model is very useful in real-world applications, allowing unreliable channels/nodes to be incorporated into our network model. The analysis of such percolation networks is invaluable for understanding the robustness of such networks to channel and node failures.
-
-%The average number of links emanating from any node is \mbox{$e_\mathrm{av} = (|V|-1)p_\mathrm{edge}$}.
 
 Note that percolation graphs might be disjoint with sufficient defects, in which case the respective network becomes unreliable. Specifically, with sufficiently low $p_\mathrm{perc}$, `islands' may form in the network topology -- small segregated networks, which are unable to interface with the remainder of the network.
 
