@@ -35,22 +35,32 @@ In the case of classical communication of input and output data, we can reasonab
 
 The elementary model described above is very limited, as many realistic data processing applications will require multiple stages of computations to be performed, potentially by different hosts. For example, a client may need data processed using multiple proprietary algorithms owned by different hosts, and the processing will need to be distributed across the network \cite{bib:Cirac99}.
 
-There are two main models for how a distributed computation may proceed -- in \textit{parallel}, or in \textit{series} -- whereby sub-algorithms are performed either side-by-side simultaneously, or one after another in a pipeline. The two models are illustrated in Fig.~\ref{fig:distributed}.
+\subsubsection{In-parallel \& in-series computation}
+
+Classically, there are two main models for how a distributed computation may proceed -- in \textit{parallel}\index{Parallel computation}, or in \textit{series}\index{Series computation} -- whereby sub-algorithms are performed either side-by-side simultaneously, or one after another in a pipeline. The two models are illustrated in Fig.~\ref{fig:distributed}.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.47\textwidth]{distributed}
 \caption{Models for distributed computation in parallel and in series. In parallel, a root node oversees the total computation, delegating tasks to child nodes, which process data independently of one another. In series the nodes sequentially process data in a pipeline of algorithmic stages.} \label{fig:distributed}
 \end{figure}
 
-Classical parallel processing typically involves a root node, which delegates tasks to be performed in parallel by a number of child nodes, and the results returned to the root node, which potentially applies an algorithm to merge the set of results, before returning a final result to the client. Classical models such as Google's \textsc{MapReduce} protocol \cite{bib:MapReduce}\index{MapReduce} are built on this idea.
+Classical parallel processing typically involves a root node\index{Root node}, which delegates tasks to be performed in parallel by a number of child nodes, and the results returned to the root node, which potentially applies an algorithm to merge the set of results, before returning a final result to the client. Classical models such as Google's \textsc{MapReduce} protocol \cite{bib:MapReduce}\index{MapReduce} are built on this idea.
 
-In classical computing, parallel processing is widely employed to shorten algorithmic runtimes. However, the increase in clock-cycles scales only linearly with the number of nodes in the network: $k$-fold parallelisation yields a \mbox{$\sim k$}-fold speedup. For time-critical applications, such a linear improvement may be already highly beneficial, albeit costly. The attractive feature of quantum computing, however, is the potentially exponential improvement in algorithmic performance of certain tasks over their classical counterparts. This exponential relationship implies that parallelisation in general no longer has a simple linear tradeoff.
+In classical computing, parallel processing is widely employed to shorten algorithmic runtimes. However, the increase in clock-cycles scales only linearly with the number of nodes in the network: $k$-fold parallelisation yields an \mbox{$\sim k$}-fold speedup. For time-critical applications, such a linear improvement may already be highly beneficial, albeit costly.
 
-Let $t_c$ be the time required by a classical algorithm to solve a given problem, and $t_q$ the time required to solve the same problem using a quantum algorithm. In the case of algorithms exhibiting exponential quantum speedup, we will have,
+The alternate scenario is in-series distributed computation, in which a computation proceeds through a pipeline of different stages, potentially performed by different hosts. This model allows a complex algorithm comprising smaller subroutines, each of which may be proprietary with different owners, to be delegated across the network. The different stages may communicate classical and/or quantum data. As with the simple single-host model, if the different stages of the processing pipeline are sharing quantum data, distributed QEC will generally be necessary to protect the computation in transit. This necessarily introduces an (efficient) overhead in the number of physical qubits being communicated across the network, introducing additional bandwidth costs, which must be accommodated for in networking strategies.
+
+\subsubsection{Quantum enhancement}
+
+The attractive feature of quantum computing is the potentially exponential improvement in algorithmic performance of certain tasks over their classical counterparts as the size of the computer grows. This exponential relationship implies that computation in general no longer has a simple linear tradeoff as the number of participating nodes increases. In Sec.~\ref{sec:comp_sc_func} we quantify this via so-called \textit{computational scaling functions}\index{Computational scaling functions} and study its economic implications in detail.
+
+But not every effort at distributed quantum computation will automatically exhibit the holy grail of exponential speedup. The architecture and algorithm to which it is applied must be thoughtfully designed to fully exploit the computers' quantum power. A simple adaptation of in-series or in-parallel computation may not achieve this. Rather, we must cunningly exploit quantum entanglement between nodes to perform truly distributed computation, in the sense that no instance of an algorithm is uniquely associated with any given node, but is rather represented collectively across all of them.
+
+Let us assume that we have such a carefully constructed distributed platform. Let $t_c$ be the time required by a classical algorithm to solve a given problem, and $t_q$ the time required to solve the same problem using a quantum algorithm. In the case of algorithms exhibiting exponential quantum speedup, we will have,
 \begin{align}
 t_c = O(\mathrm{exp}(t_q)).
 \end{align}
-If we now increase the quantum processing power $k$-fold, the equivalent classical processing time is (in the best case),
+If we now increase the quantum processing power (i.e number of nodes or qubits) $k$-fold, the equivalent classical processing time is (in the best case),
 \begin{align}
 t_c' &= O(\mathrm{exp}(t_q k)) \nonumber \\
 &= O(\mathrm{exp}(t_q)^{k}) \nonumber \\
@@ -58,18 +68,62 @@ t_c' &= O(\mathrm{exp}(t_q k)) \nonumber \\
 \end{align}
 Thus, $k$-fold quantum enhancement corresponds to a $k$th-order exponential enhancement in the equivalent classical processing time, which clearly scales much more favourably than the linear $k$-fold enhancement offered by classical parallelisation.
 
-The alternate scenario is in-series distributed computation, in which a computation proceeds through a pipeline of different stages, potentially performed by different hosts. This model allows a complex algorithm comprising smaller subroutines, each of which may be proprietary with different owners, to be delegated across the network. The different stages may communicate classical and/or quantum data. As with the simple single-host model, if the different stages of the processing pipeline are sharing quantum data, distributed QEC will generally be necessary to protect the computation in transit. This necessarily introduces an (efficient) overhead in the number of physical qubits being communicated across the network, introducing additional bandwidth costs, which must be accommodated for in networking strategies.
+For this scaling to be possible, we expect that nodes will need to communicate via quantum rather than purely classical channels, so as to preserve inter-node entanglement and mediate non-local gates across nodes.
 
-The cluster state (Sec.~\ref{sec:CSQC}), topological code (Sec.~\ref{sec:topol_codes}) and quantum random walk (Sec.~\ref{sec:QW}) models for quantum computation may find themselves to be particularly well-suited to distributed implementation, since they naturally reside on graphs, whose nodes needn't be held locally by a single user, but could instead be shared across multiple hosts with the ability for graph nodes to intercommunicate. Then only classical communication is required to complete a computation will quantum information not localised to any particular node.
+\subsubsection{Quantum MapReduce}\index{MapReduce}
 
-Additionally, the entangling gates which build cluster states all commute and may be implemented simultaneously in parallel. This enables a distributed cluster state to be constructed in a `patchwork' fashion, as shown in Fig.~\ref{fig:patchwork_cluster}. Now the computation is truly distributed in the sense that the computation resides collectively across the distributed cluster state, held by any number of users.
+\comment{Keeping this section? Work with Nana. Is she cool to have it here?}
 
-This approach overlaps with the modularised approach for quantum computation discussed in the upcoming Sec.~\ref{sec:module}, the difference being that in distributed cluster states the goal is to delocalise computations due to resource constraints, whereas for modularised computation the motivation is largely economical, driven by economy of scale.
+Designing native distributed algorithms is not trivial, and architectural constraints may physically limit the allowed set of inter-node operations available to us. Are there any simple constructions that allow us to achieve this? We will propose an approach to parallelised quantum computation based on a direct quantum adaptation of the classical \textsc{MapReduce} protocol.
+
+\textsc{MapReduce}, originally developed by Google\index{Google} for large-scale parallel processing, is simply an elegant formalism for parallelising classical computations. There are three stages to the protocol:
+\begin{enumerate}
+	\item \textsc{Map}: a root node\index{Root node} generates $k$ instances of an algorithm, each with different input data (or a different random seed).
+	\item \textsc{Execute}: each of the $k$ instances are executed independently on the $k$ nodes in parallel.
+	\item \textsc{Reduce}: all outputs are returned to the root node, collated and combined together to yield the final output of the computation.
+\end{enumerate}
+
+Perhaps the simplest illustrative example is to consider the execution of a Monte Carlo simulation\index{Monte Carlo simulation}. Here we wish to execute a large number of instances of the same problem, each with different random seed, and average the results to yield a statistical outcome. Here the \textsc{Map} algorithm simply delegates out $k$ copies of the same algorithm, assigning each node a different random seed\index{Random seed}, and the \textsc{Reduce} algorithm needs only average their outputs. Note that the \textsc{Map} and \textsc{Reduce} algorithms are relatively simple, with the nodes operating in parallel doing all the hardcore number crunching.
+
+Taking this model, one might intuitively follow a similar approach for quantum computation, where we simply replace all the operations with unitary processes, and replace the communication links with quantum channels. Now we have a model as shown in Fig.~\ref{fig:quant_map_red}.
+
+\begin{figure}
+\includegraphics[width=0.475\textwidth]{quantum_map_reduce}
+\caption{Structure of the quantum \textsc{MapReduce} protocol. All operations are unitary, and the \textsc{Map} and \textsc{Reduce} operations may be entangling in general. The \textsc{Execute} stage is separable into a tensor product of smaller \textsc{Execute} operations that are executed in parallel by the $k$ nodes.}\label{fig:quant_map_red}	
+\end{figure}
+
+The goal in this construction is to make the \textsc{Map} and \textsc{Reduce} operations be relatively very simple, e.g have low circuit depth, while the \textsc{Execute} operations are more challenging to implement. Note that the \textsc{Map} and \textsc{Reduce} operations are now unitary processes, rather than being, for example, simple classical dispatch and collate operations. This means that in general the \textsc{Map} operation will prepare entanglement between the \textsc{Execute} sub-computations, and \textsc{Reduce} might similarly implement non-separable entangling measurements to measure collective properties of the joint system.
+
+This architecture is merely a direct mapping of classical \textsc{MapReduce} to the quantum setting. How might it be used? Consider quantum simulation, where we aim to simulate a Hamiltonian of the form,
+\begin{align}
+\hat{H}_\mathrm{total} = \sum_i \hat{H}_i,	
+\end{align}
+where each of the $\hat{H}_i$ terms are local Hamiltonians acting on orthogonal Hilbert spaces. This implies that all terms commute,
+\begin{align}
+[\hat{H}_i,\hat{H}_j]=0,
+\end{align}
+and therefore the unitaries they generate,
+\begin{align}
+	\hat{U}_j=e^{-\frac{i\hat{H}_jt}{\hbar}},
+\end{align}
+have a separable tensor product structure,
+\begin{align}
+	\hat{U}_\mathrm{total}=\bigotimes_i \hat{U}_i,
+\end{align}
+This separability lends itself directly to the tensor product structure of the \textsc{Execute} unitaries. The \textsc{Map} operation could now be a stage for preparing entangled initial states, and the \textsc{Reduce} operation might perform collective measurements.
+
+\subsubsection{Delocalised computation}\index{Delocalised computation}
+
+The cluster state (Sec.~\ref{sec:CSQC})\index{Cluster states}, topological code (Sec.~\ref{sec:topol_codes})\index{Topological codes} and quantum random walk (Sec.~\ref{sec:QW})\index{Quantum random walk} models for quantum computation may find themselves to be particularly well-suited to distributed implementation, since they naturally reside on graphs, whose nodes needn't be held locally by a single user, but could instead be shared across multiple hosts with the ability for graph nodes to intercommunicate. Then only classical communication is required to complete a computation will quantum information not localised to any particular node.
+
+Additionally, the entangling gates which build cluster states all commute and may be implemented simultaneously in parallel. This enables a distributed cluster state to be constructed in a `patchwork' fashion, as shown in Fig.~\ref{fig:patchwork_cluster}. Now the computation is truly distributed in the sense that the computation resides collectively across the distributed cluster state, held by any number of users. No instance of an algorithm can be uniquely associated with any given node.
 
 \begin{figure}[!htb]
 \includegraphics[width=0.4\textwidth]{patchwork_cluster} 
 \caption{Approach for constructing distributed cluster states across multiple nodes. The quantum channels allow neighbouring clusters in the topology to be fused together, constructing a large virtual cluster state for distributed computation. The nodes could be arbitrarily separated with optically-mediated interconnects.} \label{fig:patchwork_cluster}
 \end{figure}
+
+This approach overlaps with the modularised approach for quantum computation discussed in the upcoming Sec.~\ref{sec:module}, the difference being that in distributed cluster states the goal is to delocalise computations due to resource constraints, whereas for modularised computation the motivation is largely economical, driven by economy of scale.
 
 %
 % Delegated Quantum Computation
