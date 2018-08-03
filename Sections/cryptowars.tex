@@ -135,7 +135,7 @@ To mitigate the need for constant one-on-one exchange of public-keys, many key s
 
 A downside of RSA is that ciphertexts are in general much longer than plaintexts, unlike private-key protocols where the ciphertext is always the same length as the plaintext. For this reason it is typically not used to directly encrypt long messages, since the memory and bandwidth overheads would be undesirable. Instead, RSA is typically employed in conjunction with private-key cryptography in a key exchange protocol\index{Key exchange protocol}. Here the public-key system communicates a private \textit{session key}\index{Session key} between parties, which is subsequently employed in a private-key protocol, without incurring the time and memory overhead that RSA does. In Sec.~\ref{sec:brute_force_attacks} we point out that quantum computers are not believed to be able to efficiently crack private-key protocols, but instead effectively reduce their key length by a factor of 1/2, which is easily counteracted to restore security.
 
-Numerous key exchange protocols have been formulated, the best known being the Diffie-Hellman\index{Diffie-Hellman protocol} protocol, which has been widely adopted on the internet.
+Numerous key exchange protocols have been formulated, the best known being the Diffie-Hellman\index{Diffie-Hellman protocol} protocol \cite{DiffieHellman}, which has been widely adopted on the internet.
 
 %
 % Digital Signatures
@@ -215,7 +215,7 @@ Note that because the function in general maps longer strings to shorter ones, t
 
 \section{Attacks on classical cryptography}\index{Cryptographic attacks}\label{sec:attacks_on_class}
 
-\comment{To do}
+\dropcap{H}aving introduced the main classes of classical cryptographic protocols, we now turn our attention to their weaknesses and vulnerabilities, both against adversaries with classical or quantum computational resources.
 
 %
 % Classical Attacks
@@ -223,13 +223,13 @@ Note that because the function in general maps longer strings to shorter ones, t
 
 \subsection{Classical attacks}
 
-Having introduced the main classes of classical cryptographic protocols, we now turn our attention to their weaknesses and vulnerabilities.
+All known classical attacks against any respected classical cryptosystem involve tremendous computational resources. After all, were this not the case the cryptosystem would be considered weak and would never have become widely adopted in the first place!
 
 %
 % Brute-Force
 %
 
-\subsection{Brute-force}\index{Brute-force attacks}\label{sec:brute_force_attack}
+\subsubsection{Brute-force}\index{Brute-force attacks}\label{sec:brute_force_attack}
 
 The most obvious approach to cracking a cryptosystem is to systematically try out all possible keys until we find one that correctly decodes the encrypted message. This is also the most na\"ive approach, and one which is computationally intractable for real-world key lengths. Specifically, for a key length of $k$ bits (\mbox{$k=256$} for AES), there are $2^k$ possible keys to try, and on average we will wait for $2^{k-1}$ trials before choosing the right one. Clearly an average waiting time of $2^{255}$ is not plausible!
 
@@ -264,13 +264,15 @@ which scales poorly for large $n$, keeping in mind that present-day implementati
 % Quantum Attackes
 %
 
-\subsubsection{Quantum attacks}
+\subsection{Quantum attacks}
+
+Having established that classical attacks against strong classical cryptosystems are quite limited by their implausible computational requirements, what if our adversary now has quantum computational resources? Does this change the game?
 
 %
 % Brute-Force
 %
 
-\paragraph{Brute-force}\index{Brute-force attacks}\label{sec:brute_force_attacks}
+\subsubsection{Brute-force}\index{Brute-force attacks}\label{sec:brute_force_attacks}
 
 A brute-force attack by a quantum computer does not offer us the exponential improvement attacker Eve might hope for. However, we can gain a quadratic improvement by cleverly exploiting Grover's search algorithm (Sec.~\ref{sec:quantum_algs})\index{Grover's algorithm}.
 
@@ -284,7 +286,7 @@ This same technique of treating encryption as an oracle within a quantum search 
 % Cryptanalysis
 %
 
-\paragraph{Cryptanalysis}\index{Cryptanalysis}
+\subsubsection{Cryptanalysis}\index{Cryptanalysis}
 
 In the case of private-key cryptosystems such as AES, no quantum-enhanced cryptanalytic techniques have been described, which offer an exponential enhancement. Thus, modulo doubling key-lengths to counter a Grover attack, these cryptosystems are not regarded as being compromised by quantum computing.
 
@@ -292,13 +294,13 @@ In the case of private-key cryptosystems such as AES, no quantum-enhanced crypta
 % Integer Factorisation
 %
 
-\paragraph{Integer factorisation}\index{Integer factorisation}
+\subsubsection{Integer factorisation}\index{Integer factorisation}
 
 In the case of RSA public-key cryptography the attack is more direct -- with access to a scalable quantum computer, Shor's algorithm\index{Shor's algorithm} can be employed to efficiently factorise large integers, allowing private keys to be retrieved from public keys. Unlike the brute-force attacks, which yielded only a quadratic enhancement, Shor's algorithm is exponentially faster than the classical GNFS, requiring runtime of only,
 \begin{align}
 	O([\log n]^2[\log\log n][\log\log\log n]).
 \end{align}
-Compare this with Eq.~(\ref{eq:GNFS_scaling}).
+Compare this with the classical case given in Eq.~(\ref{eq:GNFS_scaling}).
 
 %
 % Bitcoin & The Blockchain
@@ -348,7 +350,7 @@ Thankfully, there are two saving graces. First of all, much research is being ca
 
 \section{Quantum cryptography}\index{Quantum cryptography}
 
-\comment{To do}
+\dropcap{A}s quantum physics can compromise some important aspects of classical cryptography, can it perhaps be similarly exploited to make new cryptosystems that are immune even to quantum adversaries? Thankfully the answer is yes... at least some of the time.
 
 %
 % Quantum Key Distribution (QKD)
@@ -528,6 +530,14 @@ The best known attack against photonically implemented BB84 is the `photon-numbe
 This trivial attack vector clearly demonstrates the importance of well-considered engineering decisions when physically implementing QKD. No piece of hardware is ever 100\% to specification!
 
 \comment{Decoy states}
+
+\subsubsection{Public-key cryptography}
+
+The BB84 protocol is used exclusively for private-key cryptography. For many applications (notably digital signatures and easy key exchange with unidentified parties), public-key cryptosystems would be highly desirable.
+
+Are there any viable public-key quantum protocols that could fill the vacancy of the soon-to-be-compromised RSA? Unfortunately the answer is `not yet'. As appealing as it would be, and despite many highly intelligent people putting their minds to it, to-date no one has presented a viable public-key quantum cryptosystem.
+
+This is problematic since when quantum computing becomes a reality it will immediately compromise the classical public-key cryptosystems we all rely on on a daily basis, and it would be highly desirable for a quantum replacement to fill its shoes.
 
 %
 % Hybrid Quantum/Classical Cryptography
