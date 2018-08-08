@@ -2,9 +2,9 @@
 % Quality of Service
 %
 
-\section{Quality of service}\index{Quantum error correction}\index{Quality of service}\label{sec:QOS_chap}
+\section{Quality of service}\index{Quantum error correction (QEC)}\index{Quality of service (QoS)}\label{sec:QOS_chap}
 
-\dropcap{A}{s} discussed previously in Sec.~\ref{sec:QOS}\index{Quality of service}, quality of service is a major consideration in any quantum network. If we are transmitting quantum states over a quantum channel, there will inevitably be deterioration in the form of decoherence, loss, and other undesirable effects we wish to mitigate. In this section we review some of the essential quantum error correction (QEC) techniques that can be used to achieve this.
+\dropcap{A}{s} discussed previously in Sec.~\ref{sec:QOS}\index{Quality of service (QoS)}, quality of service is a major consideration in any quantum network. If we are transmitting quantum states over a quantum channel, there will inevitably be deterioration in the form of decoherence, loss, and other undesirable effects we wish to mitigate. In this section we review some of the essential quantum error correction (QEC) techniques that can be used to achieve this.
 
 Different error correcting codes have different error correcting power, and different resource overheads, which must be taken into consideration. The appropriate choice of code will largely be determined by the final \textsc{Services \& Applications} layer. For some simple quantum communications protocols, simple error correction (or even no error correction) may suffice. A full-fledged quantum computation on the other hand will require error rates within a fault-tolerance threshold\index{Fault-tolerance thresholds}.
 
@@ -43,7 +43,7 @@ F_\mathrm{out}>F_\mathrm{in}.
 \end{align}
 
 The purification process $\mathcal{E}_\mathrm{purif}$ is realised very simply by Alice and Bob both performing parity measurements\index{Bell measurements} on their two qubits, whose measurement outcomes indicate whether the two qubits were equal ($+$) or different ($-$) -- their parity. These are easily implemented using CNOT gates, using the construction shown in Fig.~\ref{fig:parity_meas}, which implement the projectors,
-\begin{align}\index{Parity measurement}\index{Parity projectors}
+\begin{align}\index{Bell measurements}\index{Parity projectors}
 \hat\Pi^+ &= \ket{0,0}\bra{0,0} + \ket{1,1}\bra{1,1}, \nonumber \\
 \hat\Pi^- &= \ket{0,1}\bra{0,1} + \ket{1,0}\bra{1,0}.
 \end{align}
@@ -57,7 +57,7 @@ They complete the protocol by classically communicating their measurement outcom
 		\lstick{} & \qw & \ctrl{-1} & \qw
 		} \nonumber
 	\end{align}
-	\caption{Construction of a parity measurement circuit using a single CNOT gate and a single-qubit measurement. The measurement outcome indicates whether the two input qubits were the same (\mbox{$\ket{0}\ket{0}$}, \mbox{$\ket{1}\ket{1}$}) or different (\mbox{$\ket{0}\ket{1}$}, \mbox{$\ket{1}\ket{0}$}). See Sec.~\ref{sec:bell_proj} for a simple linear optics construction for this operation.}\label{fig:parity_meas}\index{Parity measurement}
+	\caption{Construction of a parity measurement circuit using a single CNOT gate and a single-qubit measurement. The measurement outcome indicates whether the two input qubits were the same (\mbox{$\ket{0}\ket{0}$}, \mbox{$\ket{1}\ket{1}$}) or different (\mbox{$\ket{0}\ket{1}$}, \mbox{$\ket{1}\ket{0}$}). See Sec.~\ref{sec:bell_proj} for a simple linear optics construction for this operation.}\label{fig:parity_meas}\index{Bell measurements}
 \end{figure}
 
 Two such parity projections project a 4-qubit state down to a 2-qubit state. The full circuit for this entanglement purification protocol is shown in Fig.~\ref{fig:ent_purif_circ}.
@@ -201,7 +201,7 @@ These codes have been shown to have very favourable fault-tolerance thresholds i
 
 Importantly, topological codes do not require joint measurements across the entire graph state, instead requiring only operations localised to small regions within the graph. Thanks to this, computation using such topological codes can remain distributed\index{Distributed quantum computation} without requiring the entire state to be held locally by a particular host, or requiring full access to the entire state by any particular user. As with cluster states, a large graph can be stitched together from a patchwork of smaller neighbouring graphs.
 
-The most common topological code, which we will use here as an example, is the toric code\index{Toric code}, which resides on a lattice graph over the surface of a torus\footnote{As with cluster states, this graph needn't (but could) correspond to a network graph.}. As with cluster states (Sec.~\ref{sec:CSQC}), the toric code is most easily visualised in the stabiliser formalism\index{Stabiliser formalism}, and the toric code is an example of a stabiliser code\index{Stabiliser code} (Sec.~\ref{sec:stab_code}). Consider a rectangular sub-graph of the torus. We place a qubit on each edge (not vertex) of the graph. Now we define two sets of stabiliser operators: \textit{star} ($\hat{S}_+$) and \textit{plaquette} ($\hat{S}_\square$) operators,
+The most common topological code, which we will use here as an example, is the toric code\index{Toric code}, which resides on a lattice graph over the surface of a torus\footnote{As with cluster states, this graph needn't (but could) correspond to a network graph.}. As with cluster states (Sec.~\ref{sec:CSQC}), the toric code is most easily visualised in the stabiliser formalism\index{Stabiliser formalism}, and the toric code is an example of a stabiliser code\index{Stabiliser codes} (Sec.~\ref{sec:stab_code}). Consider a rectangular sub-graph of the torus. We place a qubit on each edge (not vertex) of the graph. Now we define two sets of stabiliser operators: \textit{star} ($\hat{S}_+$) and \textit{plaquette} ($\hat{S}_\square$) operators,
 \begin{align} \index{Surface code stabilisers}\index{Star operator}\index{Plaquette operator}
 	\hat{S}_+(v) &= \prod_{i\in e(v)} \hat{X}_i, \nonumber \\
 	\hat{S}_\square(p) &= \prod_{i\in e(p)} \hat{Z}_i,
@@ -261,7 +261,7 @@ Logical operations similarly have geometric interpretations. Most simply, logica
 % Unitary Error Averaging
 %
 
-\subsection{Unitary error averaging} \index{Quantum error correction}\index{Unitary error averaging}\label{sec:error_averaging}
+\subsection{Unitary error averaging} \index{Quantum error correction (QEC)}\index{Unitary error averaging}\label{sec:error_averaging}
 
 Aside from the \textit{active} QoS techniques discussed until now, there is also a recently described \textit{passive} technique that requires no feedforward to operate. This technique, called \textit{unitary error averaging} \cite{MarshmanLundRohde}, is formulated specifically in the linear optical context. It is an open question whether it generalises to other models, such as conventional quantum circuits.
 
