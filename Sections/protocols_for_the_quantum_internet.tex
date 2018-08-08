@@ -120,7 +120,7 @@ e^{i\phi\hat{n}} \ket\psi_\mathrm{NOON} = \frac{1}{\sqrt{2}}(\ket{N,0}+e^{i\phi 
 \end{align}
 where \mbox{$\hat{n}=\hat{a}^\dag\hat{a}$} is the photon-number operator associated with the second mode\index{Photon-number operator}. The phase enhancement arises because \mbox{$\hat{n}\ket{N}=N\ket{N}$}. Then, a simple interferometric procedure is able to extract this enhanced phase-dependence as an observable.
 
-However, these states are notoriously difficult and technologically challenging to prepare, and can only be prepared non-deterministically using linear optics \cite{bib:Cable07}. If a remote server had the capacity to prepare such states, they would be in high demand across the globe. Hindering this, NOON states are very fragile creatures. First, they exhibit exponentially increased susceptibility to loss -- loss of just a single photon completely decoheres the state, rendering it useless for metrological purposes. Second, the large photon-number, $N$, amplifies unwanted dephasing by a factor of $N$, as discussed in Sec.~\ref{sec:dephasing_error}. These considerations can be readily accommodated for in the QTCP protocol by tracking dephasing and loss metrics of the packets encapsulating the NOON states.
+However, these states are notoriously difficult and technologically challenging to prepare, and can only be prepared non-deterministically using linear optics \cite{bib:Cable07, bib:PhysRevA.65.030101, bib:PhysRevA.76.063808}. If a remote server had the capacity to prepare such states, they would be in high demand across the globe. Hindering this, NOON states are very fragile creatures. First, they exhibit exponentially increased susceptibility to loss -- loss of just a single photon completely decoheres the state, rendering it useless for metrological purposes. Second, the large photon-number, $N$, amplifies unwanted dephasing by a factor of $N$, as discussed in Sec.~\ref{sec:dephasing_error}. These considerations can be readily accommodated for in the QTCP protocol by tracking dephasing and loss metrics of the packets encapsulating the NOON states.
 
 %
 % Cluster States
@@ -162,22 +162,33 @@ A simple linear optics circuit for the preparation of 3-qubit polarisation-encod
 % W-states
 %
 
-\subsection{W-states}\index{W-states}
+\subsection{W-states}\index{W-states}\label{sec:W_state_prep}
 
-Using linear optics, W-states are amongst the most trivial entangled states to prepare. An $N$-mode W-state can be prepared directly using $N$ beamsplitters in a linear cascade, as shown in Fig.~\ref{fig:W_state_LO_prep}, where the beamsplitter reflectivities are chosen so as to create the uniform superposition, given by the pattern,
+W-states are a class of non-maximally-entangled states across an arbitrary number of qubits/modes. They are given by the equal superposition of a single excitation/`1' across all $n$ qubits. Thus, there are $n$ terms in the superposition, of the form,
 \begin{align}
-	1-{\eta_1}^2 &= \frac{1}{N},\nonumber\\
-	{\eta_1}^2 {\eta_2}^2 &= \frac{1}{N},\nonumber\\
-	{\eta_1}^2 {\eta_3}^2 (1-{\eta_2}^2)  &= \frac{1}{N},\nonumber\\
-	{\eta_1}^2 {\eta_4}^2(1-{\eta_2}^2) (1-{\eta_3}^2)  &= \frac{1}{N},\nonumber\\
-	{\eta_1}^2 {\eta_i}^2 \prod_{j=2}^{i-1} (1-{\eta_j}^2) &= \frac{1}{N},\nonumber\\
-	{\eta_N}^2 &= 1.
+\ket\psi_\mathrm{W}^{(n)} &= \frac{1}{\sqrt{n}} \sum_{i=1}^n \hat{a}_i^\dag \ket{0}^{\otimes n}\nonumber\\
+&= \frac{1}{\sqrt{n}}(\ket{1,0,0,0,\dots} + \ket{0,1,0,0,\dots}\nonumber\\
+&+ \ket{0,0,1,0,\dots} + \ket{0,0,0,1,\dots} + \dots).
+\end{align}
+
+W-states are a class of states distinct from GHZ states (for any \mbox{$n\geq 3$}). Unlike GHZ states, W-states preserve some entanglement when a single qubit is traced out of the system, giving them a degree of robustness against qubit loss. This property is discussed in further detail in Secs.~\ref{sec:atomic_ens} \& \ref{sec:error_averaging}, where this property is exploited for error correction purposes.
+
+Using linear optics, W-states are amongst the most trivial entangled states to prepare, using a simple fanout operation. An $n$-mode W-state can be prepared directly using $n$ beamsplitters in a linear cascade, as shown in Fig.~\ref{fig:W_state_LO_prep}, where the beamsplitter reflectivities are chosen so as to create the uniform superposition, given by the pattern,
+\begin{align}
+	{\eta_1}^2 &= 1 - \frac{1}{n},\nonumber\\
+	{\eta_1}^2 {\eta_2}^2 &= \frac{1}{n},\nonumber\\
+	{\eta_1}^2 {\eta_3}^2 (1-{\eta_2}^2)  &= \frac{1}{n},\nonumber\\
+	{\eta_1}^2 {\eta_4}^2(1-{\eta_2}^2) (1-{\eta_3}^2)  &= \frac{1}{n},\nonumber\\
+	{\eta_1}^2 {\eta_i}^2 \prod_{j=2}^{i-1} (1-{\eta_j}^2) &= \frac{1}{n},\nonumber\\
+	{\eta_n}^2 &= 1.
 \end{align}
 
 \begin{figure}[!htb]
 \includegraphics[width=0.2\textwidth]{W_state_LO_prep}
-\caption{Preparation of an $N$-mode W-state using a linear cascade of beamsplitters and a single-photon source.}\label{fig:W_state_LO_prep}	
+\caption{Preparation of an $n$-mode W-state using a linear cascade of beamsplitters and a single-photon source.}\label{fig:W_state_LO_prep}	
 \end{figure}
+
+Alternately, an entire basis of W-states\footnote{We refer to a `basis' of W-states as being a set of states that are all equivalent to a standard W-state up to local phases.} is accessible using linear optics networks described by unitaries where all matrix elements have amplitude $1/\sqrt{n}$, differing only via local phases. This includes the generalised Hadamard transform\index{Hadamard transform}, and quantum Fourier transform\index{Quantum Fourier transform}.
 
 %
 % Bell States
@@ -213,7 +224,7 @@ In Sec.~\ref{sec:ent_ultimate} we present the case that these states are so usef
 
 Cat states (Sec.~\ref{sec:cat_enc}) -- superpositions of coherent states -- are extremely difficult to prepare, most easily via non-linear processes. However, they are very useful for optical quantum computation and for the study of macroscopic quantum systems, when using large coherent amplitudes. Because of the difficulty of their preparation, the ability to outsource it would be very valuable.
 
-However, it must be cautioned that cat states decohere very readily, since their well-defined parity implies decoherence upon loss of just a single photon. This makes QoS considerations particularly pertinent.
+However, it must be cautioned that cat states decohere very readily, since their well-defined parity implies decoherence upon loss or measurement of just a single photon. This makes QoS considerations particularly pertinent.
 
 %
 % Squeezed States
@@ -221,7 +232,7 @@ However, it must be cautioned that cat states decohere very readily, since their
 
 \subsection{Squeezed states} \label{sec:squeezed} \index{Squeezed state preparation}
 
-Of particular interest to metrology\index{Quantum metrology} and CV quantum computing\index{Continuous-variable quantum computing} in particular, are squeezed states, states which have been longitudinally distorted in phase-space. In the metrological context, squeezed states enable sub-shotnoise limited metrology \cite{???}, thereby outperforming any classical protocol, using, for example, coherent states.
+Of particular interest to metrology\index{Quantum metrology} and CV quantum computing\index{Continuous-variable quantum computation} in particular, are squeezed states, states which have been longitudinally distorted in phase-space. In the metrological context, squeezed states enable sub-shotnoise limited metrology \cite{???}, thereby outperforming any classical protocol, using, for example, coherent states.
 
 Mathematically, squeezing is represented using the squeezing operator,
 \begin{align}
@@ -393,7 +404,7 @@ for efficiency $\eta$, not accounting for other lesser errors such as dark-count
 
 \begin{figure}[htpb]
 \includegraphics[width=0.35\textwidth]{detector_multiplexing}
-\caption{Multiplexed number-resolved photo-detection using non-number-resolved photo-detectors. The principle is to spread out (as uniformly as possible) a multi-photon state across a large number of modes, sufficiently large that it is unlikely that more than one photon will be present in any given mode. Then, the sum of the number of clicks at each mode closely approximates the incident photon-number. (a) In the spatial domain. (b) In the temporal domain. The advantage of employing the temporally multiplexed architecture is that only a single detector is required, unlike the multiple independent detectors required in the spatially multiplexed scheme. However this requires that the dead-time\index{Dead-time} of the detector is less than the round-trip time of the fibre loop. An alternate, but conceptually equivalent approach is to spatially disperse the optical field across a charge-coupled device (CCD)\index{Charge-coupled device}, much like that found in a regular digital camera, except with single-photon resolution per-pixel. This achieves an effectively very large number of optical modes.} \label{fig:det_mult}
+\caption{Multiplexed number-resolved photo-detection using non-number-resolved photo-detectors. The principle is to spread out (as uniformly as possible) a multi-photon state across a large number of modes, sufficiently large that it is unlikely that more than one photon will be present in any given mode. Then, the sum of the number of clicks at each mode closely approximates the incident photon-number. (a) In the spatial domain. (b) In the temporal domain. The advantage of employing the temporally multiplexed architecture is that only a single detector is required, unlike the multiple independent detectors required in the spatially multiplexed scheme. However this requires that the dead-time\index{Dead-time} of the detector is less than the round-trip time of the fibre loop. An alternate, but conceptually equivalent approach is to spatially disperse the optical field across a charge-coupled device (CCD)\index{Charge-coupled device (CCD)}, much like that found in a regular digital camera, except with single-photon resolution per-pixel. This achieves an effectively very large number of optical modes.} \label{fig:det_mult}
 \end{figure}
 
 \begin{figure}[htpb]
@@ -1094,7 +1105,7 @@ Classical information is exchanged between them, which reveals the time elapsed 
 
 In a more recent proposal, a shared GHZ state\index{Greenberger-Horne-Zeilinger (GHZ) states} is prepared across all nodes in the quantum network, which allows for quantum metrologically enhanced detection\index{Quantum metrologically enhanced detection} of the clock signal drift at the Heisenberg limit\index{Heisenberg limit} \cite{bib:komar14}. The use of shared resources acts to improve the overall precision, allowing for an optimal scheme for the qubit resources that are employed. Several other proposals have also been made, which are quantum versions of Eddington's slow clock transport protocol\index{Eddington's slow clock transport protocol} where the qubit keeps time of the transmission \cite{bib:chuang2000quantum, bib:tavakoli2015quantum}. 
 
-Experimentally, there have been several demonstrations of the protocol, albeit at relatively short distances. Continuous time-bin\index{Time-bin encoding} entangled photons were used as the entanglement resource to obtain a time-correlation between a distance of 3km \cite{bib:valencia2004distant}, and another technique based on Hong-Ou-Mandel interferometry\index{Hong-Ou-Mandel interferometry} was performed across a 4km fibre link \cite{bib:quan2016demonstration}. Several other demonstrations based on nuclear magnetic resonance (NMR)\index{Nuclear magnetic resonance} \cite{bib:zhang2004nuclear, bib:kong2017implementation} have also been performed. 
+Experimentally, there have been several demonstrations of the protocol, albeit at relatively short distances. Continuous time-bin\index{Time-bin encoding} entangled photons were used as the entanglement resource to obtain a time-correlation between a distance of 3km \cite{bib:valencia2004distant}, and another technique based on Hong-Ou-Mandel interferometry\index{Hong-Ou-Mandel (HOM) interferometry} was performed across a 4km fibre link \cite{bib:quan2016demonstration}. Several other demonstrations based on nuclear magnetic resonance (NMR)\index{Nuclear magnetic resonance} \cite{bib:zhang2004nuclear, bib:kong2017implementation} have also been performed. 
 
 There are however several outstanding problems with the quantum clock synchronisation scheme as presented above. In the scheme of Jozsa \textit{et al.}, if one starts in a perfect singlet state\index{Singlet state}, the scheme works as intended, but if one instead starts with the state, 
 \begin{align}

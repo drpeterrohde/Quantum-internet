@@ -6,7 +6,7 @@
 
 \dropcap{A}{s} discussed previously in Sec.~\ref{sec:QOS}\index{Quality of service}, quality of service is a major consideration in any quantum network. If we are transmitting quantum states over a quantum channel, there will inevitably be deterioration in the form of decoherence, loss, and other undesirable effects we wish to mitigate. In this section we review some of the essential quantum error correction (QEC) techniques that can be used to achieve this.
 
-Different error correcting codes have different error correcting power, and different resource overheads, which must be taken into consideration. The appropriate choice of code will largely be determined by the final \textsc{Services \& Applications} layer. For some simple quantum communications protocols, simple error correction (or even no error correction) may suffice. A full-fledged quantum computation on the other hand will require error rates within a fault-tolerance threshold\index{Fault-tolerance threshold}.
+Different error correcting codes have different error correcting power, and different resource overheads, which must be taken into consideration. The appropriate choice of code will largely be determined by the final \textsc{Services \& Applications} layer. For some simple quantum communications protocols, simple error correction (or even no error correction) may suffice. A full-fledged quantum computation on the other hand will require error rates within a fault-tolerance threshold\index{Fault-tolerance thresholds}.
 
 %
 % Entanglement Purification
@@ -42,7 +42,7 @@ where,
 F_\mathrm{out}>F_\mathrm{in}.
 \end{align}
 
-The purification process $\mathcal{E}_\mathrm{purif}$ is realised very simply by Alice and Bob both performing parity measurements\index{Bell measurement} on their two qubits, whose measurement outcomes indicate whether the two qubits were equal ($+$) or different ($-$) -- their parity. These are easily implemented using CNOT gates, using the construction shown in Fig.~\ref{fig:parity_meas}, which implement the projectors,
+The purification process $\mathcal{E}_\mathrm{purif}$ is realised very simply by Alice and Bob both performing parity measurements\index{Bell measurements} on their two qubits, whose measurement outcomes indicate whether the two qubits were equal ($+$) or different ($-$) -- their parity. These are easily implemented using CNOT gates, using the construction shown in Fig.~\ref{fig:parity_meas}, which implement the projectors,
 \begin{align}\index{Parity measurement}\index{Parity projectors}
 \hat\Pi^+ &= \ket{0,0}\bra{0,0} + \ket{1,1}\bra{1,1}, \nonumber \\
 \hat\Pi^- &= \ket{0,1}\bra{0,1} + \ket{1,0}\bra{1,0}.
@@ -199,7 +199,7 @@ It has been shown that fault-tolerance is possible within the cluster state mode
 
 These codes have been shown to have very favourable fault-tolerance thresholds in terms of both depolarising noise and loss \cite{bib:StaceBarrettDohertyLoss, bib:BarrettStaceFT}, as well as frugal resource overhead compared to traditional concatenated codes. Additionally, loss- and gate-failure-tolerant codes, uniquely applicable to the cluster state model, have been described, with very favourable loss thresholds \cite{bib:Varnava05, bib:RalphHayes05, bib:Duan05}. 
 
-Importantly, topological codes do not require joint measurements across the entire graph state, instead requiring only operations localised to small regions within the graph. Thanks to this, computation using such topological codes can remain distributed\index{Distributed computation} without requiring the entire state to be held locally by a particular host, or requiring full access to the entire state by any particular user. As with cluster states, a large graph can be stitched together from a patchwork of smaller neighbouring graphs.
+Importantly, topological codes do not require joint measurements across the entire graph state, instead requiring only operations localised to small regions within the graph. Thanks to this, computation using such topological codes can remain distributed\index{Distributed quantum computation} without requiring the entire state to be held locally by a particular host, or requiring full access to the entire state by any particular user. As with cluster states, a large graph can be stitched together from a patchwork of smaller neighbouring graphs.
 
 The most common topological code, which we will use here as an example, is the toric code\index{Toric code}, which resides on a lattice graph over the surface of a torus\footnote{As with cluster states, this graph needn't (but could) correspond to a network graph.}. As with cluster states (Sec.~\ref{sec:CSQC}), the toric code is most easily visualised in the stabiliser formalism\index{Stabiliser formalism}, and the toric code is an example of a stabiliser code\index{Stabiliser code} (Sec.~\ref{sec:stab_code}). Consider a rectangular sub-graph of the torus. We place a qubit on each edge (not vertex) of the graph. Now we define two sets of stabiliser operators: \textit{star} ($\hat{S}_+$) and \textit{plaquette} ($\hat{S}_\square$) operators,
 \begin{align} \index{Surface code stabilisers}\index{Star operator}\index{Plaquette operator}
@@ -263,11 +263,11 @@ Logical operations similarly have geometric interpretations. Most simply, logica
 
 \subsection{Unitary error averaging} \index{Quantum error correction}\index{Unitary error averaging}\label{sec:error_averaging}
 
-Aside from the \textit{active} QoS techniques discussed until now, there is also a recently described \textit{passive} technique that requires no feedforward to operate. This technique, called \textit{unitary error averaging}, is formulated specifically in the linear optical context. It is an open question whether it generalises to other models, such as conventional quantum circuits.
+Aside from the \textit{active} QoS techniques discussed until now, there is also a recently described \textit{passive} technique that requires no feedforward to operate. This technique, called \textit{unitary error averaging} \cite{MarshmanLundRohde}, is formulated specifically in the linear optical context. It is an open question whether it generalises to other models, such as conventional quantum circuits.
 
 Suppose we desire to implement some linear optics unitary network, $\hat{U}_\mathrm{target}$, but our fabrication techniques are imperfect and we instead implement a close approximation to it. How can we overcome this?
 
-\cite{MarshmanLundRohdeRalph} showed that by using an optical fanout operation, which splits a set of optical modes equally across multiple sets of modes in a type of redundant encoding, and passing each set through an independently manufactured copy of the imperfect unitary, $\tilde{U}_i$, upon post-selection on detecting all photons in the desired output modes, the output state will behave as if it had evolved through a network given by the arithmetic average of each of the imperfect copies of $\hat{U}_\mathrm{target}$,
+\cite{MarshmanLundRohdeRalph} showed that by using an optical fanout\index{Fanout operation} operation, which splits a set of optical modes equally across multiple sets of modes in a type of redundant encoding\footnote{The optical fanout operation effectively maps single-photon states to W-states (Sec.~\ref{sec:W_state_prep})\index{W-states}.}, and passing each set through an independently manufactured copy of the imperfect unitary, $\tilde{U}_i$, upon performing a fan-in to recombine the modes, and post-selection on detecting all photons in the desired output modes, the output state will behave as if it had evolved through a network given by the arithmetic average of each of the imperfect copies of $\hat{U}_\mathrm{target}$,
 \begin{align}
 \hat{U}_\mathrm{av} = \frac{1}{M}\sum_{i=1}^M \tilde{U}_i.	
 \end{align}
@@ -275,12 +275,12 @@ A schematic for the optical circuit is shown in Fig.~\ref{fig:error_av_circuit}.
 
 \begin{figure}[htpb]
 \includegraphics[width=0.47\textwidth]{unitary_error_averaging}
-\caption{Protocol for error correction via unitary error averaging. Here our computation resides across \mbox{$N=2$} modes, and there are \mbox{$M=2$} redundant copies of the manufactured unitary, which straightforwardly generalises to arbitrary $M$ and $N$. A fanout operation splits the wave amplitudes from the set of $N$ input modes uniformly across $M$ sets of $N$ modes. Each set of $N$ evolves through an independent copy of the manufactured imperfect unitary, $\tilde{U}_i$. A reverse fanout operation recollects the bundles of modes. Upon post-selecting upon detecting all photons within the first $N$ modes, and none in the other ancillary modes, the state is projected into the subspace as if it had been acted upon by the arithmetic average of the imperfect unitaries.} \label{fig:error_av_circuit}	
+\caption{Protocol for error correction via unitary error averaging. Here our computation resides across \mbox{$N=2$} modes, and there are \mbox{$M=2$} redundant copies of the manufactured unitary, which straightforwardly generalises to arbitrary $M$ and $N$. A fanout operation splits the wave amplitudes from the set of $N$ input modes uniformly across $M$ sets of $N$ modes. Each set of $N$ evolves through an independent copy of the manufactured imperfect unitary, $\tilde{U}_i$. A reverse fanout operation recollects the bundles of modes. Upon post-selecting upon detecting all photons within the first $N$ modes, and none in the other ancillary modes, the state is projected into the subspace as if it had been acted upon by the arithmetic average of the imperfect unitaries. If photons are detected in the error modes, our logical state has effectively suffered photon loss and has been corrupted.} \label{fig:error_av_circuit}	
 \end{figure}
 
-Note that the protocol doesn't require that the $M$ instances of the unitary be held locally. They operate independently in parallel and could therefore be distributed, with the independent copies held by entirely different parties in distant locations.\index{Distributed computation}\index{Parallelisation}
+Note that the protocol doesn't require that the $M$ instances of the unitary be held locally. They operate independently in parallel and could therefore be distributed, with the independent copies held by entirely different parties in distant locations (Sec.~\ref{sec:error_av_parallel}).\index{Distributed quantum computation}\index{Parallelisation}
 
-The protocol is necessarily non-deterministic, since sometimes photons will be measured in the error modes, signalling that the output state has been projected onto an erroneous subspace. However, when post-selection succeeds we have effectively evolved via the averaged operator, which statistically ought to more closely approximate $\hat{U}_\mathrm{target}$ than the individual $\tilde{U}_i$.
+The protocol is necessarily non-deterministic, since sometimes photons will be measured in the error modes, signalling that the output state has been projected onto an erroneous subspace. Thus, this is a heralded error correction scheme. When post-selection succeeds we have effectively evolved via the averaged operator, which statistically ought to more closely approximate $\hat{U}_\mathrm{target}$ than individual $\tilde{U}_i$.
 
 %
 % Qubit Loss Codes
