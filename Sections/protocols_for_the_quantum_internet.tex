@@ -236,7 +236,7 @@ Of particular interest to metrology\index{Quantum metrology} and CV quantum comp
 
 Mathematically, squeezing is represented using the squeezing operator,
 \begin{align}
-\hat{S}(\xi) = \mathrm{exp}\left[ \frac{1}{2}(\xi^*\hat{a}^2 - \xi{\hat{a}^{\dag 2}})\right],
+\hat{S}(\xi) = \exp \left[ \frac{1}{2}(\xi^*\hat{a}^2 - \xi{\hat{a}^{\dag 2}})\right],
 \end{align}
 where $\hat{a}$ is the photonic creation operator, and $\xi$ is the squeezing parameter. Experimentally, such states are prepared using non-linear crystals. It is intuitively obvious that linear optics alone cannot prepare such states, owing to the non-linear terms in the squeezing operator, which do not preserve photon-number, and therefore cannot be passive.
 
@@ -572,13 +572,13 @@ Aside from the linear transformations described above, which are passive and pho
 
 The most well-known non-linear transformation is the displacement operation, which translates the Wigner function by some arbitrary amplitude in phase-space, whilst preserving all other features of the phase-space representation. This is described by the unitary operator,\index{Displacement operator}
 \begin{align}
-\hat{D}(\alpha) = \mathrm{exp}\left[\alpha\hat{a}^\dag - \alpha^*\hat{a}\right],
+\hat{D}(\alpha) = \exp \left[\alpha\hat{a}^\dag - \alpha^*\hat{a}\right],
 \end{align}
 where $\alpha$ is the displacement amplitude. This transformation is easily implemented by mixing a state on a low-reflectivity beamsplitter with a coherent state of some arbitrary complex amplitude, which determines the displacement amplitude. In the special case of a displacement operator acting on the vacuum state, we obtain a coherent state of equal amplitude, \mbox{$\hat{D}(\alpha)\ket{0}=\ket\alpha$}.
 
 Another common non-linear transformation is squeezing, discussed in Sec.~\ref{sec:squeezed}. This implements the unitary operator\index{Squeezing operator},
 \begin{align}
-\hat{S}(\xi) = \mathrm{exp}\left[ \frac{1}{2}(\xi^*\hat{a}^2 - \xi{\hat{a}^{\dag 2}})\right],
+\hat{S}(\xi) = \exp \left[ \frac{1}{2}(\xi^*\hat{a}^2 - \xi{\hat{a}^{\dag 2}})\right],
 \end{align}
 where $\xi$ is the squeezing parameter, which has the effect of applying a dilation of some arbitrary factor in phase-space.
 
@@ -1114,3 +1114,51 @@ There are however several outstanding problems with the quantum clock synchronis
 (a Bell pair augmented by a local phase) one obtains an offset to the synchronisations between the two parties. In practice, such a phase could arise from decoherence induced noise, or differences in the basis conventions chosen by the two parties. Thus, in practice entanglement purification\index{Entanglement purification} would be required to produce a singlet state with \mbox{$\delta=0$} prior to executing the protocol. However, it was argued that to perform the entanglement purification quantum circuit correctly, the timing of the quantum gates would need to be controlled, which requires synchronised clocks \cite{bib:preskill2000quantum} --  this renders syncrhonisation impossible. It has previously been shown that such a phase cannot be eliminated using asynchronous entanglement purification\index{Entanglement purification} \cite{bib:yurtsever02}, and hence the protocol remains incomplete in the general case where imperfect singlet pairs\index{Bell states} are shared.
 
 \comment{Need to reference figure}
+
+\comment{Peter's start - fix this}
+
+A quantum protocol for clock synchronisation based on shared entanglement is given in Alg.~\ref{alg:clock_sync}.
+
+\begin{table}[htpb]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
+function ClockSync($\frac{1}{\sqrt{2}}(\ket{0}\ket{1} - \ket{1}\ket{0})$):
+\begin{enumerate}
+\item Distribute a Bell state between Alice and Bob,
+\begin{align}
+\ket{\psi_0} &= \frac{1}{\sqrt{2}}(\ket{0}_A\ket{1}_B - \ket{1}_A\ket{0}_B)\nonumber\\
+	&= \frac{1}{\sqrt{2}}(\ket{+}_A\ket{-}_B - \ket{-}_A\ket{+}_B).
+\end{align}
+\item The joint system is assumed to be freely-evolving under the Hamiltonian,
+\begin{align}
+\hat{H} = \hbar\omega(\hat{Z}_A + \hat{Z}_B).	
+\end{align}
+\item Over time $t_\mathrm{free}$ this evolves the initial state to,
+\begin{align}
+	\ket{\psi_1} &= e^{-i\hat{H} t_\mathrm{free}}\frac{1}{\sqrt{2}}(\ket{+}_A\ket{-}_B - \ket{-}_A\ket{+}_B)\nonumber\\
+	&= e^{-i\omega t_\mathrm{free}}\frac{1}{\sqrt{2}}(\ket{+}_A\ket{-}_B - \ket{-}_A\ket{+}_B),
+\end{align}
+yielding only an irrelevant global phase.
+\item Alice measures her qubit in the $\hat{X}$ basis ($\ket\pm\bra\pm$), and classically announces the time at which she performed the measurement, $t_A$, and her measurement outcome, \mbox{$m_A=\pm$}.
+\item The system evolves for time $t_\mathrm{ev}$,
+\begin{align}
+	\ket{\psi_{+}} &= e^{-i\hat{Z} t_\mathrm{ev}}\ket{-}_B\nonumber\\
+	&\propto \ket{0}_B-e^{-i\omega t_\mathrm{ev}}\ket{1}_B,\nonumber\\
+	\ket{\psi_{-}} &= e^{-i\hat{Z} t_\mathrm{ev}}\ket{+}_B\nonumber\\
+	&\propto \ket{0}_B+e^{-i\omega t_\mathrm{ev}}\ket{1}_B.
+\end{align}
+\item Bob measures his qubit in the $\hat{X}$ basis, with measurement probabilities,
+\begin{align}
+	m_+ &\propto \sin^2(\omega t_\mathrm{ev}),\nonumber\\
+	m_- &\propto \cos^2(\omega t_\mathrm{ev}).
+\end{align}
+\item Bob sets his clock to,
+\begin{align}
+	t_B = t_A+t_\mathrm{ev}.
+\end{align}
+\item $\Box$
+\end{enumerate}
+}
+\end{mdframed}
+\caption{Algorithm for performing quantum clock synchronisation between two parties using shared Bell-pairs and classical communication.\comment{Check this for errors!}} \label{alg:clock_sync}
+\end{table}

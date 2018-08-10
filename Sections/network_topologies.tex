@@ -46,7 +46,7 @@ However, these highly desirable benefits come at the expense of requiring the mo
 
 This type of topology could arise in, for example, international-scale networks, where links of very high bandwidth (and value) between nations or continents need to be maximally utilised, which would be undermined by sparse, shared network topologies. Additionally, in this instance route redundancy will be highly valued, as the isolation of one continent from another would be catastrophic to the functioning of the global network.
 
-Fig.~\ref{fig:complete_graph} illustrates the $K_{15}$ graph. The number of edges scales as $O(n^2)$. Clearly route-finding is trivial, since there is always a direct link from sender to receiver, with no possibility of collisions with other packets, requiring $O(1)$ search time (assuming all users are communicating only via their direct links with one another, which may not strictly be the case when costs are factored into strategies).
+Fig.~\ref{fig:complete_graph} illustrates the $K_{15}$ graph. The number of edges scales as $O(n^2)$. Clearly route-finding is trivial, since there is always a direct P2P link from sender to receiver, with no possibility of collisions with other packets, requiring $O(1)$ search time (assuming all users are communicating only via their direct links with one another, which may not strictly be the case when costs are factored into strategies).
 
 \begin{figure}[htpb]
 \includegraphics[width=0.35\textwidth]{K_15}
@@ -59,7 +59,7 @@ Fig.~\ref{fig:complete_graph} illustrates the $K_{15}$ graph. The number of edge
 
 \subsection{Lattice} \index{Lattice topologies}
 
-A lattice graph is simply an \mbox{$n\times m$} lattice of vertices (of any geometry, e.g squares), connecting each vertex to its immediate geometric neighbours. This type of graph is useful when link costs are measured in terms of Euclidean distances, and nodes have nearest neighbour links. An example is shown in Fig.~\ref{fig:lattice}.
+A lattice graph is simply an \mbox{$n\times m$} lattice of vertices (of any geometry, e.g squares), connecting each vertex to its immediate geometric neighbours. The number of edges scales obviously as \mbox{$|E|=O(mn)$}. This type of graph is useful when link costs are measured in terms of Euclidean distances, and nodes have nearest neighbour links, as per Fig.~\ref{fig:lattice}.
 
 \begin{figure}[htpb]
 \includegraphics[width=0.35\textwidth]{lattice}
@@ -72,7 +72,7 @@ In the case of a balanced lattice, in which all edges are of equal weight, the c
 \begin{align}
 L_1 = |x_\mathrm{start} - x_\mathrm{finish}| + |y_\mathrm{start} - y_\mathrm{finish}|.
 \end{align}
-In this case, route finding is simplified, since \textit{all} routes, which strictly traverse in one direction vertically and one direction horizontally, are optimal and of equal distance. Thus, the maximum number of hops between any two points in the network is \mbox{$O(m+n)$}.
+In this case, route finding is simplified, since \textit{all} routes, which strictly traverse in one direction vertically and one direction horizontally, are optimal and of equal distance. Thus, the diameter (maximum number of hops between any two points) on the network is \mbox{$d=O(m+n)$}.
 
 %
 % Tree
@@ -80,13 +80,13 @@ In this case, route finding is simplified, since \textit{all} routes, which stri
 
 \subsection{Tree} \label{sec:tree_graph} \index{Tree topologies}
 
-A tree is a graph containing no cycles, only \textit{branches}. There are many uses for tree graphs, but one property is of particular convenience in many applications: because the graph is acyclic, there is always exactly one path from any vertex to any other. This mitigates the need for shortest-path algorithms designed for general graphs, and simplifies route-finding algorithms (to be discussed in Sec.~\ref{sec:path_exp}). However, this brings with it the drawback that the topology is most vulnerable to link failures, since the removal of any link from the tree will separate it into a bipartite graph, making communication between the two disjoint subgraphs (which are also trees) impossible, as there are no redundant routes. In a sense, tree graphs can be considered the polar opposites of complete graphs.
+A tree is a graph containing no cycles, only \textit{branches}\index{Branches}. There are many uses for tree graphs, but one property is of particular convenience in many applications: because the graph is acyclic, there is always exactly one path from any vertex to any other. This mitigates the need for shortest-path algorithms designed for general graphs, and simplifies route-finding algorithms (to be discussed in Sec.~\ref{sec:path_exp}). However, this brings with it the drawback that the topology is most vulnerable to link failures, since the removal of any link from the tree will separate it into a multipartite graph\index{Multipartite graphs}, making communication between the disjoint subgraphs (which are also trees) impossible, as there are no redundant routes. In a sense, tree graphs can be considered the polar opposites of complete graphs.
 
 Trees are specified entirely by \textit{branching parameters} ($b_i$) -- the number of child nodes emanating from a given node, $i$. In general, branching parameters may be distinct for each node, although often trees with symmetries in their branching structures are considered, such as the balanced trees discussed in Sec.~\ref{sec:bal_tree}. A node terminates a branch if its branching parameter is zero (i.e it has no children).
 
-The \textit{depth} ($d$) of a tree is the maximum number of steps from the root node to a terminating node with no children. The depth scales between \mbox{$d=O(|V|)$}, for the trivial linear tree (\mbox{$b_i=1$}), and \mbox{$d=O(\mathrm{log}|V|)$} for non-trivial branching parameters (i.e \mbox{$b_i\neq 1$}).
+The \textit{depth} ($d$) of a tree is the maximum number of steps from the root node to a terminating node with no children. The depth scales between \mbox{$d=O(|V|)$}, for the trivial linear tree (\mbox{$b_i=1$}), and \mbox{$d=O(\log |V|)$} for non-trivial branching parameters (\mbox{$b_i\neq 1$}).
 
-The worst-case number of edges that must be traversed to reach any vertex from any other is \mbox{$2d=O(\mathrm{log}|V|)$}, which implies that accumulated cost metrics scale as \mbox{$c=O(\mathrm{log}|V|)$}. Trees are the most frugal graphs in their number of edges, which are fixed at \mbox{$|E|=|V|-1$}, irrespective of the branching parameters, since because the graph is strictly acyclic, every addition of an edge requires the addition of exactly a single vertex. This makes tree graphs the cheapest to construct in terms of physical resource usage.
+The worst-case number of edges that must be traversed to reach any vertex from any other is \mbox{$2d=O(\log|V|)$}, which implies that accumulated cost metrics scale as \mbox{$c=O(\log |V|)$}. Trees are the most frugal graphs in their number of edges, which are fixed at \mbox{$|E|=|V|-1$}, irrespective of the branching parameters, since because the graph is strictly acyclic, every addition of an edge requires the addition of exactly a single vertex. This makes tree graphs the cheapest to construct in terms of physical resource usage.
 
 %
 % Balanced Tree
@@ -142,31 +142,46 @@ The calculation of MSTs is most likely to come into consideration when actually 
 % Percolation
 %
 
-\subsection{Percolation}\index{Percolation graph}
+\subsection{Percolation}\index{Percolation topologies}\label{sec:perc_topol}
 
-A variation on any graph, $G$, is to instead have a randomised implementation of it, whereby each of the possible edges \mbox{$e\in E$} or vertices \mbox{$v\in V$} occurs with some probability \mbox{$0\leq p_\mathrm{perc}\leq 1$}. These are referred to as \textit{edge percolation} and \textit{site percolation} graphs respectively. For any given graph, its associated percolation graph has average vertex and edge counts,
+A variation on any graph is to instead have a randomised implementation of it, whereby each of the possible edges or vertices occur with some probability, $p_\mathrm{edge}$ or $p_\mathrm{vertex}$, otherwise deleted. These are referred to as \textit{edge percolation} and \textit{site percolation} graphs respectively.
+
+For any given graph, its associated percolation graph has average vertex and edge counts,
 \begin{align}
 |E|_\mathrm{av} &= p_\mathrm{edge}\cdot |E|,\nonumber\\
-|V|_\mathrm{av} &= p_\mathrm{vertex}\cdot |V|,
+|V|_\mathrm{av} &= p_\mathrm{vertex}\cdot |V|.
 \end{align}
-for edge and vertex percolations respectively.
 
-Adjusting $p_\mathrm{perc}$ allows us to tune between the desired graph (when $p_\mathrm{perc}=1$) and the completely disconnected graph (when $p_\mathrm{perc}=0$). This model is very useful in real-world applications, allowing unreliable channels/nodes to be incorporated into our network model. The analysis of such percolation networks is invaluable for understanding the robustness of such networks to channel and node failures.
+Adjusting $p_\mathrm{edge/vertex}$ allows us to tune between the desired graph $G$ (when $p_\mathrm{edge/vertex}=1$) and the completely disconnected graph (when $p_\mathrm{edge/vertex}=0$).
 
-Note that percolation graphs might be disjoint with sufficient defects, in which case the respective network becomes unreliable. Specifically, with sufficiently low $p_\mathrm{perc}$, `islands' may form in the network topology -- small segregated networks, which are unable to interface with the remainder of the network.
+This model is very useful in real-world applications, allowing unreliable channels/nodes to be incorporated into our network model. The analysis of such percolation networks is invaluable for understanding the robustness of such networks to channel and node failures.
 
-For asymptotically large percolation graphs, \textit{percolation theory}\index{Percolation theory} \cite{???} provides thresholds for $p_\mathrm{perc}$ such that routes across the network exist \cite{???}.
+Note that percolation graphs might be disjoint with sufficient defects, in which case the respective network becomes unreliable. Specifically, with sufficiently low $p_\mathrm{edge/vertex}$, `islands' may form in the network topology -- small segregated networks, which are unable to interface with the remainder of the network.
 
-Fig.~\ref{fig:perc_graph} illustrates several graphs with different percolation probabilities, and how the larger network segregates into smaller islands as failure rates increase.
+For asymptotically large percolation graphs, \textit{percolation theory}\index{Percolation theory} \cite{???} provides thresholds for $p_\mathrm{edge/vertex}$ such that routes across the network exist in asymptotic limits \cite{???}.
+
+Fig.~\ref{fig:perc_graph} illustrates several square lattice graphs with different percolation probabilities, and how the larger network segregates into smaller disconnected islands as failure rates increase.
+
+\begin{figure*}[htpb]
+\includegraphics[width=0.325\textwidth]{percolation_1}
+\includegraphics[width=0.325\textwidth]{percolation_2}
+\includegraphics[width=0.325\textwidth]{percolation_3}
+\caption{A square lattice graph subject to different percolation rates (node defects). As the failure rate increases, the larger network segregates into a multipartite graph of smaller disjoint islands (denoted by colour).} \label{fig:perc_graph}\index{Percolation topologies}
+\end{figure*}
+
+%
+% Random
+%
+
+\subsection{Random}\index{Random topologies}
+
+We refer to a random graph as being one in which edges between each pair of vertices occur with some probability $p_\mathrm{edge}$. No vertices are removed from the network, although some may have order \mbox{$|v|=0$}, i.e \mbox{$p_\mathrm{vertex}=1$}. This can be thought of as the edge percolation graph of the complete graph $K_{|V|}$. Some examples are shown in Fig.~\ref{fig:random_graph}.
 
 \begin{figure*}[htpb]
 \includegraphics[width=0.325\textwidth]{random_0}
 \includegraphics[width=0.325\textwidth]{random_05}
-\includegraphics[width=0.325\textwidth]{random_1}\\
-\includegraphics[width=0.325\textwidth]{percolation_1}
-\includegraphics[width=0.325\textwidth]{percolation_2}
-\includegraphics[width=0.325\textwidth]{percolation_3}
-\caption{(top) The 15-vertex randomly-connected percolation graph. This is the same as $K_{15}$ in Fig.~\ref{fig:complete_graph}, but where edges are present with probabilities \mbox{$p_\mathrm{edge}=0,0.5,1$} (top to bottom). (bottom) A square lattice graph subject to different percolation rates (node defects). As the failure rate increases, the larger network segregates into smaller disjoint islands (denoted by colour).} \label{fig:perc_graph}
+\includegraphics[width=0.325\textwidth]{random_1}
+\caption{The 15-vertex random graph. This is the same as $K_{15}$ in Fig.~\ref{fig:complete_graph}, but where edges are present with probabilities \mbox{$p_\mathrm{edge}=0,0.5,1$} (left to right).} \label{fig:random_graph}\index{Random topologies}
 \end{figure*}
 
 %
@@ -184,23 +199,48 @@ Furthermore, the real-world internet is not simply a hierarchy of different type
 This hybrid network topology is the norm today in our classical internet, and it is entirely foreseeable that a similar trend will emerge in the future quantum internet as quantum technologies become more mainstream, their networking less well structured, and competing, redundant links are in place.
 
 %
+% Scale-Free Networks
+%
+
+\subsection{Scale-free networks}\index{Scale-free networks}\label{sec:scale_free_networks}
+
+Scale-free networks are not defined as obeying a specific topological structure, but rather as following a particular statistical distribution in the connectedness of their nodes. Specifically, the probability distribution function\index{Probability distribution function} for the order of vertices roughly follows a Pareto distribution or power law\index{Power law},
+\begin{align}\label{eq:pareto_dist}
+	P(k) \sim k^{-\gamma},
+\end{align}
+where $P(k)$ is the probability of a vertex having order $k$ (up to normalisation), and \mbox{$\gamma>1$}. Most commonly \mbox{$2\leq\gamma\leq 3$}. Fig.~\ref{fig:power_law} illustrates this scaling behaviour for different power coefficients.
+
+\begin{figure}[htpb]
+\includegraphics[width=0.475\textwidth]{power_law}
+\caption{Examples of the power law, characteristic of the vertex order distribution in scale-free networks.}\label{fig:power_law}\index{Scale-free networks}\index{Power law}	
+\end{figure}
+
+This distribution is observed empirically in many real-world networks, and as such is more an observation about the typical behaviour of naturally occurring and evolving human-made networks than an explicit definition for their construction. However, owing to this particular statistical behaviour, and the underlying causations for their Pareto distribution, much has been researched and is known about the properties of scale-free networks.
+
+One notable characteristic is their hierarchical structure, with a small number of very highly-connected `hubs'\index{Hubs} at the top of the food chain, which quickly connect onto smaller hubs, and so on down the food chain with decreasing connectivity.
+
+A feature of scale-free networks of especial interest in the context of computer networks is their robustness against node failure. Suppose we constructed a percolated (Sec.~\ref{sec:perc_topol}) instance of a typical scale-free network. Such a network is highly robust against node/edge deletions compared to many other graph constructions, in the sense that a relatively large number of failures must occur to disconnect the graph. This makes the scale-free network characteristic a particularly attractive one from the perspective of the failure-tolerance of the network.
+
+Scale-free networks typically exhibit extremely small diameter (average distance between nodes), scaling as \cite{bib:PhysRevLett.90.058701},
+\begin{align}
+	d = O(\log(\log |V|)).
+\end{align}
+That is, they exhibit (exponentially) smaller diameter than tree graphs (which already exhibit only logarithmic depth). Thus, expanding the network (in a manner consistent with the model) by adding a moderate number of new nodes effectively leaves graph diameter unchanged -- the graph diameter is virtually a constant under modest evolution.
+
+%
 % The Internet Web-Graph
 %
 
 \subsection{The internet web-graph} \index{Internet web-graph}
 
-Of course, all the topological structures described until now are in-principle constructs. Of most relevance is the \textit{Web-graph}, the graph of the actual internet (or some other real-world network). Fig.~\ref{fig:webgraph} illustrates some example web-graphs. The combination of random, densely and sparsely connected, and tree structures, and its clear hierarchy are all evident. This encourages our intuition of the different types of structures present in realistic networks.
+Of course, all the topological structures described until now are in-principle constructs. Of most relevance is the \textit{internet web-graph}, the graph of the actual internet (or some other real-world network).
+
+Fig.~\ref{fig:webgraph} illustrates some example web-graphs, constructed from subsets of data from the actual internet. The combination of random, densely and sparsely connected, and tree structures, and its clear hierarchy are all evident. This encourages our intuition of the different types of structures present in realistic networks.
 
 \begin{figure*}[htpb]
 \includegraphics[width=0.481\textwidth]{webgraph_1}
 \includegraphics[width=0.47\textwidth]{webgraph_2}
-\caption{Examples of real-world web-graphs of the internet, capturing their high-level random tree-like structure. Graphics attributed to the Center for Applied Internet Data Analysis (CAIDA), \texttt{\href{http://www.caida.org}{http://www.caida.org}}.} \label{fig:webgraph}
+\caption{Examples of real-world web-graphs of the internet, capturing their high-level random tree-like structure. Graphics attributed to the Center for Applied Internet Data Analysis (CAIDA), \texttt{\href{http://www.caida.org}{http://www.caida.org}}.}\index{Internet web-graph} \label{fig:webgraph}
 \end{figure*}
 
-%
-% Scale-Free Networks
-%
-
-\subsection{Scale-free networks}
-
-\comment{To do}
+The internet web-graph has been observed to be a scale-free network (Sec.~\ref{sec:scale_free_networks}), observing its power law distribution in node connectivity, as per Eq.~(\ref{eq:pareto_dist}).
