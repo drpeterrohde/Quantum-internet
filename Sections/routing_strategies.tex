@@ -4,7 +4,7 @@
 
 \section{Routing strategies} \label{sec:strategies} \index{Routing strategies}
 
-In Sec.~\ref{sec:costs} we introduced the notion of network costs, strategies for allocating network resources in Sec.~\ref{sec:route_strats}, and a general formalism for optimising strategies so as to minimise costs in Sec.~\ref{sec:strat_opt}. In this section we present some meaningful example strategies and associated pseudo-code fragments, illustrating the implementation of various aspects of strategies of practical real-world interest.
+\dropcap{I}{n} Sec.~\ref{sec:costs} we introduced the notion of network costs, strategies for allocating network resources in Sec.~\ref{sec:route_strats}, and a general formalism for optimising strategies so as to minimise costs in Sec.~\ref{sec:strat_opt}. In this section we present some meaningful example strategies and associated pseudo-code fragments, illustrating the implementation of various aspects of strategies of practical real-world interest.
 
 %
 % Single User
@@ -15,8 +15,9 @@ In Sec.~\ref{sec:costs} we introduced the notion of network costs, strategies fo
 Let us begin our discussion of strategies by considering the simplest case of just a single user on the network. Consider the graph shown in Fig.~\ref{fig:simp_route_opt}. This is the same example used earlier, but now the edges have been weighted by some arbitrary cost metric. There are four routes from $A$ to $B$. All have cost \mbox{$c=3$} except the route indicated by the red arrow, which has cost \mbox{$c=2$}. Clearly the latter is optimal in terms of cost minimisation, and any shortest-path algorithm applied between $A$ and $B$ will accurately come to that conclusion. Thus, single-user networks are very trivial to optimise, and there is no distinction between \textsc{Local} and \textsc{Global} strategies.
 
 The very trivial algorithm for this route finding is shown in Alg.~\ref{alg:single_user}, where the \texttt{ShortestPath()} function could be any of the existing, well-known shortest path algorithms (Sec.~\ref{sec:shortest_path}).
-\begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{table}[htpb]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{ 
 function Strategy.SingleUser(Packets):
 \begin{enumerate}
     \item for(packet$\in$Packets) \{
@@ -29,7 +30,8 @@ function Strategy.SingleUser(Packets):
     \setlength{\itemindent}{0in}
     \item \}
     \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{For a single user, a simple shortest-path algorithm necessarily finds the optimal route, as there is no potential for packet collisions or competition for network resources.} \label{alg:single_user}
 \end{table}
 
@@ -45,10 +47,10 @@ Let us assume there are just two properties of interest when deciding strategies
 
 To define our net cost measure, we combine $c_1$ and $a_1$ according to,
 \begin{align}
-\mathcal{S} : f_\text{net}(\vec{c}) = \left\{
+\mathcal{S} : f_\mathrm{net}(\vec{c}) = \left\{
 \begin{array}{l l}
-c_1 & \quad \text{if}~ a_1>0 \\
-\infty & \quad \text{if}~~ a_1=0 \\
+c_1 & \quad \mathrm{if}~ a_1>0 \\
+\infty & \quad \mathrm{if}~~ a_1=0 \\
 \end{array} \right..
 \end{align}
 That is, provided bandwidth is available, the link will have the dollar cost $c_1$. If no bandwidth is available, the cost is infinite, thereby removing the respective link from the graph.
@@ -66,7 +68,7 @@ Suppose the \mbox{$A_2\to B_2$} route were optimised first. We would choose $R_2
 
 If, however, the \mbox{$A_1\to B_1$} were optimised first, choosing $R_3$, then $R_2$ would be prohibited once the bandwidth attributes were updated, and the second best option, $R_1$, would be chosen. Now both communications could take place simultaneously. So we see that the outcomes of \textsc{Local} optimisations needn't always be consistent or unique. Rather, they can be highly dependent upon circumstantial issues, such as the arbitrary order in which routes are chosen for optimisation.
 
-\begin{figure}[!htb]
+\begin{figure}[htpb]
 \includegraphics[width=0.47\textwidth]{conflict}
 \caption{A simple network with two competing pairs of senders and receivers, \mbox{$A_1\to B_1$} and \mbox{$A_2\to B_2$}. Edges are labelled by \mbox{$\{b,d\}$}, where $b$ is the bandwidth attribute of the link (i.e number of states that can be communicated simultaneously), and $d$ is the cost metric associated with the link, e.g loss in dB. (blue line) $R_1$ and $R_2$ are two routes from $A_2\to B_2$. Either of these routes could be declared optimal, depending on the choice of cost function. For a trivial additive cost function, $R_2$ would be declared optimal. (red lines) $R_3$ is the optimal route from \mbox{$A_1\to B_1$}.} \label{fig:conflict}
 \end{figure}
@@ -75,7 +77,7 @@ Generalising this to any number of users is a straightforward extension to the r
 
 In the upcoming sections we discuss multi-user strategies in more detail. None of these are true \textsc{Global} strategies, but nonetheless address some of the problems facing \textsc{Local} strategies mentioned above.
 
-Truly \textsc{Global} strategies could employ, for example, the vehicle routing problem (Sec.~\ref{sec:VRP}) or vehicle rescheduling problem (Sec.~\ref{sec:VRSP}) algorithms. However, both of these are \textbf{NP}-hard\index{\textbf{NP} \& \textbf{NP}-complete} in general. Thus, the approximation heuristics to be discussed in the following sections are highly applicable.
+Truly \textsc{Global} strategies could employ, for example, the vehicle routing problem (Sec.~\ref{sec:VRP}) or vehicle rescheduling problem (Sec.~\ref{sec:VRSP}) algorithms. However, both of these are \textbf{NP}-hard\index{NP \& NP-complete} in general. Thus, the approximation heuristics to be discussed in the following sections are highly applicable.
 
 %
 % Round Robin
@@ -85,8 +87,9 @@ Truly \textsc{Global} strategies could employ, for example, the vehicle routing 
 
 Perhaps the simplest and most elegant multi-user scheduling strategy is to borrow from the idea of time-division multiplexing for preemptive multitasking employed by UNIX operating systems. Here we simply put all live packets in a list, and go through the list, one-by-one, giving each packet an equal time-share of network resources, independent of costs. The algorithm for this is shown in Alg.~\ref{alg:round_robin}.
 
-\begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{table}[htpb]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function Strategy.RoundRobin(Packets):
 \begin{enumerate}
     \item for(packet$\in$Packets) \{
@@ -98,7 +101,8 @@ function Strategy.RoundRobin(Packets):
         \item packet.RoutingQueue.Push(shortestRoute)
     \setlength{\itemindent}{0in} \}
     \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{In the \textsc{Round Robin} strategy we simply iterate through the list of active packets, with no regard for any metrics, or conflicts between them. Rather, we strive for perfect time-sharing equality, and every packet entirely ignores the actions of all other packets, performing a completely selfish optimisation strategy.} \label{alg:round_robin}
 \end{table}
 The \textsc{Round Robin} strategy can be considered base skeleton code for more sophistic algorithms to build upon, simply by reordering the packet queue.
@@ -135,8 +139,9 @@ The \textsc{Random} strategy overcomes one key problem facing any \textsc{Local}
 
 It isn't just the order in which routes are chosen, which creates imbalance between users. The costs and attributes of the routes themselves is inevitably biased more in favour of some users than others. To accommodate this we now introduce the \textsc{Cost Priority} strategy. Here, rather than prioritising packets on a random basis, or according to a fixed, predetermined priority attribute, we do so according to their net accumulated cost. Those who have accumulated the highest cost will subsequently be treated with highest priority. This strategy effectively introduces a negative feedback loop into resource allocation, creating a self-regulating (and hopefully stable!) time-multiplexed packet-switched network. The pseudo-code for the \textsc{Cost Priority} strategy is shown in Alg.~\ref{alg:cost_prior_alg}.
 
-\begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{table}[htpb]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function Strategy.CostPriority(Packets):
 \begin{enumerate}
     \item packetsAndCosts = []
@@ -158,8 +163,9 @@ function Strategy.CostPriority(Packets):
     \setlength{\itemindent}{0in}
     \item \}
     \item $\Box$
-\end{enumerate}}}}
-\caption{The \textsc{Cost Priority} strategy scheduling algorithm that gives highest routing priority to \textsc{Packets} with the highest accumulated cost (i.e which have suffered the most). The as-yet undefined \texttt{costFunction()}, which refers to $f_\text{cost}$ from Eq.~(\ref{eq:net_cost_R}), is where the details of the priority decisions are made, which could be entirely arbitrary. In this example, the shortest route is recalculated at each step, based on the expectation that network metrics are dynamic.} \label{alg:cost_prior_alg}
+\end{enumerate}}
+\end{mdframed}
+\caption{The \textsc{Cost Priority} strategy scheduling algorithm that gives highest routing priority to \textsc{Packets} with the highest accumulated cost (i.e which have suffered the most). The as-yet undefined \texttt{costFunction()}, which refers to $f_\mathrm{cost}$ from Eq.~(\ref{eq:net_cost_R}), is where the details of the priority decisions are made, which could be entirely arbitrary. In this example, the shortest route is recalculated at each step, based on the expectation that network metrics are dynamic.} \label{alg:cost_prior_alg}
 \end{table}
 
 This is an example of a \textsc{Greedy} optimisation algorithm, which attempts to optimise routing by always optimising the most desperate packets first, in descending order down to the least. It is well-known that \textsc{Greedy} algorithms often do not find global optima. Nonetheless, this approach improves on the previous multi-user protocols.
@@ -171,16 +177,16 @@ There are many users on the network, with many active packets at any give time, 
 Let us define an example \textsc{Cost Priority} strategy using the following:
 \begin{itemize}
 \item \textsc{Latency} cost: How long has the packet has been in transit for? This is actually a very general cost metric, since any other cost metric measured in units per time will be directly proportional to this metric. That is, loss, fidelity, purity, efficiency, and so on, all mirror this metric when expressed on a decibel scale. Of course, the same strategy could have easily been applied to any other cost metric.
-\item \textsc{Blackout} attribute: Is our unreliable link actually working right now? A given link will have probability $p_\text{op}$ of being operational at any given time, chosen independently for each link at each clock-cycle. The \texttt{Attributes.Update()} function from Alg.~\ref{alg:transport_alg} is responsible for implementing this.
-\item \mbox{\textsc{Cost Function}} ($f_\text{cost}$, \texttt{costFunction()} in Alg.~\ref{alg:cost_prior_alg}): The strategy must make sensible decisions based upon only the above two parameters. Because of the previously mentioned generality of the \textsc{Latency} metric, we would like the net cost to directly reflect this metric, but only of course, if the link is operational. If it is not, then that link must be ruled out entirely by assigning it an infinite cost. Thus, we simply choose,
+\item \textsc{Blackout} attribute: Is our unreliable link actually working right now? A given link will have probability $p_\mathrm{op}$ of being operational at any given time, chosen independently for each link at each clock-cycle. The \texttt{Attributes.Update()} function from Alg.~\ref{alg:transport_alg} is responsible for implementing this.
+\item \mbox{\textsc{Cost Function}} ($f_\mathrm{cost}$, \texttt{costFunction()} in Alg.~\ref{alg:cost_prior_alg}): The strategy must make sensible decisions based upon only the above two parameters. Because of the previously mentioned generality of the \textsc{Latency} metric, we would like the net cost to directly reflect this metric, but only of course, if the link is operational. If it is not, then that link must be ruled out entirely by assigning it an infinite cost. Thus, we simply choose,
 \begin{align}
-\mathcal{S} : f_\text{cost}(c,a) = \left\{
+\mathcal{S} : f_\mathrm{cost}(c,a) = \left\{
 \begin{array}{l l}
-c & \quad \text{if}~ a=\text{\texttt{True}} \\
-\infty & \quad \text{if}~ a=\text{\texttt{False}} \\
+c & \quad \mathrm{if}~ a=\mathrm{\texttt{True}} \\
+\infty & \quad \mathrm{if}~ a=\mathrm{\texttt{False}} \\
 \end{array} \right..
 \end{align}
-Note that different packets could be associated with different net cost functions, $f_\text{net}$, to accommodate for the different QoS requirements of different users and messages.
+Note that different packets could be associated with different net cost functions, $f_\mathrm{net}$, to accommodate for the different QoS requirements of different users and messages.
 \end{itemize}
 
 In other words, the net cost is taken directly from the underlying cost metric, and modulated by an attribute, yielding a net cost for each packet, which is used to determine which packets receive priority.
@@ -195,8 +201,9 @@ This provides us with a simple illustration of how costs and attributes can comp
 
 In some cases, end-user applications may have strict QoS constraints associated with any data they receive. For example, in a time-critical enterprise, say high-frequency trading, receiving information a millisecond too late is worthless, and it would be best to discard the out of date information to free up bandwidth for the next round of information. Alternately, if the fidelity of a state is required to strictly fall within a fault-tolerance threshold, it will be useless if the threshold is violated. In such a context, the \textsc{Strategy} will apply hard boundaries on QoS metrics, discarding anything violating it, after which some other \textsc{Strategy} is applied. The algorithm is summarised in Alg.~\ref{alg:all_or_nothing}.
 
-\begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{table}[htpb]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function Strategy.AllOrNothing(Packets, threshold):
 \begin{enumerate}
     \item for(packet$\in$Packets) \{
@@ -213,7 +220,8 @@ function Strategy.AllOrNothing(Packets, threshold):
     \item \}
     \item Strategy.SomeOtherStrategy(Packets)
     \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{The \textsc{All or Nothing} strategy. If the net cost of a packet exceeds a certain \texttt{threshold}, it is discarded outright, and the sender and recipient notified.} \label{alg:all_or_nothing}
 \end{table}
 
@@ -231,8 +239,9 @@ These scenarios are handled by flow network optimisation algorithms, of which th
 
 The routing strategy is very straightforward, shown in Alg.~\ref{alg:opt_flow}, since the \textsc{Global} flow-optimisation algorithm completely specifies the entire configuration of routes through the network.
 
-\begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{table}[htpb]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function Strategy.OptimalFlow(Packets):
 \begin{enumerate}
     \item routes = Packets.OptimalFlowRoutes()
@@ -243,6 +252,7 @@ function Strategy.OptimalFlow(Packets):
                 \setlength{\itemindent}{0in} 
     \item \}
     \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{A generic optimal flow routing strategy. \textsc{Packets} is the array of all packets that ought to be transmitted simultaneously, which are collectively optimised using some flow optimisation algorithm before undergoing transport.} \label{alg:opt_flow}
 \end{table}

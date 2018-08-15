@@ -2,11 +2,11 @@
 % Quality of Service
 %
 
-\section{Quality of service}\index{Quantum error correction}\index{Quality of service}\label{sec:QOS_chap}
+\section{Quality of service}\index{Quantum error correction (QEC)}\index{Quality of service (QoS)}\label{sec:QOS_chap}
 
-As discussed previously in Sec.~\ref{sec:QOS}\index{Quality of service}, quality of service is a major consideration in any quantum network. If we are transmitting quantum states over a quantum channel, there will inevitably be deterioration in the form of decoherence, loss, and other undesirable effects we wish to mitigate. In this section we review some of the essential quantum error correction (QEC) techniques that can be used to achieve this.
+\dropcap{A}{s} discussed previously in Sec.~\ref{sec:QOS}\index{Quality of service (QoS)}, quality of service is a major consideration in any quantum network. If we are transmitting quantum states over a quantum channel, there will inevitably be deterioration in the form of decoherence, loss, and other undesirable effects we wish to mitigate. In this section we review some of the essential quantum error correction (QEC) techniques that can be used to achieve this.
 
-Different error correcting codes have different error correcting power, and different resource overheads, which must be taken into consideration. The appropriate choice of code will largely be determined by the final \textsc{Services \& Applications} layer. For some simple quantum communications protocols, simple error correction (or even no error correction) may suffice. A full-fledged quantum computation on the other hand will require error rates within a fault-tolerance threshold\index{Fault-tolerance threshold}.
+Different error correcting codes have different error correcting power, and different resource overheads, which must be taken into consideration. The appropriate choice of code will largely be determined by the final \textsc{Services \& Applications} layer. For some simple quantum communications protocols, simple error correction (or even no error correction) may suffice. A full-fledged quantum computation on the other hand will require error rates within a fault-tolerance threshold\index{Fault-tolerance thresholds}.
 
 %
 % Entanglement Purification
@@ -18,49 +18,103 @@ As we will later see in Sec.~\ref{sec:ent_ultimate}, Bell pairs are a ubiquitous
 
 Entanglement purification (or distillation) is a process by which two imperfect distributed Bell pairs can be condensed into a single Bell pair of higher quality (as measured by a fidelity metric, Sec.~\ref{sec:fid_metric}).
 
-More concretely, we distribute two Bell pairs of fidelity $F$ between Alice and Bob. Let us assume a dephasing error model in this instance, in which case the imperfect Bell pairs are of the form,
+More concretely, we distribute two Bell pairs of fidelity $F$ between Alice and Bob. Let us assume a bit-flip error model in this instance\footnote{The same protocol can be employed to correct against phase-flip errors by operating in a Hadamard-rotated basis.}, in which case the imperfect Bell pairs are of the form,
 \begin{align}
-\hat\rho^F_{A,B} = F\ket{\Phi^+}\bra{\Phi^+} + (1-F)\hat{X}_1\ket{\Phi^+}\bra{\Phi^+}\hat{X}_1,	
+\hat\rho^F_{A,B} &= F\ket{\Phi^+}\bra{\Phi^+} + (1-F)\hat{X}_1\ket{\Phi^+}\bra{\Phi^+}\hat{X}_1 \nonumber \\
+&= F\ket{\Phi^+}\bra{\Phi^+} + (1-F)\ket{\Psi^+}\bra{\Psi^+},
 \end{align}
-which corresponds to a bit-flip error model (Sec.~\ref{sec:dephasing_error}). Alice and Bob then perform their entanglement purification protocol -- operations to reduce them to a single Bell pair of higher fidelity,
+That is, we have a mixture of,
 \begin{align}
-\mathcal{E}_\text{purif}(\hat\rho^{F_\text{in}}_{A,B} \otimes \hat\rho^{F_\text{in}}_{A,B}) \to \hat\rho^{F_\text{out}}_{A,B},
+\ket{\Phi^+} = \frac{1}{\sqrt{2}}(\ket{0}_A\ket{0}_B + \ket{1}_A\ket{1}_B),	
+\end{align}
+with probability $F$, and,
+\begin{align}
+\ket{\Psi^+} = \frac{1}{\sqrt{2}}(\ket{0}_A\ket{1}_B + \ket{1}_A\ket{0}_B),	
+\end{align}
+with probability \mbox{$1-F$}. The goal is to `filter' out the latter of these.
+x 
+Alice and Bob then perform their entanglement purification protocol -- operations to reduce them to a single Bell pair of higher fidelity,
+\begin{align}
+\mathcal{E}_\mathrm{purif}(\hat\rho^{F_\mathrm{in}}_{A,B} \otimes \hat\rho^{F_\mathrm{in}}_{A,B}) \to \hat\rho^{F_\mathrm{out}}_{A,B},
 \end{align}
 where,
 \begin{align}
-F_\text{out}>F_\text{in}.
+F_\mathrm{out}>F_\mathrm{in}.
 \end{align}
 
-The purification process $\mathcal{E}_\text{purif}$ is realised very simply by Alice and Bob both performing Bell projections (Sec.~\ref{sec:bell_proj}) on their two qubits, classically communicating their measurement outcomes, and performing appropriate local corrections. This is best illustrated by example.
+The purification process $\mathcal{E}_\mathrm{purif}$ is realised very simply by Alice and Bob both performing parity measurements\index{Bell measurements} on their two qubits, whose measurement outcomes indicate whether the two qubits were equal ($+$) or different ($-$) -- their parity. These are easily implemented using CNOT gates, using the construction shown in Fig.~\ref{fig:parity_meas}, which implement the projectors,
+\begin{align}\index{Bell measurements}\index{Parity projectors}
+\hat\Pi^+ &= \ket{0,0}\bra{0,0} + \ket{1,1}\bra{1,1}, \nonumber \\
+\hat\Pi^- &= \ket{0,1}\bra{0,1} + \ket{1,0}\bra{1,0}.
+\end{align}
 
-For this model, we will assume our Bell projections destroy the first of their two input qubits, while the second one remains as the output. Then two such projections project a four-qubit state down to a two-qubit state as desired.
+They complete the protocol by classically communicating their measurement outcomes, and performing appropriate local corrections.
 
-Suppose there was no error. Then the input state was,
+\begin{figure}[htpb]
+	\begin{align}
+		\Qcircuit @C=.7em @R=.4em @! {
+		\lstick{} & \qw & \targ & \meter \\
+		\lstick{} & \qw & \ctrl{-1} & \qw
+		} \nonumber
+	\end{align}
+	\caption{Construction of a parity measurement circuit using a single CNOT gate and a single-qubit measurement. The measurement outcome indicates whether the two input qubits were the same (\mbox{$\ket{0}\ket{0}$}, \mbox{$\ket{1}\ket{1}$}) or different (\mbox{$\ket{0}\ket{1}$}, \mbox{$\ket{1}\ket{0}$}). See Sec.~\ref{sec:bell_proj} for a simple linear optics construction for this operation.}\label{fig:parity_meas}\index{Bell measurements}
+\end{figure}
+
+Two such parity projections project a 4-qubit state down to a 2-qubit state. The full circuit for this entanglement purification protocol is shown in Fig.~\ref{fig:ent_purif_circ}.
+
+\begin{figure}[htpb]
+\includegraphics[width=0.39\textwidth]{entanglement_purification}
+\caption{Protocol for entanglement purification of two noisy Bell pairs (blue) into a single less noisy Bell pair. Not shown are trivial single-qubit local corrections that may need to be made, depending upon measurement outcomes.} \label{fig:ent_purif_circ}\index{Entanglement purification protocol}
+\end{figure}
+
+Let us illustrate the operation of the circuit by example of different possible input states.
+
+Suppose there were no errors, the ideal case. Then the input state was,
 \begin{align}
-\ket\psi_\text{in} &= \ket{\Phi^+}\bra{\Phi^+} \otimes \ket{\Phi^+}\bra{\Phi^+}\\
+\ket\psi_\mathrm{in} &= \ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4}\\
 &= \frac{1}{2}(\ket{0}_1\ket{0}_2+\ket{1}_1\ket{1}_2)(\ket{0}_3\ket{0}_4+\ket{1}_3\ket{1}_4).\nonumber
 \end{align}
-Now upon inspection it is evident that if a Bell projection between Alice's two qubits (1 and 3) yields the $\ket{\Phi^+}$ outcome, Bob's projection (2 and 4) must also yield $\ket{\Phi^+}$. Similarly, whatever Bell outcome Alice measures, Bob will measure the same outcome. Upon classically communicating that they measured consistent outcomes, they are satisfied the final state is error-free, and it is.
+Upon parity measurement we obtain,
+\begin{align}
+\hat\Pi^+_{1,3} \ket{\Phi^+}_{1,2}\ket{\Phi^+}_{3,4} &= \ket{\Phi^+}_{2,4},\nonumber \\
+\hat\Pi^-_{1,3} \ket{\Phi^+}_{1,2}\ket{\Phi^+}_{3,4} &= \hat{X}_2\ket{\Phi^+}_{2,4},
+\end{align}
+and we obtain the desired output Bell pair (with an $\hat{X}$ correction in the case of the odd-parity outcome).
+
+Note that if both qubits from one Bell pair are subject to bit-flips, this is equivalent to no error, since,
+\begin{align}
+	\hat{X}_1\hat{X}_2\ket{\Phi^+}_{1,2}=\ket{\Phi^+}_{1,2}.
+\end{align}
 
 Now suppose there was a bit-flip error on the first qubit of the first pair. Now the input state is,
 \begin{align}
-\ket\psi_\text{in} &= \hat{X}_1 \ket{\Phi^+}\bra{\Phi^+}\hat{X}_1 \otimes \ket{\Phi^+}\bra{\Phi^+}\\
+\ket\psi_\mathrm{in} &= \hat{X}_1 \ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4}\\
 &= \frac{1}{2}(\ket{1}_1\ket{0}_2+\ket{0}_1\ket{1}_2)(\ket{0}_3\ket{0}_4+\ket{1}_3\ket{1}_4).\nonumber
 \end{align}
-Upon performing the Bell measurements as before, suppose Alice measures the $\ket{\Psi^+}$ outcome. Now Bob must measure the $\ket{\Phi^+}$ outcome, and a comparison of measurement outcomes diagnoses this single bit-flip error, which may subsequently be corrected with an additional bit-flip.
-
-In the above two scenarios (no error, or exactly one error), the state is correctable to a perfect Bell pair. What if there are two errors? Consider the input state with bit-flips affecting both Bell pairs. Then,
+Now upon parity measurement we obtain,
 \begin{align}
-\ket\psi_\text{in} &= \hat{X}_1 \ket{\Phi^+}\bra{\Phi^+}\hat{X}_1 \otimes \hat{X}_3\ket{\Phi^+}\bra{\Phi^+}\hat{X}_3\\
+\hat\Pi^+_{1,3} \hat{X}_1\ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4} &= \hat{X}_2\ket{\Phi^+}_{2,4},\nonumber \\
+\hat\Pi^-_{1,3} \hat{X}_1\ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4} &= \ket{\Phi^+}_{2,4},
+\end{align}
+and following correction we achieve a bit-flipped Bell pair.
+
+Finally, with both Bell pairs subject to a single bit-flip,
+\begin{align}
+\ket\psi_\mathrm{in} &= \hat{X}_1\hat{X}_3 \ket{\Phi^+}_{1,2}\ket{\Phi^+}_{3,4} \\
 &= \frac{1}{2}(\ket{1}_1\ket{0}_2+\ket{0}_1\ket{1}_2)(\ket{1}_3\ket{0}_4+\ket{0}_3\ket{1}_4).\nonumber
 \end{align}
-Upon performing the Bell projections, both Alice and Bob are guaranteed to measure the same outcome, as per the error-free case. However this isn't error-free at all since the remaining state is $\ket{\Psi^+}$ not $\ket{\Phi^+}$. That is, the bit-flip error has permeated through to the corrected state.
+Upon performing the parity measurement,
+\begin{align}
+\hat\Pi^+_{1,3} \hat{X}_1\hat{X}_3\ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4} &= \ket{\Phi^+}_{2,4},\nonumber \\
+\hat\Pi^-_{1,3} \hat{X}_1\hat{X}_3\ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4} &= \hat{X}_2\ket{\Phi^+}_{2,4},
+\end{align}
+recovering the expected Bell pair, without an erroneous bit-flip.
 
-Following this example it is evident that our rudimentary entanglement purification protocol can correct at most one bit-flip error. For this reason a mixed state is only correctable if \mbox{$F>1/2$} to begin with. Otherwise errors are more likely to permeate than be corrected, thereby reducing output fidelity.
-
-Similar reasoning as above can be employed to correct against phase-flip errors, and depolarising errors more generally.
-
-In Sec.~\ref{sec:ent_purif} we demonstrate a simple linear optics setup for implementing this, that was subject to experimental demonstration.
+Evidently, the output Bell pair is subject to an unexpected bit-flip iff one of the Bell pairs was subject to a bit-flip error. This yields the output fidelity,
+\begin{align}
+F_\mathrm{out} = \frac{{F_\mathrm{in}}^2}{{F_\mathrm{in}}^2 + (1-F_\mathrm{in})^2},
+\end{align}
+and thus the purification protocol improves fidelity provided that \mbox{$F_\mathrm{out}>F_\mathrm{in}$}, which implies the input fidelity must satisfy \mbox{$F_\mathrm{in}>1/2$}.
 
 %
 % 3-Qubit Code
@@ -72,8 +126,9 @@ The first described QEC\index{Quantum error correction (QEC)} code was the 3-qub
 
 By switching into a Hadamard-rotated basis, the same code could equivalently correct against at most a single phase-flip error (since \mbox{$\hat{H}\hat{X}\hat{H}=\hat{Z}$}).
 
-\begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{
+\begin{table}[htpb]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function ThreeQubitCode($\ket\psi$):
 \begin{enumerate}
 \item Using two CNOT gates, redundantly encode the logical single-qubit state,
@@ -82,7 +137,7 @@ function ThreeQubitCode($\ket\psi$):
 \end{align}
 into the 3-qubit state,
 \begin{align}
-\ket\psi_R &= \hat{\text{CNOT}}_{1,2}\hat{\text{CNOT}}_{1,3}\ket\psi\ket{00} \nonumber \\
+\ket\psi_R &= \hat{\mathrm{CNOT}}_{1,2}\hat{\mathrm{CNOT}}_{1,3}\ket\psi\ket{00} \nonumber \\
 &= \alpha\ket{000}+\beta\ket{111}.
 \end{align}
 \item Independently apply bit-flip channels $\mathcal{E}_X$ to each of the three encoded qubits.
@@ -108,7 +163,7 @@ into the 3-qubit state,
   &          &          &          & & \lstick{\ket{0}} & \qw       & \qw       & \targ    & \meter & \control \cw \cwx
 } \nonumber
 \end{align}
-}}
+\end{mdframed}
 \caption{3-qubit code for protecting against at most a single logical bit-flip error. The doubly-controlled CNOT gates represent parity measurements, \mbox{$n_3=n_1\oplus n_2$}, where $n_i$ represents the value of the $i$th qubit. In a Hadamard-rotated basis, the same circuit may be employed to protect against a single phase-flip error. And by concatenating the two we obtain a 9-qubit code protecting against a single depolarising error (i.e joint bit-flip/phase-flip), which is a universal single-qubit error model.} \label{alg:three_QEC}
 \end{table}
 
@@ -144,21 +199,21 @@ It has been shown that fault-tolerance is possible within the cluster state mode
 
 These codes have been shown to have very favourable fault-tolerance thresholds in terms of both depolarising noise and loss \cite{bib:StaceBarrettDohertyLoss, bib:BarrettStaceFT}, as well as frugal resource overhead compared to traditional concatenated codes. Additionally, loss- and gate-failure-tolerant codes, uniquely applicable to the cluster state model, have been described, with very favourable loss thresholds \cite{bib:Varnava05, bib:RalphHayes05, bib:Duan05}. 
 
-Importantly, topological codes do not require joint measurements across the entire graph state, instead requiring only operations localised to small regions within the graph. Thanks to this, computation using such topological codes can remain distributed\index{Distributed computation} without requiring the entire state to be held locally by a particular host, or requiring full access to the entire state by any particular user. As with cluster states, a large graph can be stitched together from a patchwork of smaller neighbouring graphs.
+Importantly, topological codes do not require joint measurements across the entire graph state, instead requiring only operations localised to small regions within the graph. Thanks to this, computation using such topological codes can remain distributed\index{Distributed quantum computation} without requiring the entire state to be held locally by a particular host, or requiring full access to the entire state by any particular user. As with cluster states, a large graph can be stitched together from a patchwork of smaller neighbouring graphs.
 
-The most common topological code, which we will use here as an example, is the toric code\index{Toric code}, which resides on a lattice graph over the surface of a torus\footnote{As with cluster states, this graph needn't (but could) correspond to a network graph.}. As with cluster states (Sec.~\ref{sec:CSQC}), the toric code is most easily visualised in the stabiliser formalism\index{Stabiliser formalism}, and the toric code is an example of a stabiliser code\index{Stabiliser code} (Sec.~\ref{sec:stab_code}). Consider a rectangular sub-graph of the torus. We place a qubit on each edge (not vertex) of the graph. Now we define two sets of stabiliser operators: \textit{star} ($\hat{S}_+$) and \textit{plaquette} ($\hat{S}_\square$) operators,
+The most common topological code, which we will use here as an example, is the toric code\index{Toric code}, which resides on a lattice graph over the surface of a torus\footnote{As with cluster states, this graph needn't (but could) correspond to a network graph.}. As with cluster states (Sec.~\ref{sec:CSQC}), the toric code is most easily visualised in the stabiliser formalism\index{Stabiliser formalism}, and the toric code is an example of a stabiliser code\index{Stabiliser codes} (Sec.~\ref{sec:stab_code}). Consider a rectangular sub-graph of the torus. We place a qubit on each edge (not vertex) of the graph. Now we define two sets of stabiliser operators: \textit{star} ($\hat{S}_+$) and \textit{plaquette} ($\hat{S}_\square$) operators,
 \begin{align} \index{Surface code stabilisers}\index{Star operator}\index{Plaquette operator}
 	\hat{S}_+(v) &= \prod_{i\in e(v)} \hat{X}_i, \nonumber \\
 	\hat{S}_\square(p) &= \prod_{i\in e(p)} \hat{Z}_i,
 \end{align}
-where $e(v)$ are the edges neighbouring vertex $v$, and $e(p)$ are the edges surrounding plaquette $p$. By definition, the toric code state, $\ket\psi_\text{toric}$, satisfies the stabiliser relations,
+where $e(v)$ are the edges neighbouring vertex $v$, and $e(p)$ are the edges surrounding plaquette $p$. By definition, the toric code state, $\ket\psi_\mathrm{toric}$, satisfies the stabiliser relations,
 \begin{align}
-	\hat{S}_+(v) \ket\psi_\text{toric} &= \ket\psi_\text{toric} \,\forall\, v, \nonumber \\
-	\hat{S}_\square(p) \ket\psi_\text{toric} &= \ket\psi_\text{toric} \,\forall\, p.
+	\hat{S}_+(v) \ket\psi_\mathrm{toric} &= \ket\psi_\mathrm{toric} \,\forall\, v, \nonumber \\
+	\hat{S}_\square(p) \ket\psi_\mathrm{toric} &= \ket\psi_\mathrm{toric} \,\forall\, p.
 \end{align}
 The stabilisers can be visualised graphically as per Fig.~\ref{fig:toric_code}.
 
-\begin{figure*}[!htb]
+\begin{figure*}[htpb]
 	\includegraphics[width=0.47\textwidth]{torus}
 	\includegraphics[width=0.47\textwidth]{toric_code}
 	\caption{Graph representation of the toric QEC code, and its associated stabilisers. The graph resides on a torus (left), while the physical qubits reside on the embedded lattice (right). The star and plaquette stabilisers across all vertices, jointly specify the state of the graph up to two missing degrees of freedom, which encode a single logical qubit. Thus, a logical qubit is encoded jointly across the entire graph, not at any specific vertex. Logical operations are performed via operations following topological paths through the lattice (not shown). The graph may be distributed across multiple hosts for distributed quantum computation.} \label{fig:toric_code}
@@ -172,7 +227,7 @@ Having defined the toric code as such, QEC proceeds in a similar manner to any o
 
 The simplest example of error detection is the scenario where a single bit-flip ($\hat{X})$ error has occurred in the graph. Now exactly two plaquette stabilisers (the ones upon which the respective qubit acts) will yield the $-1$ measurement outcome, instead of the expected $+1$ outcome. These two stabilisers will necessarily be neighbouring ones, overlapping at the qubit where the error took place. Thus, using this geometric reasoning, we are able to identify the location of the single $\hat{X}$ error and subsequently correct it. On the other hand, if there were too many errors, it is possible they could conspire against us to create ambiguity in the geometric argument for the location of the errors. The QEC procedure is illustrated in Fig.~\ref{fig:toric_code}.
 
-\begin{figure}[!htb]
+\begin{figure}[htpb]
 	\includegraphics[width=0.3\textwidth]{toric_code_correction}
 	\caption{QEC of a single bit-flip (top) and phase-flip (bottom) error via measuring two overlapping stabilisers. If there is at most one bit- or phase-flip error, as per this graphic, then upon measuring all the star and plaquette stabilisers, only those whose qubits are affected by the error channel will yield the $-1$ measurement outcome, the others all yielding $+1$. Such an error will affect exactly two stabilisers, whose qubit in common must have been the one affected by the respective error, which can subsequently be corrected since the type of the error and its location are known. Thus, in this example, all of the $\hat{S}_+^{(1)}$, $\hat{S}_+^{(2)}$, $\hat{S}_\square^{(1)}$ and $\hat{S}_\square^{(2)}$ stabilisers will yield $-1$ outcomes for the shown $\hat{X}$ and $\hat{Z}$ errors, whereas any of the remaining (not shown) $\hat{S}_k^{(j)}$ will yield $+1$ outcomes, which uniquely specifies where those errors took place.}\label{fig:toric_corr}	
 \end{figure}
@@ -181,7 +236,7 @@ Importantly, the stabilisers are all defined over geometrically localised neighb
 
 Logical operations similarly have geometric interpretations. Most simply, logical Pauli-$\hat{X}$ and -$\hat{Z}$ gates may be implemented by applying chains of local Pauli operations along topological paths, specifically closed loops around the two different axes of the torus (Fig.~\ref{fig:toric_code_paulis}. These topologies may be deformed, provided that they are topologically equivalent to the desired closed loops, hence the name `topological code'. With more qubits and more elaborate gates, similar topological definitions exist for implementing logical gates on encoded qubits.
 
-\begin{figure}[!htb]
+\begin{figure}[htpb]
 	\includegraphics[width=0.47\textwidth]{torus_paulis}
 	\caption{Implementation of logical Pauli-$\hat{X}$ (\comment{which colour?}) and -$\hat{Z}$ (\comment{which colour?}) operations on a toric code qubit via the application of a chain of local Paulis. The chains must circumnavigate the torus around either axis. Any path topologically equivalent to such a circumnavigation of the torus is sufficient, enabling paths to bypass defects in the lattice.} \label{fig:toric_code_paulis}
 \end{figure}
@@ -206,26 +261,26 @@ Logical operations similarly have geometric interpretations. Most simply, logica
 % Unitary Error Averaging
 %
 
-\subsection{Unitary error averaging} \index{Quantum error correction}\index{Unitary error averaging}\label{sec:error_averaging}
+\subsection{Unitary error averaging} \index{Quantum error correction (QEC)}\index{Unitary error averaging}\label{sec:error_averaging}
 
-Aside from the \textit{active} QoS techniques discussed until now, there is also a recently described \textit{passive} technique that requires no feedforward to operate. This technique, called \textit{unitary error averaging}, is formulated specifically in the linear optical context. It is an open question whether it generalises to other models, such as conventional quantum circuits.
+Aside from the \textit{active} QoS techniques discussed until now, there is also a recently described \textit{passive} technique that requires no feedforward to operate. This technique, called \textit{unitary error averaging} \cite{MarshmanLundRohde}, is formulated specifically in the linear optical context. It is an open question whether it generalises to other models, such as conventional quantum circuits.
 
-Suppose we desire to implement some linear optics unitary network, $\hat{U}_\text{target}$, but our fabrication techniques are imperfect and we instead implement a close approximation to it. How can we overcome this?
+Suppose we desire to implement some linear optics unitary network, $\hat{U}_\mathrm{target}$, but our fabrication techniques are imperfect and we instead implement a close approximation to it. How can we overcome this?
 
-\cite{MarshmanLundRohdeRalph} showed that by using an optical fanout operation, which splits a set of optical modes equally across multiple sets of modes in a type of redundant encoding, and passing each set through an independently manufactured copy of the imperfect unitary, $\tilde{U}_i$, upon post-selection on detecting all photons in the desired output modes, the output state will behave as if it had evolved through a network given by the arithmetic average of each of the imperfect copies of $\hat{U}_\text{target}$,
+\cite{MarshmanLundRohdeRalph} showed that by using an optical fanout\index{Fanout operation} operation, which splits a set of optical modes equally across multiple sets of modes in a type of redundant encoding\footnote{The optical fanout operation effectively maps single-photon states to W-states (Sec.~\ref{sec:W_state_prep})\index{W-states}.}, and passing each set through an independently manufactured copy of the imperfect unitary, $\tilde{U}_i$, upon performing a fan-in to recombine the modes, and post-selection on detecting all photons in the desired output modes, the output state will behave as if it had evolved through a network given by the arithmetic average of each of the imperfect copies of $\hat{U}_\mathrm{target}$,
 \begin{align}
-\hat{U}_\text{av} = \frac{1}{M}\sum_{i=1}^M \tilde{U}_i.	
+\hat{U}_\mathrm{av} = \frac{1}{M}\sum_{i=1}^M \tilde{U}_i.	
 \end{align}
 A schematic for the optical circuit is shown in Fig.~\ref{fig:error_av_circuit}.
 
-\begin{figure}[!htb]
+\begin{figure}[htpb]
 \includegraphics[width=0.47\textwidth]{unitary_error_averaging}
-\caption{Protocol for error correction via unitary error averaging. Here our computation resides across \mbox{$N=2$} modes, and there are \mbox{$M=2$} redundant copies of the manufactured unitary, which straightforwardly generalises to arbitrary $M$ and $N$. A fanout operation splits the wave amplitudes from the set of $N$ input modes uniformly across $M$ sets of $N$ modes. Each set of $N$ evolves through an independent copy of the manufactured imperfect unitary, $\tilde{U}_i$. A reverse fanout operation recollects the bundles of modes. Upon post-selecting upon detecting all photons within the first $N$ modes, and none in the other ancillary modes, the state is projected into the subspace as if it had been acted upon by the arithmetic average of the imperfect unitaries.} \label{fig:error_av_circuit}	
+\caption{Protocol for error correction via unitary error averaging. Here our computation resides across \mbox{$N=2$} modes, and there are \mbox{$M=2$} redundant copies of the manufactured unitary, which straightforwardly generalises to arbitrary $M$ and $N$. A fanout operation splits the wave amplitudes from the set of $N$ input modes uniformly across $M$ sets of $N$ modes. Each set of $N$ evolves through an independent copy of the manufactured imperfect unitary, $\tilde{U}_i$. A reverse fanout operation recollects the bundles of modes. Upon post-selecting upon detecting all photons within the first $N$ modes, and none in the other ancillary modes, the state is projected into the subspace as if it had been acted upon by the arithmetic average of the imperfect unitaries. If photons are detected in the error modes, our logical state has effectively suffered photon loss and has been corrupted.} \label{fig:error_av_circuit}	
 \end{figure}
 
-Note that the protocol doesn't require that the $M$ instances of the unitary be held locally. They operate independently in parallel and could therefore be distributed, with the independent copies held by entirely different parties in distant locations.\index{Distributed computation}\index{Parallelisation}
+Note that the protocol doesn't require that the $M$ instances of the unitary be held locally. They operate independently in parallel and could therefore be distributed, with the independent copies held by entirely different parties in distant locations (Sec.~\ref{sec:error_av_parallel}).\index{Distributed quantum computation}\index{Parallelisation}
 
-The protocol is necessarily non-deterministic, since sometimes photons will be measured in the error modes, signalling that the output state has been projected onto an erroneous subspace. However, when post-selection succeeds we have effectively evolved via the averaged operator, which statistically ought to more closely approximate $\hat{U}_\text{target}$ than the individual $\tilde{U}_i$.
+The protocol is necessarily non-deterministic, since sometimes photons will be measured in the error modes, signalling that the output state has been projected onto an erroneous subspace. Thus, this is a heralded error correction scheme. When post-selection succeeds we have effectively evolved via the averaged operator, which statistically ought to more closely approximate $\hat{U}_\mathrm{target}$ than individual $\tilde{U}_i$.
 
 %
 % Qubit Loss Codes
@@ -243,11 +298,10 @@ These manifestations arise naturally in different architectural contexts. For ex
 
 It turns out that the distinction between these two modes of error can have a significant effect on the error correction thresholds of QECs. Specifically, a located error effectively gives us an additional classical bit of information diagnosing that an error took place, which we are not privy to for unlocated errors. This additional bit of information can be exploited by QEC codes to improve thresholds for located errors.
 
-In \cite{RohdeHaselgrove} a derivation of a generalisation of the quantum Hamming bound\index{Quantum Hamming bound} was presented, where the number of located and unlocated errors were treated as independent parameters. They found that for non-degenerate codes the Hamming bound allows exactly twice as many located as unlocated errors. Specifically, for $t_l$ located errors and $t_u$ unlocated errors in an $n$-qubit non-degenerate code encoding $k$ logical qubits, QEC is possible provided that the number of errors satisfied,
+In \cite{RohdeHaselgrove} a derivation of a generalisation of the quantum Hamming bound\index{Quantum Hamming bound} for non-degenerate\footnote{In a non-degenerate code, all correctable errors map the codeword to orthogonal states. For degenerate codes\index{Degenerate codes} multiple distinct errors can map the codeword to the same state. The Hamming bound exploits the non-degeneracy using a counting or `pigeonholing' argument to count correctable errors.} QEC codes\index{Non-degenerate codes} was presented, where the number of located and unlocated errors were treated as independent parameters. They found that for non-degenerate codes the Hamming bound allows exactly twice as many located as unlocated errors. Specifically, for $t_l$ located errors and $t_u$ unlocated errors in an $n$-qubit non-degenerate code encoding $k$ logical qubits, QEC is possible provided that the number of errors satisfied,
 \begin{align}
 \sum_{i=0}^{t_u + \lfloor t_l/2 \rfloor} \binom{n}{i}3^i 2^k \leq 2^n.
 \end{align}
-\comment{Explain Hamming bound, potentially in footnote. Explain what degenerate and non-degenerate codes are.}
 
 Subsequently, using surface codes \cite{bib:StaceBarrettDohertyLoss} arrived at the similar conclusion that QEC codes are more robust against located than unlocated errors.
 
@@ -323,11 +377,11 @@ This idea, although very simple, is very powerful, since it is a completely pass
 
 An alternate mechanism by which errors could be introduced into our system is via coupling to an external environment (for example via an electromagnetic field) introducing a persistent evolution of our qubits, which is slow-moving compared to the rate at which the implemented computation is evolving the system. We can model this as a joint system/environment Hamiltonian of the form,
 \begin{align}\label{eq:dyn_dec_ham}
-\hat{H}_\text{total} = \lambda_\text{comp}\hat{H}_\text{comp} + \lambda_\text{env}\hat{H}_\text{env} + \lambda_\text{int}\hat{H}_\text{int},	
+\hat{H}_\mathrm{total} = \lambda_\mathrm{comp}\hat{H}_\mathrm{comp} + \lambda_\mathrm{env}\hat{H}_\mathrm{env} + \lambda_\mathrm{int}\hat{H}_\mathrm{int},	
 \end{align}
-where the different components represent, in order, the Hamiltonians of the: total joint system; quantum computer (or system of interest); environment; interaction between system and environment. We are specifically operating in the regime where \mbox{$\lambda_\text{int}\ll\lambda_\text{comp}$}, such that the computation is the dominant term in the evolution and the environmental coupling can be treated as a small perturbation from the desired evolution.
+where the different components represent, in order, the Hamiltonians of the: total joint system; quantum computer (or system of interest); environment; interaction between system and environment. We are specifically operating in the regime where \mbox{$\lambda_\mathrm{int}\ll\lambda_\mathrm{comp}$}, such that the computation is the dominant term in the evolution and the environmental coupling can be treated as a small perturbation from the desired evolution.
 
-The goal of dynamical decoupling is to minimise the influence of the system/environment interaction term, $\hat{H}_\text{int}$, by manipulating the system in such a way that this term continuously cancels itself out over time.
+The goal of dynamical decoupling is to minimise the influence of the system/environment interaction term, $\hat{H}_\mathrm{int}$, by manipulating the system in such a way that this term continuously cancels itself out over time.
 
 Let us illustrate how this can be achieved using a simple example, whereby a single-qubit system couples with an environment which introduces a slow, unknown phase evolution. Discretising time, we can write this phase evolution as a Pauli $Z$-rotation on the Bloch sphere\index{Bloch sphere},
 \begin{align}
@@ -351,18 +405,18 @@ That is, applying a bit-flip to a qubit, followed by an arbitrary phase-rotation
 
 Now if we proceed for two time-steps, once bit-flipped and another not, we have,
 \begin{align}
-\underbrace{\hat{Z}(\theta)}_{\text{forward}}\cdot\underbrace{[\hat{X}\hat{Z}(\theta)\hat{X}]}_{\text{reverse}} = \hat{\mathbb{I}},
+\underbrace{\hat{Z}(\theta)}_{\mathrm{forward}}\cdot\underbrace{[\hat{X}\hat{Z}(\theta)\hat{X}]}_{\mathrm{reverse}} = \hat{\mathbb{I}},
 \end{align}
 and the unknown phase-rotation has been eliminated. The sequence is illustrated on the Bloch sphere\index{Bloch sphere} in Fig.~\ref{fig:bloch_sphere_dyn_dec}.
 
-\begin{figure*}[!htb]
+\begin{figure*}[htpb]
 \includegraphics[width=\textwidth]{bloch_sphere_dyn_dec}
 \caption{Bloch sphere representation of a sequence to dynamically decouple an unknown $\hat{Z}$ rotation from a qubit. (a) Blue dot represents the initial state. (b) The state undergoes an unknown $\hat{Z}(\theta)$ rotation. (c) A bit-flip ($\hat{X}$) flips the Bloch sphere upside down. (d) Waiting for the same time as before such that the same unknown $\hat{Z}$-rotation takes place, the state ends up in its initial state, independent of the $\hat{Z}$-rotation angle $\theta$, but assuming it was the same on both occasions in (b) and (d).} \label{fig:bloch_sphere_dyn_dec}	
 \end{figure*}
 
 The coupling to the external environment and the qubit state needn't be constant over time, but could be time-varying. In this instance, it is essential that the decoupling control sequence of bit-flip operations be much faster than the rate at which both the phase-rotations and computational operation are changing, such that consecutive unknown phase-rotations are approximately equal and thereby almost perfectly cancel. This rapid control sequence is sometimes referred to as `bang-bang' control\index{Bang-bang control}, since we are repeatedly implementing bit-flips at a fast rate. 
 
-As described above, we have merely error corrected a quantum memory. Of course we wish to implement far more sophisticated evolutions. This requires breaking down the computational evolution (given by $\hat{H}_\text{comp}$) into a large number of small, discrete steps. These are interspersed with our bang-bang control sequence so as to continuously remove any phase-errors accumulated during the course of the computation.
+As described above, we have merely error corrected a quantum memory. Of course we wish to implement far more sophisticated evolutions. This requires breaking down the computational evolution (given by $\hat{H}_\mathrm{comp}$) into a large number of small, discrete steps. These are interspersed with our bang-bang control sequence so as to continuously remove any phase-errors accumulated during the course of the computation.
 
 Dynamical decoupling extends to all manner of error models, beyond the simple $Z$-error model presented above. They are therefore a very powerful tool in error correction. However, unfortunately they are only naturally suited to continuous evolutions governed by Hamiltonians of the form shown in Eq.~(\ref{eq:dyn_dec_ham}), not to the more common discretised models such as the circuit and cluster state models.
 

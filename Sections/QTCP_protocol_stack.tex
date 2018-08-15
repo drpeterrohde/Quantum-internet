@@ -17,7 +17,7 @@ The structure of the protocol stack for QTCP is shown in Fig.~\ref{fig:stack}. I
 \item \textsc{Services \& Applications}\index{Services \& applications layer}: High-level interface to \textsc{Data} presented to Bob's services and applications. The interface abstracts away lower levels of the protocol stack, presenting Bob with only \textsc{Data} and its associated metadata.
 \end{itemize}
 
-\begin{figure}[!htb]\index{QTCP protocol stack}
+\begin{figure}[htpb]\index{QTCP protocol stack}
 \includegraphics[width=0.47\textwidth]{stack}
 \caption{Protocol stack for QTCP. The protocol stack mediates communication of quantum data from Alice to Bob using the shown layers of abstraction. The end goal is to provide Bob a virtual interface to Alice's transmitted data, while remaining oblivious to the underlying protocol.} \label{fig:stack}\index{QTCP protocol stack}
 \end{figure}
@@ -58,11 +58,11 @@ At the lowest level of the protocol we have the raw \textsc{Data} Alice wishes t
 
 We can express the state of an entire \textsc{Packet} as,
 \begin{align}
-\hat\rho_\text{packet}(i) = \hat\rho_\text{quantum}(i) \oplus \hat\rho_\text{classical}(i) \oplus \hat\rho_\text{header}(i),
+\hat\rho_\mathrm{packet}(i) = \hat\rho_\mathrm{quantum}(i) \oplus \hat\rho_\mathrm{classical}(i) \oplus \hat\rho_\mathrm{header}(i),
 \end{align}
-where $i$ denotes the $i$th packet. Here $\hat\rho_\text{quantum}$ ($\hat\rho_\text{classical}$) is a block of \textsc{Quantum Block Size} qubits (\textsc{Classical Block Size} bits) taken from the user's \textsc{Quantum Data} (\textsc{Classical Data}), while $\hat\rho_\text{header}$ is the \textsc{Packet's} classical \textsc{Packet Header}. As discussed earlier, since $\hat\rho_\text{quantum}$ is quantum, and $\hat\rho_\text{classical}$ and $\hat\rho_\text{header}$ are classical, they needn't be transmitted together over the same quantum network. Instead all \textsc{Classical Data} and \textsc{Packet Header} could be transmitted over a classical network operating in parallel to and synchronised with the quantum network, which carries the \textsc{Quantum Data}.
+where $i$ denotes the $i$th packet. Here $\hat\rho_\mathrm{quantum}$ ($\hat\rho_\mathrm{classical}$) is a block of \textsc{Quantum Block Size} qubits (\textsc{Classical Block Size} bits) taken from the user's \textsc{Quantum Data} (\textsc{Classical Data}), while $\hat\rho_\mathrm{header}$ is the \textsc{Packet's} classical \textsc{Packet Header}. As discussed earlier, since $\hat\rho_\mathrm{quantum}$ is quantum, and $\hat\rho_\mathrm{classical}$ and $\hat\rho_\mathrm{header}$ are classical, they needn't be transmitted together over the same quantum network. Instead all \textsc{Classical Data} and \textsc{Packet Header} could be transmitted over a classical network operating in parallel to and synchronised with the quantum network, which carries the \textsc{Quantum Data}.
 
-Note that while one can always measure classical data without disturbance, this is not the case with quantum data, where measurements cause wavefunction collapse. Thus, while Alice is always able to know $\hat\rho_\text{classical}$ and $\hat\rho_\text{header}$, she may or may not know $\hat\rho_\text{quantum}$. Clearly if she prepared the state herself, she would (hopefully) know what she was doing. But in general, quantum networks could be used for far less trivial networking, where Alice is, for example, an intermediary in a distributed quantum computation. In this instance, Alice is unlikely to know what her \textsc{Quantum Data} is.
+Note that while one can always measure classical data without disturbance, this is not the case with quantum data, where measurements cause wavefunction collapse. Thus, while Alice is always able to know $\hat\rho_\mathrm{classical}$ and $\hat\rho_\mathrm{header}$, she may or may not know $\hat\rho_\mathrm{quantum}$. Clearly if she prepared the state herself, she would (hopefully) know what she was doing. But in general, quantum networks could be used for far less trivial networking, where Alice is, for example, an intermediary in a distributed quantum computation. In this instance, Alice is unlikely to know what her \textsc{Quantum Data} is.
 
 %
 % Packet Data
@@ -109,7 +109,7 @@ Once routings have been determined for all \textsc{Packets}, the \textsc{Routing
 
 In the case of dynamic, time-dependent strategies, which can be updated within the duration of transmissions, the \textsc{Routing Queues} may need to be updated. A change in a \textsc{Packet's} route simply requires flushing the queue and pushing new node identifiers for each of the nodes in the new route, in chronological order.
 
-The \textsc{Strategy} layer is responsible for evaluating the net cost function $f_\text{cost}$ from Eq.~(\ref{eq:net_cost_R}), which accounts for both \textsc{Costs} and \textsc{Attributes} to calculate a single effective cost measure that may be employed in routing decisions.
+The \textsc{Strategy} layer is responsible for evaluating the net cost function $f_\mathrm{cost}$ from Eq.~(\ref{eq:net_cost_R}), which accounts for both \textsc{Costs} and \textsc{Attributes} to calculate a single effective cost measure that may be employed in routing decisions.
 
 %
 % Transport
@@ -123,8 +123,9 @@ Additionally, the \textsc{Transport} layer is responsible for collision detectio
 
 The pseudo-code algorithm implemented by the \textsc{Transport} layer, including collision detection, is shown in Alg.~\ref{alg:transport_alg}.
 
-\begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ \
+\begin{table}[htpb]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function Transport(Packet):
 \begin{enumerate}
     \item nextNode = Packet.RoutingQueue.Pop()
@@ -148,7 +149,8 @@ function Transport(Packet):
     \item \}
     \setlength{\itemindent}{0in}
     \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{Algorithm implemented by the \textsc{Transport} layer of QTCP for each \textsc{Packet}. The \texttt{Attributes.Update()} function is left undefined. This is where arbitrary \textsc{Attribute} dynamics may take place.} \label{alg:transport_alg}
 \end{table}
 
@@ -158,25 +160,28 @@ function Transport(Packet):
 
 \subsubsection{Reconstruction} \index{Reconstruction layer} \label{sec:reconstruction_layer}
 
-The \textsc{Reconstruction} layer only serves one purpose -- to chronologically reorder the received \textsc{Packets} based on the \textsc{Order} field in their \textsc{Packet Headers}. This stage is only performed by Bob -- the final recipient -- and not at any intermediate stage. In general this will require Bob to have a quantum memory, able to hold all \textsc{Packet Data} for a sufficient duration as to enable an arbitrary permutation of \textsc{Packets} to be applied, reproducing the correct chronological order.
+The \textsc{Reconstruction} layer only serves one purpose -- to chronologically reorder the received \textsc{Packets} based on the \textsc{Order} field in their \textsc{Packet Headers}. This stage is only performed by Bob -- the final recipient -- and not at any intermediate stage. In general this will require Bob to have a quantum memory, able to hold all \textsc{Packet Data} for a sufficient duration as to enable an arbitrary permutation of \textsc{Packets} to be applied, reproducing the correct chronological order. The algorithm for this is shown in Alg.~\ref{alg:reconstruction}.
 
-\begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{table}[htpb]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function Reconstruction(Packets):
 \begin{enumerate}
     \item Packets.WaitUntilAllReceived()
-    \item message = Packets.SortByOrderAscending().data
+    \item message =\\ 
+    Packets.SortByOrderAscending().data
     \item Packets.Receiver.Notify(message)
      \item $\Box$
-\end{enumerate}}}}
-\caption{The goal of the \textsc{Reconstruction} layer, is to take a collection of received \textsc{Packets} and reassemble them into the \textsc{Message}. \comment{Not referenced in text!}} \label{alg:reconstruction}
+\end{enumerate}}
+\end{mdframed}
+\caption{The goal of the \textsc{Reconstruction} layer, is to take a collection of received \textsc{Packets} and reassemble them into the \textsc{Message}.} \label{alg:reconstruction}
 \end{table}
 
 %
 % Quality of Service (QoS)
 %
 
-\subsubsection{Quality of service} \label{sec:QOS} \index{Quality of service layer}
+\subsubsection{Quality of service} \label{sec:QOS} \index{Quality of service (QoS) layer}
 
 In classical networking theory, error detection and correction is an important element of networking protocols. Communication links may be unreliable, or subject to external noise, which users must be able to detect so as to guarantee the quality of their data.
 
@@ -184,7 +189,7 @@ Classically, error detection is typically performed using checksums (hash functi
 
 In the quantum context the elegant notion of checksums is complicated by the fact that calculating a hash function of a quantum state would necessarily entangle the state with the output hash. This would have the undesired effect of causing measurement of the checksum to collapse the quantum state of the data, thereby altering it in an uncontrollable way.
 
-As an alternative to checksums, we could borrow the notion of quantum error correction (QEC)\index{Quantum error correction (QEC)} and fault-tolerance from quantum computing theory \cite{???}. Here we encode a quantum state into a (polynomially) larger Hilbert space. \textit{Syndrome measurements}\index{Syndrome measurements} on some of the states in this larger space allow us to both detect and correct universal error models, such as depolarisation or dephasing, provided that error rates are within the fault-tolerance threshold of the code being employed.
+As an alternative to checksums, we could borrow the notion of quantum error correction (QEC)\index{Quantum error correction (QEC)} and fault-tolerance\index{Fault-tolerance} from quantum computing theory \cite{???}. Here we encode a quantum state into a (polynomially) larger Hilbert space. \textit{Syndrome measurements}\index{Syndrome measurements} on some of the states in this larger space allow us to both detect and correct universal error models, such as depolarisation or dephasing, provided that error rates are within the fault-tolerance threshold of the code being employed.
 
 Thus, enforcing QoS in fundamentally different for quantum data packets than for classical ones, requiring entirely different techniques. Given how large a field this has become in its own right, we dedicate Sec.~\ref{sec:QOS_chap} entirely to protocols suited to the implementation of quantum QoS requirements in quantum networks.
 
@@ -194,4 +199,4 @@ Thus, enforcing QoS in fundamentally different for quantum data packets than for
 
 \subsubsection{Services \& applications} \index{Services \& applications layer} \label{sec:services_apps}
 
-Having communicated all the \textsc{Packet Data} from Alice to Bob, performed \textsc{Reconstruction}, and applied \textsc{QoS} protocols, Bob ought to have $\hat\rho_\text{data}$ to a good approximation. The quality of Bob's received state can be inferred directly from the \textsc{Costs} vector contained in the \textsc{Packet Headers}. The final state and its associated quality metrics (\textsc{Costs} and QEC outcomes) may then be provided to Bob as a software interface for end use.
+Having communicated all the \textsc{Packet Data} from Alice to Bob, performed \textsc{Reconstruction}, and applied \textsc{QoS} protocols, Bob ought to have $\hat\rho_\mathrm{data}$ to a good approximation. The quality of Bob's received state can be inferred directly from the \textsc{Costs} vector contained in the \textsc{Packet Headers}. The final state and its associated quality metrics (\textsc{Costs} and QEC outcomes) may then be provided to Bob as a software interface for end use.

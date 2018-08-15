@@ -6,7 +6,7 @@
 
 \comment{To do}
 
-Thus far we have considered nodes which implement single-packet operations. However, many real-world quantum protocols (to be presented in Sec.~\ref{sec:protocols_quant_int}) will require multi-packet operations, which must be carefully combined in some well-defined way. For example, for state teleportation (Sec.~\ref{sec:teleport}) we must combine a data packet with half of a Bell-pair (Sec.~\ref{sec:bell_state_res}). For entanglement swapping (Sec.~\ref{sec:swapping}) -- the essential component in quantum repeater networks (Sec.~\ref{sec:rep_net}) -- two halves of distinct Bell-pairs undergo a joint entangling measurement.
+Thus far we have considered nodes which implement single-packet operations. However, many real-world quantum protocols (to be presented in Sec.~\ref{sec:protocols_quant_int}) will require multi-packet operations, which must be carefully combined in some well-defined way. For example, for state teleportation (Sec.~\ref{sec:teleport}) we must combine a data packet with half of a Bell pair (Sec.~\ref{sec:bell_state_res}). For entanglement swapping (Sec.~\ref{sec:swapping}) -- the essential component in quantum repeater networks (Sec.~\ref{sec:rep_net}) -- two halves of distinct Bell pairs undergo a joint entangling measurement.
 
 To accommodate such multi-packet operations, we must add some modifications to the QTCP protocol to handle:
 \begin{itemize}
@@ -18,8 +18,9 @@ To accommodate such multi-packet operations, we must add some modifications to t
 
 At a high level, these may be implemented in the \textsc{Transport} layer as outlined in Alg.~\ref{alg:trans_multi_packet}, where we have intentionally left the functions for combining costs and attributes unspecified. In many instances, the \texttt{CombineCosts()} function could be as simple as a summation of its arguments.
 
-\begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{table}[htpb]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function Transport.MultiPacketOperation(packets):
 \begin{enumerate}
 	\item for(packet$\in$packets) \{
@@ -43,7 +44,8 @@ function Transport.MultiPacketOperation(packets):
   	\setlength{\itemindent}{0in}
     \item \}
     \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{High-level structure of transport layer implementation of multi-packet operations.}\index{Multi-packet operations} \label{alg:trans_multi_packet}
 \end{table}
 
@@ -67,15 +69,17 @@ These ideas logically extend all the way from simple state teleportation to more
 
 \paragraph{Efficiency} \index{Loss channel}
 
-\begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{table}[htpb]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function CombineCosts.Efficiency(packets):
 \begin{enumerate}
 	\item costs = packets.Costs.Efficiency
 	\item netCost = sum(costs)
 	\item return(netCost)
     \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{Algorithm for combining efficiency metrics in a multi-packet protocol.} \label{alg:combine_eff}
 \end{table}
 
@@ -87,15 +91,17 @@ function CombineCosts.Efficiency(packets):
 
 \paragraph{Decoherence} \index{Decoherence}
 
-\begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{table}[htpb]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function CombineCosts.Decoherence(packets):
 \begin{enumerate}
 	\item maxDecoherence = \\
     max(packets.Costs.Decoherence)
     \item return(maxDecoherence)
     \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{Transport layer algorithm for combining decoherence rates in a multi-packet protocol.} \label{alg:combine_lat}
 \end{table}
 
@@ -109,14 +115,16 @@ function CombineCosts.Decoherence(packets):
 
 In state teleportation there are three channels side-by-side, each exhibiting their own distinct latencies. However, as they are in parallel, the net latency will not be the accumulation of the individual latencies, but rather determined by the largest of those three latencies. That is, the slowest qubit acts as a bottleneck. This is shown in Alg.~\ref{alg:combine_lat}.
 
-\begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{table}[htpb]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function CombineCosts.Latency(packets):
 \begin{enumerate}
 	\item maxLatency = max(packets.Costs.Latency)
     \item return(maxLatency)
     \item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{Transport layer algorithm for combining latencies in a multi-packet protocol.} \label{alg:combine_lat}
 \end{table}
 
@@ -130,15 +138,17 @@ function CombineCosts.Latency(packets):
 
 Dollars are perhaps the simplest of costs to account for, as they are simply additive -- the dollar cost of a protocol is the sum of the dollar cost of each component within it. This is shown in Alg.~\ref{alg:combine_dol}.
 
-\begin{table}[!htb]
-\fbox{\parbox{0.965\columnwidth}{\texttt{ 
+\begin{table}[htpb]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
 function CombineCosts.Dollars(packets):
 \begin{enumerate}
 	\item costs = packets.Costs.Dollars
 	\item netCost = sum(costs)
 	\item return(netCost)
 	\item $\Box$
-\end{enumerate}}}}
+\end{enumerate}}
+\end{mdframed}
 \caption{Transport layer algorithm for combining dollar costs in packet teleportation.} \label{alg:combine_dol}
 \end{table}
 

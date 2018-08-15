@@ -13,6 +13,9 @@
 
 \newcommand{\latinquote}[1]{\textit{--- #1}\index{Latin}}
 
+\newcommand{\dropcap}[2]{\lettrine[lines=2, findent=3pt, nindent=0pt]{#1}{#2}}
+%\newcommand{\dropcap}[2]{#1#2}
+
 \newcounter{regtablecntr}
 \setcounter{regtablecntr}{0}
 \newcounter{algcntr}
@@ -40,11 +43,35 @@
 \renewcommand{\tablename}{ALG.}
 \renewcommand{\nomname}{List of Abbreviations}
 
-\newtheorem{definition}{Definition}
-\newtheorem{postulate}{Postulate}
+%\newtheorem{definition}{Definition}
+\if 2\pubmode
+	\newmdtheoremenv[innertopmargin=3pt, innerbottommargin=3pt, nobreak]{definition}{Def}
+\else
+	\newmdtheoremenv[innertopmargin=3pt, innerbottommargin=3pt, nobreak]{definition}{Definition}
+\fi
+
+%\newtheorem{postulate}{Postulate}
+\if 2\pubmode
+	\newmdtheoremenv[innertopmargin=3pt, innerbottommargin=3pt, nobreak]{postulate}{Post}
+\else
+	\newmdtheoremenv[innertopmargin=3pt, innerbottommargin=3pt, nobreak]{postulate}{Postulate}
+\fi
 
 \makeatletter
 \def\BState{\State\hskip-\ALG@thistlm}
 \makeatother
 
 \graphicspath{{./Figures/}}
+
+\renewcommand{\topfraction}{1} % (0.9) max fraction of floats at top
+\renewcommand{\bottomfraction}{1} % (0.8) max fraction of floats at bottom
+\setcounter{topnumber}{2}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4} % 2 may work better
+\setcounter{dbltopnumber}{2} % for 2-column pages
+\renewcommand{\dbltopfraction}{1}% (0.9) fit big float above 2-col. text
+\renewcommand{\textfraction}{0} % (0.07) allow minimal text w. figs
+\renewcommand{\floatpagefraction}{1} % (0.7) require fuller float pages
+\renewcommand{\dblfloatpagefraction}{1} % (0.7) require fuller float pages
+
+\afterpage{\clearpage}

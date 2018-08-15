@@ -4,7 +4,7 @@
 
 \section{Mathematical representation of networks}
 
-We now turn our attention to defining a mathematical construction for the representation of (quantum and/or classical) networks, that we will subsequently rely on heavily in our framework for quantum networks. This encompasses representing networks as graphs, representing the cost of communications within the network, and how to optimise network routing to minimise costs.  These notions will be essential in our treatment of quantum networks.
+\dropcap{W}{e} now turn our attention to defining a mathematical construction for the representation of (quantum and/or classical) networks, that we will subsequently rely on heavily in our framework for quantum networks. This encompasses representing networks as graphs, representing the cost of communications within the network, and how to optimise network routing to minimise costs.  These notions will be essential in our treatment of quantum networks.
 
 %
 % Graph-Theoretic Representation
@@ -56,12 +56,12 @@ where $v_i$ is the $i$th node in the route $R_{A\to B}$.
 
 Fig.~\ref{fig:example_routes} illustrates a simple example network with all of its available routes, \mbox{$R_{A\to B} \subseteq G$}. Fig.~\ref{fig:simp_route_opt} illustrates the optimal path for \mbox{$A\to B$} based on edge weights.
 
-\begin{figure}[!htb]
+\begin{figure}[htpb]
 \includegraphics[width=0.325\textwidth]{example_routes}
 \caption{Example of a simple network with multiple routes \mbox{$A\to B$}. Note that $R_3$ and $R_4$ are competing with one another for use of the last link, which the routing strategy, $\mathcal{S}$, will need to resolve if multiple simultaneous transmissions are taking place.} \label{fig:example_routes}
 \end{figure}
 
-\begin{figure}[!htb]
+\begin{figure}[htpb]
 \includegraphics[width=0.3\textwidth]{example_opt}
 \caption{The same network graph from Fig.~\ref{fig:example_routes}, with links weighted by some arbitrary cost metric. Applying a shortest-path algorithm yields the optimal route between Alice and Bob to be \mbox{$A\to F\to B$}, which incurs a net cost of \mbox{$c=2$}, as opposed to all other routes, which incur a net cost of \mbox{$c=3$}.} \label{fig:simp_route_opt}
 \end{figure}
@@ -72,9 +72,9 @@ To accommodate this, we allow the \textit{net cost} of a route to be defined as 
 \begin{definition}[Net routing cost]\index{Net routing cost}
 The net cost of a route \mbox{$A\to B$} is given by,
 \begin{align} \label{eq:net_cost_R} \index{Net routing cost}
-c_\text{net}(R) = f_\text{cost}(\vec{c}(R),\vec{a}(R)),
+c_\mathrm{net}(R) = f_\mathrm{cost}(\vec{c}(R),\vec{a}(R)),
 \end{align}
-where $c_\text{net}$ is a single numeric value representing the net cost as calculated from an arbitrary cost function, $f_\text{cost}$, of the vector of associated costs and attributes.
+where $c_\mathrm{net}$ is a single numeric value representing the net cost as calculated from an arbitrary cost function, $f_\mathrm{cost}$, of the vector of associated costs and attributes.
 \end{definition}
 Note that the net routing cost needn't be a metric, as the cost function could be arbitrary. The net cost can be thought of as a ranking for routes, but not necessarily as a metric that accumulates across routes, since it already captures all these accumulations.
 
@@ -82,7 +82,7 @@ Eq.~(\ref{eq:net_cost_R}) gives us the net cost of a given route. For multiple u
 \begin{definition}[Network routing cost]
 	The net routing cost of all costs, over all active routes $\vec{R}$ is,
 \begin{align} \label{eq:c_total}
-c_\text{total}(\vec{R}_{\vec{A}\to \vec{B}}) = \sum_{r \in {\vec R}_{\vec{A}\to \vec{B}}} c_\text{net}(r),
+c_\mathrm{total}(\vec{R}_{\vec{A}\to \vec{B}}) = \sum_{r \in {\vec R}_{\vec{A}\to \vec{B}}} c_\mathrm{net}(r),
 \end{align}
 where $\vec{R}_{\vec{A}\to \vec{B}}$ is a set of active routes connecting each pair \mbox{$A_i\to B_i~\forall ~ i$}.
 \end{definition}
@@ -127,6 +127,7 @@ A time-dependent strategy, $\mathcal{S}_t$, updates the network graph, $G_t$, at
 \begin{align} \label{eq:S_G}
 G_{t+1} = \mathcal{S}_t(G_t).
 \end{align}
+$S_t$ could be any \textbf{BPP} algorithm, deterministic or probabilistic.
 \end{definition}
 For example, the network might have bandwidth restrictions on some links, in which case if more than a certain amount of data is transmitted through a link, it is no longer available for use until previous transmissions have completed. Or, based on market dynamics, the dollar cost of utilising a link may change with its demand.
 
@@ -142,14 +143,14 @@ A detailed exposition of routing strategies is provided in Sec.~\ref{sec:strateg
 
 Clearly the goal when choosing routing strategies is to minimise the total cost, Eq.~(\ref{eq:net_cost_R}). That is, solving the optimisation problem,
 \begin{definition}[Strategy optimisation]
-The optimisation of strategies with a network comprising net costs $c_\text{total}$ is given by,
+The optimisation of strategies with a network comprising net costs $c_\mathrm{total}$ is given by,
 \begin{align}
-c_\text{min} &= \underset{\mathcal{S}}{\text{min}}(c_\text{total}), \nonumber \\
-\mathcal{S}_\text{opt} &= \underset{\mathcal{S}}{\text{argmin}} (c_\text{total}).
+c_\mathrm{min} &= \underset{\mathcal{S}}{\mathrm{min}}(c_\mathrm{total}), \nonumber \\
+\mathcal{S}_\mathrm{opt} &= \underset{\mathcal{S}}{\mathrm{argmin}} (c_\mathrm{total}).
 \end{align}
 \end{definition}
 
-Choosing optimal strategies is a challenging problem, potentially requiring complex, computationally inefficient optimisation techniques. Strategy optimisation is an example of resource allocation, whose optimal solutions are often notoriously difficult to solve exactly, residing in complexity classes like \textbf{NP}-complete\index{\textbf{NP} \& \textbf{NP}-complete} (or worse!). In general, the number of possible routes through a graph will grow exponentially with the number of vertices. Thus, explicitly enumerating each possible route is generally prohibitive for large networks, unless some known structure provides `shortcuts' to optimisation. Having said this, Dijkstra's shortest path algorithm (discussed in Sec.~\ref{sec:shortest_path}) is the perfect counterexample, demonstrating that although an exponential number of routes may exist between two points, an optimal one can be found in \textbf{P}.
+Choosing optimal strategies is a challenging problem, potentially requiring complex, computationally inefficient optimisation techniques. Strategy optimisation is an example of resource allocation, whose optimal solutions are often notoriously difficult to solve exactly, residing in complexity classes like \textbf{NP}-complete\index{NP \& NP-complete} (or worse!). In general, the number of possible routes through a graph will grow exponentially with the number of vertices. Thus, explicitly enumerating each possible route is generally prohibitive for large networks, unless some known structure provides `shortcuts' to optimisation. Having said this, Dijkstra's shortest path algorithm (discussed in Sec.~\ref{sec:shortest_path}) is the perfect counterexample, demonstrating that although an exponential number of routes may exist between two points, an optimal one can be found in \textbf{P}.
 
 %
 % Ad hoc Operation vs. Central Authorities

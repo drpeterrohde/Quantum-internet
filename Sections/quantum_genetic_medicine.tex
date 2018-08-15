@@ -4,7 +4,7 @@
 
 \section{Quantum genetic medicine}\index{Genetic medicine}
 
-Until now, medicine\index{Medicine} has largely relied on one-size-fits-all diagnosis and treatment options. Needless to say, everyone's different, manifest in their unique genotype\index{Genotype}. However, with access to individuals' unique genetic makeup, the next generation of medicine will become highly personalised, catering for individual genetic differences. People with different genetic predispositions, mutations, or traits will be able to have treatment options tailored to them.\index{Genetic mutations} Different cancer types, which are genetically distinct from one another, may be genetically targeted.\index{Cancer}
+\dropcap{U}{ntil} now, medicine\index{Medicine} has largely relied on one-size-fits-all diagnosis and treatment options. Needless to say, everyone's different, manifest in their unique genotype\index{Genotype}. However, with access to individuals' unique genetic makeup, the next generation of medicine will become highly personalised, catering for individual genetic differences. People with different genetic predispositions, mutations, or traits will be able to have treatment options tailored to them.\index{Genetic mutations} Different cancer types, which are genetically distinct from one another, may be genetically targeted.\index{Cancer}
 
 With the ability to sequence individuals' genomes extremely cheaply, we will open up entirely new medical possibilities for genetically-personalised treatments -- the era of \textit{genetic medicine}, the next revolution in medicine.
 
@@ -32,7 +32,7 @@ Following its own technological Moore's Law\index{Moore's Law}, one can reasonab
 
 The major technological transition that has enabled this rapid progress is the adoption of next-generation sequencers (NGS)\index{Next-generation sequencers} based on \textit{short-read} technology\index{Short-reads}. Using this process, a DNA\index{DNA} sequence is not mapped exhaustively from beginning to end, but rather is chemically deconstructed into an enormous number of \textit{short-reads} -- small genetic segments, each typically on the order of $\sim$50 base-pairs\index{Base-pairs} in length. Having prepared an enormous pool of such short-reads, they are then sequenced in parallel\index{Parallel sequencing}, yielding a large database of $N$ short strings, corresponding to small segments of the larger genome. The task then is to reconstruct a complete genome from this data.
 
-Typically the end result is not a complete human genome from start to finish, but rather segments that capture regions of interest in the respective genome. In particular, certain genes or single-nucleotide polymorphisms (SNPs)\index{Single-nucleotide polymorphisms}\footnote{SNPs are positions in a genome whose nucleotides may differ between individuals within a species. Of course, the vast majority of the genetic makeup of individuals within a species is identical. Thus, the SNPs are sufficient to characterise the genetic differences between individuals and identify their genotype.} may be targeted as regions of interest during sequencing.
+Typically the end result is not a complete human genome from start to finish, but rather segments that capture regions of interest in the respective genome. In particular, certain genes or single-nucleotide polymorphisms (SNPs)\index{Single-nucleotide polymorphisms (SNPs)}\footnote{SNPs are positions in a genome whose nucleotides may differ between individuals within a species. Of course, the vast majority of the genetic makeup of individuals within a species is identical. Thus, the SNPs are sufficient to characterise the genetic differences between individuals and identify their genotype.} may be targeted as regions of interest during sequencing.
 
 To achieve this, there are two approaches that are most commonly employed -- \textit{de novo} assembly, and \textit{mapping}.
 
@@ -46,13 +46,13 @@ In \textit{de novo} sequencing we treat the short-read data as a jigsaw puzzle t
 
 Open-source software for implementing \textit{de novo} assembly of short-read data is available. The well-known \textit{Velvet}\index{Velvet} package \cite{velvet}\index{Velvet} does this graph-theoretically using de Bruijn graph\index{de Bruijn graphs} \cite{???} representations for contigs/reads, with very efficient computational resource requirements.
 
-The number of comparisons between short-reads scales only as $O(N^2)$, and employing hash table\index{Hash table} representations for short-reads, the lookups for each individual comparison can be efficiently implemented in $O(1)$ time. The confidence that two contigs/reads actually overlap increases exponentially with $n$, but with increasing $n$ comes a reduction in the number of matches that will be identified -- the tradeoff between \textit{sensitivity}\index{Sensitivity} and \textit{specificity}\index{Specificity} in contig reconstruction.
+The number of comparisons between short-reads scales only as $O(N^2)$, and employing hash table\index{Hash tables} representations for short-reads, the lookups for each individual comparison can be efficiently implemented in $O(1)$ time. The confidence that two contigs/reads actually overlap increases exponentially with $n$, but with increasing $n$ comes a reduction in the number of matches that will be identified -- the tradeoff between \textit{sensitivity}\index{Sensitivity} and \textit{specificity}\index{Specificity} in contig reconstruction.
 
 The \textit{de novo} approach is extremely powerful, as it does not require any genomic reference\index{Genomic reference}. Rather, we can reconstruct a genome \textit{ab initio}, with sufficient read data.
 
 Fig.~\ref{fig:gen_seq_de_novo} provides a graphic example of \textit{de novo} sequencing.
 
-\begin{figure}[!htb]
+\begin{figure}[htpb]
 	\includegraphics[width=0.47\textwidth]{genetic_sequencing_de_novo}
 	\caption{Three short-reads, each of 10 base-pairs in length (blue), which we wish to assemble into the largest possible contig\index{Contig} belonging to the underlying genome. The specificity\index{Specificity} defines the number of endpoint base-pairs that must overlap for them to be considered a match (orange). In this case the specificity is 3, and 3 short-reads have been assembled into a single 24 base-pair contig. The greater the specificity the more accurate will be the matching, but the lower the probability of finding matches. A specificity too low will create false matches, whereas a specificity too high makes finding sufficiently overlapping short-reads unlikely. This makes optimum choice of specificity an important consideration, creating a direct tradeoff between reconstructed contig length and accuracy. This sequencing technique is best applied when there is no known reference genome for the data under analysis. For the technique to work effectively there must be a sufficient quantity of short-read data that with high probability overlaps between reads will exist. If the data is too sparse few overlaps are likely to be found. Thus, average reconstructed contig lengths grow with the amount of short-read data available to the engine.} \label{fig:gen_seq_de_novo}
 \end{figure}
@@ -75,7 +75,7 @@ As with \textit{de novo} sequencing, open-source software for efficiently implem
 
 Fig.~\ref{fig:gen_seq_mapping} provides a graphic example of mapping in the presence of a SNP.
 
-\begin{figure}[!htb]
+\begin{figure}[htpb]
 	\includegraphics[width=0.47\textwidth]{genetic_sequencing_mapping}
 	\caption{In genome mapping we begin with a known reference genome (blue) to act as a comparison for short-reads (orange). The short-reads are slided along the reference until a location with sufficient overlap is found, at which point we record a match. By allowing some degree of single nucleotide mismatches (green) between the reference and short-read, we are able to characterise the SNPs in the short-read data. This sequencing technique is appropriate when we have a known genome for the species to which the short-read data belongs, but we wish to identify minor genetic mutations between the samples. For example, mapping short-reads belonging to human cancer cells to a human reference genome characterises the genetic mutations associated with that particular cancer. The technique works with any amount of short-read data, even just a single read, provided the reference is known.} \label{fig:gen_seq_mapping}
 \end{figure}
@@ -86,11 +86,11 @@ Fig.~\ref{fig:gen_seq_mapping} provides a graphic example of mapping in the pres
 
 \subsection{Genetic medicine}\index{Genetic medicine}
 
-At its simplest, the design of genetically-tailored medical treatments will require understanding the interactions between drug compounds\index{Drug compounds} and genetic processes at the molecular level. For example, we might desire that a drug modifies gene expression\index{Gene expression} for specific genes, or the transcription\index{Transcription} of DNA\index{DNA} to specific proteins\index{Proteins}. In the case of cancer treatment, we may wish to inhibit the function of biochemical processes\index{Biochemical processes} reliant on genes exhibiting particular cancerous mutations\index{Mutations}, whilst not affecting healthy, unmutated ones.
+At its simplest, the design of genetically-tailored medical treatments will require understanding the interactions between drug compounds\index{Drug compounds} and genetic processes at the molecular level. For example, we might desire that a drug modifies gene expression\index{Gene expression} for specific genes, or the transcription\index{Transcription} of DNA\index{DNA} to specific proteins\index{Proteins}. In the case of cancer treatment, we may wish to inhibit the function of biochemical processes\index{Biochemical processes} reliant on genes exhibiting particular cancerous mutations\index{Genetic mutations}, whilst not affecting healthy, unmutated ones.
 
 The drug design process for conventional medicines is an incredibly tedious one, requiring massive latitudinal and longitudinal studies on the effects of drugs on physiological symptoms. It is not uncommon for the entire drug development process, from design, to testing, to approval, to cost on the order of $\sim$\$100m's for a single drug. However, in the case of individually tailored medicine such studies are clearly not possible. This will require replacing human studies with accurate biomolecular-level simulations of these chemical processes. At this scale, interactions are inevitably quantum mechanical in nature, which must be accommodated for in simulations.
 
-The key goal is to properly simulate the interaction of candidate drug compounds\index{Drug compounds}, ligands\index{Ligands}, or functional groups\index{Functional groups} with biochemical processes at the molecular level. Classical techniques for such simulations include estimating electron densities using density functional theory\index{Electron density}\index{Density functional theory} (the potential energy surface)\index{Potential energy surface} of compounds, from which useful properties such as bonding affinities\index{Bonding affinity} may be determined.
+The key goal is to properly simulate the interaction of candidate drug compounds\index{Drug compounds}, ligands\index{Ligands}, or functional groups\index{Functional groups} with biochemical processes at the molecular level. Classical techniques for such simulations include estimating electron densities using density functional theory\index{Electron density}\index{Density functional theory} (the potential energy surface)\index{Electron density} of compounds, from which useful properties such as bonding affinities\index{Bonding affinity} may be determined.
 
 %
 % Quantum Chemistry
@@ -100,24 +100,24 @@ The key goal is to properly simulate the interaction of candidate drug compounds
 
 Despite the existence of classical estimation techniques, molecular-level interactions are necessarily quantum mechanical in nature. For this reason, classical simulation techniques are limited to approximations that ignore realistic and important quantum effects, since this would require exponential classical computational resources in general (i.e in general, simulating quantum systems is \textbf{BQP}-complete).
 
-Using standard quantum chemistry techniques, one can construct accurate Hamiltonians\index{Molecular Hamiltonians}\index{Hamiltonians} describing the evolution of molecular systems at the quantum level. Efficiently implementing such simulations can then be performed on quantum computers using standard, efficient Hamiltonian simulation quantum algorithms (Sec.~\ref{sec:quantum_sim_alg})\index{Hamiltonian simulation} for simulating the Schr\"odinger equation\index{Schr\"odinger equation},
+Using standard quantum chemistry techniques, one can construct accurate Hamiltonians\index{Molecular Hamiltonians}\index{Hamiltonians} describing the evolution of molecular systems at the quantum level. Efficiently implementing such simulations can then be performed on quantum computers using standard, efficient Hamiltonian simulation quantum algorithms (Sec.~\ref{sec:quantum_sim_alg})\index{Quantum simulation} for simulating the Schr\"odinger equation\index{Schr\"odinger equation},
 \begin{align}
 	\hat{H}\ket{\psi(t)} = i\hbar \frac{\partial}{\partial t}\ket{\psi(t)},
 \end{align}
-where $\hat{H}$ is the system's Hamiltonian\index{Hamiltonian}, describing the time-dependent evolution of the state as,
+where $\hat{H}$ is the system's Hamiltonian\index{Hamiltonians}, describing the time-dependent evolution of the state as,
 \begin{align}
 	\ket{\psi(t)} = e^{-\frac{i\hat{H}t}{\hbar}} \ket{\psi(0)}.
 \end{align}
 
 These Hamiltonians can be constructed \textit{ab initio}, combining relevant one- and two-body interactions\index{One-body interactions}\index{Two-body interactions}, such as Coulomb potential\index{Coulomb potential}, kinetic energy\index{Kinetic energy}, spin- and spin-orbit\index{Spin coupling}\index{Spin-orbit coupling} coupling, and magnetic and electric dipole terms appropriately. A net interaction Hamiltonian may be obtained by summing over the different one- ($i$) and two-body (\mbox{$j,k$}) terms for all particles comprising the system,
 \begin{align}
-	\hat{H}_\text{int} = \sum_i \hat{H}_i + \sum_{j>k} \hat{H}_{j,k}.
+	\hat{H}_\mathrm{int} = \sum_i \hat{H}_i + \sum_{j>k} \hat{H}_{j,k}.
 \end{align}
-This structure is of the form of Eq.~(\ref{eq:Ham_sim_Ham}) and thus lends itself to the quantum Hamiltonian simulation algorithm\index{Hamiltonian simulation} (Sec.~\ref{sec:quantum_sim_alg}).
+This structure is of the form of Eq.~(\ref{eq:Ham_sim_Ham}) and thus lends itself to the quantum Hamiltonian simulation algorithm\index{Quantum simulation} (Sec.~\ref{sec:quantum_sim_alg}).
 
 The dominant one-body interactions are kinetic energy\index{Kinetic energy Hamiltonian} terms, of the form,
 \begin{align}
-\hat{H}_i^{(\text{kinetic})} &= \frac{\hat{p}^2}{2m} \nonumber \\
+\hat{H}_i^{(\mathrm{kinetic})} &= \frac{\hat{p}^2}{2m} \nonumber \\
 &= -\frac{\hbar^2}{2m_i}\nabla^2_{\vec{r}_i},
 \end{align}
 where $\hat{p}$ is the momentum operator, $m_i$ is mass, $\vec{r}_i$ is the position vector, and,
@@ -126,7 +126,7 @@ where $\hat{p}$ is the momentum operator, $m_i$ is mass, $\vec{r}_i$ is the posi
 \end{align}
 The dominant two-body terms are Coulomb (electrostatic) interactions\index{Coulomb interaction},
 \begin{align}
-\hat{H}_{j,k}^{(\text{Coulomb})} = \frac{q_j q_k}{4\pi\epsilon_0|\vec{r}_j-\vec{r}_k|},
+\hat{H}_{j,k}^{(\mathrm{Coulomb})} = \frac{q_j q_k}{4\pi\epsilon_0|\vec{r}_j-\vec{r}_k|},
 \end{align}
 where $q_j$ denotes charge.
 
@@ -134,13 +134,13 @@ where $q_j$ denotes charge.
 % Quantum Drug Trial Simulation
 %
 
-\subsection{Quantum drug trial simulations}\index{Quantum drug trial simulation}
+\subsection{Quantum drug trial simulations}\index{Quantum drug trial simulations}
 
 These approaches borrowed from quantum chemistry allow simulation of the interaction between drug compounds and molecular biochemical interactions. The next step is to perform this process against a huge library of candidate drug compounds\index{Drug compound libraries}, ligands or functional groups, from which, we hope, some candidates will exhibit desired characteristics, such as strong bonding affinities\index{Bonding affinity}.
 
-To achieve this, let us construct a classical algorithm for exhaustively constructing and enumerating organic drug molecules or functional groups, up to some cutoff size\index{Cutoff size}. The length of this list grows exponentially with the cutoff size. Next we implement this algorithm unitarily (which is always possible, writing the classical circuit as a reversible one), and construct it as a quantum oracle\index{Oracle} such that every input state (which acts as a pointer\index{Pointers} to an element in the list) yields as output a qubit representation\index{Qubit molecule representation} of the corresponding drug compound. Specifically, the oracle implements a transformation of the form,
+To achieve this, let us construct a classical algorithm for exhaustively constructing and enumerating organic drug molecules or functional groups, up to some cutoff size\index{Cutoff size}. The length of this list grows exponentially with the cutoff size. Next we implement this algorithm unitarily (which is always possible, writing the classical circuit as a reversible one), and construct it as a quantum oracle\index{Oracles} such that every input state (which acts as a pointer\index{Pointers} to an element in the list) yields as output a qubit representation\index{Qubit molecule representation} of the corresponding drug compound. Specifically, the oracle implements a transformation of the form,
 \begin{align}
-\hat{U}_\text{oracle}\ket{i}_\text{pointer}\ket{0}_\text{drug}^{\otimes n} \to \ket{i}_\text{pointer}\ket{\psi_i}_\text{drug}^{(n)},
+\hat{U}_\mathrm{oracle}\ket{i}_\mathrm{pointer}\ket{0}_\mathrm{drug}^{\otimes n} \to \ket{i}_\mathrm{pointer}\ket{\psi_i}_\mathrm{drug}^{(n)},
 \end{align}
 where $i$ is the index (pointer) to the drug element in the enumeration, and $n$ is the number of qubits encoding the representation of the drug molecule\footnote{This may be implemented unitarily, which is easy to see via its preservation of orthonormality.}.
 
@@ -148,7 +148,7 @@ This oracle may be constructed by writing a classical algorithm that generates a
 
 Having constructed this oracle, we feed the output qubit molecule description into the Hamiltonian simulation algorithm\index{Quantum simulation}, with exponential speedup, yielding as output a `score' characterising some desired property of the interaction, such as bonding affinity\index{Bonding affinity}. This implements the simulate-and-score unitary,
 \begin{align}
-\hat{U}_\text{sim} \ket{\psi_i}_\text{drug}\ket{0}_\text{score} \to \ket{\psi_i}_\text{drug}\ket{s_i}_\text{score}	
+\hat{U}_\mathrm{sim} \ket{\psi_i}_\mathrm{drug}\ket{0}_\mathrm{score} \to \ket{\psi_i}_\mathrm{drug}\ket{s_i}_\mathrm{score}	
 \end{align}
 
 The joint oracle$\to$simulation algorithm is finally embedded within a quantum search subroutine\index{Grover's algorithm}, which searches over the input space enumerating the set of drug candidates for scores above some desired threshold. This yields a quadratic enhancement in the number of drug candidates that can be simulated in parallel. Successful search results, where a compound achieves the threshold score, are then tagged for further investigation as treatment drug candidates.
@@ -161,7 +161,7 @@ where $t$ is simulation time, $\epsilon$ is the simulation accuracy, $N$ is the 
 
 The complete algorithmic pipeline is shown in Fig.~\ref{fig:genetic_med_pipe}.
 
-\begin{figure}[!htb]
+\begin{figure}[htpb]
 \includegraphics[width=0.475\textwidth]{genetic_medicine_pipeline}
 	\caption{Pipeline for quantum-enhanced genetic drug development. A quantum search algorithm searches over algorithmically-generated drug compounds or functional groups, for each performing Hamiltonian simulation, to determine if its score is above a threshold. The quantum search subroutine yields a quadratic enhancement in the number of drugs that can be simulated in parallel, and the Hamiltonian simulation subroutine yields an exponential enhancement over classical simulation techniques.} \label{fig:genetic_med_pipe}
 \end{figure}
@@ -172,7 +172,7 @@ The complete algorithmic pipeline is shown in Fig.~\ref{fig:genetic_med_pipe}.
 
 \subsection{Cyborgs -- The era of genetic editing}\index{Cyborgs}\index{Genetic editing}
 
-In very recent years, new technologies have emerged for performing highly targeted gene editing, allowing genetic manipulations to be performed on living organisms. Using, CRISPR\index{CRISPR} technology, for example, one can enable and disable entire functional genes, or perform even more specific manipulations right down to the single nucleotide level.
+In very recent years, new technologies have emerged for performing highly targeted gene editing, allowing genetic manipulations to be performed on living organisms. Using, CRISPR\index{CRISPR} technology, for example, one can enable and disable entire functional genes, or perform even more intricate manipulations, right down to the single nucleotide level.
 
 This exquisite control over the genomes of living organisms, something that would never have been dreamed possible only years ago, opens up our ability to enhance or suppress genetic characteristics of species, potentially facilitating everything from the development of highly improved agricultural crops, all the way to more ethically questionable motives such as genetic enhancement of the human race.
 
@@ -184,8 +184,8 @@ Using the genetic medicine pipeline discussed previously one might envisage even
 
 \subsection{In the cloud}\index{Cloud quantum computing}
 
-This quantum genetic medicine processing pipeline lends itself well to several important cloud-based protocols. The pipeline comprises several distinct subroutines\index{Subroutines}, which might be outsourced or distributed independently of one another\index{Outsourced quantum computation}\index{Distributed quantum computation}.
+The quantum genetic medicine processing pipeline lends itself well to several important cloud-based protocols. The pipeline comprises several distinct subroutines\index{Subroutines}, which might be outsourced or distributed independently of one another\index{Outsourced quantum computation}\index{Distributed quantum computation}.
 
-An R\&D organisation might specialise in the algorithmic generation\index{Algorithmic generation} (or hard-coding\index{Hard-coding}) of candidate drug compounds\index{Compounds}, which they would like to retain as a trade secret\index{Trade secrets}, but desire to license\index{Outsourced quantum computation} to third-party drug designers\index{Drug designers}, who wish to employ them in their computational pipeline\index{Quantum drug trial simulation}. The quantum search\index{Grover's algorithm} and Hamiltonian simulation\index{Quantum simulation} subroutines might similarly be outsourced or distributed over the cloud to vendors specialising in the implementation of these particular subroutines.
+An R\&D organisation might specialise in the algorithmic generation\index{Algorithmic generation} (or hard-coding\index{Hard-coding}) of candidate drug compounds\index{Compounds}, which they would like to retain as a trade secret\index{Trade secrets}, but desire to license\index{Outsourced quantum computation} to third-party drug designers\index{Drug designers}, who wish to employ them in their computational pipeline\index{Quantum drug trial simulations}. The quantum search\index{Grover's algorithm} and Hamiltonian simulation\index{Quantum simulation} subroutines might similarly be outsourced or distributed over the cloud to vendors specialising in the implementation of these particular subroutines.
 
-In an era where the genetic composition of every individual is fully characterised, data security will be of utmost importance -- medical confidentiality\index{Medical confidentiality} will be lifted to an entirely new plane when people's genes are at stake, as the nefarious uses and misuses\index{Nefarious uses} for obtaining other people's genomes are immense. This provides a perfect example for the value of encrypted quantum computation\index{Encrypted quantum computation} (Sec.~\ref{sec:homo_blind}). If a medical lab is outsourcing some aspects of a computation involving clients' genetics, it is paramount that this be obscured from third-parties performing the computations in the interest of medical confidentiality. Computational efficiency aside, this consideration on its own already justifies implementing such simulation pipelines quantum mechanically, as encrypted classical computation is effectively unviable in general.
+In an era where the genetic composition of every individual is fully characterised, data security will be of utmost importance -- medical confidentiality\index{Medical confidentiality} will be lifted to an entirely new plane when people's genes are at stake, as the nefarious uses (and misuses\index{Nefarious uses}) for obtaining other people's genomes are immense. This provides a perfect example for the value of encrypted quantum computation\index{Encrypted quantum computation} (Sec.~\ref{sec:homo_blind}). If a medical lab is outsourcing some aspects of a computation involving clients' genetics, it is paramount that this be obscured from third-parties performing the computations in the interest of medical confidentiality. Computational efficiency aside, this consideration on its own already justifies implementing such simulation pipelines quantum mechanically, as encrypted classical computation is effectively unviable in general.
