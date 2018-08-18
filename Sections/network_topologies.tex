@@ -86,7 +86,7 @@ Trees are specified entirely by \textit{branching parameters} ($b_i$) -- the num
 
 The \textit{depth} ($d$) of a tree is the maximum number of steps from the root node to a terminating node with no children. The depth scales between \mbox{$d=O(|V|)$}, for the trivial linear tree (\mbox{$b_i=1$}), and \mbox{$d=O(\log |V|)$} for non-trivial branching parameters (\mbox{$b_i\neq 1$}).
 
-The worst-case number of edges that must be traversed to reach any vertex from any other is \mbox{$2d=O(\log|V|)$}, which implies that accumulated cost metrics scale as \mbox{$c=O(\log |V|)$}. Trees are the most frugal graphs in their number of edges, which are fixed at \mbox{$|E|=|V|-1$}, irrespective of the branching parameters, since because the graph is strictly acyclic, every addition of an edge requires the addition of exactly a single vertex. This makes tree graphs the cheapest to construct in terms of physical resource usage.
+The worst-case number of edges that must be traversed to reach any vertex from any other is \mbox{$2d=O(\log|V|)$}, known as the \textit{diameter} of the graph\index{Diameter}, which implies that accumulated cost metrics scale as \mbox{$c=O(\log |V|)$}. Trees are the most frugal graphs in their number of edges, which are fixed at \mbox{$|E|=|V|-1$}, irrespective of the branching parameters, since because the graph is strictly acyclic, every addition of an edge requires the addition of exactly a single vertex. This makes tree graphs the cheapest to construct in terms of physical resource usage.
 
 %
 % Balanced Tree
@@ -128,8 +128,6 @@ To construct a random tree we simply randomly choose a branching parameter, acco
 %
 
 \subsubsection{Minimum spanning tree} \label{sec:graph_MST} \index{Minimum spanning tree}
-
-\comment{Mst is lowest cost vector graph that connects everyone. Most relevant during network construction. Which potential channels should be actually implemented?}
 
 A \textit{spanning tree}\index{Spanning tree} $S$, of a graph $G$, is a tree subgraph \mbox{$S\subset G$}, containing every vertex of $G$. The \textit{weight} of a spanning tree is the sum of all its constituent edge weights. Thus, the \textit{minimum spanning tree} (MST) is a spanning tree that minimises net weight. An example is shown in Fig.~\ref{fig:mst}. See Sec.~\ref{sec:min_tree} for a discussion on MST algorithms.
 
@@ -219,13 +217,13 @@ where $P(k)$ is the probability of a vertex having order $k$ (up to normalisatio
 
 This distribution is observed empirically in many real-world networks, and as such is more an observation about the typical behaviour of naturally occurring and evolving human-made networks than an explicit definition for their construction. However, owing to this particular statistical behaviour, and the underlying causations for their Pareto distribution, much has been researched and is known about the properties of scale-free networks.
 
-One notable characteristic is their hierarchical structure, with a small number of very highly-connected `hubs'\index{Hubs} at the top of the food chain, which quickly connect onto smaller hubs, and so on down the food chain with decreasing connectivity.
+One notable characteristic is their hierarchical structure, with a small number of very highly-connected `hubs'\index{Hub nodes} at the top of the food chain, which quickly connect onto smaller hubs, and so on down the food chain with decreasing connectivity.
 
 A feature of scale-free networks of especial interest in the context of computer networks is their robustness against node failure. Suppose we constructed a percolated (Sec.~\ref{sec:perc_topol}) instance of a typical scale-free network. Such a network is highly robust against node/edge deletions compared to many other graph constructions, in the sense that a relatively large number of failures must occur to disconnect the graph. This makes the scale-free network characteristic a particularly attractive one from the perspective of the failure-tolerance of the network.
 
 Scale-free networks typically exhibit extremely small diameter (average distance between nodes), scaling as \cite{bib:PhysRevLett.90.058701},
 \begin{align}
-	d = O(\log(\log |V|)).
+	d = O(\log \log |V|).
 \end{align}
 That is, they exhibit (exponentially) smaller diameter than tree graphs (which already exhibit only logarithmic depth). Thus, expanding the network (in a manner consistent with the model) by adding a moderate number of new nodes effectively leaves graph diameter unchanged -- the graph diameter is virtually a constant under modest evolution.
 
@@ -253,11 +251,13 @@ The internet web-graph has been observed to be a scale-free network (Sec.~\ref{s
 
 \subsection{Network robustness}\index{Network robustness}
 
-\comment{To do}
+A key feature of any network topology is its robustness against node or channel failures. In general, the number of redundant paths between two points in a graph is an indicator of its robustness against failures.
 
-\comment{Node, edge deletion I. Tree graphs, complete graphs. Trees extremely vulnerable to node deletion. Complete graphs maximum redundancy, high failure tolerance}
+The extreme case of network robustness is the complete graph, $K_n$, which has P2P links between every pair of nodes. Therefore, if a single channel fails, there are always alternate paths taking us between nodes. On the opposing extreme are tree graphs, which contain no redundancy whatsoever, and just a single failure will disconnect the network. Scale-free networks sit in the intermediate zone, but are relatively robust against the failure of random nodes/links, but are vulnerable to conspiratorial failures, which target the highly connected hub nodes.
+
+Fig.~\ref{fig:graph_deletions} illustrates some examples of these two extreme cases.
 
 \begin{figure*}[htbp]
 \includegraphics[width=\textwidth]{graph_deletions}
-\caption{\comment{To do}.}\label{fig:graph_deletions}
+\caption{Robustness of network topologies to node and link deletion. Examples of a tree graph (a) and a complete graph, $K_n$, with \mbox{$n=10$} (d). (b,e) The same graphs subject to a single link failure. The failure disconnects the tree graph into a bipartite graph (b), whereas the complete graph's connectivity is unhindered as alternate routes exist between all nodes (e). A single node failure disconnects the tree graph into a $|v|$-partite graph (c), where $|v|$ is the order of the vertex at which failure occurs. The complete graph, on the other hand, is simply reduced to a $K_{n-1}$ graph, with no loss of connectivity (f). Thus, tree graphs are the most vulnerable network topologies to node/link failures, whereas complete graphs are the most robust.}\label{fig:graph_deletions}
 \end{figure*}

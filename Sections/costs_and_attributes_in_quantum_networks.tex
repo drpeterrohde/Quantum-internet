@@ -345,9 +345,23 @@ With these properties, the costs in our graph have an elegant interpretation. In
 
 Such a logarithmic scale is particularly convenient when a cost metric over links accumulates on a per physical distance basis, in which case the cost metric is simply the physical length of the link multiplied by the metric per unit distance. For example, if a fibre channel implements loss at 3dB/km, the loss over 10km is 10$\times$3dB.
 
-Note that lower bounds on fidelity, purity, efficiency and dephasing are all multiplicative on a scale of 0 to 1, and thus their logarithms may be regarded as cost metrics.
+Note that lower bounds on fidelity, purity, efficiency and dephasing are all multiplicative on a scale of 0 to 1, and thus their logarithms may be regarded as cost metrics. Spatio-temporal mode-mismatch, latency, dollar cost and displacements are clearly automatically metrics as they are additive.
 
-Spatio-temporal mode-mismatch, latency, dollar cost and displacements are clearly automatically metrics as they are additive.
+A dephasing channel can be easily converted to a distance metric as follows. First we reparameterise the dephasing channel into,
+\begin{align}
+\mathcal{E}(\hat\rho) &= p\hat\rho + (1-p)\hat{Z}\hat\rho\hat{Z}\nonumber\\
+&= (2p-1)\hat\rho + (1-p)(\hat{Z}\hat\rho\hat{Z} + \hat\rho).	
+\end{align}
+Now \mbox{$2p-1$} is the probability that the state is not dephased and \mbox{$1-p$} is the probability that the state is replaced with the completely dephased state. Therefore the probability of multiple applications of the channel not dephasing the state scales multiplicitavely as,
+\begin{align}
+p_\mathrm{no\, error} = \prod_{i}(2p_i-1),
+\end{align}
+which is additive in a logarithmic scale as before,
+\begin{align}
+\log(p_\mathrm{no\, error}) = \sum_i \log(2p_i-1),
+\end{align}
+which acts as a distance metric. This approach can similarly be applied to other Pauli channels.
+
 
 In the case of mutual information and channel capacity, it makes most sense to consider the number of bits that are lost by a channel, rather than the number communicated, since then we have a measure with quasi-metric properties. Specifically, let the number of bits lost by a channel be the difference between the number of bits in the input state and the channel capacity,
 \begin{align}
@@ -367,21 +381,6 @@ Then, the number of actual bits lost is bounded from above and below as,
 \begin{align}
 B_\mathrm{lower} \leq B_\mathrm{lost} \leq B_\mathrm{upper}.	
 \end{align}
-
-A dephasing channel can be easily converted to a distance metric as follows. First we reparameterise the dephasing channel into,
-\begin{align}
-\mathcal{E}(\hat\rho) &= p\hat\rho + (1-p)\hat{Z}\hat\rho\hat{Z}\nonumber\\
-&= (2p-1)\hat\rho + (1-p)(\hat{Z}\hat\rho\hat{Z} + \hat\rho).	
-\end{align}
-Now \mbox{$2p-1$} is the probability that the state is not dephased and \mbox{$1-p$} is the probability that the state is replaced with the completely dephased state. Therefore the probability of multiple applications of the channel not dephasing the state scales multiplicitavely as,
-\begin{align}
-p_\mathrm{no\, error} = \prod_{i}(2p_i-1),
-\end{align}
-which is additive in a logarithmic scale as before,
-\begin{align}
-\log(p_\mathrm{no\, error}) = \sum_i \log(2p_i-1),
-\end{align}
-which acts as a distance metric. This approach can similarly be applied to other Pauli channels.
 
 %In the case of mutual information, which is not a metric, one can use it to define the \textit{variation of information} metric,
 %\begin{align}\index{Variation of information}
