@@ -6,7 +6,11 @@
 
 \dropcap{A}{s} quantum (or classical) networks inherently reside on graphs, it is important to introduce some of the key graph structures of relevance to networking and some of their properties of relevance to quantum networking protocols.
 
-In principle a network could be characterised by any connected graph whatsoever. However, there are certain structures and patterns that emerge very frequently and deserve special attention.
+Let the graph $G$ representing the network be,
+\begin{align}
+G=(V,E),	
+\end{align}
+with vertices $V$ and edges $E$. In principle a network could be characterised by any connected graph whatsoever. However, there are certain structures and patterns that emerge very frequently and deserve special attention.
 
 It is paramount that QTCP protocols have the capacity to deal with the diverse network topologies that are likely to present themselves in the future real-world quantum internet. Some of the graph-theoretic algorithms that we rely on in our QTCP protocol (Sec.~\ref{sec:graph_theory}) are computationally efficient for \textit{arbitrary} graph topologies, even more so for certain classes of graphs exhibiting particular structure, such as tree graphs or complete graphs. Others, however, are computationally inefficient in general, but may have efficient approximation algorithms for some or all classes of topologies.
 
@@ -46,7 +50,11 @@ However, these highly desirable benefits come at the expense of requiring the mo
 
 This type of topology could arise in, for example, international-scale networks, where links of very high bandwidth (and value) between nations or continents need to be maximally utilised, which would be undermined by sparse, shared network topologies. Additionally, in this instance route redundancy will be highly valued, as the isolation of one continent from another would be catastrophic to the functioning of the global network.
 
-Fig.~\ref{fig:complete_graph} illustrates the $K_{15}$ graph. The number of edges scales as $O(n^2)$. Clearly route-finding is trivial, since there is always a direct P2P link from sender to receiver, with no possibility of collisions with other packets, requiring $O(1)$ search time (assuming all users are communicating only via their direct links with one another, which may not strictly be the case when costs are factored into strategies).
+Fig.~\ref{fig:complete_graph} illustrates the $K_{15}$ graph. The number of edges scales as,
+\begin{align}
+	|E|=O(n^2).
+\end{align}
+Clearly route-finding is trivial, since there is always a direct P2P link from sender to receiver, with no possibility of collisions with other packets, requiring $O(1)$ search time (assuming all users are communicating only via their direct links with one another, which may not strictly be the case when costs are factored into strategies).
 
 \begin{figure}[htpb]
 \includegraphics[width=0.35\textwidth]{K_15}
@@ -59,7 +67,11 @@ Fig.~\ref{fig:complete_graph} illustrates the $K_{15}$ graph. The number of edge
 
 \subsection{Lattice} \index{Lattice topologies}
 
-A lattice graph is simply an \mbox{$n\times m$} lattice of vertices (of any geometry, e.g squares), connecting each vertex to its immediate geometric neighbours. The number of edges scales obviously as \mbox{$|E|=O(mn)$}. This type of graph is useful when link costs are measured in terms of Euclidean distances, and nodes have nearest neighbour links, as per Fig.~\ref{fig:lattice}.
+A lattice graph is simply an \mbox{$n\times m$} lattice of vertices (of any geometry, e.g squares), connecting each vertex to its immediate geometric neighbours. The number of edges scales obviously as,
+\begin{align}
+	|E|=O(mn).
+\end{align}
+This type of graph is useful when link costs are measured in terms of Euclidean distances, and nodes have nearest neighbour links, as per Fig.~\ref{fig:lattice}.
 
 \begin{figure}[htpb]
 \includegraphics[width=0.35\textwidth]{lattice}
@@ -72,7 +84,10 @@ In the case of a balanced lattice, in which all edges are of equal weight, the c
 \begin{align}
 L_1 = |x_\mathrm{start} - x_\mathrm{finish}| + |y_\mathrm{start} - y_\mathrm{finish}|.
 \end{align}
-In this case, route finding is simplified, since \textit{all} routes, which strictly traverse in one direction vertically and one direction horizontally, are optimal and of equal distance. Thus, the diameter (maximum number of hops between any two points) on the network is \mbox{$d=O(m+n)$}.
+In this case, route finding is simplified, since \textit{all} routes, which strictly traverse in one direction vertically and one direction horizontally, are optimal and of equal distance. Thus, the diameter (maximum number of hops between any two points) on the network is,
+\begin{align}
+	d=O(m+n).
+\end{align}
 
 %
 % Tree
@@ -86,7 +101,15 @@ Trees are specified entirely by \textit{branching parameters} ($b_i$) -- the num
 
 The \textit{depth} ($d$) of a tree is the maximum number of steps from the root node to a terminating node with no children. The depth scales between \mbox{$d=O(|V|)$}, for the trivial linear tree (\mbox{$b_i=1$}), and \mbox{$d=O(\log |V|)$} for non-trivial branching parameters (\mbox{$b_i\neq 1$}).
 
-The worst-case number of edges that must be traversed to reach any vertex from any other is \mbox{$2d=O(\log|V|)$}, known as the \textit{diameter} of the graph\index{Diameter}, which implies that accumulated cost metrics scale as \mbox{$c=O(\log |V|)$}. Trees are the most frugal graphs in their number of edges, which are fixed at \mbox{$|E|=|V|-1$}, irrespective of the branching parameters, since because the graph is strictly acyclic, every addition of an edge requires the addition of exactly a single vertex. This makes tree graphs the cheapest to construct in terms of physical resource usage.
+The worst-case number of edges that must be traversed to reach any vertex from any other is,
+\begin{align}
+	O(\log|V|),
+\end{align}
+known as the \textit{diameter} of the graph\index{Diameter}, which implies that accumulated cost metrics scale similarly. Trees are the most frugal graphs in their number of edges, which are fixed at,
+\begin{align}
+	|E|=|V|-1,
+\end{align}
+irrespective of the branching parameters, since because the graph is strictly acyclic, every addition of an edge requires the addition of exactly a single vertex. This makes tree graphs the cheapest to construct in terms of physical resource usage.
 
 %
 % Balanced Tree
