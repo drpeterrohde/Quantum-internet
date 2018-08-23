@@ -1165,39 +1165,30 @@ and infers $t_\mathrm{ev}$.
 \end{table}
 
 %
-% Quantum-Enhanced Telescopy
+% Quantum-Enabled Telescopy
 %
 
-\subsection{Quantum-enabled telescopy}\index{Quantum-enhanced telescopy}
-
-
-\comment{Synthetic aperture}
+\subsection{Quantum-enabled telescopy}\index{Quantum-enabled telescopy}\label{sec:telescopy}
 
 For the direct imaging of an object, diffraction limits the resolution of the image. When we consider two neighbouring points on the object separated by a small angle, the minimum angular separation resolvable is 
-
 \begin{align}
-\theta_{min} = 1.22 \lambda/D
+	\theta_\mathrm{min} = 1.22 \frac{\lambda}{D},
 \end{align}
-\noindent known as the Rayleigh criterion, $D$ being the diameter of the aperture.
-% 
-Current optical interferometers have limited baseline lengths, and thus limited resolution. In principle one can build a telescope array with an arbitrary D, however, phase-locking the entire system is extremely difficult over long distances.
-A quantum information protocol has been developed to side-step this problem.
+known as the Rayleigh criterion\index{Rayleigh criterion}, $D$ being the diameter of the aperture\index{Aperture}.
 
-The light arriving from the distant object is a thermal
-state, but the average photon number per mode is much less than 1, therefore higher order terms are negligible. The state that reaches the telescope is therefore in the state
+Current optical interferometers have limited baseline lengths\index{Baseline length}, and thus limited resolution. In principle one can build a telescope array with a synthetic aperture\index{Synthetic aperture} of arbitrary $D$, however, phase-locking the entire system is extremely difficult over long distances. A quantum information protocol has been developed to side-step this problem.
 
+The light arriving from the distant object is a thermal state, but the average photon number per mode is much less than 1, therefore higher order terms are negligible. The state that reaches the telescope is therefore approximated by,
 \begin{align}
-\ket{\psi_\mathrm{image}} = \frac{1}{\sqrt{2}}(\ket{0}_A\ket{1}_B + e^{i\phi}\ket{1}_A\ket{0}_B).	
+\ket{\psi_\mathrm{image}} = \frac{1}{\sqrt{2}}(\ket{0}_A\ket{1}_B + e^{i\phi}\ket{1}_A\ket{0}_B),
 \end{align}
-
-\noindent where $\phi$ is the relative phase shift between the two telescope, which depends on the difference in distance travelled. If $\varphi$ can be measured accurately, this can give a precise estimate on the location of the object.
-
+where $\phi$ is the relative phase-shift between the two telescopes, which depends on the difference in distance of propagation. If $\phi$ can be measured accurately, this can give a precise estimate on the location of the object,
 \begin{align}
-\phi = \frac{b \sin(\theta)}{\lambda}.
+\phi = \frac{b \sin(\theta)}{\lambda},
 \end{align}
+where $\lambda$ is wavelength.
 
-Often the light that arrives will be formed by a mixture of photons from different sources that emit incoherently, and different location give rise to different phase shifts $\varphi$, resulting in a density matrix of the form
-
+Often the light that arrives will be formed by a mixture of photons from different sources that emit incoherently, and different locations give rise to different phase-shifts $\phi$, resulting in a density matrix of the form,
 \begin{align}
 \hat\rho = \frac{1}{2} \left(\begin{matrix}{}
   0 & 0 & 0 & 0 \\
@@ -1208,33 +1199,36 @@ Often the light that arrives will be formed by a mixture of photons from differe
 \end{align}
 where $\mathcal{V}$ is the visibility, reflecting decoherence.
 
-
-If we interfere the two modes at a 50:50 beam splitter, the photon will exit port 1 with probability
+If we interfere the two modes at a 50:50 beamsplitter, the photon will exit port 1 with probability,
 \begin{align}
-	p_\mathrm{coin} = \frac{1}{2} (1 + \mathrm{Re}[\mathcal{V}e^{-i\delta}]). 
+	p_\mathrm{coin} = \frac{1}{2} (1 + \mathrm{Re}[\mathcal{V}e^{-i\delta}]),
 \end{align}
+from which $\mathcal{V}$ can be determined by taking measurements while sweeping through $\delta$.
 
-The problem with implementing the measurement is the difficulty with transporting the single photons state over long distances without incurring loss or additional phase shifts.
+The problem with implementing the measurement is the difficulty of transporting the single photon state over long distances without incurring loss or additional phase-shifts.
 
-Instead of sending a valuable quantum state directly over a noisy quantum channel, instead one can distribute a Bell pair between the two telescope, such as $\ket{01}+\ket{10}$, then we teleport the original quantum state from one telescope to another. The entangled state is known, the preparation can be repeated, and one can use an entanglement distillation protocol to eliminate the phase noise.
+Instead of sending a valuable quantum state directly over a noisy quantum channel, one can distribute a Bell pair between the two telescopes, then we teleport the original quantum state from one telescope to the other. The entangled state is known, the preparation can be repeated, and one can use an entanglement distillation protocol to eliminate the phase noise.
 
-Now, we can use the entangled pair directly to measure the visibility, as in Fig.~\ref{fig:telescopy}. We postselect on the measurement results, considering the events where a single photon is observed A and B simultaneously.
-
-The variable delay line is now applied to the entangled state when the photon is sent to A, producing the entangled state 
-$\ket{0}_A\ket{1}_B + e^{i\delta}\ket{1}_A\ket{0}_B$.
-
-\begin{align}
-\ket{\psi_\mathrm{shared}} = \frac{1}{\sqrt{2}}(\ket{0}_A\ket{1}_B + e^{i\delta}\ket{1}_A\ket{0}_B).	
-\end{align}
-
-
+Now, we can use the entangled pair directly to measure the visibility, as in Fig.~\ref{fig:telescopy}. We post-select on the measurement results, considering the events where a single photon is observed at $A$ and $B$ simultaneously.
 
 \begin{figure}[htpb]
 \includegraphics[width=0.4\textwidth]{telescopy}
-\caption{\comment{To do}.}\label{fig:telescopy}\index{Quantum-enhanced telescopy}	
+\caption{Architecture for quantum-enabled telescopy using two widely separated telescopes, which have shared Bell pairs. The basic idea is that the Bell pair mediates teleportation of one telescope's photon to the other, at which point an interferometric technique measures their phase-difference, thereby determining $\phi$.}\label{fig:telescopy}\index{Quantum-enabled telescopy}	
 \end{figure}
 
- The total probability of seeing a correlation (A1, b1 or A2, b2), conditioned on having one click at each telescope
-$\frac{1}{2} (1 + \mathrm{Re}[\mathcal{V}e^{-i\delta}])$
-and the total probability of seeing an anticorrelation (A1, B2 or A2, B1) is $\frac{1}{2} (1 - \mathrm{Re}[\mathcal{V}e^{-i\delta}])$\cite{bib:PhysRevLett.109.070503}.
+The variable delay line is now applied to the entangled state when the photon is sent to $A$, producing the entangled state,
+\begin{align}
+\ket{\psi_\mathrm{shared}} = \frac{1}{\sqrt{2}}(\ket{0}_A\ket{1}_B + e^{i\delta}\ket{1}_A\ket{0}_B),	
+\end{align}
+where $\delta$ is determined by a controllable delay, allowing completion of the protocol to determine $\phi$.
 
+Thinking futuristically, in a future large-scale quantum internet, whereby Bell pairs are a readily available resource across the globe, quantum-enabled telescopy needn't be limited to pairs of telescopes, but could expand to become large-scale telescope arrays\index{Telescope arrays} comprising numerous telescopes, all sharing pairwise entanglement.
+
+ %The total probability of seeing a correlation ($A1$, $B1$ or $A2$, $B2$), conditioned on having one click at each telescope is,
+%\begin{align}
+% 	frac{1}{2} (1 + \mathrm{Re}[\mathcal{V}e^{-i\delta}]),
+%\end{align}
+%and the total probability of seeing an anti-correlation ($A1$, $B2$ or $A2$, $B1$) is \cite{bib:PhysRevLett.109.070503},
+%\begin{align}
+%	\frac{1}{2} (1 - \mathrm{Re}[\mathcal{V}e^{-i\delta}]).
+%\end{align}
