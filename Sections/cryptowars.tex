@@ -661,11 +661,18 @@ For these reasons, this scheme lends itself readily to photonic implementation, 
 
 \subsection{Quantum voting}\index{Quantum voting}
 
+The security of voting systems, and the anonymity of their voters are a pressing issue in the modern world, and there have been countless high-profile instances of voting systems being compromised nefariously.
+
 Based on similar ideas to quantum anonymous broadcasting is quantum voting, whereby a group of parties can anonymously vote such that no party, including the tallyman, is able to learn any individual voter's vote, but at the conclusion all are able to see the collective outcome of the vote.
 
 There are a multitude of different models for voting, and a number of quantum implementations for them have been described. The two most well-known are \textit{binary voting}\index{Binary voting}, whereby each party votes `yes' or `no', and \textit{anonymous surveys}\index{Anonymous surveys}, whereby each party votes a number and we wish to determine the sum of all the votes.
 
-Alg.~\ref{alg:quantum_voting} describes a quantum implementation for anonymous surveys, using the protocol described by \cite{bib:VaccaroVoting}.
+Fig.~\ref{fig:quantum_voting} and Alg.~\ref{alg:quantum_voting} describe a quantum implementation for anonymous surveys, using the protocol described by \cite{bib:VaccaroVoting}.
+
+\begin{figure}[!htbp]
+\includegraphics[width=0.35\textwidth]{quantum_voting}
+\caption{Protocol for quantum voting via anonymous surveying. The tallyman prepares the entangled state $\ket{B_0}$, half of which is shared with the votes. The voters each perform local phase-shift operations on the voters' half of the state, as per Alg.~\ref{alg:quantum_voting}. The phase-transformed state is then returned to the tallyman, who is able to extract the phase and hence the cumulative vote.}\label{fig:quantum_voting}\index{Quantum voting}	
+\end{figure}
 
 Conceptually, the scheme is similar to quantum anonymous broadcasting in that it hides votes in phases within an entangled state, which are not accessible to individual parties. The scheme relies on the preparation and distribution of a particular entangled state as a resource. Unfortunately this particular state is not one which is known how to be trivially prepared optically, and would therefore lend itself well to the outsourcing of preparation and distribution to a capable host via the quantum internet.
 
@@ -686,11 +693,11 @@ in the photon-number basis, where $T$ is held by the tallyman and $V$ is held by
 where $\hat{n}_V$ is the photon-number operator for mode $V$, and $\nu_j$ is the amount cast for the $j$th voters vote.
 \item Following the $m$th vote the ballot state is,
 \begin{align}
-	\ket{B_m} = \frac{1}{\sqrt{N+1}}\sum_{n=0}^m e^{in\Delta_m} \ket{N-n}_T\ket{n}_V,
+	\ket{B_m} = \frac{1}{\sqrt{N+1}}\sum_{n=0}^N e^{in\Delta_m} \ket{N-n}_T\ket{n}_V,
 \end{align}
 where,
 \begin{align}
-\Delta_m = \frac{2\pi}{N+1}\sum_{j=1}^m \nu_j,
+\Delta_m = \frac{2\pi}{N+1}\sum_{j=0}^m \nu_j,
 \end{align}
 is a scaled sum of the votes.
 \item After the $m$th vote the state observed by the tallyman is,
@@ -709,7 +716,7 @@ where,
 \end{align}
 \item The tallyman finds the expectation value of the tally operator,
 \begin{align}
-\bra{B_N}\hat{T}\ket{B_N} = \sum_{j=1}^N \nu_j,
+\bra{B_N}\hat{T}\ket{B_N} = \sum_{j=0}^N \nu_j,
 \end{align}
 yielding the sum of all the votes.
 \item $\Box$
