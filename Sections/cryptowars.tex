@@ -14,11 +14,12 @@ Today, the ability to communicate secretly with others is completely taken for g
 
 \section{What is security?}\index{Computational security}\index{Information-theoretic security}\label{sec:comp_vs_inf_th_sec}
 
-\dropcap{B}{efore} describing any specific cryptographic protocols, let us define what is meant by `security' in a cryptographic context. We differentiate between \textit{information theoretic security}\index{Information-theoretic security}, as opposed to \textit{computational security}\index{Computational security}.
+\dropcap{B}{efore} describing any specific cryptographic protocols, let us define what is meant by `security' in a cryptographic context. We differentiate between \textit{information theoretic security}\index{Information-theoretic security}, as opposed to \textit{computational security}\index{Computational security}:
 
-In the former, the laws of quantum information bound the amount of information that can be extracted from a system, irrespective of measurement or computational operations. Thus, such security can be regarded as attack-independent.
-
-In the latter, security is based on the assumption that an adversary's computational resources are insufficient to perform cryptanalysis or brute-force cracking. Clearly the former makes a far stronger statement about the security of a protocol than the latter.
+\begin{itemize}
+	\item Information-theoretic security: the laws of quantum information bound the amount of information that can be extracted from a system, irrespective of measurement or computational operations. Thus, such security can be regarded as attack-independent.
+	\item Computational security: is based on the assumption that an adversary's computational resources are insufficient to perform cryptanalysis or brute-force cracking. Clearly the former makes a far stronger statement about the security of a protocol than the latter.
+\end{itemize}
 
 Classical public- and private-key encryption protocols are typically based upon the assumption of computational security (e.g the computational complexity of performing integer factorisation in the case of RSA public-key encryption, or solving a complex satisfiability problem in the case of private-key encryption), whereas quantum encryption protocols are typically information theoretically secure (e.g the one-time pad using QKD).
 
@@ -342,7 +343,7 @@ Evidently, the lifespan of exisiting Blockchain technologies is limited and in t
 
 \dropcap{T}{he} vulnerability of RSA to attacks by quantum computers raises the question whether this spells the end of classical cryptography and compromises the security of much of the present-day internet.
 
-Thankfully, there are two saving graces. First of all, much research is being carried out into \textit{post-quantum classical cryptography}\index{Post-quantum classical cryptography}. That is, public-key cryptosystems based upon trapdoor functions\index{One-way functions} that reside outside of \textbf{BQP} and are therefore not efficiently attacked by quantum computers. One such line of research is to construct cryptosystems based upon \textbf{NP}-complete problems, such as the McEliece protocol\index{McEliece protocol}. Recall from Fig.~\ref{fig:complexity_classes} that \textbf{NP}-complete is strongly believed to reside completely outside of \textbf{BQP}. However, while many computer scientists might be comfortable with such a level of security, it is nonetheless based on the unproven conjecture that \textbf{NP}-complete and \textbf{BQP} do not intersect, i.e \mbox{$\mathbf{NP}\nsubseteq\mathbf{BQP}$}. What would be much more satisfying would be protocols demonstrating information-theoretic security\index{Information-theoretic security} rather than computational security\index{Computational security}. Here quantum mechanics can help us -- \textit{quantum cryptography}.
+Thankfully, there are two saving graces. First of all, much research is being carried out into \textit{post-quantum classical cryptography}\index{Post-quantum classical cryptography}. That is, public-key cryptosystems based upon trapdoor functions\index{One-way functions} that reside outside of \textbf{BQP} and are therefore not efficiently attacked by quantum computers. One such line of research is to construct cryptosystems based upon \textbf{NP}-complete problems, such as the McEliece protocol\index{McEliece protocol} \cite{bib:McEliece}. Recall from Fig.~\ref{fig:complexity_classes} that \textbf{NP}-complete is strongly believed to reside completely outside of \textbf{BQP}. However, while many computer scientists might be comfortable with such a level of security, it is nonetheless based on the unproven conjecture that \textbf{NP}-complete and \textbf{BQP} do not intersect, i.e \mbox{$\mathbf{NP}\nsubseteq\mathbf{BQP}$}. What would be much more satisfying would be protocols demonstrating information-theoretic security\index{Information-theoretic security} rather than computational security\index{Computational security}. Here quantum mechanics can help us -- \textit{quantum cryptography}.
 
 %
 % Quantum Cryptography
@@ -369,8 +370,6 @@ The central notion to QKD protocols, in their numerous manifestations, is that m
 QKD is a relatively mature technology with already several commercial systems being available off-the-shelf\footnote{Examples of companies selling off-the-shelf QKD hardware include \href{http://www.magiqtech.com}{MagiQ} and \href{http://www.idquantique.com}{ID Quantique}.} and initial space-based implementations have been successfully demonstrated \cite{Pan}.
 
 It is easy to see the utility of quantum networks in enabling commodity deployment of QKD -- users desire to communicate photons across long-range ad hoc networks, with low loss and dephasing. A global quantum internet would allow quantum cryptography to truly supersede classical cryptography, bypassing the vulnerabilities faced by classical cryptography in the era of quantum computing.
-
-In Sec.~\ref{sec:state_of_the_art} we summarise the state-of-the-art in the physical implementation of QKD.
 
 %
 % BB84 Protocol
@@ -619,10 +618,17 @@ for any qubit $i$. This invariance in the location of the $\hat{Z}$ gate is the 
 
 Finally, all users measure their qubits in the $\pm$-basis and publicly (without encryption) broadcast their measurement outcomes. All users now see all other users' measurement outcomes and are able to calculate the collective parity of the measurements. Now if the parity is even, the speaker must have said `0', whereas if it is odd he must have said `1'. The protocol is shown in Fig.~\ref{fig:QAB} and described in detail in Alg.~\ref{alg:QAB}.
 
+\if 2\pubmode
+\begin{figure}[!htbp]
+\includegraphics[width=0.475\textwidth]{QAB_long}
+\caption{Protocol for quantum anonymous broadcasting. (a) A central trusted server prepares GHZ states and distributes them amongst a group of users, one qubit per user. All users measure in the $\pm$-basis. (b) All users classically broadcast their measurement outcomes yielding shared random parity. During broadcast, the broadcaster lies about his measurement outcome to flip the joint parity if he wishes to transmit `1', or tells the truth to transmit `0'. The joint parity encodes the message of the anonymous user, which all listeners are able to recover. Importantly, only one user may broadcast at a time, otherwise the recovered message will be given by the XOR of all the simultaneously broadcast messages.} \label{fig:QAB}
+\end{figure}
+\else
 \begin{figure*}[!htbp]
 \includegraphics[width=0.8\textwidth]{QAB}
 \caption{Protocol for quantum anonymous broadcasting. (a) A central trusted server prepares GHZ states and distributes them amongst a group of users, one qubit per user. All users measure in the $\pm$-basis. (b) All users classically broadcast their measurement outcomes yielding shared random parity. During broadcast, the broadcaster lies about his measurement outcome to flip the joint parity if he wishes to transmit `1', or tells the truth to transmit `0'. The joint parity encodes the message of the anonymous user, which all listeners are able to recover. Importantly, only one user may broadcast at a time, otherwise the recovered message will be given by the XOR of all the simultaneously broadcast messages.} \label{fig:QAB}
 \end{figure*}
+\fi
 
 \begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
