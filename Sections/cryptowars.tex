@@ -667,11 +667,15 @@ For these reasons, this scheme lends itself readily to photonic implementation, 
 
 \subsection{Quantum voting}\index{Quantum voting}
 
-The security of voting systems, and the anonymity of their voters are a pressing issue in the modern world, and there have been countless high-profile instances of voting systems being compromised nefariously.
+The security of voting systems, and the anonymity of their voters are pressing issues in the modern world, and there have been countless high-profile instances of voting systems being compromised nefariously.
 
 Based on similar ideas to quantum anonymous broadcasting is quantum voting, whereby a group of parties can anonymously vote such that no party, including the tallyman, is able to learn any individual voter's vote, but at the conclusion all are able to see the collective outcome of the vote.
 
-There are a multitude of different models for voting, and a number of quantum implementations for them have been described. The two most well-known are \textit{binary voting}\index{Binary voting}, whereby each party votes `yes' or `no', and \textit{anonymous surveys}\index{Anonymous surveys}, whereby each party votes a number and we wish to determine the sum of all the votes.
+There are a multitude of different models for voting, and a number of quantum implementations for them have been described. The two most well-known are:
+\begin{itemize}
+	\item Binary voting\index{Binary voting}: whereby each party votes `yes' or `no'. 
+	\item Anonymous surveys\index{Anonymous surveys}: whereby each party votes a number and we wish to determine the sum of all the votes.
+\end{itemize}
 
 Fig.~\ref{fig:quantum_voting} and Alg.~\ref{alg:quantum_voting} describe a quantum implementation for anonymous surveys, using the protocol described by \cite{bib:VaccaroVoting}.
 
@@ -687,17 +691,17 @@ Conceptually, the scheme is similar to quantum anonymous broadcasting in that it
 \texttt{
 function QuantumVoting($\ket{B_0}$):
 \begin{enumerate}
-\item For $N$ voters, the \textit{ballot state} is prepared,
+\item Prepare \textit{ballot state} for $N$ voters,
 \begin{align}
 \ket{B_0} = \frac{1}{\sqrt{N+1}}\sum_{n=0}^N \ket{N-n}_T\ket{n}_V,	
 \end{align}
-in the photon-number basis, where $T$ is held by the tallyman and $V$ is held by the voters.
+in the photon-number basis, where $T$ and $V$ represent the tallyman and the voters.
 \item Each voter $j$ applies their vote operator,
 \begin{align}
 	\hat{v}_j = e^{i\pi\hat{n}_V \frac{\nu_j}{N+1}},
 \end{align}
-where $\hat{n}_V$ is the photon-number operator for mode $V$, and $\nu_j$ is the amount cast for the $j$th voters vote.
-\item Following the $m$th vote the ballot state is,
+where $\hat{n}_V$ is the photon-number operator, and $\nu_j$ is the vote cast by $j$.
+\item Following the $m$th vote,
 \begin{align}
 	\ket{B_m} = \frac{1}{\sqrt{N+1}}\sum_{n=0}^N e^{in\Delta_m} \ket{N-n}_T\ket{n}_V,
 \end{align}
@@ -706,11 +710,11 @@ where,
 \Delta_m = \frac{2\pi}{N+1}\sum_{j=0}^m \nu_j,
 \end{align}
 is a scaled sum of the votes.
-\item After the $m$th vote the state observed by the tallyman is,
+\item The state observed by the $T$ is,
 \begin{align}
 \mathrm{tr}_V(\ket{B_m}\bra{B_m}) = \frac{1}{N+1}\sum_{n=0}^N \ket{n}_T\bra{n}_T,	
 \end{align}
-which contains no voting information, and similarly for the voters' reduced state.
+which contains no voting information, similarly for $V$.
 \item After all $N$ voters have voted, the voter state $V$ is transferred to the tallyman $T$.
 \item Define the tally operator as,
 \begin{align}
@@ -722,9 +726,10 @@ where,
 \end{align}
 \item The tallyman finds the expectation value of the tally operator,
 \begin{align}
-\bra{B_N}\hat{T}\ket{B_N} = \sum_{j=0}^N \nu_j,
+r = \bra{B_N}\hat{T}\ket{B_N} = \sum_{j=0}^N \nu_j,
 \end{align}
 yielding the sum of all the votes.
+\item return(r)
 \item $\Box$
 \end{enumerate}
 }
