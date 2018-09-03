@@ -11,7 +11,7 @@ We will focus heavily on combinatorial optimisation techniques, where the goal i
 In Table.~\ref{tab:net_alg_sum} we summarise the upcoming discussion on important network algorithms, and their associated complexities.
 
 \startnormtable
-\begin{table*}[htpb]
+\begin{table*}[!htbp]
 	\begin{tabular}{|c|c|c|c|}
 		\hline
   		\rowcolor{Dandelion} Algorithm & Description & Complexity class & Scaling \\
@@ -49,7 +49,7 @@ In Table.~\ref{tab:net_alg_sum} we summarise the upcoming discussion on importan
   		\rowcolor{Lavender} Vehicle rescheduling problem & Same as above but with dynamically changing costs & \textbf{NP}-complete & ? \\
     	\hline
 	\end{tabular}
-	\caption{Summary of some important network algorithms and their complexities. The \textbf{NP}-complete algorithms are not believed to have efficient classical algorithms, and their exact scaling is not well understood.} \label{tab:net_alg_sum} \index{Network algorithms}\index{Breadth-first-search (BFS) algorithm}\index{Depth-first-search (DFS) algorithm}\index{Shortest-path algorithm}\index{Single-source shortest path algorithm}\index{Minimum spanning tree algorithm}\index{Minimum cost flow algorithm}\index{Maximum flow algorithm}\index{Multi-commodity flow algorithm}\index{Vehicle routing problem}\index{Vehicle rescheduling problem}
+	\captionspacetab \caption{Summary of some important network algorithms and their complexities. The \textbf{NP}-complete algorithms are not believed to have efficient classical algorithms, and their exact scaling is not well understood.} \label{tab:net_alg_sum} \index{Network algorithms}\index{Breadth-first-search (BFS) algorithm}\index{Depth-first-search (DFS) algorithm}\index{Shortest-path algorithm}\index{Single-source shortest path algorithm}\index{Minimum spanning tree algorithm}\index{Minimum cost flow algorithm}\index{Maximum flow algorithm}\index{Multi-commodity flow algorithm}\index{Vehicle routing problem}\index{Vehicle rescheduling problem}
 \end{table*}
 \startalgtable
 
@@ -67,10 +67,17 @@ In DFS, on the other hand, we begin by following a single arbitrary path until w
 
 Examples of these two algorithms are shown in Fig.~\ref{fig:BFS_DFS}.
 
-\begin{figure}[htpb]
-\includegraphics[width=0.3\textwidth]{BFS_DFS}
-\caption{Comparison of the order in which vertices are explored, using the breadth-first-search (BFS) and depth-first-search (DFS) algorithms, where vertex 1 is the root vertex.} \label{fig:BFS_DFS}
-\end{figure}
+\if 2\pubmode
+	\begin{figure}[!htbp]
+	\includegraphics[width=0.3\textwidth]{BFS_DFS_long}
+	\captionspacefig \caption{Comparison of the order in which vertices are explored, using the breadth-first-search (BFS) and depth-first-search (DFS) algorithms, where vertex 1 is the root vertex.} \label{fig:BFS_DFS}
+	\end{figure}
+\else
+	\begin{figure*}[!htbp]
+	\includegraphics[width=0.65\textwidth]{BFS_DFS}
+	\captionspacefig \caption{Comparison of the order in which vertices are explored, using the breadth-first-search (BFS) and depth-first-search (DFS) algorithms, where vertex 1 is the root vertex.} \label{fig:BFS_DFS}
+	\end{figure*}
+\fi
 
 Both BFS and DFS guarantee visiting every vertex in a connected graph, and do so using only nearest neighbour transitions. Such algorithms are therefore very useful for network discovery.
 
@@ -90,11 +97,11 @@ where $|V|$ and $|E|$ are the number of vertices and edges respectively. Thus, t
 
 In graph theory, the shortest-path problem is that of finding a subgraph of a given graph $G$, connecting two vertices, \mbox{$A\to B \subset G$}, such that the sum of its edge weights is minimised. In the context of our application to route-finding, this amounts to finding a route that minimises cost.
 
-The first proven shortest-path algorithm was by Dijkstra \cite{bib:Dijkstra59}, which requires runtime,
+The first proven shortest-path algorithm was invented by and named after Dijkstra \cite{bib:Dijkstra59}, which requires runtime,
 \begin{align}
 	O(|V|^2),
 \end{align}
-also residing in \textbf{P}\index{P}. Subsequently, a number of improvements and variations on Dijkstra's algorithm have been proposed, most notably the $A^*$ algorithm \cite{bib:Astar}\index{Shortest-path algorithm}, which has found widespread modern use, using a heuristic approach to improve performance over Dijkstra.
+also residing in \textbf{P}\index{P} (one of the relatively few, and highly valuable optimisation problems that is classically efficient). Subsequently, a number of improvements and variations on Dijkstra's algorithm have been proposed, most notably the $A^*$ algorithm \cite{bib:Astar}\index{Shortest-path algorithm}, which has found widespread modern use, using a heuristic approach to improve performance over Dijkstra.
 
 Formally, let $\vec{R}$ be the set of all routes \mbox{$A\to B$}. Then,
 \begin{align}
@@ -102,7 +109,7 @@ c_\mathrm{opt} = \min_{r\in R} \left(\sum_{i\in r} c_\mathrm{net}(i) \right),
 \end{align}
 where \mbox{$i\in r$} denotes the $i$th edge in the route $r$. Intuitively, the (in general) exponential number of possible paths through a graph might lead one to believe the above optimisation problem is a computationally inefficient one (such as \textbf{NP}-complete, or worse). However, perhaps surprisingly, Dijkstra's algorithm cleverly manages to reduce this to a polynomial-time problem. A sketch of the algorithm is provided in Alg.~\ref{alg:dijkstra}, which needn't be understood by the reader desperate to read further.
 
-\begin{table}[htpb]
+\begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
 \texttt{
 function DijkstraShortestPath($G$,$A$,$B$):
@@ -135,7 +142,7 @@ function DijkstraShortestPath($G$,$A$,$B$):
     \item $\Box$
 \end{enumerate}}
 \end{mdframed}
-\caption{Dijkstra's original shortest-path algorithm for finding the lowest weight path through a graph, $G$, between two vertices, $A$ (source) and $B$ (destination). The algorithm has $O(|V|^2)$ runtime (in \textbf{P}).} \label{alg:dijkstra}\index{Shortest-path algorithm}
+\captionspacealg \caption{Dijkstra's original shortest-path algorithm for finding the lowest weight path through a graph, $G$, between two vertices, $A$ (source) and $B$ (destination). The algorithm has $O(|V|^2)$ runtime (in \textbf{P}).} \label{alg:dijkstra}\index{Shortest-path algorithm}
 \end{table}
 
 Fig.~\ref{fig:simp_route_opt} illustrates a directed, edge-weighted graph. A shortest-path algorithm applied between vertices $A$ and $B$ would return \mbox{$R_\mathrm{shortest} = A\to F\to B$} as the minimum cost route.

@@ -14,11 +14,12 @@ Today, the ability to communicate secretly with others is completely taken for g
 
 \section{What is security?}\index{Computational security}\index{Information-theoretic security}\label{sec:comp_vs_inf_th_sec}
 
-\dropcap{B}{efore} describing any specific cryptographic protocols, let us define what is meant by `security' in a cryptographic context. We differentiate between \textit{information theoretic security}\index{Information-theoretic security}, as opposed to \textit{computational security}\index{Computational security}.
+\dropcap{B}{efore} describing any specific cryptographic protocols, let us define what is meant by `security' in a cryptographic context. We differentiate between \textit{information theoretic security}\index{Information-theoretic security}, as opposed to \textit{computational security}\index{Computational security}:
 
-In the former, the laws of quantum information bound the amount of information that can be extracted from a system, irrespective of measurement or computational operations. Thus, such security can be regarded as attack-independent.
-
-In the latter, security is based on the assumption that an adversary's computational resources are insufficient to perform cryptanalysis or brute-force cracking. Clearly the former makes a far stronger statement about the security of a protocol than the latter.
+\begin{itemize}
+	\item Information-theoretic security: the laws of quantum information bound the amount of information that can be extracted from a system, irrespective of measurement or computational operations. Thus, such security can be regarded as attack-independent.
+	\item Computational security: is based on the assumption that an adversary's computational resources are insufficient to perform cryptanalysis or brute-force cracking. Clearly the former makes a far stronger statement about the security of a protocol than the latter.
+\end{itemize}
 
 Classical public- and private-key encryption protocols are typically based upon the assumption of computational security (e.g the computational complexity of performing integer factorisation in the case of RSA public-key encryption, or solving a complex satisfiability problem in the case of private-key encryption), whereas quantum encryption protocols are typically information theoretically secure (e.g the one-time pad using QKD).
 
@@ -88,7 +89,7 @@ Public- (or asymmetric-) key cryptography addresses this issue by replacing the 
 
 RSA \cite{bib:RSA} was the first published public-key cryptographic protocol, and forms the backbone for most encryption used on the internet today. It achieves its security based on the belief that factorising large integers into constituent primes is a computationally hard problem -- a so-called `trapdoor function'\index{One-way functions}. The algorithm is built upon number theory using modular arithmetic, described in detail in Alg.~\ref{alg:RSA}.
 
-\begin{table}[htpb]
+\begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
 \texttt{
 function RSAGenerateKey():
@@ -120,7 +121,7 @@ function RSADecrypt(ciphertext, privateKey):
 \end{enumerate}
 }
 \end{mdframed}
-\caption{Number-theoretic algorithms based on modular arithmetic for RSA key generation, encryption and decryption.} \label{alg:RSA}
+\captionspacealg \caption{Number-theoretic algorithms based on modular arithmetic for RSA key generation, encryption and decryption.} \label{alg:RSA}
 \end{table}
 
 Since RSA, numerous other public-key cryptosystems have been developed, based on different choices of trapdoor function. Most notably, elliptic curve cryptography\index{Elliptic curve cryptography} has gained much attention. However, RSA remains the most widely used and well studied public-key cipher.
@@ -147,7 +148,7 @@ Rather than cryptographically ensuring the secrecy of messages, a user may wish 
 
 Digital signatures can be easily implemented using the RSA protocol\index{RSA protocol}, but swapping the role of the public and private keys. Now the public key can only be used for decrypting a message, and the private key can only be used for encrypting it. As before, it is computationally hard to infer one from the other. The protocol for sending and verifying a digitally signed message is shown in Alg.~\ref{alg:dig_sig}.
 
-\begin{table}[htpb]
+\begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
 \texttt{
 function DigitalSignature(message,keyPair):
@@ -178,7 +179,7 @@ function DigitalSignature(message,keyPair):
 \end{enumerate}
 }
 \end{mdframed}
-\caption{Protocol for digitally signing a message using public-key cryptography (RSA) and a cryptographic hash function (SHA256).} \label{alg:dig_sig}
+\captionspacealg \caption{Protocol for digitally signing a message using public-key cryptography (RSA) and a cryptographic hash function (SHA256).} \label{alg:dig_sig}
 \end{table}
 
 The key point from the security perspective is that the private key cannot be efficiently inferred from the public key. So although everyone has access to Alice's public key, no one is able to counterfeit messages since they cannot create encrypted signatures without access to her private key -- signatures can be easily verified but not created.
@@ -242,7 +243,7 @@ The most obvious approach to cracking a cryptosystem is to systematically try ou
 Far better than waiting the age of the universe for the right key to turn up, is \textit{cryptanalysis}. Here we study patterns between input and output strings from a cipher utilising a particular key. There are many variations on this, but include techniques such as \cite{bib:Schneier96}:
 
 \begin{itemize}
-	\item Known plaintext attacks (KPA)\index{Known plaintext attack}: Through alternate means of espionage, the attacker is able to possess \textit{both} a ciphertext and its associated plaintext. Knowing both the input and output to the encryption algorithm may then reveal information about the key relating them. This technique was important to Alan Turing's successful cracking of the German Enigma encryption protocol during World War II.
+	\item Known plaintext attacks (KPA)\index{Known plaintext attack}: Through alternate means of espionage, the attacker is able to possess \textit{both} a ciphertext and its associated plaintext. Knowing both the input and output to the encryption algorithm may then reveal information about the key relating them. This technique was important to Alan Turing's successful cracking of the German Enigma\index{Enigma machines} encryption protocol during World War II.
 	\item Chosen plaintext attack (CPA)\index{Chosen plaintext attack}: The same as a KPA except that the adversary has the ability to choose what the known plaintext is.
 	\item Linear cryptanalysis\index{Linear cryptanalysis}: A technique for representing ciphers as linear systems, to which KPA are applied.
 	\item Differential cryptanalysis\index{Differential cryptanalysis}: We analyse how changes in input bits propagate through the cipher to modulate output bits. Typically this type of technique operates as a CPA.
@@ -342,7 +343,7 @@ Evidently, the lifespan of exisiting Blockchain technologies is limited and in t
 
 \dropcap{T}{he} vulnerability of RSA to attacks by quantum computers raises the question whether this spells the end of classical cryptography and compromises the security of much of the present-day internet.
 
-Thankfully, there are two saving graces. First of all, much research is being carried out into \textit{post-quantum classical cryptography}\index{Post-quantum classical cryptography}. That is, public-key cryptosystems based upon trapdoor functions\index{One-way functions} that reside outside of \textbf{BQP} and are therefore not efficiently attacked by quantum computers. One such line of research is to construct cryptosystems based upon \textbf{NP}-complete problems, such as the McEliece protocol\index{McEliece protocol}. Recall from Fig.~\ref{fig:complexity_classes} that \textbf{NP}-complete is strongly believed to reside completely outside of \textbf{BQP}. However, while many computer scientists might be comfortable with such a level of security, it is nonetheless based on the unproven conjecture that \textbf{NP}-complete and \textbf{BQP} do not intersect, i.e \mbox{$\mathbf{NP}\nsubseteq\mathbf{BQP}$}. What would be much more satisfying would be protocols demonstrating information-theoretic security\index{Information-theoretic security} rather than computational security\index{Computational security}. Here quantum mechanics can help us -- \textit{quantum cryptography}.
+Thankfully, there are two saving graces. First of all, much research is being carried out into \textit{post-quantum classical cryptography}\index{Post-quantum classical cryptography}. That is, public-key cryptosystems based upon trapdoor functions\index{One-way functions} that reside outside of \textbf{BQP} and are therefore not efficiently attacked by quantum computers. One such line of research is to construct cryptosystems based upon \textbf{NP}-complete problems, such as the McEliece protocol\index{McEliece protocol} \cite{bib:McEliece}. Recall from Fig.~\ref{fig:complexity_classes} that \textbf{NP}-complete is strongly believed to reside completely outside of \textbf{BQP}. However, while many computer scientists might be comfortable with such a level of security, it is nonetheless based on the unproven conjecture that \textbf{NP}-complete and \textbf{BQP} do not intersect, i.e \mbox{$\mathbf{NP}\nsubseteq\mathbf{BQP}$}. What would be much more satisfying would be protocols demonstrating information-theoretic security\index{Information-theoretic security} rather than computational security\index{Computational security}. Here quantum mechanics can help us -- \textit{quantum cryptography}.
 
 %
 % Quantum Cryptography
@@ -370,8 +371,6 @@ QKD is a relatively mature technology with already several commercial systems be
 
 It is easy to see the utility of quantum networks in enabling commodity deployment of QKD -- users desire to communicate photons across long-range ad hoc networks, with low loss and dephasing. A global quantum internet would allow quantum cryptography to truly supersede classical cryptography, bypassing the vulnerabilities faced by classical cryptography in the era of quantum computing.
 
-In Sec.~\ref{sec:state_of_the_art} we summarise the state-of-the-art in the physical implementation of QKD.
-
 %
 % BB84 Protocol
 %
@@ -384,7 +383,7 @@ Implemented photonically, BB84 requires only the transmission of a sequence of s
 
 The BB84 protocol is described in detail in Alg.~\ref{alg:bb84} in the context of polarisation-encoded photons, which is the most natural (but not only) setting for this protocol. An example evolution of the protocol is illustrated in Fig.~\ref{fig:BB84_example}
 
-\begin{table}[htpb]
+\begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
 \texttt{
 function BB84():
@@ -414,12 +413,12 @@ or,
 \item $\Box$
 \end{enumerate}}
 \end{mdframed}
-\caption{BB84\index{BB84 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photons. Upon completion of the protocol, Alice and Bob share a random bit-string for use in a one-time pad cipher\index{One-time pad}.}\label{alg:bb84}
+\captionspacealg \caption{BB84\index{BB84 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photons. Upon completion of the protocol, Alice and Bob share a random bit-string for use in a one-time pad cipher\index{One-time pad}.}\label{alg:bb84}
 \end{table}
 
-\begin{figure}[htpb]
-\includegraphics[width=0.47\textwidth]{BB84_example}
-\caption{Example execution of the BB84 protocol for securely sharing random bit-strings between Alice and Bob as per Alg.~\ref{alg:bb84}. At the conclusion of the protocol, some bits are discarded (X), with those remaining guaranteed to be secret between the two parties.} \label{fig:BB84_example}	
+\begin{figure}[!htbp]
+\includegraphics[width=0.475\textwidth]{BB84_example}
+\captionspacefig \caption{Example execution of the BB84 protocol for securely sharing random bit-strings between Alice and Bob as per Alg.~\ref{alg:bb84}. At the conclusion of the protocol, some bits are discarded (X), with those remaining guaranteed to be secret between the two parties.} \label{fig:BB84_example}	
 \end{figure}
 
 To understand the secrecy of the protocol as described in Alg.~\ref{alg:bb84}, suppose an eavesdropper, Eve, were to perform an intercept-resend\index{Intercept-resend attack} attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of encoding bases, and Eve will not know the bases in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. Thus, by sacrificing some of their shared bits, via openly communicating them to one another for comparison, such an attack will be detected with asymptotically high security. Now Alice and Bob have great confidence that they have a shared, secret, random bit-string, which may subsequently be employed in a one-time pad\index{One-time pad} with perfect secrecy.
@@ -452,7 +451,7 @@ E91 is slightly different to BB84. Here Alice and Bob share an entangled Bell pa
 
 \comment{Fix this up. Discuss using Bell violation to prove security.}
 
-\begin{table}[htpb]
+\begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
 \texttt{
 function E91():
@@ -470,7 +469,7 @@ function E91():
 \item $\Box$
 \end{enumerate}}
 \end{mdframed}
-\caption{E91\index{E91 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photonic Bell pairs. Upon completion of the protocol, Alice and Bob share a random bit-string of ruse in a one-time pad cipher\index{One-time pad}.}\label{alg:e91}
+\captionspacealg \caption{E91\index{E91 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photonic Bell pairs. Upon completion of the protocol, Alice and Bob share a random bit-string of ruse in a one-time pad cipher\index{One-time pad}.}\label{alg:e91}
 \end{table}
 
 Like BB84, E91 has no mode-matching\index{Mode-matching} or interferometric stability\index{Interferometric stability} requirements, and Alice and Bob both only require single-photon detection. Unlike BB84, however, E91 requires a central authority that is able to prepare entanglement on-demand as a resource.
@@ -489,7 +488,7 @@ Note that this protocol provides information-theoretic security\index{Informatio
 
 Conceptually, the operation of the CV QKD protocol is virtually identical to photonic BB84, differing only in that now the different choices of encodings correspond to phase-space transformations. Like BB84, if Eve were to perform an intercept-resend attack\index{Intercept-resend attack} she would probabilistically re-encode in the wrong quadrature, thereby revealing herself to Alice and Bob, who could then terminate. 
 
-\begin{table}[htpb]
+\begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
 \texttt{
 function CVQKD():
@@ -508,9 +507,10 @@ where $V_\mathrm{mod}$ is the modulation variance\index{Modulation variance}.
 \item Bob randomly measures either $\hat{x}$ or $\hat{p}$ using homodyne detection.
 \item Alice and Bob use classical communication to determine for which transmissions their preparation and measurement were consistent \comment{I don't get this, Alice is deterministically encoding x+ip, where's the randomness in the choice of basis? Are we adding a randomised phase that puts us into a diagonal basis sometimes, or something like that}
 \item \comment{Complete the rest of this}
+\item $\Box$
 \end{enumerate}}
 \end{mdframed}
-\caption{CV QKD protocol using coherent states, encoded in the quadrature basis.}\label{alg:cv_qkd}
+\captionspacealg \caption{CV QKD protocol using coherent states, encoded in the quadrature basis.}\label{alg:cv_qkd}
 \end{table}
 
 \comment{To do.}
@@ -545,7 +545,44 @@ This is problematic since when quantum computing becomes a reality it will immed
 
 \subsection{Quantum Enigma machines}\index{Quantum Enigma machines}
 
-\comment{To do}
+While the BB84\index{BB84} and other related QKD\index{Quantum key distribution} protocols are perfectly secure, they suffer the major drawback that because they are based upon the one-time pad\index{One-time pad}, the number of successfully communicated key-bits must equal message length and cannot be reused. This means that for real-time or high-bandwidth applications, the quantum communications channel must have similarly high bandwidth to be applicable.
+
+What would be more useful would be a quantum equivalent of private-key cryptography\index{Private-key cryptography}, whereby a short key can be reused over and over again for different messages, meaning that only a short, shared secret-key would need to be established once-off.
+
+This led to the proposal for \textit{quantum Enigma machines}\footnote{The Enigma machine\index{Enigma machines} was the classical cryptosystem employed by the Germans during World War 2 for military and intelligence communication.} \cite{bib:LloydEnigma}. The protocol is shown in Fig.~\ref{fig:enigma}.
+
+\begin{figure}[!htbp]
+\includegraphics[width=0.475\textwidth]{enigma_machines}
+\captionspacefig \caption{Schematic of the quantum Enigma machine protocol for quantum private-key cryptography. $\ket{j}$ is the message, $k$ is the key, and $\hat{U}_k$ is the encryption operation associated with key $k$, chosen randomly from the Haar measure. The encrypted message is $\ket{j}_k$. An eavesdropper intercepting the channel without knowledge of the key observes the state $\hat\rho_\mathrm{enc}$.}\index{Quantum Enigma machines}\label{fig:enigma}	
+\end{figure}
+
+Here Alice and Bob share a short secret key $k$ of length $m$, and wish to communicate a message $j$ of length $n$. The secret key might be established via conventional QKD. First off, they agree upon a set of Haar-random unitaries\index{Haar measure}, $\{\hat{U}_k\}$, associating one with each of the possible $2^m$ keys. This needn't be performed in secret. Alice then encodes her message into the state $\ket{j}$. Her encryption operation is to apply $\hat{U}_k$ to this state according to Alice and Bob's shared secret key, yielding the encoded state,
+\begin{align}
+\ket{j}_k=\hat{U}_k\ket{j},
+\end{align}
+which Bob is easily able to decrypt using the inverse unitary,
+\begin{align}
+\hat{U}_k^\dag\ket{j}_k=\ket{j}.
+\end{align}
+
+To characterise the security of the scheme, we first note that in the absence of knowing the key or message, and assuming all $j$ and $k$ are equally likely, Eve observes the mixed state,
+\begin{align}
+\hat\rho_\mathrm{enc} &= \frac{1}{2^{m+n}} \sum_{j,k} \hat{U}_k\ket{j}\bra{j}\hat{U}^\dag_k \nonumber\\
+&= \frac{1}{2^{m+n}} \sum_{j,k} \ket{j}_k\bra{j}_k.
+\end{align}
+The security can now be quantified in terms of the accessible information\footnote{The accessible information is the maximum of the mutual information between Alice's input states and measurements performed on the encoded state by Eve.}\index{Accessible information} between this state and the plaintext state, which can be upper-bounded as,
+\begin{align}
+	I_c \leq n + \frac{1}{2^m}\max_{\ket\phi}\sum_{j,k} |\langle \phi|j\rangle_k|^2 \log |\langle \phi|j\rangle_k|^2.
+\end{align}
+It was shown that this quantity can be made arbitrarily small with key-size scaling as,
+\begin{align}
+m=O(\log n),
+\end{align}
+which represents very frugal requirements in key-size versus message length. They further showed that the scheme can be made robust against noise and loss.
+
+Note that the security of the scheme is information-theoretic\index{Information-theoretic security}, and does not make any assumptions about computational security\index{Computational security}. Thus, this represents a strong form of quantum private-key cryptography, requiring only very short keys compared to message length.
+
+However, the scheme is very challenging to implement on a large scale over long distances. Consider an optical implementation, where the message is photonically encoded. Now the scheme represents a complex, multi-mode, generalised Mach-Zehnder interferometer\index{Mach-Zehnder interferometer}, meaning that the channel between Alice and Bob, who might be far apart, must be interferometrically stabilised\index{Interferometric stability} (Sec.~\ref{sec:opt_stab}) on the order of the photons' wavelength (hundreds of nanometers for optical frequencies), which is extremely challenging over long distances.
 
 %
 % Hybrid Quantum/Classical Cryptography
@@ -581,12 +618,19 @@ for any qubit $i$. This invariance in the location of the $\hat{Z}$ gate is the 
 
 Finally, all users measure their qubits in the $\pm$-basis and publicly (without encryption) broadcast their measurement outcomes. All users now see all other users' measurement outcomes and are able to calculate the collective parity of the measurements. Now if the parity is even, the speaker must have said `0', whereas if it is odd he must have said `1'. The protocol is shown in Fig.~\ref{fig:QAB} and described in detail in Alg.~\ref{alg:QAB}.
 
-\begin{figure*}[htpb]
+\if 2\pubmode
+\begin{figure}[!htbp]
+\includegraphics[width=0.475\textwidth]{QAB_long}
+\captionspacefig \caption{Protocol for quantum anonymous broadcasting. (a) A central trusted server prepares GHZ states and distributes them amongst a group of users, one qubit per user. All users measure in the $\pm$-basis. (b) All users classically broadcast their measurement outcomes yielding shared random parity. During broadcast, the broadcaster lies about his measurement outcome to flip the joint parity if he wishes to transmit `1', or tells the truth to transmit `0'. The joint parity encodes the message of the anonymous user, which all listeners are able to recover. Importantly, only one user may broadcast at a time, otherwise the recovered message will be given by the XOR of all the simultaneously broadcast messages.} \label{fig:QAB}
+\end{figure}
+\else
+\begin{figure*}[!htbp]
 \includegraphics[width=0.8\textwidth]{QAB}
-\caption{Protocol for quantum anonymous broadcasting. (a) A central trusted server prepares GHZ states and distributes them amongst a group of users, one qubit per user. All users measure in the $\pm$-basis. (b) All users classically broadcast their measurement outcomes yielding shared random parity. During broadcast, the broadcaster lies about his measurement outcome to flip the joint parity if he wishes to transmit `1', or tells the truth to transmit `0'. The joint parity encodes the message of the anonymous user, which all listeners are able to recover.} \label{fig:QAB}
+\captionspacefig \caption{Protocol for quantum anonymous broadcasting. (a) A central trusted server prepares GHZ states and distributes them amongst a group of users, one qubit per user. All users measure in the $\pm$-basis. (b) All users classically broadcast their measurement outcomes yielding shared random parity. During broadcast, the broadcaster lies about his measurement outcome to flip the joint parity if he wishes to transmit `1', or tells the truth to transmit `0'. The joint parity encodes the message of the anonymous user, which all listeners are able to recover. Importantly, only one user may broadcast at a time, otherwise the recovered message will be given by the XOR of all the simultaneously broadcast messages.} \label{fig:QAB}
 \end{figure*}
+\fi
 
-\begin{table}[htpb]
+\begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
 \texttt{
 function QuantumAnonymousBroadcasting(message, speaker):
@@ -604,7 +648,7 @@ function QuantumAnonymousBroadcasting(message, speaker):
 \end{enumerate}
 }
 \end{mdframed}
-\caption{Protocol for quantum anonymous broadcasting. The GHZ state is distributed in advance, one qubit per user. The measurement outcomes are classically broadcast without encryption. The final parity of the classical measurements reflects the message bit without identifying the speaker.} \label{alg:QAB}
+\captionspacealg \caption{Protocol for quantum anonymous broadcasting. The GHZ state is distributed in advance, one qubit per user. The measurement outcomes are classically broadcast without encryption. The final parity of the classical measurements reflects the message bit without identifying the speaker.} \label{alg:QAB}
 \end{table}
 
 Note that the scheme can be slightly simplified by rather than the speaker applying the $\hat{Z}$ to his qubit, upon announcing his measurement outcome he instead simply lies about his outcome and flips it. This follows simply because a $\hat{Z}$ gate prior to a $\pm$ measurement bit flips the classical measurement outcome, \mbox{$\hat{Z}\ket\pm=\ket\mp$}.
@@ -616,6 +660,82 @@ Because of the time invariance in the measurements, distribution and measurement
 Since the parity-sharing can be isolated from the broadcasting stage it is unimportant if the GHZ source is non-deterministic or the channels for distributing it lossy. We can instead simply repeat GHZ distribution over and over at high repetition rate, post-selecting upon measurement outcomes where all users signal that they successfully received and measured their photons.
 
 For these reasons, this scheme lends itself readily to photonic implementation, provided a reliable GHZ preparation circuit. The scheme has since been ported to operate on distributed toric codes\index{Toric code} to facilitate error correction of the distributed GHZ states \cite{bib:MenicucciExpQAB}.
+
+%
+% Quantum Voting
+%
+
+\subsection{Quantum voting}\index{Quantum voting}
+
+The security of voting systems, and the anonymity of their voters are pressing issues in the modern world, and there have been countless high-profile instances of voting systems being compromised nefariously.
+
+Based on similar ideas to quantum anonymous broadcasting is quantum voting, whereby a group of parties can anonymously vote such that no party, including the tallyman, is able to learn any individual voter's vote, but at the conclusion all are able to see the collective outcome of the vote.
+
+There are a multitude of different models for voting, and a number of quantum implementations for them have been described. The two most well-known are:
+\begin{itemize}
+	\item Binary voting\index{Binary voting}: whereby each party votes `yes' or `no'. 
+	\item Anonymous surveys\index{Anonymous surveys}: whereby each party votes a number and we wish to determine the sum of all the votes.
+\end{itemize}
+
+Fig.~\ref{fig:quantum_voting} and Alg.~\ref{alg:quantum_voting} describe a quantum implementation for anonymous surveys, using the protocol described by \cite{bib:VaccaroVoting}.
+
+\begin{figure}[!htbp]
+\includegraphics[width=0.35\textwidth]{quantum_voting}
+\captionspacefig \caption{Protocol for quantum voting via anonymous surveying. The tallyman prepares the entangled state $\ket{B_0}$, half of which is shared with the votes. The voters each perform local phase-shift operations on the voters' half of the state, as per Alg.~\ref{alg:quantum_voting}. The phase-transformed state is then returned to the tallyman, who is able to extract the phase and hence the cumulative vote.}\label{fig:quantum_voting}\index{Quantum voting}	
+\end{figure}
+
+Conceptually, the scheme is similar to quantum anonymous broadcasting in that it hides votes in phases within an entangled state, which are not accessible to individual parties. The scheme relies on the preparation and distribution of a particular entangled state as a resource. Unfortunately this particular state is not one which is known how to be trivially prepared optically, and would therefore lend itself well to the outsourcing of preparation and distribution to a capable host via the quantum internet.
+
+\begin{table}[!htbp]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
+function QuantumVoting($\ket{B_0}$):
+\begin{enumerate}
+\item Prepare \textit{ballot state} for $N$ voters,
+\begin{align}
+\ket{B_0} = \frac{1}{\sqrt{N+1}}\sum_{n=0}^N \ket{N-n}_T\ket{n}_V,	
+\end{align}
+in the photon-number basis, where $T$ and $V$ represent the tallyman and the voters.
+\item Each voter $j$ applies their vote operator,
+\begin{align}
+	\hat{v}_j = e^{i\pi\hat{n}_V \frac{\nu_j}{N+1}},
+\end{align}
+where $\hat{n}_V$ is the photon-number operator, and $\nu_j$ is the vote cast by $j$.
+\item Following the $m$th vote,
+\begin{align}
+	\ket{B_m} = \frac{1}{\sqrt{N+1}}\sum_{n=0}^N e^{in\Delta_m} \ket{N-n}_T\ket{n}_V,
+\end{align}
+where,
+\begin{align}
+\Delta_m = \frac{2\pi}{N+1}\sum_{j=0}^m \nu_j,
+\end{align}
+is a scaled sum of the votes.
+\item The state observed by the $T$ is,
+\begin{align}
+\mathrm{tr}_V(\ket{B_m}\bra{B_m}) = \frac{1}{N+1}\sum_{n=0}^N \ket{n}_T\bra{n}_T,	
+\end{align}
+which contains no voting information, similarly for $V$.
+\item After all $N$ voters have voted, the voter state $V$ is transferred to the tallyman $T$.
+\item Define the tally operator as,
+\begin{align}
+\hat{T} = \sum_{n=0}^N n\ket{T_n}\bra{T_n},	
+\end{align}
+where,
+\begin{align}
+\ket{T_n} = \frac{1}{\sqrt{N+1}}\sum_{j=0}^N e^{inj\frac{2\pi}{N+1}}\ket{N-j}\ket{j}.	
+\end{align}
+\item The tallyman finds the expectation value of the tally operator,
+\begin{align}
+r = \bra{B_N}\hat{T}\ket{B_N} = \sum_{j=0}^N \nu_j,
+\end{align}
+yielding the sum of all the votes.
+\item return(r)
+\item $\Box$
+\end{enumerate}
+}
+\end{mdframed}
+\captionspacealg \caption{Protocol for performing secure quantum anonymous surveying.} \label{alg:quantum_voting}\index{Quantum voting}
+\end{table}
 
 %
 % Quantum Secret Sharing

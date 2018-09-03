@@ -24,25 +24,32 @@ NS: \alpha\ket{0}+\beta\ket{1}+\gamma\ket{2}\to\alpha\ket{0}+\beta\ket{1}-\gamma
 \end{align}
 in the photon-number basis, up to normalisation (which is determined by the post-selection success probability). That is, it applies a $\pi$ phase-shift to only the $\ket{2}$ component of a photon-number superposition. The breakthrough result by KLM demonstrated that this is in fact not the case at all. Instead, the NS gate can be implemented non-deterministically using post-selected linear optics. Two such NS gates allow the construction of a single CZ gate. The construction of the KLM NS and CZ gates are shown in Figs.~\ref{fig:KLM_gate} \& \ref{fig:KLM_explain}. Equivalently, a CNOT gate may be trivially constructed via conjugation by Hadamard gates, based on the identity \mbox{$\hat{H}\hat{Z}\hat{H}=\hat{X}$}.
 
-\begin{figure}[htpb]
+\begin{figure}[!htbp]
 \includegraphics[width=0.42\textwidth]{KLM_gate}
-\caption{(a) A KLM CZ gate, employing dual-rail encoding, constructed from two non-linear sign-shift (NS) gates, which apply a $\pi$ phase-shift to only $\ket{2}$ terms in the photon-number basis. (b) Construction of the non-deterministic linear optics NS gate. Two ancillary states -- one $\ket{1}$ and one $\ket{0}$ -- are employed, and two photo-detectors post-select upon detecting $\ket{1}\bra{1}$ and $\ket{0}\bra{0}$ respectively. The beamsplitter reflectivities in (a) are 50:50, and in (b) chosen such that the amplitudes obey Eq.~(\ref{eq:NS_trans}).}. \label{fig:KLM_gate} \index{Knill-Laflamme-Milburn (KLM)}\index{Non-linear sign-shift (NS) gate}
+\captionspacefig \caption{(a) A KLM CZ gate, employing dual-rail encoding, constructed from two non-linear sign-shift (NS) gates, which apply a $\pi$ phase-shift to only $\ket{2}$ terms in the photon-number basis. (b) Construction of the non-deterministic linear optics NS gate. Two ancillary states -- one $\ket{1}$ and one $\ket{0}$ -- are employed, and two photo-detectors post-select upon detecting $\ket{1}\bra{1}$ and $\ket{0}\bra{0}$ respectively. The beamsplitter reflectivities in (a) are 50:50, and in (b) chosen such that the amplitudes obey Eq.~(\ref{eq:NS_trans}).}. \label{fig:KLM_gate} \index{Knill-Laflamme-Milburn (KLM)}\index{Non-linear sign-shift (NS) gate}
 \end{figure}
 
-\begin{figure*}[htpb]
-\includegraphics[width=0.9\textwidth]{KLM_optical_paths}
-\caption{Evolution of the four logical basis states through the KLM CZ gate. The NS gates do nothing in the first three cases, since they are operating only on vacuum and single-photon terms, which are left unchanged by the NS gate. In the last case, where both control and target are on, HOM interference results in photon bunching after the first beamsplitter, thereby creating two-photon terms. These terms inherit the $\pi$ phase-shift from the NS gate transformation, after which the final beamsplitter reverses the HOM photon bunching, yielding the same logical basis state with an acquired $\pi$ phase-shift.} \label{fig:KLM_explain} \index{Knill-Laflamme-Milburn (KLM)}\index{Controlled-Z (CZ) gate}
-\end{figure*}
+\if 2\pubmode
+	\begin{figure}[!htbp]
+	\includegraphics[width=0.43\textwidth]{KLM_optical_paths_long}
+	\captionspacefig \caption{Evolution of the four logical basis states through the KLM CZ gate. The NS gates do nothing in the first three cases, since they are operating only on vacuum and single-photon terms, which are left unchanged by the NS gate. In the last case, where both control and target are on, HOM interference results in photon bunching after the first beamsplitter, thereby creating two-photon terms. These terms inherit the $\pi$ phase-shift from the NS gate transformation, after which the final beamsplitter reverses the HOM photon bunching, yielding the same logical basis state with an acquired $\pi$ phase-shift.} \label{fig:KLM_explain} \index{Knill-Laflamme-Milburn (KLM)}\index{Controlled-Z (CZ) gate}
+	\end{figure}
+\else
+	\begin{figure*}[!htbp]
+	\includegraphics[width=0.9\textwidth]{KLM_optical_paths}
+	\captionspacefig \caption{Evolution of the four logical basis states through the KLM CZ gate. The NS gates do nothing in the first three cases, since they are operating only on vacuum and single-photon terms, which are left unchanged by the NS gate. In the last case, where both control and target are on, HOM interference results in photon bunching after the first beamsplitter, thereby creating two-photon terms. These terms inherit the $\pi$ phase-shift from the NS gate transformation, after which the final beamsplitter reverses the HOM photon bunching, yielding the same logical basis state with an acquired $\pi$ phase-shift.} \label{fig:KLM_explain} \index{Knill-Laflamme-Milburn (KLM)}\index{Controlled-Z (CZ) gate}
+	\end{figure*}
+\fi
 
 Clearly this non-determinism is of immediate concern, since concatenating multiple gates would have exponentially decreasing success probability, making the protocol inefficient -- if the probability of a single gate succeeding is $p$, and we require that a circuit comprising $n$ of them all succeed, the success probability is clearly $p^n$.
 
-The first key observation then is that gate teleportation can be used to shift this non-determinism to a resource state preparation stage, as described in detail in Sec.~\ref{sec:teleport_gate}. However, this is not the end of the story, since gate teleportation requires Bell state projections, which are themselves non-deterministic using purely linear optics (either using PBSs or CNOT gates). --- \latinquote{Ignotum per ignotius}.
+The first key observation then is that gate teleportation can be used to shift this non-determinism to a resource state preparation stage, as described in detail in Sec.~\ref{sec:teleport_gate}. However, this is not the end of the story, since gate teleportation requires Bell state projections, which are themselves non-deterministic using purely linear optics (either using PBSs or CNOT gates). \latinquote{Ignotum per ignotius}.
 
 The final insight provided by KLM is that by concatenating these non-deterministic CNOT gates, we can inductively build up higher-level CNOT gates with ever increasing success probabilities, asymptoting to unity with high- (but polynomial-) depth concatenation. By combining these key insights, KLM were able to show that near-deterministic CNOT gates can be constructed using an efficient (polynomial) resource overhead, thereby enabling efficient universal quantum computation\footnote{Note that all single-qubit gates are trivially and deterministically implemented using wave-plates or beamsplitters, for polarisation or dual-rail encoding respectively. Thus, we need only concern ourselves with the challenges associated with implementing 2-qubit entangling gates.}. A sketch of the general KLM formalism is shown in Fig.~\ref{fig:KLM_protocol}.
 
-\begin{figure}[htpb]
+\begin{figure}[!htbp]
 \includegraphics[width=0.28\textwidth]{KLM}
-\caption{KLM architecture for universal LOQC. $n_L$ optical modes are associated with logical qubits in the state $\ket{\psi_L}$, with the remaining $n_A$ modes acting as ancillary states, $\ket{\psi_A}$. A round of passive linear optics is applied, $\hat{U}_1$. Then the ancillary modes are measured, yielding some set of measurement outcomes $m_1$. These are classically processed to determine what the next round of passive linear optics, $\hat{U}_2$, ought to be. This repeats some polynomial number of times, from which an arbitrary quantum computation can be implemented. The \textsc{BosonSampling} and quantum walk models are equivalent to taking just the first stage of this protocol: one round of input state, passive linear optics, and measurement.} \label{fig:KLM_protocol}\index{Knill-Laflamme-Milburn (KLM)}
+\captionspacefig \caption{KLM architecture for universal LOQC. $n_L$ optical modes are associated with logical qubits in the state $\ket{\psi_L}$, with the remaining $n_A$ modes acting as ancillary states, $\ket{\psi_A}$. A round of passive linear optics is applied, $\hat{U}_1$. Then the ancillary modes are measured, yielding some set of measurement outcomes $m_1$. These are classically processed to determine what the next round of passive linear optics, $\hat{U}_2$, ought to be. This repeats some polynomial number of times, from which an arbitrary quantum computation can be implemented. The \textsc{BosonSampling} and quantum walk models are equivalent to taking just the first stage of this protocol: one round of input state, passive linear optics, and measurement.} \label{fig:KLM_protocol}\index{Knill-Laflamme-Milburn (KLM)}
 \end{figure}
 
 Evolution via linear optics implements transformations of the form of Eq.~(\ref{eq:LO_unitary_map}), and may be implemented using the experimental architectures described in Sec.~\ref{sec:LO_ev_archs} and Fig.~\ref{fig:LO_archs}.
@@ -59,7 +66,7 @@ Significant progress is being made on reconfigurable, integrated LOQC devices \c
 
 \subsection{Cluster state linear optics} \label{sec:CS_LO} \index{Cluster states}
 
-Although the original KLM scheme is universal, and `efficient' (from a purely computer scientist's definition of `efficient=polynomial'\index{Efficiency}), resource usage can be reduced by orders of magnitude by combining concepts from LOQC with the cluster state formalism (Sec.~\ref{sec:CSQC}) or related concepts \cite{bib:YoranReznik03, bib:Nielsen04, bib:BrowneRudolph05, bib:GilchristHayes05, bib:Lim05, bib:LimBarrett05}.
+Although the original KLM scheme is universal, and `efficient'\footnote{From a purely computer scientist's definition of `efficient = polynomial'\index{Efficiency}.}, resource usage can be reduced by orders of magnitude by combining concepts from LOQC with the cluster state formalism (Sec.~\ref{sec:CSQC}) or related concepts \cite{bib:YoranReznik03, bib:Nielsen04, bib:BrowneRudolph05, bib:GilchristHayes05, bib:Lim05, bib:LimBarrett05}.
 
 Specifically, instead of using our non-deterministic KLM CZ gates within the circuit model formalism, they could be employed for the preparation of cluster states, since after all a CZ gate directly creates an edge in a cluster state graph.
 
@@ -87,9 +94,9 @@ Both types of gates have several highly favourable characteristics:
 
 The explicit construction of the linear optics fusion gates is shown in Fig.~\ref{fig:fusion_gates}.
 
-\begin{figure}[htpb]
+\begin{figure}[!htbp]
 \includegraphics[width=0.4\textwidth]{fusion_gates}
-\caption{Linear optics cluster state fusion gates for polarisation-encoded photons. Both type-I and type-II gates employ a single polarising beamsplitter to mediate the entangling measurement. The black bars represent Hadamard gates in the polarisation basis (waveplates). The type-I gate only measures a single photon, the other freely exiting the gate, which forms a part of the final cluster state. The type-II gate consumes two photons. Because the type-I gate does not measure in coincidence, as per the type-II gate, it requires number-resolved photo-detection, whereas bucket detectors suffice for type-II.} \label{fig:fusion_gates}
+\captionspacefig \caption{Linear optics cluster state fusion gates for polarisation-encoded photons. Both type-I and type-II gates employ a single polarising beamsplitter to mediate the entangling measurement. The black bars represent Hadamard gates in the polarisation basis (waveplates). The type-I gate only measures a single photon, the other freely exiting the gate, which forms a part of the final cluster state. The type-II gate consumes two photons. Because the type-I gate does not measure in coincidence, as per the type-II gate, it requires number-resolved photo-detection, whereas bucket detectors suffice for type-II.} \label{fig:fusion_gates}
 \end{figure}
 
 %
@@ -128,9 +135,9 @@ We then define a strategy, $\mathcal{S}$\index{Fusion strategies}, for choosing 
 \end{align}
 That is, the length vector can be thought of as a series of `buckets' containing clusters of different lengths, and the strategy simply probabilistically shuffles the contents of the buckets around each time it is applied. The process can be thought of as a random walk\index{Random walks}, guided by a probabilistic update rule. Fig.~\ref{fig:linear_cs_strategy} outlines the protocol.
 
-\begin{figure}[htpb]
-	\includegraphics[width=0.47\textwidth]{linear_cluster_state_strategies}
-	\caption{Protocol for preparing linear cluster states using non-deterministic entangling gates and quantum memory. Each `bucket' holds a resource of micro-clusters of a given length, represented by the vector $\vec n$. Beginning with a resource of single qubits we repeatedly attempt bonding operations between micro-clusters in the buckets, according to a fusion strategy, $\mathcal{S}$. Proceeding as a biased random walk, the contents of the buckets shuffle around until ultimately (hopefully) clusters of the target length $N$ are prepared and steadily flow out as output at rate $r$ clusters per update operation. We assume a free supply of single qubits as a resource.}\label{fig:linear_cs_strategy}
+\begin{figure}[!htbp]
+	\includegraphics[width=0.475\textwidth]{linear_cluster_state_strategies}
+	\captionspacefig \caption{Protocol for preparing linear cluster states using non-deterministic entangling gates and quantum memory. Each `bucket' holds a resource of micro-clusters of a given length, represented by the vector $\vec n$. Beginning with a resource of single qubits we repeatedly attempt bonding operations between micro-clusters in the buckets, according to a fusion strategy, $\mathcal{S}$. Proceeding as a biased random walk, the contents of the buckets shuffle around until ultimately (hopefully) clusters of the target length $N$ are prepared and steadily flow out as output at rate $r$ clusters per update operation. We assume a free supply of single qubits as a resource.}\label{fig:linear_cs_strategy}
 \end{figure}
 
 The strategy description, $\mathcal{S}$, is also responsible for taking care of updating the elements of $\vec{n}$ according to an update rule, which dictates how many photons are lost or gained upon success or failure of the non-deterministic gate. For example, the CZ gate we have employed here for our toy model destroys two qubits upon failure, but upon success creates a cluster of length given by the sum of the lengths of the clusters acted upon by the gate.
@@ -147,9 +154,9 @@ One of the key outcomes was that a \textsc{Balanced} strategy\index{Balanced str
 
 Example simulated state preparation rate results are shown in Fig.~\ref{fig:linear_cluster_state_r} for various types of entangling gates and gate success probabilities.
 
-\begin{figure}[htpb]
-\includegraphics[width=0.47\textwidth]{linear_cluster_state_rates}
-\caption{Linear micro-cluster preparation rates for three different types of entangling gates as described in \cite{bib:RohdeBarrett07}, against gate success probability, $p_\mathrm{gate}$. Here a \textsc{Balanced} fusion strategy is employed, whereby we only attempt to join clusters of equal length, always prioritising the largest ones available. This strategy was empirically found to perform better than any asymmetric strategies.}\label{fig:linear_cluster_state_r}
+\begin{figure}[!htbp]
+\includegraphics[width=0.475\textwidth]{linear_cluster_state_rates}
+\captionspacefig \caption{Linear micro-cluster preparation rates for three different types of entangling gates as described in \cite{bib:RohdeBarrett07}, against gate success probability, $p_\mathrm{gate}$. Here a \textsc{Balanced} fusion strategy is employed, whereby we only attempt to join clusters of equal length, always prioritising the largest ones available. This strategy was empirically found to perform better than any asymmetric strategies.}\label{fig:linear_cluster_state_r}
 \end{figure}
 
 %
@@ -164,10 +171,17 @@ The central strategy is similar as for linear clusters -- we construct recyclabl
 
 Fig.~\ref{fig:micro_clusters} illustrates several topologies for micro-clusters, beginning with the linear micro-cluster that we employed previously for preparing 1D clusters, and two variations of micro-clusters that can be employed for 2D state preparation.
 
-\begin{figure*}[htpb]
+\if 2\pubmode
+\begin{figure}[!htbp]
+\includegraphics[width=0.2\textwidth]{micro_clusters_long}
+\captionspacefig \caption{(a) Linear, (b) plus ($+$), and (c) star micro-cluster states.}\label{fig:micro_clusters}\index{Linear micro-cluster states}\index{Plus micro-cluster states}\index{Star micro-cluster states}\index{Micro-cluster states}
+\end{figure}
+\else
+\begin{figure*}[!htbp]
 \includegraphics[width=0.7\textwidth]{micro_clusters}
-\caption{Linear, plus ($+$), and star micro-cluster states.}\label{fig:micro_clusters}\index{Linear micro-cluster states}\index{Plus micro-cluster states}\index{Star micro-cluster states}\index{Micro-cluster states}
+\captionspacefig \caption{(a) Linear, (b) plus ($+$), and (c) star micro-cluster states.}\label{fig:micro_clusters}\index{Linear micro-cluster states}\index{Plus micro-cluster states}\index{Star micro-cluster states}\index{Micro-cluster states}
 \end{figure*}
+\fi
 
 The $+$-cluster\index{Plus micro-cluster states} simply comprises four linear clusters emanating in the four directions, welded together at a central vertex. It's self-evident how this is subsequently applied to 2D state preparation -- we lay out the $+$-clusters in a grid, and attempt nearest neighbour bonding in each direction for every neighbouring pair of micro-clusters.
 
@@ -181,16 +195,16 @@ The endpoints (leaves) of each tree now provide the bonding opportunities for jo
 
 Now the key feature is that when two sub-trees are successfully bonded via their leaves we do not need to measure out \textit{all} the leftover redundant vertices to reduce the graph to the desired residual topology. Instead we can `prune' away entire sub-trees by performing $\hat{Z}$ measurements at the base of their trunks. All vertices above the trunk will thereby be detached from the graph and needn't all be individually measured. Correspondingly, any error processes that had acted on the pruned vertices will not be teleported onto the main cluster, only the measurements acting on the trunks will contribute.
 
-\begin{figure}[htpb]
-\includegraphics[width=0.47\textwidth]{microcluster_snowflake}
-\caption{Snowflake micro-cluster comprising a binary tree structure, with depth \mbox{$d=7$}. Multiple copies of this micro-cluster can be placed side-by-side and fused together via attempting to bond the most outward available leaf qubits from neighbouring clusters. The tree structure allows excess qubits to be `pruned' via their trunks rather than leaves, bypassing the need to measure out every single leftover qubit, as is the case, for example, for $+$-clusters. This reduces the number of required pruning measurements from linear to logarithmic, similarly reducing the accumulation of errors associated with pruned qubits.} \label{fig:snowflake_graph}\index{Snowflake micro-cluster states}
+\begin{figure}[!htbp]
+\includegraphics[width=0.475\textwidth]{microcluster_snowflake}
+\captionspacefig \caption{Snowflake micro-cluster comprising a binary tree structure, with depth \mbox{$d=7$}. Multiple copies of this micro-cluster can be placed side-by-side and fused together via attempting to bond the most outward available leaf qubits from neighbouring clusters. The tree structure allows excess qubits to be `pruned' via their trunks rather than leaves, bypassing the need to measure out every single leftover qubit, as is the case, for example, for $+$-clusters. This reduces the number of required pruning measurements from linear to logarithmic, similarly reducing the accumulation of errors associated with pruned qubits.} \label{fig:snowflake_graph}\index{Snowflake micro-cluster states}
 \end{figure}
 
 Formally, for a linear subgraph of length $n$, there will be $O(n)$ leftover redundant qubits on average, which must \textit{all} be measured out using $\hat{Y}$ measurements. Thus, the residual state will have accumulated the action of $O(n)$ independent error processes. On the other hand, for a snowflake subgraph, the trees' depth scales as \mbox{$d=O(\log n)$}, and therefore at most \mbox{$O(\log n)$} qubits must be measured to prune away unwanted branches. Fig.~\ref{fig:snowflake_pruning} presents an example of how the pruning process works.
 
-\begin{figure}[htpb]
+\begin{figure}[!htbp]
 \includegraphics[width=0.35\textwidth]{snowflake_pruning}
-\caption{Pruning snowflake micro-clusters\index{Snowflake micro-cluster states} upon successful fusion of their outer leaves. Green indicates where the successful fusion operation took place. To remove all redundant nodes we measure the qubits marked in blue in the $\hat{Y}$-basis and the ones marked in red in the $\hat{Z}$ basis. This will discard all the other qubits marked in grey, modulo the two root qubits at the far top and bottom, which are left with a direct link between them. The total number of measured qubits scales logarithmically with the number of leaves.}\label{fig:snowflake_pruning}	
+\captionspacefig \caption{Pruning snowflake micro-clusters\index{Snowflake micro-cluster states} upon successful fusion of their outer leaves. Green indicates where the successful fusion operation took place. To remove all redundant nodes we measure the qubits marked in blue in the $\hat{Y}$-basis and the ones marked in red in the $\hat{Z}$ basis. This will discard all the other qubits marked in grey, modulo the two root qubits at the far top and bottom, which are left with a direct link between them. The total number of measured qubits scales logarithmically with the number of leaves.}\label{fig:snowflake_pruning}	
 \end{figure}
 
 Keeping in mind that for an error process with error rate $p$, the net probability of an error occurring for $m$ independent channels is \mbox{$1-p^m$}, thus reducing $m$ from linear to logarithmic is highly favourable in terms of the accumulation of errors.
@@ -205,9 +219,9 @@ A beautiful feature of the cluster state model is that the entire cluster needn'
 
 The computation therefore proceeds as alternating applications of: (1) measuring the leftmost column of physical qubits to evolve the computation by a single step; (2) bond on a new column of qubits to the rightmost column. The qubits in between the left and rightmost columns act as a buffer to give us some leeway when bonding operations fail. The architecture is shown in Fig.~\ref{fig:on_demand_cs}.
 
-\begin{figure}[htpb]
-\includegraphics[width=0.47\textwidth]{on_demand_cluster_states}
-\caption{On-demand cluster state preparation. Every time a column of computational qubits are measured away from the lefthand side, thereby evolving the computation by a single step, we dynamically bond on a fresh column of qubits to the righthand side. The buffer in between provides the redundancy necessary when using non-deterministic gates.}\label{fig:on_demand_cs}
+\begin{figure}[!htbp]
+\includegraphics[width=0.475\textwidth]{on_demand_cluster_states}
+\captionspacefig \caption{On-demand cluster state preparation. Every time a column of computational qubits are measured away from the lefthand side, thereby evolving the computation by a single step, we dynamically bond on a fresh column of qubits to the righthand side. The buffer in between provides the redundancy necessary when using non-deterministic gates.}\label{fig:on_demand_cs}
 \end{figure}
 
 \cite{KokBuffer} performed an analysis of this approach in the optical context and found that high-depth MBQC can be efficiently implemented using non-deterministic entangling operations, with significantly reduced quantum memory requirements compared to full in-advance state preparation.
@@ -279,7 +293,7 @@ m=O(n^2),
 \end{align}
 which, for large $m$, puts us into the anti-bunched (i.e binary photon-number) regime with high probability\footnote{That is, we are unlikely to observe more than a single photon in any given output mode, placing us into a binary photo-detection regime. This condition has become known as the `bosonic birthday paradox' \cite{aaronson}.}, rendering non-number-resolved photo-detectors sufficient for physical implementation. However, this `no-collision' subspace remains exponentially large,
 \begin{align}
-|S_\mathrm{no-collision}| = \binom{m}{n}.
+|S_\mathrm{no\,collision}| = \binom{m}{n}.
 \end{align}
 
 The amplitudes $\gamma_{S,T}$ are given by,\index{Configuration amplitudes}
@@ -295,9 +309,9 @@ where $\mathrm{Per}(\cdot)$ denotes the matrix permanent, and $U_{S,T}$ is a sub
 
 The computational problem is simply to sample this probability distribution $P_{S,T}$, which the linear optics network can implement efficiently, but it is believed a classical computer cannot. The full model is shown in Fig.~\ref{fig:bs_model}.
 
-\begin{figure}[htpb]
+\begin{figure}[!htbp]
 \includegraphics[width=0.35\textwidth]{bs_model}
-\caption{The \textsc{BosonSampling} model for non-universal linear optics quantum computing. $S$ (output) and $T$ (input) are represented in the photon-number basis. After application of the Haar-random linear optics unitary to the input multi-mode Fock state, the output superposition is sampled with coincidence photo-detection.} \label{fig:bs_model}
+\captionspacefig \caption{The \textsc{BosonSampling} model for non-universal linear optics quantum computing. $S$ (output) and $T$ (input) are represented in the photon-number basis. After application of the Haar-random linear optics unitary to the input multi-mode Fock state, the output superposition is sampled with coincidence photo-detection.} \label{fig:bs_model}
 \end{figure}
 
 For comparison, the equivalent classical protocol using distinguishable photons that evolve independently through the network would be described by,
@@ -324,9 +338,9 @@ However, rather than employing a multiplexed SPDC source in place of each of the
 
 The model is shown in Fig.~\ref{fig:multiplexed_bs}. We begin by operating $N$ SPDC sources in parallel. Clearly if $N$ is sufficiently large with respect to $n$, it becomes asymptotically certain that at least $n$ photons will be heralded. When this occurs, the successfully prepared $n$ photons -- in whatever configuration they happen to occur -- are routed to the first $n$ modes of the \textsc{BosonSampling} interferometer $\hat{U}$ by the multiplexer (which is classically controlled by the SPDC heralding outcomes), and the protocol proceeds as usual.
 
-\begin{figure}[htpb]
-\includegraphics[width=0.47\textwidth]{multiplexed_boson_sampling}
-\caption{Model for multiplexed \textsc{BosonSampling}. We operate \mbox{$N\gg n$} SPDC sources in parallel, which are multiplexed to the first $n$ modes of the interferometer $\hat{U}$. With sufficiently large $N$ it becomes asymptotically certain that at least $n$ single-photons will be heralded, thereby successfully preparing the desired \textsc{BosonSampling} input state.} \label{fig:multiplexed_bs}\index{Multiplexed boson-sampling}
+\begin{figure}[!htbp]
+\includegraphics[width=0.475\textwidth]{multiplexed_boson_sampling}
+\captionspacefig \caption{Model for multiplexed \textsc{BosonSampling}. We operate \mbox{$N\gg n$} SPDC sources in parallel, which are multiplexed to the first $n$ modes of the interferometer $\hat{U}$. With sufficiently large $N$ it becomes asymptotically certain that at least $n$ single-photons will be heralded, thereby successfully preparing the desired \textsc{BosonSampling} input state.} \label{fig:multiplexed_bs}\index{Multiplexed boson-sampling}
 \end{figure}
 
 Specifically, the probability of at least $n$ successful single-photon heralding events occurring is,
@@ -339,9 +353,9 @@ where,
 \end{align}
 is the probability of a single SPDC source heralding the preparation of a single-photon. This quantity asymptotes to unity for \mbox{$N\gg n$}, as shown in Fig.~\ref{fig:multiplex_bs_res}.
 
-\begin{figure}[htpb]
-\includegraphics[width=0.47\textwidth]{multiplex_bs}
-\caption{Probability of successfully preparing at least $n$ photons for \textsc{BosonSampling} from a multiplexed source comprising a bank of $N$ SPDC sources in parallel. For sufficiently large $N$, we prepare the desired $n$ photons with probability asymptoting to unity.} \label{fig:multiplex_bs_res}\index{Multiplexed boson-sampling}
+\begin{figure}[!htbp]
+\includegraphics[width=0.475\textwidth]{multiplex_bs}
+\captionspacefig \caption{Probability of successfully preparing at least $n$ photons for \textsc{BosonSampling} from a multiplexed source comprising a bank of $N$ SPDC sources in parallel. For sufficiently large $N$, we prepare the desired $n$ photons with probability asymptoting to unity.} \label{fig:multiplex_bs_res}\index{Multiplexed boson-sampling}
 \end{figure}
 
 However, although this procedure works in-principle, it comes at the expense of a large number of sources, $N$, and more challengingly, fast-feedforward. Keep in mind that if we were able to perform complex fast-feedforward, we might be able to do much more (and far more interesting things) than just \textsc{BosonSampling} in the first place!
@@ -354,9 +368,9 @@ However, although this procedure works in-principle, it comes at the expense of 
 
 A variation on SPDC-based \textsc{BosonSampling}, known as `scattershot'\index{Scattershot boson-sampling} \textsc{BosonSampling}, has been presented \cite{bib:RandBS}, which obviates the difficultly of fast multiplexing in the approach described previously. Here, rather than inputting an SPDC source into the first $n$ of the $m$ modes, we input a source into \textit{every} mode, i.e $m$ sources in total. We then accept all events with $n$ heralding successes in total, irrespective of the configuration in which they occur. This has the effect of implementing $n$-photon \textsc{BosonSampling} with an additional layer of randomisation on the input modes (i.e a randomisation in the input configuration, $T$, which is ordinarily fixed). However, since the algorithm is already randomised, this additional layer of randomisation does not undermine the complexity proofs, which hold as is. The scattershot model is shown in Fig.~\ref{fig:scattershot_model}.
 
-\begin{figure}[htpb]
+\begin{figure}[!htbp]
 \includegraphics[width=0.35\textwidth]{scattershot_model}
-\caption{Model for `scattershot' \textsc{BosonSampling}. An SPDC source is inputted into all $m$ input modes. We post-select upon detecting a total of $n$ photons in the heralding modes, irrespective of their configuration, yielding an $n$-photon instance of \textsc{BosonSampling} with randomised input configuration. Unlike multiplexed architectures, the scheme remains entirely passive, without requiring adaptive fast-feedforward.} \label{fig:scattershot_model}
+\captionspacefig \caption{Model for `scattershot' \textsc{BosonSampling}. An SPDC source is inputted into all $m$ input modes. We post-select upon detecting a total of $n$ photons in the heralding modes, irrespective of their configuration, yielding an $n$-photon instance of \textsc{BosonSampling} with randomised input configuration. Unlike multiplexed architectures, the scheme remains entirely passive, without requiring adaptive fast-feedforward.} \label{fig:scattershot_model}
 \end{figure}
 
 By keeping all configurations of $n$ photons, rather than just the \mbox{$\ket{T}=\ket{1}^{\otimes n} \ket{0}^{\otimes (m-n)}$} case, we effectively boost the $n$-photon heralding probability from,
@@ -373,9 +387,9 @@ exhibiting a binomial enhancement in $n$-photon events, yielding a significant i
 \end{align}
 which exhibits only polynomial scaling against photon-number $n$, and is therefore scalable. This is shown in Fig.~\ref{fig:scattershot_probs}. This is in stark contrast to conventional \textsc{BosonSampling}, where the success probability decays exponentially with photon-number, and is therefore inefficient. Importantly, unlike the multiplexed approach, this efficiency improvement does not require any active elements, remaining in the true spirit of \textsc{BosonSampling}.
 
-\begin{figure}[htpb]
-\includegraphics[width=0.47\textwidth]{scattershot_probs}
-\caption{Probability of successfully implementing an instance of $n$-photon \textsc{BosonSampling} using the scattershot technique, whereby all input modes are fed with an SPDC source, and all $n$-photon heralding events are accepted, irrespective of their configuration.} \label{fig:scattershot_probs}
+\begin{figure}[!htbp]
+\includegraphics[width=0.475\textwidth]{scattershot_probs}
+\captionspacefig \caption{Probability of successfully implementing an instance of $n$-photon \textsc{BosonSampling} using the scattershot technique, whereby all input modes are fed with an SPDC source, and all $n$-photon heralding events are accepted, irrespective of their configuration.} \label{fig:scattershot_probs}
 \end{figure}
 
 %
@@ -406,7 +420,7 @@ Of course this is not strictly a \textit{quantum} computation, since:
 \item It can be efficiently classically computed using $O(m^2)$ operations\footnote{Using the na\"ive element-wise approach, which can be further improved upon using more sophisticated contemporary algorithms.}, thus residing in \textbf{P}\index{P}.
 \item Coherent states are considered classical states (i.e approximated by laser light\index{Laser light}) with strictly positive Wigner and $P$-functions\index{Wigner function}\index{P-function}.
 \item There is no entanglement between modes.
-\item The algorithm offers no quantum speedup.
+\item The algorithm offers no quantum (exponential) speedup.
 \end{itemize}
 
 Despite offering no direct quantum advantage, we introduce this model for restricted computation, since it lends itself very elegantly to a form of homomorphic encryption, to be described in detail in Sec.~\ref{sec:homo_coherent_state}.
@@ -471,7 +485,7 @@ Here $P(\alpha)$ is a quasi-probability function\index{Quasi-probability functio
 
 Alg.~\ref{alg:positive_P_sim} describes an efficient classical algorithm for simulating the output photo-statistics of a linear optics sampler fed with strictly non-negative $P$-function input states \cite{SalehAustinTim}.
 
-\begin{table}[htpb]
+\begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
 \texttt{
 function SimulatePositiveP($\vec{P}$):
@@ -499,7 +513,7 @@ function SimulatePositiveP($\vec{P}$):
     \item $\Box$
 \end{enumerate}}
 \end{mdframed}
-\caption{Efficient classical algorithm for simulating any linear optics sampling problem whose input states have strictly non-negative $P$-functions, with output measured via photon-counting. $\vec{P}$ is the vector of $P$-functions for all modes.} \label{alg:positive_P_sim}
+\captionspacealg \caption{Efficient classical algorithm for simulating any linear optics sampling problem whose input states have strictly non-negative $P$-functions, with output measured via photon-counting. $\vec{P}$ is the vector of $P$-functions for all modes.} \label{alg:positive_P_sim}
 \end{table}
 
 %
@@ -567,9 +581,9 @@ P(x) = |\lambda_{x,-1}|^2 + |\lambda_{x,+1}|^2.
 \end{align}
 An example of this kind of quantum walk is shown in Fig.~\ref{fig:QW_ev}.
 
-\begin{figure}[htpb]
-\includegraphics[width=0.47\textwidth]{quantum_walk_evolution}
-\caption{Evolution on a 1D quantum walk on a line with a Hadamard coin operator. The walker begins localised at the origin and then spreads out as a superposition over the position space ($x$) with time ($t$). A key feature of this distribution is that its variance grows quadratically with time, compared with linear growth for the equivalent classical random walk. This enhanced spreading forms the basis of the quantum walk search algorithm, with quadratic enhancement compared to a classical search \cite{QWSearch}.} \label{fig:QW_ev}
+\begin{figure}[!htbp]
+\includegraphics[width=0.475\textwidth]{quantum_walk_evolution}
+\captionspacefig \caption{Evolution on a 1D quantum walk on a line with a Hadamard coin operator. The walker begins localised at the origin and then spreads out as a superposition over the position space ($x$) with time ($t$). A key feature of this distribution is that its variance grows quadratically with time, compared with linear growth for the equivalent classical random walk. This enhanced spreading forms the basis of the quantum walk search algorithm, with quadratic enhancement compared to a classical search \cite{QWSearch}.} \label{fig:QW_ev}
 \end{figure}
 
 The single-walker walk on a linear graph is not of computational interest as it can be efficiently classically simulated. However, the formalism is easily logically generalised to multiple walkers on arbitrary graph topologies. We will illustrate this using the formalism of \cite{bib:RohdeMultiWalk11}, where \textit{walker operators}\index{Walker operators}, rather than walker basis states are evolved under time-evolution (i.e we operate in the Heisenberg picture rather than the Schr{\" o}dinger picture). In an optical context, walker operators are identically photonic creation operators. The walker operators are of the form $\hat{w}(x,c)^\dag$, where $x$ denotes the vertex number currently occupied by the walker, and $c$ denotes the previous vertex occupied by the walker. The single-walker basis states are then of the form $\hat{w}(x,c)^\dag\ket{0}$, where $\ket{0}$ is the vacuum state containing no excitations. Notice the parallels to the previous example of a linear walk, where the coin degree of freedom specifies the direction the walker is following, which effectively acts as memory of the previous position.
@@ -581,9 +595,9 @@ The coin and step operators now take the form,
 \end{align}
 Here $n_x$ denotes the set of vertices neighbouring $x$. The coin operators $A^{(x)}$ are \mbox{$\mathrm{SU}(|n_x|)$} unitary matrices representing the weights of edges within this neighbourhood. The step operator, on the other hand, is simply a permutation. A simple example is shown in Fig.~\ref{fig:QW_arbitrary_graph}.
 
-\begin{figure}[htpb]
+\begin{figure}[!htbp]
 \includegraphics[width=0.2\textwidth]{QW_arbitrary_graph}
-\caption{A simple example of a quantum walk on an irregular graph structure. Associated with each vertex $x$ is an $\mathrm{SU}(|n_x|)$ coin operator $A^{(x)}$, where $|n_x|$ is the number of neighbours to $x$.} \label{fig:QW_arbitrary_graph}\index{Quantum walk graphs}
+\captionspacefig \caption{A simple example of a quantum walk on an irregular graph structure. Associated with each vertex $x$ is an $\mathrm{SU}(|n_x|)$ coin operator $A^{(x)}$, where $|n_x|$ is the number of neighbours to $x$.} \label{fig:QW_arbitrary_graph}\index{Quantum walk graphs}
 \end{figure}
 
 The total time evolution is defined analogously to before,
@@ -602,9 +616,9 @@ Now the probabilities of measuring the walkers in different position configurati
 
 It was shown by \cite{bib:RohdeMultiWalk11} that any such walk can be efficiently represented using a linear optics decomposition comprising at most $O(|V|^2)$ optical modes. Such a decomposition for \mbox{$|V|=3$} is shown in Fig.~\ref{fig:QW_LO_representation}.
 
-\begin{figure}[htpb]
-\includegraphics[width=0.47\textwidth]{QW_LO_representation}
-\caption{Linear optics decomposition for a single step of an arbitrary 3-vertex discrete-time quantum walk. The coin operators, $A^{(x)}$, may be arbitrary $\mathrm{SU}(3)$ matrices, whereas the step operator is simply a permutation of the optical modes. $O(|V|^2)$ optical modes are required, which scales efficiently.} \label{fig:QW_LO_representation}
+\begin{figure}[!htbp]
+\includegraphics[width=0.475\textwidth]{QW_LO_representation}
+\captionspacefig \caption{Linear optics decomposition for a single step of an arbitrary 3-vertex discrete-time quantum walk. The coin operators, $A^{(x)}$, may be arbitrary $\mathrm{SU}(3)$ matrices, whereas the step operator is simply a permutation of the optical modes. $O(|V|^2)$ optical modes are required, which scales efficiently.} \label{fig:QW_LO_representation}
 \end{figure}
 
 Because of the graph structure of the walk, it lends itself naturally to distributed implementation. We might imagine that different subgraphs -- or `widgets' \cite{bib:Lovett10, bib:Childs09} -- implement different computational primitives or subroutines. These widgets might be proprietary or expensive to implement, and are therefore best outsourced over a network.
@@ -615,11 +629,13 @@ Because of the graph structure of the walk, it lends itself naturally to distrib
 
 \subsection{Continuous-variables} \label{sec:CV_QC} \index{Continuous-variable quantum computation}
 
-Until now we have focussed on optical systems where quantum information is encoded into discrete variables\index{Discrete variables}, such as photon-number and polarisation. However, quantum states of light can also be considered in terms of continuous-variables (CVs)\index{Continuous-variables} in phase-space\index{Phase-space}.
+Until now we have focussed on optical systems where quantum information is encoded into discrete variables\index{Discrete variables}, such as photon-number or polarisation. However, quantum states of light can also be considered in terms of continuous-variables (CVs)\index{Continuous-variables} in phase-space\index{Phase-space}.
 
-In this picture, using squeezed states\index{Squeezed states} as a resource, a universal gate set can be constructed, enabling universal quantum computation to be implemented. All the necessary elements may be readily implemented using present-day quantum optics technology and numerous CV quantum protocols have been demonstrated \cite{bib:RevModPhys.77.513}.
+In this picture, using squeezed states\index{Squeezed states} as a resource, qubits can be closely approximated by vacuum states squeezed in orthogonal directions, where the closeness of the approximation is determined by the squeezing parameter\footnote{In the limit of infinite squeezing the two orthogonally squeezed states becomes orthogonal, enabling the encoding of a genuine qubit.}.
 
-In the CV picture, instead of representing states using photonic creation operators ($\hat a^\dag$), we express them in terms of the \textit{position} ($\hat x$)\index{Position operator} and \textit{momentum} ($\hat p$)\index{Momentum operator} operators, which can expressed in terms of creation and annihilation operators as,
+A universal gate set can be constructed, enabling universal quantum computation to be implemented using this encoding. All the necessary elements may be readily implemented using present-day quantum optics technology and numerous CV quantum protocols have been demonstrated \cite{bib:RevModPhys.77.513}. Most notably, very large-scale CV cluster states have been experimentally prepared in the laboratory \cite{nickmenicucci???}.
+
+In the CV picture, instead of representing states using photonic creation operators ($\hat a^\dag$), we express them in terms of the \textit{position} ($\hat x$)\index{Position operator} and \textit{momentum} ($\hat p$)\index{Momentum operator} operators, which can be expressed in terms of creation and annihilation operators as,
 \begin{align}
 \hat x &=    \sqrt{\frac{\hbar}{2 \omega}}(\hat a + \hat a^\dag), \nonumber \\
 \hat p &= -i \sqrt{\frac{\hbar  \omega}{2}}(\hat a - \hat a^\dag), 
@@ -639,7 +655,14 @@ The position representation corresponds to expressing a state vector $\ket{\psi}
 \begin{align}
 \psi(x) = \langle x|\psi\rangle.
 \end{align}
-The state can similarly be expressed in the momentum basis.\index{Momentum basis representation}
+The state can similarly be expressed in the momentum basis\index{Momentum basis representation},
+\begin{align}
+	\ket\psi = \int {\tilde\psi}(p) \ket{p}\, dp,
+\end{align}
+where,
+\begin{align}
+	{\tilde\psi}(p) = \langle p|\psi\rangle.
+\end{align}
 
 The quadrature eigenstates\index{Quadrature eigenstates} are mutually related to each other by a Fourier transform\index{Fourier transform},
 \begin{align}
@@ -655,9 +678,9 @@ The quadrature eigenstates\index{Quadrature eigenstates} are mutually related to
 
 Position and momentum eigenstates are orthogonal and may therefore be employed to encode a single qubit. However, these eigenstates have infinite energy. That is, they are infinitely squeezed in phase-space (Sec.~\ref{sec:squeezed}, \ref{sec:non_lin_opt})\index{Infinite squeezing}. However, position and momentum eigenstates can be closely approximated using finite, but large squeezing. The squeezed states\index{Squeezed states} in the two quadratures will now no longer be orthogonal, but will have overlap that asymptotes to zero as squeezing is increased. Thus, squeezed states can be used to approximate qubits using non-orthogonal basis states. Squeezed states may be prepared directly using a spontaneous parametric down-conversion (SPDC)\index{Spontaneous parametric down-conversion (SPDC)} process (Sec.~\ref{sec:single_phot_src}) \cite{bib:PhysRevLett.75.4337, bib:o2009photonic}. CV encoding using squeezed states is illustrated in phase-space in Fig.~\ref{fig:squeezed_state_encoding}.
 
-\begin{figure}[htpb]
+\begin{figure}[!htbp]
 \includegraphics[width=0.3\textwidth]{squeezed_state_encoding}
-\caption{Phase-space representation of two squeezed vacuum states, squeezed in the $\hat{x}$ (blue) and $\hat{p}$ (red) directions. In the limit of large squeezing these states become approximately orthogonal and may therefore approximate the encoding of a qubit.} \label{fig:squeezed_state_encoding}	
+\captionspacefig \caption{Phase-space representation of two squeezed vacuum states, squeezed in the $\hat{x}$ (blue) and $\hat{p}$ (red) directions. In the limit of large squeezing these states become approximately orthogonal and may therefore approximate the encoding of a qubit.} \label{fig:squeezed_state_encoding}	
 \end{figure}
 
 Squeezing simply corresponds to a dilation along a particular axis in phase-space. Squeezing is represented using the squeezing operator\index{Squeezing operator},
@@ -703,9 +726,9 @@ It is evident upon inspection that this can be thought of as a single-qubit rota
 
 In the squeezed basis one can prepare Bell pairs in an analogous manner to doing so using single-photon encoding. Namely, mixing two orthogonally squeezed states (squeezed and anti-squeezed states) on a 50:50 beamsplitter generates Bell-type entanglement. This is shown in Fig.~\ref{fig:CV_bell_pair}.
 
-\begin{figure}[htpb]
-\includegraphics[width=0.47\textwidth]{CV_bell_pair}
-\caption{Preparation of a CV Bell pair using a 50:50 beamsplitter to entangled two  squeezed states, squeezed in orthogonal directions in phase-space.}\label{fig:CV_bell_pair}	
+\begin{figure}[!htbp]
+\includegraphics[width=0.475\textwidth]{CV_bell_pair}
+\captionspacefig \caption{Preparation of a CV Bell pair using a 50:50 beamsplitter to entangled two  squeezed states, squeezed in orthogonal directions in phase-space.}\label{fig:CV_bell_pair}	
 \end{figure}
 
 \comment{This is deterministic?}
@@ -757,7 +780,9 @@ which transforms two-mode quadrature eigenstates as,
 \end{align}
 
 A full set of circuit model CV gates, universal for CV quantum computing is summarised in Table.~\ref{tab:CV_gates} \cite{bib:RevModPhys.84.621}.
-\begin{table}[htpb]
+
+\startnormtable
+\begin{table}[!htbp]
 \begin{tabular}{ |c|c| } 
  \hline
  Qubit model gate &  CV equivalent \\ 
@@ -770,8 +795,9 @@ CZ		   & $\hat{U}_\mathrm{CZ}= \exp[\frac{i}{2}\hat x_1 \hat x_2]$ \\
 CNOT 	   & $\hat{U}_\mathrm{CNOT} = \exp[-2i\hat x_1 \hat p_2]$\\
 \hline
 \end{tabular}
-\caption{Logical generalisations of a universal gate set to the CV model for quantum computing.\label{tab:CV_gates}}
+\captionspacetab \caption{Logical generalisations of a universal gate set to the CV model for quantum computing.\label{tab:CV_gates}}
 \end{table}
+\startalgtable
 
 \comment{Here explicitly show construction of a CZ gate.}
 
@@ -803,9 +829,9 @@ Optically-mediated atomic ensemble architectures are particularly attractive, as
 
 A novel `double heralding'\index{Double heralding} technique, introduced in \cite{bib:BarrettKok05}, allows photon loss\index{Photon loss} to be overcome during which-path erasure. Similarly, quantum states of light can be coupled to two-level quantum systems using Hamiltonians of the form shown in Eq.~(\ref{eq:two_level_hamil}). The preparation of long-distance entanglement between atomic systems has been demonstrated \cite{bib:Matsukevich05, bib:Matsukevich05b}
 
-\begin{figure}[htpb]
+\begin{figure}[!htbp]
 \includegraphics[width=0.375\textwidth]{barrett_kok}
-\caption{Two atomic systems in $\lambda$-configurations, each coupled with an optical mode. An EO between them is mediated via linear optics which-path erasure. Each system contains two degenerate ground states, which jointly encode a qubit (\mbox{$\ket{0}\equiv\ket{\!\uparrow}$}, \mbox{$\ket{1}\equiv\ket{\!\downarrow}$}), and an additional excited state ($\ket{e}$), which only couples to the $\ket{\!\downarrow}$ state. A $\pi$-pulse excites the electron from the $\ket{\!\downarrow}$ to the $\ket{e}$ state, after which emission of a photon is associated with a coherent relaxation back to $\ket{\!\downarrow}$. If the two optical modes are interfered on a 50:50 beamsplitter, and a single photon is detected between the two photo-detectors, $D_1$ and $D_2$, the two emission processes become indistinguishable, and which-path erasure entangles the two qubits by projecting them onto a maximally entangled Bell pair. More complicated networks based on this EO allow the preparation of cluster states, enabling universal quantum computation. In a quantum networking context, the matter qubits could be held by a client, and the optical interferometry implementing the computation outsourced to the cloud, i.e the PBS, $D_1$ and $D_2$ are implemented in the cloud. This would also facilitate the preparation of shared entangled states, where different clients possess parts of an entangled state, potentially physically separated over long distances.} \label{fig:barrett_kok}
+\captionspacefig \caption{Two atomic systems in $\lambda$-configurations, each coupled with an optical mode. An EO between them is mediated via linear optics which-path erasure. Each system contains two degenerate ground states, which jointly encode a qubit (\mbox{$\ket{0}\equiv\ket{\!\uparrow}$}, \mbox{$\ket{1}\equiv\ket{\!\downarrow}$}), and an additional excited state ($\ket{e}$), which only couples to the $\ket{\!\downarrow}$ state. A $\pi$-pulse excites the electron from the $\ket{\!\downarrow}$ to the $\ket{e}$ state, after which emission of a photon is associated with a coherent relaxation back to $\ket{\!\downarrow}$. If the two optical modes are interfered on a 50:50 beamsplitter, and a single photon is detected between the two photo-detectors, $D_1$ and $D_2$, the two emission processes become indistinguishable, and which-path erasure entangles the two qubits by projecting them onto a maximally entangled Bell pair. More complicated networks based on this EO allow the preparation of cluster states, enabling universal quantum computation. In a quantum networking context, the matter qubits could be held by a client, and the optical interferometry implementing the computation outsourced to the cloud, i.e the PBS, $D_1$ and $D_2$ are implemented in the cloud. This would also facilitate the preparation of shared entangled states, where different clients possess parts of an entangled state, potentially physically separated over long distances.} \label{fig:barrett_kok}
 \end{figure}
 
 The attractive feature of this type of approach is that the actual entanglement is generated using all-optical operations, despite the underlying logical qubits being stationary and potentially physically separated a long distance apart, mitigating the need for direct matter-matter interactions, and enabling distributed computation. Optical interfacing is discussed in Sec.~\ref{sec:opt_inter}. This allows the EOs to be performed remotely in the cloud, without physically moving the stationary qubits. Such hybrid systems present an interesting platform for cloud quantum computing -- despite the qubits being stationary, we are able to outsource the interactions between them to distant servers or even satellites.
@@ -818,7 +844,7 @@ Alternately, if there is no direct line of quantum communication between two qub
 
 Expanding upon this idea, we can envisage distributed models for quantum computation, where the qubits needn't even be of the same physical medium. We could, for example, entangle quantum dot qubits, atomic qubits, and atomic ensemble qubits with one another by coupling them to optical modes and performing which-path erasure between them. This enables distributed quantum computation between hosts possessing quantum infrastructure comprising different physical mediums (provided the photons emitted by those systems may be made indistinguishable, such that HOM interference is possible).
 
-\begin{table}[htpb]
+\begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
 \texttt{
 function WhichPathErasure():
@@ -854,7 +880,7 @@ which is a Bell pair between the matter qubits.
     \item $\Box$
 \end{enumerate}}
 \end{mdframed}
-\caption{Using which-path erasure to entangle two $\lambda$-configuration matter qubits via post-selected linear optics. Note that the two matter qubits could in principle be arbitrarily physically separated. Only the emitted photons need be brought together locally for the implementation of a beamsplitter operation. This lends such entanglement generation protocols to distributed implementation.} \label{alg:which_path}
+\captionspacealg \caption{Using which-path erasure to entangle two $\lambda$-configuration matter qubits via post-selected linear optics. Note that the two matter qubits could in principle be arbitrarily physically separated. Only the emitted photons need be brought together locally for the implementation of a beamsplitter operation. This lends such entanglement generation protocols to distributed implementation.} \label{alg:which_path}
 \end{table}
 
 %
