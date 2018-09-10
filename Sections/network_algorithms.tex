@@ -32,7 +32,7 @@ In Table.~\ref{tab:net_alg_sum} we summarise the upcoming discussion on importan
 		\rowcolor{LimeGreen} Minimum spanning tree & Find a spanning tree of a graph that minimises & \textbf{P} & $O(|E|\log |V|)$ \\
   		\rowcolor{LimeGreen} & the total of the edge weights & & \\
   		\hline
-  		\rowcolor{LimeGreen} Minimum cost flow & Minimise total costs in a network &  \textbf{P} & $O(|V|\log |V|(|E|$\\
+  		\rowcolor{LimeGreen} Minimum-cost flow & Minimise total costs in a network &  \textbf{P} & $O(|V|\log |V|(|E|$\\
   		\rowcolor{LimeGreen} (Orlin) & with a specified amount of flow& & $+|V|\log |V|))$ \\
   		\hline
   		\rowcolor{LimeGreen} Maximum flow & Maximise flow in a network, regardless of costs & \textbf{P} & $O(|E|\cdot c_\mathrm{max})$ \\
@@ -49,7 +49,7 @@ In Table.~\ref{tab:net_alg_sum} we summarise the upcoming discussion on importan
   		\rowcolor{Lavender} Vehicle rescheduling problem & Same as above but with dynamically changing costs & \textbf{NP}-complete & ? \\
     	\hline
 	\end{tabular}
-	\captionspacetab \caption{Summary of some important network algorithms and their complexities. The \textbf{NP}-complete algorithms are not believed to have efficient classical algorithms, and their exact scaling is not well understood.} \label{tab:net_alg_sum} \index{Network algorithms}\index{Breadth-first-search (BFS) algorithm}\index{Depth-first-search (DFS) algorithm}\index{Shortest-path algorithm}\index{Single-source shortest path algorithm}\index{Minimum spanning tree algorithm}\index{Minimum cost flow algorithm}\index{Maximum flow algorithm}\index{Multi-commodity flow algorithm}\index{Vehicle routing problem}\index{Vehicle rescheduling problem}
+	\captionspacetab \caption{Summary of some important network algorithms and their complexities. The \textbf{NP}-complete algorithms are not believed to have efficient classical algorithms, and their exact scaling is not well understood.} \label{tab:net_alg_sum} \index{Network algorithms}\index{Breadth-first-search (BFS) algorithm}\index{Depth-first-search (DFS) algorithm}\index{Shortest-path algorithm}\index{Single-source shortest path algorithm}\index{Minimum spanning tree algorithm}\index{Minimum-cost flow algorithm}\index{Maximum flow algorithm}\index{Multi-commodity flow algorithm}\index{Vehicle routing problem}\index{Vehicle rescheduling problem}
 \end{table*}
 \startalgtable
 
@@ -69,12 +69,12 @@ Examples of these two algorithms are shown in Fig.~\ref{fig:BFS_DFS}.
 
 \if 2\pubmode
 	\begin{figure}[!htbp]
-	\includegraphics[width=0.3\textwidth]{BFS_DFS_long}
+	\includegraphics[clip=true, width=0.3\textwidth]{BFS_DFS_long}
 	\captionspacefig \caption{Comparison of the order in which vertices are explored, using the breadth-first-search (BFS) and depth-first-search (DFS) algorithms, where vertex 1 is the root vertex.} \label{fig:BFS_DFS}
 	\end{figure}
 \else
 	\begin{figure*}[!htbp]
-	\includegraphics[width=0.65\textwidth]{BFS_DFS}
+	\includegraphics[clip=true, width=0.65\textwidth]{BFS_DFS}
 	\captionspacefig \caption{Comparison of the order in which vertices are explored, using the breadth-first-search (BFS) and depth-first-search (DFS) algorithms, where vertex 1 is the root vertex.} \label{fig:BFS_DFS}
 	\end{figure*}
 \fi
@@ -145,7 +145,7 @@ function DijkstraShortestPath($G$,$A$,$B$):
 \captionspacealg \caption{Dijkstra's original shortest-path algorithm for finding the lowest weight path through a graph, $G$, between two vertices, $A$ (source) and $B$ (destination). The algorithm has $O(|V|^2)$ runtime (in \textbf{P}).} \label{alg:dijkstra}\index{Shortest-path algorithm}
 \end{table}
 
-Fig.~\ref{fig:simp_route_opt} illustrates a directed, edge-weighted graph. A shortest-path algorithm applied between vertices $A$ and $B$ would return \mbox{$R_\mathrm{shortest} = A\to F\to B$} as the minimum cost route.
+Fig.~\ref{fig:simp_route_opt} illustrates a directed, edge-weighted graph. A shortest-path algorithm applied between vertices $A$ and $B$ would return \mbox{$R_\mathrm{shortest} = A\to F\to B$} as the minimum-cost route.
 
 When introducing network graphs earlier, we insisted upon all costs being associated with edges rather than vertices, and presented a trivial means by which to convert vertex costs to edge costs in Fig.~\ref{fig:remove_nodes}. This adamance arose because the presently described shortest-path algorithms operate purely in terms of edge weights, not vertex weights. But the mapping we presented from the latter to the former obviates this issue.
 
@@ -190,12 +190,12 @@ function ConstrainedShortestPath($G$,$A$,$B$,$C$):
 
 \if 2\pubmode
 \begin{figure}[!htbp]
-\includegraphics[width=0.35\textwidth]{constrained_shortest_path_long}
+\includegraphics[clip=true, width=0.35\textwidth]{constrained_shortest_path_long}
 \caption{Example of a constrained shortest-path algorithm. Beginning with the initial graph we eliminate edges that do not satisfy imposed nearest-neighbour constraints. This is performed as a pre-processing stage. Then a usual shortest-path algorithm is applied to the reduced graph, yielding the optimal route subject to the required constraints.}\label{fig:constrained_shortest_path}
 \end{figure}
 \else
 \begin{figure*}[!htbp]
-\includegraphics[width=\textwidth]{constrained_shortest_path}
+\includegraphics[clip=true, width=\textwidth]{constrained_shortest_path}
 \caption{Example of a constrained shortest-path algorithm. Beginning with the initial graph we eliminate edges that do not satisfy imposed nearest-neighbour constraints. This is performed as a pre-processing stage. Then a usual shortest-path algorithm is applied to the reduced graph, yielding the optimal route subject to the required constraints.}\label{fig:constrained_shortest_path}
 \end{figure*}
 \fi
@@ -235,12 +235,12 @@ Because MST algorithms are efficient, they play a very useful role in the design
 Fig.~\ref{fig:mst} shows an example of a graph with its MST.
 
 %
-% Minimum Cost Flow
+% Minimum-Cost Flow
 %
 
-\subsection{Minimum cost flow} \label{sec:min_cost_flow_prob} \index{Minimum cost flow algorithm}
+\subsection{Minimum-cost flow} \label{sec:min_cost_flow_prob} \index{Minimum-cost flow algorithm}
 
-The \textit{minimum cost flow problem} \cite{???} is that of minimising costs through a network for a specified amount of flow (i.e total bandwidth or throughput), which acts as a constraint on the problem. The definition of `cost' in this context is compatible with our earlier definition of cost metrics (Def.~\ref{def:metric}).
+The \textit{minimum-cost flow problem} \cite{???} is that of minimising costs through a network for a specified amount of flow (i.e total bandwidth or throughput), which acts as a constraint on the problem. The definition of `cost' in this context is compatible with our earlier definition of cost metrics (Def.~\ref{def:metric}).
 
 This problem can be efficiently solved using linear programming. Specifically, cost metrics along links in series are given by linear combinations of individual link costs. If, in addition, we let our net cost function be linear in the constituent costs then the net cost will also be linear in all the edge weights. This lends itself directly to optimisation via linear programming techniques. Algorithms for linear programming, such as the \textit{simplex} algorithm, have polynomial-time solutions (i.e reside in \textbf{P}\index{P}), and a plethora of software libraries are available for implementing them numerically.
 
@@ -283,7 +283,7 @@ Unfortunately the computational complexity of solving this problem is much harde
 The vehicle routing problem (VRP) is a multi-user generalisation of the shortest-path problem, where the goal is to minimise total network cost (i.e the sum of all individual users' costs) when there are multiple users sharing the network, each with distinct sources and destinations.
 
 \begin{figure}[!hbtp]
-\includegraphics[width=0.35\textwidth]{vehicle_routing_alg}
+\includegraphics[clip=true, width=0.35\textwidth]{vehicle_routing_alg}
 	\caption{Example of the vehicle routing problem, the multi-user generalisation of the shortest-path problem, where the goal is to minimise the total cost across all users. Intuitively, because whenever individual shortest-paths intersect one must trial different prioritisations, the combinatorics of this grow exponentially with the number of competing users.}\label{fig:VRS}
 \end{figure}
 
