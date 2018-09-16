@@ -743,33 +743,35 @@ yielding the sum of all the votes.
 
 \subsection{Quantum secret sharing}\index{Quantum secret sharing}
 
-\comment{To do}
-
-%
-% Attacks On Quantum Cryptography
-%
 
 \section{Attacks on quantum cryptography}
 
-\comment{To do}
 
-Hacking attacks are related to the weaknesses of an implementation. A first common feature of hacking attacks is that they are feasible, or almost feasible, with present-day technology.
+For a QKD system, information-theoretic security is achieved only when security against collective, coherent attacks is proven. Hacking attacks are related to the weaknesses of the physical  implementation, rather than weakness of the theory. Some examples of weaknesses which allow zero-error attacks include losses and imperfect components. When considering the security of noisy channels, one must assume that all noise is due to manipulation by an eavesdropper. An attack attempt is considered successful if it can be proven that the eavesdropper can gain a non-negligible (i.e., not exponentially small) amount of informationon the final secret key extracted by Alice and bob without alerting them. Some of the well-known attacks follows.
 
-\subsection{Trojan horse attacks}
+\subsection{Trojan horse attack}
+The family of Trojan horse attacks involves Eve probing the settings of Alice and Bob by
+sending light into their devices and collecting the reflected signal. 
+The first one of this kind of attacks actually came for free for the eavesdropper\cite{}: it was discovered that some photon counters emits light when a photon was detected \cite{}. If the emitted light carries information on which detector was triggered, it must be prevented to leak out.
 
-The best-known example is the family of Trojan horse attacks, in which Eve probes the settings of Alice’s and/or Bob’s devices by sending some light into them and collecting the reflected signal. 
 
-Actually, the first kind of hacking attack that was considered is a form of Trojan horse that would come for free: it was noticed that some photon counters  silicon-based avalanche photodiodes  emit some light at various wavelengths when they detect a photon Kurtsiefer et al., 2001. If this light carries some information about which detector has fired, it must be prevented from propagating out, where Eve could detect it. 
+\subsection{Beam-splitter and photon number splitting attack}
 
-\subsection{Quantum side channel attacks}
 
-\subsection{Photon-number splitting attacks}
+Ref.~\cite{PhysRevLett.68.3121}
 
-\cite{PhysRevLett.68.3121}
+A beam-splitting (BS) attack translates the fact that any signal lost in channel is stolen by Eve. Here Eve induces losses in the communication channel by putting a beam splitter outside Alice’s device, then forwards the remaining photons to Bob. The BS attack does not modify the optical mode that Bob receives: it is therefore always possible for lossy channels and does not introduce any error.
 
-A beam-splitting (BS) attack translates the fact that the light that is lost in the channel must be given to Eve: specifically, Eve could be simulating the losses by putting a beam splitter just outside Alice’s laboratory, and then forwarding the remaining photons to Bob on a lossless line. The BS attack does not modify the optical mode that Bob receives: it is therefore always possible for lossy channels and does not introduce any error.
 
-When the signal can consist of more than one photon, Eve can count the number of photons in each signal and act differently according to the result n of this measurement. Such attacks are called photon-number splitting PNS attacks
-% \comment{Attacks based on bad implementation rather than bad theory}
+If the state preparation consists of more than one photon, Eve can count the number of photons in each signal and act accordingly. Such attacks are called photon-number splitting (PNS) attacks. The BS and PNS attacks were discovered as zero-error attacks against BB84 implemented with a weak laser pulses. To counter the attack, the decoy-state method\cite{} method was developed.
 
-PNS were discovered as zero-error attacks against BB84 implemented with weak laser pulses; in the typical parameter regime of QKD, even the Poissonian photon-number distribution can be preserved  Lu{\" u}tkenhaus and Jahma, 2002, so that the PNS attack cannot be detected even in principle as long as one known signal intensity is used. Use of different intensities in order to detect PNS attacks is the idea behind the decoy-states method. The distributed-phase-reference protocols also detect PNS attacks.
+
+
+\subsection{Attacks on the detector}
+The Faked-state attack is based on the weak-laser implementation of BB84. Here Eve manipulates Bob's detectors to force him to measure in the same basis. It exploits the fact that the detectors may have a dead time, and the eavesdropper can trigger the detector when she wants to. 
+It follows that Bob's detection outcomes is controlled by the eavesdroper.
+
+Eve can also go behond detector blinding. She can send in a powerful laser pulse to optically damage component in the QKD system and permanently change its characteristics\cite{}. If the new characteristics then assist the eavesdropper in an attack without Alice or Bob being notified, the security of that practical QKD system would be severly compromised.
+
+
+A more detailed discussion on attacks on the physical implementation can be found in Ref.~\cite{}.
