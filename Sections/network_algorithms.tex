@@ -32,7 +32,7 @@ In Table.~\ref{tab:net_alg_sum} we summarise the upcoming discussion on importan
 		\rowcolor{LimeGreen} Minimum spanning tree & Find a spanning tree of a graph that minimises & \textbf{P} & $O(|E|\log |V|)$ \\
   		\rowcolor{LimeGreen} & the total of the edge weights & & \\
   		\hline
-  		\rowcolor{LimeGreen} Minimum cost flow & Minimise total costs in a network &  \textbf{P} & $O(|V|\log |V|(|E|$\\
+  		\rowcolor{LimeGreen} Minimum-cost flow & Minimise total costs in a network &  \textbf{P} & $O(|V|\log |V|(|E|$\\
   		\rowcolor{LimeGreen} (Orlin) & with a specified amount of flow& & $+|V|\log |V|))$ \\
   		\hline
   		\rowcolor{LimeGreen} Maximum flow & Maximise flow in a network, regardless of costs & \textbf{P} & $O(|E|\cdot c_\mathrm{max})$ \\
@@ -49,7 +49,7 @@ In Table.~\ref{tab:net_alg_sum} we summarise the upcoming discussion on importan
   		\rowcolor{Lavender} Vehicle rescheduling problem & Same as above but with dynamically changing costs & \textbf{NP}-complete & ? \\
     	\hline
 	\end{tabular}
-	\captionspacetab \caption{Summary of some important network algorithms and their complexities. The \textbf{NP}-complete algorithms are not believed to have efficient classical algorithms, and their exact scaling is not well understood.} \label{tab:net_alg_sum} \index{Network algorithms}\index{Breadth-first-search (BFS) algorithm}\index{Depth-first-search (DFS) algorithm}\index{Shortest-path algorithm}\index{Single-source shortest path algorithm}\index{Minimum spanning tree algorithm}\index{Minimum cost flow algorithm}\index{Maximum flow algorithm}\index{Multi-commodity flow algorithm}\index{Vehicle routing problem}\index{Vehicle rescheduling problem}
+	\captionspacetab \caption{Summary of some important network algorithms and their complexities. The \textbf{NP}-complete algorithms are not believed to have efficient classical algorithms, and their exact scaling is not well understood.} \label{tab:net_alg_sum} \index{Network algorithms}\index{Breadth-first-search (BFS) algorithm}\index{Depth-first-search (DFS) algorithm}\index{Shortest-path algorithm}\index{Single-source shortest path algorithm}\index{Minimum spanning tree algorithm}\index{Minimum-cost flow algorithm}\index{Maximum flow algorithm}\index{Multi-commodity flow algorithm}\index{Vehicle routing problem}\index{Vehicle rescheduling problem}
 \end{table*}
 \startalgtable
 
@@ -69,12 +69,12 @@ Examples of these two algorithms are shown in Fig.~\ref{fig:BFS_DFS}.
 
 \if 2\pubmode
 	\begin{figure}[!htbp]
-	\includegraphics[width=0.3\textwidth]{BFS_DFS_long}
+	\includegraphics[clip=true, width=0.3\textwidth]{BFS_DFS_long}
 	\captionspacefig \caption{Comparison of the order in which vertices are explored, using the breadth-first-search (BFS) and depth-first-search (DFS) algorithms, where vertex 1 is the root vertex.} \label{fig:BFS_DFS}
 	\end{figure}
 \else
 	\begin{figure*}[!htbp]
-	\includegraphics[width=0.65\textwidth]{BFS_DFS}
+	\includegraphics[clip=true, width=0.65\textwidth]{BFS_DFS}
 	\captionspacefig \caption{Comparison of the order in which vertices are explored, using the breadth-first-search (BFS) and depth-first-search (DFS) algorithms, where vertex 1 is the root vertex.} \label{fig:BFS_DFS}
 	\end{figure*}
 \fi
@@ -145,7 +145,7 @@ function DijkstraShortestPath($G$,$A$,$B$):
 \captionspacealg \caption{Dijkstra's original shortest-path algorithm for finding the lowest weight path through a graph, $G$, between two vertices, $A$ (source) and $B$ (destination). The algorithm has $O(|V|^2)$ runtime (in \textbf{P}).} \label{alg:dijkstra}\index{Shortest-path algorithm}
 \end{table}
 
-Fig.~\ref{fig:simp_route_opt} illustrates a directed, edge-weighted graph. A shortest-path algorithm applied between vertices $A$ and $B$ would return \mbox{$R_\mathrm{shortest} = A\to F\to B$} as the minimum cost route.
+Fig.~\ref{fig:simp_route_opt} illustrates a directed, edge-weighted graph. A shortest-path algorithm applied between vertices $A$ and $B$ would return \mbox{$R_\mathrm{shortest} = A\to F\to B$} as the minimum-cost route.
 
 When introducing network graphs earlier, we insisted upon all costs being associated with edges rather than vertices, and presented a trivial means by which to convert vertex costs to edge costs in Fig.~\ref{fig:remove_nodes}. This adamance arose because the presently described shortest-path algorithms operate purely in terms of edge weights, not vertex weights. But the mapping we presented from the latter to the former obviates this issue.
 
@@ -162,6 +162,45 @@ One solution is for a central authority to be responsible for maintaining a ledg
 Another approach, which does not require a reliable central authority, is for users to implement network exploration algorithms each time they wish to perform a shortest-path calculation. This facilitates truly ad hoc networking, but incurs the cost overhead associated with nodes frequently implementing network exploration. However, network exploration is a purely classical algorithm, which may run entirely over the classical network, and therefore incurs no cost in quantum resources.
 
 With this approach, a new node can join the network, without having to know anything about the topology of the network. Similarly, upon leaving the network, it needn't notify anyone, since a future interrogation by a neighbour will be detected as a non-existent node. The BFS is therefore highly suited to ad hoc operation. In fact, present-day internet gateway protocols (Sec.~\ref{sec:gateway}) essentially implement a distributed version of BFS.
+
+%
+% Constrained Shortest-Path
+%
+
+\subsection{Constrained shortest-path}\label{sec:const_short_path}\index{Constrained shortest-path algorithm}
+
+In some scenarios we may wish to find a shortest-path through a graph, subject to some constraints. In general, the addition of constraints can make such algorithms far more computationally complex, undermining the efficiency of Dijkstra's algorithm. However, in some circumstances such constraints can easily be incorporated, without undermining the performance of the algorithm.
+
+In particular, if there are constraints on the relationships between nearest-neighbours in the graph, this can be incorporated by pre-processing the graph via deletions of edges that violate the constraints. Then the usual shortest-path algorithm may be applied to the reduced graph. The rather trivial algorithm is shown in Alg.~\ref{alg:const_short}, with a simple example shown in Fig.~\ref{fig:constrained_shortest_path}.
+
+\begin{table}[!htbp]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
+function ConstrainedShortestPath($G$,$A$,$B$,$C$):
+\begin{enumerate}
+	\item For the set of nearest-neighbour constraints $C$, generate the set of edges $E(C)$ that violate the constraints.
+	\item $G'=G-E(C)$
+	\item route = DijkstraShortestPath($G'$,$A$,$B$)
+	\item return(route)
+    \item $\Box$
+\end{enumerate}}
+\end{mdframed}
+\captionspacealg \caption{Efficient algorithm for finding a constrained shortest-path, where the constraints are in terms of nearest-neighbour relationships.} \label{alg:const_short}\index{Constrained shortest-path algorithm}
+\end{table}
+
+\if 2\pubmode
+\begin{figure}[!htbp]
+\includegraphics[clip=true, width=0.35\textwidth]{constrained_shortest_path_long}
+\caption{Example of a constrained shortest-path algorithm. Beginning with the initial graph we eliminate edges that do not satisfy imposed nearest-neighbour constraints. This is performed as a pre-processing stage. Then a usual shortest-path algorithm is applied to the reduced graph, yielding the optimal route subject to the required constraints.}\label{fig:constrained_shortest_path}
+\end{figure}
+\else
+\begin{figure*}[!htbp]
+\includegraphics[clip=true, width=\textwidth]{constrained_shortest_path}
+\caption{Example of a constrained shortest-path algorithm. Beginning with the initial graph we eliminate edges that do not satisfy imposed nearest-neighbour constraints. This is performed as a pre-processing stage. Then a usual shortest-path algorithm is applied to the reduced graph, yielding the optimal route subject to the required constraints.}\label{fig:constrained_shortest_path}
+\end{figure*}
+\fi
+
+A notable example of where this technique finds applicability is in entanglement swapping networks, discussed later in Secs.~\ref{sec:swapping} \& \ref{sec:rep_net}. Consider the network shown in Fig.~\ref{fig:racetime}. Here the entanglement swapping network comprises nodes alternating between two different functionalities: Bell-pair preparation, and entanglement swapping. Representing these as colours, this effectively introduces the edge constraint that edges between nearest neighbours of the same colour ought to be removed. Additionally, the end-points of the network must neighbour Bell-pair sources, not entanglement swappers. This enforces the additional constraint of removing edges between end-points with the wrong coloured neighbours. Having applies these edge deletions enforcing these constraints, the shortest-path algorithm will now find the constrained optimal route. Thus, this example of an entanglement swapping network is isomorphic to the example presented in Fig.~\ref{fig:constrained_shortest_path}.
 
 %
 % Single-Source Shortest-Path Algorithm
@@ -196,12 +235,12 @@ Because MST algorithms are efficient, they play a very useful role in the design
 Fig.~\ref{fig:mst} shows an example of a graph with its MST.
 
 %
-% Minimum Cost Flow
+% Minimum-Cost Flow
 %
 
-\subsection{Minimum cost flow} \label{sec:min_cost_flow_prob} \index{Minimum cost flow algorithm}
+\subsection{Minimum-cost flow} \label{sec:min_cost_flow_prob} \index{Minimum-cost flow algorithm}
 
-The \textit{minimum cost flow problem} \cite{???} is that of minimising costs through a network for a specified amount of flow (i.e total bandwidth or throughput), which acts as a constraint on the problem. The definition of `cost' in this context is compatible with our earlier definition of cost metrics (Def.~\ref{def:metric}).
+The \textit{minimum-cost flow problem} \cite{???} is that of minimising costs through a network for a specified amount of flow (i.e total bandwidth or throughput), which acts as a constraint on the problem. The definition of `cost' in this context is compatible with our earlier definition of cost metrics (Def.~\ref{def:metric}).
 
 This problem can be efficiently solved using linear programming. Specifically, cost metrics along links in series are given by linear combinations of individual link costs. If, in addition, we let our net cost function be linear in the constituent costs then the net cost will also be linear in all the edge weights. This lends itself directly to optimisation via linear programming techniques. Algorithms for linear programming, such as the \textit{simplex} algorithm, have polynomial-time solutions (i.e reside in \textbf{P}\index{P}), and a plethora of software libraries are available for implementing them numerically.
 
@@ -242,6 +281,11 @@ Unfortunately the computational complexity of solving this problem is much harde
 \subsection{Vehicle routing problem} \label{sec:VRP} \index{Vehicle routing problem}
 
 The vehicle routing problem (VRP) is a multi-user generalisation of the shortest-path problem, where the goal is to minimise total network cost (i.e the sum of all individual users' costs) when there are multiple users sharing the network, each with distinct sources and destinations.
+
+\begin{figure}[!hbtp]
+\includegraphics[clip=true, width=0.35\textwidth]{vehicle_routing_alg}
+	\caption{Example of the vehicle routing problem, the multi-user generalisation of the shortest-path problem, where the goal is to minimise the total cost across all users. Intuitively, because whenever individual shortest-paths intersect one must trial different prioritisations, the combinatorics of this grow exponentially with the number of competing users.}\label{fig:VRS}
+\end{figure}
 
 Unlike the polynomial-time shortest-path algorithm, exactly solving the VRP is \textbf{NP}-hard\index{NP \& NP-complete} in general. However, heuristic methods can find approximate suboptimal solutions far more efficiently, and there is a multitude of software packages available for doing so.
 
