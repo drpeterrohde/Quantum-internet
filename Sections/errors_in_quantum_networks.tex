@@ -89,11 +89,16 @@ The scaling of loss over distance $d$ varies depending on the medium through whi
 \begin{align}
 	\eta = O(e^{-\alpha d}),
 \end{align}
-where $\alpha$ is a characteristic of the medium\footnote{With present-day fibre technology, this characteristic decay rate is on the order of \mbox{$\alpha = 22\mathrm{km}^{-1}$}.}. In space on the other hand, where the medium of propagation is vacuum, which is effectively lossless, the effective loss rate is not determined by the medium, but rather by the fact that the spot-size\index{Spot-size} of an optical state is subject to dispersion\index{Dispersion} and grows only quadratically with distance. Then when the light is detected, if the spot-size is greater than the detector aperture, the undetected component effectively translates to loss. Thus through free-space the effective efficiency scales as,
+where $\alpha$ is a characteristic of the medium\footnote{With present-day fibre technology, this characteristic decay rate is on the order of \mbox{$\alpha = \frac{1}{22\mathrm{km}}$}.}. In space on the other hand, where the medium of propagation is vacuum, which is effectively lossless, the effective loss rate is not determined by the medium, but rather by the fact that the spot-size\index{Spot-size} of an optical state is subject to dispersion\index{Dispersion} and grows only quadratically with distance, as shown in Fig.~\ref{fig:free_space_disp}. Then when the light is detected, if the spot-size is greater than the detector aperture, the undetected component effectively translates to loss. Thus through free-space the effective efficiency scales as,
 \begin{align}
 	\eta = O\left(\frac{1}{d^2}\right),
 \end{align}
 which is far more favourable than the exponential scaling inherent to lossy mediums. This provides space-based quantum networks with an inherent competitive advantage compared to any form of ground-based network.
+
+\begin{figure}[!htbp]
+	\includegraphics[width=0.475\textwidth]{free_space_dispersion}
+	\caption{Spot-size of an optical beam grows quadratically with distance from the source. If the beam is then collected via an aperture of area $A'$, any component of $A$ falling outside of $A'$ is effectively lost, yielding an effective loss channel with efficiency \mbox{$\eta = \frac{A'}{A} = \frac{A'}{\pi d^2 \tan^2\theta} = O\left(\frac{1}{d^2}\right)$}.} \label{fig:free_space_disp}
+\end{figure}
 
 %
 % Dephasing
@@ -221,7 +226,17 @@ where \mbox{$0\leq\eta\leq 1$} quantifies the degree of damping (\mbox{$\eta=0$}
 
 The physical intuition is clear upon inspection of the structure of the projectors in the Kraus operators, with $\hat{K}_2$ representing relaxation from the excited state to the ground state, with probability \mbox{$1-\eta$}.
 
-The degree of amplitude damping is often quoted in terms of a channel's $T_1$-time, characterising the expected time for the excited state to undergo spontaneous emission and relax to the ground state.
+The degree of amplitude damping is often quoted in terms of a channel's $T_1$-time, characterising the expected time for the excited state to undergo spontaneous emission and relax to the ground state. Using this parameterisation we can express the amplitude damping channel as,
+\begin{align}
+\mathcal{E}_t^\mathrm{relax}(\hat\rho) = e^{-t/T_1}\hat\rho + (1-e^{-t/T_1})\ket{0}\bra{0},
+\end{align}
+for which the output state is of the form,
+\begin{align}
+\hat\rho_t = \left(\begin{matrix}{}
+1 + (\alpha-1) e^{-t/T_1} & \gamma e^{-t/T_1} \\
+\gamma^* e^{-t/T_1} & \beta e^{-t/T_1}
+\end{matrix}\right).
+\end{align}
 
 In the specific context of optics, the loss channel (Sec.~\ref{sec:eff_err})\index{Loss channel} is the equivalent of amplitude damping.
 
