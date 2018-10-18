@@ -5,9 +5,9 @@
 \famousquote{I would rather have questions that can't be answered than answers that can't be questioned.}{Richard Feynman}
 \newline
 
-\dropcap{U}{ndoubtedly}, quantum technologies will be most impactful (and disruptive!) in the area of information security, something of fundamental importance to us all on a daily basis, vital to the world economy. Quantum technologies will be important both in terms of breaking and maintaining security, with the former mandating interest in the latter.
+\dropcap{U}{ndoubtedly}, quantum technologies will be most impactful (and disruptive!) in the area of information security, something of fundamental importance to us all on a daily basis, vital to the entire world economy. Quantum technologies will be important both in terms of breaking and maintaining security, with the former mandating interest in the latter.
 
-In Sec.~\ref{sec:homo_blind} we discussed encrypted outsourced quantum computation as an important concept in future cloud quantum computing. In this section we will step back from full-fledged distributed quantum computation, instead focussing on more elementary protocols for simple secure communication.
+In Sec.~\ref{sec:homo_blind} we discussed encrypted outsourced quantum computation as an important concept in future cloud quantum computing. In this section we will step back from full-fledged distributed quantum computation, instead focussing on more elementary protocols for simple secure communication or protocols.
 
 Today, the ability to communicate secretly with others is completely taken for granted in all but a few nations and resides in every smartphone and desktop PC. Furthermore, the encryption technologies available to the average consumer are extremely strong, the same as those used by large organisations, including world governments.
 
@@ -20,9 +20,10 @@ Today, the ability to communicate secretly with others is completely taken for g
 \dropcap{B}{efore} describing any specific cryptographic protocols, let us define what is meant by `security' in a cryptographic context. We differentiate between \textit{information theoretic security}\index{Information-theoretic security}, as opposed to \textit{computational security}\index{Computational security}:
 
 \begin{itemize}
-	\item Information-theoretic security: the laws of quantum information bound the amount of information that can be extracted from a system, irrespective of measurement or computational operations. Thus, such security can be regarded as attack-independent.
-	\item Computational security: is based on the assumption that an adversary's computational resources are insufficient to perform cryptanalysis or brute-force cracking. Clearly the former makes a far stronger statement about the security of a protocol than the latter.
+	\item Information-theoretic security: the laws of quantum information bound the amount of information that can be extracted from a system, irrespective of measurement or computational operations. Thus, such security can be regarded as attack-independent, making no assumptions about our adversary's capabilities.
+	\item Computational security: is based on the assumption that an adversary's computational resources are insufficient to perform cryptanalysis or brute-force cracking.
 \end{itemize}
+Clearly the former makes a far stronger statement about the security of a protocol than the latter.
 
 Classical public- and private-key encryption protocols are typically based upon the assumption of computational security (e.g the computational complexity of performing integer factorisation in the case of RSA public-key encryption, or solving a complex satisfiability problem in the case of private-key encryption), whereas quantum encryption protocols are typically information theoretically secure (e.g the one-time pad using QKD).
 
@@ -32,7 +33,7 @@ Classical public- and private-key encryption protocols are typically based upon 
 
 \section{Classical cryptography}\index{Classical cryptography}
 
-\dropcap{W}{e} begin with an introduction into \textit{classical} cryptography, so as to understand its limitations, which logically leads us into how quantum mechanics can assist in overcoming these limitations. We only scratch the surface of these extremely well-researched field, reviewing some of the most important and widely used protocols. For a deeper understanding of classical cryptography we refer the interested reader to \cite{bib:Schneier96}.
+\dropcap{W}{e} begin with an introduction into \textit{classical} cryptography, so as to understand its limitations, which logically leads us into how quantum mechanics can assist in overcoming them. We only scratch the surface of this extremely well-researched field, reviewing some of the most important and widely used protocols. For a deeper understanding of classical cryptography we refer the interested reader to the excellent and comprehensive \cite{bib:Schneier96}.
 
 %
 % Private-Key Cryptography
@@ -40,11 +41,11 @@ Classical public- and private-key encryption protocols are typically based upon 
 
 \subsection{Private-key cryptography}\index{Private-key cryptography}
 
-Private- (or symmetric-) key cryptography is perhaps the most basic (and useful) cryptographic primitive, enabling encryption of a channel between two parties who share a secret key\index{Private key} -- a random bit-string of length determined by the encryption algorithm. The same secret key is employed for both encryption and decryption operations, making it of utmost importance that it be retained secret.
+Private- (or symmetric-) key cryptography is perhaps the most basic (and useful) cryptographic primitive, enabling encryption of a channel between two parties who share a secret key\index{Private key} -- a random bit-string of length determined by the encryption algorithm. The same secret key is employed for both encryption and decryption operations (hence `symmetric'), making it of utmost importance that it be retained secret.
 
-Private key cryptography has a long history, in fact going back to ancient times, enabling the secret sharing of diplomatic messages between emperors and empires, e.g the so-called \textit{Caesar cipher}\index{Caesar cipher}, a simple substitution cipher\index{Substitution cipher} based on shifting the letters of the alphabet. However it was a niche technology that very few utilised, since it had to be implemented by hand without computers.
+Private-key cryptography has a long history, in fact going back to ancient times, enabling the secret sharing of diplomatic messages between emperors and empires, e.g the so-called \textit{Caesar cipher}\index{Caesar cipher}, a simple substitution cipher\index{Substitution cipher} based on shifting the letters of the alphabet. However it was a niche technology that very few utilised, since it had to be implemented by hand without computers or automation.
 
-Today there are countless freely available private-key cryptographic protocols available online, and some have been standardised by standards institutes. Currently, the Advanced Encryption Standard (AES)\index{Advanced Encryption Standard (AES)} is a standard endorsed by the US government, replacing the earlier standardised Data Encryption Standard (DES)\index{Data Encryption Standard (DES)} whose mere 56-bit key-length is today considered insecure. AES is a block cipher\index{Block cipher}, meaning that it divides data into small blocks of 128 bits, each of which are encrypted independently, and operates with key lengths of up to 256 bits (referred to as AES256), making it very robust against (even quantum) brute-force attacks (Sec.~\ref{sec:attacks_on_class}). The length of the plaintext and ciphertext is the same, meaning there is no bandwidth overhead when communicating encrypted data across a network.
+Today there are countless freely available private-key cryptographic protocols available online, and some have been standardised by standards institutes. Currently, the Advanced Encryption Standard (AES)\index{Advanced Encryption Standard (AES)} is a standard endorsed by the US government, replacing the earlier standardised Data Encryption Standard (DES)\index{Data Encryption Standard (DES)} whose mere 56-bit key-length is today considered insecure in light of present-day computing power. AES is a block cipher\index{Block cipher}, meaning that it divides data into small blocks of 128 bits, each of which are encrypted independently, and operates with key lengths of up to 256 bits (referred to as AES256), making it very robust against (even quantum) brute-force attacks (Sec.~\ref{sec:attacks_on_class}). The length of the plaintext and ciphertext is the same, meaning there is no bandwidth overhead when communicating encrypted data across a network.
 
 %
 % One-Time Pad Cipher
@@ -61,7 +62,7 @@ where $\oplus$ is the bitwise XOR operation (equivalently addition modulo 2), an
 	|c|=|s|=|k|.
 \end{align}
 
-The security of this protocol is easy to see intuitively -- with an appropriate choice of key, \textit{any} plaintext of the same length could be inferred from the ciphertext. This means that there is no possibility of performing any kind of frequency analysis\index{Frequency analysis}, as the ciphertext string has maximum entropy\index{Entropy} (inherited from the maximum entropy of the key, and assuming a strong cryptographic random bit generator) and thus no correlations. Since every possible valid plaintext can be recovered using an appropriate key, a cracking algorithm is unable to find a unique plaintext matching the ciphertext, since all are equally valid decryptions.
+The security of this protocol is easy to see intuitively -- with an appropriate choice of key, \textit{any} plaintext of the same length could be inferred from \textit{any} ciphertext. This means that there is no possibility of performing any kind of frequency analysis\index{Frequency analysis}, as the ciphertext string has maximum entropy\index{Entropy} (inherited from the maximum entropy of the random key, and assuming a strong cryptographic random bit generator) and thus no correlations. Since every possible valid plaintext can be recovered using an appropriate key, a cracking algorithm is unable to find a unique plaintext matching the ciphertext, since all are equally valid decryptions.
 
 Importantly, the secrecy of the one-time pad\index{One-time pad} strictly requires that a key never be reused. A fresh key must be generated for each message sent, otherwise trivial frequency analysis\index{Frequency analysis} techniques can be employed to compromise security. If the same key $k$ is used to encode two messages $s_1$ and $s_2$, yielding ciphertexts,
 \begin{align}
@@ -86,11 +87,11 @@ Although during the Cold War Soviet diplomats would literally carry briefcases b
 
 \subsection{Public-key cryptography}\index{Public-key cryptography}
 
-While private-key cryptography solves the problem of end-to-end cryptography, it has one main downfall -- how does one share a private key between two parties? After all, if we had the ability to secretly share keys between ourselves, wouldn't we just use that method to directly communicate, bypassing the unnecessary cryptographic protocol?
+While private-key cryptography solves the problem of end-to-end cryptography, it has one main downfall -- how does one share a private key between two parties? After all, if we had the ability to secretly share keys between ourselves, wouldn't we just use that same method to directly communicate, bypassing the unnecessary cryptographic protocol?
 
 Public- (or asymmetric-) key cryptography addresses this issue by replacing the private key with two keys (known as a key-pair\index{Key-pair}), one used solely for \textit{encryption}, the other solely for \textit{decryption}. Importantly, these two keys are non-trivially related and cannot be efficiently computed from one another. To send a message to a friend I can send him my encryption (public) key that he is only able to use for preparing an encrypted message for me. No security is required when sharing the public key since an eavesdropper can't use it for decryption. Finally, I am able to decrypt the message using my decryption (private) key, which I kept completely to myself and never shared with anyone.
 
-RSA \cite{bib:RSA} was the first published public-key cryptographic protocol, and forms the backbone for most encryption used on the internet today. It achieves its security based on the belief that factorising large integers into constituent primes is a computationally hard problem -- a so-called `trapdoor function'\index{One-way functions}. The algorithm is built upon number theory using modular arithmetic, described in detail in Alg.~\ref{alg:RSA}.
+RSA \cite{bib:RSA} was the first published public-key cryptographic protocol, and forms the backbone for most encryption used on the internet today. It achieves its security based on the (strongly held, but unproven) belief that factorising large integers into constituent primes is a computationally hard problem -- a so-called `trapdoor function'\index{One-way functions}. The algorithm is built upon number theory using modular arithmetic, described in detail in Alg.~\ref{alg:RSA}.
 
 \begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
@@ -127,7 +128,7 @@ function RSADecrypt(ciphertext, privateKey):
 \captionspacealg \caption{Number-theoretic algorithms based on modular arithmetic for RSA key generation, encryption and decryption.} \label{alg:RSA}
 \end{table}
 
-Since RSA, numerous other public-key cryptosystems have been developed, based on different choices of trapdoor function. Most notably, elliptic-curve cryptography\index{Elliptic-curve cryptography} has gained much attention. However, RSA remains the most widely used and well studied public-key cipher.
+Since RSA, numerous other public-key cryptosystems have been developed, based on different choices of trapdoor function. Most notably, elliptic-curve cryptography\index{Elliptic-curve cryptography} has gained much attention. However, RSA remains the most widely used and well-studied public-key cipher.
 
 To mitigate the need for constant one-on-one exchange of public-keys, many key servers\index{Key servers} exist around the globe, which maintain databases of people's public-keys. These servers are in a position of trust, vouching for the identities associated with their stored public-keys.
 
@@ -137,7 +138,7 @@ To mitigate the need for constant one-on-one exchange of public-keys, many key s
 
 \subsection{Key exchange protocols}
 
-A downside of RSA is that ciphertexts are in general much longer than plaintexts, unlike private-key protocols where the ciphertext is always the same length as the plaintext. For this reason it is typically not used to directly encrypt long messages, since the memory and bandwidth overheads would be undesirable. Instead, RSA is typically employed in conjunction with private-key cryptography in a key exchange protocol\index{Key exchange protocol}. Here the public-key system communicates a private \textit{session key}\index{Session key} between parties, which is subsequently employed in a private-key protocol, without incurring the time and memory overhead that RSA does. In Sec.~\ref{sec:brute_force_attacks} we point out that quantum computers are not believed to be able to efficiently crack private-key protocols, but instead effectively reduce their key length by a factor of 1/2, which is easily counteracted to restore security.
+A downside of RSA is that ciphertexts are in general much longer than plaintexts, unlike private-key protocols where the ciphertext is always the same length as the plaintext. For this reason it is typically not used to directly encrypt long messages, since the memory and bandwidth overheads would be undesirable. Instead, RSA is typically employed in conjunction with private-key cryptography in a key exchange protocol\index{Key exchange protocol}. Here the public-key system communicates a private \textit{session key}\index{Session key} between parties, which is subsequently employed in a private-key protocol, without incurring the time and memory overhead that RSA does. In Sec.~\ref{sec:brute_force_attacks} we point out that quantum computers are not believed to be able to efficiently crack private-key protocols, but instead effectively reduce their key length by a factor of 1/2, which is easily counteracted with longer keys to restore security.
 
 Numerous key exchange protocols have been formulated, the best known being the Diffie-Hellman\index{Diffie-Hellman protocol} protocol \cite{DiffieHellman}, which has been widely adopted on the internet.
 
@@ -149,7 +150,7 @@ Numerous key exchange protocols have been formulated, the best known being the D
 
 Rather than cryptographically ensuring the secrecy of messages, a user may wish to prove their identity when sending a message, such that the recipient can be certain it originated from who it says it does, and accurately conveys what they said. This is achieved using \textit{digital signatures}.
 
-Digital signatures can be easily implemented using the RSA protocol\index{RSA protocol}, but swapping the role of the public and private keys. Now the public key can only be used for decrypting a message, and the private key can only be used for encrypting it. As before, it is computationally hard to infer one from the other. The protocol for sending and verifying a digitally signed message is shown in Alg.~\ref{alg:dig_sig}.
+Digital signatures can be easily implemented using the RSA protocol\index{RSA protocol}, by reversing the roles of the public and private keys. Now the public key can only be used for decrypting a message, and the private key can only be used for encrypting it. As before, it is computationally hard to infer one from the other. The protocol for sending and verifying a digitally signed message is shown in Alg.~\ref{alg:dig_sig}.
 
 \begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
@@ -191,7 +192,7 @@ Because this protocol is implemented using ordinary RSA\index{RSA protocol}, alb
 
 Like RSA cryptography, key servers\index{Key servers} exist, maintaining databases of people's public-keys and their associated identities.
 
-Because RSA-encrypted messages are long, digital signature protocols do not sign the full document directly. Instead they create a message digest\index{Message digests} of the document using a cryptographic hash function, which is signed using RSA. These hash functions have the property that they cannot for forged or manipulated, providing an accurate summary of a document, but with extremely low memory overhead (256 bits is typical). Hash functions are discussed next in Sec.~\ref{sec:hashing}.
+Because RSA-encrypted messages are long, digital signature protocols typically do not sign the full document directly. Instead they create a message digest\index{Message digests} of the document using a cryptographic hash function, which is signed using RSA. These hash functions have the property that they cannot for forged or manipulated, providing an accurate summary of a document, but with extremely low memory overhead (256 bits is typical). Hash functions are discussed next in Sec.~\ref{sec:hashing}.
 
 %
 % Hashing
@@ -199,17 +200,17 @@ Because RSA-encrypted messages are long, digital signature protocols do not sign
 
 \subsection{Hashing} \label{sec:hashing} \index{Hash functions}
 
-Hash functions are functions that map a long string of arbitrary length to a short, fixed-size string with quasi-random behaviour,
+Hash functions are functions that map a long bit-string of arbitrary length to a short, fixed-size bit-string with quasi-random behaviour,
 \begin{align}
 	f_\mathrm{hash}:\,\{0,1\}^n \to \{0,1\}^m,
 \end{align}
-for an $n$-bit input and $m$-bit output hash, where $n$ is variable and $m$ is fixed. They are an example of `one-way functions'\index{One-way functions} that are computationally easy to compute in the forward direction, but extremely hard to invert. That is, given a hash, it is computationally difficult to find input strings that map to that value.
+for an $n$-bit input and $m$-bit output hash, where $n$ is variable and $m$ is fixed. They are an example of `one-way functions'\index{One-way functions} that are computationally easy to compute in the forward direction, but extremely hard to invert. That is, given a hash, it is computationally unviable to find input strings that map to that value.
 
 Hash functions have broad applicability throughout computer science, but here we are most interested in \textit{cryptographic hash functions} for use in cryptography, which impose strong conditions on the difficulty of inversion and their quasi-random characteristics. Most notably, changing a single bit in the input string ought to flip approximately half the bits of the hash on average.
 
 The standard cryptographic hash function with mainstream adoption is the 256-bit Secure Hashing Algorithm (SHA256\index{SHA256}), which generates 256-bit hashes. The algorithm is extremely efficient to implement digitally, and exhibits $O(n)$ runtime for input string length $n$.
 
-Cryptographically, hash functions are useful for creating message digests\index{Message digests}, which act as a highly condensed checksum\index{Checksum} of a document that can be utilised as a digital signature (Sec.~\ref{sec:dig_sig}).
+Cryptographically, hash functions are useful for creating message digests\index{Message digests}, which act as a highly condensed checksum\index{Checksum} of a document that can be utilised in a digital signature (Sec.~\ref{sec:dig_sig}).
 
 Note that because the function in general maps longer strings to shorter ones, there are necessarily \textit{collisions}\index{Hash collisions} -- multiple inputs for a given output. However, for strong cryptographic hash functions their behaviour is sufficiently random that two distinct messages will almost certainly yield completely different hashes (even if the messages are very similar), making it all but impossible for someone to make the claim that Alice said something she did not. This property is extremely important for the security of digital signatures.
 
@@ -219,7 +220,7 @@ Note that because the function in general maps longer strings to shorter ones, t
 
 \section{Attacks on classical cryptography}\index{Cryptographic attacks}\label{sec:attacks_on_class}
 
-\dropcap{H}aving introduced the main classes of classical cryptographic protocols, we now turn our attention to their weaknesses and vulnerabilities, both against adversaries with classical or quantum computational resources.
+\dropcap{H}{aving} introduced the main classes of classical cryptographic protocols, we now turn our attention to their weaknesses and vulnerabilities, both against adversaries with classical or quantum computational resources.
 
 %
 % Classical Attacks
@@ -247,7 +248,7 @@ Far better than waiting the age of the universe for the right key to turn up, is
 
 \begin{itemize}
 	\item Known plaintext attacks (KPA)\index{Known plaintext attack}: Through alternate means of espionage, the attacker is able to possess \textit{both} a ciphertext and its associated plaintext. Knowing both the input and output to the encryption algorithm may then reveal information about the key relating them. This technique was important to Alan Turing's successful cracking of the German Enigma\index{Enigma machines} encryption protocol during World War II.
-	\item Chosen plaintext attack (CPA)\index{Chosen plaintext attack}: The same as a KPA except that the adversary has the ability to choose what the known plaintext is.
+	\item Chosen plaintext attack (CPA)\index{Chosen plaintext attack}: The same as a KPA except that the adversary has the ability to choose what the known plaintext is, a more challenging prospect to orchestrate.
 	\item Linear cryptanalysis\index{Linear cryptanalysis}: A technique for representing ciphers as linear systems, to which KPA are applied.
 	\item Differential cryptanalysis\index{Differential cryptanalysis}: We analyse how changes in input bits propagate through the cipher to modulate output bits. Typically this type of technique operates as a CPA.
 \end{itemize}
@@ -258,11 +259,11 @@ Far better than waiting the age of the universe for the right key to turn up, is
  
 \subsubsection{Integer factorisation}\index{Integer factorisation}
 
-In the case of RSA encryption, whose security derives from the believed computational hardness of factorising large numbers, the most efficient known classical algorithm for integer factorisation is the general number field sieve (GNFS)\index{General number field sieve}, with time-complexity,
+In the case of RSA encryption, whose security derives from the believed computational hardness of factorising large integers, the most efficient known classical algorithm for integer factorisation is the general number field sieve (GNFS)\index{General number field sieve}, with time-complexity,
 \begin{align} \label{eq:GNFS_scaling}
 	O(\exp (O(1) (\log n)^{\frac{1}{3}} (\log\log n)^{\frac{2}{3}})),
 \end{align}
-which scales poorly for large $n$, keeping in mind that present-day implementations of RSA accommodate key lengths of up to 4,096 bits, as for example is implemented by the Pretty Good Privacy (PGP)\index{Pretty Good Privacy (PGP)} package.
+which scales poorly for large $n$, keeping in mind that present-day implementations of RSA accommodate key lengths of up to 4,096 bits, as for example is implemented by the widely-used Pretty Good Privacy (PGP)\index{Pretty Good Privacy (PGP)} package.
 
 %
 % Quantum Attackes
@@ -282,9 +283,9 @@ A brute-force attack by a quantum computer does not offer us the exponential imp
 
 To do this, we treat the brute-force cracking algorithm as a satisfiability problem, similar to how Grover's is employed to enhance \textbf{NP}-complete problems. Specifically, our oracle implements the code's decryption operation, taking as input a qubit string representing the key. After decoding the message with the key, the oracle runs an appropriate test on the decrypted message to determine whether it is a legitimate decoded message. For example, it could run an English language test -- a message decoded incorrectly with the wrong key will appear very random and almost certainly won't pass such a test. The oracle tags an element passing this test, which the Grover algorithm searches for, yielding the associated key.
 
-Note that when performing a brute-force attack against a private encryption key\index{Private-key cryptography}, a quadratic speedup effectively halves the key length in terms of algorithmic runtime, since \mbox{$O(\sqrt{2^k}) = O(2^{k/2})$}. Thus, in the quantum era private key lengths will need to be doubled to maintain the same security against brute-force attacks.
+Note that when performing a brute-force attack against a private encryption key\index{Private-key cryptography}, a quadratic speedup effectively halves the key length in terms of algorithmic runtime, since \mbox{$O(\sqrt{2^k}) = O(2^{k/2})$}. Thus, in the quantum era private key lengths will need to be doubled to maintain an equivalent level of security against brute-force attacks.
 
-This same technique of treating encryption as an oracle within a quantum search algorithm can be utilised to invert hash functions\index{Hash functions}. However, in this case there will necessarily be multiple solutions.
+This same technique of treating encryption as an oracle within a quantum search algorithm can be utilised to invert hash functions\index{Hash functions}. However, in this case there will necessarily be multiple solutions owing to collisions.
 
 %
 % Cryptanalysis
@@ -314,9 +315,9 @@ Compare this with the classical case given in Eq.~(\ref{eq:GNFS_scaling}).
 
 \dropcap{O}{ne} of the most exciting new cryptographic applications that has emerged in recent years is the Blockchain, a secure distributed ledger\index{Distributed ledger} for recording the execution of contracts and transactions. This has enabled cryptocurrencies\index{Cryptocurrencies}, most notably Bitcoin, to emerge as a secure digital alternative to conventional fiat currencies.
 
-More recent developments, such as the Ethereum project\index{Ethereum}, develop the distributed ledger further to allow executable code to be committed to the Blockchain, opening the prospects for self-enforcement and -execution of completely arbitrary contracts, a potential game-changer for the operation of financial and derivative markets.
+More recent developments, such as the Ethereum project\index{Ethereum}, develop the distributed ledger further to allow executable code to be committed to the Blockchain, opening the prospects for self-enforcement and -execution of completely arbitrary `smart contracts'\index{Smart contracts}, a potential game-changer for the operation of financial and derivative markets.
 
-In the Blockchain protocol, the validity of contracts and transactions is recognised collectively by participants using an encrypted digital ledger\index{Ledger}. The ledger records the complete history of all Blockchain transactions, which are digitally signed (Sec.~\ref{sec:hashing}) by network participants using elliptic-curve public-key cryptography\index{Digital signatures}\index{Elliptic-curve cryptography}. A democratic process ensures that, provided a single user doesn't monopolise the network, recorded transactions are legitimate, recognised collectively. This is secured by network participants digitally signing off on transactions as they take place.
+In the Blockchain protocol, the validity of contracts and transactions is recognised collectively by participants using an encrypted digital ledger\index{Ledger}. The ledger records the complete history of all Blockchain transactions, which are digitally signed (Sec.~\ref{sec:hashing}) by network participants using elliptic-curve public-key cryptography\index{Digital signatures}\index{Elliptic-curve cryptography}. A democratic process ensures that, provided a single user doesn't monopolise the network, recorded transactions are legitimate, recognised collectively and democratically. This is secured by network participants digitally signing off on transactions as they take place.
 
 The Bitcoin protocol builds on top of the Blockchain to create a secure digital cryptocurrency. This requires the introduction of another sub-protocol, \textit{mining}\index{Bitcoin mining}, where units of currency (`coins'\index{Coins}) are created. The protocol cryptographically ensures that there is an upper-bound on the number of coins that can exist, thereby preventing forgery and an inflationary blowout in the money supply.
 
@@ -324,15 +325,15 @@ The mining process is based upon the computational hardness of inverting (double
 \begin{align}
 	\epsilon_\mathrm{lower}\leq \mathrm{SHA256}(\mathrm{SHA256}(x_\mathrm{coin})) \leq \epsilon_\mathrm{upper}.
 \end{align}
-This is slightly weaker than inverting hash functions, but is nonetheless a task that can only be approached via brute-force hashing in the forward direction. This associates computational complexity with the mining process, and hence computational integrity of the money supply, whilst upper bounding the number of unique coins that can exist. This technique is known as `proof-of-work'\index{Proof-of-work}, for associating something of value with proof that certain amounts of computation were required to achieve it\footnote{In future implementations of Blockchain protocols, the proof-of-work required for a given protocol can be arbitrarily manipulated to accommodate for technological advances in computational power, for example via the adoption of quantum computing. The amount of work required to satisfy the constraint grows as we narrow the range \mbox{$\epsilon_\mathrm{upper}-\epsilon_\mathrm{lower}$}, providing us with much leverage to manipulate the complexity of the proof-of-work, and hence the rate of growth in the money supply, equivalently the rate of inflation\index{Inflation rate}.}. This idea was originally borrowed from the Hashcash protocol\index{Hashcash}, where proof-of-work is employed to associate work (and hence monetary value) with sending emails so as to eliminate automated spamming bots.
+This is slightly weaker than inverting hash functions, but is nonetheless a task that can only be approached via brute-force hashing in the forward direction. This associates computational complexity with the mining process, and hence computational integrity of the money supply, whilst upper bounding the number of unique coins that can exist. This technique is known as `proof-of-work'\index{Proof-of-work}, for associating something of value with proof that certain amounts of computation were invested into achieving it\footnote{In future implementations of Blockchain protocols, the proof-of-work required for a given protocol can be arbitrarily manipulated to accommodate for technological advances in computational power, for example via the adoption of quantum computing. The amount of work required to satisfy the constraint grows as we narrow the range \mbox{$\epsilon_\mathrm{upper}-\epsilon_\mathrm{lower}$}, providing us with much leverage to manipulate the complexity of the proof-of-work, and hence the rate of growth in the money supply, equivalently the rate of inflation\index{Inflation rate}.}. This idea was originally borrowed from the Hashcash protocol\index{Hashcash}, where proof-of-work is employed to associate work (and hence monetary value) with sending emails so as to eliminate automated spamming bots.
 
 The two key algorithms for Bitcoin and the Blockchain are therefore hashing and public-key digital signatures. Both of these are subject to enhanced quantum attacks.
 
-Hashing does not have any known quantum algorithm with exponential improvement, however using a Grover search\index{Grover's algorithm} one can achieve a quadratic speedup, using the same idea as for enhancing \textbf{NP}-complete problems by treating the hash function as a search oracle\index{Oracles}. This however does not pose a fundamental security concern as it will speed up the Bitcoin mining process, but does not circumvent the upper-bound on the number of coins that may be in existence. Already classical mining has pushed the Bitcoin money supply close to its asymptotic maximum and there is limited room for additional mining\footnote{Bitcoin mining has gained so much traction and become so competitive that desktop PCs have become uneconomical for mining. Instead miners are resorting to utilising specialised hardware in the form of CUDA cores\index{CUDA cores}, FPGAs\index{FPGA} and ASICs\index{ASIC} (or by secretly using the company supercomputer while the boss isn't looking).}.
+Inverse hashing does not have any known quantum algorithm with exponential improvement, however using a Grover search\index{Grover's algorithm} one can achieve a quadratic speedup, using the same idea as for enhancing \textbf{NP}-complete problems by treating the hash function as a search oracle\index{Oracles}. This however does not pose a fundamental security concern as it will speed up the Bitcoin mining process, but does not circumvent the upper-bound on the number of coins that may be in existence. Already classical mining has pushed the Bitcoin money supply close to its asymptotic maximum and there is limited room for additional mining\footnote{Bitcoin mining has gained so much traction and become so competitive that desktop PCs have become uneconomical for mining. Instead miners are resorting to utilising specialised hardware in the form of CUDA cores\index{CUDA cores}, FPGAs\index{FPGA} and ASICs\index{ASIC} (or by secretly using the company supercomputer while the boss isn't looking).}.
 
 Elliptic-curve public-key cryptography, like RSA, has a known efficient quantum attack via Shor's algorithm\index{Shor's algorithm}. In the context of implementing digital signatures this implies that an adversary could fraudulently sign off on illegitimate transactions, thereby committing falsified contracts to the Blockchain.
 
-A detailed investigation into the vulnerability of the Blockchain to quantum attacks was performed by \cite{bib:TomamichelBlockchain}. However, it is near impossible to predict the future rate of growth in quantum computer technology and hence over what kind of timescale the Blockchain will be compromised. But it is certain that a full compromise is inevitable at some point in the future.
+A detailed investigation into the vulnerability of the Blockchain to quantum attacks was performed by \cite{bib:TomamichelBlockchain}. However, it is near impossible to predict the future rate of growth in quantum computer technology and hence over what kind of timescale the Blockchain will be compromised. But it is certain that a full compromise is inevitable at some point in the future when scalable, universal quantum computing becomes a reality.
 
 To address this security threat, quantum-resistant hashing and public-key cryptographic protocols will need to be developed. In the former case this can easily be achieved by increasing hash lengths so as to offset the quadratic enhancement offered by Grover's algorithm\index{Grover's algorithm}. In the latter case this will require post-quantum public-key cryptosystems (to be discussed in the next section, Sec.~\ref{sec:end_of_class_crypto}).
 
@@ -362,17 +363,15 @@ Thankfully, there are two saving graces. First of all, much research is being ca
 
 \subsection{Quantum key distribution} \label{sec:QKD} \index{Quantum key distribution (QKD)}
 
-%Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. The demand for secure cryptography is now extremely important in the context of electronic commerce and general security of information transmission in the internet age. Electronic currencies such as Bitcoin\index{Bitcoin} depend on cryptographic protocols in order to secure the value of assets, assign ownership certificates\index{Owner certificates}, and secure the currency against fraud. However such protocols are based upon the computational complexity of certain mathematical problems (\textit{computational security}\index{Computational security}), and are not fundamentally secure in the presence of limitless computational resources, or quantum computers. Therefore, using quantum mechanical protocols based on physical principles (\textit{information-theoretic security}\index{Information-theoretic security}) rather than computational limitations, are favourable in the sense of future-proofing security.
+Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. The demand for secure cryptography is now extremely important in the context of electronic commerce and general security of information transmission in the internet age. Electronic currencies such as Bitcoin\index{Bitcoin} depend on cryptographic protocols in order to secure the value of assets, assign ownership certificates\index{Ownership certificates}, and secure the currency against fraud. However, such protocols are based upon the computational complexity of certain mathematical problems (i.e computational security\index{Computational security}), and are not fundamentally secure in the presence of limitless computational resources, or quantum computers. Therefore, using quantum mechanical protocols based on physical principles (i.e information-theoretic security\index{Information-theoretic security}) rather than computational limitations, are favourable for future-proofing ourselves.
 
-\comment{Add more advanced protocols? Decoy states, untrusted devices, device independent QKD, etc. etc.}
-
-Quantum key distribution (QKD) protocols facilitate shared, secret randomness, where any intercept-resend\index{Intercept-resend attack} (or man-in-the-middle attack) attack may be detected and rejected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle\index{Heisenberg uncertainty principle} and no-cloning theorem\index{No-cloning theorem}). This shared, secret randomness may subsequently be employed in a one-time pad cipher\index{One-time pad}, presenting us with true information-theoretic security\index{Information-theoretic security}.
+Quantum key distribution (QKD) protocols facilitate shared, secret randomness, where any intercept-resend\index{Intercept-resend attack} (or man-in-the-middle) attack may be detected and rejected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle\index{Heisenberg uncertainty principle} and no-cloning theorem\index{No-cloning theorem}). This shared, secret randomness may subsequently be employed in a one-time pad cipher\index{One-time pad}, presenting us with true information-theoretic security\index{Information-theoretic security}.
 
 The central notion to QKD protocols, in their numerous manifestations, is that measurement of quantum states invokes a wavefunction collapse. When measuring a state in a basis for which that state is not an eigenstate, this necessarily changes the state. QKD relies on this simple result from quantum mechanics to reveal any eavesdropper performing an intercept-resend attack\index{Intercept-resend attack} via the changes to transmitted quantum states that this would induce.
 
 QKD is a relatively mature technology with already several commercial systems being available off-the-shelf\footnote{Examples of companies selling off-the-shelf QKD hardware include \href{http://www.magiqtech.com}{MagiQ} and \href{http://www.idquantique.com}{ID Quantique}.} and initial space-based implementations have been successfully demonstrated \cite{Pan}.
 
-It is easy to see the utility of quantum networks in enabling commodity deployment of QKD -- users desire to communicate photons across long-range ad hoc networks, with low loss and dephasing. A global quantum internet would allow quantum cryptography to truly supersede classical cryptography, bypassing the vulnerabilities faced by classical cryptography in the era of quantum computing.
+It's easy to see the utility of quantum networks in enabling commodity deployment of QKD -- users desire to communicate photons across long-range ad hoc networks, with low loss and dephasing. A global quantum internet would allow quantum cryptography to truly supersede classical cryptography, bypassing the vulnerabilities faced by classical cryptography in the era of quantum computing.
 
 %
 % BB84 Protocol
@@ -384,7 +383,7 @@ The first described QKD scheme was the \textit{BB84} \cite{bib:BennetBrassard84}
 
 Implemented photonically, BB84 requires only the transmission of a sequence of single photons, polarisation-encoded\index{Polarisation encoding} with random data.
 
-The BB84 protocol is described in detail in Alg.~\ref{alg:bb84} in the context of polarisation-encoded photons, which is the most natural (but not only) setting for this protocol. An example evolution of the protocol is illustrated in Fig.~\ref{fig:BB84_example}
+The BB84 protocol is described in detail in Alg.~\ref{alg:bb84} in the context of polarisation-encoded photons, which is the most natural (but not only) setting for this protocol. An example evolution of the protocol is illustrated in Fig.~\ref{fig:BB84_example}.
 
 \begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
@@ -416,7 +415,7 @@ or,
 \item $\Box$
 \end{enumerate}}
 \end{mdframed}
-\captionspacealg \caption{BB84\index{BB84 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photons. Upon completion of the protocol, Alice and Bob share a random bit-string for use in a one-time pad cipher\index{One-time pad}.}\label{alg:bb84}
+\captionspacealg \caption{BB84\index{BB84 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photons. Upon completion of the protocol, Alice and Bob share a random bit-string for use in a one-time pad cipher\index{One-time pad}, yielding perfect information-theoretic security.}\label{alg:bb84}
 \end{table}
 
 \begin{figure}[!htbp]
@@ -424,7 +423,7 @@ or,
 \captionspacefig \caption{Example execution of the BB84 protocol for securely sharing random bit-strings between Alice and Bob as per Alg.~\ref{alg:bb84}. At the conclusion of the protocol, some bits are discarded (X), with those remaining guaranteed to be secret between the two parties.} \label{fig:BB84_example}	
 \end{figure}
 
-To understand the secrecy of the protocol as described in Alg.~\ref{alg:bb84}, suppose an eavesdropper, Eve, were to perform an intercept-resend\index{Intercept-resend attack} attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of encoding bases, and Eve will not know the bases in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. Thus, by sacrificing some of their shared bits, via openly communicating them to one another for comparison, such an attack will be detected with asymptotically high security. Now Alice and Bob have great confidence that they have a shared, secret, random bit-string, which may subsequently be employed in a one-time pad\index{One-time pad} with perfect secrecy.
+To understand the secrecy of the protocol as described in Alg.~\ref{alg:bb84}, suppose an eavesdropper, Eve, were to perform an intercept-resend\index{Intercept-resend attack} attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of encoding bases, and Eve will not know the bases in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. Thus, by sacrificing some of their shared bits, via openly communicating them to one another for comparison, such an attack will be detected with asymptotically high probability. Now Alice and Bob have great confidence that they have a shared, secret, random bit-string, which may subsequently be employed in a one-time pad\index{One-time pad} with perfect secrecy.
 
 The BB84 protocol has no measurement timing, mode-matching or interferometric stability requirements, making it a very robust protocol, readily achievable with present-day photonics technology. The scheme has been adapted to physical architectures beyond just polarisation-encoded photons, such as CV encodings\index{Continuous-variable QKD} \cite{???}.
 
@@ -434,15 +433,15 @@ The BB84 protocol has no measurement timing, mode-matching or interferometric st
 
 \subsubsection{Privacy amplification}\index{Privacy amplification}
 
-When Alice and Bob sacrifice and compare a randomly chosen subset of their key bits to detect eavesdroppers, they also need to accept the inescapable fact that their qubits propagated through imperfect channels and were subject to noise en route. This has the same effect as an eavesdropper -- it corrupts some of the bits -- and it is impossible to distinguish which took place, a noisy channel (which is ok) or an eavesdropper (which is not).
+When Alice and Bob sacrifice and compare a randomly chosen subset of their key bits to detect eavesdroppers, they also need to accept the inescapable fact that their qubits propagated through imperfect channels and were subject to noise en route. This has the same effect as an eavesdropper -- it corrupts some of the bits -- and it's impossible to distinguish which took place, a noisy channel (which is ok) or an eavesdropper (which is not).
 
-Because the channel was necessarily noisy, Alice and Bob \textit{must} tolerate some number of corrupt bits. But if the corruption came from Eve rather than the noisy channel they would effectively be tolerating her knowing some of the key. We don't want her to know any of the key!
+Because the channel was necessarily noisy, Alice and Bob \textit{must} tolerate some number of corrupted bits. But if the corruption came from Eve rather than the noisy channel they would effectively be tolerating her knowing some of the key. We don't want her to know \textit{any} of the key!
 
 \textit{Privacy amplification} is a mathematical technique based on hashing algorithms for taking a shared key with a number of unknown compromised bits and distilling it to a shorter key of which Eve has almost zero knowledge.
 
 Specifically, if we know that Eve has compromised $t$ of our $n$ shared random bits, privacy amplification allows us to distill a new key from the compromised one of approximately length \mbox{$n-t$} over which Eve knows almost nothing.
 
-This is an information-theoretic security\index{Information-theoretic security} result, not a computational security\index{Computational security} one, thereby rescuing the perfect information-theoretic security of the BB84 QKD protocol.
+This is an information-theoretic security\index{Information-theoretic security} result, not a computational security\index{Computational security} one, thereby rescuing the perfect security of the BB84 QKD protocol.
 
 %
 % E91 Protocol
@@ -450,7 +449,7 @@ This is an information-theoretic security\index{Information-theoretic security} 
 
 \subsubsection{E91 protocol}\index{E91 protocol}
 
-E91 is slightly different to BB84. Here Alice and Bob share an entangled Bell pair provided by a central authority. Then both Alice \textit{and} Bob measure their qubits in random bases. As with BB84, after measuring all qubits, they compare their choices of random bases. When they coincide, they have a shared, random bit. When they don't, they discard their result. From here the remainder of the protocol is the same as for BB84. Thre protocol is summarised in Alg.~\ref{alg:e91}.
+E91 is slightly different to BB84. Here Alice and Bob share an entangled Bell pair provided by a central authority. Then both Alice \textit{and} Bob measure their qubits in random bases. As with BB84, after measuring all qubits, they compare their choices of random bases. When they coincide, they have a shared, random bit. When they don't, they discard their result. From here the remainder of the protocol is the same as for BB84. The protocol is summarised in Alg.~\ref{alg:e91}.
 
 \comment{Fix this up. Discuss using Bell violation to prove security.}
 
@@ -472,7 +471,7 @@ function E91():
 \item $\Box$
 \end{enumerate}}
 \end{mdframed}
-\captionspacealg \caption{E91\index{E91 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photonic Bell pairs. Upon completion of the protocol, Alice and Bob share a random bit-string of ruse in a one-time pad cipher\index{One-time pad}.}\label{alg:e91}
+\captionspacealg \caption{E91\index{E91 protocol} QKD protocol using polarisation-encoded\index{Polarisation encoding} photonic Bell pairs. Upon completion of the protocol, Alice and Bob share a random bit-string for use in a one-time pad cipher\index{One-time pad}.}\label{alg:e91}
 \end{table}
 
 Like BB84, E91 has no mode-matching\index{Mode-matching} or interferometric stability\index{Interferometric stability} requirements, and Alice and Bob both only require single-photon detection. Unlike BB84, however, E91 requires a central authority that is able to prepare entanglement on-demand as a resource.
@@ -526,13 +525,11 @@ where $V_\mathrm{mod}$ is the modulation variance\index{Modulation variance}.
 
 Importantly, unlike classical cryptographic protocols, QKD makes no assumptions about the computational complexity of inverting encoding algorithms or trapdoor functions. The protocols are information-theoretically secure\index{Information-theoretic security}, and therefore no physically realisable computer, even a quantum computer, can compromise them. Thus, usual cryptanalytic techniques, like linear and differential cryptanalysis \cite{bib:Schneier96}\index{Linear cryptanalysis}\index{Differential cryptanalysis}, or the ability to factor large numbers\index{Integer factorisation}, that are employed to attack other encryption protocols, do not compromise QKD.
 
-However, this is not to say that QKD is actually perfectly secure in real life. Recent history has demonstrated that this is certainly not the case, with many attacks against various quantum cryptographic protocols being described and successfully demonstrated. The reason for this schism between theory and experiment is that no experiment ever \textit{perfectly} mimics the theoretical proposal it is trying to implement. Laboratory components might be imprecise in an unfortunate way, opening up avenues for attack, or they might perform unwanted additional actions that leak information to Eve.
+However, this is not to say that QKD is actually perfectly secure in real life. Recent history has demonstrated that this is certainly not the case, with many attacks against various quantum cryptographic protocols being described and successfully demonstrated. The reason for this schism between theory and experiment is that no experiment ever \textit{perfectly} mimics the theoretical proposal it is trying to implement. Laboratory components might be imprecise in an unfortunate way, opening up avenues for attack, or they might perform unwanted additional actions that leak information to Eve. The prospects for such so-called `side-channel attacks'\index{Side-channel attacks} must be carefully considered and satisfactorily addressed.
 
-The best known attack against photonically implemented BB84 is the `photon-number splitting attack'\index{Photon-number splitting attack}. This attack targets implementations where Alice's photon source does not produce perfect single-photon states, but may have some amplitude of higher photon-number. Weak coherent states or SPDC states exhibit this property. The attack is very simple. Eve simply performs a man-in-the-middle attack\index{Intercept-resend attack}, but not of an intercept-resend\index{Intercept-resend attack} variety. Rather than intercepting the entire channel, she inserts a low reflectivity beamsplitter and measures only the reflected mode, the other following its desired trajectory to Bob. Now there is a chance that Eve can extract just one of the multiple photons in the signal, such that Bob still receives a photon. Eve holds the split-off signal in memory until the classical communication of encoding bases, at which point she measures all her split signals in the correct basis.
+The best known attack against photonically implemented BB84 is the `photon-number splitting attack'\index{Photon-number splitting attack}. This attack targets implementations where Alice's photon source does not produce perfect single-photon states, but may have some amplitude of higher photon-number. Weak coherent states or SPDC states exhibit this property. The attack is very simple. Eve simply performs a man-in-the-middle attack\index{Intercept-resend attack}, but not of an intercept-resend\index{Intercept-resend attack} variety. Rather than intercepting the entire channel, she inserts a low reflectivity beamsplitter and measures only the reflected mode, the other following its desired trajectory to Bob. Now there is a chance that Eve can extract just one of the multiple photons in the signal, such that Bob still receives a photon. Eve holds the split-off signal in memory until the classical communication of encoding bases, at which point she measures all her split signals in the correct basis, thereby recovering the associated secret key bit.
 
 This trivial attack vector clearly demonstrates the importance of well-considered engineering decisions when physically implementing QKD. No piece of hardware is ever 100\% to specification!
-
-\comment{Decoy states}
 
 \subsubsection{Public-key cryptography}
 
@@ -540,7 +537,7 @@ The BB84 protocol is used exclusively for private-key cryptography. For many app
 
 Are there any viable public-key quantum protocols that could fill the vacancy of the soon-to-be-compromised RSA? Unfortunately the answer is `not yet'. As appealing as it would be, and despite many highly intelligent people putting their minds to it, to-date no one has presented a viable public-key quantum cryptosystem.
 
-This is problematic since when quantum computing becomes a reality it will immediately compromise the classical public-key cryptosystems we all rely on on a daily basis, and it would be highly desirable for a quantum replacement to fill its shoes.
+This is problematic since when quantum computing becomes a reality it will immediately compromise the classical public-key cryptosystems we all rely on on a daily basis, and it would be highly desirable for a quantum replacement to be available to fill its shoes.
 
 %
 % Quantum Enigma machines
@@ -548,9 +545,9 @@ This is problematic since when quantum computing becomes a reality it will immed
 
 \subsection{Quantum Enigma machines}\index{Quantum Enigma machines}
 
-While the BB84\index{BB84 protocol} and other related QKD\index{Quantum key distribution (QKD)} protocols are perfectly secure, they suffer the major drawback that because they are based upon the one-time pad\index{One-time pad}, the number of successfully communicated key-bits must equal message length and cannot be reused. This means that for real-time or high-bandwidth applications, the quantum communications channel must have similarly high bandwidth to be applicable.
+While the BB84\index{BB84 protocol} and other related QKD\index{Quantum key distribution (QKD)} protocols are perfectly secure, they suffer the major drawback that because they are based upon the one-time pad\index{One-time pad}, the number of successfully communicated key-bits must equal the message length and cannot be reused (not even once). This means that for real-time or high-bandwidth applications, the quantum communications channel must have similarly high bandwidth to be applicable.
 
-What would be more useful would be a quantum equivalent of private-key cryptography\index{Private-key cryptography}, whereby a short key can be reused over and over again for different messages, meaning that only a short, shared secret-key would need to be established once-off.
+What would be more useful would be a quantum equivalent of private-key cryptography\index{Private-key cryptography}, whereby a short key can be reused over and over again for different messages, meaning that only a short, shared secret-key would need to be established once-off (or at least very infrequently).
 
 This led to the proposal for \textit{quantum Enigma machines}\footnote{The Enigma machine\index{Enigma machines} was the classical cryptosystem employed by the Germans during World War 2 for military and intelligence communication.} \cite{bib:LloydEnigma}. The protocol is shown in Fig.~\ref{fig:enigma}.
 
@@ -583,7 +580,7 @@ m=O(\log n),
 \end{align}
 which represents very frugal requirements in key-size versus message length. They further showed that the scheme can be made robust against noise and loss.
 
-Note that the security of the scheme is information-theoretic\index{Information-theoretic security}, and does not make any assumptions about computational security\index{Computational security}. Thus, this represents a strong form of quantum private-key cryptography, requiring only very short keys compared to message length.
+Note that the security of the scheme is information-theoretic\index{Information-theoretic security}, and does not make any assumptions about computational security\index{Computational security}. Thus, this represents a strong form of quantum private-key cryptography, requiring only very short keys compared to message length that may be reused.
 
 However, the scheme is very challenging to implement on a large scale over long distances. Consider an optical implementation, where the message is photonically encoded. Now the scheme represents a complex, multi-mode, generalised Mach-Zehnder interferometer\index{Mach-Zehnder (MZ) interference}, meaning that the channel between Alice and Bob, who might be far apart, must be interferometrically stabilised\index{Interferometric stability} (Sec.~\ref{sec:opt_stab}) on the order of the photons' wavelength (hundreds of nanometers for optical frequencies), which is extremely challenging over long distances.
 
@@ -597,7 +594,9 @@ As discussed, the RSA public-key cryptosystem is vulnerable to an efficient quan
 
 Why would we combine quantum and classical encryption techniques when QKD is already provably secure, whereas the classical schemes are not?
 
-In the near future, as QKD schemes begin their rollout in space and on Earth, random bits from the QKD implementation will be very expensive and exhibit low bandwidth. Suppose we wanted to securely videoconference across the globe. For just a single user this would require megabits per second of shared random bits, which will quickly saturate the capacity of overhead quantum satellites. Instead, let us use the QKD system to securely share just a 256-bit private session key\index{Session key} between two users. This is subsequently employed for AES256\index{Advanced Encryption Standard (AES)} encryption that operates entirely over the classical network, which we regard as extremely cheap. Importantly, unlike one-time pad implementations, this session key may be reused. Now we have a hybrid system which is not quantum-compromised, but which overcomes the cost and bandwidth issues associated with upcoming QKD networks.
+In the near future, as QKD schemes begin their rollout in space and on Earth, random bits from the QKD implementation will be very expensive and exhibit low bandwidth. Suppose we wanted to securely videoconference across the globe. For just a single user this would require megabits per second of shared random bits, which will quickly saturate the capacity of overhead quantum satellites.
+
+Instead, let us use the QKD system to securely share just a 256-bit private session key\index{Session key} between two users. This is subsequently employed for AES256\index{Advanced Encryption Standard (AES)} encryption that operates entirely over the classical network, which we regard as extremely cheap and high-bandwidth. Importantly, unlike one-time pad implementations, this session key may be reused. Now we have a hybrid system which is not quantum-compromised, but which overcomes the cost and bandwidth issues associated with emerging QKD networks.
 
 While such a hybrid scheme is not information-theoretically secure (AES is not proven to be quantum-safe), the computational security assumptions are far stronger than for say RSA, since there are no known efficient quantum attacks against strong private-key schemes.
 
@@ -617,7 +616,7 @@ On the other hand, if a $\hat{Z}$ gate were applied to any one qubit, this would
 \begin{align}
 	\hat{Z}_i \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n} + \ket{1}^{\otimes n}) \to \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n} - \ket{1}^{\otimes n})\,\,\forall \, i,
 \end{align}
-for any qubit $i$. This invariance in the location of the $\hat{Z}$ gate is the basis for the anonymity of the protocol. If a user wishes to broadcast `0' he does nothing, whereas if he wishes to broadcast `1' he applies the $\hat{Z}$ gate to his local qubit.
+for any qubit $i$. This invariance in the location of the $\hat{Z}$ gate is the basis for the anonymity of the protocol. If a user wishes to broadcast `0' he does nothing, whereas if he wishes to broadcast `1' he applies a $\hat{Z}$ gate to his local qubit.
 
 Finally, all users measure their qubits in the $\pm$-basis and publicly (without encryption) broadcast their measurement outcomes. All users now see all other users' measurement outcomes and are able to calculate the collective parity of the measurements. Now if the parity is even, the speaker must have said `0', whereas if it is odd he must have said `1'. The protocol is shown in Fig.~\ref{fig:QAB} and described in detail in Alg.~\ref{alg:QAB}.
 
@@ -654,9 +653,9 @@ function QuantumAnonymousBroadcasting(message, speaker):
 \captionspacealg \caption{Protocol for quantum anonymous broadcasting. The GHZ state is distributed in advance, one qubit per user. The measurement outcomes are classically broadcast without encryption. The final parity of the classical measurements reflects the message bit without identifying the speaker.} \label{alg:QAB}
 \end{table}
 
-Note that the scheme can be slightly simplified by rather than the speaker applying the $\hat{Z}$ to his qubit, upon announcing his measurement outcome he instead simply lies about his outcome and flips it. This follows simply because a $\hat{Z}$ gate prior to a $\pm$ measurement bit flips the classical measurement outcome, \mbox{$\hat{Z}\ket\pm=\ket\mp$}.
+Note that the scheme can be slightly simplified by rather than the speaker applying the $\hat{Z}$ to his qubit, upon announcing his measurement outcome he instead simply lies about his outcome and flips it. This follows simply because a $\hat{Z}$ gate prior to a $\pm$ measurement bit-flips the classical measurement outcome, \mbox{$\hat{Z}\ket\pm=\ket\mp$}.
 
-There are no constraints on time ordering of the measurements, nor, much like BB84, are there any interferometric requirements (not including the GHZ preparation stage), making this protocol very experimentally practical and robust over long distances.
+There are no constraints on time-ordering of the measurements, nor, much like BB84, are there any interferometric stability requirements (not including the GHZ preparation stage), making this protocol very experimentally practical and robust over long distances.
 
 Because of the time invariance in the measurements, distribution and measurement of the GHZ states can be performed well in advance of the actual message broadcast. This allows us to treat `shared parity'\index{Shared parity} as a fundamental resource (Sec.~\ref{sec:ent_ultimate}) for the QAB cryptoprotocol.
 
@@ -670,7 +669,7 @@ For these reasons, this scheme lends itself readily to photonic implementation, 
 
 \subsection{Quantum voting}\index{Quantum voting}
 
-The security of voting systems, and the anonymity of their voters are pressing issues in the modern world, and there have been countless high-profile instances of voting systems being compromised nefariously.
+The security of voting systems, and the anonymity of their voters are pressing issues in the modern free-world, and there have been countless high-profile instances of voting systems being compromised nefariously.
 
 Based on similar ideas to quantum anonymous broadcasting is quantum voting, whereby a group of parties can anonymously vote such that no party, including the tallyman, is able to learn any individual voter's vote, but at the conclusion all are able to see the collective outcome of the vote.
 
@@ -684,10 +683,10 @@ Fig.~\ref{fig:quantum_voting} and Alg.~\ref{alg:quantum_voting} describe a quant
 
 \begin{figure}[!htbp]
 \includegraphics[clip=true, width=0.35\textwidth]{quantum_voting}
-\captionspacefig \caption{Protocol for quantum voting via anonymous surveying. The tallyman prepares the entangled state $\ket{B_0}$, half of which is shared with the votes. The voters each perform local phase-shift operations on the voters' half of the state, as per Alg.~\ref{alg:quantum_voting}. The phase-transformed state is then returned to the tallyman, who is able to extract the phase and hence the cumulative vote.}\label{fig:quantum_voting}\index{Quantum voting}	
+\captionspacefig \caption{Protocol for quantum voting via anonymous surveying. The tallyman prepares the entangled state $\ket{B_0}$, half of which is shared with the voters. The voters each perform local phase-shift operations on their half of the state, as per Alg.~\ref{alg:quantum_voting}. The phase-transformed state is then returned to the tallyman, who is able to extract the phase and hence the cumulative vote.}\label{fig:quantum_voting}\index{Quantum voting}	
 \end{figure}
 
-Conceptually, the scheme is similar to quantum anonymous broadcasting in that it hides votes in phases within an entangled state, which are not accessible to individual parties. The scheme relies on the preparation and distribution of a particular entangled state as a resource. Unfortunately this particular state is not one which is known how to be trivially prepared optically, and would therefore lend itself well to the outsourcing of preparation and distribution to a capable host via the quantum internet.
+Conceptually, the scheme is similar to quantum anonymous broadcasting in that it hides votes in phases within an entangled state, which are not accessible to individual parties, but are rather a global property of the state. The scheme relies on the preparation and distribution of a particular entangled state as a resource. Unfortunately this particular state is not one which is known how to be trivially prepared optically, and would therefore lend itself well to the outsourcing of preparation and distribution to a capable host via the quantum internet.
 
 \begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
@@ -745,6 +744,8 @@ yielding the sum of all the votes.
 %
 
 \subsection{Quantum secret sharing}\index{Quantum secret sharing}
+
+\comment{To do}
 
 %
 % Attacks on QKD
