@@ -498,3 +498,87 @@ function IQPsampling():
 \end{table}
 
 These reduced resource requirements makes both analysis and physical construction of some sampling problems far simpler than a universal quantum computer, yet nonetheless they implement computationally hard problems. For these reasons, many researchers regard non-universal sampling problems as being likely candidates for the first demonstration of quantum supremacy\index{Quantum supremacy}.
+
+
+\subsection{Quantum advantage with shallow circuits}\index{shallow_circuits}
+
+
+
+
+Good reasons for thinking that quantum computers have capabilities surpassing classical computers. Preskill - three reasons
+
+Additional area evidence - quiry complexity:
+A blackbox $U_\ell$
+\begin{align}
+\ket{x}-\rightarrow U_l -\rightarrow (-1)^{z\cot x} \ket{x}
+\end{align}
+
+A linear Boolean function is parametrized by $z$, a hidden string $in \{0,1\}^n$. The goal
+is to extract $z$.
+
+In the quantum case - the blackbox/oracle simply a unitary which computes the function
+into the phase.
+
+A provable, non-oracular quantum speed up.
+
+Constant-depth circuits - (definition). Assume the input is classical, input is classical, output is by measuring in computational basis.
+
+
+Given noisy circuit, n qubits, depth d, $\epsilon$ error rate. We want this condition
+\begin{align}
+nd<<1/\epsilon
+\end{align}
+\noindent for the circuit to be simulable
+
+Deep circuits: few qubits -> classically simulable.
+
+Shallow circuits -> many qubits -> potential for quantum advantage.
+
+Polynomial time computation - the comparison is too difficult. Simpler question - constant depth classical VS constant depth quantum. This would separate BPP from BQP has strong complexity implications. What we can prove: constant depth circuit
+
+Classical circuit
+\begin{align}
+f:{0,1}^k-> \{0,1 \}
+\end{align}
+initial bits can be copied into multiple locations, unlike the quantum. number of input bits k called fan in. Consider bounded fanin gates. Allow the circuit to be probabilistic (provided random bits give).
+
+What sort of quantum problem? Turns out this is a search, or relation problem. A circuit solves a relation problem
+if for any input $x$ it outputs a valid solution $z$ (with high probability).
+\begin{align}
+\sum_{z \in S_X} P(z|x)\geq 1-\epsilon
+\end{align}
+
+Result: a problem can be solved with constant depth quantum circuits, but not classical .
+
+The problem is solved with certainty by a constant-depth quantum circuit. Any probabilistic classical circuit with bounded input that solves the problem with high probability $\epsilon \leq 1/8$ must have depth increasing logarithmically with input size.
+
+\color{blue}
+The result is for the following hidden linear function (HLF) problem. Given an 
+$n\times n$ symmetric binary matrix $A$, we specify a quadratic form
+\begin{align}
+q(x) = \vec x^T A \vec x \text{(mod 4)}
+\end{align}
+\noindent find a binary vector $\vec z \in {0,1}^n$ such that
+
+\begin{align}
+q(x) 2 \vec z^T \hat x
+\end{align}
+\noindent for all $\vec x$ in the binary null-space of A.
+
+The quantum alvorithm that solves the 2D HLF problem is similar to the Bernstein and Vazirani \cite{}. A quantum circuit $U_q$ acts on the basis state $\vec x \in \{ 0,1\}^n$
+\begin{align}
+U_q \ket{x} = i^{q(x)} \ket{x}
+\end{align}
+\begin{align}
+\ket{\Psi_q} &= H^{\otimes n }U_q H^{\otimes n} \ket{0}^{\otimes n} \\
+&= \frac{1}{2^n}\sum_{\vec x,\vec z \in \{ 0,1\}^n} i^{q(x)} (-1)^{\vec z^T x}\ket{z}
+\end{align}
+\noindent where $H$ is the hadamard gate. Destructive interference between terms in x results a vanishing amplitude $\braket{z|\Psi_q}=0$ on basis state $\ket{z}$ which are not solutions of the HLF problem.
+The circuit $U_q$ can be decomposed into a product of CZ gates and phase-shift gates $S_i$
+
+\begin{figure}[h]
+\includegraphics[trim = 0cm 0cm 0cm 0cm, clip, width=0.45\linewidth]{2DHLFcircuit.pdf}
+\caption{\label{fig:2DHLF} }
+\end{figure}
+
+\color{black}
