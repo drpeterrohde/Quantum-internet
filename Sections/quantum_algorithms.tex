@@ -504,59 +504,21 @@ These reduced resource requirements makes both analysis and physical constructio
 
 
 
-
-% Good reasons for thinking that quantum computers have capabilities surpassing classical computers. Preskill - three reasons
-
-% Additional area evidence - quiry complexity:
-% A blackbox $U_\ell$
-% \begin{align}
-% \ket{x}-\rightarrow U_l -\rightarrow (-1)^{z\cot x} \ket{x}
-% \end{align}
-
-% A linear Boolean function is parametrized by $z$, a hidden string $in \{0,1\}^n$. The goal
-% is to extract $z$.
-
-% In the quantum case - the blackbox/oracle simply a unitary which computes the function
-% into the phase.
-
-% A provable, non-oracular quantum speed up.
-
-% Constant-depth circuits - (definition). Assume the input is classical, input is classical, output is by measuring in computational basis.
-
-
-
-
-% Deep circuits: few qubits -> classically simulable.
-
-% Shallow circuits -> many qubits -> potential for quantum advantage.
-
-% 
-% Classical circuit
-% \begin{align}
-% f:{0,1}^k-> \{0,1 \}
-% \end{align}
-% initial bits can be copied into multiple locations, unlike the quantum. number of input bits k called fan in. Consider bounded fanin gates. Allow the circuit to be probabilistic (provided random bits give).
-
-
-
-% The problem is solved with certainty by a constant-depth quantum circuit. 
-
-
 As we discuss in Sec.~\ref{sec:NISQ}, we have good reasons to believe that quantum computer
 have super-classical abilities. Recently, an unconditional proof of a quantum speed-up has
 been shown for a class of circuits.
 
-Motivation: it is incredibly difficult to compare quantum VS classical polynomial time computation, with a significant implication: this would separate BPP from BQP.
-Given that currently we have noisy gates, with $n$ qubits, depth $d$, and an error rate $\epsilon$. Intuitively, we need the condition
+It is incredibly difficult to compare quantum VS classical polynomial time computation, and 
+currently we have noisy gates. Given $n$ qubits, depth $d$, and an error rate $\epsilon$, intuitively, we need the condition
 \begin{align}
-nd<<1/\epsilon
+nd \ll 1/\epsilon
 \end{align}
-\noindent to hold, in order for a quantum algorithm to run successfully. If $d$ is large, then noise dominates and our circuit is classically simulable; on the other hand, if we have a large $n$ and small $d$ (constant depth circuits), we may observe a quantum speed up in the near future.
+\noindent to hold, in order for a quantum algorithm to run successfully. If $d$ is large, then noise dominates and our circuit is classically simulable; on the other hand, if we have a large $n$ and small $d$ (constant depth circuits), we may observe a quantum speed up in the near future. Given these factors, we are motivated to examine shallow circuits. 
 Now we will see that there is a distinction between constant depth circuits run using classical VS quantum algorithm.
 
 
-\color{blue}
-The result is for the following hidden linear function (HLF) problem. Given an 
+
+The result is for the following hidden linear function (HLF) problem \cite{bravyi2018quantum}. Given an 
 $n\times n$ symmetric binary matrix $A$, we specify a quadratic form
 \begin{align}
 q(x) = \vec x^T A \vec x \text{(mod 4)}.
@@ -564,17 +526,17 @@ q(x) = \vec x^T A \vec x \text{(mod 4)}.
 \noindent The goal is to find a binary vector $\vec z \in {0,1}^n$ such that
 % 
 \begin{align}
-q(x) = 2 \vec z^T \hat x
+q(x) = 2 \vec z^T \vec x
 \end{align}
 \noindent for all $\vec x$ in the binary null-space of A.
 
-The quantum alvorithm that solves the 2D HLF problem is similar to the Bernstein and Vazirani \cite{}. A quantum circuit $U_q$ acts on the basis state $\vec x \in \{ 0,1\}^n$
+The quantum alvorithm that solves the 2D HLF problem is similar to the Bernstein and Vazirani problem \cite{bernstein1997quantum}. Here a quantum circuit $U_q$ acts on the basis state $\vec x \in \{ 0,1\}^n$
 \begin{align}
 U_q \ket{x} = i^{q(x)} \ket{x}
 \end{align}
 The solution is obtained by measuring the state $\ket{\Psi_q}$ in the computational basis,
 \begin{align}
-\ket{\Psi_q} &= H^{\otimes n }U_q H^{\otimes n} \ket{0}^{\otimes n} \\
+\ket{\Psi_q} &= H^{\otimes n }U_q H^{\otimes n} \ket{0}^{\otimes n} \nonumber \\
 &= \frac{1}{2^n}\sum_{\vec x,\vec z \in \{ 0,1\}^n} i^{q(x)} (-1)^{\vec z^T x}\ket{z}
 \end{align}
 \noindent where $H$ is the Hadamard gate. A schematic of the circuit is given in Fig~.\ref{fig:2DHLF}.
@@ -585,7 +547,7 @@ The circuit $U_q$ can be decomposed into a product of CZ gates and phase-shift g
 S_i = \begin{pmatrix}
     1 & 0\\
     0 & -i
-    \end{pmatrix}
+    \end{pmatrix} \nonumber
 \end{align}
 
 \begin{figure}[h]
@@ -593,15 +555,15 @@ S_i = \begin{pmatrix}
 \caption{\label{fig:2DHLF} Quantum circuit to solve the 2D HLF problem. }
 \end{figure}
 
-If we lay out the circuit in 2D (hence the 2D HLF problem),it only requires classically controlled Clifford gates between nearest neighbor qubits on a 2D grid. For an example, see Fig.~\ref{fig:2DHLFgrid}.
+If we lay out the circuit in 2D (hence the 2D HLF problem), it only requires classically controlled Clifford gates between nearest neighbor qubits on a 2D grid. For an example, see Fig.~\ref{fig:2DHLFgrid}.
 \begin{figure}[h]
 \includegraphics[trim = 0cm 0cm 0cm 0cm, clip, width=0.8\linewidth]{2DHLF_grid.jpg}
 \caption{\label{fig:2DHLFgrid} Implementation of the HLF problem on a 2D grid.}
 \end{figure}
 
-Now, comparing the quantum algorithm to a classical one, it has been proven that any probabilistic classical circuit with bounded input that solves the 2D HLF problem with high probability $\epsilon \leq 1/8$ must have depth increasing logarithmically with input size\cite{}. The speed-up here is provided by quantum non-locality. 
+Now, comparing the quantum algorithm to a classical one, it has been proven that any probabilistic classical circuit with bounded input that solves the 2D HLF problem with high probability $\epsilon \leq 1/8$ must have depth increasing logarithmically with input size \cite{bravyi2018quantum}. The speed-up here is provided by quantum non-locality. 
 % 
 The fact that a problem can be solved with constant depth quantum circuits, but not classical ones shows that there is a clear separation in computational speed between the two cases. 
 
 
-\color{black}
+
