@@ -16,7 +16,7 @@ Here we will summarise some of the physical architectures most applicable to net
 
 With single-photon encoding of qubits in the quantum network, the obvious architecture to implement quantum computation is linear optics quantum computing (LOQC) \cite{bib:KLM01} (KLM), since the states being processed by the computer are of the same form as the states traversing the network. See \cite{bib:Kok05, bib:KokLovettBook} for excellent introductions to this what has become a very broad and exciting field.
 
-LOQC allows universal quantum computing to be implemented using single-photon polarisation or dual-rail encoding, with only linear optics interactions, i.e beamsplitter/phase-shifter networks \cite{bib:Reck94}, with the addition of quantum memory, and fast-feedforward, whereby some photons are measured, and the remaining part of the optical circuit is dynamically reconfigured based on the measurement outcomes. The former is readily available technology today, and elementary demonstrations have been performed \cite{bib:OBrien03, bib:UniversalLOOBrien}, but the latter two have proven to be somewhat more challenging.
+LOQC allows universal quantum computing to be implemented using single-photon polarisation or dual-rail encoding, with only linear optics interactions, i.e beamsplitter/phase-shifter networks \cite{bib:Reck94}, with the addition of quantum memory, and fast-feedforward, whereby some photons are measured, and the remaining part of the optical circuit is dynamically reconfigured based on the measurement outcomes. The former is readily available technology today, and elementary demonstrations have been performed \cite{bib:OBrien03, bib:carolan2015universal}, but the latter two have proven to be somewhat more challenging.
 
 Originally it was believed that universal optical quantum computation, specifically the implementation of 2-qubit entangling gates (such as CNOT or CZ gates), would require extremely (and unrealistically) strong optical non-linearities that implement a non-linear sign-shift (NS) gate,
 \begin{align} \label{eq:NS_trans}\index{Non-linear sign-shift (NS) gate}
@@ -58,7 +58,7 @@ The measurements are implemented simply by number-resolved photo-detectors, impl
 
 Since the original presentation of a universal LOQC gate set by KLM, numerous alternate implementations have been presented and experimentally demonstrated, with various pros and cons \cite{bib:Ralph01, bib:Pittman01, bib:Ralph02, bib:Knill02, bib:Pittman03, bib:MorYoran06}.
 
-Significant progress is being made on reconfigurable, integrated LOQC devices \cite{bib:UniversalLOOBrien}, but switching times remain orders of magnitude slower than that required for fast-feedforward. The resource overhead associated with overcoming the non-determinism of entangling gates is substantial in the original KLM proposal. But despite being improved upon by cluster state approaches, to be discussed next (Sec.~\ref{sec:CS_LO}), resource scaling remains daunting. It therefore seems most likely that certain elements from LOQC might be combined into hybrid architectures, to be discussed in detail in Sec.~\ref{sec:hybrid}.
+Significant progress is being made on reconfigurable, integrated LOQC devices \cite{bib:carolan2015universal}, but switching times remain orders of magnitude slower than that required for fast-feedforward. The resource overhead associated with overcoming the non-determinism of entangling gates is substantial in the original KLM proposal. But despite being improved upon by cluster state approaches, to be discussed next (Sec.~\ref{sec:CS_LO}), resource scaling remains daunting. It therefore seems most likely that certain elements from LOQC might be combined into hybrid architectures, to be discussed in detail in Sec.~\ref{sec:hybrid}.
 
 %
 % Cluster State Linear Optics
@@ -295,7 +295,7 @@ which, for large $m$, puts us into the anti-bunched (i.e binary photon-number) r
 \end{align}
 
 The amplitudes $\gamma_{S,T}$ are given by,\index{Configuration amplitudes}
-\begin{align}
+\begin{align}\label{eq:BS_perms}
 	\gamma_{S,T} = \frac{\mathrm{Per}(U_{S,T})}{\sqrt{S_1!\dots S_m! T_1!\dots T_m!}},
 \end{align}
 and the associated configuration probabilities by,
@@ -305,10 +305,59 @@ and the associated configuration probabilities by,
 \end{align}
 where $\mathrm{Per}(\cdot)$ denotes the matrix permanent, and $U_{S,T}$ is a sub-matrix of $U$ -- the transfer matrix\index{Transfer matrices} associated with the particular input-to-output sample configuration -- obtained by taking $S_i$ copies of the $i$th row, and $T_j$ copies of the $j$th column of the linear optics unitary matrix $U$. For the purposes of the original complexity proof, the unitary is chosen randomly from the Haar-measure\footnote{The Haar-measure generalises the notion of a uniform distribution to higher-dimensional topologies than the real numbers, in this instance to the $\mathrm{SU}(n)$ group.}\index{Haar measure}, although it remains an open question as to what is the full class of unitaries that yield computationally hard problems.
 
+\paragraph{The relationship to matrix permanents}\index{Permanents}
+
+The observation that output probability amplitudes are related to matrix permanents as per Eq.~(\ref{eq:BS_perms}) is the most important one, as this is ultimately responsible for the computational hardness of the \textsc{BosonSampling} problem, since permanents are in general \textbf{\#P}-hard\index{\#P} problems, a classically inefficient complexity class.
+
+The permanent of a square matrix is defined as\index{Permanents},
+\begin{align}\label{eq:permanent}
+\mathrm{Per}(A) = \sum_{\sigma\in S_n} \prod_{i=1}^n A_{i,\sigma_i},
+\end{align}
+which sums over $n!$ terms (super-exponential), where $S_n$ is the symmetric group, the group of permutations on $n$ elements, of which there are $n!$. Note the similarity with the definition for the matrix determinant\index{Determinants}, defines identically, but with the addition of an alternating $\pm$-sign in the terms. Despite this similarity, determinants reside in \textbf{P}, with an efficient classical algorithm. For this reason, Fermionic sampling\index{Fermionic sampling} yields an easy computational problem, since Fermionic sampling differs only in replacing the permanent with the determinant. The best-known classical algorithm for evaluating has exponential runtime,
+\begin{align}
+	O(2^n n^2).
+\end{align}
+
+To see how matrix permanents naturally arise in this setting, it is easiest to explain by example. In Fig.~\ref{fig:BS_2_comb} we illustrate a simple interferometer, fed with two photons. We wish to calculate the output amplitude of measuring a photon in each of the modes 2 and 3, given photons input at modes 1 and 2. To evaluate this amplitude we simply need to add up the amplitudes of all possible paths yielding the desired outcome. In this simple example this sum-of-paths\index{Sum-of-paths} is given by,
+\begin{align} \label{eq:BS_2_ph_comb}
+\gamma_{\{2,3\}} &= \underbrace{U_{1,2}U_{2,3}}_{\mathrm{don't\ swap}} + \underbrace{U_{1,3}U_{2,2}}_{\mathrm{swap}} \nonumber \\
+&= \mathrm{Per} \left[ {\begin{array}{cc}
+   U_{1,2} & U_{2,2} \\
+   U_{1,3} & U_{2,3} \\
+  \end{array} } \right],
+\end{align}
+from which it is immediately clear that the amplitude is given by the sum of \mbox{$2!=2$} paths\footnote{The number of paths scales as $n!$ in general, which corresponds to the $n!$ order of the symmetric group, $S_n$, in the definition of the permanent from Eq.~(\ref{eq:permanent}).}, the permanent of the \mbox{$2\times 2$} matrix obtained from taking the columns (rows) of $\hat{U}$ where a photon is present at the respective input (output) mode.
+
+\begin{figure}[!htbp]
+\includegraphics[clip=true, width=0.475\textwidth]{BS_2_photon_combinatorics}
+\caption{A linear optics interferometer $\hat{U}$, fed with 2 single-photon inputs, one in each of the first two modes. To calculate the output amplitude of one photon in each of the modes 2 and 3, we sum the amplitudes of all possible paths consistent with that output. In this example there are only two such paths -- either both photons pass straight through, or they swap positions. This summation yields a \mbox{$2\times 2$} matrix permanent, given by Eq.~(\ref{eq:BS_2_ph_comb}).}\label{fig:BS_2_comb}	
+\end{figure}
+
+In Fig.~\ref{fig:BS_3_comb} we present to next most sophisticated example of an interferometer fed by 3 photons, for which the sum-of-paths\index{Sum-of-paths} has \mbox{$3!=6$} terms, given by,
+\begin{align} \label{eq:BS_3_ph_comb}
+\gamma_{\{1,2,3\}} &= U_{1,1}U_{2,2}U_{3,3} + U_{1,1}U_{3,2}U_{2,3} \nonumber \\
+&+ U_{2,1}U_{1,2}U_{3,3} + U_{2,1}U_{3,2}U_{1,3} \nonumber \\
+&+ U_{3,1}U_{1,2}U_{2,3} + U_{3,1}U_{2,2}U_{1,3}
+\nonumber \\
+&= \mathrm{Per} \left[ {\begin{array}{ccc}
+   U_{1,1} & U_{2,1} & U_{3,1} \\
+   U_{1,2} & U_{2,2} & U_{3,2} \\
+   U_{1,3} & U_{2,3} & U_{3,3} \\
+  \end{array} } \right],
+\end{align}
+and it is now clear upon inspection that the amplitude is given by a \mbox{$3\times 3$} matrix permanent.
+
+\begin{figure}[!htbp]
+\includegraphics[clip=true, width=0.475\textwidth]{BS_3_photon_combinatorics}
+\caption{A linear optics interferometer $\hat{U}$, fed with 3 single-photon inputs, in modes 1, 2 and 3. To calculate the output amplitude of one photon in each of the modes 1, 2 and 3, we sum the amplitudes of all possible paths consistent with that output. This summation yields a \mbox{$3\times 3$} matrix permanent, given by Eq.~(\ref{eq:BS_3_ph_comb}).}\label{fig:BS_3_comb}	
+\end{figure}
+
+\paragraph{Problem description}
+
 The computational problem is simply to sample this probability distribution $P_{S,T}$, which the linear optics network can implement efficiently, but it is believed a classical computer cannot. The full model is shown in Fig.~\ref{fig:bs_model}.
 
 \begin{figure}[!htbp]
-\includegraphics[clip=true, width=0.35\textwidth]{bs_model}
+\includegraphics[clip=true, width=0.35\textwidth]{BS_model}
 \captionspacefig \caption{The \textsc{BosonSampling} model for non-universal linear optics quantum computing. $S$ (output) and $T$ (input) are represented in the photon-number basis. After application of the Haar-random linear optics unitary to the input multi-mode Fock state, the output superposition is sampled with coincidence photo-detection.} \label{fig:bs_model}
 \end{figure}
 
@@ -318,9 +367,9 @@ For comparison, the equivalent classical protocol using distinguishable photons 
 \end{align}
 which yields a classically efficient sampling problem. Thus, for \textsc{BosonSampling} the permanents are of complex-valued matrices, whereas for the equivalent classical problem the permanents are of positive real-valued matrices.
 
-Very importantly, note that \textsc{BosonSampling} does \textit{not} let us efficiently \textit{calculate} matrix permanents. Rather, it samples across a distribution of an exponential number of permanents. This is because, for an exponentially large sample space, with only a polynomial number of measurement trials, we are unlikely to gain more than binary accuracy about individual amplitudes, which is insufficient for determining any particular permanent. It appears that God knows how to efficiently solve matrix permanents, but conspires against us such that we remain ignorant of them. --- \textit{Deus magnus est.}
+Very importantly, note that \textsc{BosonSampling} does \textit{not} let us efficiently \textit{calculate} matrix permanents. Rather, it samples across a distribution of an exponential number of permanents. This is because, for an exponentially large sample space, with only a polynomial number of measurement trials, we are unlikely to gain more than binary accuracy about individual amplitudes, which is insufficient for determining any particular permanent. It appears that God knows how to efficiently solve matrix permanents, but conspires against us such that we remain ignorant of them. \latinquote{Deus magnus est.}
 
-The size of a boson-sampler required to exhibit post-classicality is under active debate, as has undergone much historical revision \cite{RohdeRalph}. But some recent estimates suggest that as many as 50 photons in 2,500 modes might be a rough guide for such a threshold \cite{NoSupBS_Montanaro}. Needless to say, this is already an extremely challenging technological goal, suggesting that although the \textsc{BosonSampling} problem is far simpler than universal LOQC, it is far from simple.
+The size of a boson-sampler required to exhibit post-classicality is under active debate, as has undergone much historical revision \cite{RohdeRalph}. But some recent estimates suggest that as many as \mbox{$n=50$} photons in \mbox{$m=2,500$} modes might be a rough guide for such a threshold \cite{NoSupBS_Montanaro}. Needless to say, this is already an extremely challenging technological goal, suggesting that although the \textsc{BosonSampling} problem is far simpler than universal LOQC, it is far from simple.
 
 \textsc{BosonSampling} in the presence of various error models, such as loss, source non-determinism and mode-mismatch, has been extensively investigated \cite{bib:RohdeErrBS12, bib:RohdeSPDC13, bib:ScottLost16, bib:RohdeArbSpec15, bib:RandBS}. 
 
@@ -890,44 +939,246 @@ which is a Bell pair between the matter qubits.
 \comment{To do. Talk about optical interfacing.}
 
 %
-% Superconducting Rings
+% Artificial Atoms
 %
 
-\subsection{Superconducting rings}\index{Superconducting rings}
+\subsection{Superconducting circuits}\index{Superconducting circuits}\label{sec:artificial_atoms}
 
-\comment{To do. Talk about optical interfacing.}
+Qubits may be engineered by considering the lowest two energy levels of a quantum system. Based on the spacing between their energy levels, such quantum systems are classified into two categories:
+\begin{itemize}
+	\item Quantum harmonic oscillator type: have equal spacing between energy levels.\index{Quantum harmonic oscillators}
+	\item Atomic type: have unequal spacing between energy levels.\index{Artificial atoms}
+\end{itemize}
+We illustrate these two cases in Fig.~\ref{fig:artificial_atom_energy_levels}, with their corresponding energy level diagrams. The energy levels of these two classes of systems obey,
+\begin{align}
+E_{n} &= \hbar \omega \left(n+\frac{1}{2}\right) \quad (\mathrm{Oscillator\,levels}), \nonumber \\ 
+E_{n} &= -\frac{E_{0}}{n^{2}} \quad (\mathrm{Atomic\,levels}),
+\end{align}
+where \mbox{$n\in\mathbb{Z}^+$} denotes the discrete energy level, $\omega$ is optical frequency, and $E_0$ is the lowest-lying ground state energy\index{Ground states}.
 
-%
-% Microwave Cavities
-%
+\begin{figure}[!htbp]
+\includegraphics[clip=true, width=0.475\textwidth]{artificial_atom_energy_levels}
+\caption{The energy levels of: (a) a quantum oscillator; and, (b) an atomic system. The quantum oscillator exhibits equidistant separation between energy levels, whereas for the atomic system the energy levels are non-uniform.}\label{fig:artificial_atom_energy_levels}\index{Energy levels}
+\end{figure}
 
-\subsection{Microwave cavities}
+To construct a qubit we should be able to use external fields\index{Control fields} to control and selectively drive transitions between only two energy levels in the system. Such a procedure is easy to achieve in atomic systems, but it is not possible to address only two levels in a quantum oscillator due to the harmonicity\index{Harmonicity} (equal energy spacing) between energy levels. On the other hand, it's hard to work with individual natural atoms, mainly because of their size, which makes their individual isolation and control very challenging. To overcome this problem, we need to develop new quantum devices with anharmonic\index{Anharmonicity} energy spectra\index{Energy spectra}. Such devices are referred to as \textit{artificial atoms}\index{Artificial atoms}, due to their similarity to natural atoms in the anharmonicity of their energy level spectrum.
 
-\comment{To do: Jon Dowling. Entirely new section, not subsection of another existing section. You have a lot of freedom here.}
+One of the most widely used types of artificial atom are superconducting qubits \cite{bib:martinis1985energy, bib:shnirman1997quantum, bib:averin1998adiabatic, bib:devoret2004superconducting, bib:makhlin2001quantum}\index{Superconducting qubits}, a class of non-linear quantum circuits\index{Non-linear quantum circuits}. An LC oscillator\index{LC oscillator} composed of an inductor $L$\index{Inductors} and capacitance $C$\index{Capacitors} is a typical example of a linear quantum circuit\index{Linear quantum circuits} with equal spacing. By introducing a Josephson junction\index{Josephson junction} into the linear quantum circuit we can make it non-linear, with anharmonic energy spectrum.
 
-\comment{This is to be an introductory review of this field, starting from the beginning. Use previous sections on KLM and optical cluster states as a guideline for level of detail.}
+A Josephson junction \cite{bib:josephson1974the} comprises two bulk superconducting materials\index{Superconductors}, separated by a thin layer of insulating material\index{Insulators}. In the superconducting phase the superconductors contain Cooper-pairs\index{Cooper-pairs}, composed of paired electrons. These Cooper-pairs move from one superconducting layer to another through the insulating layer via quantum tunnelling\index{Tunnelling}. The quantum mechanical nature of Josephson junctions is determined by two important energy scales:
+\begin{itemize}
+\item Josephson coupling energy, $E_{J}$.\index{Josephson coupling energy}
+\item Coulomb energy, $E_C$.\index{Coulomb energy}
+\end{itemize}
+The ratio between these two energy scales determines the energy spectrum of the superconducting qubit. This yields three distinct types of qubits:
+\begin{itemize}
+\item Voltage-driven charge qubits \cite{bib:bouchiat1998quantum, bib:nakamura1999coherent}.\index{Charge qubits}
+	\item Flux-driven flux qubits \cite{bib:friedman2000quantum, bib:van2000quantum}.\index{Flux qubits}
+	\item Current-driven phase qubits \cite{bib:martinis2002rabi}.\index{Phase qubits}
+\end{itemize} 
+These circuits and energy level diagrams for these are illustrated in Fig.~\ref{fig:superconductor_circuits}.
 
-\comment{A novice should be able to get up to speed on all the important basic concepts starting with no previous knowledge, modulo an understanding of mathematics and quantum mechanics.}
+\begin{figure}[!htbp]
+\includegraphics[clip=true, width=0.475\textwidth]{superconducting_qubits}
+\caption{Simplified circuits of the different kinds of superconducting qubits, namely the charge qubit, flux qubit and phase qubit. Below each circuit are their respective energy level diagrams.}\label{fig:superconductor_circuits}
+\end{figure}
 
-\comment{The following topics need to be included, and you're at full liberty to throw is as much other material as you think is appropriate to communicate the basic ideas of the approach. Feel free to deviate from this suggested structure if you have a clearer idea for structuring it.}
+\subsubsection{Charge qubits}\index{Charge qubits}
 
-\comment{* How are qubits defined - both physical and mathematical descriptions.}
+A non-linear quantum circuit driven by voltage\index{Voltage} is referred to as a charge qubit, whose Hamiltonian takes the form,
+\begin{align}
+\hat{H} = \frac{\hat{q}^{2}}{2C} - E_{J} \cos \left( \frac{2e}{\hbar} \hat\phi \right).
+\label{circuitHamiltonian}
+\end{align}
+Here $\hat{q}$ is the charge in the superconducting system and $\hat\phi$ is flux\index{Flux}. The total capacitance of the circuit is given by $C$, and $E_{J}$ is the Josephson energy\index{Josephson energy}. The Hamiltonian in Eq.~(\ref{circuitHamiltonian}) can be rewritten as,
+\begin{align}\label{eq:charge_qubit_hamiltonian}
+\hat{H} = 4E_C (\hat{n} - n_{g})^{2} - E_{J} \cos (\hat{\phi}) .
+\end{align}
+The variables $\hat{q}$ and $\hat{\phi}$ are canonically conjugate\index{Canonically conjugate} and satisfy the commutation relation,
+\begin{align}
+[ \hat{\phi},\hat{q} ] = i \hbar.
+\end{align}
+In a truncated charge basis the Hamiltonian is,
+\begin{align}
+\hat{H} &= 4 E_C \sum_{n = -N}^{N} (\hat{n} - n_{g})^{2} \ket{n}\bra{n}\nonumber\\
+&- E_{J} \sum_{n = -N}^{N-1} \ket{n+1}\bra{n} + \ket{n}\bra{n+1}.
+\end{align}
 
-\comment{* How is state preparation performed?}
+The energy eigenstates are the charge states\index{Charge states} $\ket{n}$, hence these qubits are referred to as charge qubits. In general the charge qubit \cite{bib:bouchiat1998quantum, bib:nakamura1999coherent} is operated in the region,
+\begin{align}
+	\frac{E_J}{E_C} \approx 1.
+\end{align}
 
-\comment{* How are single- and two-qubit gates implemented?}
+Charge qubits are highly sensitive to noise except at particular working points referred to as `sweet spots'\index{Sweet spots}. But it is experimentally difficult to control the voltage and current such that the qubit is maintained at these desired working conditions.
 
-\comment{* How is readout (measurement) performed?}
+To overcome this, a special design of charge qubit known as the \textit{transmission line shunted plasma oscillation qubit} or `transmon' \cite{bib:koch2007charge}\index{Transmon} with,
+\begin{align}
+\frac{E_J}{E_C} \gg 1,
+\end{align}
+was suggested. The transmon is highly robust against external noise compared to the charge qubit. But the energy levels become more and more harmonic\index{Harmonicity} (i.e equally spaced) as we move away from the region,
+\begin{align}
+	\frac{E_{J}}{E_{C}} \approx 1.
+\end{align}
+Thus the charge qubits are designed by giving consideration to the trade-off between robustness against external noise and the anharmonicity\index{Anharmonicity} between the levels. A 20-qubit prototype quantum computer developed by IBM\index{IBM} employs transmon-type superconducting qubits \cite{bib:gambetta2017building}. 
 
-\comment{* Scalability issues - anything important re scaling these architectures up arbitrarily.}
+\subsubsection{Flux qubits}\index{Flux qubits}
 
-\comment{* What are the dominant error models/mechanisms? (both mathematically and physically)}
+The flux qubit is popularly known as the RF SQUID (Radio Frequency Superconducting QUantum Interference Device)\index{SQUIDs}, which uses an AC current\index{Alternating current}. This qubit can be considered as the magnetic analogue of the charge qubit. In a charge qubit the Josephson junction is driven by a capacitor, but in a flux qubit, a superconducting transformer\index{Superconducting transformers} circuit generates the flux which drives the circuit. The Hamiltonian of the circuit is,
+\begin{align}
+\hat{H} = \frac{\hat{q}^{2}}{2 C_{J}} + \frac{\hat\phi^{2}}{2 L} - E_{J} \cos \left( \frac{2e}{\hbar}(\hat\phi - \phi_\mathrm{ext}) \right).
+\end{align}
 
-\comment{* Current obstacles - what needs to be overcome for this to succeed?}
+Here we can observe that there are three energy scales namely,
+\begin{align}
+E_J,& \nonumber\\
+E_{C} &= \frac{2e^{2}}{C},\nonumber\\
+E_{L} &= \frac{{\phi_{0}}^{2}}{2L}.
+\end{align}
+The quantum properties of the qubits depend on the interplay between these parameters. The Cooper-pairs in a flux qubit are confined to a double well potential\index{Double well potential}. The variables $Q$ and the total magnetic flux $\Phi$\index{Magnetic flux} are the conjugate variables, satisfying the commutation relation,
+\begin{align}
+[\hat{Q},\hat\Phi] = i \hbar.
+\end{align}
 
-\comment{* Current state of the art with comprehensive referencing}
+Flux qubits are very robust against charge noise \cite{bib:you2005fast}, and hence have very long decoherence times\index{Decoherence times}, making them one of the most attractive qubit candidates for the construction of quantum computers. The early quantum computing devices developed by D-Wave\index{D-Wave} employ flux qubits \cite{bib:harris2018phase}.
 
-\comment{* Anything else you decide is relevant or important}
+\subsubsection{Phase qubits}\index{Phase qubits}
+
+Current-driven superconducting qubits are referred to as phase qubits \cite{bib:martinis2002rabi}. They are commonly known as DC SQUIDs, and operate in the regime of very high values of $E_{J}/E_{C}$.
+
+The Hamiltonian of a phase qubit is,
+\begin{align}
+\hat{H} = E_{C} \hat{p}^{2} - I \phi_{0} \hat\delta - I_{0} \phi_{0} \cos \hat\delta,
+\label{eq:phase_qubit_hamiltonian}
+\end{align}
+where $\hat\delta$ is the gauge invariant\index{Gauge invariance} phase-difference operator\index{Phase-difference operator} and the charge on the capacitor is $2pe$. These operators are conjugate variables, satisfying the commutation relation,
+\begin{align}
+	[\hat\delta, \hat{p}] = i \hbar.
+\end{align}
+
+In the phase qubit, Cooper-pairs\index{Cooper-pairs} experience a washboard potential\index{Washboard potential}. Since their decoherence times\index{Decoherence times} are very small compared to flux and charge qubits, they are not that widely employed.
+
+\subsubsection{Microwave qubits}\index{Microwave qubits}
+
+To build a scalable quantum computer, multiple qubits are required, with the ability to interact with one another. Hence, it is essential to find ways to transfer quantum information between distinct superconducting qubits. When doing so, it is essential that quantum coherence be preserved. This implies we need to find a different kind of qubit, which can carry information from one place to another, but interacts only weakly with the other qubits and the environment. Photons are the ideal candidate for this (Sec.~\ref{sec:opt_enc_of_qi}). Photonic qubits for carrying information should have frequencies equal to the energy difference between qubit levels. For a superconducting qubit, the energy difference is very small, hence the frequency of optical qubits is in microwave regime, whose wavelength lies in the range $\sim100\mu$m-1m.
+
+Information transfer between distinct superconducting qubits is achieved using a resonator, which acts as a quantum data bus\index{Quantum data bus}. A simple resonator\index{Resonators} is an LC circuit\index{LC circuit}, which can support only one frequency mode, but a waveguide resonator can support multiple modes. In general, the transmission line circuits used in non-linear quantum electric circuits\index{Non-linear quantum electric circuits} are in the form of coplanar waveguides\index{Waveguides}. These waveguides are engineered to handle a particular set of frequencies, and produce transmission lines with tuneable frequency. Tuneable resonators\index{Tuneable resonators} are very important in quantum optics, and are useful in implementing controllable coupling between different quantum elements, and also in shaping photon wave-packets. 
+
+In cavity quantum electrodynamics (QED)\index{Quantum electrodynamics} the interaction of a natural atom with an optical photon in the visible wavelength regime is considered. Similarly, the interaction between quantum non-linear electrical circuits and  microwave photons are investigated in circuit QED. The coupling-strength between a natural atom and visible light photon is fixed, where atoms couple weakly with photons \cite{bib:raimond2001manipulating}. Meanwhile, the coupling-strength between a superconducting qubit and a microwave can be manipulated by engineering the parameters of the qubit and resonator, yielding strong and ultra-strong coupling\index{Strong coupling}\index{Ultra-strong coupling} between qubits and photons \cite{bib:wallraff2004strong} (see Fig.~\ref{fig:microwave_qubits}). Furthermore, the coupling between an atom and a photon can be tuned dynamically during the course of an experiment. Several quantum optics components such as mirrors, beamsplitters, circulators and switches can also be designed based on quantum electric circuits.
+
+\begin{figure}[!htbp]
+\includegraphics[clip=true, width=0.475\textwidth]{microwave_qubits}
+\caption{Schematic sketch of the interaction between superconducting qubits and microwave qubits. The superconducting qubits are in the entangled state \mbox{$\frac{1}{\sqrt{2}}(\ket{e,g} + \ket{g,e})$}, where $\ket{g}$ and $\ket{e}$ are the ground and excited states of the superconducting qubits. These are subjected to interact with the flying qubits, the microwave qubit (red dashed arrow). The photons become entangled and the output state of the photons are \mbox{$\frac{1}{\sqrt{2}}(\ket{H,V} + \ket{V,H})$}, where $\ket{H}$ and $\ket{V}$ are the horizontal and vertical polarisation modes respectively.}\label{fig:microwave_qubits}\index{Microwave qubits}
+\end{figure}
+
+\subsubsection{Quantum gates}\index{Quantum gates}
+
+To build useful quantum information processing devices, we require quantum gates to act upon our superconducting qubits. This is a field under active development \cite{bib:blais2004cavity, bib:chow2011simple, bib:chow2013microwave}. Below we provide a brief description of the operation of single- and two-qubit quantum gates based on superconducting qubits.
+
+\paragraph{Single-qubit gates}
+
+A single superconducting qubit, which is coherently controlled using microwaves, can be used as a quantum gate. Let us consider a cavity with resonant frequency $\omega_{r}$\index{Resonant frequency} and drive frequency $\omega_{d}$\index{Drive frequency}, where the difference \mbox{$\Delta_{r} = \omega_{r} - \omega_{d}$} is the detuning\index{Detuning} between the cavity and the drive. When \mbox{$\omega_{d} \approx \omega_{r}$} one can read the state of a superconducting qubit using microwaves. But when \mbox{$\omega_{d} = \omega_{q} \ll \omega_{r}$} the microwave can be used to perform gate operations on the qubit without measuring its state.
+
+A system comprising a superconducting qubit and a microwave can be described using the Jaynes-Cummings Hamiltonian\index{Jaynes-Cummings Hamiltonian},
+\begin{align}
+\hat{H} = \Delta _{r} \hat{a}^{\dag} \hat{a} - \frac{\Delta_{q}}{2} \hat\sigma_{z} + g (\hat{a}^{\dag} \hat\sigma_{-} + \hat{a} \hat\sigma_{+}) + \xi(t) (\hat{a}^{\dag} + \hat{a}),
+\label{eq:driven_jc_hamiltonian}
+\end{align}
+where $\hat{a}^{\dag}$ ($\hat{a}$) is the creation (annihilation) operator corresponding to the microwave photon, and $\sigma_{+}$ ($\sigma_{-}$) is the spin raising (lowering) operator\index{Spin operators}. The factors \mbox{$\Delta_{r} = \omega_{r} - \omega_{d}$} and \mbox{$\Delta_{q} = \omega_{q} - \omega_{d}$} are the detuning parameters\index{Detuning}. The factor $g$ is the coupling between the microwave photon and the qubit, and $\xi(t)$ is the envelope\index{Envelope} of the microwave pulse. The effective Hamiltonian is,
+\begin{align}
+\hat{H}_\mathrm{eff} &= \left( \Delta_{r} + \frac{g^{2}}{\Delta} \hat\sigma_{z} \right) \hat{a}^{\dag} a - \frac{1}{2} \left(\Delta_{q} - \frac{g^{2}}{\Delta} \right) \hat\sigma_{z} \nonumber\\
+&+ \xi(t) (\hat{a}^{\dag} + \hat{a}) - \frac{g \xi(t)}{\Delta} \hat\sigma_{x}.
+\end{align}
+
+To perform an $X$-gate, we choose a drive frequency\index{Drive frequency},
+\begin{align}
+\omega_{d} = \omega_{q} - \frac{g^{2}}{\Delta}(2 \bar{n} + 1),
+\end{align}
+which causes the $\sigma_{z}$ term to disappear, leaving us with a pure $\sigma_{x}$ rotation. Using a phase-shifted drive,
+\begin{align}
+H_{d}(t) = \xi(t) i (\hat{a}^{\dag} - \hat{a}),
+\end{align}
+one might obtain a pure $\sigma_{y}$ rotation, yielding a $Y$-gate. Finally we note that using a drive,
+\begin{align}
+	\omega_{d} = \omega_{q} - \frac{g^{2}}{\Delta}(2 \bar{n} + 1) - 2 \xi(t)\frac{g}{\Delta},
+\end{align}
+we may construct a Hadamard gate. 
+
+\paragraph{Two-qubit gates}
+
+Quantum gates operating on two qubits can be realised in many different ways. But in terms of their construction and operation, they can be divided into two classes. In the first class of quantum gates the superconducting qubits can be tuned over a wide range of frequencies. A good example of this is the iSWAP gate\index{iSWAP gate}, in which two Cooper-pair\index{Cooper-pairs} boxes are coupled via a transmission line resonator\index{Transmission line resonator}. In the rotating frame of reference\index{Rotating frame}, the effective Hamiltonian of the system is,
+\begin{align}
+\hat{H}_\mathrm{eff} &= \frac{g^{2}}{\Delta} \left( \hat{a}^{\dag} \hat{a} + \frac{1}{2} \right) (\hat\sigma_{z,1} + \hat\sigma_{z,2}) \nonumber\\
+&- \frac{g^{2}}{\Delta} (\hat\sigma_{+,1} \hat\sigma_{-,2} + \hat\sigma_{+,2} \hat\sigma_{-,1}).
+\end{align}
+
+The parameters of the two qubits can be adjusted by tuning their flux. The interaction between qubits can be turned on and off by tuning the qubits in and out of resonance with one another. The advantage of the first class of quantum gates is that they can be operated in a region where the frequency of the two qubits differ from one another and the interaction between them is very strong. But the disadvantage is that they are sensitive to flux noise, hence requiring extra flux bias lines for tuning them properly.
+
+The second class of quantum gates is built up of superconducting qubits with fixed frequencies, driven by microwaves. The cross-resonance gate\index{Cross-resonance gate}, the bSWAP\index{bSWAP gate} or Bell-Rabi gate\index{Bell-Rabi gate}, and the MAP gate\index{MAP gate} belong to this class. The effective Hamiltonian of the cross-resonance gate is,
+\begin{align}
+\hat{H}_\mathrm{eff} = - \left( \frac{\tilde{\omega}_{1} - \tilde{\omega}_2}{2} \right) \hat\sigma_{z,1} + \frac{\Omega(t)}{2} \left(\hat\sigma_{x,1} - \frac{J}{\Delta_{12}} \hat\sigma_{z,1} \hat\sigma_{x,2} \right),
+\end{align}
+where,
+\begin{align}
+	\tilde{\omega}_{1} &= \omega_{1} + \frac{J^{2}}{\Delta_{12}}, \nonumber\\
+		\tilde{\omega}_{2} &= \omega_{2} - \frac{J^{2}}{\Delta_{12}}, \nonumber\\
+\Delta &= \omega_{1} -\omega_{2}.		
+\end{align}
+The factors $\omega_{1}$ and $\omega_{2}$ are the frequencies of the first and second qubits, and $\Delta_{12}$ is the detuning\index{Detuning}. The first qubit is rotating with frequency $\frac{1}{2}(\tilde{\omega_{1}} - \tilde{\omega_{2}})$ around the $Z$-axis, with a little shift in the $X$-direction, yielding an $X$-gate. Similarly we can construct a microwave-activated CZ (MAP) gate\index{MAP gate} using two transmons. The system of two transmons is modelled using a system of two coupled Duffing oscillators\index{Duffing oscillators}. The effective Hamiltonian in the two qubit space reads,
+\begin{align}
+\hat{H}_\mathrm{eff} &= - \frac{1}{2} \left( \omega_{01} - \frac{\zeta}{2} \right) \hat\sigma_{z,1} - \frac{1}{2} \left( \omega_{10} - \frac{\zeta}{2} \right) \hat\sigma_{z,2} \nonumber\\
+&+ \frac{\zeta}{4} \hat\sigma_{z,1} \hat\sigma_{z,2}. 
+\end{align}
+
+Through this Hamiltonian we can realise a CZ gate, with gate time $514$ns and high fidelity. The second class of quantum gates have a longer coherence time\index{Coherence time}, since the superconducting qubits can be parked at the sweet spots\index{Sweet spots} of coherence where the effects of noise on the qubits are less substantial. But, control of the qubits is much harder, since we need to maintain them with the same qubit parameters for an extended period of time.
+
+\subsubsection{Quantum transducers}\index{Quantum transducers}
+
+Due to scalability requirements, superconducting qubits are the most widely used qubit implementation used today. The energy-level spacing in superconducting qubits lie in the microwave regime. Hence to control and transfer information from a superconducting qubit one might need to use microwave photons. In principle, we can use microwave photons to transfer information from one node to another, but such a transmission process is extremely lossy. Also, such processes have very demanding technical requirements, like the design of specialised Niobium waveguides\index{Niobium waveguides}, maintained at extremely low temperatures. Hence it isn't feasible to use microwave photons for the long-distance transfer of quantum information. Meanwhile, it is well known that photons in the visible spectrum can be transmitted easily using optical fibres, with favourable efficiency.
+
+To convert microwave photons to optical photons we can use a quantum transducer. A sketch of a typical design for a quantum transducer\index{Quantum transducer} is shown in Fig.~\ref{fig:quantum_transducer} through a flowchart diagram. The quantum computer is made up of superconducting qubits, which feed quantum information to microwave qubits. The microwave qubits are then interfaced to optical qubits in the visible spectrum through a 3-level quantum system\index{3-level quantum systems}, which can couple at both microwave and optical frequencies. These steps should be reversible. Hence it should be possible to convert the optical qubits back into microwave qubits at the receiving end. 
+
+\begin{figure}[!htbp]
+\includegraphics[clip=true, width=0.475\textwidth]{quantum_transducer}
+\caption{Block diagram for the quantum transducer. The quantum computer comprising superconducting qubits couples with the microwave qubit. The microwave qubit and the photonic qubit are coupled by a three-level system in which the energy difference between the levels correspond to both microwave and visible optical frequencies. The thick arrows denote the forward process, required to convert the microwave to optical frequencies, and the dashed arrows represent the reverse process, required at the receiving end to convert the optical frequency to a microwave frequency.}\label{fig:quantum_transducer}
+\end{figure}
+
+There are several proposals for quantum transducers in existence and they can be classified into two major classes:
+\begin{itemize}
+	\item Opto-mechanical \cite{bib:rabl2010quantum, bib:barzanjeh2011entangling, bib:bochmann2013nanomechanical, bib:didier2014quantum, bib:schuetz2015universal, bib:shumeiko2016quantum, bib:stannigel2010optomechanical}.
+	\item Spin-ensembles \cite{bib:imamouglu2009cavity, bib:blum2015interfacing}.
+\end{itemize}
+
+The opto-mechanical quantum transducer\index{Opto-mechanical quantum transducer} (see Fig.~\ref{fig:opto_mechanics_transducer}), as the name suggests, combines optical components with a nano-mechanical resonator and converts the microwave photon\index{Phonons} into a phonon (acoustic) mode. The acoustic mode is then transmitted via waveguides\index{Waveguides}. Since we need to fabricate waveguides with very high precision to transmit phonon modes, this scheme is not suitable for communicating between two distant quantum computers. A coupling of the phonon mode to the optical photon mode in the visible region was suggested to enable long-distance transfer of quantum information.
+
+\begin{figure}[!htbp]
+\includegraphics[clip=true, width=0.475\textwidth]{transducer_scheme_1}
+\caption{Scheme for an opto-mechanics-based quantum transducer. There are two possible ways of converting microwaves. The final steps for the process in which acoustic modes are transported using waveguides is enclosed by a brown coloured box with dashed outlines labeled (a). Similarly the blue coloured box labeled (b) represents the scheme where phonons are converted to optical photons which are then transmitted via optical fibres. The initial few steps consisting of the superconducting qubit, transmission line resonator and microwaves are common to both processes.}\label{fig:opto_mechanics_transducer}\index{Opto-mechanical quantum transducer}
+\end{figure}
+
+The Hamiltonian of an opto-mechanical quantum transducer, which converts a microwave photon to optical photon using an intermediate nano-mechanical resonator\index{Nano-mechanical resonator} reads,
+\begin{align}
+\hat{H} &= \hbar \omega_{1} \, \hat{a}_{1}^{\dag} \hat{a}_{1} + \hbar \omega_{2} \, \hat{a}_{2}^{\dag} \hat{a}_{2} \nonumber\\
+&+ \hbar \Omega \, \hat{b}^{\dag} \hat{b} + \hbar \, g \, (\hat{b}+\hat{b}^{\dag}) (\hat{a}_{2}^{\dag} \hat{a}_{1} + \hat{a}_{1}^{\dag} \hat{a}_{2}),
+\end{align}
+where $\omega_{1}$ ($\omega_{2}$) is the frequency of the microwave (optical) photon, and $\Omega$ is phonon frequency. The operators $\hat{a}_{1}$ ($\hat{a}_{1}^{\dag}$) and $\hat{a}_{2}$ ($\hat{a}_{2}^{\dag}$) denote the annihilation (creation) operators corresponding to the microwave and optical photons respectively. Meanwhile, $\hat{b}^{\dag}$ ($\hat{b}$) denotes the phonon creation (annihilation) operator corresponding to the phonons. The factor $g$ is the coupling-strength between the microwave, phonon and photon modes. This design for a quantum transducer is widely preferred, since the optical photons in the visible spectrum can be transmitted over long distances using fibre optics. But the scheme requires two intermediate conversions, each of which reduces overall efficiency.
+
+The spin-ensemble-based quantum transducer\index{Spin-ensemble quantum transducer} (see Fig.~\ref{fig:spin_ens_transducer}) is an alternative to the opto-mechanical quantum transducer. In this scheme an ensemble of spins interact with microwave qubits via magnetic dipole coupling\index{Magnetic dipole coupling}, while the superconducting qubits interact via electric dipole coupling\index{Electric dipole coupling} with the microwave coupling. The Hamiltonian for such a system is,
+\begin{align}
+\hat{H} = \hat{H}_{\mathrm{mw}} + \hat{H}_{\mathrm{spin}} + \hat{H}_{\mathrm{opt}},
+\end{align}
+where,
+\begin{align}
+\hat{H}_{\mathrm{mw}} &= \hbar \omega_\mathrm{sq} \hat\sigma_\mathrm{sq}^{\dag} \hat\sigma_\mathrm{sq} + \hbar \omega_{\mu} \hat{a}^{\dag} \hat{a} + \hbar g_{\mu} (\hat{a}^{\dag} \hat\sigma_\mathrm{sq} + \hat{a} \hat\sigma_\mathrm{sq}^{\dag}),\nonumber \\
+\hat{H}_{\mathrm{spin}} &= \hbar g_\mathrm{s} (\hat\sigma_\mathrm{ba}^{\dag} \hat\sigma_\mathrm{ba} + \hat\sigma_\mathrm{bs}^{\dag} \hat\sigma_\mathrm{bs}), \nonumber\\
+\hat{H}_{\mathrm{opt}} &= \hbar g_\mathrm{ab} (\hat\sigma_\mathrm{ba}^{\dag} \hat{c} + \hat{c}^{\dag} \hat\sigma_\mathrm{ba}).
+\end{align}
+
+\begin{figure}[!htbp]
+\includegraphics[clip=true, width=0.475\textwidth]{transducer_scheme_2}
+\caption{The spin-ensemble-based quantum transducer. Microwave photons are converted to optical photons via a spin-ensemble.}\label{fig:spin_ens_transducer}\index{Spin-ensemble quantum transducer}
+\end{figure}
+
+The factor $\omega_\mathrm{sq}$ is the frequency of the superconducting qubit, and $\hat\sigma_\mathrm{sq}^{\dag}$ and $\hat\sigma_\mathrm{sq}$ are the raising and lowering operators\index{Raising operators}\index{Lowering operators} corresponding to the superconducting qubits. The frequency of the microwaves is given by $\omega_{\mu}$, and the $\hat{a}^{\dag}$ and $\hat{a}$ are the creation and annihilation operators for the microwave photons. The factor $g_{s}$ is the coupling strength between the various levels of the spin, and $\hat\sigma_\mathrm{ba}$ and $\hat\sigma_\mathrm{bs}$ are the spin operators corresponding to the transition between the level $a$, $b$ and $s$. Finally, the coupling strength of the spin interaction with the photon is denoted by $g_\mathrm{ab}$, and $\hat{c}^{\dag}$ ($\hat{c}$) is the creation (annihilation) operator corresponding for the photon. Again this is a two-step process, which is in addition beset with the problem of inhomogenous line broadening\index{Inhomogenous line broadening}. The design of an experimental, high-fidelity quantum transducer is still an open and ongoing challenge in the field of quantum technology.
 
 %
 % Adiabatic Quantum Computing & Quantum Annealing
