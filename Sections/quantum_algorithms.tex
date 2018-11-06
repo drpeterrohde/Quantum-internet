@@ -432,7 +432,7 @@ for accuracy $\delta$.
 % Sampling Problems
 %
 
-\subsection{Sampling problems}\index{Sampling problems}
+\subsection{Sampling problems}\index{Sampling problems}\label{sec:sampling_problems}
 
 The algorithms described previously are examples of \textit{decision problems}\index{Decision problems}, whereby the computation answers a question, providing a well-defined output for a well-defined input. Another entirely different class of problems are the so-called \textit{sampling problems}, whereby the goal is to accurately reproduce samples taken from some probability distribution. By their nature, these algorithms are statistical and generally their output cannot be associated with the answer to a decision problem. Nonetheless, despite being an entirely different category of problems, such problems reside in distinct sampling complexity classes, some of which are classically efficient to simulate, others not.
 
@@ -507,15 +507,15 @@ These reduced resource requirements makes both analysis and physical constructio
 
 As discussed in Sec.~\ref{sec:NISQ}, we have good reason to believe that quantum computers have super-classical capabilities. Recently, an unconditional proof of a quantum speed-up has been shown for a particular class of circuits.
 
-It's incredibly difficult to compare quantum versus classical polynomial time computation, and currently we have noisy gates in the lab. Given $n$ qubits, circuit depth $d$, and an error rate $\epsilon$, intuitively, we demand the condition,
+It's incredibly difficult to compare quantum versus classical polynomial time computation, and currently we have only noisy gates in the lab, further complicating the goal of achieving quantum supremacy. Given $n$ qubits, circuit depth $d$, and an error rate $\epsilon$, intuitively, we demand the condition,
 \begin{align}
 nd \ll \frac{1}{\epsilon},
 \end{align}
 to hold, in order for a quantum algorithm to run successfully. If $d$ is large, then noise dominates and our circuit is classically simulable. On the other hand, if we have large $n$ and small $d$ (constant depth circuits), we may observe a quantum speed up in the near future. Given these factors, we are motivated to examine `shallow circuits'. Now we will see that there is a distinction between constant depth circuits run using classical versus quantum algorithm.
 
-The result is for the following hidden linear function (HLF) problem\index{Hidden linear function problem} \cite{bib:bravyi2018quantum}. Given an  \mbox{$n\times n$} symmetric binary matrix $A$, we specify a quadratic form,
+The result is for the following hidden linear function (HLF) problem\index{Hidden linear function problem} \cite{bib:bravyi2018quantum}. Given an \mbox{$n\times n$} symmetric binary matrix\index{Symmetric binary matrices} $A$, we specify a quadratic form\index{Quadratic form},
 \begin{align}
-q(x) = \vec x^T A \vec x \text{(mod 4)}.
+q(x) = \vec x^T A \vec x \, (\mathrm{mod} \,4).
 \end{align}
 The goal is to find a binary vector $\vec z \in \{0,1\}^n$ such that,
 \begin{align}
@@ -523,27 +523,63 @@ q(x) = 2 \vec z^T \vec x,
 \end{align}
 for all $\vec x$ in the binary null-space of $A$.
 
-The quantum algorithm that solves the 2D HLF problem is similar to the Bernstein-Vazirani problem \cite{bib:bernstein1997quantum}. Here a quantum circuit $U_q$ acts on the basis state $\vec x \in \{ 0,1\}^n$,
-\begin{align}
-U_q \ket{x} = i^{q(x)} \ket{x}.
-\end{align}
-The solution is obtained by measuring the state $\ket{\Psi_q}$ in the computational basis. Here,
-\begin{align}
-\ket{\Psi_q} &= H^{\otimes n }U_q H^{\otimes n} \ket{0}^{\otimes n} \nonumber \\
-&= \frac{1}{\sqrt{2^n}}\sum_{\vec x,\vec z \in \{ 0,1\}^n} i^{q(x)} (-1)^{\vec z^T x}\ket{z},
-\end{align}
-where $H$ is the Hadamard gate. A schematic of the circuit is given in Fig.~\ref{fig:2DHLF}. Destructive interference between terms in $x$ results a vanishing amplitude \mbox{$\braket{z|\Psi_q}=0$} on basis state $\ket{z}$, which are not solutions of the HLF problem. The circuit $U_q$ can be decomposed into a product of CZ gates and phase-shift gates,
-\begin{align}
+The quantum algorithm that solves the 2D HLF problem is similar to the Bernstein-Vazirani problem\index{Bernstein-Vazirani problem} \cite{bib:bernstein1997quantum}. The algorithm, shown in Alg.~\ref{alg:shallow_circs}, has similar structure to the IQP sampling problem (Alg.~\ref{alg:IQP_samp}).
+
+\begin{table}[!htbp]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
+function ShallowQuantumCircuit():
+\begin{enumerate}
+    \item Prepare the $n$-qubit state,
+    \begin{align}
+    \ket{\psi_\mathrm{in}} = \ket{0}^{\otimes n}.
+    \end{align}
+    \item Apply the $n$-qubit Hadamard transform\index{Hadamard transform},
+    \begin{align}
+    \hat{H}^{\otimes n}.
+    \end{align}
+    \item Apply the oracle,
+	\begin{align}
+		U_q \ket{x} = i^{q(x)} \ket{x},
+	\end{align}
+	for bit-string \mbox{$x\in \{0,1\}^{n}$}, where the oracle is composed of a product of $CZ$ gates\index{Controlled-phase gates} and phase-shifts\index{Phase-shift gates},
+	\begin{align}
 S_i = \begin{pmatrix}
     1 & 0\\
     0 & -i
     \end{pmatrix}.
 \end{align}
+	\item Apply another $n$-qubit Hadamard transform,
+    \begin{align}
+    \hat{H}^{\otimes n}.
+    \end{align}
+    \item Measure all qubits in the computational basis, yielding measurement outcomes ${\vec z}$.
+	\item Repeat protocol $O(\mathrm{poly}(n))$ times.
+	\item $\Box$
+\end{enumerate}
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {
+    \lstick{\ket{0}} & \gate{\hat{H}} & \multigate{2}{\hat{U}_q} & \gate{\hat{H}} & \meter \\
+    \lstick{\vdots} & \gate{\hat{H}} & \ghost{\hat{U}_q} & \gate{\hat{H}} & \meter \\
+    \lstick{\ket{0}} & \gate{\hat{H}} & \ghost{\hat{U}_q} & \gate{\hat{H}} & \meter \\
+} \nonumber
+\end{align}
+}
+\end{mdframed}
+\captionspacealg \caption{Quantum computing using shallow circuits, where circuit depth scales as \mbox{$O(\log d)$}.} \label{alg:shallow_circs}
+\end{table}
 
-\begin{figure}[!htbp]
-%\includegraphics[clip=true, width=0.475\textwidth]{2DHLFcircuit}
-\caption{\comment{Insert figure}\label{fig:2DHLF} Quantum circuit to solve the 2D HLF problem.}
-\end{figure}
+Here a quantum circuit $U_q$ acts on the computational basis states \mbox{$\vec x \in \{ 0,1\}^n$} via a generalised controlled-phase operation,
+\begin{align}
+U_q \ket{x} = i^{q(x)} \ket{x},
+\end{align}
+for some oracle function $q(x)$. The solution is obtained by measuring the state $\ket{\Psi_q}$ in the computational basis. Here,
+\begin{align}
+\ket{\Psi_q} &= H^{\otimes n }U_q H^{\otimes n} \ket{0}^{\otimes n} \nonumber \\
+&= \frac{1}{2^n}\sum_{\vec x,\vec z \in \{ 0,1\}^n} i^{q(x)} (-1)^{\vec z^T x}\ket{z}.
+\end{align}
+
+The circuit $U_q$ can be decomposed into a product of CZ gates and phase-shift gates, which all commute, thereby allowing the shallow circuit-depth.
 
 If we lay out the circuit in 2D (hence the 2D HLF problem), it only requires classically-controlled Clifford gates\index{Clifford gates} between nearest neighbour qubits on a 2D grid. An example is shown in Fig.~\ref{fig:2DHLFgrid}.
 \begin{figure}[!htbp]
@@ -551,6 +587,6 @@ If we lay out the circuit in 2D (hence the 2D HLF problem), it only requires cla
 \caption{\comment{Vector version please}\label{fig:2DHLFgrid} Implementation of the HLF problem on a 2D grid.}
 \end{figure}
 
-Now, comparing the quantum algorithm to a classical one, it has been proven that any probabilistic classical circuit with bounded input that solves the 2D HLF problem with high probability $\epsilon \leq 1/8$ must have depth increasing logarithmically with input size \cite{bib:bravyi2018quantum}. The speed-up here is provided by quantum non-locality\index{Quantum non-locality}. 
+Now, comparing the quantum algorithm to a classical one, it has been proven that any probabilistic classical circuit with bounded input that solves the 2D HLF problem with high probability, $\epsilon \leq 1/8$, must have depth increasing logarithmically with input size \cite{bib:bravyi2018quantum}. The speed-up here is provided by quantum non-locality\index{Quantum non-locality}. 
 
 The fact that a problem can be solved with constant depth quantum circuits, but not classical ones shows that there is a clear exponential computational separation between them. 
