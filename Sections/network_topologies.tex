@@ -262,7 +262,7 @@ This hybrid network topology is the norm today in our classical internet, and it
 
 \subsection{Scale-free networks}\index{Scale-free networks}\label{sec:scale_free_networks}
 
-Scale-free networks are not defined as obeying a specific topological structure, but rather as following a particular statistical distribution in the connectedness of their nodes. Specifically, the probability distribution function\index{Probability distribution function} for the order of vertices roughly follows a Pareto distribution or power law\index{Power law},
+Scale-free networks are not defined as obeying a specific topological structure, but rather as following a particular statistical distribution in the connectedness of their nodes. Specifically, the probability distribution function\index{Probability distribution function} for the order of vertices (degree distribution\index{Degree distribution}) roughly follows a Pareto distribution or power law\index{Power law},
 \begin{align}\label{eq:pareto_dist}
 	P(k) \sim k^{-\gamma},
 \end{align}
@@ -273,11 +273,39 @@ where $P(k)$ is the probability of a vertex having order $k$ (up to normalisatio
 \captionspacefig \caption{Examples of the power law, characteristic of the vertex order distribution in scale-free networks.}\label{fig:power_law}\index{Scale-free networks}\index{Power law}	
 \end{figure}
 
-This distribution is observed empirically in many real-world networks, and as such is more an observation about the typical behaviour of naturally occurring and evolving human-made networks than an explicit definition for their construction. However, owing to this particular statistical behaviour, and the underlying causations for their Pareto distribution, much has been researched and is known about the properties of scale-free networks.
+This distribution is observed empirically in many real-world networks and sociological scenarios, and as such is more an observation about the typical behaviour of naturally occurring and evolving human-made networks than an explicit definition for their construction. However, owing to this particular statistical behaviour, and the underlying causations for their Pareto distribution, much has been researched and is known about the properties of scale-free networks.
 
-One notable characteristic is their hierarchical structure, with a small number of very highly-connected `hubs'\index{Hub nodes} at the top of the food chain, which quickly connect onto smaller hubs, and so on down the food chain with decreasing connectivity.
+Scale-free networks arise naturally in systems exhibiting \textit{preferential attachment}\index{Preferential attachment}, i.e when a new node is added to the system it preferentially attaches to nodes that are already more highly connected. This yields a so-called \textit{fitness model}\index{Fitness model}.
 
-A feature of scale-free networks of especial interest in the context of computer networks is their robustness against node failure. Suppose we constructed a percolated (Sec.~\ref{sec:perc_topol}) instance of a typical scale-free network. Such a network is highly robust against random node/edge deletions compared to many other graph constructions, in the sense that a relatively large number of failures must occur to disconnect the graph. This makes the scale-free network characteristic a particularly attractive one from the perspective of the failure-tolerance of a network.
+According to the Bianconi-Barab{\'a}si fitness model\index{Bianconi-Barab{\'a}si fitness model} \cite{bib:BBfitness, bib:BAfitness}, let \mbox{$\eta_i>0$} be the \textit{fitness factor}\index{Fitness factors} of node $i$, which follow a distribution $\rho(\eta)$, characteristic of the network. Then the fitness parameters\index{Fitness parameters} are defined to be normalised such that,
+\begin{align}
+\Pi_i = \frac{\eta_i k_i}{\sum_j \eta_j k_j}.	
+\end{align}
+Upon adding a new node of degree $m$ to the network, the temporal dynamics will satisfy,
+\begin{align}
+\frac{\partial P(k_i)}{\partial t}= m\Pi_i.	
+\end{align}
+The probability distribution can then be shown to have solution,
+\begin{align}
+P(k) \approx \int \rho(\eta)\frac{C}{\eta}\left(\frac{m}{k}\right)^\frac{C}{\eta+1}\,d\eta,
+\end{align}
+where,
+\begin{align}
+	C &= \int \frac{\rho(\eta)\cdot\eta}{1-\beta(\eta)},\nonumber\\
+	\beta(\eta) &= \frac{\eta}{C}.
+\end{align}
+which is a linear combination of power law relationships, as required for the definition for scale-free.
+
+Intuitively, why would we expect computer networks (classical or quantum) to be scale-free? To answer this, we simply must establish whether the preferential attachment property will hold. In computer networks there are many reasons why we might expect this to be the case:
+\begin{itemize}
+	\item Distance\index{Cost vector analysis}: connecting to more highly-connected nodes reduces (on average) the number of channels data packets must traverse to reach their destination, making them `cheaper' in terms of their cost vector analysis (Sec.~\ref{sec:quantum_meas_cost}).
+	\item Availability\index{Availability}: larger nodes are more likely to have unused network sockets\index{Sockets} available for use by new nodes. For example, one is more likely to be able to successfully sign up for an internet connection with a major national ISP than a small, local upstart player.
+	\item Economies of scale\index{Economies of scale}: the dollar cost per connection of a larger node is likely to be less than for a smaller one, owing to economies of scale. For example, the cost per FLOP of a large-scale supercomputer is far less than for a desktop PC, and Google's data-centres experience lower cost-per-bandwidth on their internet connections than home-users connecting via their ISPs.
+\end{itemize}
+
+One notable characteristic of scale-free networks is their hierarchical structure, with a small number of very highly-connected `hubs'\index{Hub nodes} at the top of the food chain, which quickly connect onto smaller hubs, and so on down the food chain with decreasing connectivity.
+
+A feature of scale-free networks of especial interest in the context of computer networks is their robustness against node failure. Suppose we constructed a percolated (Sec.~\ref{sec:perc_topol}) instance of a typical scale-free network. Such a network is highly robust against \textit{random} node/edge deletions compared to many other graph constructions, in the sense that a relatively large number of failures must occur to disconnect the graph. This makes the scale-free network characteristic a particularly attractive one from the perspective of the failure-tolerance of a network. It should be noted that, on the other hand, a scale-free network is highly vulnerable to \textit{targeted} node/edge deletions, that specifically target the highly-connected nodes. A targeted attack against major hubs could disconnect the network with relatively few attacks. This brings with it important geo-strategic\index{Geo-strategic politics} considerations when constructing network infrastructure.
 
 Scale-free networks typically exhibit extremely small diameter\index{Graph diameter} (average distance between nodes), scaling as \cite{bib:PhysRevLett.90.058701},
 \begin{align}
@@ -317,9 +345,13 @@ The internet web-graph has been observed to be a scale-free network (Sec.~\ref{s
 
 \subsection{Network robustness}\index{Network robustness}
 
-A key feature of any network topology is its robustness against node or channel failures. In general, the number of redundant paths between two points in a graph is an indicator of its robustness against failures.
+A key feature of any network topology is its robustness against node or channel failures. This is important from the perspective of naturally occurring hardware faults, and also from a geo-strategic perspective, where adversaries may be launching attacks against the network. In general, there are two main contributing factors to network robustness:
+\begin{itemize}
+	\item Redundancy\index{Redundancy}: the number of redundant paths between two points in a graph stipulates how many backups there are to finding a route to a destination in the advent of one route failing.
+	\item Diameter\index{Diameter}: the chance of a data packet encountering a faulty node/channel increases with the number of hops required to the reach its destination. Graphs with smaller diameter are hence less vulnerable.
+\end{itemize}
 
-The extreme case of network robustness is the complete graph, $K_n$, which has P2P links between every pair of nodes. Therefore, if a single channel fails, there are \textit{always} alternate paths taking us between nodes. On the opposing extreme are tree graphs, which contain no redundancy whatsoever, and just a single failure will disconnect the network, making certain routes impossible. Scale-free networks sit in the intermediate zone, but are relatively robust against the failure of random nodes/links, but are vulnerable to conspiratorial failures, which target the elite, highly connected hub-nodes.
+The extreme case of network robustness is the complete graph, $K_n$, which has P2P links between every pair of nodes. Therefore, if a single channel fails, there are \textit{always} alternate paths taking us between nodes. On the opposing extreme are tree graphs, which contain no redundancy whatsoever, and just a single failure will disconnect the network, making certain routes impossible. Scale-free networks sit in the intermediate zone, but are relatively robust against the failure of random nodes/links, but are vulnerable to conspiratorial failures, which target the elite, highly connected hub-nodes\footnote{The 1\%.}.
 
 Fig.~\ref{fig:graph_deletions} illustrates some examples of these two extreme cases.
 
