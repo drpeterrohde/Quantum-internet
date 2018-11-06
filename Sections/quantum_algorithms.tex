@@ -515,11 +515,11 @@ to hold, in order for a quantum algorithm to run successfully. If $d$ is large, 
 
 The result is for the following hidden linear function (HLF) problem\index{Hidden linear function problem} \cite{bib:bravyi2018quantum}. Given an \mbox{$n\times n$} symmetric binary matrix\index{Symmetric binary matrices} $A$, we specify a quadratic form\index{Quadratic form},
 \begin{align}
-q(x) = \vec x^T A \vec x \, (\mathrm{mod} \,4).
+q(\vec x) = \vec x^T A \vec x \, (\mathrm{mod} \,4).
 \end{align}
 The goal is to find a binary vector $\vec z \in \{0,1\}^n$ such that,
 \begin{align}
-q(x) = 2 \vec z^T \vec x,
+q(\vec x) = 2 \vec z^T \vec x,
 \end{align}
 for all $\vec x$ in the binary null-space of $A$.
 
@@ -540,9 +540,9 @@ function ShallowQuantumCircuit():
     \end{align}
     \item Apply the oracle,
 	\begin{align}
-		\hat{U}_q \ket{x} = i^{q(x)} \ket{x},
+		\hat{U}_q \ket{\vec x} = i^{q(\vec x)} \ket{\vec x},
 	\end{align}
-	for bit-string \mbox{${\vec x}\in \{0,1\}^{n}$}, composed of a product of $CZ$ gates\index{Controlled-phase gates} and phase-shifts\index{Phase-shift gates},
+	for bit-string \mbox{${\vec x}\in \{0,1\}^{n}$}, composed of a product of CZ gates\index{Controlled-phase gates} and phase-shifts\index{Phase-shift gates},
 	\begin{align}
 \hat{S}_i = \begin{pmatrix}
     1 & 0\\
@@ -555,11 +555,12 @@ function ShallowQuantumCircuit():
     \end{align}
     \item The output state is,
     \begin{align}
-    \ket{\psi_\mathrm{out}} = \hat{H}^{\otimes n}\hat{U}_q\hat{H}^{\otimes n}\ket{0}^{\otimes n}.
+    \ket{\psi_\mathrm{out}} &= \hat{H}^{\otimes n}\cdot\hat{U}_q\cdot\hat{H}^{\otimes n}\ket{0}^{\otimes n}\nonumber\\
+    &= \frac{1}{2^n}\sum_{\vec x,\vec z \in \{ 0,1\}^n} i^{q(\vec x)} (-1)^{\vec z^T \vec x}\ket{z}.
     \end{align}
     \item Measure all qubits in the computational basis, yielding measurement outcomes \mbox{${\vec z}\in \{0,1\}^{n}$}, with probabilities,
     \begin{align}
-   	 P(\vec z) = |\bra{\vec z}\hat{H}^{\otimes n}\hat{U}_q\hat{H}^{\otimes n}\ket{0}^{\otimes n}|^2.	
+   	 P(\vec z) = |\bra{\vec z}\hat{H}^{\otimes n}\cdot\hat{U}_q\cdot\hat{H}^{\otimes n}\ket{0}^{\otimes n}|^2.	
     \end{align}
 	\item Repeat protocol \mbox{$O(\mathrm{poly}(n))$} times.
 	\item $\Box$
@@ -576,17 +577,17 @@ function ShallowQuantumCircuit():
 \captionspacealg \caption{Quantum computing using shallow circuits, where circuit depth scales as \mbox{$O(\log d)$}.} \label{alg:shallow_circs}
 \end{table}
 
-Here a quantum circuit $U_q$ acts on the computational basis states \mbox{$\vec x \in \{ 0,1\}^n$} via a generalised controlled-phase operation,
+Here a quantum circuit $\hat{U}_q$ acts on the computational basis states \mbox{$\vec x \in \{ 0,1\}^n$} via a generalised controlled-phase operation,
 \begin{align}
-U_q \ket{x} = i^{q(x)} \ket{x},
+\hat{U}_q \ket{\vec x} = i^{q(\vec x)} \ket{\vec x},
 \end{align}
-for some oracle function $q(x)$. The solution is obtained by measuring the state $\ket{\Psi_q}$ in the computational basis. Here,
+for some oracle function $q(\vec x)$. The solution is obtained by measuring the state $\ket{\Psi_q}$ in the computational basis. Here,
 \begin{align}
-\ket{\Psi_q} &= H^{\otimes n }U_q H^{\otimes n} \ket{0}^{\otimes n} \nonumber \\
-&= \frac{1}{2^n}\sum_{\vec x,\vec z \in \{ 0,1\}^n} i^{q(x)} (-1)^{\vec z^T x}\ket{z}.
+\ket{\Psi_q} &= \hat{H}^{\otimes n }\cdot\hat{U}_q\cdot\hat{H}^{\otimes n} \ket{0}^{\otimes n} \nonumber \\
+&= \frac{1}{2^n}\sum_{\vec x,\vec z \in \{ 0,1\}^n} i^{q(\vec x)} (-1)^{\vec z^T \vec x}\ket{\vec z}.
 \end{align}
 
-The circuit $U_q$ can be decomposed into a product of CZ gates and phase-shift gates, which all commute, thereby allowing the shallow circuit-depth.
+The circuit $\hat{U}_q$ can be decomposed into a product of CZ gates and phase-shift gates, which all commute, thereby allowing the shallow circuit-depth.
 
 If we lay out the circuit in 2D (hence the 2D HLF problem), it only requires classically-controlled Clifford gates\index{Clifford gates} between nearest neighbour qubits on a 2D grid. An example is shown in Fig.~\ref{fig:2DHLFgrid}.
 \begin{figure}[!htbp]
