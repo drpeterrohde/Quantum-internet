@@ -649,10 +649,14 @@ Since quantum memories are subject to errors that accumulate with time, long-lif
 
 To achieve this, standard QEC codes (Sec.~\ref{sec:QOS}) can be employed to encode a number of logical qubits into a larger number of physical qubits, which are held in quantum memory and undergo active error correction. Any of the previously discussed QEC techniques are applicable to this.
 
-An alternate approach is to use W-state encoding\index{W-state encoding} to implement unitary error averaging (Sec.~\ref{sec:error_averaging})\index{Unitary error averaging}, where the unitaries are single-qubit channels \cite{errorfilteringpaper, bib:MadhavPeterLund}. The protocol is shown in Fig.~\ref{fig:W_state_memory}. We begin by using a QFT fanout\index{Fanout} operation to encode a dual-rail encoded qubit\index{Dual-rail encoding} across $N$ optical modes. Each optical mode then feeds into a solid-state qubit (e.g a two-level atom), which ideally implement an identity channel but are inevitably subject to usual error processes such as dephasing and amplitude damping (characterised by $T_1$ and $T_2$ times\index{T$_2$-time}\index{T$_1$-time}). Finally, the inverse fanout operation is applied and success of the protocol is defined as there being exactly one photon between the first two (`success') output modes. If a photon is detected in any of the other (`failure') modes the state is presumed erroneous and discarded.
+An alternate approach is to use W-state encoding\index{W-state encoding} to implement unitary error averaging (Sec.~\ref{sec:error_averaging})\index{Unitary error averaging}, where the unitaries are single-qubit channels \cite{errorfilteringpaper, bib:MadhavPeterLund}. The protocol is shown in Fig.~\ref{fig:W_state_memory}. We begin by using a QFT fanout\index{Fanout} operation to encode a dual-rail encoded qubit\index{Dual-rail encoding} across $N$ optical modes. Each optical mode then feeds into a solid-state qubit (e.g a two-level atom), which ideally implement an identity channel but are inevitably subject to usual error processes such as dephasing and amplitude damping (characterised by $T_1$- and $T_2$-times\index{T$_2$-time}\index{T$_1$-time}). Finally, the inverse fanout operation is applied and success of the protocol is defined as there being exactly one photon between the first two (`success') output modes. If a photon is detected in any of the other (`failure') modes the state is presumed erroneous and discarded.
 
 \begin{figure}[!htpb]
-	\includegraphics[clip=true, width=0.475\textwidth]{W_state_memory}
+	\if 3\pubmode
+	\includegraphics[clip=true, width=0.7\textwidth]{W_state_memory}
+	\else
+		\includegraphics[clip=true, width=0.475\textwidth]{W_state_memory} has  has 
+	\fi
 	\caption{Quantum memory based on W-state encoding. Rails represent optical modes, and the input logical qubit state, $\ket{L}$, is represented using dual-rail encoding. The QFT fanout operation maps each of the two input basis states to one of two orthogonal $N$-qubit W-states, $\ket{W}$, differing only by their phase relationships. These are then fed into a bank of $N$ quantum memories. To readout the memories we convert back to optical encoding and decode using the inverse QFT operation. Success of the protocol is defined as there being exactly one photon between the first two `success' output modes. If a photon leaks into any of the other `failure' output modes we discard the state and assume it was erroneous. Thus error detection is heralded via the presence or absence of a photon in the `failure' modes.}\label{fig:W_state_memory}
 \end{figure}
 
@@ -672,13 +676,14 @@ An alternate approach is to use W-state encoding\index{W-state encoding} to impl
 
 \subsection{Random number generation} \index{Random number generation}
 
-\comment{Add stuff on properties required for cryptographic purposes.}
+\famousquote{God does not play dice!}{Albert Einstein}
+\newline
 
 Perhaps the simplest quantum information processing task is that of perfect random number generation. True random numbers have widespread applications in cryptography, Monte-Carlo simulations, and any type of randomised (e.g \textbf{BPP}\index{BPP}) algorithm.
 
-Classical random number generators are actually deterministic, but so difficult to predict that we accept them to be as good as random. But for some applications this isn't enough, and we must make sure that no correlations of any type exist between different random numbers, or between the random numbers and their environment.
+Classical random number generators are actually deterministic, following the laws of classical physics, but so difficult to predict that we accept them to be as good as random. But for some applications this isn't enough, and we must make sure that no correlations of any type exist between different random numbers, or between the random numbers and their environment.
 
-This can be achieved in many different ways quantum mechanically. Ultimately, they are all based on the Heisenberg uncertainty principle, that certain quantum mechanical measurements yield uncertainty. The procedure is shown in Alg.~\ref{alg:random_number}.
+This can be achieved in many different ways quantum mechanically. Ultimately, they are all based on the Heisenberg uncertainty principle, that certain quantum mechanical measurements yield uncertainty. The procedure is shown in Alg.~\ref{alg:random_number}, and a simple optical implementation is shown in Fig.~\ref{fig:random_number_generation}.
 
 \startalgtable
 \begin{table}[!htbp]
@@ -710,12 +715,19 @@ function RandomBit():
     \item $\Box$
 \end{enumerate}}
 \end{mdframed}
-\captionspacealg \caption{Procedure for the generation of random bit-strings. Assuming the device is perfectly implementing this procedure, we will measure a perfect random 50/50 distribution between the two measurement outcomes. Note that the procedure requires no quantum interference, and no entanglement. Only single-qubit state preparation and measurement are required. Thus, a single-photon source, wave-plate, polarisation filter, and photo-detector are sufficient for its realisation. Favourably, if the detector is inefficient it simply reduces the bit-rate, but does not compromise the randomness of the distribution.} \label{alg:random_number}
+\captionspacealg \caption{Procedure for the generation of random bit-strings. Assuming the device is perfectly implementing this procedure, we will measure a perfect random 50/50 distribution between the two measurement outcomes. Note that the procedure requires no quantum interference, and no entanglement. Only single-qubit state preparation and measurement are required. Thus, a single-photon source, wave-plate, polarisation filter, and photo-detector are sufficient for its realisation. Favourably, if the detector is inefficient it simply reduces the bit-rate, but does not compromise the randomness of the distribution. The scheme is very robust, in the sense that there are no temporal synchronisation or mode-matching requirements.} \label{alg:random_number}
 \end{table}
 
-The cynics amongst us might question the non-determinism\index{Non-determinism of quantum mechanics} of the laws of Nature (`God does not play dice!' -- Albert Einstein), and ask whether quantum random numbers really are truly random (in the sense of non-determinism), or whether they also are just too hard to predict that we treat them as effectively random. The answer to this is that it has been proven that quantum mechanics is inconsistent with `hidden variable theories' \cite{Bell}\index{Hidden variable theory}, i.e that there is an underlying, but inaccessible determinism in the world, which is guiding quantum measurements in a completely deterministic manner. This disproof effectively validates the notion of quantum mechanical perfect random number generation.
+\begin{figure}[!htpb]
+	\includegraphics[width=0.4\textwidth]{random_number_generation}
+	\caption{A simple optical implementation for a quantum binary random number generator. The source prepares single photons, which pass through a polarisation filter (\textit{F}) to retain only horizontally polarised photons, $\ket{H}$. A wave-plate (\textit{WP}) then rotates the polarisation into the diagonal basis, yielding a stream of $\ket{+}$ polarised photons. These are then separated into horizontal and vertical components via a polarising beamsplitter (\textit{PBS}), each of which are independently photo-detected (\textit{D}). If correctly implemented, the two detectors click one at a time, each with 50\% probability, and the random stream is inherently non-deterministic, guaranteed by the non-determinism of quantum mechanics. Random numbers are produced at a rate of 1 bit per photo-detection.}\label{fig:random_number_generation}
+\end{figure}
+
+The cynics amongst us might question the non-determinism\index{Non-determinism of quantum mechanics} of the laws of Nature, and ask whether quantum random numbers really are truly random (in the sense of non-determinism), or whether they also are just too hard to predict that we treat them as effectively random. The answer to this is that it has been proven that quantum mechanics is inconsistent with `hidden variable theories' \cite{Bell}\index{Hidden variable theory}, i.e that there is an underlying, but inaccessible determinism in the world, which is guiding quantum measurements in a completely deterministic manner. This disproof effectively validates the notion of quantum mechanical perfect random number generation.
 
 Consider the scenario where a client needs a stream of true random numbers for use in her Monte-Carlo simulation algorithm or as a secret-key for her email encryption. She has limited quantum resources herself, so she outsources it to her better-equipped mate. Depending on her own resource limitations and potential security considerations, her friend could either: (1) implement the full protocol described above, providing her with a classical random bitstream; or (2) only take care of photon generation, providing her with a perpetual source of high-quality photons for her to measure herself using a simple photo-detector. (1) and (2) would both be suitable if the intention was to apply the source of randomness to a Monte-Carlo simulation. But in a cryptographic scenario, where the randomness is being used for key generation, clearly Alice could not outsource the measurement stage without revealing her secret-key. In this instance, Bob can act as the provider of photons, while Alice does the measurements herself so as to keep her random bit-string secret.
+
+For cryptographic purposes , there are far more stringent constraints placed upon our random number generator than for use in say a Monte-Carlo computer simulation -- cryptographic random number generation\index{Cryptographic random number generation}. In this context, the demands placed upon the amount of bias or correlations in the random number stream are very stringent. An enormous amount of research has been invested into this topic, and sophisticated statistical tests have been developed for establishing crypto-worthiness of a random number stream. The fact that quantum random numbers, via the inherent non-determinism of quantum mechanics, do not obey any hidden variable theory, implies there is intrinsically no underlying `seed'\index{Random seed} to the random number stream, which reveals the entire deterministic sequence. This is unlike any classical generator, where there always is such a seed, but it is simply taken to be too hard to determine.
 
 This scenario is an obvious example of where a UDP-like \textsc{Send-and-forget} protocol may be viable. Unlike most other applications, Bob is broadcasting a stream of identical, pure quantum states, that are not entangled with any peripheral system, and are easily replicated, with no correlations between distinct photons. Thus, if any particular photon fails to reach Alice, it matters not, as she can simply await the next one emanating from Bob's bombardment of photons (the `shotgun' approach\index{Shotgun protocol}). There are no QoS requirements.
 
@@ -1125,11 +1137,11 @@ In principle, technology for more stable clocks already exists, with atomic cloc
 
 \begin{figure*}[!htbp]
 \includegraphics[clip=true, width=\textwidth]{space_3}
-\captionspacefig \caption{Quantum clock synchronisation schemes. (top) The proposal by Jozsa \& Dowling \textit{et al.} where a singlet state\index{Bell states} is shared and measured in an ensemble of qubits \cite{bib:jozsa00}. (bottom) The proposal by Lukin \& Ye \textit{et al.} where a GHZ state\index{Greenberger-Horne-Zeilinger (GHZ) states} is distributed between satellites to measure the frequency drift at the Heisenberg limit \cite{bib:komar14}.}
+\captionspacefig \caption{\comment{Better figure, this is shit}Quantum clock synchronisation schemes. (top) The proposal by Jozsa \& Dowling \textit{et al.} where a singlet state\index{Bell states} is shared and measured in an ensemble of qubits \cite{bib:jozsa00}. (bottom) The proposal by Lukin \& Ye \textit{et al.} where a GHZ state\index{Greenberger-Horne-Zeilinger (GHZ) states} is distributed between satellites to measure the frequency drift at the Heisenberg limit \cite{bib:komar14}.}
 \label{fig:space_3}
 \end{figure*}
 
-Previous works have examined the problem of clock synchronisation in space \comment{(see also Sec. [TB: refer to other section on clock sync])}. In the proposal of Jozsa \textit{et al.}, many copies of shared entanglement in a singlet state\index{Bell states} is first distributed and stored on the clock states of an atomic clock \cite{bib:jozsa00}. The measurement is then performed by one party, which collapses the states simultaneously across all parties, and the time evolution of the states begins.
+Previous works have examined the problem of clock synchronisation in space. In the proposal of Jozsa \textit{et al.}, many copies of shared entanglement in a singlet state\index{Bell states} is first distributed and stored on the clock states of an atomic clock \cite{bib:jozsa00}. The measurement is then performed by one party, which collapses the states simultaneously across all parties, and the time evolution of the states begins.
 
 Classical information is exchanged between them, which reveals the time elapsed since the measurement, which can be used to synchronise the clocks. While the original protocol only allowed clock synchronisation between two parties, similar ideas were used to extend this to the multiparty context \cite{bib:krvco2002quantum, bib:ben2011optimized, bib:ren2012clock}.
 
@@ -1142,10 +1154,6 @@ There are however several outstanding problems with the quantum clock synchronis
 \frac{1}{\sqrt{2}} ( | 0 \rangle_A | 1 \rangle_B - e^{i \delta} | 1 \rangle_A | 0 \rangle_B ),
 \end{align}
 (a Bell pair augmented by a local phase) one obtains an offset to the synchronisations between the two parties. In practice, such a phase could arise from decoherence induced noise, or differences in the basis conventions chosen by the two parties. Thus, in practice entanglement purification\index{Entanglement purification} would be required to produce a singlet state with \mbox{$\delta=0$} prior to executing the protocol. However, it was argued that to perform the entanglement purification quantum circuit correctly, the timing of the quantum gates would need to be controlled, which requires synchronised clocks \cite{bib:preskill2000quantum} --  this renders synchronisation impossible. It has previously been shown that such a phase cannot be eliminated using asynchronous entanglement purification\index{Entanglement purification} \cite{bib:yurtsever02}, and hence the protocol remains incomplete in the general case where imperfect singlet pairs\index{Bell states} are shared.
-
-\comment{Need to reference figure}
-
-\comment{Peter's start - fix this}
 
 A quantum protocol for clock synchronisation based on shared entanglement is given in Alg.~\ref{alg:clock_sync}.
 
