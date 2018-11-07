@@ -157,7 +157,7 @@ Digital signatures can be easily implemented using the RSA protocol\index{RSA pr
 \texttt{
 function DigitalSignature(message,keyPair):
 \begin{enumerate}
-\item Alice prepares a short \textit{digest}\index{Digest} of her message using a cryptographic hash function\index{Hash functions}, such as SHA256\index{SHA256} (Sec.~\ref{sec:hashing}),\\
+\item Alice prepares a short \textit{digest}\index{Digest} of her message using a cryptographic hash function\index{Hash!Functions}, such as SHA256\index{SHA256} (Sec.~\ref{sec:hashing}),\\
 	\vspace{1mm} 
 	$digest=SHA256(message)$
 	\item Alice encrypts the digest using her private-key. This forms the `digital signature',\\
@@ -198,7 +198,7 @@ Because RSA-encrypted messages are long, digital signature protocols typically d
 % Hashing
 %
 
-\subsection{Hashing} \label{sec:hashing} \index{Hash functions}
+\subsection{Hashing} \label{sec:hashing} \index{Hash!Functions}
 
 Hash functions are functions that map a long bit-string of arbitrary length to a short, fixed-size bit-string with quasi-random behaviour,
 \begin{align}
@@ -210,9 +210,9 @@ Hash functions have broad applicability throughout computer science, but here we
 
 The standard cryptographic hash function with mainstream adoption is the 256-bit Secure Hashing Algorithm (SHA256\index{SHA256}), which generates 256-bit hashes. The algorithm is extremely efficient to implement digitally, and exhibits $O(n)$ runtime for input string length $n$.
 
-Cryptographically, hash functions are useful for creating message digests\index{Message digests}, which act as a highly condensed checksum\index{Checksum} of a document that can be utilised in a digital signature (Sec.~\ref{sec:dig_sig}).
+Cryptographically, hash functions are useful for creating message digests\index{Message digests}, which act as a highly condensed checksum\index{Checksums} of a document that can be utilised in a digital signature (Sec.~\ref{sec:dig_sig}).
 
-Note that because the function in general maps longer strings to shorter ones, there are necessarily \textit{collisions}\index{Hash collisions} -- multiple inputs for a given output. However, for strong cryptographic hash functions their behaviour is sufficiently random that two distinct messages will almost certainly yield completely different hashes (even if the messages are very similar), making it all but impossible for someone to make the claim that Alice said something she did not. This property is extremely important for the security of digital signatures.
+Note that because the function in general maps longer strings to shorter ones, there are necessarily \textit{collisions}\index{Hash!Collisions} -- multiple inputs for a given output. However, for strong cryptographic hash functions their behaviour is sufficiently random that two distinct messages will almost certainly yield completely different hashes (even if the messages are very similar), making it all but impossible for someone to make the claim that Alice said something she did not. This property is extremely important for the security of digital signatures.
 
 %
 % Attacks On Classical Cryptography
@@ -234,7 +234,7 @@ All known classical attacks against any respected classical cryptosystem involve
 % Brute-Force
 %
 
-\subsubsection{Brute-force}\index{Brute-force attacks}\label{sec:brute_force_attack}
+\subsubsection{Brute-force}\index{Brute-force!Attacks}\label{sec:brute_force_attack}
 
 The most obvious approach to cracking a cryptosystem is to systematically try out all possible keys until we find one that correctly decodes the encrypted message. This is also the most na\"ive approach, and one which is computationally intractable for real-world key lengths. Specifically, for a key length of $k$ bits (\mbox{$k=256$} for AES256), there are $2^k$ possible keys to try, and on average we will wait for $2^{k-1}$ trials before choosing the right one. Clearly an average waiting time of $2^{255}$ is not plausible!
 
@@ -248,7 +248,7 @@ Far better than waiting the age of the universe for the right key to turn up, is
 
 \begin{itemize}
 	\item Known plaintext attacks (KPA)\index{Known plaintext attack}: Through alternate means of espionage, the attacker is able to possess \textit{both} a ciphertext and its associated plaintext. Knowing both the input and output to the encryption algorithm may then reveal information about the key relating them. This technique was important to Alan Turing's successful cracking of the German Enigma\index{Enigma machines} encryption protocol during World War II.
-	\item Chosen plaintext attack (CPA)\index{Chosen plaintext attack}: The same as a KPA except that the adversary has the ability to choose what the known plaintext is, a more challenging prospect to orchestrate.
+	\item Chosen plaintext attack (CPA)\index{Chosen plaintext attacks}: The same as a KPA except that the adversary has the ability to choose what the known plaintext is, a more challenging prospect to orchestrate.
 	\item Linear cryptanalysis\index{Linear cryptanalysis}: A technique for representing ciphers as linear systems, to which KPA are applied.
 	\item Differential cryptanalysis\index{Differential cryptanalysis}: We analyse how changes in input bits propagate through the cipher to modulate output bits. Typically this type of technique operates as a CPA.
 \end{itemize}
@@ -277,7 +277,7 @@ Having established that classical attacks against strong classical cryptosystems
 % Brute-Force
 %
 
-\subsubsection{Brute-force}\index{Brute-force attacks}\label{sec:brute_force_attacks}
+\subsubsection{Brute-force}\index{Brute-force!Attacks}\label{sec:brute_force_attacks}
 
 A brute-force attack by a quantum computer does not offer us the exponential improvement attacker Eve might hope for. However, we can gain a quadratic improvement by cleverly exploiting Grover's search algorithm (Sec.~\ref{sec:quantum_algs})\index{Grover's algorithm}.
 
@@ -285,7 +285,7 @@ To do this, we treat the brute-force cracking algorithm as a satisfiability prob
 
 Note that when performing a brute-force attack against a private encryption key\index{Private-key cryptography}, a quadratic speedup effectively halves the key length in terms of algorithmic runtime, since \mbox{$O(\sqrt{2^k}) = O(2^{k/2})$}. Thus, in the quantum era private-key lengths will need to be doubled to maintain an equivalent level of security against brute-force attacks.
 
-This same technique of treating encryption as an oracle within a quantum search algorithm can be utilised to invert hash functions\index{Hash functions}. However, in this case there will necessarily be multiple solutions owing to collisions.
+This same technique of treating encryption as an oracle within a quantum search algorithm can be utilised to invert hash functions\index{Hash!Functions}. However, in this case there will necessarily be multiple solutions owing to collisions.
 
 %
 % Cryptanalysis
@@ -319,17 +319,17 @@ More recent developments, such as the Ethereum project\index{Ethereum}, develop 
 
 In the Blockchain protocol, the validity of contracts and transactions is recognised collectively by participants using an encrypted digital ledger\index{Ledger}. The ledger records the complete history of all Blockchain transactions, which are digitally signed (Sec.~\ref{sec:hashing}) by network participants using elliptic-curve public-key cryptography\index{Digital signatures}\index{Elliptic-curve cryptography}. A democratic process ensures that, provided a single user doesn't monopolise the network, recorded transactions are legitimate, recognised collectively and democratically. This is secured by network participants digitally signing off on transactions as they take place.
 
-The Bitcoin protocol builds on top of the Blockchain to create a secure digital cryptocurrency. This requires the introduction of another sub-protocol, \textit{mining}\index{Bitcoin mining}, where units of currency (`coins'\index{Coins}) are created. The protocol cryptographically ensures that there is an upper-bound on the number of coins that can exist, thereby preventing forgery and an inflationary blowout in the money supply.
+The Bitcoin protocol builds on top of the Blockchain to create a secure digital cryptocurrency. This requires the introduction of another sub-protocol, \textit{mining}\index{Bitcoin!Mining}, where units of currency (`coins'\index{Coins}) are created. The protocol cryptographically ensures that there is an upper-bound on the number of coins that can exist, thereby preventing forgery and an inflationary blowout in the money supply.
 
-The mining process is based upon the computational hardness of inverting (double) SHA256 hashing\index{Hash functions}\index{SHA256}. A legitimate Bitcoin is defined by a string with a hash satisfying a thoughtfully chosen constraint, specifically one which hashes to a value within some range,
+The mining process is based upon the computational hardness of inverting (double) SHA256 hashing\index{Hash!Functions}\index{SHA256}. A legitimate Bitcoin is defined by a string with a hash satisfying a thoughtfully chosen constraint, specifically one which hashes to a value within some range,
 \begin{align}
 	\epsilon_\mathrm{lower}\leq \mathrm{SHA256}(\mathrm{SHA256}(x_\mathrm{coin})) \leq \epsilon_\mathrm{upper}.
 \end{align}
-This is slightly weaker than inverting hash functions, but is nonetheless a task that can only be approached via brute-force hashing in the forward direction. This associates computational complexity with the mining process, and hence computational integrity of the money supply, whilst upper bounding the number of unique coins that can exist. This technique is known as `proof-of-work'\index{Proof-of-work}, for associating something of value with proof that certain amounts of computation were invested into achieving it\footnote{In future implementations of Blockchain protocols, the proof-of-work required for a given protocol can be arbitrarily manipulated to accommodate for technological advances in computational power, for example via the adoption of quantum computing. The amount of work required to satisfy the constraint grows as we narrow the range \mbox{$\epsilon_\mathrm{upper}-\epsilon_\mathrm{lower}$}, providing us with much leverage to manipulate the complexity of the proof-of-work, and hence the rate of growth in the money supply, equivalently the rate of inflation\index{Inflation rate}.}. This idea was originally borrowed from the Hashcash protocol\index{Hashcash}, where proof-of-work is employed to associate work (and hence monetary value) with sending emails so as to eliminate automated spamming bots.
+This is slightly weaker than inverting hash functions, but is nonetheless a task that can only be approached via brute-force hashing in the forward direction. This associates computational complexity with the mining process, and hence computational integrity of the money supply, whilst upper bounding the number of unique coins that can exist. This technique is known as `proof-of-work'\index{Proof-of-work}, for associating something of value with proof that certain amounts of computation were invested into achieving it\footnote{In future implementations of Blockchain protocols, the proof-of-work required for a given protocol can be arbitrarily manipulated to accommodate for technological advances in computational power, for example via the adoption of quantum computing. The amount of work required to satisfy the constraint grows as we narrow the range \mbox{$\epsilon_\mathrm{upper}-\epsilon_\mathrm{lower}$}, providing us with much leverage to manipulate the complexity of the proof-of-work, and hence the rate of growth in the money supply, equivalently the rate of inflation\index{Inflation!Rate}.}. This idea was originally borrowed from the Hashcash protocol\index{Hashcash}, where proof-of-work is employed to associate work (and hence monetary value) with sending emails so as to eliminate automated spamming bots.
 
 The two key algorithms for Bitcoin and the Blockchain are therefore hashing and public-key digital signatures. Both of these are subject to enhanced quantum attacks.
 
-Inverse hashing does not have any known quantum algorithm with exponential improvement, however using a Grover search\index{Grover's algorithm} one can achieve a quadratic speedup, using the same idea as for enhancing \textbf{NP}-complete problems by treating the hash function as a search oracle\index{Oracles}. This however does not pose a fundamental security concern as it will speed up the Bitcoin mining process, but does not circumvent the upper-bound on the number of coins that may be in existence. Already classical mining has pushed the Bitcoin money supply close to its asymptotic maximum and there is limited room for additional mining\footnote{Bitcoin mining has gained so much traction and become so competitive that desktop PCs have become uneconomical for mining. Instead miners are resorting to utilising specialised hardware in the form of CUDA cores\index{CUDA cores}, FPGAs\index{FPGA} and ASICs\index{ASIC} (or by secretly using the company supercomputer while the boss isn't looking).}.
+Inverse hashing does not have any known quantum algorithm with exponential improvement, however using a Grover search\index{Grover's algorithm} one can achieve a quadratic speedup, using the same idea as for enhancing \textbf{NP}-complete problems by treating the hash function as a search oracle\index{Oracles}. This however does not pose a fundamental security concern as it will speed up the Bitcoin mining process, but does not circumvent the upper-bound on the number of coins that may be in existence. Already classical mining has pushed the Bitcoin money supply close to its asymptotic maximum and there is limited room for additional mining\footnote{Bitcoin mining has gained so much traction and become so competitive that desktop PCs have become uneconomical for mining. Instead miners are resorting to utilising specialised hardware in the form of CUDA cores\index{CUDA}, FPGAs\index{FPGA} and ASICs\index{ASIC} (or by secretly using the company supercomputer while the boss isn't looking).}.
 
 Elliptic-curve public-key cryptography, like RSA, has a known efficient quantum attack via Shor's algorithm\index{Shor's algorithm}. In the context of implementing digital signatures this implies that an adversary could fraudulently sign off on illegitimate transactions, thereby committing falsified contracts to the Blockchain.
 
@@ -365,9 +365,9 @@ Thankfully, there are two saving graces. First of all, much research is being ca
 
 Aside from quantum computing, a central use for quantum technologies is in cryptography \cite{bib:Gisin02}. The demand for secure cryptography is now extremely important in the context of electronic commerce and general security of information transmission in the internet age. Electronic currencies such as Bitcoin\index{Bitcoin} depend on cryptographic protocols in order to secure the value of assets, assign ownership certificates\index{Ownership certificates}, and secure the currency against fraud. However, such protocols are based upon the computational complexity of certain mathematical problems (i.e computational security\index{Computational security}), and are not fundamentally secure in the presence of limitless computational resources, or quantum computers. Therefore, using quantum mechanical protocols based on physical principles (i.e information-theoretic security\index{Information-theoretic security}) rather than computational limitations, are favourable for future-proofing ourselves.
 
-Quantum key distribution (QKD) protocols facilitate shared, secret randomness, where any intercept-resend\index{Intercept-resend attack} (or man-in-the-middle) attack may be detected and rejected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle\index{Heisenberg uncertainty principle} and no-cloning theorem\index{No-cloning theorem}). This shared, secret randomness may subsequently be employed in a one-time pad cipher\index{One-time pad}, presenting us with true information-theoretic security\index{Information-theoretic security}.
+Quantum key distribution (QKD) protocols facilitate shared, secret randomness, where any intercept-resend\index{Intercept-resend attacks} (or man-in-the-middle) attack may be detected and rejected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle\index{Heisenberg uncertainty principle} and no-cloning theorem\index{No-cloning theorem}). This shared, secret randomness may subsequently be employed in a one-time pad cipher\index{One-time pad}, presenting us with true information-theoretic security\index{Information-theoretic security}.
 
-The central notion to QKD protocols, in their numerous manifestations, is that measurement of quantum states invokes a wavefunction collapse. When measuring a state in a basis for which that state is not an eigenstate, this necessarily changes the state. QKD relies on this simple result from quantum mechanics to reveal any eavesdropper performing an intercept-resend attack\index{Intercept-resend attack} via the changes to transmitted quantum states that this would induce.
+The central notion to QKD protocols, in their numerous manifestations, is that measurement of quantum states invokes a wavefunction collapse. When measuring a state in a basis for which that state is not an eigenstate, this necessarily changes the state. QKD relies on this simple result from quantum mechanics to reveal any eavesdropper performing an intercept-resend attack\index{Intercept-resend attacks} via the changes to transmitted quantum states that this would induce.
 
 QKD is a relatively mature technology with already several commercial systems being available off-the-shelf\footnote{Examples of companies selling off-the-shelf QKD hardware include \href{http://www.magiqtech.com}{MagiQ} and \href{http://www.idquantique.com}{ID Quantique}.} and initial space-based implementations have been successfully demonstrated \cite{Pan}.
 
@@ -423,9 +423,9 @@ or,
 \captionspacefig \caption{Example execution of the BB84 protocol for securely sharing random bit-strings between Alice and Bob as per Alg.~\ref{alg:bb84}. At the conclusion of the protocol, some bits are discarded (red `X'), with those remaining guaranteed to be secret between the two parties.} \label{fig:BB84_example}	
 \end{figure}
 
-To understand the secrecy of the protocol as described in Alg.~\ref{alg:bb84}, suppose an eavesdropper, Eve, were to perform an intercept-resend\index{Intercept-resend attack} attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of encoding bases, and Eve will not know the bases in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. Thus, by sacrificing some of their shared bits, via openly communicating them to one another for comparison, such an attack will be detected with asymptotically high probability. Now Alice and Bob have great confidence that they have a shared, secret, random bit-string, which may subsequently be employed in a one-time pad\index{One-time pad} with perfect secrecy.
+To understand the secrecy of the protocol as described in Alg.~\ref{alg:bb84}, suppose an eavesdropper, Eve, were to perform an intercept-resend\index{Intercept-resend attacks} attack on the channel between Alice and Bob. At that stage in the protocol Alice had not yet announced her choice of encoding bases, and Eve will not know the bases in which to measure states without randomly collapsing them onto values inconsistent with Alice's encoding. Thus, by sacrificing some of their shared bits, via openly communicating them to one another for comparison, such an attack will be detected with asymptotically high probability. Now Alice and Bob have great confidence that they have a shared, secret, random bit-string, which may subsequently be employed in a one-time pad\index{One-time pad} with perfect secrecy.
 
-The BB84 protocol has no measurement timing, mode-matching or interferometric stability requirements, making it a very robust protocol, readily achievable with present-day photonics technology. The scheme has been adapted to physical architectures beyond just polarisation-encoded photons, such as CV encodings\index{Continuous-variable QKD} \cite{???}.
+The BB84 protocol has no measurement timing, mode-matching or interferometric stability requirements, making it a very robust protocol, readily achievable with present-day photonics technology. The scheme has been adapted to physical architectures beyond just polarisation-encoded photons, such as CV encodings\index{Continuous-variables!QKD} \cite{???}.
 
 %
 % Privacy amplification
@@ -482,13 +482,13 @@ An advantage of E91 over BB84 is that it does not require a direct quantum commu
 % Continuous-Variable Protocols
 %
 
-\subsubsection{Continuous-variable protocols}\index{Continuous-variable QKD}
+\subsubsection{Continuous-variable protocols}\index{Continuous-variables!QKD}
 
 Like quantum computing, QKD protocols may be adapted to the CV domain also. Alg.~\ref{alg:cv_qkd} describes a simple such scheme based on encoding in phase-space\index{Phase-space}, where the basis states are coherent states of different amplitudes and phases. The goal is the same as BB84 -- to securely share a random bit-string for use in a one-time-pad\index{One-time pad}.
 
 Note that this protocol provides information-theoretic security\index{Information-theoretic security}, as per BB84\index{BB84 protocol}, despite the fact that coherent states are non-orthogonal, forming an over-complete basis in phase-space.
 
-Conceptually, the operation of the CV QKD protocol is virtually identical to photonic BB84, differing only in that now the different choices of encodings correspond to phase-space transformations. Like BB84, if Eve were to perform an intercept-resend attack\index{Intercept-resend attack} she would probabilistically re-encode in the wrong quadrature, thereby revealing herself to Alice and Bob, who could then terminate. 
+Conceptually, the operation of the CV QKD protocol is virtually identical to photonic BB84, differing only in that now the different choices of encodings correspond to phase-space transformations. Like BB84, if Eve were to perform an intercept-resend attack\index{Intercept-resend attacks} she would probabilistically re-encode in the wrong quadrature, thereby revealing herself to Alice and Bob, who could then terminate. 
 
 \begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
@@ -527,7 +527,7 @@ Importantly, unlike classical cryptographic protocols, QKD makes no assumptions 
 
 However, this is not to say that QKD is actually perfectly secure in real life. Recent history has demonstrated that this is certainly not the case, with many attacks against various quantum cryptographic protocols being described and successfully demonstrated. The reason for this schism between theory and experiment is that no experiment ever \textit{perfectly} mimics the theoretical proposal it is trying to implement. Laboratory components might be imprecise in an unfortunate way, opening up avenues for attack, or they might perform unwanted additional actions that leak information to Eve. The prospects for such so-called `side-channel attacks'\index{Side-channel attacks} must be carefully considered and satisfactorily addressed.
 
-The best known attack against photonically implemented BB84 is the `photon-number splitting attack'\index{Photon-number splitting attack}. This attack targets implementations where Alice's photon source does not produce perfect single-photon states, but may have some amplitude of higher photon-number. Weak coherent states or SPDC states exhibit this property. The attack is very simple. Eve simply performs a man-in-the-middle attack\index{Intercept-resend attack}, but not of an intercept-resend\index{Intercept-resend attack} variety. Rather than intercepting the entire channel, she inserts a low reflectivity beamsplitter and measures only the reflected mode, the other following its desired trajectory to Bob. Now there is a chance that Eve can extract just one of the multiple photons in the signal, such that Bob still receives a photon. Eve holds the split-off signal in memory until the classical communication of encoding bases, at which point she measures all her split signals in the correct basis, thereby recovering the associated secret-key bit.
+The best known attack against photonically implemented BB84 is the `photon-number splitting attack'\index{Photon-number splitting attack}. This attack targets implementations where Alice's photon source does not produce perfect single-photon states, but may have some amplitude of higher photon-number. Weak coherent states or SPDC states exhibit this property. The attack is very simple. Eve simply performs a man-in-the-middle attack\index{Intercept-resend attacks}, but not of an intercept-resend\index{Intercept-resend attacks} variety. Rather than intercepting the entire channel, she inserts a low reflectivity beamsplitter and measures only the reflected mode, the other following its desired trajectory to Bob. Now there is a chance that Eve can extract just one of the multiple photons in the signal, such that Bob still receives a photon. Eve holds the split-off signal in memory until the classical communication of encoding bases, at which point she measures all her split signals in the correct basis, thereby recovering the associated secret-key bit.
 
 This trivial attack vector clearly demonstrates the importance of well-considered engineering decisions when physically implementing QKD. No piece of hardware is ever 100\% to specification!
 
@@ -588,7 +588,7 @@ However, the scheme is very challenging to implement on a large scale over long 
 % Hybrid Quantum/Classical Cryptography
 %
 
-\subsection{Hybrid quantum/classical cryptography}\index{Hybrid quantum/classical cryptography}
+\subsection{Hybrid quantum/classical cryptography}\index{Hybrid!Quantum/classical cryptography}
 
 As discussed, the RSA public-key cryptosystem is vulnerable to an efficient quantum attack, whereas private-key schemes like AES\index{Advanced Encryption Standard (AES)} are not (believed to be). Thus, combining QKD schemes with private-key classical schemes does not compromise security in the quantum era.
 
