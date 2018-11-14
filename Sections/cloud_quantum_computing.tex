@@ -116,13 +116,17 @@ This separability lends itself directly to the tensor product structure of the \
 
 \subsubsection{Distributed quantum search algorithm}\index{Distributed quantum search algorithm}
 
-The Grover quantum search algorithm (Sec.~\ref{sec:quantum_search}) can be easily parallelised by partitioning the search space, and allocating a different partition to each node.
+The Grover quantum search algorithm (Sec.~\ref{sec:quantum_search}) can be easily parallelised\index{Parallelisation} by partitioning the search space\index{Search space!Partitioning}, and allocating a different partition to each node.
 
-Suppose we wish to search over the $N$-bit space $x$, to find a satisfying solution to some oracle function \mbox{$f(x)=1$}. Let there be $M$ nodes available for computation, where for simplicity we assume $M$ is a power of 2. We designate each of the nodes a $\log_2 M$-bit identification number $y=(0,M-1)$. We now program each node to search over a smaller search space $x'$, which is \mbox{$N-\log_2 M$} bits in length. The input to each oracle is now,
+Suppose we wish to search over the $N$-bit space $x$, to find a satisfying solution to some oracle function \mbox{$f(x)=1$}. Let there be $M$ nodes available for computation, where for simplicity we assume $M$ is a power of 2. We designate each of the nodes a $\log_2 M$-bit identification number\index{Identification numbers},
 \begin{align}
-x = x'\frown y.
+	y=[0,M-1].
 \end{align}
-(`$\frown$' denotes string concatenation).
+We now program each node to search over a smaller search space $x'$, which is \mbox{$N-\log_2 M$} bits in length, concatenated with the node's identification number to produce the full range of $x$. The input to each oracle is now,
+\begin{align}
+x = x'\frown y,
+\end{align}
+where `$\frown$' denotes string concatenation.
 
 For example, with four nodes the 2-bit identification numbers are, 
 \begin{align}
@@ -130,7 +134,9 @@ For example, with four nodes the 2-bit identification numbers are,
 \end{align}
 If the input search space is $N$-bits in length, then each of the nodes are assigned the search-space \mbox{$x'\frown y$}, where $x'$ is a \mbox{$N-2$}-bit number.
 
-It can easily be seen that this approach is compatible with the quantum \textsc{MapReduce} formalism, where the \textsc{Map} function assigns the partitions denoted by $y$, and the \textsc{Reduce} function collects satisfying arguments. The net computational speedup is linear, simply a factor equal to the number of nodes, $M$. Note that this approach does not exploit entanglement between nodes, and does not offer a `quantum' (i.e super-linear) speedup, since it is really just brute-force partitioning of a problem into smaller more efficient ones that are attacked independently.
+It can easily be seen that this approach is compatible with the quantum \textsc{MapReduce} formalism, where the \textsc{Map} function assigns the partitions denoted by identification numbers $y$, and the \textsc{Reduce} function collects satisfying arguments.
+
+The net computational speedup is linear, simply a factor equal to the number of nodes, $M$. Note that this approach does not exploit entanglement between nodes, and does not offer a `quantum' (i.e super-linear) speedup, since it is really just brute-force partitioning of a problem into smaller more efficient ones that are attacked independently, much like classical parallelisation.
 
 % Distributed unitary error averaging
 
