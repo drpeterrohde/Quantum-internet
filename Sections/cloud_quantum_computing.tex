@@ -112,6 +112,28 @@ have a separable tensor product structure,
 \end{align}
 This separability lends itself directly to the tensor product structure of the \textsc{Execute} unitaries. The \textsc{Map} operation could now be a stage for preparing entangled initial states, and the \textsc{Reduce} operation might perform collective measurements.
 
+% Distributed quantum search algorithm
+
+\subsubsection{Distributed quantum search algorithm}\index{Distributed quantum search algorithm}
+
+The Grover quantum search algorithm (Sec.~\ref{sec:quantum_search}) can be easily parallelised by partitioning the search space, and allocating a different partition to each node.
+
+Suppose we wish to search over the $N$-bit space $x$, to find a satisfying solution to some oracle function \mbox{$f(x)=1$}. Let there be $M$ nodes available for computation, where for simplicity we assume $M$ is a power of 2. We designate each of the nodes a $\log_2 M$-bit identification number $y=(0,M-1)$. We now program each node to search over a smaller search space $x'$, which is \mbox{$N-\log_2 M$} bits in length. The input to each oracle is now,
+\begin{align}
+x = x'\frown y.
+\end{align}
+(`$\frown$' denotes string concatenation).
+
+For example, with four nodes the 2-bit identification numbers are, 
+\begin{align}
+	y=\{00,01,10,11\}.
+\end{align}
+If the input search space is $N$-bits in length, then each of the nodes are assigned the search-space \mbox{$x'\frown y$}, where $x'$ is a \mbox{$N-2$}-bit number.
+
+It can easily be seen that this approach is compatible with the quantum \textsc{MapReduce} formalism, where the \textsc{Map} function assigns the partitions denoted by $y$, and the \textsc{Reduce} function collects satisfying arguments. The net computational speedup is linear, simply a factor equal to the number of nodes, $M$. Note that this approach does not exploit entanglement between nodes, and does not offer a `quantum' (i.e super-linear) speedup, since it is really just brute-force partitioning of a problem into smaller more efficient ones that are attacked independently.
+
+% Distributed unitary error averaging
+
 \subsubsection{Distributed unitary error averaging}\index{Unitary error averaging}\index{Distributed unitary error averaging}\label{sec:error_av_parallel}
 
 In Sec.~\ref{sec:error_averaging} we introduced the unitary error averaging technique for minimising the errors associated with imperfect implementation of linear optics beamsplitter networks. This model is naturally of the form of \textsc{Quantum MapReduce}, where the \textsc{Map} and \textsc{Reduce} operations implement the fan-in and fan-out respectively, and the independent instances of the noisy unitary are executed in parallel on different nodes, as shown in Fig.~\ref{fig:error_av_map_reduce}.
