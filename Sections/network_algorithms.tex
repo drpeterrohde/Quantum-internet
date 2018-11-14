@@ -21,7 +21,7 @@ In Table.~\ref{tab:net_alg_sum} we summarise the upcoming discussion on importan
   		\hline
   		\rowcolor{LimeGreen} Depth-first-search & (same as above) & \textbf{P} & $O(|V|+|E|)$ \\
 		\hline
-  		\rowcolor{LimeGreen} Shortest-path (Dijkstra) & Find the shortest route between two nodes & \textbf{P} & $O(|V|^2)$ \\
+  		\rowcolor{LimeGreen} Shortest-path (Dijkstra) & Find the shortest route between two nodes & \textbf{P} & $O(|E|+|V|\log|V|)$ \\
   		\rowcolor{LimeGreen} & in a directed graph & &  \\
   		  		\hline
 		\rowcolor{LimeGreen} Shortest-path (\textit{A*}) & (same as above) & \textbf{P} & (varying) \\
@@ -101,7 +101,11 @@ The first proven shortest-path algorithm was invented by and named after Dijkstr
 \begin{align}
 	O(|V|^2),
 \end{align}
-also residing in \textbf{P}\index{P} (one of the relatively few, and highly valuable optimisation problems that is classically efficient). Subsequently, a number of improvements and variations on Dijkstra's algorithm have been proposed, most notably the $A^*$ algorithm \cite{bib:Astar}\index{Shortest-path algorithm}, which has found widespread modern use, using a heuristic approach to improve performance over Dijkstra.
+which has since been improved to,
+\begin{align}
+	O(|E|+|V|\log |V|),	
+\end{align}
+by \cite{bib:FredmanLawrence84}, residing in \textbf{P}\index{P} (one of the relatively few, and highly valuable optimisation problems that is classically efficient). Subsequently, a number of improvements and variations on Dijkstra's algorithm have been proposed, most notably the $A^*$ algorithm \cite{bib:Astar}\index{Shortest-path algorithm}, which has found widespread modern use, using a heuristic approach to improve performance over Dijkstra. An alternate implementation of Dijkstra using
 
 Formally, let $\vec{R}$ be the set of all routes \mbox{$A\to B$}. Then,
 \begin{align}
@@ -125,7 +129,7 @@ function DijkstraShortestPath($G$,$A$,$B$):
     \item for(n$\in$neighbours) \{
     \setlength{\itemindent}{0.2in}
     \item newTentativeDist = \\ min(tentativeDistances[currentNode] \\+ edgeWeight[currentNode,n],\\
-        tentativeDistances[n])\\
+        tentativeDistances[n])
     \item nodesVisited[currentNode] = True
     \setlength{\itemindent}{0in}
     \item \}
@@ -136,14 +140,23 @@ function DijkstraShortestPath($G$,$A$,$B$):
     \setlength{\itemindent}{0in}
     \item \}
 	\item currentNode = \\
-	tentativeDistances[unvisitedNodes]\\
+	tentativeDistances[unvisitedNodes].
 	nodeWithSmallest()
 	\item goto(loopStart)
     \item $\Box$
 \end{enumerate}}
 \end{mdframed}
-\captionspacealg \caption{Dijkstra's original shortest-path algorithm for finding the lowest weight path through a graph, $G$, between two vertices, $A$ (source) and $B$ (destination). The algorithm has $O(|V|^2)$ runtime (in \textbf{P}).} \label{alg:dijkstra}\index{Shortest-path algorithm}
+\captionspacealg \caption{Dijkstra's original shortest-path algorithm for finding the lowest weight path through a graph, $G$, between two vertices, $A$ (source) and $B$ (destination). The algorithm has $O(|E|+|V|\log|V|)$ runtime (in \textbf{P}). An example application of this algorithm is shown in Fig.~\ref{fig:dijkstra_eg}.} \label{alg:dijkstra}\index{Shortest-path algorithm}
 \end{table}
+
+\begin{figure}[!htbp]
+\if 2\pubmode
+\includegraphics[width=0.475\textwidth]{dijkstra_example_long}
+\else
+\includegraphics[width=0.7\textwidth]{dijkstra_example}
+\fi
+\caption{Example of Dijkstra's shortest-path algorithm for finding the shortest route from $A$ to $B$. Initially (\mbox{$t=0$}) all nodes are designated a tentative distance of $\infty$, except the starting node $A$, which is designated distance $0$. At each step we choose the lowest cost path to a previously unexplored node (edge shown in red). This updates the tentative distance of the newly-visited neighbour, which is now marked as visited (red vertex). This is iterated until all nodes have been visited. Each node is visited exactly once.}\label{fig:dijkstra_eg}\index{Shortest-path algorithm}	
+\end{figure}
 
 Fig.~\ref{fig:simp_route_opt} illustrates a directed, edge-weighted graph. A shortest-path algorithm applied between vertices $A$ and $B$ would return \mbox{$R_\mathrm{shortest} = A\to F\to B$} as the minimum-cost route.
 
