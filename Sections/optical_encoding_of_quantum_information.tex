@@ -187,9 +187,9 @@ Thermal states can encode classical information into their amplitudes, polarisat
 
 \subsection{Phase-space} \label{sec:exotic} \index{Phase-space!Encoding}
 
-When encoding information optically, we needn't restrict ourselves to photon-number states. We also have a lot of flexibility to encode information in phase-space using continuous-variable (CV) states, where phase and amplitude relations encode quantum information \cite{bib:CahillGlauber69}.
+When encoding information optically, we needn't restrict ourselves to photon-number states (discrete variables\index{Discrete variables}). We also have a lot of flexibility to encode information in phase-space using continuous-variable (CV) states, where phase and amplitude relations encode quantum information \cite{bib:CahillGlauber69}. In this formalism, rather than expressing states in terms of photonic creation operators, $\hat{a}^\dag$, we represent them using phase-space position ($\hat{x}$) and momentum ($\hat{p}$) operators.
 
-In phase-space, the most common representations of optical states are in terms of quasi-probability functions\index{Quasi-probability functions}\footnote{The term `quasi-probablity' arises because in some regimes (for example, strictly non-negative $P$-functions), the function has a true probabilistic interpretation. However this interpretation breaks down for any negativity in the $P(\alpha)$, since negative probabilities have no meaningful classical interpretation.}:
+In phase-space, the most common method for visualising optical states is in terms of quasi-probability functions\index{Quasi-probability functions}\footnote{The term `quasi-probablity' arises because in some regimes (for example, strictly non-negative $P$-functions), the function has a true probabilistic interpretation. However this interpretation breaks down for any negativity in the $P(\alpha)$, since negative probabilities have no meaningful classical interpretation.}, of which there are a multitude. The best known quasi-probability representations are:
 \begin{itemize}\index{P-function}\index{Q-function}\index{Wigner function}
 \item $P$-function: represents a state as a quasi-mixture of coherent states. When the $P$-function is strictly non-negative, it can be interpreted as a perfect classical mixture of coherent states. However, with any negativity this classical interpretation breaks down, hence `quasi'-probability. In general, the $P$-function representation for a state is not unique.
 \begin{align}
@@ -246,6 +246,15 @@ Note that despite being pure states, with well-defined coherence, coherent state
 
 Coherent states are useful in that they are easy to prepare using modern lasers, including laser diodes, and by turning up the amplitude can be transmitted over long distances, with loss not affecting quantum coherence, only the amplitude (Sec.~\ref{sec:eff_err}).
 
+Coherent state encoding can be regarded as encoding via the displacement operator,
+\begin{align}\label{eq:disp_op}
+\hat{D}(\alpha) = \exp \left[\alpha\hat{a}^\dag - \alpha^*\hat{a}\right],
+\end{align}
+which implements translations in phase-space via the addition of coherent amplitude to a state. Coherent states are simply obtained as displaced vacuum states,
+\begin{align}
+\hat{D}(\alpha)\ket{0} = \ket{\alpha}.
+\end{align}
+
 %
 % Cat States
 %
@@ -273,9 +282,55 @@ However, modulo these difficulties, with a resource of cat states at one's dispo
 % Squeezed States
 %
 
-\subsubsection{Squeezed states}\index{Squeezed states}
+\subsubsection{Squeezed states}\index{Squeezed states}\label{sec:squeezed_enc}
 
-Coherent state encoding can be regarded as encoding via the displacement operator, Eq.~(\ref{eq:disp_op}), which implements translations in phase-space. Alternately, we can encode via the squeezing operator, Eq.~(\ref{eq:sq_op}), which implements dilations about an axis in phase-space. Squeezing the vacuum state along the $\hat{x}$ or $\hat{p}$ directions yields two states that are approximately orthogonal for large squeezing amplitudes, as shown in Fig.~\ref{fig:squeezed_state_encoding}. Thus, with sufficient squeezing they can be used as a basis for approximately encoding a qubit. This encoding can be exploited for full universal quantum computing, as was introduced in Sec.~\ref{sec:CV_QC}.
+In the same way that information can be encoded using the displacement operator, in the form of coherent states, we can encode information via the squeezing operator\index{Squeezing operator},
+\begin{align}\label{eq:sq_op}
+\hat{S}(\xi) = \exp\left[ \frac{1}{2}(\xi^*\hat{a}^2 - \xi{\hat{a}^{\dag 2}})\right],
+\end{align}
+where \mbox{$\xi  = r e^{i \varphi}$}, $r$ is known as the squeezing parameter\index{Squeezing parameter}, which will determine the magnitude of the squeezing and \mbox{$\varphi \in [0, 2\pi]$} denotes that axis along which the squeezing is taking place.
+
+Graphically, in terms of their phase-space visualisation, squeezing implements dilations about a given axis. Strongly squeezing the vacuum state along the $\hat{x}$ or $\hat{p}$ directions yields two states that are approximately orthogonal for large squeezing amplitudes, as shown in Fig.~\ref{fig:squeezed_state_encoding}. Thus, with sufficient squeezing they can be used as a basis for approximating a qubit. This encoding can be exploited for full universal quantum computing, to be discussed in Sec.~\ref{sec:CV_QC}.
+
+\begin{figure}[!htbp]
+\includegraphics[clip=true, width=0.3\textwidth]{squeezed_state_encoding}
+\captionspacefig \caption{Phase-space representation of two squeezed vacuum states, squeezed in the $\hat{x}$ (blue) and $\hat{p}$ (red) directions. In the limit of large squeezing these states become approximately orthogonal and may therefore approximate the encoding of a qubit.} \label{fig:squeezed_state_encoding}	
+\end{figure}
+
+In the CV picture, instead of representing states using photonic creation operators ($\hat a^\dag$), we express them in terms of the \textit{position} ($\hat x$)\index{Position operator} and \textit{momentum} ($\hat p$)\index{Momentum operator} operators, which are related to the creation and annihilation operators as,
+\begin{align}
+\hat x &=    \sqrt{\frac{\hbar}{2 \omega}}(\hat a + \hat a^\dag), \nonumber \\
+\hat p &= -i \sqrt{\frac{\hbar  \omega}{2}}(\hat a - \hat a^\dag), 
+\end{align}
+where $\omega$ is the optical frequency\index{Optical!Frequency}. These operators obey the commutation relation,
+\begin{align}
+[\hat x, \hat p] = i \hbar.
+\end{align}
+
+The position and momentum operators represent the \textit{quadratures}\index{Quadratures} of a mode, and correspond to the real and imaginary components of a harmonic oscillator's\index{Harmonic oscillator} amplitude.
+
+The \textit{position representation} of an optical state corresponds to expressing a state vector $\ket{\psi}$ in the position basis\index{Position basis representation},
+\begin{align}
+\ket{\psi} = \int \psi(x)\ket{x}\, dx,
+\end{align}
+where $\ket{x}$ are the eigenstates of the position operator. Here the wave-function in the position representation\index{Position basis representation} is defined as,
+\begin{align}
+\psi(x) = \braket{x|\psi}.
+\end{align}
+The state can similarly be expressed via a \textit{momentum representation}\index{Momentum basis representation},
+\begin{align}
+	\ket\psi = \int {\tilde\psi}(p) \ket{p}\, dp,
+\end{align}
+where,
+\begin{align}
+	{\tilde\psi}(p) = \braket{p|\psi}.
+\end{align}
+
+The quadrature eigenstates\index{Quadratures!Eigenstates} are mutually related to each other by a Fourier transform\index{Fourier transform},
+\begin{align}
+\ket{x} &= \frac{1}{\sqrt{\pi}} \int_{-\infty} ^\infty e^{-2 i x p} \ket{p} \,dp,\nonumber \\
+\ket{p} &= \frac{1}{\sqrt{\pi}} \int_{-\infty} ^\infty e^{2 i x p} \ket{x} \,dx.
+\end{align}
 
 %
 % Non-Optical Encoding
