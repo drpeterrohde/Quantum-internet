@@ -482,18 +482,18 @@ An advantage of E91 over BB84 is that it does not require a direct quantum commu
 % Continuous-Variable Protocols
 %
 
-\subsubsection{Continuous-variable protocols}\index{Continuous-variables!QKD}\label{sec:CV_QKD}
+\subsubsection{Continuous-variable protocols}\index{Continuous-variables!Quantum key distribution}\label{sec:CV_QKD}
 
 Like quantum computing, QKD protocols may be adapted to the CV domain also. Alg.~\ref{alg:cv_qkd} describes a simple such scheme based on encoding in phase-space\index{Phase-space}, where the basis states are coherent states of different amplitudes and phases. The goal is the same as BB84 -- to securely share a random bit-string for use in a one-time-pad\index{One-time pad}.
 
-Note that this protocol provides information-theoretic security\index{Information-theoretic security}, as per BB84\index{BB84 protocol}, despite the fact that coherent states are non-orthogonal, forming an over-complete basis in phase-space.
+Note that this protocol provides information-theoretic security\index{Information-theoretic security}, as per BB84\index{BB84 protocol}, despite the fact that coherent states are non-orthogonal, forming an over-complete basis in phase-space\index{Phase-space}.
 
-Conceptually, the operation of the CV QKD protocol is virtually identical to photonic BB84, differing only in that now the different choices of encodings correspond to phase-space transformations. Like BB84, if Eve were to perform an intercept-resend attack\index{Intercept-resend attacks} she would probabilistically re-encode in the wrong quadrature, thereby revealing herself to Alice and Bob, who could then terminate. 
+Conceptually, the operation of the CV QKD protocol is virtually identical to photonic BB84, differing only in that now the different choices of encodings correspond to phase-space transformations. Like BB84, if Eve were to perform an intercept-resend attack\index{Intercept-resend attacks} she would probabilistically re-encode in the wrong quadrature\index{Quadratures}, thereby revealing herself to Alice and Bob, who could then terminate and start over. 
 
 \begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
 \texttt{
-function CVQKD():
+function CV\_QKD():
 \begin{enumerate}
 \item Alice chooses two Gaussian-distributed random numbers with mean zero,
 \begin{align}
@@ -506,16 +506,14 @@ where $V_\mathrm{mod}$ is the modulation variance\index{Modulation variance}.
 \ket\alpha = \ket{x_A+ip_A}.	
 \end{align}
 \item Alice transmits $\ket\alpha$ to Bob.
-\item Bob randomly measures either $\hat{x}$ or $\hat{p}$ using homodyne detection.
-\item Alice and Bob use classical communication to determine for which transmissions their preparation and measurement were consistent \comment{I don't get this, Alice is deterministically encoding x+ip, where's the randomness in the choice of basis? Are we adding a randomised phase that puts us into a diagonal basis sometimes, or something like that}
-\item \comment{Complete the rest of this}
+\item Bob randomly measures either $\hat{x}$ or $\hat{p}$ using homodyne detection\index{Homodyne detection}.
+\item Alice and Bob use classical communication to determine for which transmissions their preparation and measurement were consistent.
+\item The remainder of the protocol proceeds as per BB84.
 \item $\Box$
 \end{enumerate}}
 \end{mdframed}
 \captionspacealg \caption{CV QKD protocol using coherent states, encoded in the quadrature basis.}\label{alg:cv_qkd}
 \end{table}
-
-\comment{To do.}
 
 %
 % Security
@@ -523,7 +521,7 @@ where $V_\mathrm{mod}$ is the modulation variance\index{Modulation variance}.
 
 \subsubsection{Security}\index{Security of QKD}
 
-Importantly, unlike classical cryptographic protocols, QKD makes no assumptions about the computational complexity of inverting encoding algorithms or trapdoor functions. The protocols are information-theoretically secure\index{Information-theoretic security}, and therefore no physically realisable computer, even a quantum computer, can compromise them. Thus, usual cryptanalytic techniques, like linear and differential cryptanalysis \cite{bib:Schneier96}\index{Linear cryptanalysis}\index{Differential cryptanalysis}, or the ability to factor large numbers\index{Integer factorisation}, that are employed to attack other encryption protocols, do not compromise QKD.
+Importantly, unlike classical cryptographic protocols, QKD makes no assumptions about the computational complexity of inverting encoding algorithms or trapdoor functions\index{Trapdoor functions}. The protocols are information-theoretically secure\index{Information-theoretic security}, and therefore no physically realisable computer, even a quantum computer, can compromise them. Thus, usual cryptanalytic techniques, like linear and differential cryptanalysis \cite{bib:Schneier96}\index{Linear cryptanalysis}\index{Differential cryptanalysis}, or the ability to factor large numbers\index{Integer factorisation}, that are employed to attack other encryption protocols, do not compromise QKD.
 
 However, this is not to say that QKD is actually perfectly secure in real life. Recent history has demonstrated that this is certainly not the case, with many attacks against various quantum cryptographic protocols being described and successfully demonstrated. The reason for this schism between theory and experiment is that no experiment ever \textit{perfectly} mimics the theoretical proposal it is trying to implement. Laboratory components might be imprecise in an unfortunate way, opening up avenues for attack, or they might perform unwanted additional actions that leak information to Eve. The prospects for such so-called `side-channel attacks'\index{Side-channel attacks} must be carefully considered and satisfactorily addressed.
 
