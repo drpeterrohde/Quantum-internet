@@ -72,7 +72,9 @@ Thus, $k$-fold quantum enhancement corresponds to a $k$th-order exponential enha
 
 For this scaling to be possible, we expect that nodes will need to communicate via quantum rather than purely classical channels, so as to preserve inter-node entanglement and mediate non-local gates across nodes.
 
-\subsubsection{Quantum MapReduce}\index{Quantum MapReduce}
+% Quantum MapReduce
+
+\subsubsection{Quantum MapReduce}\index{Quantum MapReduce}\label{sec:quant_map_reduce}
 
 Designing native distributed algorithms is not trivial, and architectural constraints may physically limit the allowed set of inter-node operations available to us. Are there any simple constructions that allow us to achieve this? We will propose an approach to parallelised quantum computation based on a direct quantum adaptation of the classical \textsc{MapReduce} protocol.
 
@@ -118,25 +120,49 @@ This separability lends itself directly to the tensor product structure of the \
 
 The Grover quantum search algorithm (Sec.~\ref{sec:quantum_search}) can be easily parallelised\index{Parallelisation} by partitioning the search space\index{Search space!Partitioning}, and allocating a different partition to each node.
 
-Suppose we wish to search over the $N$-bit space $x$, to find a satisfying solution to some oracle function \mbox{$f(x)=1$}. Let there be $M$ nodes available for computation, where for simplicity we assume $M$ is a power of 2. We designate each of the nodes a $\log_2 M$-bit identification number\index{Identification numbers},
+Suppose we wish to search over the $N$-bit space $x$, to find a satisfying solution to some oracle\index{Oracles} function (e.g when solving an \textbf{NP}-complete problem\index{NP \& NP-complete}),
+\begin{align}
+x\,\, \mathrm{s.t.}\, f(x)=1.
+\end{align}
+Let there be $M$ nodes available for computation, where for simplicity we assume $M$ is a power of 2 (although the idea works generally for arbitrary $M$, albeit not as mathematically elegantly). We designate each of the nodes a $\log_2 M$-bit identification number\index{Identification numbers},
 \begin{align}
 	y=[0,M-1].
 \end{align}
-We now program each node to search over a smaller search space $x'$, which is \mbox{$N-\log_2 M$} bits in length, concatenated with the node's identification number to produce the full range of $x$. The input to each oracle is now,
+We now program each node to search over a smaller search space $x'$, which is \mbox{$N-\log_2 M$} bits in length, concatenated with the node's identification number to produce the full range of $x$. The input to each instance of the oracle is now,
 \begin{align}
 x = x'\frown y,
 \end{align}
-where `$\frown$' denotes string concatenation.
+where `$\frown$' denotes binary string concatenation.
 
 For example, with four nodes the 2-bit identification numbers are, 
 \begin{align}
 	y=\{00,01,10,11\}.
 \end{align}
-If the input search space is $N$-bits in length, then each of the nodes are assigned the search-space \mbox{$x'\frown y$}, where $x'$ is a \mbox{$N-2$}-bit number.
+If the input search space is $N$-bits in length, then each of the nodes are assigned the search-space \mbox{$x'\frown y$}, where $x'$ is an \mbox{$N-2$}-bit number. Within each instance, the Grover search searches over only the reduced space $x'$, with $y$ a constant of the instance. Fig.~\ref{fig:distributed_search} illustrates the circuit schematic for this simple example.
 
-It can easily be seen that this approach is compatible with the quantum \textsc{MapReduce} formalism, where the \textsc{Map} function assigns the partitions denoted by identification numbers $y$, and the \textsc{Reduce} function collects satisfying arguments.
+\begin{figure}[!htbp]
+	\includegraphics[clip=true, width=0.475\textwidth]{distributed_search}
+	\caption{Example of a quantum \textsc{MapReduce} protocol for implementing a distributed quantum search over four nodes. Each node performs a quantum search over the reduced space $x'$, concatenated with the identification number of the node, which recovers the full search-space $x$ across all the nodes collectively. This effectively partitions and allocates the search-space across the nodes, which implement their reduced searches in parallel. The net speedup provided by $M$ nodes operating in parallel scales as $O(\sqrt{M})$.}\label{fig:distributed_search}\index{Distributed quantum search algorithm}
+\end{figure}
 
-The net computational speedup is linear, simply a factor equal to the number of nodes, $M$. Note that this approach does not exploit entanglement between nodes, and does not offer a `quantum' (i.e super-linear) speedup, since it is really just brute-force partitioning of a problem into smaller more efficient ones that are attacked independently, much like classical parallelisation.
+It can easily be seen that this approach is compatible with the general quantum \textsc{MapReduce} formalism (Sec.~\ref{sec:quant_map_reduce}), where the \textsc{Map} function assigns the partitions denoted by the node identification numbers $y$, the \textsc{Execute} functions implement the reduced searches associated with each instance, and the \textsc{Reduce} function collects satisfying arguments from the instances,
+\begin{align}
+	x'\,\, \mathrm{s.t.}\, f(x'\frown y)=1\,\,\forall\, y.
+\end{align}
+
+From the runtime of the Grover algorithm, it follows that the time required to solve the search problem on the initial full search-space is $O(\sqrt{2^N})$, whereas the time required in the parallelised implementation is only $O(\sqrt{2^{N-\log_2 M}})$. Thus, the need speedup is,
+\begin{align}
+	O\left(\frac{\sqrt{2^N}}{\sqrt{2^{N-\log_2 M}}}\right) = O(\sqrt{M}).
+\end{align}
+
+Evidently, the net computational speedup scales as a factor of the square root of the number of nodes in the parallelised implementation. Note that this approach does not exploit entanglement between nodes, and does not offer a `quantum' (i.e super-polynomial) speedup, since it's really just brute-force partitioning of a problem into smaller, quicker, bite-sized chunks that are attacked completely independently of one another, much like classical parallelisation.
+
+To the contrary, unlike most quantum algorithms, whose power grows exponentially with the number of qubits (increasing returns\index{Increasing returns}), the distributed quantum search algorithm exhibits diminishing returns\index{Diminishing returns} with the degree of parallelisation -- the computational gain from adding one additional node to the network scales as,
+\begin{align}
+O\left(\sqrt{\frac{M+1}{M}}\right) &= O\left(\sqrt{1+\frac{1}{M}}\right),\nonumber\\
+\lim_{M\to\infty} O\left(\sqrt{1+\frac{1}{M}}\right) &= O(1).
+\end{align}
+That is, increasing the number of nodes from 1 to 2 has far greater net gain than increasing them from 100 to 101. In fact, asymptotically, the gain from adding an additional node vanishes in the limit of a high degree of parallelisation.
 
 % Distributed unitary error averaging
 
