@@ -145,7 +145,7 @@ function Grover(f,n):
 
 \subsection{Quantum Fourier transform}\index{Quantum Fourier transform}\label{sec:QFT_alg}
 
-The quantum Fourier transform (QFT) is not an algorithm per se, but rather a unitary operator that finds widespread use in other quantum algorithms. The QFT operator is so ubiquitous that it warrants special treatment.
+The quantum Fourier transform (QFT) is not an algorithm per se, but rather a unitary operator that finds widespread use in other quantum algorithms -- a quantum subroutine of sorts. The QFT operator is so ubiquitous as a component in other quantum algorithms, that it warrants special treatment.
 
 The QFT matrix simply contains coefficients taken from the discrete Fourier transform (DFT)\index{Discrete Fourier transform}. Specifically, the \mbox{$N\times N$} QFT matrix has elements,
 \begin{align}
@@ -176,9 +176,14 @@ Equivalently, in terms of basis state transformations this implements the map,
 \end{align}
 on the $N$ basis states.
 
-Unlike the closely-related Hadamard transform\index{Hadamard!Transform}, $\hat{H}^{\otimes n}$, which shares many properties with the QFT, the QFT is a highly entangling operation. The QFT of any dimension has an efficient circuit implementation, making it an important subroutine in many algorithms. Specifically, the $n$-qubit QFT (i.e a transformation on $2^n$ amplitudes) requires only $O(n^2)$ elementary gates (Hadamards and CZs). If an approximation of the QFT is sufficient for one's purposes, this can be further reduced to only \mbox{$O(n\,\log \,n)$}.
+Unlike the closely-related Hadamard transform\index{Hadamard!Transform}, $\hat{H}^{\otimes n}$, which shares many properties\footnote{Like the QFT, all matrix elements of the Hadamard transform have magnitude \mbox{$1/\sqrt{N}$}, differing only in their phases, which are all simple $\pm$.} with the QFT, the QFT is a highly entangling operation. The QFT of any dimension has an efficient circuit implementation, making it an important subroutine in many algorithms. Specifically, the $n$-qubit QFT (i.e a transformation on $2^n$ amplitudes) requires only $O(n^2)$ elementary gates (Hadamards and CZs). If an approximation of the QFT is sufficient for one's purposes, this can be further reduced to only \mbox{$O(n\log n)$}.
 
-\comment{Show algorithm box with circuit}
+The circuit construction for the QFT is shown in Fig.~\ref{fig:QFT_circuit}.
+
+\begin{figure}
+\includegraphics[width=0.475\textwidth]{QFT}
+\caption{Circuit decomposition for the quantum Fourier transform (QFT). The circuit is defined recursively, defining the $n$-qubit QFT in terms of an \mbox{$n-1$}-qubit QFT. Here \mbox{$R_\theta=\mathrm{diag}(1,e^{i\theta})$} is a generalised phase-flip gate.}\label{fig:QFT_circuit}\index{Quantum Fourier transform}
+\end{figure}
 
 %
 % Phase-Estimation
