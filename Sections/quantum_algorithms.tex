@@ -308,7 +308,7 @@ where $t$ is evolution time and $\epsilon$ is the accuracy.
 
 \subsection{Integer factorisation} \index{Shor's algorithm}\index{Hidden subgroup problem}\label{sec:shors_alg}
 
-\comment{To do - Heliang}
+\comment{To do}
 
 \comment{Mention relationship to hidden subgroup, period-finding, and discrete-log problems}
 
@@ -374,7 +374,7 @@ From the superposition state, the uniform mixture of simplices state,
 \begin{align}
 \hat\rho_k^\epsilon = \frac{1}{|S_k^\epsilon|} \sum_{s_k\in S_k^\epsilon} \ket{s_k}\bra{s_k},
 \end{align}
-is easily prepared with the addition of CNOT gates and ancillary qubits\footnote{Using parallel CNOT gates one can transform an arbitrary superposition state into a redundantly encoded equivalent, \mbox{$\hat{U}_\mathrm{CNOTs}\sum_i \lambda_i \ket{\psi_i}\ket{0} \to \sum_i \lambda_i \ket{\psi_i}\ket{\psi_i}$}, following which tracing out the redundant copy takes us to its uniform mixture, \mbox{$\sum_i |\lambda_i|^2\ket{\psi_i}\bra{\psi_i}$}.}.
+is easily prepared with the addition of CNOT gates and ancillary qubits\footnote{Using parallel CNOT gates one can transform an arbitrary superposition state into a redundantly encoded equivalent, \mbox{$\hat{U}_\mathrm{CNOTs}\sum_i \lambda_i \ket{\psi_i}\ket{0} \to \sum_i \lambda_i \ket{\psi_i}\ket{\psi_i}$}, following which tracing out the redundant copy takes us to its uniform mixture, \mbox{$\hat\rho=\sum_i |\lambda_i|^2\ket{\psi_i}\bra{\psi_i}$}.}.
 
 The quantum TDA algorithm then takes the simplicial complex mixed state and estimates the full set of Betti numbers by employing a phase-estimation algorithm\index{Phase estimation!Algorithm} (Sec.~\ref{sec:phase_est_alg}), which induces an exponential algorithmic runtime improvement. The full TDA algorithm is summarised in Alg.~\ref{alg:TDA}.
 
@@ -403,10 +403,10 @@ which prepares the simplicial complex superposition state,
 \hat\rho_k^\epsilon = \frac{1}{|S_k^\epsilon|} \sum_{s_k\in S_k^\epsilon} \ket{s_k}\bra{s_k},
 \end{align}
 	\item Perform quantum phase-estimation on the simplicial complex mixed state.
-	\item \comment{To do - show how Betti numbers are calculated. Formulas.}
+	\item Classical post-processing reveals the Betti numbers.
 	\item Algorithm has runtime,
 \begin{align}
-O(n^5/\delta),
+O\left(\frac{n^5}{\delta}\right),
 \end{align}
 for accuracy $\delta$.
 \item $\Box$
@@ -423,8 +423,6 @@ for accuracy $\delta$.
 \captionspacealg \caption{Quantum topological data analysis algorithm for calculating Betti numbers.} \label{alg:TDA}
 \end{table}
 
-\comment{Finish mathematical details}
-
 %
 % Linear Systems
 %
@@ -433,7 +431,7 @@ for accuracy $\delta$.
 
 \cite{bib:harrow2009quantum}
 
-\comment{To do}
+\comment{To do. DELETE???}
 
 \comment{Example: recommendation algorithm where sampling the vector yields, with high probability, a recommendation that is a good one, without having to explicitly know the entire solution vector.}
 
@@ -598,11 +596,11 @@ for some oracle function $q(\vec x)$. The solution is obtained by measuring the 
 
 The circuit $\hat{U}_q$ can be decomposed into a product of CZ gates and phase-shift gates, which all commute, thereby allowing the shallow circuit-depth.
 
-If we lay out the circuit in 2D (hence the 2D HLF problem), it only requires classically-controlled Clifford gates\index{Clifford gates} between nearest neighbour qubits on a 2D grid. An example is shown in Fig.~\ref{fig:2DHLFgrid}. An instance of the HLF problem can be described by a graph $G(A)$ with $n$ vertices such that the off-diagonal part of A is the adjacency matrix of $G(A)$. Here $A_{i,j}=0$ unless $i,j$ are nearest neighbour vertices of the grid or $i = j$. We place qubits at each vertex and every edge corresponds to an input bit. The HLF problem is solved by applying nearest-neighbour $C_Z$ gates and $S_i$ phase gates at the correct site.
+If we lay out the circuit in 2D (hence the 2D HLF problem), it only requires classically-controlled Clifford gates\index{Clifford gates} between nearest neighbour qubits on a 2D grid. An example is shown in Fig.~\ref{fig:2DHLFgrid}. An instance of the HLF problem can be described by a graph $G(A)$ with $n$ vertices such that the off-diagonal part of A is the adjacency matrix of $G(A)$. Here $A_{i,j}=0$ unless $i,j$ are nearest neighbour vertices of the grid or $i = j$. We place qubits at each vertex and every edge corresponds to an input bit. The HLF problem is solved by applying nearest-neighbour CZ gates and $S_i$ phase gates at the correct site.
 
 \begin{figure}[!htbp]
 \includegraphics[clip=true, width=0.4\textwidth]{shallow_circuits_2D}
-\caption{\label{fig:2DHLFgrid} Implementation of the HLF problem on a 2D grid. The qubits are represented as green circles (some omitted for clarity), and $C_Z$ gates are drawn in red.}
+\caption{\label{fig:2DHLFgrid} Implementation of the HLF problem on a 2D grid. The qubits are represented as green circles (some omitted for clarity), and CZ gates are drawn in red.}
 \end{figure}
 
 Now, comparing the quantum algorithm to a classical one, it has been proven that any probabilistic classical circuit with bounded input that solves the 2D HLF problem with high probability, $\epsilon \leq 1/8$, must have depth increasing logarithmically with input size \cite{bib:bravyi2018quantum}. The speed-up here is provided by quantum non-locality\index{Quantum non-locality}. 
