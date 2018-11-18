@@ -122,7 +122,7 @@ function Grover(f,n):
 		\hat{U}_T \ket{x} &= (-1)^{f(x)}\ket{x} \nonumber \\
 		&= (\hat{I} - 2\ket{T}\bra{T})\ket{x},
 	\end{align}
-	where $f(x)=\{0,1\}$ is the black-box function determining whether input $x$ is the target element $T$ (\mbox{$f(x)=1$}) or not (\mbox{$f(x)=0$}).
+	where \mbox{$f(x)=\{0,1\}$} is the black-box function determining whether input $x$ is the target element $T$ (\mbox{$f(x)=1$}) or not (\mbox{$f(x)=0$}).
 	\item The Grover diffusion operator\index{Grover diffusion operator} is defined to implement,
 	\begin{align}
 	\hat{U}_s = \hat{I} - 2\ket{T}\bra{T}.
@@ -140,6 +140,37 @@ function Grover(f,n):
 \end{table}
 
 %
+% Oracles
+%
+
+\subsection{Oracles}\index{Oracles}\label{sec:oracles}
+
+From Sec.~\ref{sec:quantum_search} we know that the quantum search algorithm requires a black box oracle that evaluates a classical function or database lookup query as a subroutine. How do we construct these oracles?
+
+If we consider the case of solving a satisfiability problem, to find a satisfying input such that the function evaluates to \mbox{$f(x)=1$}, then it would na{\"i}svely appear that the required quantum operation needs to implement the transformation,
+\begin{align}
+	\hat{U}_f\ket{x}=\ket{f(x)}.
+\end{align}
+However, it is easy to see that in general such a transformation is non-unitary, and therefore cannot be implemented quantum mechanically. To overcome this obstacle and enable unitary implementation, we introduce additional ancillary bits\index{Ancillary bits} to $f(x)$ and first write it as a reversible classical circuit\index{Reversible classical circuits}, which then always lends itself to a unitary quantum construction. For example, if we instead introduce some extra qubits and implement the transformation,
+\begin{align}
+\hat{U}_f\ket{x}\ket{0} 	= \ket{x}\ket{f(x)},
+\end{align}
+then it can easily be seen that this preserves orthonormality and may be implemented unitarily for any function $f(x)$, even if $f(x)$ is not an invertible function.
+
+To provide the simplest possible example, consider the classical XOR gate, given by,
+\begin{align}
+	y_1 = x_1\oplus x_2.
+\end{align}
+This operation is obviously not reversible (and hence not unitary), since for a give output $y_1$, the inputs $x_1$ and $x_2$ are not unique. However, if we trivially modify the transformation to be,
+\begin{align}
+	y_1 &= x_1\oplus x_2,\nonumber\\
+	y_2 &= x_2,
+\end{align}
+then a quick back-of-the-envelope calculation verifies that the transformation (simply a CNOT gate\index{CNOT gate} now) is now reversible, unitary, and output $y_1$ encodes the desired function evaluation.
+
+Having re-expressed our desired oracle function as a reversible classical circuit, we now simply make direct substitutions of all the reversible classical gates with their logically equivalent quantum counterparts, yielding a quantum implementation of the function that is unitary and preserves quantum coherence.
+
+%
 % Quantum Fourier Transform
 %
 
@@ -155,7 +186,9 @@ where,
 \begin{align}
 \omega = e^{\frac{2\pi i}{N}},	
 \end{align}
-is a complex root of unity. In matrix form the $N$-dimensional QFT is therefore,
+is a complex root of unity\index{Complex root of unity}.
+
+In matrix form the $N$-dimensional QFT is therefore,
 \begin{align}
 \hat{\mathrm{QFT}}_N = \frac{1}{\sqrt{N}} \left(\begin{matrix}
   1 & 1 & 1 & \dots & 1\\
@@ -178,12 +211,48 @@ on the $N$ basis states.
 
 Unlike the closely-related Hadamard transform\index{Hadamard!Transform}, $\hat{H}^{\otimes n}$, which shares many properties\footnote{Like the QFT, all matrix elements of the Hadamard transform have magnitude \mbox{$1/\sqrt{N}$}, differing only in their phases, which are all simple $\pm$.} with the QFT, the QFT is a highly entangling operation. The QFT of any dimension has an efficient circuit implementation, making it an important subroutine in many algorithms. Specifically, the $n$-qubit QFT (i.e a transformation on $2^n$ amplitudes) requires only $O(n^2)$ elementary gates (Hadamards and CZs). If an approximation of the QFT is sufficient for one's purposes, this can be further reduced to only \mbox{$O(n\log n)$}.
 
-The circuit construction for the QFT is shown in Fig.~\ref{fig:QFT_circuit}.
+The circuit construction for the QFT is shown in Alg.~\ref{alg:QFT}.
 
-\begin{figure}
-\includegraphics[width=0.475\textwidth]{QFT}
-\caption{Circuit decomposition for the quantum Fourier transform (QFT). The circuit is defined recursively, defining the $n$-qubit QFT in terms of an \mbox{$n-1$}-qubit QFT. Here \mbox{$R_\theta=\mathrm{diag}(1,e^{i\theta})$} is a generalised phase-flip gate.}\label{fig:QFT_circuit}\index{Quantum Fourier transform}
-\end{figure}
+\begin{table}[!htbp]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
+function QFT($\ket{x}$):
+\begin{enumerate}
+\item Apply the recursively-defined circuit below to the $n$-qubit input state $\ket{x}$, where,
+\begin{align}
+\hat{R}_\theta=\left(\begin{matrix}
+1 & 0 \\
+0 & e^{i\theta}	
+\end{matrix}\right),
+\end{align}
+is a generalised phase-flip gate.
+\item The amplitudes in the $n$-qubit output state $\ket{y}$ are given by the quantum Fourier transform of the input amplitudes, implementing the transformation,
+\begin{align}
+	\hat{\mathrm{QFT}} \ket{j} \to \frac{1}{\sqrt{N}}\sum_{k=0}^{N-1} \omega^{jk}\ket{k},
+\end{align}
+on the logical basis states, or in matrix form,
+\begin{align}
+\frac{1}{\sqrt{N}} \left(\begin{matrix}
+  1 & 1 & 1 & \dots & 1\\
+  1 & \omega & \omega^2 & \dots & \omega^{N-1} \\
+  1 & \omega^2 & \omega^4 & \dots & \omega^{2(N-1)} \\
+  \vdots & \vdots & \vdots & \ddots & \vdots \\
+  1 & \omega^{N-1} & \omega^{2(N-1)} &\dots &\omega^{(N-1)(N-1)}
+\end{matrix}\right),
+\end{align}
+where there are,
+\begin{align}
+N=2^n,
+\end{align}
+logical basis states.
+\item The quantum circuit requires $O(n^2)$ gates.
+\item $\Box$
+\end{enumerate}
+\includegraphics[width=\textwidth]{QFT}
+}
+\end{mdframed}
+\captionspacealg \caption{The quantum Fourier transform (QFT) algorithm. The circuit is defined recursively, defining the $n$-qubit QFT in terms of an \mbox{$n-1$}-qubit QFT.} \label{alg:QFT}\index{Quantum Fourier transform}
+\end{table}
 
 %
 % Phase-Estimation
@@ -200,7 +269,7 @@ where $\theta$ parameterises the phase of the eigenvalue and $\ket\psi$ is an ei
 The algorithm for this is baked from several ingredients. To implement phase-estimation with $n$ bits of precision, we require:
 \begin{itemize}
 	\item An $n$-qubit Hadamard transform, $\hat{H}^{\otimes n}$\index{Hadamard!Transform}.
-	\item $n$ controlled-$\hat{U}$s\footnote{Any unitary has a coherently controlled unitary equivalent, of the form $\hat{U}_\mathrm{controlled} = \ket{0}\bra{0}\otimes \hat{\mathbb{I}} + \ket{1}\bra{1}\otimes\hat{U}$. These always have an efficient circuit construction, given $\hat{U}$.}.
+	\item $n$ controlled-$\hat{U}$s\footnote{Any unitary has a coherently controlled unitary equivalent, of the form $\hat{U}_\mathrm{controlled} = \ket{0}\bra{0}\otimes \hat{\mathbb{I}} + \ket{1}\bra{1}\otimes\hat{U}$. These always have an efficient circuit construction, given $\hat{U}$.}\index{Controlled unitaries}.
 	\item An $n$-qubit inverse quantum Fourier transform\index{Quantum Fourier transform}, $\hat{\mathrm{QFT}}_n^\dag$ (Sec.~\ref{sec:QFT_alg}).
 \end{itemize}
 
