@@ -147,11 +147,13 @@ function Grover(f,n):
 
 From Sec.~\ref{sec:quantum_search} we know that the quantum search algorithm requires a black box oracle that evaluates a classical function or database lookup query as a subroutine. How do we construct these oracles?
 
-If we consider the case of solving a satisfiability problem, to find a satisfying input such that the function evaluates to \mbox{$f(x)=1$}, then it would na{\"i}svely appear that the required quantum operation needs to implement the transformation,
-\begin{align}
+If we consider the case of solving a satisfiability problem, to find a satisfying input such that the function evaluates to \mbox{$f(x)=1$}, then it would na{\"i}vely appear that the required quantum operation needs to implement the transformation,
+\begin{align}\label{eq:wrong_oracle}
 	\hat{U}_f\ket{x}=\ket{f(x)}.
 \end{align}
-However, it is easy to see that in general such a transformation is non-unitary, and therefore cannot be implemented quantum mechanically. To overcome this obstacle and enable unitary implementation, we introduce additional ancillary bits\index{Ancillary bits} to $f(x)$ and first write it as a reversible classical circuit\index{Reversible classical circuits}, which then always lends itself to a unitary quantum construction. For example, if we instead introduce some extra qubits and implement the transformation,
+However, it's easy to see that in general such a transformation is non-unitary, and therefore cannot be implemented quantum mechanically.
+
+To overcome this obstacle and enable unitary implementation, we introduce additional ancillary bits\index{Ancillary bits} to $f(x)$, and first write it as a reversible classical circuit\index{Reversible classical circuits}, which then always lends itself to a unitary quantum construction. Specifically, if instead of attempting to construct Eq.~(\ref{eq:wrong_oracle}) we  introduce some extra qubits and attempt to implement the transformation,
 \begin{align}
 \hat{U}_f\ket{x}\ket{0} 	= \ket{x}\ket{f(x)},
 \end{align}
@@ -161,19 +163,37 @@ To provide the simplest possible example, consider the classical XOR gate, given
 \begin{align}
 	y_1 = x_1\oplus x_2.
 \end{align}
-This operation is obviously not reversible (and hence not unitary), since for a give output $y_1$, the inputs $x_1$ and $x_2$ are not unique. However, if we trivially modify the transformation to be,
+This operation is obviously not reversible (and hence not unitary), since for a given output $y_1$, the inputs $x_1$ and $x_2$ are not unique. However, if we trivially modify the transformation to be,
 \begin{align}
 	y_1 &= x_1\oplus x_2,\nonumber\\
 	y_2 &= x_2,
 \end{align}
-then a quick back-of-the-envelope calculation verifies that the transformation (simply a CNOT gate\index{CNOT gate} now) is now reversible, unitary, and output $y_1$ encodes the desired function evaluation.
+then a quick back-of-the-envelope calculation verifies that the transformation (simply a CNOT gate\index{CNOT gate}) is now reversible, unitary, and output $y_1$ encodes the desired function evaluation.
 
-Having re-expressed our desired oracle function as a reversible classical circuit, we now simply make direct substitutions of all the reversible classical gates with their logically equivalent quantum counterparts, yielding a quantum implementation of the function that is unitary and preserves quantum coherence. The progression is shown in Fig.~\ref{fig:oracle_circ}.
+Having re-expressed our desired oracle function as a reversible classical circuit, we now simply make direct substitutions of all the reversible classical gates with their logically equivalent quantum counterparts, yielding a quantum implementation of the function that is unitary and preserves quantum coherence. The progression for this example is shown in Fig.~\ref{fig:oracle_circ}. The general procedure for oracle construction is shown in Alg.~\ref{alg:oracle_constr}
 
 \begin{figure}[!htbp]
 \includegraphics[clip=true,width=0.4\textwidth]{oracle_circuits}
 \caption{Simple example of the progression of turning a classical function into a quantum oracle. (a) A simple classical circuit, the XOR gate, which is not invertible. (b) By introducing an ancillary bit we are able to make a reversible implementation of the same circuit. (c) With a reversible circuit construction, we can directly substitute the reversible gates for their unitary equivalents, yielding a quantum oracle implementation of the starting function.}\label{fig:oracle_circ}	
 \end{figure}
+
+\begin{table}[!htbp]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
+function Oracle(f):
+\begin{enumerate}
+	\item Let $f$ be an arbitrary, efficiently-computable function in \textbf{BPP}.
+	\item Express $f$ as a classical logic circuit.
+	\item Make ancillary bits available.
+	\item Rewrite the classical circuit as a reversible classical circuit, exploiting the introduced ancillary qubits as necessary.
+	\item Make direct substitutions of all reversible classical gates with their quantum counterparts that implement the equivalent logical operations in qubit space.
+	\item Return $\hat{U}_f$.
+    \item $\Box$
+\end{enumerate}
+}
+\end{mdframed}
+\captionspacealg \caption{Outline of the general procedure for constructing quantum oracles from classical logic descriptions.} \label{alg:oracle_const}
+\end{table}
 
 %
 % Quantum Fourier Transform
@@ -216,6 +236,8 @@ on the $N$ basis states.
 
 Unlike the closely-related Hadamard transform\index{Hadamard!Transform}, $\hat{H}^{\otimes n}$, which shares many properties\footnote{Like the QFT, all matrix elements of the Hadamard transform have magnitude \mbox{$1/\sqrt{N}$}, differing only in their phases, which are all simple $\pm$.} with the QFT, the QFT is a highly entangling operation. The QFT of any dimension has an efficient circuit implementation, making it an important subroutine in many algorithms. Specifically, the $n$-qubit QFT (i.e a transformation on $2^n$ amplitudes) requires only $O(n^2)$ elementary gates (Hadamards and CZs). If an approximation of the QFT is sufficient for one's purposes, this can be further reduced to only \mbox{$O(n\log n)$}.
 
+Note that while the circuit only requires $O(n^2)$ gates, it implements a Fourier transform on $2^n$ amplitudes, giving this subroutine an exponential quantum improvement over classical DFTs.
+
 The circuit construction for the QFT is shown in Alg.~\ref{alg:QFT}.
 
 \begin{table}[!htbp]
@@ -251,6 +273,7 @@ N=2^n,
 \end{align}
 logical basis states.
 \item The quantum circuit requires $O(n^2)$ gates.
+\item Return $\ket{y}$.
 \item $\Box$
 \end{enumerate}
 \includegraphics[width=\textwidth]{QFT}
