@@ -16,7 +16,7 @@ To provide context for the excitement of quantum computing and motivate interest
 
 The first quantum algorithm demonstrating a provable improvement over the best classical algorithm was the Deutsch-Jozsa algorithm\cite{bib:DeutschJozsa92}. Unfortunately the algorithm solves a very contrived problem, designed for the purposes of demonstrating post-classicality rather than solving a problem of actual practical interest. Nonetheless, the algorithm is straightforward to explain and understand, making it a useful starting point in understanding quantum algorithms and the computational enhancement they may offer.
 
-The algorithm relies on a `black box', referred to as an \textit{oracle}\index{Oracles}, which takes an input bit-string and outputs a single bit, evaluating the function $f(x)$ for the $n$-bit input bit-string $x$. In this contrived problem $f(x)$ is guaranteed to be either \textit{uniform}\index{Uniform function} or \textit{balanced}\index{Balanced function}. In the former case, the output to the oracle is always \mbox{$f(x)=0$} or always \mbox{$f(x)=1$}, but it doesn't matter which, they simply must always be the same. In the latter case, the output is \mbox{$f(x)=0$} for exactly half the inputs $x$, and \mbox{$f(x)=1$} for the other half of $x$, but the ordering of which inputs generate which outputs may be arbitrary. The goal of the algorithm is to determine whether $f(x)$ is uniform of balanced using the least number of queries to the oracle.
+The algorithm relies on a `black box', referred to as an \textit{oracle}\index{Oracles}, which takes an input bit-string and outputs a single bit, evaluating the function $f(x)$ for the $n$-bit input bit-string $x$. In this contrived problem $f(x)$ is guaranteed to be either \textit{uniform}\index{Uniform functions} or \textit{balanced}\index{Balanced functions}. In the former case, the output to the oracle is always \mbox{$f(x)=0$} or always \mbox{$f(x)=1$}, but it doesn't matter which, they simply must always be the same. In the latter case, the output is \mbox{$f(x)=0$} for exactly half the inputs $x$, and \mbox{$f(x)=1$} for the other half of $x$, but the ordering of which inputs generate which outputs may be arbitrary. The goal of the algorithm is to determine whether $f(x)$ is uniform of balanced using the least number of queries to the oracle.
 
 While it's clear that the dimensionality of the input state space is exponentially large, $2^n$, it is fairly obvious that a trivial \textbf{BPP}\index{BPP} algorithm exists for solving this problem with confidence exponentially asymptoting to unity against the number of oracle queries. We simply evaluate the oracle for randomly chosen inputs. If we measure any occurrences of measurement outcomes that are not all 0 or all 1 we know with certainty that the function must have been balanced. If on the other hand we measure all 0s or all 1s for more than half the input state space $x$, we know with certainty the function was uniform.
 
@@ -77,8 +77,8 @@ function DeutschJozsa(f,n):
 \end{enumerate}
 \begin{align}
 \Qcircuit @C=1em @R=1.6em {
-    \lstick{\ket{0}^{\otimes n}} & \gate{\hat{H}^{\otimes n}} & \multigate{1}{\hat{U}_f} & \gate{\hat{H}^{\otimes n}} & \meter \\
-    \lstick{\ket{1}} & \gate{\hat{H}} & \ghost{\hat{U}_f} & \qw & \\
+    \lstick{\ket{0}^{\otimes n}} & \gate{{H}^{\otimes n}} & \multigate{1}{{U}_f} & \gate{{H}^{\otimes n}} & \meter \\
+    \lstick{\ket{1}} & \gate{{H}} & \ghost{{U}_f} & \qw & \\
 } \nonumber
 \end{align}
 }
@@ -170,7 +170,7 @@ This operation is obviously not reversible (and hence not unitary), since for a 
 \end{align}
 then a quick back-of-the-envelope calculation verifies that the transformation (simply a CNOT gate\index{CNOT gate}) is now reversible, unitary, and output $y_1$ encodes the desired function evaluation.
 
-Having re-expressed our desired oracle function as a reversible classical circuit, we now simply make direct substitutions of all the reversible classical gates with their logically equivalent quantum counterparts, yielding a quantum implementation of the function that is unitary and preserves quantum coherence. The progression for this example is shown in Fig.~\ref{fig:oracle_circ}. The general procedure for oracle construction is shown in Alg.~\ref{alg:oracle_constr}
+Having re-expressed our desired oracle function as a reversible classical circuit, we now simply make direct substitutions of all the reversible classical gates with their logically equivalent quantum counterparts, yielding a quantum implementation of the function that is unitary and preserves quantum coherence. The progression for this example is shown in Fig.~\ref{fig:oracle_circ}, and the general procedure for oracle construction is shown in Alg.~\ref{alg:oracle_const}.
 
 \begin{figure}[!htbp]
 \includegraphics[clip=true,width=0.4\textwidth]{oracle_circuits}
@@ -286,7 +286,7 @@ logical basis states.
 % Phase-Estimation
 %
 
-\subsection{Phase-estimation}\index{Phase estimation!Algorithm}\label{sec:phase_est_alg}
+\subsection{Phase-estimation}\index{Phase-estimation!Algorithm}\label{sec:phase_est_alg}
 
 The goal of the phase-estimation algorithm \cite{bib:PhaseEstAlg} is to calculate the eigenvalue of a given unitary operator for a given eigenvector of that unitary. Since the eigenvalues of unitary operators are always phases of amplitude 1, we can write,
 \begin{align}
@@ -314,10 +314,10 @@ function PhaseEstimation($\hat{U}$, $\ket\psi$, $n$):
 \end{enumerate}
 \begin{align}
 \Qcircuit @C=1em @R=1.6em {
-    \lstick{\ket{0}} & \gate{\hat{H}} & \qw &\qw & \dots && \ctrl{3} & \multigate{2}{\hat{QFT}^\dag} & \meter \\
-    \lstick{\vdots} & \gate{\hat{H}} & \qw &\qw & \dots & & \qw & \ghost{\hat{QFT}^\dag} & \meter \\
-    \lstick{\ket{0}} & \gate{\hat{H}} & \ctrl{1} &\qw & \dots && \qw & \ghost{\hat{QFT}^\dag} & \meter \\
-    \lstick{\ket{\psi}} & \qw & \gate{\hat{U}^{2^0}} &\qw & \dots & &\gate{\hat{U}^{2^{n-1}}} & \qw & \qw \\
+    \lstick{\ket{0}} & \gate{{H}} & \qw &\qw & \dots && \ctrl{3} & \multigate{2}{{QFT}^\dag} & \meter \\
+    \lstick{\vdots} & \gate{{H}} & \qw &\qw & \dots & & \qw & \ghost{{QFT}^\dag} & \meter \\
+    \lstick{\ket{0}} & \gate{{H}} & \ctrl{1} &\qw & \dots && \qw & \ghost{{QFT}^\dag} & \meter \\
+    \lstick{\ket{\psi}} & \qw & \gate{{U}^{2^0}} &\qw & \dots & &\gate{{U}^{2^{n-1}}} & \qw & \qw \\
 } \nonumber
 \end{align}
 }
@@ -347,7 +347,7 @@ where each $\hat{H}_i$ acts on a subspace of dimension $m_i$ within the larger s
 \end{align}
 We wish to simulate this evolution.
 
-From the CampBell pairBaker-Hausdorff lemma\index{CampBell pairBaker-Hausdorff lemma} we can approximate this as,
+From the Baker-Campbell-Hausdorff lemma\index{Baker-Campbell-Hausdorff lemma} we can approximate this as,
 \begin{align}\label{eq:CBH_lemma}
 	\hat{U} \approx \left(e^{i\hat{H}_1\frac{t}{n}}\dots e^{i\hat{H}_N\frac{t}{n}}\right)^n + O\left(\frac{t^2}{n}\right).
 \end{align}
@@ -357,9 +357,9 @@ This representation effectively decomposes the global evolution into $nN$ discre
 \end{align}
 each of which operates on an $m_i$-dimensional subspace, and may therefore be directly efficiently implemented as a unitary gate within the circuit model on a quantum computer. 
 
-Clearly the error terms vanish in the limit of \mbox{$n\to\infty$}, whereby the simulation becomes exact. However, this requires an infinite number of gates via infinitesimal discretisation. We would rather approximate the solution using a finite number of gates. It follows from Eq.~(\ref{eq:CBH_lemma}) that for simulation accuracy $\epsilon$, the number of discrete steps scales as,
+Clearly the error terms vanish in the limit of \mbox{$n\to\infty$}, whereby the simulation becomes exact. However, this requires an infinite number of gates via infinitesimal discretisation. We would rather approximate the solution using a finite number of gates. It follows from Eq.~(\ref{eq:CBH_lemma}) that for simulation accuracy $\delta$, the number of discrete steps scales as,
 \begin{align}
-n = O\left(\frac{t^2}{\epsilon}\right),
+n = O\left(\frac{t^2}{\delta}\right),
 \end{align}
 which scales efficiently with the duration of time being simulated and the accuracy of the simulation.
 
@@ -381,16 +381,16 @@ where $\hat{H}_i$ are local Hamiltonians operating on low-dimensional spaces, an
 \end{align}
 \item The degree of discretisation, $n$, is chosen according to,
 \begin{align}
-n = O\left(\frac{t^2}{\epsilon}\right),
+n = O\left(\frac{t^2}{\delta}\right),
 \end{align}
-where $t$ is evolution time and $\epsilon$ is the accuracy.
+where $t$ is evolution time and $\delta$ is the accuracy.
 \item Apply the circuits for simulating the local Hamiltonians according to the sequence,
 \begin{align}
 	\hat{U} = \left(\prod_{j=1}^N \hat{U}_j \right)^n.
 \end{align}
 \item The algorithm has runtime,
 \begin{align}
-	O\left(\frac{Nt^2}{\epsilon}\right).
+	O\left(\frac{Nt^2}{\delta}\right).
 \end{align}
 \item $\Box$
 \end{enumerate}
@@ -410,6 +410,19 @@ where $t$ is evolution time and $\epsilon$ is the accuracy.
 \comment{Mention relationship to hidden subgroup, period-finding, and discrete-log problems}
 
 While this algorithm is known to reside in \textbf{BQP}, it is strongly believed not to be \textbf{BQP}-complete. Similarly, while it is known to reside in \textbf{NP}, it is strongly believed not to be \textbf{NP}-complete, thereby placing it in the `limbo zone' of \textbf{NP}-intermediate complexity.\index{NP \& NP-complete}
+
+\begin{table}[!htbp]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
+function Shor(x):
+\begin{enumerate}
+    \item $\Box$
+\end{enumerate}
+\includegraphics[width=\textwidth]{shor_circuit}
+}
+\end{mdframed}
+\captionspacealg \caption{Shor's quantum algorithm for integer factorisation.} \label{alg:shor}
+\end{table}
 
 %
 % Quantum Machine Learning
@@ -521,18 +534,6 @@ for accuracy $\delta$.
 \end{table}
 
 %
-% Linear Systems
-%
-
-\subsection{Linear systems}\label{sec:linear_systems} \index{Linear systems}
-
-\cite{bib:harrow2009quantum}
-
-\comment{To do. DELETE???}
-
-\comment{Example: recommendation algorithm where sampling the vector yields, with high probability, a recommendation that is a good one, without having to explicitly know the entire solution vector.}
-
-%
 % Sampling Problems
 %
 
@@ -560,7 +561,7 @@ Because CZ gates commute, they can be performed in parallel, giving the IQP circ
 \begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
 \texttt{
-function IQPsampling():
+function IQP\_sampling():
 \begin{enumerate}
     \item Prepare the $n$-qubit state,
     \begin{align}
@@ -589,11 +590,11 @@ function IQPsampling():
 	\item Repeat protocol $O(\mathrm{poly}(n))$ times.
 	\item $\Box$
 \end{enumerate}
-\begin{align}
+	\item \begin{align}
 \Qcircuit @C=1em @R=1.6em {
-    \lstick{\ket{0}} & \gate{\hat{H}} & \multigate{2}{\hat{U}_\mathrm{CZs}} & \gate{\hat{H}} & \meter \\
-    \lstick{\vdots} & \gate{\hat{H}} & \ghost{\hat{U}_\mathrm{CZs}} & \gate{\hat{H}} & \meter \\
-    \lstick{\ket{0}} & \gate{\hat{H}} & \ghost{\hat{U}_\mathrm{CZs}} & \gate{\hat{H}} & \meter \\
+    \lstick{\ket{0}} & \gate{{H}} & \multigate{2}{{U}_\mathrm{CZs}} & \gate{{H}} & \meter \\
+    \lstick{\vdots} & \gate{{H}} & \ghost{{U}_\mathrm{CZs}} & \gate{{H}} & \meter \\
+    \lstick{\ket{0}} & \gate{{H}} & \ghost{{U}_\mathrm{CZs}} & \gate{{H}} & \meter \\
 } \nonumber
 \end{align}
 }
@@ -604,10 +605,10 @@ function IQPsampling():
 These reduced resource requirements makes both analysis and physical construction of some sampling problems far simpler than a universal quantum computer, yet nonetheless they implement computationally hard problems. For these reasons, many researchers regard non-universal sampling problems as being likely candidates for the first demonstration of quantum supremacy\index{Quantum supremacy}.
 
 %
-% Quantum advantage with shallow circuits}
+% Shallow quantum circuits
 %
 
-\subsection{Quantum advantage with shallow circuits}\index{Shallow circuits}\label{sec:shallow_circs}
+\subsection{Shallow quantum circuits}\index{Shallow quantum circuits}\label{sec:shallow_circs}
 
 As discussed in Sec.~\ref{sec:NISQ}, we have good reason to believe that quantum computers have super-classical capabilities. Recently, an unconditional proof of a quantum speed-up has been shown for a particular class of circuits.
 
@@ -671,9 +672,9 @@ function ShallowQuantumCircuits():
 \end{enumerate}
 \begin{align}
 \Qcircuit @C=1em @R=1.6em {
-    \lstick{\ket{0}} & \gate{\hat{H}} & \multigate{2}{\hat{U}_q} & \gate{\hat{H}} & \meter \\
-    \lstick{\vdots} & \gate{\hat{H}} & \ghost{\hat{U}_q} & \gate{\hat{H}} & \meter \\
-    \lstick{\ket{0}} & \gate{\hat{H}} & \ghost{\hat{U}_q} & \gate{\hat{H}} & \meter \\
+    \lstick{\ket{0}} & \gate{{H}} & \multigate{2}{{U}_q} & \gate{{H}} & \meter \\
+    \lstick{\vdots} & \gate{{H}} & \ghost{{U}_q} & \gate{{H}} & \meter \\
+    \lstick{\ket{0}} & \gate{{H}} & \ghost{{U}_q} & \gate{{H}} & \meter \\
 } \nonumber
 \end{align}
 }
@@ -697,7 +698,7 @@ If we lay out the circuit in 2D (hence the 2D HLF problem), it only requires cla
 
 \begin{figure}[!htbp]
 \includegraphics[clip=true, width=0.4\textwidth]{shallow_circuits_2D}
-\caption{\label{fig:2DHLFgrid} Implementation of the HLF problem on a 2D grid. The qubits are represented as green circles (some omitted for clarity), and CZ gates are drawn in red.}
+\caption{\label{fig:2DHLFgrid} Implementation of the HLF problem on a 2D grid. The qubits are represented as green circles (some omitted for clarity), and CZ gates are drawn in red.\comment{Better explanation}}
 \end{figure}
 
 Now, comparing the quantum algorithm to a classical one, it has been proven that any probabilistic classical circuit with bounded input that solves the 2D HLF problem with high probability, $\epsilon \leq 1/8$, must have depth increasing logarithmically with input size \cite{bib:bravyi2018quantum}. The speed-up here is provided by quantum non-locality\index{Quantum non-locality}. 
