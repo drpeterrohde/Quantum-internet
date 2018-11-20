@@ -403,19 +403,56 @@ where $t$ is evolution time and $\delta$ is the accuracy.
 % Integer Factorisation
 %
 
-\subsection{Integer factorisation} \index{Shor's algorithm}\index{Hidden subgroup problem}\label{sec:shors_alg}
+\subsection{Integer factorisation} \index{Shor's algorithm}\index{Hidden subgroup problem}\index{Period finding}
+	\index{Integer factorisation}\label{sec:shors_alg}
 
-\comment{To do}
+By far the most influential quantum algorithm, and one of the first, is Shor's integer factorisation algorithm \cite{bib:ShorFactor}. The problem is simply to find \mbox{$x,y\in\mathbb{Z}^+$} given $z=xy$.
+ 
+ While this algorithm is known to reside in \textbf{BQP} (since it has an efficient quantum algorithm), it is strongly believed not to be \textbf{BQP}-complete. Similarly, while it is known to reside in \textbf{NP} (since it can be efficiently classically verified using simple multiplication), it is strongly believed not to be \textbf{NP}-complete, thereby placing it in the `limbo zone' of \textbf{NP}-intermediate complexity.\index{NP \& NP-complete}
 
-\comment{Mention relationship to hidden subgroup, period-finding, and discrete-log problems}
+This problem is of immense interest to the field of cryptography, since finding private RSA keys (Sec.~\ref{sec:public_key_crypt}) computationally can be reduced to this problem. An adversary with access to an efficient factoring algorithm could completely compromise RSA cryptography. For this reason, Shor's algorithm is responsible for the large investments made into quantum computing by nation states, and their military and intelligence agencies!
 
-While this algorithm is known to reside in \textbf{BQP}, it is strongly believed not to be \textbf{BQP}-complete. Similarly, while it is known to reside in \textbf{NP}, it is strongly believed not to be \textbf{NP}-complete, thereby placing it in the `limbo zone' of \textbf{NP}-intermediate complexity.\index{NP \& NP-complete}
+Shor's algorithm works by first reducing integer factorisation to another problem, \textit{period finding}\index{Period finding}. For the function,
+\begin{align}
+f(x)= a^x \,\mathrm{mod}\, N,	
+\end{align}
+find its period \mbox{$r\in\mathbb{Z}^+$}, the smallest integer such that,
+\begin{align}
+f(x)=f(x+r) \,\mathrm{mod} N.	
+\end{align}
+With the ability to solve the period finding problem, an efficient classical algorithm exists for transforming this solution to a solution for factoring.
+
+The algorithm derives its power from a quantum Fourier transform subroutine (Sec.~\ref{sec:QFT_alg}), and has runtime,
+\begin{align}
+O((\log N)^2(\log\log N)(\log\log\log N)),	
+\end{align}
+making it quantum-efficient. By contrast, the best-known classical algorithm, the \textit{general number field sieve}\index{General number field sieve}, requires time,
+\begin{align}
+	O(e^{1.9(\log N)^{\frac{1}{3}}(\log\log N)^\frac{2}{3}}).
+\end{align}
+
+The algorithm is described in Alg.~\ref{alg:shor}.
 
 \begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
 \texttt{
-function Shor(x):
+function Shor(a,N):
 \begin{enumerate}
+	\item For function,
+	\begin{align}
+		f(x)= a^x \,\mathrm{mod}\, N,	
+	\end{align}
+	we wish to find the smallest integer $r$ such that,
+	\begin{align}
+		f(x)=f(x+r) \,\mathrm{mod} \,N.	
+	\end{align}
+	\item Run the circuit below.
+	\item Efficient classical processing of the measured output registers reveals $r$ with high probabiliy.
+	\item Classically verify that,
+	\begin{align}
+		f(x)=f(x+r) \,\mathrm{mod} \,N.	
+	\end{align}
+	\item If it isn't then repeat the circuit to obtain more samples. 
     \item $\Box$
 \end{enumerate}
 \includegraphics[width=\textwidth]{shor_circuit}
