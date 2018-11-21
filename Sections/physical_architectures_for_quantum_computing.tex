@@ -76,7 +76,7 @@ We now review approaches for cluster state-based LOQC using non-deterministic en
 % Fusion Gates
 %
 
-\subsubsection{Fusion gates} \index{Fusion!Gates}
+\subsubsection{Fusion gates}\label{sec:fusion_gates}\index{Fusion!Gates}
 
 As introduced in Sec.~\ref{sec:CSQC}, a cluster state may be defined by the action of CZ gates upon a graph of qubits initialised into the $\ket{+}$ state. As we saw in the previous section, implementing these CZ gates is troublesome using linear optics, as it is non-deterministic and carries the burden of a large resource overhead. Nonetheless, it was shown early on \cite{NielsenOptCS} that by combining non-deterministic CZ gates with the cluster state formalism yields LOQC protocols far more efficient than the original KLM protocol for LOQC.
 
@@ -234,10 +234,64 @@ In addition to technologically simplifying the architecture by reducing the numb
 
 \subsection{Weak cross-Kerr non-linearities} \index{Weak cross-Kerr non-linearity quantum computation}
 
-More recently, as an alternative to using post-selection to simulate strong optical non-linearities, it was shown that by introducing strong coherent states, the strength of a cross-Kerr optical non-linearity can be effectively amplified, allowing even very weak non-linearities to be employed for deterministic entangling gate operations \cite{bib:Munro05}. However, such schemes are particularly sensitive to loss, with sensitivity increasing with the coherent amplitudes in the system, creating a direct tradeoff between effective non-linear interaction strength and susceptibility to loss.
+In Sec.~\ref{sec:KLM_univ} we showed that with strong cross-Kerr non-linearities\index{cross-Kerr non-linearities} at our disposal, scalable photonic quantum computing is possible. However, the interaction strengths of such devices available in the lab today are minuscule compared to the full $\pi$ phase-shift required for NS and CNOT gates. In LOQC this problem is circumvented using measurement-induced non-linearities, which are sufficiently strong, but necessarily non-deterministic, requiring substantial overheads to accommodate for gate failure. 
 
-\comment{To do! Bill Munro perhaps?}
-\index{Quantum bus (Qubus)}
+More recently, as an alternative to using post-selection to simulate strong optical non-linearities, it was shown that by introducing strong coherent states, the strength of  cross-Kerr optical non-linearity can be effectively amplified arbitrarily, allowing even very weak non-linearities to be employed for deterministic entangling gate operations \cite{bib:Munro05}, compensated for by using strong coherent states. Thankfully, strong coherent states are an easy resource to come by nowadays.
+
+In this hybrid linear/non-linear optical architecture, a coherent state is used as a `qubus' (quantum bus)\index{Qubus}, which is entangled with the photonic qubits via the weak non-linear interaction, thereby mediating long-range entangling operations. This can provide the sufficient entangling power needed to enable scalable, universal quantum computation.
+
+Let us describe the operation of a parity measurement\index{Parity measurements} device using weak non-linearities. This gate could subsequently be employed as a fusion gate\index{Fusion!Gates} (Sec.~\ref{sec:fusion_gates}) for building cluster states, and is therefore a resource for universal quantum computation. Simple extensions of the design idea easily generalise to other non-trivial operations, such as CNOT gates or QND measurements\index{Quantum non-demolition measurements}. 
+
+The key ingredient here is the cross-Kerr interaction, which obeys the Hamiltonian,
+\begin{align}
+\hat{H}_\mathrm{ck} = \hbar \chi \hat{n}_a \hat{n}_b,	
+\end{align}
+where \mbox{$\hat{n}_a = \hat{a}^\dag \hat{a}$} and \mbox{$\hat{n}_b = \hat{b}^\dag \hat{b}$} are the photon-number operators for modes $a$ and $b$ respectively, and $\chi$ is the interaction strength, which is typically very small in the lab. This Hamiltonian generates the unitary transformation,
+\begin{align}
+\hat{U}_\mathrm{ck} = e^{i\theta\hat{n}_a\hat{n}_b}.
+\end{align}
+The magnitude of the induced phase-shift is now proportional to,  
+\begin{align}
+\theta = \chi t,	
+\end{align}
+where $t$ is the interaction time. For strongly entangling gates we need \mbox{$\theta \approx \pi$}.
+
+Applying this operation between a coherent state and a photon-number state implements the transformation, 
+\begin{align}
+\hat{U}_\mathrm{ck} \ket\alpha \ket{n} = \ket{\alpha e^{i\theta n}} \ket{n}.	
+\end{align}
+Note that the phase-shift accumulated by the coherent state is proportional to the photon-number in the other mode, thereby entangling the two modes.
+
+\begin{figure*}[!htpb]
+	\includegraphics[clip=true, width=\textwidth]{weak_ck_parity_gate}
+\caption{Construction of a 2-mode, polarisation-encoded, photonic parity gate using an ancillary qubus coherent state, mediating photonic interactions via weak cross-Kerr non-linearities.}\label{fig:weak_ck_parity}	
+\end{figure*}
+
+Now consider the parity measurement circuit shown in Fig.~\ref{fig:weak_ck_parity}. Let us begin with two polarisation-encoded photonic qubits, which might be separated over long distances,
+\begin{align}
+\ket{\psi_\mathrm{in}} &= \alpha_{HH} \ket{H}\ket{H} + \alpha_{HV} \ket{H}\ket{V} \nonumber\\
+&+\alpha_{VH} \ket{V}\ket{H} + \alpha_{VV} \ket{V}\ket{V}.
+\end{align}
+Applying the cross-Kerr interactions leaves us in the state,
+\begin{align}
+\hat{U}_\mathrm{gate} \ket{\psi_\mathrm{in}}\ket\alpha &= [\alpha_{HH} \ket{H}\ket{H}] + \alpha_{VV} \ket{V}\ket{V}]\ket\alpha \nonumber\\
+	&+ \alpha_{HV} \ket{H}\ket{V}\ket{\alpha e^{i\theta}}\nonumber\\
+	&+ \alpha_{VH} \ket{V}\ket{H}\ket{\alpha e^{-i\theta}}.
+\end{align}
+Now the qubus state is in some superposition of $\ket\alpha$, $\ket{\alpha e^{i\theta}}$ and $\ket{\alpha e^{-i\theta}}$. The key observation now is that these three coherent basis states become highly distinguishable for large $\alpha$. Specifically, a homodyne measurement on the qubus that projects onto \mbox{$x=0$}, approximately leaves us in the state,
+\begin{align}
+	\ket{\psi_\mathrm{out}} = \alpha_{HH}\ket{H}\ket{H} + \alpha_{VV}\ket{V}\ket{V},
+\end{align}
+which corresponds to a maximally-entangling parity or Bell projection\index{Bell!Measurement}.
+
+Clearly, since \mbox{$\braket{\alpha|\alpha e^{\pm i\theta}}\neq 0$}, there is some probability of error. However, we asymptote towards perfect behaviour in the limit of large coherent qubus amplitudes, since,
+\begin{align}	
+\lim_{|\alpha|\to\infty}\braket{\alpha|\alpha e^{\pm i \theta}} = 0.
+\end{align}
+
+This type of distributed gate lends itself very naturally to distributed, network-based implementation, where the quantum internet is employed to mediate the qubus, potentially over long distances.
+
+The downside of this protocol, and other qubus-based protocols based on the same idea, is its sensitivity to loss. This is because the qubus is effectively in a cat state (Sec.~\ref{sec:cat_enc}), whose sensitivity to decoherence increases rapidly with the coherent amplitude $|\alpha|$. This will effectively place hard limits on how remote Alice and Bob can be in a distributed setting, depending on the loss characteristics of the quantum channel shared between them. It also presents the engineer with a direct tradeoff between decoherence of the qubus and distinguishability of the qubus basis states, both of which increase with $|\alpha|$.
 
 %
 % Passive Linear Optics
