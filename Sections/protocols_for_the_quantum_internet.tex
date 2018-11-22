@@ -487,7 +487,33 @@ The attractive feature of this is that although the matter qubit is stationary, 
 
 \subsection{Quantum non-demolition measurement}\index{Quantum non-demolition measurement (QND)}
 
-\comment{To do! List abbrev.}
+When it comes to optical systems, measurement is typically \textit{destructive}\index{Destructive measurements}, i.e the photon (or other optical state) is destroyed in the process of measurement. An APD, for example, converts a photon to an electrical current and then the photon is gone. Can we measure the logical value of optical states without destroying them?
+
+The answer is yes, via \textit{quantum non-demolition measurements} (QND). The central idea here is to entangle a system which mustn't be destroyed with an ancillary system that we can happily afford to lose. Because the two systems are correlated, a destructive measurement on the ancillary state yields an effective measurement on the primary system, but without destroying it.
+
+The simplest example to illustrate this is by considering the measurement of a single qubit,
+\begin{align}
+\ket\psi = \alpha\ket{0} + \beta\ket{1}.	
+\end{align}
+We begin by introducing an additional ancillary qubit in the logical $\ket{0}$ state, which we maximally entangle to the primary system with a CNOT gate. This yields two redundantly encoded qubits,
+\begin{align}
+\hat{\mathrm{CNOT}}\ket\psi \ket{0} = \alpha\ket{0}\ket{0} + \beta\ket{1}\ket{1},
+\end{align}
+characterised by the same amplitudes as the original qubit. The ancilla is then measured (destructively), which reads out the original state of the primary system to which it was correlated, but which has not been destroyed and may freely continue on its journey.
+
+Unfortunately, the required CNOT gate is cumbersome in optical architectures. But it can be done, and in Sec.~\ref{sec:KLM_univ} we describe in detail how such gates can be constructed.
+
+The quantum circuit implementation for QND is shown in Fig.~\ref{fig:QND_circ}.
+
+\begin{figure}[!htbp]
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {
+    \lstick{\ket\psi} & \ctrl{1} & \qw & \hat{M}\ket\psi \\
+    \lstick{\ket{0}} & \targ & \qw & \meter \\
+} \nonumber
+\end{align}
+\captionspacefig \caption{Quantum non-demolition measurement of a single qubit. $\hat{M}$ is the measurement operator applied during measurement to the ancillary state, which may be destructive. The primary qubit has now been projected onto the measurement outcome $\hat{M}$, but has not been destroyed.}\index{Quantum non-demolition measurement (QND).}\label{fig:QND_circ}
+\end{figure}
 
 %
 % Weak Measurement
