@@ -519,9 +519,29 @@ The quantum circuit implementation for QND is shown in Fig.~\ref{fig:QND_circ}.
 % Weak Measurement
 %
 
-\subsection{Weak measurement}
+\subsection{Weak measurement}\index{Weak measurement}
 
-\comment{To do}
+The measurements considered until now have been \textit{projective} measurements. These completely collapse the wave-function of a state onto an eigenstate of the measurement operator, and also give us perfect information about the associated eigenvalue (i.e measurement outcome). But in some scenarios this might be too aggressive -- could we instead just extract \textit{some} information about the system, and only \textit{partially} collapse it. This is achieved using \textit{weak measurement}.
+
+Consider the circuit shown in Fig.~\ref{fig:weak_meas}. This is identical to the previous circuit for QND, but with the addition of the arbitrary rotation on the ancilla qubit prior to the CNOT gate.
+
+\begin{figure}[!htbp]
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {
+    \lstick{\ket\psi} & \qw & \ctrl{1} & \qw & \qw \\
+    \lstick{\ket{0}} & \gate{R(\theta)} &  \targ & \qw & \meter \\
+} \nonumber
+\end{align}
+\captionspacefig \caption{Quantum weak measurement. The choice of rotation on the ancillary qubit determines how much information about the state is extracted from the measurement, and also how much the state is disturbed by the measurement.}\label{fig:weak_meas}
+\end{figure}
+
+When \mbox{$\theta=0$} this circuit implements an ordinary projective measurement, projecting onto the eigenbasis of the measurement operator. We'll refer to this as a \textit{strong} measurement -- maximum information and maximum disturbance.
+
+On the other hand, consider the case where \mbox{$\hat{R}(\theta)=\hat{H}$}. This transforms the ancillary $\ket{0}$ state into the \mbox{$\ket{+}=\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})$} state. However, the $\ket{+}$ state is an eigenstate of the $\hat{X}$ operator that resides in the CNOT gate, and is therefore invariant under the action of the CNOT. Now the measurement outcome will be completely randomised and independent of $\ket\psi$, revealing no information about $\ket\psi$ whatsoever. But simultaneously, $\ket\psi$ will be unaffected by the measurement since it was not entangled with the ancilla, remaining separable. We have effectively implemented no measurement at all.
+
+However, we can choose $\theta$ to be any value in between these two extremities -- \textit{weak measurement} -- where the strength of the measurement, how much information is extracted from it, and how much it disturbs the state $\ket\psi$, will be a function of the rotation $\theta$. The rule is, the more information our measurement extracts, the more we disturb the state.
+
+\comment{Add some equations.}
 
 %
 % Evolution
