@@ -156,18 +156,22 @@ An intuitive example of a problem taken from a far harder complexity class than 
 
 How do current classical computers play chess? They construct a \textit{search tree}\index{Search tree} (see Fig.~\ref{fig:search_tree}), which is explored exhaustively up to a given depth (bounded by computational resources), and assign a score to each board position, indicating the relative strength of its position. The branch in the tree with the highest scores determines the next move.
 
-\begin{figure}[!htbp]
+%\if 3\pubmode
+\begin{figure*}[!htbp]
+	\includegraphics[clip=true, width=0.7\textwidth]{search_tree}
+%\else
+%	\includegraphics[clip=true, width=0.475\textwidth]{search_tree}
+%\fi
+	\captionspacefig \caption{A search tree\index{Search tree}\index{Search-space} is an outwardly-directed tree graph in which each vertex represents a state of the system (i.e `board position' in chess\index{Chess}). Edges represent actions (or `moves') available from the position from which the edge emanates. The root node represents the current position, and the depth of a vertex (i.e its distance from the root node) represents its future time. A path through the tree therefore represents a sequence of moves up to some point in future time. If the tree had maximum depth, a route (from root to leaf) would represent an entire single game, and the complete set of routes would represent all possible ways in which the game can be played. A complete analysis of a complete search tree with maximum depth would therefore allow us to exhaustively analyse all possible ways in which a game could be played to completion, enabling optimal gameplay. However, since the number of vertices/edges in a tree graph grows exponentially with depth, \mbox{$|V|=O(\exp(d))$}, the configuration search space in a game grows exponentially with how many moves into the future we wish to explore, thereby strongly limiting tree depth in practical implementations.}\label{fig:search_tree}
 \if 3\pubmode
-	\includegraphics[clip=true, width=0.8\textwidth]{search_tree}
+\end{figure*}
 \else
-	\includegraphics[clip=true, width=0.475\textwidth]{search_tree}
+\end{figure*}
 \fi
-	\captionspacefig \caption{A search tree\index{Search tree}\index{Search-space} is an outwardly-directed tree graph in which each vertex represents a state of the system (i.e `board position' in chess\index{Chess}). Edges represent actions (or `moves') available from the position from which the edge emanates. The root node represents the current position, and the depth of a vertex (i.e it's distance from the root node) represents its future time. A path through the tree therefore represents a sequence of moves up to some point in future time. If the tree had maximum depth, a route (from root to leaf) would represent an entire single game, and the complete set of routes would represent all possible ways in which the game can be played. A complete analysis of a complete search tree with maximum depth would therefore allow us to exhaustively analyse all possible ways in which a game could be played to completion, enabling optimal gameplay. However, since the number of vertices/edges in a tree graph grows exponentially with depth, the configuration search space in a game grows exponentially with how many moves into the future we wish to explore, thereby strongly limiting tree depth in practical implementations.}\label{fig:search_tree}
-\end{figure}
 
 This approach lends itself ideally to approximation via Grover. We take the same classical board-position-scoring algorithm, and implement it as an oracle. Grover is then able to search through a quadratically larger search tree, querying the oracle for scores above threshold.
 
-Indeed this intuitive example is a very powerful one -- since all \textbf{EXP}-complete problems are by definition equivalent, and \textbf{EXP} contains many other lesser (but hard) classes, the approximate optimisation technique immediately captures a vast array of interesting problems.
+Indeed this intuitive example is a very powerful one -- since all \textbf{EXP}-complete problems are by definition equivalent, and \textbf{EXP} contains many other lesser (but nonetheless hard) classes, the approximate optimisation technique immediately captures a vast array of interesting problems.
 
 \subsection{How beneficial is quantum-enhanced optimisation?}
 

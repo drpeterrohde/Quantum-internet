@@ -91,7 +91,7 @@ While private-key cryptography solves the problem of end-to-end cryptography, it
 
 Public- (or asymmetric-) key cryptography addresses this issue by replacing the private-key with two keys (known as a key-pair\index{Key-pair}), one used solely for \textit{encryption}, the other solely for \textit{decryption}. Importantly, these two keys are non-trivially related and cannot be efficiently computed from one another. To send a message to a friend I can send him my encryption (public) key that he is only able to use for preparing an encrypted message for me. No security is required when sharing the public-key since an eavesdropper can't use it for decryption. Finally, I am able to decrypt the message using my decryption (private) key, which I kept completely to myself and never shared with anyone.
 
-RSA \cite{bib:RSA} was the first published public-key cryptographic protocol, and forms the backbone for most encryption used on the internet today. It achieves its security based on the (strongly held, but unproven) belief that factorising large integers into constituent primes is a computationally hard problem -- a so-called `trapdoor function'\index{One-way functions}. The algorithm is built upon number theory using modular arithmetic, described in detail in Alg.~\ref{alg:RSA}.
+RSA \cite{bib:RSA} was the first published public-key cryptographic protocol, and forms the backbone for most encryption used on the internet today. It achieves its security based on the (strongly held, but unproven) belief that factorising large integers into constituent primes is a computationally hard problem -- a so-called `trapdoor function'\index{One-way functions}. The algorithm is built upon number theory using modular arithmetic. Alg.~\ref{alg:RSA} described the RSA key-generation, encryption, and decryption protocols.
 
 \begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
@@ -206,7 +206,15 @@ Hash functions are functions that map a long bit-string of arbitrary length to a
 \end{align}
 for an $n$-bit input and $m$-bit output hash, where $n$ is variable and $m$ is fixed. They are an example of `one-way functions'\index{One-way functions} that are computationally easy to compute in the forward direction, but extremely hard to invert. That is, given a hash, it is computationally unviable to find input strings that map to that value.
 
-Hash functions have broad applicability throughout computer science, but here we are most interested in \textit{cryptographic hash functions} for use in cryptography, which impose strong conditions on the difficulty of inversion and their quasi-random characteristics. Most notably, changing a single bit in the input string ought to flip approximately half the bits of the hash on average.
+Hash functions have broad applicability throughout computer science, but here we are most interested in \textit{cryptographic hash functions} for use in cryptography, which impose strong conditions on the difficulty of inversion and their quasi-random characteristics. Most notably, the desired characteristics of a cryptographic hash function include:
+\begin{itemize}
+	\item The distribution of hashes ought not exhibit any biases, following a uniform distribution with quasi-random\index{Quasi-random} behaviour.
+	\item Changing a single bit in the input string ought to flip approximately half the bits of the hash on average.	
+	\item It's computationally efficient to calculate a hash from an input.
+	\item It's computationally complex to find an input that hashes to a given value.
+	\item The hashes of two very similar inputs ought to yield hashes that a very different.
+	\item Two different inputs are extremely unlikely to hash to the same value.
+\end{itemize}
 
 The standard cryptographic hash function with mainstream adoption is the 256-bit Secure Hashing Algorithm (SHA256\index{SHA256}), which generates 256-bit hashes. The algorithm is extremely efficient to implement digitally, and exhibits $O(n)$ runtime for input string length $n$.
 
