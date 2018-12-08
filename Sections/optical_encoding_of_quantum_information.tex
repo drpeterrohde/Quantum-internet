@@ -230,11 +230,16 @@ By manipulating these parameters, information can be encoded into coherent state
 \ket{0} &\equiv \ket{\alpha}, \nonumber \\
 \ket{1} &\equiv \ket{-\alpha}.
 \end{align}
-Note, however, that this representation for qubits is only approximate, since the two basis states are not perfectly orthogonal,
+Note, however, that this representation for qubits is only approximate, since coherent states are not orthogonal,
+\begin{align}\label{eq:coh_st_overlap}
+\braket{\alpha|\beta} &= e^{-\frac{1}{2}(|\alpha|^2+|\beta|^2-2\alpha^*\beta)}\nonumber\\
+&\neq \delta(\alpha-\beta),	
+\end{align}
+thus the two logical basis states are not perfectly orthogonal,
 \begin{align}
 \braket{-\alpha|\alpha} = e^{-2|\alpha|^2},
 \end{align}
-which is non-zero for any finite $\alpha$, whereas for ideal qubits we require \mbox{$\braket{0|1} = 0$}. However, for large $\alpha$, $\ket{\pm\alpha}$ closely approximate orthogonality.
+which is non-zero for any finite $\alpha$, whereas for ideal qubits we require \mbox{$\braket{0|1} = 0$}. However, for large $\alpha$, $\ket{\pm\alpha}$ closely approximate orthogonality, allowing them to be used as qubits.
 
 This representation for qubits using coherent states is easily generalised to qudits by considering coherent states orbiting the origin of phase-space at equal angular intervals of \mbox{$2\pi/d$}, for a $d$-level qudit. The $k$th qudit basis state is then,
 \begin{align}
@@ -265,20 +270,26 @@ which implements translations in phase-space via the addition of coherent amplit
 
 \subsubsection{Cat states} \label{sec:cat_enc} \index{Cat states!Encoding}\index{Cat states}
 
-Another type of CV state, which can in fact encode quantum information, is superpositions of coherent states (colloquially known as `cat' states), with the encoding \cite{???},
-\begin{align}
-\ket{0} &\equiv \frac{1}{\sqrt{2(1+e^{-2|\alpha|^2})}} (\ket{\alpha}+\ket{-\alpha}) \nonumber \\
+Another type of CV state, which can in fact encode quantum information, is superpositions of coherent states (colloquially known as `cat' states), with the encoding \cite{bib:JeongRalph05},
+\begin{align}\label{eq:cat_state_enc}
+\ket{0}_L &\equiv \mathcal{N}_+ (\ket{\alpha}+\ket{-\alpha}) \nonumber \\
+&= 2\mathcal{N}_+ e^{-\frac{|\alpha|^2}{2}} \sum_{n=0}^\infty \frac{\alpha^{2n}}{\sqrt{(2n)!}} \ket{2n}, \nonumber\\
 &= \ket{\mathrm{cat}_+(\alpha)},\nonumber \\
-\ket{1} &\equiv \frac{1}{\sqrt{2(1-e^{-2|\alpha|^2})}}(\ket{\alpha}-\ket{-\alpha}) \nonumber \\
-&= \ket{\mathrm{cat}_-(\alpha)}.
+\ket{1}_L &\equiv \mathcal{N}_- (\ket{\alpha}-\ket{-\alpha}) \nonumber \\
+&= 2\mathcal{N}_- e^{-\frac{|\alpha|^2}{2}} \sum_{n=0}^\infty \frac{\alpha^{2n+1}}{\sqrt{(2n+1)!}} \ket{2n+1},\nonumber\\
+&= \ket{\mathrm{cat}_-(\alpha)},
 \end{align}
-These two basis states contain strictly even or odd photon-number terms respectively (i.e they have well-defined parity\index{Parity}), implying that, unlike coherent states, they are always orthogonal, regardless of amplitude,
+where the normalisation factors are,
+\begin{align}
+\mathcal{N}_\pm = \frac{1}{\sqrt{2(1\pm e^{-2|\alpha|^2})}},
+\end{align}
+which arise due to the non-orthogonality of coherent states, Eq.~(\ref{eq:coh_st_overlap}). These two basis states contain strictly even or odd photon-number terms respectively (i.e they have well-defined parity\index{Parity}), implying that, unlike coherent states, they are always orthogonal, regardless of amplitude,
 \begin{align}
 \braket{\mathrm{cat}_+(\alpha)|\mathrm{cat}_-(\alpha)} = 0 \,\,\forall\,\alpha,
 \end{align}
 making them directly appropriate for qubit encoding, even for weak coherent amplitudes.
 
-Unfortunately, cat states are notoriously difficult to prepare, and extremely sensitive to loss (Sec.~\ref{sec:single_phot_enc}) and dephasing (Sec.~\ref{sec:dephasing_error}). This arises because loss of a single photon flips the parity of the state to an orthogonal one, meaning that as $\alpha$ increases, the state is exponentially more susceptible to decohering into a mixture of the logical basis states.
+Unfortunately, cat states are notoriously difficult to prepare, and extremely sensitive to loss (Sec.~\ref{sec:eff_err}) and dephasing (Sec.~\ref{sec:dephasing_error}). This arises because loss of a single photon flips the parity of the state to an orthogonal one, meaning that as $\alpha$ increases, the state is exponentially more susceptible to decohering into a mixture of the logical basis states.
 
 However, modulo these difficulties, with a resource of cat states at one's disposal, universal quantum computation may be realised using post-selected linear optics \cite{bib:JeongRalph05, bib:Gilchrist04}.
 
