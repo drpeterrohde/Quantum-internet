@@ -40,7 +40,7 @@ When implementing protocols employing post-selection upon detecting all photons,
 \end{align}
 This implies an exponential number of trials\index{Trials},
 \begin{align}
-	N=\left(\frac{1}{\eta}\right)^n,
+	N = \frac{1}{P} = \frac{1}{\eta^n},
 \end{align}
 is required in post-selected protocols. Clearly this exponential scaling is of concern, requiring demanding efficiencies in future large-scale implementations.
 
@@ -48,7 +48,7 @@ is required in post-selected protocols. Clearly this exponential scaling is of c
 
 \subsubsection{Model}\index{Loss model}
 
-Formally, let $\mathcal{E}^\mathrm{loss}_\eta$ be the loss channel with efficiency $\eta$. The channel acting on an initially pure single-photon state, $\ket{1}$, can be modelled as a beamsplitter with transmissivity $\eta$ acting on the state, where the reflected mode is traced out, shown in Fig.\ref{fig:loss_model}. This yields the quantum process,
+Formally, let $\mathcal{E}^\mathrm{loss}_\eta$ be the loss channel with efficiency $\eta$. The channel acting on an initially pure single-photon state, $\ket{1}$, can be modelled as a beamsplitter with transmissivity $\eta$ acting on the state, where the reflected mode is traced out, shown in Fig.~\ref{fig:loss_model}. This yields the quantum process,
 \begin{align}
 \mathcal{E}^\mathrm{loss}_\eta(\hat\rho) = \mathrm{tr}_B[\hat{U}_\mathrm{BS}(\hat\rho_A\otimes\ket{0}_B\bra{0}_B)\hat{U}_\mathrm{BS}^\dag],
 \end{align}
@@ -72,7 +72,12 @@ In the special case of linear optics circuits, loss channels have the elegant pr
 \begin{align}
 (\mathcal{E}_{\eta}^\mathrm{loss})^{\otimes m} \circ \mathcal{E}_U = \mathcal{E}_U \circ (\mathcal{E}_{\eta}^\mathrm{loss})^{\otimes m},
 \end{align}
-where $\mathcal{E}_U$ is a unitary linear optics process, implementing a photon-number-preserving map of the form of Eq.~(\ref{eq:LO_unitary_map}). This simplifies the treatment of distinct system inefficiencies (such as source, network and detector inefficiencies) by allowing us to commute them to the beginning or end of the circuit and combine them together into a single net efficiency. In many scenarios, this allows the different system inefficiencies to be dealt with via post-selection.
+where $\mathcal{E}_U$ is a unitary linear optics process, implementing a photon-number-preserving map of the form of Eq.~(\ref{eq:LO_unitary_map}). This is represented by the circuit diagram shown in Fig.~\ref{fig:loss_LO_commutation}. This simplifies the treatment of distinct system inefficiencies (such as source, network and detector inefficiencies) by allowing us to commute them to the beginning or end of the circuit and combine them together into a single net efficiency. In many scenarios, this allows the different system inefficiencies to be dealt with via post-selection.
+
+\begin{figure}[!htbp]
+	\includegraphics[clip=true, width=0.475\textwidth]{loss_LO_commutation}
+	\captionspacefig \caption{Commutation of a uniform loss channel (i.e identical efficiency on each mode), $\mathcal{E}^\mathrm{loss}$, through a passive linear optics network, $\hat{U}$.} \label{fig:loss_LO_commutation} \index{Loss!Commutation}
+\end{figure}
 
 % Single-photon encoding
 
@@ -148,7 +153,22 @@ which rapidly asymptotes to zero for large $\alpha$ with any \mbox{$\eta<1$}, as
 
 \subsubsection{NOON states}\index{NOON states}
 
-Similarly, NOON states (Sec.~\ref{sec:NOON}) undergo complete wave-function collapse if just a single photon is lost to the environment, and because there are $N$ photons in total, the probability of wave-function collapse grows exponentially with photon-number.
+Similarly, NOON states (Sec.~\ref{sec:NOON}) undergo complete wave-function collapse if just a single photon is lost to the environment. This is because any single photon reveals complete information about the location of the remaining \mbox{$N-1$} photons. Therefore, a NOON state subject to loss of a single photon decoheres to the mixture,
+\begin{align}
+\hat\rho = \frac{1}{2}(\ket{N-1,0}\bra{N-1,0} + \ket{0,N-1}\bra{0,N-1}),
+\end{align}
+which contains no entanglement.
+
+Because there are $N$ photons in total, the probability of wave-function collapse grows exponentially with photon-number. Specifically, the probability of completely collapsing and losing all entanglement is,
+\begin{align}
+	P=1-\eta^N,
+\end{align}
+as shown in Fig.~\ref{fig:NOON_loss}.
+
+\begin{figure}[!htbp]
+	\includegraphics[clip=true, width=0.475\textwidth]{NOON_loss}
+	\caption{Probability of an $N$-photon NOON state completely collapsing and losing all entanglement, under a loss channel with efficiency $\eta$.}\label{fig:NOON_loss}
+\end{figure}
 
 % Scaling
 
@@ -172,15 +192,15 @@ In free-space on the other hand, where the medium of propagation is vacuum, whic
 \end{align}
 which is far more favourable than the exponential scaling inherent to lossy mediums. This provides space-based quantum networks with an inherent competitive advantage compared to any form of ground-based network.
 
-Through atmospheric channels we will have both dispersion and distance-dependent loss, yielding an effective loss rate given by the product of the two effects,
-\begin{align}
-	\eta = O\left(\frac{e^{-\alpha d}}{d^2}\right).
-\end{align}
-
 \begin{figure}[!htbp]
 	\includegraphics[clip=true, width=0.475\textwidth]{free_space_dispersion}
 	\captionspacefig \caption{Spot-size of an optical beam grows quadratically with distance from the source. If the beam is then collected via a camera with aperture area $A'$, any component of $A$ falling outside of $A'$ is effectively lost, yielding an effective loss channel with efficiency \mbox{$\eta = \frac{A'}{A} = \frac{A'}{\pi d^2 \tan^2\theta} = O\left(\frac{1}{d^2}\right)$}.} \label{fig:free_space_disp}
 \end{figure}
+
+Through atmospheric channels we will have both dispersion and distance-dependent loss, yielding an effective loss rate given by the product of the two effects,
+\begin{align}
+	\eta = O\left(\frac{e^{-\alpha d}}{d^2}\right).
+\end{align}
 
 %
 % Dephasing
