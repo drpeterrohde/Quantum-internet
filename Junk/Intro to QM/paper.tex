@@ -199,7 +199,7 @@ From the cyclic property of the trace, it follows that,
 \mathrm{tr}(\ket\psi\bra\phi) = \braket{\psi|\phi}.	
 \end{align}
 
-A useful property of the reduced state of larger pure state is that its purity characterises how entangled that subsystem is with the peripheral system. For example, a joint system which is separable and pure exhibit reduced states which are also pure. But the reduced state of an entangled state, such as that shown in Eq.~(\ref{eq:bell_state_vec_def}), is necessarily mixed. Thus the purity $\mathcal{P}$ of the reduced states of a joint system may be used as a metric for quantifying the degree of entanglement in the system.
+A useful property of the reduced state of larger pure state is that its purity characterises how entangled that subsystem is with the peripheral system. For example, a joint system which is separable and pure exhibit reduced states which are also pure. But the reduced state of an entangled state, such as that shown in Eq.~(\ref{eq:bell_state_vec_def}), is necessarily mixed. Thus the purity $\mathcal{P}$ of the reduced states of a joint system may be used as a metric for quantifying the degree of entanglement in the system. This provides an extremely important link between entanglement and decoherence -- the loss of coherence in an observed quantum system can always be attributed to it becoming entangled to the external environment, to which we don't have access.
 
 %
 % Evolution
@@ -207,9 +207,27 @@ A useful property of the reduced state of larger pure state is that its purity c
 
 \section{Evolution}
 
+Thus far we have only provided a description for the state of quantum systems. What about their evolution? In quantum mechanics the evolution of an $N$-dimensional state is given by arbitrary \mbox{$N\times N$}-dimensional unitary transformations, $\mathrm{U}(N)$, which satisfy,
 \begin{align}
-\hat{U} = e^{-i\hat{H}t}.	
+\hat{U}^\dag\hat{U}=\hat{\mathbb{I}}.	
 \end{align}
+
+Intuitively, this corresponds to the class of higher-dimensional complex rotations that preserve the orthonormality of quantum states. In principle, any unitary operator is physically allowed, although most are challenging to artificially engineer!
+
+The evolution of quantum state vectors under unitary transformation is simply given by matrix multiplication,
+\begin{align}
+\ket{\psi'} = \hat{U}\ket\psi,	
+\end{align}
+or for density operators by conjugation,
+\begin{align}
+\hat\rho' = \hat{U}\hat\rho\hat{U}^\dag.	
+\end{align}
+
+This provides, a discrete-time description for the evolution of quantum states. Sometimes an alternate continuous-time description is employ. Here the system is governed by a Hamiltonian, $\hat{H}$, the quantum analogue of a classical Hamiltonian, which relates to unitary evolution via,
+\begin{align}
+	\hat{U} = e^{-i\hat{H}t},
+\end{align}
+over evolution time $t$.
 
 %
 % Measurement
@@ -217,7 +235,9 @@ A useful property of the reduced state of larger pure state is that its purity c
 
 \section{Measurement}
 
-Measurement operator $\hat{M}$, let the eigenvectors be the so-called \textit{measurement projectors},
+The final ingredient in our toolbox of allowed quantum operations is measurement. After all, what use is a quantum protocol if we can't read out the answer?
+
+So-called \textit{projective measurement} in quantum mechanics are described by sets of \textit{measurement projectors},
 \begin{align}
 \hat{M}_i = \ket{m_i}\bra{m_i},	
 \end{align}
@@ -225,14 +245,37 @@ where,
 \begin{align}
 \sum_i \hat{M}_i = \hat{\mathbb{I}}.	
 \end{align}
+Each projector in the set corresponds to a possible allowed measurement outcome. After measuring a given outcome the state is disturbed and collapses (i.e \textit{projected}) into being in the state corresponding to the measurement outcome. If the set of projectors corresponds to the eigenbasis of some unitary operator $\hat{U}$, we can say that the measurement is performed in the $\hat{U}$-basis.
 
-\begin{align}
-p_i = \mathrm{tr}(\hat{M}_i\hat\rho).
+Importantly, and this is a key feature of quantum mechanics, we cannot control what the measurement outcome is. It occurs randomly according to some classical probability distribution, given by the overlaps between the projectors and the quantum state.
+
+The set of possible projected states following measurement is given by,
+\begin{align}\label{eq:meas_proj_def}
+\ket{\psi_i} &= \frac{\hat{M}_i \ket\psi}{\sqrt{p_i}},\nonumber\\
+\hat\rho_i &= \frac{\hat{M}_i\hat\rho\hat{M}_i^\dag}{p_i},
+\end{align}
+where those outcomes occur with probabilities,
+\begin{align}\label{eq:meas_prob_def}
+p_i &= \bra\psi \hat{M}_i^\dag \hat{M}_i\ket\psi,\nonumber\\
+p_i &= \mathrm{tr}(\hat{M}_i\hat\rho\hat{M}_i^\dag).
 \end{align}
 
-\begin{align}
-\hat\rho_i = \frac{\hat{M}_i\hat\rho\hat{M}_i^\dag}{\mathrm{tr}(\hat{M}_i\hat\rho\hat{M}_i^\dag)}.
-\end{align}
+More general classes of measurements are allowed, given by measurement operators $\hat{M}_i$ comprised of linear combinations of projectors. The same rules above for the action of these measurement operators apply, Eqs.~(\ref{eq:meas_proj_def}, \ref{eq:meas_prob_def}).
 
+As a simple example, consider the superposition state,
+\begin{align}
+\ket\psi = \frac{1}{\sqrt{2}}(\ket{0}+\ket{1}).	
+\end{align}
+Now we have,
+\begin{align}
+p_0 = |\braket{0|\psi}|^2 = \frac{1}{2},\nonumber\\
+p_1 = |\braket{1|\psi}|^2 = \frac{1}{2},
+\end{align}
+and,
+\begin{align}
+\ket{\psi_0} &= \sqrt{2}\ket{0}\braket{0|\psi} = \ket{0},\nonumber\\
+\ket{\psi_1} &= \sqrt{2}\ket{1}\braket{1|\psi} = \ket{1}.\nonumber\\
+\end{align}
+Thus, we see that with 50:50 probability the measurement randomly collapses the measured state onto the $\ket{0}$ or $\ket{1}$ states.
 
 \end{document}
