@@ -16,11 +16,34 @@ It is paramount that QTCP protocols have the capacity to deal with the diverse n
 
 We will now review some of the graph structures most likely to arise in quantum networks, learning from the structures that have become ubiquitous in classical networking.
 
+A summary of the mathematical characteristics of the topologies presented is shown in Table.~\ref{tab:net_top_sum}.\comment{Finish this text - expand on why these properties matter}
+
+\startnormtable
+\begin{table*}[!htbp]
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+  		Topology & Vertices ($|V|$) & Edges ($|E|$) & Diameter ($d$) \\
+      	\hline
+      	\hline
+      	Point-to-point & $2$ & $1$ & $1$ \\
+      	Linear & $|V|$ & \mbox{$O(|V|)$} & \mbox{$O(|V|)$} \\
+      	Complete & $|V|$ & \mbox{$O(|V|^2)$} & $1$ \\
+      	Lattice & $mn$ & \mbox{$O(mn)$} & \mbox{$O(m+n)$} \\
+      	Tree & $|V|$ & \mbox{$O(|V|)$} & \mbox{$O(\log |V|)$} \\
+      	Percolation & \mbox{$O(p_\mathrm{vertex}\cdot |V|)$} & \mbox{$O(p_\mathrm{edge}\cdot |E|)$} & variable \\
+      	Random & \mbox{$O(p_\mathrm{vertex}\cdot |V|)$} & \mbox{$O(p_\mathrm{edge}\cdot |V|^2)$} & variable \\
+      	Scale-free & $|V|$ & $|E|$ & \mbox{$O(\log\log |V|)$}\\
+      	\hline
+	\end{tabular}
+	\captionspacetab \caption{Summary of the mathematical characteristics of different network topologies.} \label{tab:net_top_sum}
+\end{table*}
+\startalgtable
+
 %
 % Point-To-Point
 %
 
-\subsection{Point-to-point} \index{Point-to-point (P2P)!Topologies}
+\subsection{Point-to-point} \index{Point-to-point (P2P)!Topologies}\label{sec:P2P_topol}
 
 The most trivial network topology, which also acts as the elementary primitive from which our other topologies will be constructed is a simple dedicated point-to-point (P2P) connection between two parties, where the sender and recipient of a packet reside on neighbouring nodes.
 
@@ -31,10 +54,18 @@ In the case whereby the P2P connection is reserved exclusively for a particular 
 In the case whereby the P2P connection is not reserved for exclusive use between a single sender/recipient pair, but shared between different competing routes in the network, the importance of network routing strategies manifests itself. Now competition for access to the channel will reduce network efficiency, scaling inversely against the number of network participants, and the priorities and costs of packets must be tallied for the purpose of implementing routing strategies.
 
 %
+% Linear
+%
+
+\subsection{Linear}\index{Linear topologies}\label{sec:linear_topol}
+
+\comment{To do}
+
+%
 % Complete
 %
 
-\subsection{Complete} \index{Complete topologies}
+\subsection{Complete}\label{sec:complete_topol} \index{Complete topologies}
 
 The complete graph, denoted $K_{|V|}$, is a $|V|$-vertex graph where every vertex has an undirected link to every other. From a networking point of view, this can be regarded as the extremity of exclusive-use P2P networking, whereby every node has a direct link with every other. Thus, any sender can directly communicate with any receiver, via a dedicated direct channel, with no need to utilise any indirect routes. This topology has the favourable property that although any node can communicate with any other, by exclusively utilising direct P2P links we achieve several benefits:
 \begin{itemize}
@@ -65,7 +96,7 @@ Clearly route-finding is trivial, since there is always a direct P2P link from s
 % Lattice
 %
 
-\subsection{Lattice} \index{Lattice!Topologies}
+\subsection{Lattice}\label{sec:lattice_topol} \index{Lattice!Topologies}
 
 A lattice graph is simply an \mbox{$n\times m$} lattice of vertices (of any geometry, e.g squares), connecting each vertex to its immediate geometric neighbours. The number of edges scales obviously as,
 \begin{align}
@@ -93,7 +124,7 @@ In this case, route finding is simplified, since \textit{all} routes, which stri
 % Tree
 %
 
-\subsection{Tree} \label{sec:tree_graph} \index{Tree topologies}
+\subsection{Tree}\label{sec:tree_topol} \label{sec:tree_graph} \index{Tree topologies}
 
 A tree is a graph containing no cycles, only \textit{branches}\index{Branches}. There are many uses for tree graphs, but one property is of particular convenience in many applications: because the graph is acyclic, there is always exactly one path from any vertex to any other. This mitigates the need for shortest-path algorithms designed for general graphs, and simplifies route-finding algorithms (to be discussed in Sec.~\ref{sec:path_exp}). However, this brings with it the drawback that the topology is most vulnerable to link failures, since the removal of any link from the tree will separate it into a multipartite graph\index{Multipartite graphs}, making communication between the disjoint subgraphs (which are also trees) impossible, as there are no redundant routes. In a sense, tree graphs can be considered the polar opposites of complete graphs.
 
@@ -224,9 +255,11 @@ Fig.~\ref{fig:perc_graph} illustrates several square lattice graphs with differe
 % Random
 %
 
-\subsection{Random}\index{Random!Topologies}
+\subsection{Random}\label{sec:rand_topol}\index{Random!Topologies}
 
 We refer to a random graph as being one in which edges between each pair of vertices occur with some probability $p_\mathrm{edge}$. No vertices are removed from the network, although some may have order \mbox{$|v|=0$}, i.e \mbox{$p_\mathrm{vertex}=1$}. This can be thought of as the edge percolation graph of the complete graph $K_{|V|}$. Some examples are shown in Fig.~\ref{fig:random_graph}.
+
+\comment{Show average edge and vertex numbers}
 
 \if 2\pubmode
 	\begin{figure}[!htbp]
