@@ -27,19 +27,24 @@
 
 \subsection{State vectors}
 
+The most fundamental object in representing quantum systems is the \textit{state vector}, a vector representation for the quantum wave-function. A state vector resides in an $N$-dimensional complex Hilbert space, \mbox{$\mathcal{H}\in\mathbb{C}^N$}, where $N$ denotes the number of basis states supporting the system. These vector representations for quantum states can quickly become unwieldy, since their dimensionality grows exponentially with the number of constituent subsystems. For example, a single qubit resides in a 2-dimensional Hilbert, whereas an $n$-qubit system resides in a $2^n$-dimensional one.
+
+Mathematically, we can employ the following alternate state vector representations, where the latter is referred as \textit{Dirac notation} (with $\ket{n}$ denoting the basis states),
 \begin{align}
 	\ket\psi &= \left(\begin{matrix}{}
 	\alpha_1\\
 	\alpha_2\\
-	\vdots
+	\vdots\\
+	\alpha_N
 \end{matrix}\right)\nonumber\\
-	&= \sum_n \alpha_n \ket{n},
+	&= \sum_{n=1}^N \alpha_n \ket{n}.
 \end{align}
-where \mbox{$\alpha_n\in\mathbb{C}$}, and for normalisation,
+Here \mbox{$\alpha_n\in\mathbb{C}$} are referred to as the \textit{amplitudes} of the state, which for normalisation satisfy,
 \begin{align}\label{eq:state_norm_cond}
 \sum_n |\alpha_n|^2 = 1,	
 \end{align}
 
+In this book we will largely we dealing with qubits, which are supported by two basis states, $\ket{0}$ and $\ket{1}$, and can therefore be written as,
 \begin{align}
 \ket\psi &= \left(\begin{matrix}{}
 	\alpha \\
@@ -47,7 +52,7 @@ where \mbox{$\alpha_n\in\mathbb{C}$}, and for normalisation,
 \end{matrix}\right)\nonumber\\
 &= \alpha\ket{0} + \beta\ket{1}.
 \end{align}
-
+Also useful is the \textit{dual} of a state vector, which is simply the complex conjugate transpose ($\dag$) of the vector, capturing the same information about the state in conjugate form),
 \begin{align}
 \bra\psi &= \left(\begin{matrix}{}
 	\alpha \\
@@ -59,21 +64,20 @@ where \mbox{$\alpha_n\in\mathbb{C}$}, and for normalisation,
 &= \alpha^*\bra{0} + \beta^*\bra{1}.
 \end{align}
 
+For two generic state vectors,
 \begin{align}
 	\ket\psi = \sum_n \alpha_n \ket{n},\nonumber\\
 	\ket\phi = \sum_n \beta_n \ket{n},
 \end{align}
-
-The \textit{overlap} between two states is defined as,
+the \textit{overlap} between them is defined as,
 \begin{align}
 \braket{\psi|\phi} = \sum_n \alpha_n\beta_n^*,
 \end{align}
-The normalisation condition from Eq.~(\ref{eq:state_norm_cond}) implies,
+which is mathematically equivalent to their vector dot product. This quantity has the useful intuitive interpretation as the \textit{distinguishability} between quantum states, which plays an important role in measurement theory and the theory of quantum information. Thus, the normalisation condition from Eq.~(\ref{eq:state_norm_cond}) can equivalently be written,
 \begin{align}
 \braket{\psi|\psi} = 1.	
 \end{align}
-
-Because basis states are orthonormal, this implies that for basis states $\ket{m}$ and $\ket{n}$,
+Because basis states are orthonormal, this implies that for basis states $\ket{m}$ and $\ket{n}$ we have the trivial identity,
 \begin{align}
 	\braket{m|n}=\delta_{m,n}.
 \end{align}
@@ -84,16 +88,28 @@ Because basis states are orthonormal, this implies that for basis states $\ket{m
 
 \subsection{Composite systems}
 
+The joint state vector of a multi-partite system is represented using a tensor (or Kronecker) product Hilbert space, which has dimensionality equal to the product of their individual dimensions, hence yielding the dreaded (cherished) exponential growth in the complexity of quantum systems,
+\begin{align}
+\mathcal{H}_{A,B} = \mathcal{H}_A\otimes \mathcal{H}_B,	
+\end{align}
+where,
+\begin{align}
+\mathcal{H}_A &\in\mathbb{C}^M,\nonumber\\
+\mathcal{H}_B &\in\mathbb{C}^N,\nonumber\\
+\mathcal{H}_{A,B} &\in\mathbb{C}^{MN}.	
+\end{align}
+
+The state vector of two independent subsystems is simply given by their tensor product\footnote{Often the $\otimes$ symbol is omitted for brevity and left implicit.},
 \begin{align}
 \ket\psi_{A,B} &= \ket\psi_A \otimes \ket\phi_B\nonumber\\
 &=\sum_{m,n} \alpha_m\beta_n\ket{m}\otimes\ket{n}.
 \end{align}
-
+This is a so-called \textit{separable} state, since the state vector can be factorised into independent terms characterising each of the subsystems. However, more generally we may have,
 \begin{align}
 \ket\psi_{A,B} =\sum_{m,n} \lambda_{m,n}\ket{m}\otimes\ket{n}.
 \end{align}
-In general, $\lambda_{m,n}$ may not be separable as \mbox{$\lambda_{m,n}=\alpha_m\beta_n$}.
-\begin{align}
+where in general, $\lambda_{m,n}$ may not be separable as \mbox{$\lambda_{m,n}=\alpha_m\beta_n$}. In this case no physical description exists for either subsystem in isolation, which may only be described collectively. Now the state is said to be \textit{entangled}, a uniquely quantum class of quantum states with no classical analogue. The best-known example is the \textit{Bell state},
+\begin{align}\label{eq:bell_state_vec_def}
 \ket\psi_{A,B} &= \frac{1}{\sqrt{2}}\left(\begin{matrix}{}
   1\\
   0\\
@@ -102,7 +118,7 @@ In general, $\lambda_{m,n}$ may not be separable as \mbox{$\lambda_{m,n}=\alpha_
 \end{matrix}\right)\nonumber\\
 &= \frac{1}{\sqrt{2}}(\ket{0}_A\ket{0}_B+\ket{1}_A\ket{1}_B).
 \end{align}
-Cannot be written in separable form as \mbox{$\ket\psi_{A,B} = \ket\psi_A \otimes \ket\phi_B$}. This is a so-called \textit{entangled state}, whereby the two subsystems exhibit a type of quantum correlation with no classical analogue.
+It is obvious upon inspection that this state cannot be written in separable form as \mbox{$\ket\psi_{A,B} = \ket\psi_A \otimes \ket\phi_B$}, and is hence entangled. Entanglement is one of the key unique features of quantum physics, which underpins the operation of most quantum information processing protocols, including quantum computing in particular, where extremely complex many-particle entanglement is present and exploited for computational advantage.
 
 %
 % Density Operators
@@ -110,23 +126,30 @@ Cannot be written in separable form as \mbox{$\ket\psi_{A,B} = \ket\psi_A \otime
 
 \subsection{Density operators}
 
-For an $n$-dimensional Hilbert space, the density operator, $\hat\rho$, is an \mbox{$n\times n$} complex Hermitian matrix, satisfying,
+The state vector formalism presented above applies to \textit{pure states}, i.e ones which are exhibit perfect quantum coherence (i.e superposition), and no classical randomness. But realistic physical systems combine both classical probabilities \textit{and} quantum superposition amplitudes. To capture both of these features simultaneously we employ \textit{density operators}. For an $N$-dimensional Hilbert space, the density operator, $\hat\rho$, is an \mbox{$N\times N$} complex Hermitian matrix,
 \begin{align}
-	\hat\rho = \hat\rho^\dag.
+	\hat\rho = \hat\rho^\dag,
 \end{align}
-
-\begin{align}
-\hat\rho = \left(\begin{matrix}{}
-  a & c \nonumber\\
-  c^* & b
-\end{matrix}\right).
-\end{align}
-
+which satisfies,
 \begin{align}
 \mathrm{tr}(\hat\rho)=\sum_i \hat\rho_{i,i} = 1,	
 \end{align}
 for normalisation.
 
+Thus, in the special case of a qubit, density operators are \mbox{$2\times 2$} complex matrices,
+\begin{align}
+\hat\rho = \left(\begin{matrix}{}
+  a & c \nonumber\\
+  c^* & b
+\end{matrix}\right),
+\end{align}
+where diagonal elements are necessarily real, and off-diagonal ones may be complex.
+
+The intuitive physical interpretation of density matrices is as follows. Diagonal elements represent the classical probabilities of the respective basis states. Off-diagonal elements represent \textit{coherences} between basis states, i.e whether they exist as a classical probability distribution (when the coherence is zero) or as a quantum superposition (when non-zero).
+
+The density operator captures all information (classical and quantum) that can be known about a physical system under the standard laws of quantum physics, and is therefore a very powerful representation to employ.
+
+For a pure state (a qubit in this example), the density operator takes the form,
 \begin{align}
 \hat\rho &= \ket\psi\bra\psi\nonumber\\
 &= \left(\begin{matrix}{}
@@ -135,6 +158,7 @@ for normalisation.
 \end{matrix}\right).
 \end{align}
 
+A classical mixture of quantum states $\hat\rho_i$ with probability distribution $p_i$ takes the form,
 \begin{align}
 	\hat\rho = \sum_i p_i \hat\rho_i,
 \end{align}
@@ -143,11 +167,15 @@ where the probabilities are normalised such that,
 	\sum_i p_i = 1.
 \end{align}
 
-Purity,
+An important measure on density operators is their \textit{purity}, which quantifies to what extent the system is coherent (i.e \textit{not} probabilistic),
 \begin{align}
 \mathcal{P} = \mathrm{tr}(\hat\rho^2),
 \end{align}
-where \mbox{$\mathcal{P}=1$} only for pure states.
+where,
+\begin{align}
+\frac{1}{N}\leq \mathcal{P}\leq 1,	
+\end{align}
+and \mbox{$\mathcal{P}=1$} only for pure states.
 
 %
 % Reduced States
@@ -155,18 +183,23 @@ where \mbox{$\mathcal{P}=1$} only for pure states.
 
 \subsection{Reduced states}
 
+Suppose there exists a bipartite system, to which we only have access to one subsystem. Since in general quantum states are not always separable, we now necessarily have an incomplete physical description of what we have access to. This physical description is obtained by taking the \textit{partial trace} of the joint system, tracing out the subsystem to which we don't have access,
 \begin{align}
 \hat\rho_A = \mathrm{tr}_B(\hat\rho_{A,B}).	
 \end{align}
+$\hat\rho_A$ is referred to as the \textit{reduced state} of system $A$.
 
+The partial trace is a linear operator defined as,
 \begin{align}
-\mathrm{tr}_B(\hat\rho_A\otimes\hat\rho_B) = \mathrm{tr}(\hat\rho_B) \cdot \hat\rho_A.
+\mathrm{tr}_B(\hat\rho_A\otimes\hat\rho_B) &= \mathrm{tr}(\hat\rho_B) \cdot \hat\rho_A,\nonumber\\
+\mathrm{tr}_B(\hat\rho+\hat\sigma) &= \mathrm{tr}_B(\hat\rho) + \mathrm{tr}_B(\hat\sigma).
 \end{align}
-
 From the cyclic property of the trace, it follows that,
 \begin{align}
 \mathrm{tr}(\ket\psi\bra\phi) = \braket{\psi|\phi}.	
 \end{align}
+
+A useful property of the reduced state of larger pure state is that its purity characterises how entangled that subsystem is with the peripheral system. For example, a joint system which is separable and pure exhibit reduced states which are also pure. But the reduced state of an entangled state, such as that shown in Eq.~(\ref{eq:bell_state_vec_def}), is necessarily mixed. Thus the purity $\mathcal{P}$ of the reduced states of a joint system may be used as a metric for quantifying the degree of entanglement in the system.
 
 %
 % Evolution
