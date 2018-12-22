@@ -11,12 +11,14 @@ The laws of quantum mechanics are inherently different to those of classical mec
 We review all of these formalisms in the upcoming sections, and present the necessary mathematical framework to enable following the derivations presented here.
 
 %
-% Characteristics of quantum mechanics
+% Features of quantum mechanics
 %
 
-\section{Characteristics of quantum mechanics}\index{Characteristics of quantum mechanics}
+\section{Features of quantum mechanics}\index{Characteristics of quantum mechanics}
 
-\dropcap{T}{he} key conceptual differences between classical and quantum mechanics are:
+\dropcap{C}{lassical} and quantum physics are fundamentally different in a number of extremely important ways. These differences are what allow quantum mechanics to enable the entire new field of quantum technologies, most notably quantum computing, which offers massive computational gains over traditional classical computing. The same applies to the novel and groundbreaking promises of the other key quantum technologies. All of these gains are achieved by exploiting these unique new characteristics offered by quantum systems, that are physically impossible in a classical context.
+
+The key conceptual differences between classical and quantum mechanics are:
 \begin{itemize}
 	\item Superposition\index{Superpositions}: the ability of quantum systems to be in multiple states simultaneously (not probabilistically!). This arises since quantum states can always be interpreted as waves, which are inherently delocalised and non-particle-like.
 	\item Quantum amplitudes: quantum states are not governed by classical probabilities, but by \textit{quantum amplitudes}, which are complex numbers rather than real numbers.\index{Quantum amplitudes}
@@ -24,6 +26,7 @@ We review all of these formalisms in the upcoming sections, and present the nece
 	\item Unitary evolution: the free evolution of quantum systems is restricted to being described by unitary operators. This implies that all quantum evolution is perfectly time-reversible\index{Time-reversal}, since all unitary operators are invertible.\index{Evolution}
 	\item Measurement collapse: the measurement of a quantum system changes its state in general, \textit{collapsing} it to the state corresponding to the measurement outcome\footnote{An open and intuitively confusing conundrum in quantum theory is to resolve the question of what exactly it is that constitutes `measurement' -- the \textit{measurement paradox}\index{Measurement paradox}. Given that all quantum evolution is supposed to be governed by unitary dynamics, whereas measurements are not, at what point in physical reality does an operation transition from one to the other? This is an extremely important open question, particularly from the perspective of quantum foundations and the philosophy of physics. This has led to the emergence of countless theories for the interpretation of quantum mechanics\index{Interpretation of quantum mechanics}, which is an essentially untestable field of research, more akin to fundamentalist religious movements than physical science. However, the resolution is largely unimportant in a practical technological context, where it suffices to define `measurement' as being `when quantum information becomes classical information', e.g once we are able to read it off a measurement device's LCD screen!}.\index{Measurement}
 	\item Non-determinism: quantum systems exhibit genuine non-determinism, associated with the randomness of the measurement collapse\index{Measurement!Collapse} process\footnote{When we say `random' we \textit{really} mean random, not `quasi-random but actually deterministic'\index{Quasi-randomness}. This true randomness is another of the unique and surprising features of quantum mechanics. Unlike classical physics, quantum mechanics is inherently and provably non-deterministic! Specifically, it has been proven theoretically \cite{bib:BellNoHiddenVariables} that so-called `hidden variable theories'\index{Hidden variable theories} are incompatible with quantum physics, which rules out any form of quasi-randomness and mandates true randomness.}.\index{Non-determinism}
+	\item Exponential complexity: the number of unique parameters required to fully describe a quantum system grows exponentially with its `size' (e.g the number of constituent subsystems, such as quantum particles or qubits). This is in contrast to classical systems whose state complexity grows only linearly with system size, since it's always possible to describe constituent subsystems independently (there is no notion of entanglement). Therefore the number of parameters required to characterise classical systems accumulates additively, whereas for quantum systems it grows multiplicatively.\index{Exponential complexity}
 \end{itemize}
 
 All of these phenomena will become more clear and intuitive as we present the relevant mathematical constructions in the upcoming sections.
@@ -90,6 +93,10 @@ Also mathematically useful is the \textit{dual} of a state vector\index{Dual vec
 &= \alpha^*\bra{0} + \beta^*\bra{1}.
 \end{align}
 The objects $\bra{\cdot}$ are referred to as \textit{bras}\index{Bras}.
+
+% State overlap
+
+\subsubsection{State overlap}
 
 For two generic state vectors,
 \begin{align}
@@ -205,6 +212,10 @@ where the probabilities are normalised such that,
 	\sum_i p_i = 1.
 \end{align}
 Eq.~(\ref{eq:rho_sum_interp}) has the elegant interpretation that the state $\hat\rho$ is in quantum state $\hat\rho_i$ with classical probability $p_i$.
+
+% Purity
+
+\subsubsection{Purity}
 
 An important measure on density operators is their \textit{purity}\index{Purity}, which quantifies to what extent the system is coherent (i.e \textit{not} classically probabilistic),
 \begin{align}
@@ -325,20 +336,50 @@ p_i = |\alpha_i|^2.
 
 More general classes of measurements are allowed, given by measurement operators $\hat{M}_i$ comprised of linear combinations of projectors. The same rules above for the action of these measurement operators apply, Eqs.~(\ref{eq:meas_proj_def}, \ref{eq:meas_prob_def}).
 
-% Example
+% Example derivation
 
-\subsection{Example}
+\section{Example derivation}
 
-As a simple example, consider the superposition state,
+\dropcap{T}{o} illustrate the basic techniques presented above, we now present a derivation of the operation of a very simple quantum protocol comprising state preparation, evolution, and measurement.
+
+Let us begin by preparing a single-qubit state into the logical basis state,
 \begin{align}
-\ket\psi = \frac{1}{\sqrt{2}}(\ket{0}+\ket{1}).	
+\ket\phi = \ket{0},
 \end{align}
-Now we have,
+where we have employed Dirac notation for simplicity.
+
+Next we will apply the so-called Hadamard gate\index{Hadamard gate}, given by the \mbox{$2\times 2$} unitary matrix,
+\begin{align}
+\hat{H} = \frac{1}{\sqrt{2}}\left(\begin{matrix}{}
+  1 & 1 \\
+  1 & -1
+\end{matrix}\right).
+\end{align}
+
+Applying this gate to our input state yields,
+\begin{align}
+	\ket\psi &= \hat{H}\ket{0}\nonumber\\
+	&= \frac{1}{\sqrt{2}}\left(\begin{matrix}{}
+  1 & 1 \\
+  1 & -1
+\end{matrix}\right)\left(\begin{matrix}{}
+1\\
+0	
+\end{matrix}\right)\nonumber\\
+&=\frac{1}{\sqrt{2}}\left(\begin{matrix}{}
+1\\
+1	
+\end{matrix}\right)\nonumber\\
+&= \frac{1}{\sqrt{2}}(\ket{0}+\ket{1}),
+\end{align}
+which is an equal superposition of the two logical basis states.
+
+Applying our measurement identities, we obtain measurement probabilities,
 \begin{align}
 p_0 = |\braket{0|\psi}|^2 = \frac{1}{2},\nonumber\\
 p_1 = |\braket{1|\psi}|^2 = \frac{1}{2},
 \end{align}
-and,
+and respective post-measurement projected states,
 \begin{align}
 \ket{\psi_0} &= \sqrt{2}\ket{0}\braket{0|\psi} = \ket{0},\nonumber\\
 \ket{\psi_1} &= \sqrt{2}\ket{1}\braket{1|\psi} = \ket{1}.
