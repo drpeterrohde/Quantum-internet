@@ -175,7 +175,7 @@ into the 3-qubit state,
 
 By taking two instances of the 3-qubit code, one implementing bit-flip correction and the other implementing phase-flip correction, and concatenating them, we can define a 9-qubit code, which protects against at most a single bit-flip and a single phase-flip. Joint protection against both the bit-flip and phase-flip operators ($\hat{X}$ and $\hat{Z}$) in turn allows error correction against a single depolarising error, the most general type of logical error, which completely destroys a single qubit.
 
-This is the simplest construction of a code which protects against a single depolarising event. But it is not the most efficient, and numerous more resource-savvy codes for protecting against Pauli errors exist, such as Steane's 7-qubit code\index{Steane code} \cite{SteaneCode}.
+This is the simplest construction of a code which protects against a single depolarising event. But it is not the most efficient, and numerous more resource-savvy codes for protecting against Pauli errors exist, such as Steane's 7-qubit code\index{Steane code} \cite{bib:SteaneCode}.
 
 %
 % Stabiliser Codes
@@ -271,11 +271,11 @@ Logical operations similarly have geometric interpretations. Most simply, logica
 
 \subsection{Unitary error averaging} \index{Quantum error correction (QEC)}\index{Unitary!Error averaging}\label{sec:error_averaging}
 
-Aside from the \textit{active} QoS techniques discussed until now, there is also a recently described \textit{passive} technique that requires no feedforward to operate. This technique, called \textit{unitary error averaging} \cite{MarshmanLundRohde}, is formulated specifically in the linear optical context. It is an open question whether it generalises to other models, such as conventional quantum circuits.
+Aside from the \textit{active} QoS techniques discussed until now, there is also a recently described \textit{passive} technique that requires no feedforward to operate. This technique, called \textit{unitary error averaging} \cite{bib:MarshmanLundRohde}, is formulated specifically in the linear optical context. It is an open question whether it generalises to other models, such as conventional quantum circuits.
 
 Suppose we desire to implement some linear optics unitary network, $\hat{U}_\mathrm{target}$, but our fabrication techniques are imperfect and we instead implement a close approximation to it. How can we overcome this?
 
-\cite{MarshmanLundRohdeRalph} showed that by using an optical fanout\index{Fanout} operation, which splits a set of optical modes equally across multiple sets of modes in a type of redundant encoding\footnote{The optical fanout operation effectively maps single-photon states to W-states (Sec.~\ref{sec:W_state_prep})\index{W-states}.}, and passing each set through an independently manufactured copy of the imperfect unitary, $\tilde{U}_i$, upon performing a fan-in to recombine the modes, and post-selection on detecting all photons in the desired output modes, the output state will behave as if it had evolved through a network given by the arithmetic average of each of the imperfect copies of $\hat{U}_\mathrm{target}$,
+\cite{bib:MarshmanLundRohdeRalph} showed that by using an optical fanout\index{Fanout} operation, which splits a set of optical modes equally across multiple sets of modes in a type of redundant encoding\footnote{The optical fanout operation effectively maps single-photon states to W-states (Sec.~\ref{sec:W_state_prep})\index{W-states}.}, and passing each set through an independently manufactured copy of the imperfect unitary, $\tilde{U}_i$, upon performing a fan-in to recombine the modes, and post-selection on detecting all photons in the desired output modes, the output state will behave as if it had evolved through a network given by the arithmetic average of each of the imperfect copies of $\hat{U}_\mathrm{target}$,
 \begin{align}
 \hat{U}_\mathrm{av} = \frac{1}{M}\sum_{i=1}^M \tilde{U}_i.	
 \end{align}
@@ -306,7 +306,7 @@ These manifestations arise naturally in different architectural contexts. For ex
 
 It turns out that the distinction between these two modes of error can have a significant effect on the error correction thresholds of QECs. Specifically, a located error effectively gives us an additional classical bit of information diagnosing that an error took place, which we are not privy to for unlocated errors. This additional bit of information can be exploited by QEC codes to improve thresholds for located errors.
 
-In \cite{RohdeHaselgrove} a derivation of a generalisation of the quantum Hamming bound\index{Quantum Hamming bound} for non-degenerate\footnote{In a non-degenerate code, all correctable errors map the codeword to orthogonal states. For degenerate codes\index{Degenerate codes} multiple distinct errors can map the codeword to the same state. The Hamming bound exploits the non-degeneracy using a counting or `pigeonholing' argument to count correctable errors.} QEC codes\index{Non-degenerate codes} was presented, where the number of located and unlocated errors were treated as independent parameters. They found that for non-degenerate codes the Hamming bound allows exactly twice as many located as unlocated errors. Specifically, for $t_l$ located errors and $t_u$ unlocated errors in an $n$-qubit non-degenerate code encoding $k$ logical qubits, QEC is possible provided that the number of errors satisfied,
+In \cite{bib:RohdeHaselgrove} a derivation of a generalisation of the quantum Hamming bound\index{Quantum Hamming bound} for non-degenerate\footnote{In a non-degenerate code, all correctable errors map the codeword to orthogonal states. For degenerate codes\index{Degenerate codes} multiple distinct errors can map the codeword to the same state. The Hamming bound exploits the non-degeneracy using a counting or `pigeonholing' argument to count correctable errors.} QEC codes\index{Non-degenerate codes} was presented, where the number of located and unlocated errors were treated as independent parameters. They found that for non-degenerate codes the Hamming bound allows exactly twice as many located as unlocated errors. Specifically, for $t_l$ located errors and $t_u$ unlocated errors in an $n$-qubit non-degenerate code encoding $k$ logical qubits, QEC is possible provided that the number of errors satisfied,
 \begin{align}
 \sum_{i=0}^{t_u + \lfloor t_l/2 \rfloor} \binom{n}{i}3^i 2^k \leq 2^n.
 \end{align}
@@ -339,10 +339,10 @@ To illustrate this idea we will consider encoding a single logical qubit into tw
 
 A single-qubit $Z$-rotation of angle $\theta$ on the Bloch sphere\index{Bloch sphere} is given by,
 \begin{align}
-	\hat{Z}(\theta) = e^{i\frac{\theta}{2}\hat{Z}} = \left(\begin{matrix}
+	\hat{Z}(\theta) = e^{i\frac{\theta}{2}\hat{Z}} = \begin{pmatrix}
   e^{i\frac{\theta}{2}} & 0 \\
   0 & e^{-i\frac{\theta}{2}}
-\end{matrix}\right).
+\end{pmatrix}.
 \end{align}
 where $\hat{Z}$ is the usual Pauli phase-flip operator\index{Pauli!Operators} (Sec.~\ref{sec:circuit_model}). This operates on the physical basis states as,
 \begin{align}
@@ -395,10 +395,10 @@ The goal of dynamical decoupling is to minimise the influence of the system/envi
 
 Let us illustrate how this can be achieved using a simple example, whereby a single-qubit system couples with an environment which introduces a slow, unknown phase evolution. Discretising time, we can write this phase evolution as a Pauli $Z$-rotation on the Bloch sphere\index{Bloch sphere},
 \begin{align}
-	\hat{Z}(\theta) = e^{i\frac{\theta}{2}\hat{Z}} = \left(\begin{matrix}
+	\hat{Z}(\theta) = e^{i\frac{\theta}{2}\hat{Z}} = \begin{pmatrix}
   e^{i\frac{\theta}{2}} & 0 \\
   0 & e^{-i\frac{\theta}{2}}
-\end{matrix}\right),
+\end{pmatrix},
 \end{align}
 for some unknown, but small $\theta$. Next we observe that, quite obviously, a $Z$-rotation of angle $\theta$ can be trivially undone by applying another $Z$-rotation of angle $-\theta$, since,
 \begin{align}

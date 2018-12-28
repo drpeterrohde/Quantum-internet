@@ -16,7 +16,7 @@ To provide context for the excitement of quantum computing and motivate interest
 
 The first quantum algorithm demonstrating a provable improvement over the best classical algorithm was the Deutsch-Jozsa algorithm \cite{bib:DeutschJozsa92}. Unfortunately the algorithm solves a very contrived problem, designed for the purposes of demonstrating post-classicality rather than solving a problem of actual practical interest. Nonetheless, the algorithm is straightforward to explain and understand, making it a useful starting point in understanding quantum algorithms and the computational enhancement they may offer.
 
-The algorithm relies on a `black box', referred to as an \textit{oracle}\index{Oracles}, which takes an input bit-string and outputs a single bit, evaluating the function $f(x)$ for the $n$-bit input bit-string $x$. In this contrived problem $f(x)$ is guaranteed to be either \textit{uniform}\index{Uniform functions} or \textit{balanced}\index{Balanced!Functions}. In the former case, the output to the oracle is always \mbox{$f(x)=0$} or always \mbox{$f(x)=1$}, but it doesn't matter which, they simply must always be the same. In the latter case, the output is \mbox{$f(x)=0$} for exactly half the inputs $x$, and \mbox{$f(x)=1$} for the other half of $x$, but the ordering of which inputs generate which outputs may be arbitrary. The goal of the algorithm is to determine whether $f(x)$ is uniform of balanced using the least number of queries to the oracle.
+The algorithm relies on a `black box', referred to as an \textit{oracle}\index{Oracles}, which takes an input bit-string and outputs a single bit, evaluating the function $f(x)$ for the $n$-bit input bit-string $x$. In this contrived problem $f(x)$ is guaranteed to be either \textit{uniform}\index{Uniform functions} or \textit{balanced}\index{Balanced!Functions}. In the former case, the output to the oracle is always \mbox{$f(x)=0$} or always \mbox{$f(x)=1$}, but it doesn't matter which, they simply must always be the same. In the latter case, the output is \mbox{$f(x)=0$} for exactly half the inputs $x$, and \mbox{$f(x)=1$} for the other half of $x$, but the ordering of which inputs generate which outputs may be arbitrary. The goal of the algorithm is to determine whether $f(x)$ is uniform or balanced using the least number of queries to the oracle.
 
 While it's clear that the dimensionality of the input state space is exponentially large, $2^n$, it is fairly obvious that a trivial \textbf{BPP}\index{BPP} algorithm exists for solving this problem with confidence exponentially asymptoting to unity against the number of oracle queries. We simply evaluate the oracle for randomly chosen inputs. If we measure any occurrences of measurement outcomes that are not all 0 or all 1 we know with certainty that the function must have been balanced. If on the other hand we measure all 0s or all 1s for more than half the input state space $x$, we know with certainty the function was uniform.
 
@@ -83,7 +83,7 @@ function DeutschJozsa(f,n):
 \end{align}
 }
 \end{mdframed}
-\captionspacealg \caption{Deutsch-Jozsa algorithm for evaluating whether the function $f(x)$ is balanced or uniform, exhibiting exponential worst case speedup compared to the best classical \textbf{BPP} algorithm\index{BPP}.} \label{alg:deutsch_jozsa}
+\captionspacealg \caption{Deutsch-Jozsa algorithm for evaluating whether the function $f(x)$ is balanced or uniform, exhibiting exponential worst case speedup compared to the best classical \textbf{BPP} algorithm\index{BPP}\index{Deutsch-Jozsa algorithm}.} \label{alg:deutsch_jozsa}
 \end{table}
 
 %
@@ -98,9 +98,9 @@ For example, \textit{hash tables}\index{Hash!Tables} enable theoretical $O(1)$ l
 
 In the absence of a key-value representation one might simply store data in sorted form. However, this requires pre-sorting the entire data space, which may become costly for large data sets, and requires continual rearrangement whenever the data space is modified, making it computationally costly for mutable datasets.
 
-For the end user, who wishes to find data elements, the worst-case data space is one with no order or underlying structure. Suppose we want to find whether a number exists in the telephone directory, but we don't know it's associated name. In this instance, it can easily be seen that the best one can hope for, in terms of algorithmic runtime, is to simply look through the data space brute-force\index{Brute-force} until we find what we are looking for. It is clear that with an unstructured space of $N$ elements, this brute-force search algorithm requires on average $O(N)$ queries to find the desired entry. We call this the \textit{unstructured search problem}.
+For the end user, who wishes to find data elements, the worst-case data space is one with no order or underlying structure. Suppose we want to find whether a number exists in the telephone directory, but we don't know its associated name. In this instance, it can easily be seen that the best one can hope for, in terms of algorithmic runtime, is to simply look through the data space brute-force\index{Brute-force} until we find what we are looking for. It is clear that with an unstructured space of $N$ elements, this brute-force search algorithm requires on average $O(N)$ queries to find the desired entry. We call this the \textit{unstructured search problem}\index{Unstructured search problem}.
 
-The brute-force classical algorithm, despite already being technically `efficient' (i.e $O(N)$ linear runtime), could nonetheless become unwieldy for very large datasets. Google doesn't want to exhaustively scan their entire collection of data-centres each time they want to lookup a database element. The quantum search algorithm, first presented by Grover \cite{grover1997quantum}, provides a solution to this problem using only $O(\sqrt{N})$ runtime (oracle queries), a quadratic enhancement. Whilst this falls far short of the exponential quantum enhancement one might have hoped for, which has also shown to be optimal \cite{bib:bennett1997strengths, bib:zalka1999grover}, it is nonetheless still extremely helpful for many purposes, given the broad applications for this algorithm.
+The brute-force classical algorithm, despite already being technically `efficient' (i.e $O(N)$ linear runtime), could nonetheless become unwieldy for very large datasets. Google doesn't want to exhaustively scan their entire collection of data-centres each time they want to lookup a database element. The quantum search algorithm, first presented by Grover \cite{bib:grover1997quantum}, provides a solution to this problem using only $O(\sqrt{N})$ runtime (oracle queries), a quadratic enhancement. Whilst this falls far short of the exponential quantum enhancement one might have hoped for, which has also shown to be optimal \cite{bib:bennett1997strengths, bib:zalka1999grover}, it is nonetheless still extremely helpful for many purposes, given the broad applications for this algorithm.
 
 We will formulate the quantum search algorithm as an oracular algorithm\index{Oracles}, where the oracle takes as input an $n$-bit string, and outputs 1 if the input matches the entry we are looking for, otherwise 0. This formulation of the problem makes the algorithm naturally suited to solving satisfiability problems (many of which are \textbf{NP}-complete and of great practical interest).
 
@@ -215,13 +215,13 @@ is a complex root of unity\index{Complex root of unity}.
 
 In matrix form the $N$-dimensional QFT is therefore,
 \begin{align}
-\hat{\mathrm{QFT}}_N = \frac{1}{\sqrt{N}} \left(\begin{matrix}
+\hat{\mathrm{QFT}}_N = \frac{1}{\sqrt{N}} \begin{pmatrix}
   1 & 1 & 1 & \dots & 1\\
   1 & \omega & \omega^2 & \dots & \omega^{N-1} \\
   1 & \omega^2 & \omega^4 & \dots & \omega^{2(N-1)} \\
   \vdots & \vdots & \vdots & \ddots & \vdots \\
   1 & \omega^{N-1} & \omega^{2(N-1)} &\dots &\omega^{(N-1)(N-1)}
-\end{matrix}\right),
+\end{pmatrix},
 \end{align}
 which is symmetric, \mbox{$\hat{\mathrm{QFT}}=\hat{\mathrm{QFT}}^\top$}. Note that all matrix elements are phases with magnitude $1/\sqrt{N}$,
 \begin{align}
@@ -247,10 +247,10 @@ function QFT($\ket{x}$):
 \begin{enumerate}
 \item Apply the recursively-defined circuit below to the $n$-qubit input state $\ket{x}$, where,
 \begin{align}
-\hat{R}_\theta=\left(\begin{matrix}
+\hat{R}_\theta=\begin{pmatrix}
 1 & 0 \\
 0 & e^{i\theta}	
-\end{matrix}\right),
+\end{pmatrix},
 \end{align}
 is a generalised phase-flip gate.
 \item The amplitudes in the $n$-qubit output state $\ket{y}$ are given by the quantum Fourier transform of the input amplitudes, implementing the transformation,
@@ -259,13 +259,13 @@ is a generalised phase-flip gate.
 \end{align}
 on the logical basis states, or in matrix form,
 \begin{align}
-\frac{1}{\sqrt{N}} \left(\begin{matrix}
+\frac{1}{\sqrt{N}} \begin{pmatrix}
   1 & 1 & 1 & \dots & 1\\
   1 & \omega & \omega^2 & \dots & \omega^{N-1} \\
   1 & \omega^2 & \omega^4 & \dots & \omega^{2(N-1)} \\
   \vdots & \vdots & \vdots & \ddots & \vdots \\
   1 & \omega^{N-1} & \omega^{2(N-1)} &\dots &\omega^{(N-1)(N-1)}
-\end{matrix}\right),
+\end{pmatrix},
 \end{align}
 where there are,
 \begin{align}
@@ -303,7 +303,7 @@ where $\theta$ parameterises the phase of the eigenvalue and $\ket\psi$ is an ei
 The algorithm for this is baked from several ingredients. To implement phase-estimation with $n$ bits of precision, we require:
 \begin{itemize}
 	\item An $n$-qubit Hadamard transform, $\hat{H}^{\otimes n}$\index{Hadamard!Transform}.
-	\item $n$ controlled-$\hat{U}$s\footnote{Any unitary has a coherently controlled unitary equivalent, of the form $\hat{U}_\mathrm{controlled} = \ket{0}\bra{0}\otimes \hat\openone + \ket{1}\bra{1}\otimes\hat{U}$. These always have an efficient circuit construction, given $\hat{U}$.}\index{Controlled unitaries}.
+	\item $n$ controlled-$\hat{U}$s\footnote{Any unitary has a coherently controlled-unitary equivalent, of the form $\hat{U}_\mathrm{controlled} = \ket{0}\bra{0}\otimes \hat\openone + \ket{1}\bra{1}\otimes\hat{U}$. These always have an efficient circuit construction, given $\hat{U}$.}\index{Controlled-unitaries}.
 	\item An $n$-qubit inverse quantum Fourier transform\index{Quantum Fourier transform}, $\hat{\mathrm{QFT}}_n^\dag$ (Sec.~\ref{sec:QFT_alg}).
 \end{itemize}
 
@@ -339,7 +339,7 @@ The phase-estimation algorithm is not extremely useful as a standalone product, 
 
 \subsection{Quantum simulation} \index{Quantum chemistry}\index{Quantum simulation}\label{sec:quantum_sim_alg}
 
-The field of quantum computation was originally inspired by Feynman's\index{Feynman} observation that quantum systems cannot be efficiently classically simulated, and therefore maybe computers based on quantum principles could handle this problem. Indeed they can, as was shown by \cite{bib:lloyd1996universal}.
+The field of quantum computation was originally inspired by Feynman's\index{Richard Feynman} observation that quantum systems cannot be efficiently classically simulated, and therefore maybe computers based on quantum principles could handle this problem. Indeed they can, as was shown by \cite{bib:lloyd1996universal}.
 
 It requires little imagination to recognise that the applications for quantum simulation are enormous, given the multitude of quantum systems under active investigation by researchers across countless fields.
 
@@ -453,7 +453,7 @@ function Shor(a,N):
 		f(x)=f(x+r) \,\mathrm{mod} \,N.	
 	\end{align}
 	\item Run the circuit below.
-	\item Efficient classical processing of the measured output registers reveals $r$ with high probabiliy.
+	\item Efficient classical processing of the measured output registers reveals $r$ with high probability.
 	\item Classically verify that,
 	\begin{align}
 		f(x)=f(x+r) \,\mathrm{mod} \,N.	
@@ -522,10 +522,10 @@ The first step in the algorithm is to construct the simplicial complex superposi
 \end{align}
 where $s_k$ denotes a $k$-simplex from the simplicial complex $S_k^\epsilon$. This superposition can be constructed by employing a Grover search\index{Grover's algorithm} using a set-membership oracle function\index{Oracles},
 \begin{align}
-f_\epsilon(s_k) = \left\{ \begin{matrix}
+f_\epsilon(s_k) = \left\{ \begin{array}{l l}
  1, & \mathrm{if}\,\,s_k\in S_k^\epsilon \\
  0, & \mathrm{otherwise}
-\end{matrix}\right.,
+\end{array}\right.,
 \end{align}
 yielding quadratically enhanced efficiency in the simplicial complex state preparation.
 
@@ -548,10 +548,10 @@ function TDA(dataPoints):
 \begin{enumerate}
 	\item Implement a Grover search on the set of data-points with set-membership oracle function,
 	\begin{align}
-f_\epsilon(s_k) = \left\{ \begin{matrix}
+f_\epsilon(s_k) = \left\{ \begin{array}{l l}
  1, & \mathrm{if}\,\,s_k\in S_k^\epsilon \\
  0, & \mathrm{otherwise}
-\end{matrix}\right.,
+\end{array}\right.,
 \end{align}
 which prepares the simplicial complex superposition state,
 \begin{align}
@@ -597,7 +597,7 @@ The simplest example of a classical sampling problem is the propagation of balls
 \captionspacefig \caption{The Galton board yields a very simple classical sampling problem. Balls (red) are input at the top and allowed to fall freely through the pyramid network of pegs (grey), at which balls bounce to the left or right with 50\% probability. At the output the balls are collected into buckets, which populate according to a binomial distribution\index{Binomial distribution}. The computational problem is to produce statistically accurate samples from such a device, which classically is efficiently implemented by sampling the binomial distribution.}	\label{fig:galton_board}\index{Galton board}
 \end{figure}
 
-An equivalent quantum sampling problem would be to replace the pegs in the Galton board with beamsplitters, and the balls with photons. Now we have an analogous problem, but defined in terms of photonic wave-function amplitudes rather than classical transition probabilities. When generalised to the multi-photon context, this problem turns into the so-called \textsc{BosonSampling}\index{Boson-sampling} problem, which is discussed in detail in Sec.~\ref{sec:BS}, a problem believed to not have an efficient classical simulation algorithm \cite{bib:AaronsonArkhipovBS}.
+An equivalent quantum sampling problem would be to replace the pegs in the Galton board with beamsplitters, and the balls with photons. Now we have an analogous problem, but defined in terms of photonic wave-function amplitudes rather than classical transition probabilities. When generalised to the multi-photon context, this problem turns into the so-called \textsc{BosonSampling}\index{Boson-sampling} problem, which is discussed in detail in Sec.~\ref{sec:boson_sampling}, a problem believed to not have an efficient classical simulation algorithm \cite{bib:AaronsonArkhipovBS}.
 
 In computationally hard sampling problems, e.g quantum ones, the goal is generally not to reconstruct the complete probability distribution. This is generally impossible in the quantum context, since the number of basis states we are sampling from is exponentially large, and therefore cannot be efficiently fully reconstructed. Thus the goal of \textit{sampling} is distinct from the goal of \textit{reconstruction}. In the case of sampling problems, we are satisfied with incomplete data, provided that we only have to take a polynomial number of samples for the sake of computational efficiency.
 
@@ -751,7 +751,7 @@ If we lay out the circuit in 2D (hence the 2D HLF problem), it only requires cla
 
 \begin{figure}[!htbp]
 \includegraphics[clip=true, width=0.35\textwidth]{shallow_circuits_2D}
-\captionspacefig \caption{\label{fig:2DHLFgrid} Implementation of the HLF problem on a 2D grid. The qubits are represented as green circles (some omitted for clarity), and CZ gates are drawn in red.  To implement the circuit $\hat U_Q$, the qubits at the vertex of the graph $G(A)$ embedded into a 2D grid. Then $\hat U_q$ can be decomposed into a product of nearest-neighbor CZ gates and $S$.}
+\captionspacefig \caption{\label{fig:2DHLFgrid} Implementation of the HLF problem on a 2D grid. The qubits are represented as green circles (some omitted for clarity), and CZ gates are drawn in red.  To implement the circuit $\hat U_Q$, the qubits at the vertex of the graph $G(A)$ embedded into a 2D grid. Then $\hat U_q$ can be decomposed into a product of nearest-neighbour CZ gates and $S$.}
 \end{figure}
 
 Now, comparing the quantum algorithm to a classical one, it has been proven that any probabilistic classical circuit with bounded input that solves the 2D HLF problem with high probability, $\epsilon \leq 1/8$, must have depth increasing logarithmically with input size \cite{bib:bravyi2018quantum}. The speed-up here is provided by quantum non-locality\index{Quantum non-locality}. 

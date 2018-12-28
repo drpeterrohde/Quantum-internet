@@ -138,9 +138,9 @@ To mitigate the need for constant one-on-one exchange of public-keys, many key s
 
 \subsection{Key exchange protocols}
 
-A downside of RSA is that ciphertexts are in general much longer than plaintexts, unlike private-key protocols where the ciphertext is always the same length as the plaintext. For this reason it is typically not used to directly encrypt long messages, since the memory and bandwidth overheads would be undesirable. Instead, RSA is typically employed in conjunction with private-key cryptography in a key exchange protocol\index{Key exchange protocol}. Here the public-key system communicates a private \textit{session key}\index{Session key} between parties, which is subsequently employed in a private-key protocol, without incurring the time and memory overhead that RSA does. In Sec.~\ref{sec:brute_force_attacks} we point out that quantum computers are not believed to be able to efficiently crack private-key protocols, but instead effectively reduce their key length by a factor of 1/2, which is easily counteracted with longer keys to restore security.
+A downside of RSA is that ciphertexts are in general much longer than plaintexts, unlike private-key protocols where the ciphertext is always the same length as the plaintext. For this reason it is typically not used to directly encrypt long messages, since the memory and bandwidth overheads would be undesirable. Instead, RSA is typically employed in conjunction with private-key cryptography in a key exchange protocol\index{Key exchange protocol}. Here, the public-key system communicates a private \textit{session key}\index{Session key} between parties, which is subsequently employed in a private-key protocol, without incurring the time and memory overhead that RSA does. In Sec.~\ref{sec:brute_force_attacks} we point out that quantum computers are not believed to be able to efficiently crack private-key protocols, but instead effectively reduce their key length by a factor of 1/2, which is easily counteracted with longer keys to restore security.
 
-Numerous key exchange protocols have been formulated, the best known being the Diffie-Hellman\index{Diffie-Hellman protocol} protocol \cite{DiffieHellman}, which has been widely adopted on the internet.
+Numerous key exchange protocols have been formulated, the best known being the Diffie-Hellman\index{Diffie-Hellman protocol} protocol \cite{bib:DiffieHellman}, which has been widely adopted on the internet.
 
 %
 % Digital Signatures
@@ -211,7 +211,7 @@ Hash functions have broad applicability throughout computer science, but here we
 	\item The distribution of hashes ought not exhibit any biases, following a uniform distribution with quasi-random\index{Quasi-random} behaviour.
 	\item Changing a single bit in the input string ought to flip approximately half the bits of the hash on average.	
 	\item It's computationally efficient to calculate a hash from an input.
-	\item It's computationally complex to find an input that hashes to a given value.
+	\item It's computationally complex to find an input that hashes to a given value (that is, they are one-way or trapdoor functions).\index{Trapdoor functions}
 	\item The hashes of two very similar inputs ought to yield hashes that a very different.
 	\item Two different inputs are extremely unlikely to hash to the same value.
 \end{itemize}
@@ -274,7 +274,7 @@ In the case of RSA encryption, whose security derives from the believed computat
 which scales poorly for large $n$, keeping in mind that present-day implementations of RSA accommodate key lengths of up to 4,096 bits, as for example is implemented by the widely-used Pretty Good Privacy (PGP)\index{Pretty Good Privacy (PGP)} package.
 
 %
-% Quantum Attackes
+% Quantum Attacks
 %
 
 \subsection{Quantum attacks}
@@ -355,7 +355,7 @@ Evidently, the lifespan of exisiting Blockchain technologies is limited and in t
 
 \dropcap{T}{he} vulnerability of RSA to attacks by quantum computers raises the question whether this spells the end of classical cryptography and compromises the security of much of the present-day internet.
 
-Thankfully, there are two saving graces. First of all, much research is being carried out into \textit{post-quantum classical cryptography}\index{Post-quantum classical cryptography}. That is, public-key cryptosystems based upon trapdoor functions\index{One-way functions} that reside outside of \textbf{BQP} and are therefore not efficiently attacked by quantum computers. One such line of research is to construct cryptosystems based upon \textbf{NP}-complete problems, such as the McEliece protocol\index{McEliece protocol} \cite{bib:McEliece}. Recall from Fig.~\ref{fig:complexity_classes} that \textbf{NP}-complete is strongly believed to reside completely outside of \textbf{BQP}. However, while many computer scientists might be comfortable with such a level of security, it is nonetheless based on the unproven conjecture that \textbf{NP}-complete and \textbf{BQP} do not intersect, i.e \mbox{$\mathbf{NP}\nsubseteq\mathbf{BQP}$}. What would be much more satisfying would be protocols demonstrating information-theoretic security\index{Information-theoretic!Security} rather than computational security\index{Computational!Security}. Here quantum mechanics can help us -- \textit{quantum cryptography}.
+Thankfully, there are two saving graces. First of all, much research is being carried out into \textit{post-quantum classical cryptography}\index{Post-quantum classical cryptography}. That is, public-key cryptosystems based upon trapdoor functions\index{One-way functions} that reside outside of \textbf{BQP} and are therefore not efficiently attacked by quantum computers. One such line of research is to construct cryptosystems based upon \textbf{NP}-complete problems, such as the McEliece protocol\index{McEliece protocol} \cite{bib:McEliece}. Recall from Fig.~\ref{fig:complexity_classes} that \textbf{NP}-complete is strongly believed to reside completely outside of \textbf{BQP}. However, while many computer scientists might be comfortable with such a level of security, it is nonetheless based on the unproven conjecture that \textbf{NP}-complete and \textbf{BQP} do not intersect, i.e \mbox{$\mathbf{NP}\nsubseteq\mathbf{BQP}$}. What would be much more satisfying would be protocols demonstrating information-theoretic security\index{Information-theoretic!Security} rather than computational security\index{Computational!Security}. Here, quantum mechanics can help us -- \textit{quantum cryptography}.
 
 %
 % Quantum Cryptography
@@ -375,7 +375,7 @@ Aside from quantum computing, a central use for quantum technologies is in crypt
 
 Quantum key distribution (QKD) protocols facilitate shared, secret randomness, where any intercept-resend\index{Intercept-resend attacks} (or man-in-the-middle) attack may be detected and rejected, guaranteed by the laws of quantum physics (specifically the Heisenberg uncertainty principle\index{Heisenberg!Uncertainty principle} and no-cloning theorem\index{No-cloning theorem}). This shared, secret randomness may subsequently be employed in a one-time pad cipher\index{One-time pad}, presenting us with true information-theoretic security\index{Information-theoretic!Security}.
 
-The central notion to QKD protocols, in their numerous manifestations, is that measurement of quantum states invokes a wavefunction collapse. When measuring a state in a basis for which that state is not an eigenstate, this necessarily changes the state. QKD relies on this simple result from quantum mechanics to reveal any eavesdropper performing an intercept-resend attack\index{Intercept-resend attacks} via the changes to transmitted quantum states that this would induce.
+The central notion to QKD protocols, in their numerous manifestations, is that measurement of quantum states invokes a wave-function collapse. When measuring a state in a basis for which that state is not an eigenstate, this necessarily changes the state. QKD relies on this simple result from quantum mechanics to reveal any eavesdropper performing an intercept-resend attack\index{Intercept-resend attacks} via the changes to transmitted quantum states that this would induce.
 
 QKD is a relatively mature technology with already several commercial systems being available off-the-shelf\footnote{Examples of companies selling off-the-shelf QKD hardware include \href{http://www.magiqtech.com}{MagiQ} and \href{http://www.idquantique.com}{ID Quantique}.} and initial space-based implementations have been successfully demonstrated \cite{Pan}.
 
@@ -559,7 +559,7 @@ This led to the proposal for \textit{quantum Enigma machines}\footnote{The Enigm
 
 \begin{figure}[!htbp]
 \includegraphics[clip=true, width=0.475\textwidth]{enigma_machines}
-\captionspacefig \caption{Schematic of the quantum Enigma machine protocol for quantum private-key cryptography. $\ket{j}$ is the message, $k$ is the key, and $\hat{U}_k$ is the encryption operation associated with key $k$, chosen randomly from the Haar measure. The encrypted message is $\ket{j}_k$. An eavesdropper intercepting the channel without knowledge of the key observes the state $\hat\rho_\mathrm{enc}$.}\index{Quantum Enigma machines}\label{fig:enigma}	
+\captionspacefig \caption{Schematic of the quantum Enigma machine protocol for quantum private-key cryptography. $\ket{j}$ is the message, $k$ is the key, and $\hat{U}_k$ is the encryption operation associated with key $k$, chosen randomly from the Haar measure\index{Haar measure}. The encrypted message is $\ket{j}_k$. An eavesdropper intercepting the channel without knowledge of the key observes the state $\hat\rho_\mathrm{enc}$.}\index{Quantum Enigma machines}\label{fig:enigma}	
 \end{figure}
 
 Here Alice and Bob share a short secret-key $k$ of length $m$, and wish to communicate a message $j$ of length $n$. The secret-key might be established via conventional QKD. First off, they agree upon a set of Haar-random unitaries\index{Haar measure}, $\{\hat{U}_k\}$, associating one with each of the possible $2^m$ keys. This needn't be performed in secret. Alice then encodes her message into the state $\ket{j}$. Her encryption operation is to apply $\hat{U}_k$ to this state according to Alice and Bob's shared secret-key, yielding the encoded state,
@@ -780,13 +780,13 @@ In general, Eve probes into the optical channel that Alice and Bob use to commun
 
 \subsection{Beamsplitter and photon-number-splitting attacks}\index{Beamsplitter attacks}\index{Photon-number-splitting attacks}
 
-A beamsplitting (BS) attack translates the fact that any signal lost over a channel is acquired by Eve. Here Eve induces losses in the communications channel by putting a beamsplitter outside Alice's device, then forwards the remaining photons to Bob. The BS attack does not modify the optical mode that Bob receives: it's therefore always possible for lossy channels, and does not introduce any errors.
+A beamsplitting (BS) attack translates the fact that any signal lost over a channel is acquired by Eve. Here, Eve induces losses in the communications channel by putting a beamsplitter outside Alice's device, then forwards the remaining photons to Bob. The BS attack does not modify the optical mode that Bob receives: it's therefore always possible for lossy channels, and does not introduce any errors.
 
 If the state preparation consists of more than one photon, Eve can count the number of photons in each signal and act accordingly. Such attacks are called photon-number-splitting (PNS) attacks \cite{bib:PhysRevLett.68.3121}. The BS and PNS attacks were discovered as zero-error attacks against BB84 implemented with weak laser pulses. To counter the attack, the decoy-state\index{Decoy states} method \cite{bib:PhysRevLett.91.057901, bib:PhysRevLett.94.230504} was developed.
 
 \subsection{Detector attacks}\index{Detector!Attacks}
 
-The faked-state attack\index{Faked-state attack} is based on the weak-laser implementation of BB84. Here Eve manipulates Bob's detectors to force him to measure in the same basis. It exploits the fact that the detectors may have a dead-time\index{Dead-time}, and the eavesdropper can trigger the detector whenever she chooses. It follows that Bob's detection outcomes are controlled by the eavesdropper.
+The faked-state attack\index{Faked-state attack} is based on the weak-laser implementation of BB84. Here, Eve manipulates Bob's detectors to force him to measure in the same basis. It exploits the fact that the detectors may have a dead-time\index{Dead-time}, and the eavesdropper can trigger the detector whenever she chooses. It follows that Bob's detection outcomes are controlled by the eavesdropper.
 
 Eve can also go beyond detector blinding. She can send in a powerful laser pulse to optically damage components in the QKD system and permanently change its characteristics \cite{bib:jain2016attacks}. If the new characteristics then assist the eavesdropper in an attack without Alice or Bob being notified, the security of the QKD system would be severely compromised.
 
