@@ -43,7 +43,9 @@ in the photon-number basis, up to normalisation (which is determined by the post
 
 Clearly this non-determinism is of immediate concern, since concatenating multiple gates would have exponentially decreasing success probability, making the protocol inefficient -- if the probability of a single gate succeeding is $p$, and we require that a circuit comprising $n$ of them all succeed, the success probability is clearly $p^n$.
 
-The first key observation then is that gate teleportation can be used to shift this non-determinism to a resource state preparation stage, as described in detail in Sec.~\ref{sec:teleport_gate}. However, this is not the end of the story, since gate teleportation requires Bell state projections, which are themselves non-deterministic using purely linear optics (either using PBSs or CNOT gates). \latinquote{Ignotum per ignotius}.
+The first key observation then is that gate teleportation can be used to shift this non-determinism to a resource state preparation stage, as described in detail in Sec.~\ref{sec:teleport_gate}. However, this is not the end of the story, since gate teleportation requires Bell state projections, which are themselves non-deterministic using purely linear optics (either using PBSs or CNOT gates).
+
+\latinquote{Ignotum per ignotius}.
 
 The final insight provided by KLM is that by concatenating these non-deterministic CNOT gates, we can inductively build up higher-level CNOT gates with ever increasing success probabilities, asymptoting to unity with high- (but polynomial-) depth concatenation. By combining these key insights, KLM were able to show that near-deterministic CNOT gates can be constructed using an efficient (polynomial) resource overhead, thereby enabling efficient universal quantum computation\footnote{Note that all single-qubit gates are trivially and deterministically implemented using wave-plates or beamsplitters, for polarisation or dual-rail encoding respectively. Thus, we need only concern ourselves with the challenges associated with implementing 2-qubit entangling gates.}. A sketch of the general KLM formalism is shown in Fig.~\ref{fig:KLM_protocol}.
 
@@ -330,7 +332,7 @@ The computational hardness of \textsc{BosonSampling} relates to the fact that th
 % The Boson-Sampling Model
 %
 
-\paragraph{The \textsc{BosonSampling} model} \index{Boson-sampling}
+\paragraph{The \textsc{BosonSampling} model} \index{Boson-sampling!Model}
 
 For an $m$-mode interferometer, and input state,
 \begin{align}
@@ -380,10 +382,10 @@ which sums over $n!$ terms (super-exponential), where $S_n$ is the symmetric gro
 To see how matrix permanents naturally arise in this setting, it is easiest to explain by example. In Fig.~\ref{fig:BS_2_comb} we illustrate a simple interferometer, fed with two photons. We wish to calculate the output amplitude of measuring a photon in each of the modes 2 and 3, given photons input at modes 1 and 2. To evaluate this amplitude we simply need to add up the amplitudes of all possible paths yielding the desired outcome. In this simple example this sum-of-paths\index{Sum-of-paths} is given by,
 \begin{align} \label{eq:BS_2_ph_comb}
 \gamma_{\{2,3\}} &= \underbrace{U_{1,2}U_{2,3}}_{\mathrm{don't\ swap}} + \underbrace{U_{1,3}U_{2,2}}_{\mathrm{swap}} \nonumber \\
-&= \mathrm{Per} \left[ {\begin{array}{cc}
+&= \mathrm{Per}\begin{pmatrix}
    U_{1,2} & U_{2,2} \\
-   U_{1,3} & U_{2,3} \\
-  \end{array} } \right],
+   U_{1,3} & U_{2,3}
+  \end{pmatrix},
 \end{align}
 from which it is immediately clear that the amplitude is given by the sum of \mbox{$2!=2$} paths\footnote{The number of paths scales as $n!$ in general, which corresponds to the $n!$ order of the symmetric group, $S_n$, in the definition of the permanent from Eq.~(\ref{eq:permanent}).}, the permanent of the \mbox{$2\times 2$} matrix obtained from taking the columns (rows) of $\hat{U}$ where a photon is present at the respective input (output) mode.
 
@@ -398,11 +400,11 @@ In Fig.~\ref{fig:BS_3_comb} we present to next most sophisticated example of an 
 &+ U_{2,1}U_{1,2}U_{3,3} + U_{2,1}U_{3,2}U_{1,3} \nonumber \\
 &+ U_{3,1}U_{1,2}U_{2,3} + U_{3,1}U_{2,2}U_{1,3}
 \nonumber \\
-&= \mathrm{Per} \left[ {\begin{array}{ccc}
+&= \mathrm{Per} \begin{pmatrix}
    U_{1,1} & U_{2,1} & U_{3,1} \\
    U_{1,2} & U_{2,2} & U_{3,2} \\
-   U_{1,3} & U_{2,3} & U_{3,3} \\
-  \end{array} } \right],
+   U_{1,3} & U_{2,3} & U_{3,3}
+  \end{pmatrix},
 \end{align}
 and it is now clear upon inspection that the amplitude is given by a \mbox{$3\times 3$} matrix permanent.
 
@@ -415,7 +417,7 @@ and it is now clear upon inspection that the amplitude is given by a \mbox{$3\ti
 \captionspacefig \caption{A linear optics interferometer $\hat{U}$, fed with 3 single-photon inputs, in modes 1, 2 and 3. To calculate the output amplitude of one photon in each of the modes 1, 2 and 3, we sum the amplitudes of all possible paths consistent with that output. This summation yields a \mbox{$3\times 3$} matrix permanent, given by Eq.~(\ref{eq:BS_3_ph_comb}).}\label{fig:BS_3_comb}	
 \end{figure}
 
-\paragraph{Problem description}
+\paragraph{Problem description}\index{Boson-sampling!Problem description}
 
 The computational problem is simply to sample this probability distribution $P_{S,T}$, which the linear optics network can implement efficiently, but it is believed a classical computer cannot. The full model is shown in Fig.~\ref{fig:bs_model}.
 
@@ -440,7 +442,7 @@ The size of a boson-sampler required to exhibit post-classicality is under activ
 % Multiplexed Boson-Sampling
 %
 
-\paragraph{Multiplexed \textsc{BosonSampling}} \index{Multiplexed!Boson-sampling}
+\paragraph{Multiplexed \textsc{BosonSampling}} \index{Boson-sampling!Multiplexed}
 
 As discussed in Sec.~\ref{sec:single_phot_src}, SPDC is the most common present-day implementation of single-photon sources. However, despite their ready availability, they suffer from non-determinism, with single-photon heralding probability given by Eq.~(\ref{eq:SPDC_p_prep}). To improve upon this, multiplexed sources can be employed \cite{bib:RohdeSPDC13}, improving effective single-photon preparation probabilities asymptotically to unity, as given by Eq.~(\ref{eq:SPDC_multiplex}).
 
@@ -474,7 +476,7 @@ However, although this procedure works in-principle, it comes at the expense of 
 % Scattershot Boson-Sampling
 %
 
-\paragraph{Scattershot \textsc{BosonSampling}} \index{Scattershot boson-sampling}
+\paragraph{Scattershot \textsc{BosonSampling}} \index{Boson-sampling!Scattershot}
 
 A variation on SPDC-based \textsc{BosonSampling}, known as `scattershot'\index{Scattershot boson-sampling} \textsc{BosonSampling}, has been presented \cite{bib:RandBS}, which obviates the difficultly of fast multiplexing in the approach described previously. Here, rather than inputting an SPDC source into the first $n$ of the $m$ modes, we input a source into \textit{every} mode, i.e $m$ sources in total. We then accept all events with $n$ heralding successes in total, irrespective of the configuration in which they occur. This has the effect of implementing $n$-photon \textsc{BosonSampling} with an additional layer of randomisation on the input modes (i.e a randomisation in the input configuration, $T$, which is ordinarily fixed). However, since the algorithm is already randomised, this additional layer of randomisation does not undermine the complexity proofs, which hold as is. The scattershot model is shown in Fig.~\ref{fig:scattershot_model}.
 
@@ -771,7 +773,7 @@ A phase-shifter\index{Phase!Shifts}, implementing the unitary operation,
 \begin{align}
 \hat{R}(\theta) = e^{i\theta \hat{n}},
 \end{align}
-where \mbox{$\hat{n}=\hat a^\dag \hat a$} is the photon-number operator\index{Photon-number operator}, rotates a state in phase-space by angle $\theta$ about the origin, implementing the transformation between the position and momentum operators,
+where $\hat{n}$ is the photon-number operator\index{Photon-number!Operators}, rotates a state in phase-space by angle $\theta$ about the origin, implementing the transformation between the position and momentum operators,
 \begin{align}\label{eq:xp_theta}
 \begin{pmatrix}
 \hat x_{\theta}\\
@@ -999,15 +1001,17 @@ which is a Bell pair between the matter qubits.
 
 Qubits may be engineered by considering the lowest two energy levels of a quantum system. Based on the spacing between their energy levels, such quantum systems are classified into two categories:
 \begin{itemize}
-	\item Quantum harmonic oscillator type: have equal spacing between energy levels.\index{Quantum harmonic oscillators}
-	\item Atomic type: have unequal spacing between energy levels.\index{Artificial atoms}
+	\item Quantum harmonic oscillator type\index{Quantum harmonic oscillators}: have equal spacing between energy levels, given by,
+	\begin{align}
+	E_{n} &= \hbar \omega \left(n+\frac{1}{2}\right),
+	\end{align}
+	where \mbox{$n\in\mathbb{Z}^+$} denotes the discrete energy level, $\omega$ is optical frequency, and $E_0$ is the lowest-lying ground state energy\index{Ground states}.
+	\item Atomic type\index{Artificial atoms}: have unequal spacing between energy levels, given by,
+	\begin{align}
+	E_{n} &= -\frac{E_{0}}{n^{2}}.
+	\end{align}
 \end{itemize}
-We illustrate these two cases in Fig.~\ref{fig:artificial_atom_energy_levels}, with their corresponding energy level diagrams. The energy levels of these two classes of systems obey,
-\begin{align}
-E_{n} &= \hbar \omega \left(n+\frac{1}{2}\right) \quad (\mathrm{Oscillator\,levels}), \nonumber \\ 
-E_{n} &= -\frac{E_{0}}{n^{2}} \quad (\mathrm{Atomic\,levels}),
-\end{align}
-where \mbox{$n\in\mathbb{Z}^+$} denotes the discrete energy level, $\omega$ is optical frequency, and $E_0$ is the lowest-lying ground state energy\index{Ground states}.
+We illustrate these two cases in Fig.~\ref{fig:artificial_atom_energy_levels}, with their corresponding energy level diagrams.
 
 \begin{figure}[!htbp]
 \includegraphics[clip=true, width=0.475\textwidth]{artificial_atom_energy_levels}
