@@ -184,27 +184,27 @@ The second approach is to borrow techniques from percolation theory\index{Percol
 
 \sectionby{Zixin Huang}
 
-Adiabatic quantum computation (AQC) began as an approach for solving optimisation problems, but has evolved into a universal alternative to the circuit model for quantum computing. AQC is based on an idea that is distinct from the circuit model \cite{bib:RevModPhys.90.015002}. In the circuit model, the computation is encoded into a series of unitary quantum logic gates, whereas in AQC the computation starts from an initial Hamiltonian whose ground state is easy to prepare, and evolves to a final state that encodes the solution to the computational problem.
+Adiabatic quantum computation (AQC) began as an approach for solving optimisation problems, but now has evolved into a universal alternative to the circuit model. AQC is based on an idea that is distinct from the circuit model \cite{bib:RevModPhys.90.015002}; in the circuit model, the computation is encoded into a series of gates, whereas in AQC the computation starts from an initial Hamiltonian whose ground state is easy to prepare, and evolves to a final state that encodes the solution to the computational problem.
 
-The adiabatic theorem\index{Adiabatic!Theorem} forms the backbone of AQC, which states that for a system initially prepared in an eigenstate of a time-dependent Hamiltonian $\hat{H}(t)$, the evolution via the Schr{\"o}dinger equation\index{Schr{\" o}dinger!Equation},
+The adiabatic theorem\index{Adiabatic!Theorem} forms the backbone of AQC, which states that for a system initially prepared in an eigenstate of a time-dependent Hamiltonian $\hat{H}(t)$, the is dictated by the Schr{\"o}dinger equation\index{Schr{\" o}dinger!Equation},
 \begin{align}
 i \frac{\partial \ket{\psi(t)}}{\partial t} = \hat{H}(t)\ket{\psi(t)},
 \end{align}
-will keep approximately to the instantaneous ground state, if $\hat{H}(t)$ varies sufficiently slowly.
+\noindent which will keep approximately to the instantaneous ground state, if $\hat{H}(t)$ varies sufficiently slowly.
 
-In the circuit model, the cost of the computation is equated with the number of gates. In AQC, \cite{???} defined the cost of adiabatic algorithms to be the dimensionless quantity,
+In the circuit model, the cost of the computation is equated with the number of gates. In AQC, the cost of adiabatic algorithms is defined to be the dimensionless quantity \cite{bib:aharonov2008adiabatic},
 \begin{align}
 \mathrm{cost} = t_f \cdot \mathrm{max}_s ||\hat{H}(s)||,
 \end{align}
-where $t_f$ is the algorithmic runtime, and $||\cdot||$ denotes the operator norm\index{Operator norm}, its largest singular value\index{Singular value}.
+where $t_f$ is the algorithmic runtime, and $||\cdot||$ denotes the operator norm\index{Operator norm}, which is the largest singular value\index{Singular value} of the operator.
 
-The runtime $t_f$ of an adiabatic algorithm scales at worst as \mbox{$O(1/\Delta^3)$}, where $\Delta^3$ is the minimum eigenvalue gap between the ground state and the first excited state of the Hamiltonian \cite{???}. This is the reason why AQC has generated much interest -- it has a rich connection to the well-studied field of condensed matter physics\index{Condensed matter physics}.
+The runtime $t_f$ of an adiabatic algorithm scales at worst as \mbox{$O(1/\Delta^3)$}, where $\Delta^3$ is the minimum eigenvalue gap between the ground state and the first excited state of the Hamiltonian \cite{bib:jansen2007bounds} This is the reason why AQC has generated much interest -- it has a rich connection to the well-studied field of condensed matter physics\index{Condensed matter physics}.
 
 The analysis for AQC involves bounding the eigenvalue gap of a complicated many-body Hamiltonian, which is a notoriously difficult problem. Nevertheless, a number of examples are known exhibiting a gap between the classical and quantum cases. 
-
-Examples of adiabatic quantum algorithms include:
+% 
+These include:
 \begin{itemize}
-\item Adiabatic Grover algorithm\index{Adiabatic!Grover algorithm}: as its name suggests, this is the adiabatic version of Grover's search algorithm. The initial Hamiltonian is,
+\item The adiabatic Grover algorithm\index{Adiabatic!Grover algorithm}: as its name suggests, this is the adiabatic version of Grover's search algorithm. The initial Hamiltonian is,
 \begin{align}
 	\hat{H}_0 = \hat\openone - \ket{\phi}\bra{\phi},
 \end{align}
@@ -213,13 +213,21 @@ where $\ket{\phi}$ is the uniform superposition state $\ket{+}^{\otimes n}$. The
 \hat{H}_1 = \hat\openone - \ket{m}\bra{m},
 \end{align}
 where $\ket{m}$ is the marked item we are searching for \cite{bib:PhysRevA.65.042308}.
-\item Adiabatic Deutsch-Jozsa algorithm\index{Adiabatic!Deutsch-Jozsa algorithm}\index{Deutsch-Jozsa algorithm}: given a binary function,
+% 
+% 
+\item The adiabatic Deutsch-Jozsa algorithm\index{Adiabatic!Deutsch-Jozsa algorithm}\index{Deutsch-Jozsa algorithm}: given a binary function,
 \begin{align}
 f:\{0,1 \}^n \rightarrow \{0,1\},
 \end{align}
 which is either constant\index{Constant functions} or balanced\index{Balanced functions}, the Deutsch-Jozsa algorithm can determine which type of function it is, exhibiting quantum speedup. An adiabatic implementation \cite{bib:PhysRevLett.95.250503} is derived to match the speedup obtained in the original circuit model implementation.
-\item Adiabatic glued-trees problem\index{Adiabatic!Glued-trees problem}: here we consider two binary trees\index{Binary trees} of depth $n$. Each tree has \mbox{$2^{n+1}-1$} vertices, and the two trees are randomly glued together, as shown in Fig.~\ref{fig:glued_trees}. More specifically, a leaf is chosen from the left, is connected to a leaf on the right also chosen at random, which is then connected to another leaf on the left, and so on. Every leaf on the left is connected to two on the right and vice versa. This creates a random cycle that alternates between the two trees. The problem is to, starting from the left root, find a path to the right root in the smallest possible number of steps. Classical algorithms require at least a sub-exponential number of queries, but there exists a polynomial-time quantum algorithm based on quantum walks \cite{bib:childs2003exponential}.
-\item Adiabatic \textsc{PageRank} algorithm\index{Adiabatic!PageRank algorithm}: the \textsc{PageRank}\index{PageRank algorithm} vector is a crucial tool in data mining and information retrieval, employed heavily by the Google search engine. The goal of the algorithm is to rank the importance, impact or influence of some entity in a network (webpages on the internet in the case of a Google search). The algorithm achieves this by representing the network as a flow network\index{Flow networks}, whereby flow from one vertex to another represents a vote by the source vertex for the importance of the destination vertex. By finding a steady-state flow to each edge in the network, the net flow into vertices represents their cumulative importance, as determined collectively by participants in the network. However, the magnitude of votes cast by vertices is weighted by their own ranking. Therefore, the algorithm aims to filter out bogus gaming of the system via the creation of dummy nodes that cast votes en masse to rig the election. The \textsc{PageRank} approach to ranking webpages has been by far the most successful and robust such algorithm, and was perhaps the key development behind the global success of Google. The best-known classical algorithms for solving the \textsc{PageRank} problem are via: representing the flow network as a matrix equation, from which the solution is obtained via solving an eigenvalue equation; representing the flow network as a random walk, whereby walkers randomly follow paths influenced by the flows, which in the long-time limit yields walks approximating the solution. The current best-known quantum \textsc{PageRank} algorithm outperforms all currently known classical algorithms with polynomial or even exponential speedup \cite{bib:PhysRevLett.108.230506}, but better future classical algorithms have not been ruled out and are under active investigation.
+% 
+% 
+\item The adiabatic glued-trees problem\index{Adiabatic!Glued-trees problem}: we consider two binary trees\index{Binary trees} of depth $n$. Each tree has \mbox{$2^{n+1}-1$} vertices, and the two trees are randomly glued together, as shown in Fig.~\ref{fig:glued_trees}. A leaf is chosen from the left, connected to a random leaf on the right, which is in turn glued to another leaf on the left and so on. Every leaf on is connected to two on the other side, creating a random cycle that alternates between the two trees.
+% 
+ The computation problem is to start from the left root and find a path to the right root in the smallest possible number of steps, given that one can only see adjacent vertices. Classical algorithms require at least a sub-exponential number of queries, but there exists a polynomial-time quantum algorithm based on quantum walks \cite{bib:childs2003exponential}.
+% 
+ % 
+\item The adiabatic \textsc{PageRank} algorithm\index{Adiabatic!PageRank algorithm}: the \textsc{PageRank}\index{PageRank algorithm} vector is a crucial tool in data mining and information retrieval, employed heavily by the Google search engine. The goal of the algorithm is to rank the importance, impact or influence of some entity in a network (webpages on the internet in the case of a Google search). The algorithm achieves this by representing the network as a flow network\index{Flow networks}, whereby flow from one vertex to another represents a vote by the source vertex for the importance of the destination vertex. By finding a steady-state flow to each edge in the network, the net flow into vertices represents their cumulative importance, as determined collectively by participants in the network. However, the magnitude of votes cast by vertices is weighted by their own ranking. Therefore, the algorithm aims to filter out bogus gaming of the system via the creation of dummy nodes that cast votes en masse to rig the election. The \textsc{PageRank} approach to ranking webpages has been by far the most successful and robust such algorithm, and was perhaps the key development behind the global success of Google. The best-known classical algorithms for solving the \textsc{PageRank} problem are via: representing the flow network as a matrix equation, from which the solution is obtained via solving an eigenvalue equation; representing the flow network as a random walk, whereby walkers randomly follow paths influenced by the flows, which in the long-time limit yields walks approximating the solution. The current best-known quantum \textsc{PageRank} algorithm outperforms all currently known classical algorithms with polynomial or even exponential speedup \cite{bib:PhysRevLett.108.230506}, but better future classical algorithms have not been ruled out and are under active investigation.
 \end{itemize}
 
 \begin{figure}[!htbp]
@@ -227,9 +235,11 @@ which is either constant\index{Constant functions} or balanced\index{Balanced fu
 	\captionspacefig \caption{A glued-trees graph of depth \mbox{$n=4$}. The `gluing' edges, chosen randomly such that each leaf vertex connects to exactly two of them, are shown in red.} \label{fig:glued_trees}\index{Glued-trees graph}
 \end{figure}
 
-The computational power of the circuit model and the adiabatic model for quantum computing are equivalent up to a polynomial overhead. In the circuit model, a set of gates is said to be universal if any unitary operation may be approximated to arbitrary accuracy by a quantum circuit involving only those gates. The analog of such a set of gates in AQC is a Hamiltonian.
+The computational power of the circuit model and the adiabatic model for quantum computing are equivalent up to a polynomial overhead. In the circuit model, a set of gates is said to be universal if any unitary operation may be approximated to arbitrary accuracy by a quantum circuit involving only those gates. The analog of such a set of gates in AQC is to efficiently map any circuit to a Hamiltonian.
 
-A time-dependent Hamiltonian $\hat{H}(t)$ is universal if, given an arbitrary quantum circuit $\hat{U}$ operating on an arbitrary multipartite initial state $\ket{\psi}$, the ground state of $\hat{H}(t_f)$ is equal to $\hat{U}\ket{\psi}$.
+If we have in the circuit model an $n$-partical pure state $\ket{\psi}$, acted upon by $U$ with depth $L$,
+% 
+a time-dependent Hamiltonian $\hat{H}(t)$ is universal if the ground state of $\hat{H}(t_f)$ is equal to $\hat{U}\ket{\psi}$ with non-zero probability, the number of particles in $H(t_f)$ is polynomial in $n$ and $L$, and $t_f$ is polynomial in $n$ and $L$.
 
 It has been proven that AQC can efficiently simulate the entire circuit model \cite{bib:RevModPhys.90.015002}, which implies that it is itself universal for efficient quantum computing.
 
