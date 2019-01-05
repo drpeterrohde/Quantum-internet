@@ -801,7 +801,7 @@ The cynics amongst us might question the non-determinism\index{Non-determinism o
 
 Consider the scenario where a client needs a stream of true random numbers for use in her Monte-Carlo simulation algorithm or as a secret-key for her email encryption. She has limited quantum resources herself, so she outsources it to her better-equipped mate. Depending on her own resource limitations and potential security considerations, her friend could either: (1) implement the full protocol described above, providing her with a classical random bitstream; or (2) only take care of photon generation, providing her with a perpetual source of high-quality photons for her to measure herself using a simple photo-detector. (1) and (2) would both be suitable if the intention was to apply the source of randomness to a Monte-Carlo simulation. But in a cryptographic scenario, where the randomness is being used for key generation, clearly Alice could not outsource the measurement stage without revealing her secret-key. In this instance, Bob can act as the provider of photons, while Alice does the measurements herself so as to keep her random bit-string secret.
 
-For cryptographic purposes , there are far more stringent constraints placed upon our random number generator than for use in say a Monte-Carlo computer simulation -- cryptographic random number generation\index{Cryptographic!Random number generation}. In this context, the demands placed upon the amount of bias or correlations in the random number stream are very stringent. An enormous amount of research has been invested into this topic, and sophisticated statistical tests have been developed for establishing crypto-worthiness of a random number stream. The fact that quantum random numbers, via the inherent non-determinism of quantum mechanics, do not obey any hidden variable theory, implies there is intrinsically no underlying `seed'\index{Random!Seed} to the random number stream, which reveals the entire deterministic sequence. This is unlike any classical generator, where there always is such a seed, but it is simply taken to be too hard to determine.
+For cryptographic purposes, there are far more stringent constraints placed upon our random number generator than for use in say a Monte-Carlo computer simulation -- cryptographic random number generation\index{Cryptographic!Random number generation}. In this context, the demands placed upon the amount of bias or correlations in the random number stream are very stringent. An enormous amount of research has been invested into this topic, and sophisticated statistical tests have been developed for establishing crypto-worthiness of a random number stream. The fact that quantum random numbers, via the inherent non-determinism of quantum mechanics, do not obey any hidden variable theory, implies there is intrinsically no underlying `seed'\index{Random!Seed} to the random number stream, which reveals the entire deterministic sequence. This is unlike any classical generator, where there always is such a seed, but it is simply taken to be too hard to determine.
 
 This scenario is an obvious example of where a UDP-like \textsc{Send-and-forget} protocol may be viable. Unlike most other applications, Bob is broadcasting a stream of identical, pure quantum states, that are not entangled with any peripheral system, and are easily replicated, with no correlations between distinct photons. Thus, if any particular photon fails to reach Alice, it matters not, as she can simply await the next one emanating from Bob's bombardment of photons (the `shotgun' approach\index{Shotgun!Protocol}). There are no QoS requirements.
 
@@ -958,7 +958,7 @@ The above describes quantum state teleportation at the level of single qubits. H
 % Open-destination quantum state teleportation
 %
 
-\subsection{Open-destination quantum state teleportation}\index{Open-destination quantum state teleportation}\label{sec:open_dest_q	st}
+\subsection{Open-destination quantum state teleportation}\index{Open-destination quantum state teleportation}\label{sec:open_dest_qst}
 
 In the standard quantum state teleportation protocol there is a single sender and a single receiver. A generalisation of the protocol is \textit{open-destination quantum state teleportation}, whereby there is still just one sender, but any number of potential recipients. At the time of transmission, the sender does not specify the recipient, but rather wishes to `broadcast' the state to \textit{all} recipients, such that any \textit{one} of them can subsequently read out the state. Note that only a single recipient may actually perform the readout, since multiple readouts would violate the no-cloning theorem\index{No-cloning theorem}. However, the key new feature introduced by this variant of the protocol is that the final choice of which recipient performs the readout needn't be known in advance, but can be decided at an arbitrary later stage, well after the sender has completed their side of the protocol.
 
@@ -972,7 +972,10 @@ Next, note that performing an $\hat{X}$-basis measurement on one qubit in a GHZ 
 	\braket{+|\psi_\mathrm{GHZ}^{(n)}} &= \ket{\psi_\mathrm{GHZ}^{(n-1)}},\nonumber\\
 	\braket{-|\psi_\mathrm{GHZ}^{(n)}} &= \hat{Z}\ket{\psi_\mathrm{GHZ}^{(n-1)}}.
 \end{align}
-Performing this contraction repeatedly ultimately reduces us all the way down to a single Bell pair.
+Performing this contraction repeatedly ultimately reduces us all the way down to a single Bell pair, since,
+\begin{align}
+	\ket{\psi_\mathrm{GHZ}^{(2)}} = \ket{\Phi^+}.
+\end{align}
 
 Thus, to teleport from sender to recipient, all non-recipients simply measure their qubits in the $\hat{X}$-basis, and publicly report their classical measurement outcomes for the purposes of performing local corrections. What is left is a Bell pair between sender and recipient. This Bell pair may then be employed in the conventional teleportation protocol to perform the teleportation.
 
