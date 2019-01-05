@@ -874,7 +874,7 @@ which she would like to teleport to Bob. Importantly, no quantum communication b
 &= \frac{1}{\sqrt{2}} (\alpha\ket{0}_{A_1}+\beta\ket{1}_{A_1}) (\ket{0}_{A_2}\ket{1}_B + \ket{1}_{A_2}\ket{0}_B). \nonumber
 \end{align}
 
-The first step of the protocol is for Alice to perform a 2-qubit entangling measurement on her two qubits, projecting onto the Bell basis [Eq.~(\ref{eq:bell_basis})]. She obtains one of four measurement outcomes. For illustration, suppose she measures the $\ket{\Psi^+}$ outcome. Then the projected state is,
+The first step of the protocol is for Alice to perform a 2-qubit entangling measurement on her two qubits, projecting onto the Bell basis, Eq.~(\ref{eq:bell_basis}). She obtains one of four measurement outcomes. For illustration, suppose she measures the $\ket{\Psi^+}$ outcome. Then the projected state is,
 \begin{align}
 \ket\psi_\mathrm{proj}^{\Psi^+} &= \bra{\Psi^+}_{A_1,A_2} \ket\psi_\mathrm{in} \nonumber \\
 &= \frac{1}{\sqrt{2}} \bra{\Psi^+}_{A_1,A_2}\ket\psi_{A_1}(\ket{0}_{A_2}\ket{1}_B + \ket{1}_{A_2}\ket{0}_B) \nonumber \\
@@ -953,6 +953,53 @@ Relying on teleportation rather than direct quantum communication makes frugal u
 The Bell state measurement can be implemented either using a CNOT gate, or as a non-deterministic partial Bell state measurement using a PBS (Sec.~\ref{sec:bell_proj}), both of which are non-deterministic using purely linear optics.
 
 The above describes quantum state teleportation at the level of single qubits. However, when dealing with more general QTCP packets, which may have multi-qubit payloads, we may wish to teleport an entire packet\index{Packet!Teleportation}. This is implemented as a simple extension of the above procedure -- we simply implement $n$ multiple independent teleportation protocols to all of the packet's $n$ constituent qubits. Via linearly, although the teleportation protocols are being applied independently to each qubit, the net packet teleportation operation will preserve their joint state, including entanglement between them. Note, however, that if the qubit state teleportation protocols are individually non-deterministic with success probability $p_\mathrm{teleport}$, the net success probability for the teleportation of the entire packet scales inverse exponentially with $n$, as ${p_\mathrm{teleport}}^n$.
+
+%
+% Open-destination quantum state teleportation
+%
+
+\subsection{Open-destination quantum state teleportation}\index{Open-destination quantum state teleportation}\label{sec:open_dest_q	st}
+
+In the standard quantum state teleportation protocol there is a single sender and a single receiver. A generalisation of the protocol is \textit{open-destination quantum state teleportation}, whereby there is still just one sender, but any number of potential recipients. At the time of transmission, the sender does not specify the recipient, but rather wishes to `broadcast' the state to \textit{all} recipients, such that any \textit{one} of them can subsequently read out the state. Note that only a single recipient may actually perform the readout, since multiple readouts would violate the no-cloning theorem\index{No-cloning theorem}. However, the key new feature introduced by this variant of the protocol is that the final choice of which recipient performs the readout needn't be known in advance, but can be decided at an arbitrary later stage, well after the sender has completed their side of the protocol.
+
+To implement this protocol, rather than first distributing a Bell pair between sender and recipient, we distribute an $n$-party GHZ state between the sender and the \mbox{$n-1$} recipients,
+\begin{align}
+\ket{\psi_\mathrm{GHZ}^{(n)}} = \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n} + \ket{1}^{\otimes n}).
+\end{align}
+
+Next, note that performing an $\hat{X}$-basis measurement on one qubit in a GHZ state reduces it to an \mbox{$n-1$}-qubit GHZ state, up to a potential local $\hat{Z}$-correction,
+\begin{align}
+	\braket{+|\psi_\mathrm{GHZ}^{(n)}} &= \ket{\psi_\mathrm{GHZ}^{(n-1)}},\nonumber\\
+	\braket{-|\psi_\mathrm{GHZ}^{(n)}} &= \hat{Z}\ket{\psi_\mathrm{GHZ}^{(n-1)}}.
+\end{align}
+Performing this contraction repeatedly ultimately reduces us all the way down to a single Bell pair.
+
+Thus, to teleport from sender to recipient, all non-recipients simply measure their qubits in the $\hat{X}$-basis, and publicly report their classical measurement outcomes for the purposes of performing local corrections. What is left is a Bell pair between sender and recipient. This Bell pair may then be employed in the conventional teleportation protocol to perform the teleportation.
+
+The key observation now is that the dynamics of this entire system must be invariant under the time-ordering of the $\hat{X}$-basis measurements. Thus, whether they are performed at the beginning of the protocol (thereby directly reducing us to standard 2-party teleportation), or deferred until later, makes no difference to the final state obtained by the recipient. This is the basis for the ability of the protocol to broadcast the teleported state, without first specifying the intended recipient.
+
+The full protocol is described in Alg.~\ref{alg:open_dest_qst}. This protocol was successfully experimentally demonstrated photonically using 5 qubits \cite{bib:PanOpenDest}, with high teleported state fidelities.
+
+\begin{table}[!htbp]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
+function OpenDestTeleportation($\ket\phi_A$, $\ket{\psi_\mathrm{GHZ}^{(n)}}$):
+\begin{enumerate}
+    \item An $n$-qubit GHZ state is distributed between the sender and \mbox{$n-1$} potential recipients,
+    \begin{align}
+    	\ket{\psi_\mathrm{GHZ}^{(n)}} = \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n} + \ket{1}^{\otimes n}).
+    \end{align}
+    \item The sender completes their side of the protocol as per the ordinary 2-party quantum state teleportation protocol.
+    \item The sender's classical measurement outcome is broadcast to all potential recipients.
+    \item Wait until the potential recipients have decided between themselves (classically) who shall be the recipient.
+    \item All non-recipients measure their qubits in the $\hat{X}$-basis and publicly announce their measurement outcomes.
+    \item The recipient calculates the parity of the announced measurement outcomes, which determines whether they apply a local $\hat{Z}$-correction.
+    \item The recipient completes their side of the protocol as per the usual quantum state teleportation protocol, obtaining $\ket\phi$.
+    \item $\Box$
+\end{enumerate}}
+\end{mdframed}
+\captionspacealg \caption{Open-destination quantum state teleportation of a single qubit from a single sender to \mbox{$n-1$} potential recipients.} \label{alg:open_dest_qst}
+\end{table}
 
 %
 % Quantum Gate Teleportation
