@@ -69,7 +69,7 @@ P_\mathrm{prep}=\chi^2(1-\chi^2),
 \end{align}
 assuming ideal photo-detection. Thus, the perfect photon-number correlation enables heralded preparation of states with exactly one photon in principle.
 
-Transitioning from heralded state preparation to quasi-deterministic state preparation may then be achieved by operating a bank of such sources in parallel, and multiplexing their outputs, such that when all sources are triggered simultaneously, if any one succeeds, the respective single photon is routed to the desired output mode \cite{???}, as shown in Fig.~\ref{fig:SPDC_multiplexing_arch}.
+Transitioning from heralded state preparation to quasi-deterministic state preparation may then be achieved by operating a bank of such sources in parallel, and multiplexing their outputs, such that when all sources are triggered simultaneously, if any one succeeds, the respective single photon is routed to the desired output mode, as shown in Fig.~\ref{fig:SPDC_multiplexing_arch}.
 
 \begin{figure}[!htbp]
 \includegraphics[clip=true, width=0.38\textwidth]{SPDC_multiplexing_arch}\index{Multiplexed!Single-photon sources}
@@ -563,7 +563,7 @@ Linear optics networks \cite{bib:TanRohdeRev} implement unitary linear maps on t
 \begin{align} \label{eq:LO_unitary_map}
 \hat{U}\hat{a}_i^\dag \hat{U}^\dag \to \sum_{j=1}^m U_{i,j} \hat{a}^\dag_j,
 \end{align}
-where $\hat{a}^\dag_i$ is the photonic creation operator on the $i$th of the $m$ modes, and $U$ may be any $\mathrm{SU}(m)$ matrix. It was shown by \cite{bib:Reck94} that arbitrary transformations of this form may be decomposed into $O(m^2)$ linear optical elements (beamsplitters and phase-shifters), enabling efficient construction of arbitrary linear transformations.\index{Linear optics!Decompositions} Furthermore, the algorithm for determining the decomposition of such transformations has polynomial classical runtime (i.e residing in \textbf{P}\index{P}). Note that the original Reck \textit{et al.} decomposition is not unique, and various other topologies of optical elements also enable universality \cite{???}, each with their own implementational advantages and disadvantages.
+where $\hat{a}^\dag_i$ is the photonic creation operator on the $i$th of the $m$ modes, and $U$ may be any $\mathrm{SU}(m)$ matrix. It was shown by \cite{bib:Reck94} that arbitrary transformations of this form may be decomposed into $O(m^2)$ linear optical elements (beamsplitters and phase-shifters), enabling efficient construction of arbitrary linear transformations.\index{Linear optics!Decompositions} Furthermore, the algorithm for determining the decomposition of such transformations has polynomial classical runtime (i.e residing in \textbf{P}\index{P}). Note that the original Reck \textit{et al.} decomposition is not unique, and various other topologies of optical elements also enable universality, each with their own implementational advantages and disadvantages.
 
 Each individual beamsplitter in such a decomposition is an arbitrary $\mathrm{SU}(2)$ matrix acting on two photonic creation operators, $\hat{a}^\dag$ and $\hat{b}^\dag$,
 \begin{align}\index{Beamsplitters}
@@ -681,7 +681,12 @@ Note that this is not directly compatible with conventional shortest-path algori
 
 \subsection{Physical implementation}
 
-At the physical level, there are two main approaches we could use to put optical states into memory. The first is simply to employ delay lines, either in free-space or in fibre. The second is to interface the state with a non-optical system with a long lifetime, which holds the information content until needed and out-coupled. This can be achieved using, for example, the light-matter interfacing techniques discussed in Sec.~\ref{sec:opt_inter}.
+At the physical level, there are two main approaches we could use to put optical states into memory. The first is simply to employ optical delay lines\index{Optical delay lines} (shown in Fig.~\ref{fig:delay_line_mem}), either in free-space or in fibre. The second is to interface the state with a non-optical system with a long coherence lifetime, which holds the information content until needed before being out-coupled. This can be achieved using, for example, the light-matter interfacing techniques discussed in Sec.~\ref{sec:opt_inter}.
+
+\begin{figure}[!htbp]
+\includegraphics[clip=true, width=0.3\textwidth]{delay_line_memory}
+\captionspacefig \caption{Simple architecture for a controllable optical quantum memory using an optical delay line. A length of optical fibre (or free-space), with roundtrip time $\tau_\mathrm{delay}$, couples to a fast controllable switch, with switching time \mbox{$\tau_\mathrm{switch}\ll\tau_\mathrm{delay}$}. The switch allows the optical state to be coupled into the loop, maintained there for an arbitrary number of roundtrips, and then coupled out. The storage time of the memory is restricted to being integer multiples of the roundtrip time, \mbox{$\tau_\mathrm{storage}=n\cdot\tau_\mathrm{delay}$}, where \mbox{$n\in\mathbb{Z}_+$} is the number of roundtrips. If the efficiency of the fibre-loop is $\eta$, the effective efficiency of the quantum memory after readout is \mbox{$\eta_\mathrm{eff}=\eta^n$}.}\label{fig:delay_line_mem}	
+\end{figure}
 
 The former is experimentally straightforward, but plagued by loss, and is only suitable over short timescales, on the order of nanoseconds. The latter is more experimentally challenging, but can achieve longer storage times, limited by the lifetime ($T_1$- and $T_2$-times)\index{T$_2$-time}\index{T$_1$-time} of the non-optical system. For some physical systems, this can be very high, on the order of milliseconds for atomic ensemble qubits \cite{bib:Duan01, bib:Duan02, bib:LauratKimble07}, for example, which is typically adequate for the purposes of waiting out network bottlenecks.
 
@@ -796,7 +801,7 @@ The cynics amongst us might question the non-determinism\index{Non-determinism o
 
 Consider the scenario where a client needs a stream of true random numbers for use in her Monte-Carlo simulation algorithm or as a secret-key for her email encryption. She has limited quantum resources herself, so she outsources it to her better-equipped mate. Depending on her own resource limitations and potential security considerations, her friend could either: (1) implement the full protocol described above, providing her with a classical random bitstream; or (2) only take care of photon generation, providing her with a perpetual source of high-quality photons for her to measure herself using a simple photo-detector. (1) and (2) would both be suitable if the intention was to apply the source of randomness to a Monte-Carlo simulation. But in a cryptographic scenario, where the randomness is being used for key generation, clearly Alice could not outsource the measurement stage without revealing her secret-key. In this instance, Bob can act as the provider of photons, while Alice does the measurements herself so as to keep her random bit-string secret.
 
-For cryptographic purposes , there are far more stringent constraints placed upon our random number generator than for use in say a Monte-Carlo computer simulation -- cryptographic random number generation\index{Cryptographic!Random number generation}. In this context, the demands placed upon the amount of bias or correlations in the random number stream are very stringent. An enormous amount of research has been invested into this topic, and sophisticated statistical tests have been developed for establishing crypto-worthiness of a random number stream. The fact that quantum random numbers, via the inherent non-determinism of quantum mechanics, do not obey any hidden variable theory, implies there is intrinsically no underlying `seed'\index{Random!Seed} to the random number stream, which reveals the entire deterministic sequence. This is unlike any classical generator, where there always is such a seed, but it is simply taken to be too hard to determine.
+For cryptographic purposes, there are far more stringent constraints placed upon our random number generator than for use in say a Monte-Carlo computer simulation -- cryptographic random number generation\index{Cryptographic!Random number generation}. In this context, the demands placed upon the amount of bias or correlations in the random number stream are very stringent. An enormous amount of research has been invested into this topic, and sophisticated statistical tests have been developed for establishing crypto-worthiness of a random number stream. The fact that quantum random numbers, via the inherent non-determinism of quantum mechanics, do not obey any hidden variable theory, implies there is intrinsically no underlying `seed'\index{Random!Seed} to the random number stream, which reveals the entire deterministic sequence. This is unlike any classical generator, where there always is such a seed, but it is simply taken to be too hard to determine.
 
 This scenario is an obvious example of where a UDP-like \textsc{Send-and-forget} protocol may be viable. Unlike most other applications, Bob is broadcasting a stream of identical, pure quantum states, that are not entangled with any peripheral system, and are easily replicated, with no correlations between distinct photons. Thus, if any particular photon fails to reach Alice, it matters not, as she can simply await the next one emanating from Bob's bombardment of photons (the `shotgun' approach\index{Shotgun!Protocol}). There are no QoS requirements.
 
@@ -806,7 +811,7 @@ This scenario is an obvious example of where a UDP-like \textsc{Send-and-forget}
 
 \subsection{Entanglement purification} \label{sec:ent_purif} \index{Entanglement!Purification}
 
-Entangled states, most notably Bell pairs (Sec.~\ref{sec:bell_state_res}), play a central role in many quantum technologies. These maximally entangled states are easily represented optically using polarisation encoding of single photons, and can be non-deterministically prepared directly using SPDC (Sec.~\ref{sec:single_phot_src}), or post-selected linear optics \cite{???}.
+Entangled states, most notably Bell pairs (Sec.~\ref{sec:bell_state_res}), play a central role in many quantum technologies. These maximally entangled states are easily represented optically using polarisation encoding of single photons, and can be non-deterministically prepared directly using SPDC (Sec.~\ref{sec:single_phot_src}), or post-selected linear optics.
 
 Bell pairs are the basis for building cluster states (Sec.~\ref{sec:CSQC}), some quantum cryptography protocols (Sec.~\ref{sec:QKD}), and quantum teleportation (Sec.~\ref{sec:teleport}), to name just a few applications. Therefore distributing entangled states with the highest entanglement metrics is extremely important. In short, entanglement can be considered a valuable quantum resource (discussed in detail in Sec.~\ref{sec:ent_ultimate}), upon which many other protocols may be built.
 
@@ -857,7 +862,7 @@ Entanglement purification can also be performed using physical encodings other t
 
 \subsection{Quantum state teleportation} \label{sec:teleport} \index{Quantum state teleportation}
 
-Quantum state teleportation \cite{???, bib:PRL_70_1895} is an essential ingredient in many higher-level protocols. It forms the basis of cluster state quantum computing (Sec.~\ref{sec:CSQC}), some QEC codes, the KLM linear optics quantum computing scheme (Sec.~\ref{sec:KLM_univ}), and can act as a mediator for long-range transmission of quantum states, amongst others.
+Quantum state teleportation \cite{bib:PRL_70_1895} is an essential ingredient in many higher-level protocols. It forms the basis of cluster state quantum computing (Sec.~\ref{sec:CSQC}), some QEC codes, the KLM linear optics quantum computing scheme (Sec.~\ref{sec:KLM_univ}), and can act as a mediator for long-range transmission of quantum states, amongst others.
 
 In the standard teleportation protocol, Alice begins with a single qubit,
 \begin{align}
@@ -869,7 +874,7 @@ which she would like to teleport to Bob. Importantly, no quantum communication b
 &= \frac{1}{\sqrt{2}} (\alpha\ket{0}_{A_1}+\beta\ket{1}_{A_1}) (\ket{0}_{A_2}\ket{1}_B + \ket{1}_{A_2}\ket{0}_B). \nonumber
 \end{align}
 
-The first step of the protocol is for Alice to perform a 2-qubit entangling measurement on her two qubits, projecting onto the Bell basis [Eq.~(\ref{eq:bell_basis})]. She obtains one of four measurement outcomes. For illustration, suppose she measures the $\ket{\Psi^+}$ outcome. Then the projected state is,
+The first step of the protocol is for Alice to perform a 2-qubit entangling measurement on her two qubits, projecting onto the Bell basis, Eq.~(\ref{eq:bell_basis}). She obtains one of four measurement outcomes. For illustration, suppose she measures the $\ket{\Psi^+}$ outcome. Then the projected state is,
 \begin{align}
 \ket\psi_\mathrm{proj}^{\Psi^+} &= \bra{\Psi^+}_{A_1,A_2} \ket\psi_\mathrm{in} \nonumber \\
 &= \frac{1}{\sqrt{2}} \bra{\Psi^+}_{A_1,A_2}\ket\psi_{A_1}(\ket{0}_{A_2}\ket{1}_B + \ket{1}_{A_2}\ket{0}_B) \nonumber \\
@@ -950,6 +955,56 @@ The Bell state measurement can be implemented either using a CNOT gate, or as a 
 The above describes quantum state teleportation at the level of single qubits. However, when dealing with more general QTCP packets, which may have multi-qubit payloads, we may wish to teleport an entire packet\index{Packet!Teleportation}. This is implemented as a simple extension of the above procedure -- we simply implement $n$ multiple independent teleportation protocols to all of the packet's $n$ constituent qubits. Via linearly, although the teleportation protocols are being applied independently to each qubit, the net packet teleportation operation will preserve their joint state, including entanglement between them. Note, however, that if the qubit state teleportation protocols are individually non-deterministic with success probability $p_\mathrm{teleport}$, the net success probability for the teleportation of the entire packet scales inverse exponentially with $n$, as ${p_\mathrm{teleport}}^n$.
 
 %
+% Open-destination quantum state teleportation
+%
+
+\subsection{Open-destination quantum state teleportation}\index{Open-destination quantum state teleportation}\label{sec:open_dest_qst}
+
+In the standard quantum state teleportation protocol there is a single sender and a single receiver. A generalisation of the protocol is \textit{open-destination quantum state teleportation}, whereby there is still just one sender, but any number of potential recipients. At the time of transmission, the sender does not specify the recipient, but rather wishes to `broadcast' the state to \textit{all} recipients, such that any \textit{one} of them can subsequently read out the state. Note that only a single recipient may actually perform the readout, since multiple readouts would violate the no-cloning theorem\index{No-cloning theorem}. However, the key new feature introduced by this variant of the protocol is that the final choice of which recipient performs the readout needn't be known in advance, but can be decided at an arbitrary later stage, well after the sender has completed their side of the protocol.
+
+To implement this protocol, rather than first distributing a Bell pair between sender and recipient, we distribute an $n$-party GHZ state between the sender and the \mbox{$n-1$} recipients,
+\begin{align}
+\ket{\psi_\mathrm{GHZ}^{(n)}} = \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n} + \ket{1}^{\otimes n}).
+\end{align}
+
+Next, note that performing an $\hat{X}$-basis measurement on one qubit in a GHZ state reduces it to an \mbox{$n-1$}-qubit GHZ state, up to a potential local $\hat{Z}$-correction,
+\begin{align}
+	\braket{+|\psi_\mathrm{GHZ}^{(n)}} &= \ket{\psi_\mathrm{GHZ}^{(n-1)}},\nonumber\\
+	\braket{-|\psi_\mathrm{GHZ}^{(n)}} &= \hat{Z}\ket{\psi_\mathrm{GHZ}^{(n-1)}}.
+\end{align}
+Performing this contraction repeatedly ultimately reduces us all the way down to a single Bell pair, since,
+\begin{align}
+	\ket{\psi_\mathrm{GHZ}^{(2)}} = \ket{\Phi^+}.
+\end{align}
+
+Thus, to teleport from sender to recipient, all non-recipients simply measure their qubits in the $\hat{X}$-basis, and publicly report their classical measurement outcomes for the purposes of performing local corrections. What is left is a Bell pair between sender and recipient. This Bell pair may then be employed in the conventional teleportation protocol to perform the teleportation.
+
+The key observation now is that the dynamics of this entire system must be invariant under the time-ordering of the $\hat{X}$-basis measurements. Thus, whether they are performed at the beginning of the protocol (thereby directly reducing us to standard 2-party teleportation), or deferred until later, makes no difference to the final state obtained by the recipient. This is the basis for the ability of the protocol to broadcast the teleported state, without first specifying the intended recipient.
+
+The full protocol is described in Alg.~\ref{alg:open_dest_qst}. This protocol was successfully experimentally demonstrated photonically using 5 qubits \cite{bib:PanOpenDest}, with high teleported state fidelities.
+
+\begin{table}[!htbp]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
+function OpenDestTeleportation($\ket\phi_A$, $\ket{\psi_\mathrm{GHZ}^{(n)}}$):
+\begin{enumerate}
+    \item An $n$-qubit GHZ state is distributed between the sender and \mbox{$n-1$} potential recipients,
+    \begin{align}
+    	\ket{\psi_\mathrm{GHZ}^{(n)}} = \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n} + \ket{1}^{\otimes n}).
+    \end{align}
+    \item The sender completes their side of the protocol as per the ordinary 2-party quantum state teleportation protocol.
+    \item The sender's classical measurement outcome is broadcast to all potential recipients.
+    \item Wait until the potential recipients have decided between themselves (classically) who shall be the recipient.
+    \item All non-recipients measure their qubits in the $\hat{X}$-basis and publicly announce their measurement outcomes.
+    \item The recipient calculates the parity of the announced measurement outcomes, which determines whether they apply a local $\hat{Z}$-correction.
+    \item The recipient completes their side of the protocol as per the usual quantum state teleportation protocol, obtaining $\ket\phi$.
+    \item $\Box$
+\end{enumerate}}
+\end{mdframed}
+\captionspacealg \caption{Open-destination quantum state teleportation of a single qubit from a single sender to \mbox{$n-1$} potential recipients.} \label{alg:open_dest_qst}
+\end{table}
+
+%
 % Quantum Gate Teleportation
 %
 
@@ -1024,7 +1079,7 @@ Note that this technique works for the CNOT gate because it is a Clifford gate\i
 
 \subsection{Entanglement swapping} \label{sec:swapping} \index{Entanglement!Swapping}
 
-The obvious approach to sending a qubit from Alice to Bob is to send a qubit from Alice to Bob (duh!). However, over long distances this may accrue impractical error rates, particularly losses. The other alternative is to employ the quantum state teleportation protocol (Sec.~\ref{sec:teleport}) to teleport the state between the two parties. However, this requires that Alice and Bob first share an entangled Bell pair, which must itself be distributed across the same distances. Entanglement swapping \cite{???, bib:PhysRevLett.75.4337} is the process of taking two Bell pairs, one held by each party, and swapping the entanglement between them such that the two parties share an entangled state. This procedure can be bootstrapped to progressively swap the entanglement over longer and longer distances, yielding \textit{quantum repeater networks} (Sec.~\ref{sec:rep_net}). The procedure for this protocol is shown in Alg.~\ref{alg:ent_swap} and Fig.~\ref{fig:ent_swap}
+The obvious approach to sending a qubit from Alice to Bob is to send a qubit from Alice to Bob (duh!). However, over long distances this may accrue impractical error rates, particularly losses. The other alternative is to employ the quantum state teleportation protocol (Sec.~\ref{sec:teleport}) to teleport the state between the two parties. However, this requires that Alice and Bob first share an entangled Bell pair, which must itself be distributed across the same distances. Entanglement swapping \cite{bib:PhysRevLett.75.4337} is the process of taking two Bell pairs, one held by each party, and swapping the entanglement between them such that the two parties share an entangled state. This procedure can be bootstrapped to progressively swap the entanglement over longer and longer distances, yielding \textit{quantum repeater networks} (Sec.~\ref{sec:rep_net}). The procedure for this protocol is shown in Alg.~\ref{alg:ent_swap} and Fig.~\ref{fig:ent_swap}
 
 \begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]

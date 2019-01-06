@@ -4,6 +4,9 @@
 
 \section{Optimising the world}\label{sec:optimising_the_world}\index{Optimisation}
 
+\famousquote{Premature optimisation is the root of all evil.}{Donald Knuth}
+\newline
+
 \dropcap{E}{very} aspect of our modern world is heavily optimised to improve efficiency, affordability, profitability, and every other kind of desirability. Even long before the digital revolution, which enabled the widespread implementation of modern optimisation-theoretic techniques, humans have always striven to make life as easy as possible -- the least effort for the greatest possible reward. Our modern application of optimisation theory is merely a logical extension of this to the many other facets of the 21st century economy that now exist.
 
 \subsection{Optimisation in everyday life}
@@ -119,7 +122,7 @@ Now finding a valid scheduling of tasks amounts to solving the graph colouring p
 
 Consider a country comprising different regions, where each region is served by its own local radio station, operating at its own carrier frequency. But the radio signal within a region is strong enough to penetrate its immediate neighbouring regions also. For this reason, the frequency at which a regional station transmits should never be the same as that of its neighbours, so as to avoid signal interference.
 
-In this incarnation of the map colouring problem, a valid colouring specifies a set of transmission frequencies that avoid interregional signal interference, and the chromatic number specifies the smallest possible radio spectrum\index{Radio spectrum} that must be allocated\footnote{Spectrum is worth a lot of money!}.
+In this incarnation of the map colouring problem, a valid colouring specifies a set of transmission frequencies that avoid interregional signal interference, and the chromatic number specifies the smallest possible radio spectrum\index{Radio spectrum} that must be allocated\footnote{Spectrum is a scarce resource\index{Scarcity}, in high demand, and worth a lot of money!}.
 
 The same principles could apply to all manner of broadcast networks, such as the allocation of spectrum in cellular phone networks\index{Cellular phone networks}, where now map regions represent cellular transmission towers and their respective coverage.
 
@@ -146,15 +149,33 @@ This can be thought of as an optimisation problem in the sense that our goal is 
 
 Semidefinite programming\index{Semidefinite programming} is a technique for finding solutions to constrained linear systems\index{Linear systems}. Although the technique is already classically efficient, running in polynomial time, a quantum-enhanced version has been described \cite{???}, which promises exponential speedup in certain parameter regimes.
 
-\subsection{Approximate optimisation}\index{Approximate optimisation}
+\subsection{An example of a poorly constructed joke}\index{Jokes}
 
-Some problems in even harder classes than \textbf{NP}-complete can in some instances be \textit{approximated} using the same approach. The key to solving such problems is to define an oracle\index{Oracles} that attributes a \textit{score}\index{Score} to a given input, rather than a yes/no answer to perfect satisfiability, and answers `yes' or `no' depending on whether that score is above some defined threshold for approximation. As an illustrative example, consider the optimisation of, say, a complex traffic network, where the goal is to maximise flow through the network. Then we might define our score to be some flow metric for the network's graph.
+\famousquote{How many apples grow on a tree? All of them.}{Dad}
+\newline
+
+A number of years ago there was a popular quantum computing joke circulating the internet. It went along the lines of:
+\\
+\\
+\textit{Q:\,\,What happens when two quantum computers play chess?}\\
+\textit{A:\,\,White e3, black resigns.}
+\\
+
+This joke is of course based on the assumption that quantum computers can efficiently and optimally solve the chess problem, foreseeing the entire future of a game, and determine the perfect optimal next move. Thus, after making the optimal first move `e3', black concedes that he cannot win.
+
+However this is a poorly-designed joke, since it has been proven that chess is an \textbf{EXP}-complete problem\footnote{The complexity of chess is defined in the context where the game is generalised appropriately to an \mbox{$n\times n$} board, since complexity classes are all about computational scaling against problem size, and obviously any \textit{fixed} size instance of a game can be solved in $O(1)$ time (albeit with perhaps a very large constant!).}, believed to lie well outside of \textbf{BQP}, that which is efficiently solvable on quantum computers. Therefore this is a bad joke and it isn't funny.
+
+However, although quantum computers are unlikely to be able to efficiently play chess \textit{optimally}, there may still be some room for improvement in \textit{approximating} optimal moves, to be discussed next in Sec.~\ref{sec:approx_optim}.
+
+\subsection{Approximate optimisation}\label{sec:approx_optim}\index{Approximate optimisation}
+
+Some problems in even harder classes than \textbf{NP}-complete can in some instances be \textit{approximated} using the same approach as for \textbf{NP}-complete problems. The key to solving such problems is to define an oracle\index{Oracles} that attributes a \textit{score}\index{Score} to a given input, rather than a yes/no answer to perfect satisfiability, and answers `yes' or `no' depending on whether that score is above some defined threshold for approximation. As an illustrative example, consider the optimisation of, say, a complex traffic network, where the goal is to maximise flow through the network. Then we might define our score to be some flow metric for the network's graph.
 
 We then apply a Grover search repeatedly, each time incrementing this threshold until the algorithm outputs `no'. Then we know that the last input yielding the `yes' outcome had the highest score. The reason this approach is \textit{approximate} rather than \textit{exact} is that defining such a score-oracle mightn't be always efficiently implemented, or maybe it mightn't make sense at all to define score measures for a given problem. Alternately, maybe a particular problem inherently requires perfect satisfiability, and any imperfect approximation is insufficient -- if even a single constraint isn't satisfied, the system is broken.
 
 An intuitive example of a problem taken from a far harder complexity class than \textbf{NP}-complete, that can be approximately optimised using the Grover approach is the game of chess\index{Chess}. Generalisation of the rules of chess to an \mbox{$n\times n$} board yields a game proven to reside in \textbf{EXP}-complete\index{EXP} -- the class of all problems requiring exponential runtime on a classical computer.
 
-How do current classical computers play chess? They construct a \textit{search tree}\index{Search tree} (see Fig.~\ref{fig:search_tree}), which is explored exhaustively up to a given depth (bounded by computational resources), and assign a score to each board position, indicating the relative strength of its position. The branch in the tree with the highest scores determines the next move.
+How do current classical computers play chess? They construct a \textit{search tree}\index{Search tree} (see Fig.~\ref{fig:search_tree}), which is explored exhaustively up to a given depth (bounded by computational resources), and assign a score to each board position, indicating its relative strength. The branch in the tree with the highest scores determines the next move.
 
 %\if 3\pubmode
 \begin{figure*}[!htbp]
