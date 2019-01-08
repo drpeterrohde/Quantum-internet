@@ -962,7 +962,19 @@ The above describes quantum state teleportation at the level of single qubits. H
 
 In the standard quantum state teleportation protocol there is a single sender and a single receiver. A generalisation of the protocol is \textit{open-destination quantum state teleportation}, whereby there is still just one sender, but any number of potential recipients. At the time of transmission, the sender does not specify the recipient, but rather wishes to `broadcast'\index{Broadcasting} the state to \textit{all} recipients, such that any \textit{one} of them can subsequently read out the state. Note that only a single recipient may actually perform the readout, since multiple readouts would violate the no-cloning theorem\index{No-cloning theorem}. However, the key new feature introduced by this variant of the protocol is that the final choice of which recipient performs the readout needn't be known in advance, but can be decided at an arbitrary later stage, well after the sender has completed their side of the protocol.
 
-To implement this protocol, rather than first distributing a Bell pair between sender and recipient, we distribute an $n$-party GHZ state between the sender and the \mbox{$n-1$} recipients,
+\if 2\pubmode
+	\begin{figure}[!htbp]
+	\includegraphics[clip=true, width=0.475\textwidth]{open_dest_teleport_long}
+	\captionspacefig \caption{Open-destination quantum state teleportation. (a) GHZ state distribution from a central server between the sender and all potential recipients. (b) Sender performs quantum state teleportation, resulting in the state being teleported to all recipients in redundantly-encoded\index{Redundant encoding} form. (c) All non-receivers measure out their qubits in the $\hat{X}$-basis, resulting in the teleported state arriving at the destination of just the chosen true receiver.}\index{Open-destination quantum state teleportation}\label{fig:open_dest_teleport}
+	\end{figure}
+\else
+	\begin{figure*}[!htbp]
+	\includegraphics[clip=true, width=\textwidth]{open_dest_teleport}
+	\captionspacefig \caption{Open-destination quantum state teleportation. (a) GHZ state distribution from a central server between the sender and all potential recipients. (b) Sender performs quantum state teleportation, resulting in the state being teleported to all recipients in redundantly-encoded\index{Redundant encoding} form. (c) All non-receivers measure out their qubits in the $\hat{X}$-basis, resulting in the teleported state arriving at the destination of just the chosen true receiver.}\index{Open-destination quantum state teleportation}\label{fig:open_dest_teleport}
+	\end{figure*}
+\fi
+
+To implement this protocol, outlined in Fig.~\ref{fig:open_dest_teleport}, rather than first distributing a Bell pair between sender and recipient, we distribute an $n$-party GHZ state between the sender and the \mbox{$n-1$} recipients,
 \begin{align}
 \ket{\psi_\mathrm{GHZ}^{(n)}} = \frac{1}{\sqrt{2}}(\ket{0}^{\otimes n} + \ket{1}^{\otimes n}).
 \end{align}
@@ -981,7 +993,7 @@ Thus, to teleport from sender to recipient, all non-recipients simply measure th
 
 The key observation now is that the dynamics of this entire system must be invariant under the time-ordering of the $\hat{X}$-basis measurements. Thus, whether they are performed at the beginning of the protocol (thereby directly reducing us to standard 2-party teleportation), or deferred until later, makes no difference to the final state obtained by the recipient. This is the basis for the ability of the protocol to broadcast the teleported state, without first specifying the intended recipient.
 
-The full protocol is described in Alg.~\ref{alg:open_dest_qst}, and outlined in Fig.~\ref{fig:open_dest_teleport}. This protocol was successfully experimentally demonstrated photonically using 5 qubits \cite{bib:PanOpenDest}, with high teleported state fidelities.
+The full protocol is described in Alg.~\ref{alg:open_dest_qst}. This protocol was successfully experimentally demonstrated photonically using 5 qubits \cite{bib:PanOpenDest}, with high teleported state fidelities.
 
 \begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
@@ -1003,18 +1015,6 @@ function OpenDestTeleportation($\ket\phi_A$, $\ket{\psi_\mathrm{GHZ}^{(n)}}$):
 \end{mdframed}
 \captionspacealg \caption{Open-destination quantum state teleportation of a single qubit from a single sender to \mbox{$n-1$} potential recipients.}\index{Open-destination quantum state teleportation}\label{alg:open_dest_qst}
 \end{table}
-
-\if 2\pubmode
-	\begin{figure}[!htbp]
-	\includegraphics[clip=true, width=0.475\textwidth]{open_dest_teleport_long}
-	\captionspacefig \caption{Open-destination quantum state teleportation. (a) GHZ state distribution from a central server between the sender and all potential recipients. (b) Sender performs quantum state teleportation. (c) All non-receivers measure out their qubits in the $\hat{X}$-basis, resulting in the teleported state arriving at the destination of the chosen true receiver.}\index{Open-destination quantum state teleportation}\label{fig:open_dest_teleport}
-	\end{figure}
-\else
-	\begin{figure*}[!htbp]
-	\includegraphics[clip=true, width=\textwidth]{open_dest_teleport}
-	\captionspacefig \caption{Open-destination quantum state teleportation. (a) GHZ state distribution from a central server between the sender and all potential recipients. (b) Sender performs quantum state teleportation. (c) All non-receivers measure out their qubits in the $\hat{X}$-basis, resulting in the teleported state arriving at the destination of the chosen true receiver.}\index{Open-destination quantum state teleportation}\label{fig:open_dest_teleport}
-	\end{figure*}
-\fi
 
 %
 % Quantum Gate Teleportation
