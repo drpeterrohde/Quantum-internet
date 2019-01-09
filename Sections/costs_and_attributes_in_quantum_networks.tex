@@ -325,35 +325,59 @@ The \textit{classical mutual information}\index{Classical channel capacity} of c
 I(\mathcal{E}) = \max_{p(x)} I(X;Y)
 % 
 \end{align}
-with the intuitive interpretation as the maximum mutual information between input and output states that can be achieved for the channel. (Note: this definition of `capacity' is not to be confused with that which we later refer to in flow networks).
+with the intuitive interpretation as the maximum mutual information between input and output states that can be achieved for the channel.  For a noisy channel, if the input contains product states (i.e. entanglement between input states is not allowed), the classical capacity can be expressed as
+\begin{align}
+\chi(\mathcal{E}) = \max_{p_i,\rho_i} S(\rho) - \sum_i p_i S(\rho_i) \label{eq:holevoinfo}
+\end{align}
+
 
 And the \textit{classical channel capacity} of $\mathcal{N}$ is defined as
 \begin{align}\index{classical!Channels!Capacity}
 \mathcal{C}(\mathcal{E}) = \lim_{n \rightarrow \infty} \frac{1}{n} \mathcal{E}^{\otimes n},
 \end{align}
-
+(Note: this definition of `capacity' is not to be confused with that which we later refer to in flow networks).
 
 Analogous to the mutual information for classical systems is the \textit{coherent information} for quantum systems \cite{bib:PhysRevA.54.2629}, defined as,
 \begin{align}\index{Coherent information}
 I(\hat\rho,\mathcal{E}) = S(\mathcal{E}(\hat\rho)) - S_e(\hat\rho,\mathcal{E}).
 \label{eq:mutual_info_classical_single}
 \end{align}
-Here $S_e$ is the \textit{exchange entropy}, a measure of how much information is exchanged between the state $\hat\rho$ and the environment under the action of the process. Specifically, it is given by the entropy of the environment subsystem in Eq.~(\ref{eq:proc_environment}), after application of the channel. This yields the intuitive interpretation that the coherent information is the information contained in the evolved state, discounted by the amount lost to the environment.
+Here $S_e$ is the \textit{exchange entropy}, a measure of how much information is exchanged between the state $\hat\rho$ and the environment under the action of the process. Specifically, it is given by the entropy of the environment subsystem in Eq.~(\ref{eq:proc_environment}), after application of the channel. This yields the intuitive interpretation that the coherent information is the information contained in the evolved state, discounted by the amount lost to the environment. It can be alternatively written as
 
-The quantum coherent information exhibits much of the same mathematical structure as the classical mutual information. And analogously, we can define the \textit{quantum channel capacity} as,
+\begin{align}
+I(A\>B) \equiv H(B)_\rho - H(AB)_\rho
+\end{align}
+\noindent which we recognize as the negative of conditional quantum entropy $H(A|B) = H(AB)_\rho - H(B)$. The quantity $H(A|B)$ can be negative is a signature of the fundamental difference between the classical and the quantum world.
+
+The quantum coherent information exhibits much of the same mathematical structure as the classical mutual information. And analogously
 \begin{align}\index{Quantum channels!Capacity}
-\mathcal{Q}(\mathcal{E}) = \max_{\hat\rho} I(\hat\rho,\mathcal{E}).
+\mathcal{I}_Q(\mathcal{E}) = \max_{\hat\rho} I(\hat\rho,\mathcal{E}).
 \label{eq:mutual_info_quantum_single}
 \end{align}
 
-\textbf{Regularized mutual information}: 
+The \textit{quantum channel capacity} is then defined as
+\begin{align}
+Q(\mathcal{E}) = \lim_{n \rightarrow \infty} \frac{1}{n} \mathcal{I}_Q(\mathcal{E})^{\otimes n}
+\label{eq:quantcohinfo}
+\end{align}
 
-The quantities in Eq~\eqref{eq:mutual_info_classical_single} and Eq~\eqref{eq:mutual_info_quantum_single}
+\textit{The most important distinction between quantum mutual information and quantum coherent information is that, the 
+mutual information is always additive, but the quantum coherent information is not.}
+Analytic solutions to Eq.~\eqref{eq:quantcohinfo} are notoriously difficult to calculate. However, once net dephasing or depolarisation rates have been calculated across a route, the \textit{single-use} quantities can be calculated, which can serve as a lower bound to the ultimately achievable rates, if a number representing \textit{cost}, rather than an analytic solution, is all we need.
 
-Analytic solutions to $\mathcal{C}(\mathcal{E})$ and $\mathcal{Q}(\mathcal{E})$ are not known even for simple Pauli error channels such as dephasing and depolarisation. However, once net dephasing or depolarisation rates have been calculated across a route, the channel capacities can easily be solved numerically, which is sufficient for the numerical algorithms we will rely upon, where a number representing \textit{cost}, rather than an analytic solution, is all we need.
 
-
-
+A summary of the different measure of classical and quantum capacities are given in Table \ref{tab:capacitie}.
+\begin{widetext}
+\begin{table}[hbt]
+\begin{tabular}{ |c | c | c| c| } \hline
+Capacity & Type of information & Correlation measure &Capacity formula  \\ \hline
+Classical &Classical information &Holevo information &Eq.~\eqref{eq:holevoinfo}       \\
+Entanglement Assisted Classical & Classical information & Quantum mutual information &Bennett-Shor-Smolin-Thapliyal formula \\
+Quantum &Quantum information &Quantum Coherent Information &Eq\eqref{eq:quantcohinfo} \\ \hline
+\end{tabular}
+\caption{\label{tab:capacitie} Measure of classical and quantum channel capacities.}
+\end{table}
+\end{widetext}
 
 
 
