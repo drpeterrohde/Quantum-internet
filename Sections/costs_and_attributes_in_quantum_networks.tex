@@ -280,19 +280,27 @@ S(\hat\rho) &= - \sum_x \lambda_x \log_2 (\lambda_x) \nonumber \\
 \end{align}
 where $\{\lambda\}$ is the eigenvalue spectrum of $\hat\rho$. This modification is logically justified, as the eigenvalues can be interpreted directly as a purely classical probability distribution of orthogonal states when the density operator is transformed into a basis with no coherences between basis states (i.e a diagonal basis or spectral decomposition). In that case the Shannon and von Neuman entropies essentially have identical physical interpretations.
 
-The \textit{mutual information} specifies the number of bits in common between two distributions. Equivalently, it is the maximum number of bits that one party can learn about the other. For two classical distributions, $A$ and $B$, this is given by,
+
+We now introduce an entropic measure of common or mutual information that two party possesses. Suppose Alice possesses the random variable $A$ and Bob has the random variable $B$, the \textit{mutual information} specifies the number of bits in common between the two distributions. Equivalently, it is the maximum number of bits that one party can learn about the other. For two classical distributions, this is given by,
 \begin{align}\index{Mutual information}
 I(A;B) = H(A) + H(B) - H(A,B).
 \end{align}
-Equivalently, for density operators,
+
+We can also define the classical mutual information $I_c(\rho_{AB})$ for a bipartite quantum state $\rho_{AB}$. Suppose that $\rho_{AB}$ is shared between Alice and Bob and they would like to extract maximal correlations from it. They measure using local measurement bases $\{\Lambda_A^x\}$ and $\{\Lambda_B^x\}$, which yields random varialbes $X$ and $Y$.  Their classical mutual information is given by
 \begin{align}
-I(\hat\rho_A;\hat\rho_B) = S(\hat\rho_A) + S(\hat\rho_B) - S(\hat\rho_A,\hat\rho_B),
+I_c(\rho_{AB}) \equiv \max_{\{\Lambda_A^x\},\{\Lambda_B^x\}} I(X;Y).
+\end{align}
+
+Analogously, the quantum mutual information  for a bipartite state $\rho_{AB}$ is defined as
+\begin{align}
+I(A;B)_\rho = S(\hat\rho_A) + S(\hat\rho_B) - S(\rho_{AB}),
 \end{align}
 using the von Neuman entropy. The mutual information between two quantum states is invariant under local unitary transformations,
 \begin{align}
-I(\hat\rho_A;\hat\rho_B) = I(\hat{U}_A\hat\rho_A \hat{U}_A^\dag; \hat{U}_B\hat\rho_B \hat{U}_B^\dag),
+I(A;B)_\rho = I(\hat{U}_A\hat\rho_A \hat{U}_A^\dag; \hat{U}_B\hat\rho_B \hat{U}_B^\dag),
 \end{align}
 since the eigenvalue spectrum of a density operator is invariant under unitary transformations. Therefore, the mutual information represents the maximum amount of information Bob can learn about Alice's state under \textit{any} local operations.
+
 
 A quantum process cannot increase the mutual information between two parties. This yields the \textit{data processing inequality}\index{Data processing inequality} that, for a sequence of channels \mbox{$X\to Y\to Z$},
 \begin{align}\index{Data processing inequality}\label{eq:data_proc_ineq}
@@ -306,13 +314,24 @@ with equality if and only if the channel not specified in the identity on the ri
 \captionspacefig \caption{A sequence of events \mbox{$X\to Y\to Z$}. The data processing inequality states that the mutual information from beginning to end is upper-bounded by the mutual information between neighbouring stages, as per Eq.~(\ref{eq:data_proc_ineq}).}\label{fig:data_proc_ineq}	
 \end{figure}
 
-\textbf{Mutual information}-
+
+
 % 
-The mutual information is defined as being between a particular known pair of states. Of course, in a quantum network we will seldom know what the states being communicated are and will therefore be unable to directly calculate the mutual information. To address this, the \textit{classical channel capacity}\index{Classical channel capacity} of a channel is defined as,
-\begin{align}\index{Channels!Capacity}
-\mathcal{C}(\mathcal{E}) = \max_{\hat\rho} [I(\hat\rho,\mathcal{E}(\hat\rho))],
+The mutual information is defined as being between a particular known pair of states. Of course, in a channel we have room 
+play around with the input state and the measurement at the output. Therefore we can optimize the mutual information of a particular channel, which leads to the following definiiton:
+
+The \textit{classical mutual information}\index{Classical channel capacity} of channel $\mathcal{E}$ is defined as,
+\begin{align}\index{mutinfoclassical}
+I(\mathcal{E}) = \max_{p(x)} I(X;Y)
+% 
 \end{align}
 with the intuitive interpretation as the maximum mutual information between input and output states that can be achieved for the channel. (Note: this definition of `capacity' is not to be confused with that which we later refer to in flow networks).
+
+And the \textit{classical channel capacity} of $\mathcal{N}$ is defined as
+\begin{align}\index{classical!Channels!Capacity}
+\mathcal{C}(\mathcal{E}) = \lim_{n \rightarrow \infty} \frac{1}{n} \mathcal{E}^{\otimes n},
+\end{align}
+
 
 Analogous to the mutual information for classical systems is the \textit{coherent information} for quantum systems \cite{bib:PhysRevA.54.2629}, defined as,
 \begin{align}\index{Coherent information}
@@ -333,7 +352,6 @@ The quantities in Eq~\eqref{eq:mutual_info_classical_single} and Eq~\eqref{eq:mu
 
 Analytic solutions to $\mathcal{C}(\mathcal{E})$ and $\mathcal{Q}(\mathcal{E})$ are not known even for simple Pauli error channels such as dephasing and depolarisation. However, once net dephasing or depolarisation rates have been calculated across a route, the channel capacities can easily be solved numerically, which is sufficient for the numerical algorithms we will rely upon, where a number representing \textit{cost}, rather than an analytic solution, is all we need.
 
-\comment{Add stuff on channel capacities of different channels, like Pauli error channels etc.}
 
 
 
