@@ -35,7 +35,7 @@ When employing single-photon encoding of qubits (e.g using the polarisation degr
 
 \subsubsection{Spectral filtering} \index{Loss!Channel}\index{Spectral filtering}
 
-Because spectral filtering can be regarded as a frequency-dependent loss channel, its associated cost can be treated in the same manner, except that rather than keeping track of a single efficiency $\eta$, we track a frequency response function $\eta_f(\omega)$, with the same multiplicative property,
+Because spectral filtering can be regarded as a frequency-dependent loss channel, its associated cost can be treated in the same manner, except that rather than keeping track of a single efficiency $\eta$, we track a frequency response function $\eta_f(\omega)$, with the same multiplicative property (on a per-frequency basis),
 \begin{align}
 	\eta_f^\mathrm{(net)}(\omega)=\prod_i \eta_f^{(i)}(\omega).
 \end{align}
@@ -231,46 +231,20 @@ it is evident that squeezing accumulates additively as well,
 % Channel Capacity
 %
 
-
-
-
-
-\clearpage
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \subsubsection{Channel capacity} \label{sec:channel_cap} \index{Channels!Capacity}
 
-The measures considered until now have quantified the preservation of quantum states. Alternately, one might consider information theoretic measures, which quantify the number of bits/qubits transmitted by a link, i.e the number of bits/qubits in common before and after the channel. This is an extremely powerful tool as it upper bounds the amount of information the receiver can extract from the transmitter under \textit{any} measurement scheme, very useful in a cryptographic context, where we want security to be attack-independent\index{Information-theoretic!Security} (Sec.~\ref{sec:comp_vs_inf_th_sec}). Before we delve into that, we have to introduce a few new quantities.
+The measures considered until now have quantified the preservation of quantum states. Alternately, one might consider information theoretic measures\index{Information theoretic!Measures}, which quantify the number of bits/qubits transmitted by a link, i.e the number of bits/qubits in common before and after the channel. This is an extremely powerful tool as it upper bounds the amount of information the receiver can extract from the transmitter under \textit{any} measurement scheme, very useful in a cryptographic context, where we want security to be attack-independent\index{Information-theoretic!Security} (Sec.~\ref{sec:comp_vs_inf_th_sec}). Before we delve into this, we have to introduce a few new quantities.
 
-Suppose we have a random variable $X$, and a particular measurement outcome $x$ occurs with probability $p(x)$, the entropy of $X$ is given by,
+Suppose we have a random variable $X$, and a particular measurement outcome $x$ occurs with probability $p(x)$, the Shannon entropy of $X$ is given by,
 \begin{align}\index{Shannon entropy}
 H(X) = -\sum_x p_x\log_2(p_x).
 \end{align}
 
-The information, or entropy, plays a central role in information theory. 
-The intuitive interpretation is that,it quantifies an experimenter's uncertainty about $X$
-before measuring it, and his expected information gain is $H(X)$ bits upon learning the outcome. The information $H(X)$ is zero if and only if one of the probabilities
-$p(x)$ is unity, with the others being zero. In this case the value of $X$ is
-already known and so there is no information to be gained by observing
-it.  
-
-
+The information, or entropy, plays a central role in information theory. The intuitive interpretation is that it quantifies an experimenter's uncertainty about $X$ before measuring it, and his expected information gain is $H(X)$ bits upon learning the outcome. The information $H(X)$ is zero if and only if one of the probabilities $p(x)$ is unity, with the others being zero. In this case the value of $X$ is already known and so there is no information to be gained from observing it.  
 
  For a joint distribution over $X$ and $Y$ this simply generalises to,
 \begin{align}\index{Joint Shannon entropy}
-H(X,Y) =  -\sum_{x,y} p_{x,y}\log_2(p_{x,y})
+H(X,Y) =  -\sum_{x,y} p_{x,y}\log_2(p_{x,y}).
 \end{align}
 
 The von Neuman entropy\index{von Neuman entropy} \cite{???} for quantum density operators, $S(\hat\rho)$, is defined analogously, replacing probabilities with density operator eigenvalues,
@@ -278,29 +252,25 @@ The von Neuman entropy\index{von Neuman entropy} \cite{???} for quantum density 
 S(\hat\rho) &= - \sum_x \lambda_x \log_2 (\lambda_x) \nonumber \\
 &= -\mathrm{tr}(\hat\rho\,\log \,\hat\rho),
 \end{align}
-where $\{\lambda\}$ is the eigenvalue spectrum of $\hat\rho$. This modification is logically justified, as the eigenvalues can be interpreted directly as a purely classical probability distribution of orthogonal states when the density operator is transformed into a basis with no coherences between basis states (i.e a diagonal basis or spectral decomposition). In that case the Shannon and von Neuman entropies essentially have identical physical interpretations.
+where $\{\lambda\}$ is the eigenvalue spectrum of $\hat\rho$. This modification is logically justified, as the eigenvalues can be interpreted directly as a purely classical probability distribution of orthogonal states when the density operator is transformed into a basis with no coherences between basis states (i.e a diagonal basis or spectral decomposition\index{Spectral decomposition}). In that case, the Shannon and von Neuman entropies essentially have identical physical interpretations.
 
+We now introduce an entropic measure of common or mutual information shared by two parties. Suppose Alice possesses the random variable $A$ and Bob has the random variable $B$, the \textit{mutual information} specifies the number of bits in common between the two distributions. Equivalently, this represents the maximum number of bits that one party can learn about the other just by inspecting their own information.
 
-We now introduce an entropic measure of common or mutual information that two party possesses. Suppose Alice possesses the random variable $A$ and Bob has the random variable $B$, the \textit{mutual information} specifies the number of bits in common between the two distributions. Equivalently, it is the maximum number of bits that one party can learn about the other. For two classical distributions, this is given by,
+For two classical distributions, the classical mutual information is given by,
 \begin{align}\index{Mutual information}
 I(A;B) = H(A) + H(B) - H(A,B).
 \end{align}
-
-We can also define the classical mutual information $I_c(\rho_{AB})$ for a bipartite quantum state $\rho_{AB}$. Suppose that $\rho_{AB}$ is shared between Alice and Bob and they would like to extract maximal correlations from it. They measure using local measurement bases $\{\Lambda_A^x\}$ and $\{\Lambda_B^x\}$, which yields random varialbes $X$ and $Y$.  Their classical mutual information is given by
+Analogously, the quantum mutual information\index{Quantum mutual information} for bipartite state $\hat\rho_{A,B}$ is defined as,
 \begin{align}
-I_c(\rho_{AB}) \equiv \max_{\{\Lambda_A^x\},\{\Lambda_B^x\}} I(X;Y).
+I(A;B)_{\hat\rho} = S(\hat\rho_A) + S(\hat\rho_B) - S(\hat\rho_{A,B}),
 \end{align}
+using the von Neuman entropy.
 
-Analogously, the quantum mutual information  for a bipartite state $\rho_{AB}$ is defined as
-\begin{align}
-I(A;B)_\rho = S(\hat\rho_A) + S(\hat\rho_B) - S(\rho_{AB}),
-\end{align}
-using the von Neuman entropy. The mutual information between two quantum states is invariant under local unitary transformations,
+The mutual information between two quantum states is invariant under local unitary transformations,
 \begin{align}
 I(A;B)_\rho = I(\hat{U}_A\hat\rho_A \hat{U}_A^\dag; \hat{U}_B\hat\rho_B \hat{U}_B^\dag),
 \end{align}
 since the eigenvalue spectrum of a density operator is invariant under unitary transformations. Therefore, the mutual information represents the maximum amount of information Bob can learn about Alice's state under \textit{any} local operations.
-
 
 A quantum process cannot increase the mutual information between two parties. This yields the \textit{data processing inequality}\index{Data processing inequality} that, for a sequence of channels \mbox{$X\to Y\to Z$},
 \begin{align}\index{Data processing inequality}\label{eq:data_proc_ineq}
@@ -314,104 +284,81 @@ with equality if and only if the channel not specified in the identity on the ri
 \captionspacefig \caption{A sequence of events \mbox{$X\to Y\to Z$}. The data processing inequality states that the mutual information from beginning to end is upper-bounded by the mutual information between neighbouring stages, as per Eq.~(\ref{eq:data_proc_ineq}).}\label{fig:data_proc_ineq}	
 \end{figure}
 
-
-
-% 
-The mutual information is defined as being between a particular known pair of states. Of course, in a channel we have room 
-play around with the input state and the measurement at the output. Therefore we can optimize the mutual information of a particular channel, which leads to the following definiiton:
-
-The \textit{classical mutual information}\index{Classical channel capacity} of channel $\mathcal{E}$ is defined as,
-\begin{align}\index{mutinfoclassical}
-I(\mathcal{E}) = \max_{p(x)} I(X;Y)
-% 
-\end{align}
-with the intuitive interpretation as the maximum mutual information between input and output states that can be achieved for the channel.  For a noisy channel, if the input contains product states (i.e. entanglement between input states is not allowed), the classical capacity can be expressed as
+From this, we can then define the \comment{accessible information}\index{Accessible information}, $I_c(\hat\rho_{A,B})$ -- the maximum of the mutual information, optimised over \textit{all} possible measurement settings. Suppose $\hat\rho_{A,B}$ is shared between Alice and Bob, from which they would like to extract maximal correlations (i.e joint information). They measure using local measurement bases $\{\Lambda_A^x\}$ and $\{\Lambda_B^x\}$, yielding random variables $A$ and $B$ \comment{Changed from X,Y to A,B}. Their \comment{accessible information} is defined as,
 \begin{align}
-\chi(\mathcal{E}) = \max_{p_i,\rho_i} S(\rho) - \sum_i p_i S(\rho_i) \label{eq:holevoinfo}
+I_c(\hat\rho_{A,B}) = \max_{\{\Lambda_A^x\},\{\Lambda_B^x\}} I(A;B).
 \end{align}
-\noindent which is known as the Holevo bound.
+\comment{Previously this was `classical mutual information'. Is that right? Isn't this actually the `accessible information'?}
 
+The mutual information is defined as being between a particular known pair of states. Of course, in a quantum channel we have the flexibility to manipulate the input state and the measurement at the output. Therefore we can optimise the mutual information of a particular channel, which leads to the following definiton:
 
-And the \textit{classical channel capacity} of $\mathcal{N}$ is defined as
-\begin{align}\index{classical!Channels!Capacity}
-\mathcal{C}(\mathcal{E}) = \lim_{n \rightarrow \infty} \frac{1}{n} \mathcal{E}^{\otimes n},
+The \comment{\textit{classical channel capacity}}\index{Classical channel capacity} of quantum channel $\mathcal{E}$ is defined as,
+\begin{align}
+I(\mathcal{E}) = \max_{p(x)} I(X;Y),
 \end{align}
-(Note: this definition of `capacity' is not to be confused with that which we later refer to in flow networks).
+\comment{What's p(x)?}
+with the intuitive interpretation as the maximum mutual information between input and output states that can be achieved across the channel. This effectively places a physical upper bound on the achievable bitrate or bandwidth of the channel. For a noisy channel, if the input contains product states (i.e. entanglement between input states is not allowed), the classical channel capacity can be expressed as,
+\begin{align}
+\chi(\mathcal{E}) = \max_{p_i,\hat\rho_i} S(\hat\rho) - \sum_i p_i S(\hat\rho_i) \label{eq:holevoinfo}
+\end{align}
+\noindent which is known as the Holevo bound\index{Holevo bound}.
+
+And the \textit{classical channel capacity} of $\mathcal{E}$ is defined as
+\begin{align}\index{Classical!Channels!Capacity}
+\mathcal{C}(\mathcal{E}) = \lim_{n \rightarrow \infty} \frac{I(\mathcal{E}^{\otimes n})}{n},
+\end{align}
+\comment{Added missing entropy/capacity measure in here that needs to act on E. Correct?}
+which can be interpreted as the maximum bitrate of the channel, per use of the channel, in the limit of an infinite number of uses, where entangled between multiple applications is allowed in general.\comment{Why is this called the same thing as before but defined differently and using a different symbol for the metric?}
 
 Analogous to the mutual information for classical systems is the \textit{coherent information} for quantum systems \cite{bib:PhysRevA.54.2629}, defined as,
 \begin{align}\index{Coherent information}
 I(\hat\rho,\mathcal{E}) = S(\mathcal{E}(\hat\rho)) - S_e(\hat\rho,\mathcal{E}).
 \label{eq:mutual_info_classical_single}
 \end{align}
-Here $S_e$ is the \textit{exchange entropy}, a measure of how much information is exchanged between the state $\hat\rho$ and the environment under the action of the process. Specifically, it is given by the entropy of the environment subsystem in Eq.~(\ref{eq:proc_environment}), after application of the channel. This yields the intuitive interpretation that the coherent information is the information contained in the evolved state, discounted by the amount lost to the environment. It can be alternatively written as
-
+Here $S_e$ is the \textit{exchange entropy}, a measure of how much information is exchanged between the state $\hat\rho$ and the environment under the action of the process. Specifically, it is given by the entropy of the environment subsystem in Eq.~(\ref{eq:proc_environment}), after application of the channel. This yields the intuitive interpretation that the coherent information is the information contained in the evolved state, discounted by the amount lost to the environment. It can be alternatively written as,
 \begin{align}
-I(A\>B) \equiv H(B)_\rho - H(AB)_\rho
+I(A\>B) = H(B)_{\hat\rho} - H(A,B)_{\hat\rho},
 \end{align}
-\noindent which we recognize as the negative of conditional quantum entropy $H(A|B) = H(AB)_\rho - H(B)$. The quantity $H(A|B)$ can be negative is a signature of the fundamental difference between the classical and the quantum world.
+\comment{The symbol $\backslash >$ doesn't work. Please correct this.}
+which we recognise as the negative of the \textit{conditional quantum entropy}\index{Conditional quantum entropy},
+\begin{align}
+H(A|B) = H(A,B)_{\hat\rho} - H(B).
+\end{align}
+The fact that the information quantity $H(A|B)$ can be negative is a signature of the fundamental difference between the laws of classical and quantum information.
 
 The quantum coherent information exhibits much of the same mathematical structure as the classical mutual information. And analogously
 \begin{align}\index{Quantum channels!Capacity}
 \mathcal{I}_Q(\mathcal{E}) = \max_{\hat\rho} I(\hat\rho,\mathcal{E}).
 \label{eq:mutual_info_quantum_single}
 \end{align}
+\comment{What's this metric called? `quantum accessible information'?}
 
-The \textit{quantum channel capacity} is then defined as
-\begin{align}
-Q(\mathcal{E}) = \lim_{n \rightarrow \infty} \frac{1}{n} \mathcal{I}_Q(\mathcal{E}^{\otimes n})
-\label{eq:quantcohinfo}
+The \textit{quantum channel capacity}\index{Quantum channel capacity} is then analogously defined as,
+\begin{align}\label{eq:quantcohinfo}
+Q(\mathcal{E}) = \lim_{n \rightarrow \infty} \frac{\mathcal{I}_Q(\mathcal{E}^{\otimes n})}{n}.
 \end{align}
 
-\textit{The most important distinction between quantum mutual information and quantum coherent information is that, the 
-mutual information is always additive, but the quantum coherent information is not.}
-Analytic solutions to Eq.~\eqref{eq:quantcohinfo} are notoriously difficult to calculate. However, once net dephasing or depolarisation rates have been calculated across a route, the \textit{single-use} quantities can be calculated, which can serve as a lower bound to the ultimately achievable rates, if a number representing \textit{cost}, rather than an analytic solution, is all we need.
+The most important distinction between quantum mutual information and quantum coherent information is that the mutual information is always additive, but the quantum coherent information is not.
 
+Analytic solutions to Eq.~(\ref{eq:quantcohinfo}) are notoriously difficult to calculate. However, once net dephasing or depolarisation rates have been calculated across a route, the \textit{single-use} quantities can be calculated, which can serve as a lower bound to the ultimately achievable rates, if a number representing \textit{cost}, rather than an analytic solution, is all we need.
 
+For a more in-depth discussion of channel capacities 
 
-% A summary of the different measure of classical and quantum capacities are given in Table \ref{tab:capacitie}.
+\comment{This is an excellent idea to have a table summarising the different channel capacity measures!! Good thinking! Perhaps also have a column describing the interpretation of the measure, in English rather than in maths.}
+% A summary of the different measure of classical and quantum capacities are given in Table \ref{tab:capacities}.
 % \begin{widetext}
 % \begin{table}[hbt]
 % \begin{tabular}{ |c | c | c| c| } \hline
 % Capacity & Type of information & Correlation measure &Capacity formula  \\ \hline
-% Classical &Classical information &Holevo information &Eq.~\eqref{eq:holevoinfo}       \\
+% Classical &Classical information &Holevo information &Eq.~(\ref{eq:holevoinfo})       \\
 % % Entanglement Assisted Classical & Classical information & Quantum mutual information &Bennett-Shor-Smolin-Thapliyal formula \\
-% Quantum &Quantum information &Quantum Coherent Information &Eq\eqref{eq:quantcohinfo} \\ \hline
+% Quantum &Quantum information &Quantum Coherent Information &Eq.~(\ref{eq:quantcohinfo}) \\ \hline
 % \end{tabular}
-% \caption{\label{tab:capacitie} Measure of classical and quantum channel capacities.}
+% \caption{\label{tab:capacities} Measure of classical and quantum channel capacities.}
 % \end{table}
 % \end{widetext}
 
-We now discuss the quantum capacity for the erasure channel and the amplitude damping channel, both of which the quantum capacities can be calculated.
-
-We recall that the erasure channel acts on a state as follows is  
-\begin{align}
-\rho \rightarrow (1-\eta) \rho + \eta\ket{e}\bra{e}
-\end{align}
-\noindent where $\eta$ is the probability of losing the state and $\ket{e}\bra{e}$ is orthogonal to $\rho$. Given a system of dimension $d_A$, For $\eta \in [1/2,1]$, the quantum capacity is zero. For $\eta \in [0,1/2]$, the quantum capacity is $(1-2\eta)\log d_A.$
-
-For an amplitude damping channel with damping parameter $\gamma$, the Kraus operators can be written as
-\begin{align}
-A_0 = \ket{0}\bra{0} + \sqrt{1-\gamma}\ket{1}\bra{1}, \qquad A_1 = \sqrt{\gamma}\ket{1}\bra{1}.
-\end{align}
-
-For $\gamma \in [0,1/2]$,the quantum capacity is equal to
-\begin{align}
-\max_{p \in [0,1]} h_2 [(1-\gamma)p] - h_2[\gamma_p]
-\end{align}
-\noindent where $h_2$ represents the binary entropy function. For $\gamma \in [1/2,1]$, the quantum capacity is equal to zero.
-
-Two of the most surprising discoveries of quantum Shannon theory is the \textit{superadditivity} of coherent information for the depolarizing channel, and \textit{superactivation} of quantum capacity, where two channels whose indivicual capacities are zero can be combined to make a channel with non-zero capacity.
-
-
-
-
-For a more in-depth discussion of channel capacities 
-
-
-
-
-
-\clearpage
+\comment{One final request. Are you familiar with any analytic(!) results for channel capacities of Pauli channels, loss channels, or channels under the action of other simple/common error models? Would be handy to include these, if they are even known.}
 
 %
 % Latency
