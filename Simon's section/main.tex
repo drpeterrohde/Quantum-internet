@@ -26,6 +26,7 @@
 \newcommand{\sectionby}[1]{\begin{center}\textit{--- by #1.}\end{center}}
 \newcommand{\famousquote}[2]{\noindent\textit{``#1"} --- #2.\index{Quotes}\index{#2}}
 \newcommand{\dropcap}[2]{\lettrine[lines=2, findent=3pt, nindent=0pt]{#1}{#2}}
+\newcommand{\comment}[1]{{\color{blue}{\textbf{#1}}}}
 
 \begin{document}
 \title{The Quantum Sneakernet}
@@ -154,12 +155,12 @@ The second major element to a Sneakernet network is \textbf{PORTABILITY}. The un
 
 If we consider the six major \textit{qubit} technologies that are the most developed and have been most successful in attracting significant private/public sector investment, we see consider some of the pros and cons. In a lot of systems, \textit{infrastructure requirements} appears to be the biggest barrier to portability. 
 \begin{itemize}
-\item \textbf{Superconducting qubits} require operational temperatures of approximately 30mK in order to maintain operational coherence. This temperature requires dilution refrigeration technology which is difficult to make portable. 
-\item \textbf{Ion-Traps} require an almost perfect vacuum environment which again may prove to be problematic. 
+\item \textbf{Superconducting qubits}: require operational temperatures of approximately 30mK in order to maintain operational coherence. This temperature requires dilution refrigeration technology which is difficult to make portable. 
+\item \textbf{Ion-Traps}: require an almost perfect vacuum environment which again may prove to be problematic. 
 \item \textbf{Linear optical technology}: Can avoid infrastructure issues such as vacuums and extremely low temperatures. However, the probabilistic gates in linear optics and the consequently, ability to create active error corrected logical qubits has some practical issues to still overcome.  
 \item \textbf{Quantum Dots}: Similar to superconducting technology -- dilution refrigeration technology is required.
 \item \textbf{Phosphorus in Silicon}: Similar to quantum dots and superconductors -- dilution refrigeration technology is required. 
-\item \textbf{Colour centres, e.g. NV-diamond}: Vacuums and dilution refrigeration technology not required. 
+\item \textbf{Colour centres (e.g. NV-diamond)}: Vacuums and dilution refrigeration technology not required. 
 \end{itemize}
 
 Colour centres, at least from the context of building large-portable qubit arrays, appear the most promising -- mostly due to to the large-scale infrastructure needed for the technology. In colour centres, an atomic defect is inserted within a crystal substrate -- for example, a Nitrogen defect in a perfect diamond crystal of Carbon -- which provides what is known as a \textit{spin vacuum} substrate. Essentially, the surrounding crystal itself provides the same isolation properties that an actual physical vacuum does in, for example, ion-trap technology. Additionally, many colour centres are operated at temperatures of only 4K. While still cold, 4K cryogenic technology is far simpler than the dilution refrigeration systems needed for a 30 mK thermal environment. 4K cryogenic technology is so advanced that we are able to effectively launch these sorts of cooling systems into space. Thirdly, colour centres are generally \textit{optically accessible.}. An optically accessible colour centre has, in general, an electronic transition of the donor system that is resonant at optical frequencies. This allows for remote coupling of colour centres using optical photons which are comparatively easy to route in and out of the crystal and surrounding 4K infrastructure -- in comparison to superconducting qubits which interact with microwave photons which are difficult to route around or systems such as Phosphorus in Silicon that generally utilise direct dipole/dipole or exchange based coupling to realise gates. 
@@ -170,36 +171,33 @@ Active quantum error corrected devices are the cornerstone of scalable quantum c
 
 Active QEC protocols are central to a Sneakerent communications architecture. A Quantum Memory Unit (QMU) is ideally designed to house an array of optically coupled qubits that are encoded using efficient error correction (QEC) techniques into a long-lived quantum memory. Without loss of generality, we will use a particular, well known error correction technique to illustrate the basic operational principles of a QMU and how they can be scaled up into the devices that will ultimately be used to construct the Sneakernet network.
 
-Surface code quantum error correction is a well known technique for active error correction that is being developed by several of the major hardware vendors in quantum computation. The basic idea is that a square 2D array of interacting qubits is needed to encode a \textit{logical} piece of quantum information to extend its natural lifetime beyond the individual \textit{physical} lifetimes of the constituent physical qubits. The basic schematic is shown in Figure \ref{fig:array}. 
+Surface code quantum error correction is a well known technique for active error correction that is being developed by several of the major hardware vendors in quantum computation. The basic idea is that a square 2D array of interacting qubits is needed to encode a \textit{logical} piece of quantum information to extend its natural lifetime beyond the individual \textit{physical} lifetimes of the constituent physical qubits. The basic schematic is shown in Fig.~\ref{fig:array}. 
 
 \begin{figure}[htbp!]
 	\includegraphics[clip=true, width=0.475\textwidth]{array}
-	\caption{}
-	\label{fig:array}
+	\caption{} \label{fig:array}
 \end{figure}
 
-The physical array of qubits is arranged in a 2D nearest-neighbour connection geometry, wherein individual physical qubits can couple to immediate neighbours to the north, south, east, and west as shown in the right image in Figure \ref{fig:array}. 
+The physical array of qubits is arranged in a 2D nearest-neighbour connection geometry, wherein individual physical qubits can couple to immediate neighbours to the north, south, east, and west as shown in the right image in Fig.~\ref{fig:array}. 
 
 The surface code has been extremely well studied over the past 15 years. We have extremely accurate simulations that detail the threshold behaviour of the code under a variety of different assumptions and we have quantified very well how the scaling of the code behaves as a function of physical error rate. For this reason we are able to quantify expected \textit{logical} memory time, $T$, in terms of the physical operation time of the quantum gates in our hardware, $t$, the number of physical qubits in the QMU array, $N$, and the logical error rate we want to target, $P$. Through direct numerical simulation, we find:
-\begin{equation}
-T \approx 10t\sqrt{N} P(70p)^{-\sqrt{N}/4}
-\label{eq:scale}
-\end{equation}
+\begin{align} \label{eq:scale}
+T \approx 10t\sqrt{N} P(70p)^{-\sqrt{N}/4},
+\end{align}
 where $p$ is the physical error rate associated with each of the qubits within each QMU -- assumed to be at least below the Fault-tolerant threshold of the planar code, $p_{th} \approx 0.7\%$.
 
-In the table illustrated in Figure \ref{fig:array} we detail the number of physical qubits in a QMU chip, the physical size of the chip-set under the assumption that physical qubits are physically separated by 250$\mu$m, and the amount of time we can maintain the coherence of a single piece of logically encoded quantum information. For this table we assume that physical gates in the QMU chip -- i.e. physical qubit initialisation, measurement, single qubit gates and two qubit gates are all, $t = 1\mu$s. Once the chip set contains approximately 900 physical qubits at a physical dimension of about $(7.5)^2$mm, we can expect to extend the natural coherence time of a piece of encoded information and reliably store it for approximately 14 seconds at a \textit{logical} error of $P= 10^{-4}$.  The performance of the error correction scales exponentially. Consequently, if we roughly triple the size of the chip set, the effective quantum memory time increases to 13 years!
+In the table illustrated in Fig.~\ref{fig:array} we detail the number of physical qubits in a QMU chip, the physical size of the chip-set under the assumption that physical qubits are physically separated by 250$\mu$m, and the amount of time we can maintain the coherence of a single piece of logically encoded quantum information. For this table we assume that physical gates in the QMU chip -- i.e. physical qubit initialisation, measurement, single qubit gates and two qubit gates are all, $t = 1\mu$s. Once the chip set contains approximately 900 physical qubits at a physical dimension of about $(7.5)^2$mm, we can expect to extend the natural coherence time of a piece of encoded information and reliably store it for approximately 14 seconds at a \textit{logical} error of $P= 10^{-4}$.  The performance of the error correction scales exponentially. Consequently, if we roughly triple the size of the chip set, the effective quantum memory time increases to 13 years!
 
 The point where logical information within the QMU can be reliably stored for longer than approximately 1 seconds is the boundary of what we define as \textit{macroscopic quantum memories}. A macroscopic quantum memory is something that can store information long enough to start physically transporting the QMU. Clearly the longer you can reliably store the information in the QMU the further it can be physically moved, but a memory of at least 1 second is needed before you can start doing something interesting using Sneakernet principles.
 
-It should be emphasised that the estimates in Figure \ref{fig:array} are based on QEC techniques that are unoptimised for a specific hardware chipset. Performing error correction decoding on a system with biased noise can change resource overheads and it is possible for other QEC coding techniques to be invented that is compatible with hardware engineering constraints that scales better than Eq. \ref{eq:scale} for the rotated planar code. This could reduce the required physical qubit array sizes for a given QMU memory. However, the key message here is that a physical qubit array of on the order of 1cm$^2$, with physical gate times of order 1$\mu$s can be made into very long-lived quantum memories using the same architectural structures and assumptions of quantum computing systems that are already under development (we just require the added property of portability). 
+It should be emphasised that the estimates in Fig.~\ref{fig:array} are based on QEC techniques that are unoptimised for a specific hardware chipset. Performing error correction decoding on a system with biased noise can change resource overheads and it is possible for other QEC coding techniques to be invented that is compatible with hardware engineering constraints that scales better than Eq.~(\ref{eq:scale}) for the rotated planar code. This could reduce the required physical qubit array sizes for a given QMU memory. However, the key message here is that a physical qubit array of on the order of 1cm$^2$, with physical gate times of order 1$\mu$s can be made into very long-lived quantum memories using the same architectural structures and assumptions of quantum computing systems that are already under development (we just require the added property of portability). 
 
 \begin{figure}[htbp!]
 	\includegraphics[clip=true, width=0.475\textwidth]{goal}
-	\caption{}
-	\label{fig:goal}
+	\caption{} \label{fig:goal}
 \end{figure}
 
-Illustrated in Figure \ref{fig:goal} are the four primary technological properties that makes Sneakernet based quantum communications a possible game changer for QKD and global quantum networking. While many are hunting for commercially relevant NISQ \textit{quantum algorithms}, quantum memory units and Sneakernet based communications may be the actual killer application for physical chipsets of the order of 1,000 qubits. However, this will only be of academic interest if systems cannot be be manufactured economically at scale.
+Illustrated in Fig.~\ref{fig:goal} are the four primary technological properties that makes Sneakernet based quantum communications a possible game changer for QKD and global quantum networking. While many are hunting for commercially relevant NISQ \textit{quantum algorithms}, quantum memory units and Sneakernet based communications may be the actual killer application for physical chipsets of the order of 1,000 qubits. However, this will only be of academic interest if systems cannot be be manufactured economically at scale.
 
 \subsubsection{Cheap, mass-manufactured qubit chipsets}
 
@@ -207,17 +205,16 @@ Cost will always be a major issue for any quantum computing or communication/QKD
 
 Many have made the claim that building a quantum computing system or quantum communications network will be akin to other major scientific projects such as the Large Hadron Collider (LHC) at CERN or an array of LIGO gravitational wave detectors for astronomy. However, this analogy is not completely accurate. While LIGO and the LHC are extremely expensive scientific projects, in the case of the LHC there is only \textbf{one} and with LIGO there are only currently \textbf{four} completed operational units. Quantum computing and communications systems will hopefully be ubiquitous in the future. We already know better than to believe, as IBM chairman Thomas Watson reputedly did, `\textit{I think there is a world market for about five computers}'. 
 
-Consequently, being able to mass manufacture physical qubits cheaply will be of paramount concern for any hardware developer in this space. And when we say \textit{cheaply}, we really mean it. Physical qubits in a quantum system are often analogised with physical transistors in a classical information processing system. As you can see in Figure \ref{fig:price} the cost of individual classical transistors is \textbf{INSANELY} low. 
+Consequently, being able to mass manufacture physical qubits cheaply will be of paramount concern for any hardware developer in this space. And when we say \textit{cheaply}, we really mean it. Physical qubits in a quantum system are often analogised with physical transistors in a classical information processing system. As you can see in Fig.~\ref{fig:price} the cost of individual classical transistors is \textbf{INSANELY} low. 
  
 \begin{figure}[htbp!]
 	\includegraphics[clip=true, width=0.475\textwidth]{cost}
-	\caption{}
-	\label{fig:price}.
+	\caption{} \label{fig:price}.
 \end{figure}
 
-While it is certainly not expected that the price-per-qubit (PPQ) will reach these levels anytime soon, we need to keep Figure \ref{fig:price} in mind if we ultimately want to make quantum technology at the scale needed to take full advantage of the power of quantum computing and communications. 
+While it is certainly not expected that the price-per-qubit (PPQ) will reach these levels anytime soon, we need to keep Fig.~\ref{fig:price} in mind if we ultimately want to make quantum technology at the scale needed to take full advantage of the power of quantum computing and communications. 
 
-This issue of PPQ is of critical concern for large-scale quantum computing systems. Shown in Figure \ref{fig:cost} are costing out of a quantum computing system of sufficient size to perform Shor's factoring algorithm for large key sizes and for quantum simulation of nitrogenase molecules for nitrogen fixation. If an ultimate PPQ goal is not \$1 or lower, there may be little economic motivation for building more than a handful of quantum computers globally. It should be noted that PPQ needs to take into account the infrastructure and control systems as well as the physical qubit itself. For example, in superconducting systems, the required dilution refrigeration system is expensive -- around \$500,000. Additionally, the sample chamber for the dilution refrigerator is quite small in comparison to the `footprint' of a superconducting qubit. A commercial dilution refrigeration system can accommodate perhaps 100 such physical qubits. Consequently, at a minimum, the PPQ in this system would be \$5000.  Additionally Figure \ref{fig:cost} does not include any R\&D expenditure or the costs associated with building the fabrication infrastructure to build the qubits themselves. 
+This issue of PPQ is of critical concern for large-scale quantum computing systems. Shown in Fig.~\ref{fig:cost} are costing out of a quantum computing system of sufficient size to perform Shor's factoring algorithm for large key sizes and for quantum simulation of nitrogenase molecules for nitrogen fixation. If an ultimate PPQ goal is not \$1 or lower, there may be little economic motivation for building more than a handful of quantum computers globally. It should be noted that PPQ needs to take into account the infrastructure and control systems as well as the physical qubit itself. For example, in superconducting systems, the required dilution refrigeration system is expensive -- around \$500,000. Additionally, the sample chamber for the dilution refrigerator is quite small in comparison to the `footprint' of a superconducting qubit. A commercial dilution refrigeration system can accommodate perhaps 100 such physical qubits. Consequently, at a minimum, the PPQ in this system would be \$5000.  Additionally Fig.~\ref{fig:cost} does not include any R\&D expenditure or the costs associated with building the fabrication infrastructure to build the qubits themselves. 
 
 All current qubit architectures have associated considerations with regards to ultimate costs of manufacturing a large number of physical qubits and we do expect costs to drop, thanks to economies of scale and efficiency in manufacturing processes as various systems mature. However, we should always keep the \$1 PPQ in the back of our minds as system architectures are invented and experimentally developed. 
 
@@ -239,27 +236,25 @@ The first practical consideration for Sneakernet communications has been solved.
 
 Let's contrast this capacity with fibre optic connections. In 2016 the new FASTER fibre optic communications link was brought online between northern California and Japan. Costing \$300 million to deploy, it has a total data capacity of 7.5 TB/sec across the Pacific. Consequently, it takes two seconds, utilising the full design capacity of a \$300 million dollar piece of telecommunications infrastructure, to transmit the data contained on a \$550 device that could fit into a handbag. This \$550 hard drive can be shipped via FedEx from northern California to Tokyo for about an extra \$150 and arrive about twenty hours later. Using that approach, we could achieve the same bandwidth as the FASTER network utilising approximately 36,000 hard drives shipped continuously back and forth. The total cost of this would be approximately \$20 Million dollars for the hard-drives and \$5 million per day in commercial shipping costs (which could be made significantly cheaper by using more dedicated cargo transportation systems than FedEx, which is arguably the most expensive).
 
-The capital cost alone associated with the FASTER network is \textit{fifteen} times more expensive than the capital cost of using hard drive-based Sneakernet. The operational costs of the hard drive system would be comparable if not lower than these fibre-optic links. So why do we spend so much time and money on capital and maintenance-intensive classical communications infrastructure such as submarine fibre or communications satellites [Figure \ref{fig:classical}]?
+The capital cost alone associated with the FASTER network is \textit{fifteen} times more expensive than the capital cost of using hard drive-based Sneakernet. The operational costs of the hard drive system would be comparable if not lower than these fibre-optic links. So why do we spend so much time and money on capital and maintenance-intensive classical communications infrastructure such as submarine fibre or communications satellites (Fig.~\ref{fig:classical})?
 
 \begin{figure}[htbp!]
 	\includegraphics[clip=true, width=0.475\textwidth]{classical}
-	\caption{}
-	\label{fig:classical}
+	\caption{} \label{fig:classical}
 \end{figure}
 
 The answer is the third point noted above: \textbf{information latency}. When we transmit information from one side of the planet to another, we don't want to wait twenty hours for the data to arrive. A classical communications system that has that amount of information latency is unusable for most practical applications. Consequently, our classical infrastructure for communications is designed to operate with high bandwidth (capacity) at as close to the speed of light as physically possible. 
 
 Once we move into the quantum regime, we can get the best of both worlds -- the infrastructure benefits of a Sneakernet-based communications link without the latency problem traditionally associated with that approach. 
 
-We can consider a collection of individual QMU's in a single packaged device, forming basically a Quantum memory STICK (QuSTICK). As we have described, a chip set array of physical qubits can maintain and store quantum information for time periods ranging from a day to many decades, depending on the number of physical qubits in the chip set QMU. In Figure \ref{fig:array}, a 1.6cm$^2$ chip-set has enough QEC hardware to protect the information for approximately 22 weeks. A QuSTICK consists of hundreds, potentially thousands, of these chip sets in a common cryogenic environment, packaged into a single device would be the quantum version of a USB portable memory stick. However, a classical memory stick and a QuSTICK transport very different things. A memory stick carries classical data; a QuSTICK carries quantum entanglement. This distinction is the key to the power of the quantum Sneakernet. 
+We can consider a collection of individual QMU's in a single packaged device, forming basically a Quantum memory STICK (QuSTICK). As we have described, a chip set array of physical qubits can maintain and store quantum information for time periods ranging from a day to many decades, depending on the number of physical qubits in the chip set QMU. In Fig.~\ref{fig:array}, a 1.6cm$^2$ chip-set has enough QEC hardware to protect the information for approximately 22 weeks. A QuSTICK consists of hundreds, potentially thousands, of these chip sets in a common cryogenic environment, packaged into a single device would be the quantum version of a USB portable memory stick. However, a classical memory stick and a QuSTICK transport very different things. A memory stick carries classical data; a QuSTICK carries quantum entanglement. This distinction is the key to the power of the quantum Sneakernet. 
 
 \begin{figure}[htbp!]
 	\includegraphics[clip=true, width=0.475\textwidth]{qustick1}
-	\caption{}
-	\label{fig:qustick1}
+	\caption{} \label{fig:qustick1}
 \end{figure}
 
-Shown in Figure \ref{fig:qustick1} is the basic structure of the QuSTICK communications link. Two parties, Alice and Bob each have a QuSTICK. The device itself contains multiple Quantum Memory Units (QMU's). Each QMU is chip-set containing sufficient physical qubits to create a long-lived quantum memory of some defined timescale. Referencing back to Figure \ref{fig:array}, if the desired memory time is about a day (at a fidelity of 99.99\%), each QMU chipset would consist of approximately 1,600 physical qubits. If we wanted each QMU to protect its respective quantum information for a year, each chip-set would contain approximately 2,100 physical qubits. 
+Shown in Fig.~\ref{fig:qustick1} is the basic structure of the QuSTICK communications link. Two parties, Alice and Bob each have a QuSTICK. The device itself contains multiple Quantum Memory Units (QMU's). Each QMU is chip-set containing sufficient physical qubits to create a long-lived quantum memory of some defined timescale. Referencing back to Fig.~\ref{fig:array}, if the desired memory time is about a day (at a fidelity of 99.99\%), each QMU chipset would consist of approximately 1,600 physical qubits. If we wanted each QMU to protect its respective quantum information for a year, each chip-set would contain approximately 2,100 physical qubits. 
 
 The packaged device would need to contain not only the qubit chipsets themselves, but also all infrastructure required to operate the machine. This may include cooling, laser or microwave control infrastructure, classical computing systems and power. This packaging will ultimately dictate the size of the device and how many individual QMU's could be placed in a single QuSTICK.
 
@@ -267,28 +262,26 @@ The packaged device would need to contain not only the qubit chipsets themselves
 
 Entanglement is a unique property of quantum mechanics that has no classical analogue. Once referred to by Einstein as `spooky action at a distance', entanglement is the ability for quantum particles to remain linked after they have been interacted together regardless of physical separation or physical obstruction. Unless decoherence occurs, there is no evidence that quantum entanglement can be disturbed, blocked or otherwise tampered with. According to the basic principles of quantum mechanics, if two quantum particles are entangled and isolated well enough from the outside world, they can be transported to the opposite sides of the observable universe, with all the stars, planets and black-holes between them, and the entangled correlations will remain undisturbed. It is this entangled state that will be transported by the QuSTICKS. Entanglement isn't information, but rather a quantum resource that can criss-cross the globe and be used as a consumable for quantum related communications protocols such as QKD. 
 
-In Figure \ref{fig:array} we illustrated a simple two-party point-to-point connection that is possible with QuSTICKs. Two QuSTICK units, each containing a number of QMU chip sets are built. Each QMU is designed to maintain its integrity for some predetermined amount of time using active QEC protocols built into each QMU. Both QuSTICK units start out in the same room. If physical qubits within a QMU (and between QMU's) are optically connected to each other (if we use colour centres as the underlying hardware technology), it is no more difficult to interact qubits in two separate QuSTICKS than it is to interact qubits that exist in the same QMU. This allows us to create entangled states between QMU's in separate QuSTICKs by simply connecting them together with a suitable optical connection. 
+In Fig.~\ref{fig:array} we illustrated a simple two-party point-to-point connection that is possible with QuSTICKs. Two QuSTICK units, each containing a number of QMU chip sets are built. Each QMU is designed to maintain its integrity for some predetermined amount of time using active QEC protocols built into each QMU. Both QuSTICK units start out in the same room. If physical qubits within a QMU (and between QMU's) are optically connected to each other (if we use colour centres as the underlying hardware technology), it is no more difficult to interact qubits in two separate QuSTICKS than it is to interact qubits that exist in the same QMU. This allows us to create entangled states between QMU's in separate QuSTICKs by simply connecting them together with a suitable optical connection. 
 
 The most basic entanglement protocol is to match up each individual QMU in QuSTICK-1 with a partner QMU in QuSTICK-2 and sequentially create an entangled Bell states between each pair of QMUs. Once this is done, the optic link physically connecting the two QuSTICKs can be removed and the internal error correction will preserve the quantum entanglement up to the time specified by the physical number of qubits inside each QMU.
 
-Each QuSTICK unit has a finite number of QMU's, but there is no limit to the number of QuSTICKs that can be manufactured and deployed in the entire Sneakernet network. For each pair of QuSTICKs we execute this pairwise entangling protocol locally and then then load half of them into a transport vehicle. Shown in Figure \ref{fig:loading} is a scenario where a manufacturing factory is `home base' and we are preparing long-lived entangled states with a set of QuSTICKs that remain at `home' and partner sets that are physically moved to different locations. 
+Each QuSTICK unit has a finite number of QMU's, but there is no limit to the number of QuSTICKs that can be manufactured and deployed in the entire Sneakernet network. For each pair of QuSTICKs we execute this pairwise entangling protocol locally and then then load half of them into a transport vehicle. Shown in Fig.~\ref{fig:loading} is a scenario where a manufacturing factory is `home base' and we are preparing long-lived entangled states with a set of QuSTICKs that remain at `home' and partner sets that are physically moved to different locations. 
 
 \begin{figure}[htbp!]
 	\includegraphics[clip=true, width=0.475\textwidth]{qustick2}
-	\caption{}
-	\label{fig:loading}
+	\caption{} \label{fig:loading}
 \end{figure}
 
 It is important to note that when the entanglement is initially prepared, we do not need to know the destination of the transported QuSTICKs or their eventual application. The application could be highly sensitive QKD distribution or it could be a very public scientific experiment. The only thing we care about is that the QMU's inside each QuSTICK have sufficient quantum memory time to get to their destination with their entangled state intact at the desired fidelity.
 
 Once the entanglement is prepared, the entanglement links are \textit{automatically} preserved while the devices are being physically moved. The internal error correction protocols for each QMU ensures that errors produced by the physical qubits themselves or the act of physically moving the system are effectively corrected. The portability of the architecture is crucial to this. 
 
-Not all QuSTICKS have to go to the same destination. Once the entanglement is prepared at home base, a subset of QuSTICKS may be transported to destination A, another subset to destination B and so on. In fact, destination A may be 5km up the road, while destination B is half way around the world. Destination C might use low-cost cargo shipping to receive their QuSTICKs, while destination D's need might be for fewer units sooner, and so shipment by air is preferred (as shown in Figure \ref{fig:distribution}). The flexibility enabled by portable quantum memories allows for dynamic allocation of both QuSTICK resources and the use of whatever physical transport method is appropriate to support the final application. This is in contrast to the 'one size fits all' approach used by infrastructure-intensive communications systems like satellites and repeaters. Such systems operate in exactly the same way regardless of the demands of the ultimate application.
+Not all QuSTICKS have to go to the same destination. Once the entanglement is prepared at home base, a subset of QuSTICKS may be transported to destination A, another subset to destination B and so on. In fact, destination A may be 5km up the road, while destination B is half way around the world. Destination C might use low-cost cargo shipping to receive their QuSTICKs, while destination D's need might be for fewer units sooner, and so shipment by air is preferred (as shown in Fig.~\ref{fig:distribution}). The flexibility enabled by portable quantum memories allows for dynamic allocation of both QuSTICK resources and the use of whatever physical transport method is appropriate to support the final application. This is in contrast to the 'one size fits all' approach used by infrastructure-intensive communications systems like satellites and repeaters. Such systems operate in exactly the same way regardless of the demands of the ultimate application.
 
 \begin{figure}[htbp!]
 	\includegraphics[clip=true, width=0.475\textwidth]{qustick3}
-	\caption{}
-	\label{fig:distribution}
+	\caption{} \label{fig:distribution}
 \end{figure}
 
 \subsection{Using and re-charging QuSTICK quantum entanglement}
@@ -297,7 +290,7 @@ We have described a system where a finite amount of entangled quantum states is 
 \begin{itemize}
 \item The sender and receiver now share a persistent, high fidelity entanglement link that \textbf{does not have to be used immediately}. Quantum satellites and ballistic repeater designs generate entanglement using photons. They are not designed to `store' the entanglement for future use -- the entanglement needs to be consumed for some type of communications protocol immediately upon receipt.
 \item The total amount of entanglement a destination shares with home base is dependent only on the number of QMU's and QuSTICKs used. If only 100 entangled states are needed for an application, a single QuSTICK (containing 100 QMU chips) will suffice. One million entangled states would require 10,000 QuSTICKS at 100 QMU's per stick. 
-\item The entanglement the Sneakernet provides is \textbf{by design} ultra-high-fidelity. All of the numbers in Figure \ref{fig:array} assumes that each QMU can maintain an encoded piece of quantum information for a given period of time \textbf{to a fidelity of 99.99\%}. Increasing the fidelity even further requires only a small increase in the size of the QMU. If a target application requires a fidelity of 99.999999999\% (say for direct connections between fully fault-tolerant quantum computing systems), simply use a few more physical qubits per QMU. i.e. a $T= 22$ week QMU at 99.99\% fidelity requires 2,500 physical qubits, the same $T=22$ week QMU at 99.999999999\% requires 5,400 physical qubits. That's just over double the physical size for 7 orders of magnitude increase in fidelity.
+\item The entanglement the Sneakernet provides is \textbf{by design} ultra-high-fidelity. All of the numbers in Fig.~\ref{fig:array} assumes that each QMU can maintain an encoded piece of quantum information for a given period of time \textbf{to a fidelity of 99.99\%}. Increasing the fidelity even further requires only a small increase in the size of the QMU. If a target application requires a fidelity of 99.999999999\% (say for direct connections between fully fault-tolerant quantum computing systems), simply use a few more physical qubits per QMU. i.e. a $T= 22$ week QMU at 99.99\% fidelity requires 2,500 physical qubits, the same $T=22$ week QMU at 99.999999999\% requires 5,400 physical qubits. That's just over double the physical size for 7 orders of magnitude increase in fidelity.
 \item Sneakernet entanglement connections can reach global distances (Alice's QuSTICK in Sydney can be connected to Bob's QuSTICK in London using conventional transportation services).
 \item The persistent entanglement shared can continue to move before it is used. Alice may not want to use this entanglement in Sydney, but instead transport it to central Australia. The entanglement link with London will continue to move with Alice as long as her QuSTICK provides sufficient error-correction for the additional time required.
 \end{itemize}
@@ -306,20 +299,19 @@ We have described a system where a finite amount of entangled quantum states is 
 
 Another extremely beneficial aspect to the quantum Sneakernet design is the ability to \textbf{SWAP} entanglement. What does this mean? 
 
-In Figure \ref{fig:distribution} we assume that all QuSTICKs that will be physically transported are initially physically connected to partners sitting at their home base. This creates a star-network structure, where the home base acts as an endpoint node for all of the entanglement links that are physically distributed outwards. But suppose two distributed QuSTICK units want to share entanglement directly? Do they need to physically meet and have their optical links hooked up? No, instead they can ask for an entanglement SWAP protocol to occur. 
+In Fig.~\ref{fig:distribution} we assume that all QuSTICKs that will be physically transported are initially physically connected to partners sitting at their home base. This creates a star-network structure, where the home base acts as an endpoint node for all of the entanglement links that are physically distributed outwards. But suppose two distributed QuSTICK units want to share entanglement directly? Do they need to physically meet and have their optical links hooked up? No, instead they can ask for an entanglement SWAP protocol to occur. 
 
 Let us take three parties: Alice, Bob and Alan. Alan is located in Berlin, and, as in the previous example, Alice is in Sydney and Bob is in London. In total there are four QuSTICKs. Alan has initially manufactured all four, and we will call them ALICE, BOB and ALAN-(1,2). Before putting ALICE and BOB onto airplanes or ships, Alan entangles all of ALAN-1 QMU's to the QMU's in ALICE, and similarly between ALAN-2 and BOB. ALICE and BOB are then shipped off to Sydney and London respectively. Again, at this point, nobody has decided exactly how they are going to use this entanglement; but (depending on the amount of memory time provided by each QMU in each QuSTICK) they have a fixed time during which they can use it for anything. 
 
 Once ALICE and BOB arrive, Alice and Bob only share entanglement with Alan directly. However, at some point, Alice and Bob decide that they want a direct entanglement connection with each other (for example, if they are intending to establish some cryptographic keys).
 
-Instead of physically moving again, Alice and Bob can request an entanglement SWAP from Alan. Alan will then connect ALAN-1 and ALAN-2 directly together (since he still has physical possession of both units in Berlin) and entangle each of their QMU's. If Alan then measures each of the QMU's in his two QuSTICKs in the $X$-basis, the entanglement he initially shared with Alice and Bob is SWAPPED to them. By performing this operation, Alice and Bob can share \textbf{directly} two QuSTICKs of entangled QMU's without ever having to physically meet each other. They can then proceed to perform whatever communications protocol they wish. This SWAPPING protocol is illustrated in Figure \ref{fig:SWAPPING} 
+Instead of physically moving again, Alice and Bob can request an entanglement SWAP from Alan. Alan will then connect ALAN-1 and ALAN-2 directly together (since he still has physical possession of both units in Berlin) and entangle each of their QMU's. If Alan then measures each of the QMU's in his two QuSTICKs in the $X$-basis, the entanglement he initially shared with Alice and Bob is SWAPPED to them. By performing this operation, Alice and Bob can share \textbf{directly} two QuSTICKs of entangled QMU's without ever having to physically meet each other. They can then proceed to perform whatever communications protocol they wish. This SWAPPING protocol is illustrated in Fig.~\ref{fig:SWAPPING} 
 
 The above example highlights an important point. The physical distribution of a set of QuSTICKs creates an \textit{initial network topology} for their entanglement. However, this topology can be modified after the fact to create direct entanglement connections between parties that were never initially in the same distribution channel. The physical distribution network can be thought of as a network graph. Initially, each node is the physical location of a QuSTICK, and each edge connects the node where a QuSTICK began its journey to a node where it ended its journey. Entanglement SWAPPING allows us to change the structure of the graph (i.e. change where edges are and are not) without having to move the QuSTICKs again. 
  
 \begin{figure}[htbp!]
 	\includegraphics[clip=true, width=0.475\textwidth]{SWAPPING}
-	\caption{}
-	\label{fig:SWAPPING}
+	\caption{} \label{fig:SWAPPING}
 \end{figure}
 
 This kind of flexibility is simply not possible in classical networking design. It would be as if a classical data packet could be sent \textbf{directly} between the Australia and Iceland despite there being no direct telecommunications link between those two countries. Classically, the data packet would have to first travel from Australia to Singapore, then perhaps from Singapore through routers in west Asia, the Middle East, central and northern Europe, the U.K. and finally to Iceland. At any point in its journey the packet might be intercepted, copied, lost, tampered with, inspected, corrupted, or accidentally routed to a completely inaccurate destination. 
@@ -405,31 +397,29 @@ One-time-pads are the only encryption technique discovered that is completely se
 
 At the extreme end of the scale, a high-definition video stream (4K at 24 frames per second) requires transmitting approximately 35MBps of classical data. Hence, securing this kind of transmission using a one-time-pad would require at least 70 million QMU's for each second of video. This is clearly an extraordinarily large number of Turing QuSTICKS. However, as we have noted, the network continues to grow as more physical QuSTICKS are manufactured. 
 
-In Fig. \ref{fig:transistor} we illustrate this assuming Moore's law scaling in the total number of QMU's fabricated (note that Moore's law actually quantifies the number of transistors that can be placed on a single chip; the numbers here are much, much larger). Fig. \ref{fig:transistor} shows the total number of transistors manufactured per year, worldwide, starting with the first demonstration of the transistor in 1947, until now (source: VSLI research, http://www.vsliresearch.com). 
+In Fig.~\ref{fig:transistor} we illustrate this assuming Moore's law scaling in the total number of QMU's fabricated (note that Moore's law actually quantifies the number of transistors that can be placed on a single chip; the numbers here are much, much larger). Fig.~\ref{fig:transistor} shows the total number of transistors manufactured per year, worldwide, starting with the first demonstration of the transistor in 1947, until now (source: VSLI research, \href{http://www.vsliresearch.com}{http://www.vsliresearch.com}). 
 
 \begin{figure}[htbp!]
 	\includegraphics[clip=true, width=0.475\textwidth]{transistor}
-	\caption{}
-	\label{fig:transistor}
+	\caption{} \label{fig:transistor}
 \end{figure}
 
-Assuming an initial R\&D time frame of approximately 5 years for the first demonstration of a QMU, we further assume the same scaling in terms of the number of QMU's manufactured and illustrate the growth of the Sneakernet network though each state: 1) a large-scale, global authentication network, 2) a global key exchange network, and 3) a global one-time-pad encryption network. We also show a forth stage of the Sneakernet network: the ability to build a true Quantum Internet that connects large-scale, error-corrected quantum computing systems. Fig. \ref{fig:QMU} illustrates network volume extrapolated using the same scaling as Fig. \ref{fig:transistor} (in terms of the total number of QMU's manufactured after 2023) for the next 50 years. 
+Assuming an initial R\&D time frame of approximately 5 years for the first demonstration of a QMU, we further assume the same scaling in terms of the number of QMU's manufactured and illustrate the growth of the Sneakernet network though each state: 1) a large-scale, global authentication network, 2) a global key exchange network, and 3) a global one-time-pad encryption network. We also show a forth stage of the Sneakernet network: the ability to build a true Quantum Internet that connects large-scale, error-corrected quantum computing systems. Fig.~\ref{fig:QMU} illustrates network volume extrapolated using the same scaling as Fig.~\ref{fig:transistor} (in terms of the total number of QMU's manufactured after 2023) for the next 50 years. 
 
 \begin{figure}[htbp!]
 	\includegraphics[clip=true, width=0.475\textwidth]{QMU}
-	\caption{}
-	\label{fig:QMU}
+	\caption{} \label{fig:QMU}
 \end{figure}
 
 If a similar trend line is followed, approximately ten trillion QMU's can be manufactured by 2073. This is an astronomical figure for active quantum devices; and it would also be more than sufficient to construct multiple, large-scale quantum computing systems capable of executing any large-scale algorithm that has ever been developed. But keeping our discussion limited to the communications space, the Sneakernet system is, as we have said, designed to incorporate new QMU's as they become available, rather than replacing them. So the total size of the network is cumulative. 
 
 How such a network will be used is less clear. As noted above, we can make the following arguments as to when a particular application `comes online'
 \begin{itemize}
-\item Authentication tokens can come online once the number of QMU's $> 100$. 
-\item Key exchange can come online once the number of QMU's $> 10,000$
-\item One-time-pads can come online once the number of QMU's $> 50$Million. This assumes voice communications using the 600 bps NATO standard STANAG-4591 vocoding technique with a cumulative total of 10 hours of communication that needs to be encoded using QuSTICKS.
-\item Direct coupling of fully error-corrected quantum computers at a MHz logic-gate rate once the number of QMU's $> 10$ Billion. 
-\item Large-scale quantum internet once the number of QMU's $> 1$ trillion.
+\item Authentication tokens can come online once the number of QMU's $> 1\times 10^2$. 
+\item Key exchange can come online once the number of QMU's $> 10\times 10^3$.
+\item One-time-pads can come online once the number of QMU's $> 50\times 10^6$. This assumes voice communications using the 600 bps NATO standard STANAG-4591 vocoding technique with a cumulative total of 10 hours of communication that needs to be encoded using QuSTICKS.
+\item Direct coupling of fully error-corrected quantum computers at a MHz logic-gate rate once the number of QMU's $> 10\times 10^9$. 
+\item Large-scale quantum internet once the number of QMU's $> 1\times 10^{12}$.
 \end{itemize}
 
 Between 100 and 10,000 QMU's, the network can expand into a network consisting of 100 separate authentication links, with each link implemented at arbitrary distance scales. These separate links could be deployed between the same two parties (increasing the speed of a single link) or it could be spread out over multiple locations. How the network is configured and re-configured is completely at the discretion of whoever owns or controls the physical QuSTICKS. 
@@ -470,7 +460,7 @@ As we have mentioned, denial of service attacks require an actual physical QuSTI
 
 The physical QMU resources needed to connect together fully error-corrected quantum computing systems would only be about an order of magnitude higher than using quantum methods to directly transmit encrypted or unencrypted classical data. A fully functional Quantum Internet (that is, a network with the ability to provide quantum communication channels between large-scale, error corrected quantum computers) requires the following:
 \begin{itemize}
-\item Transcontinental communication links spanning distances anywhere up to 10,000Km
+\item Transcontinental communication links spanning distances anywhere up to 10,000km.
 \item A high speed network spanning those distances for $>$ THz operational speeds.
 \item End-to-end error rates of $10^{-10}$ or lower.
 \end{itemize}
@@ -487,12 +477,11 @@ QuSTICK-based quantum networks can satisfy the constraints noted above as well a
 
 Prototype quantum communication networks using Sneakernet principles and QuSTICKs will first be demonstrated at much shorter ranges and at slower communication rates. Scaling up to higher fidelity, higher speed, and longer ranges is conceptually straightforward. Additionally, communications channels do not influence infrastructure development. Building a quantum communications system between Tokyo and Osaka is no different to building a communications system from Japan to Australia. 
 
-Figure \ref{fig:link} illustrates the performance of a single link based on physically transporting QuSTICK units on cargo containers, over a distance of 10,000km with a link fidelity of 99.99\% as a function of the density of physical qubits inside each QMU. These are only back of the envelope calculations, but does illustrate that overall QMU density and number of units is the only impediment to achieving truely global link distances at ultra-high fidelity at bandwidths that approach what is currently possible in classical fibre optics communications. No other system proposed can scale to this level.
+Fig.~\ref{fig:link} illustrates the performance of a single link based on physically transporting QuSTICK units on cargo containers, over a distance of 10,000km with a link fidelity of 99.99\% as a function of the density of physical qubits inside each QMU. These are only back of the envelope calculations, but does illustrate that overall QMU density and number of units is the only impediment to achieving truely global link distances at ultra-high fidelity at bandwidths that approach what is currently possible in classical fibre optics communications. No other system proposed can scale to this level.
  
 \begin{figure}[htbp!]
 	\includegraphics[clip=true, width=\columnwidth]{link}
-	\caption{}
-	\label{fig:link}
+	\caption{} \label{fig:link}
 \end{figure}
 
 While many of the other core technologies for quantum communications (satellites, fibre, free-space) can be used to augment secondary and tertiary communication links appropriate to the applications needed, Sneakernet based communication networks appear to be the best approach to form the major high-bandwidth truck lines of the future. 
