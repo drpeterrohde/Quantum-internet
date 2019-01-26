@@ -1054,18 +1054,37 @@ In this scenario, the \textsc{Isolation} and \textsc{License} strategies are ass
 
 \subsection{Cooperative payoff enhancement}\index{Cooperative payoff enhancement}\label{sec:coop_enh}
 
-When implementing a quantum computation characterised by completely general computational scaling functions\index{Computational scaling functions}, $f^{X,Y}_\mathrm{sc}$ (which in general can be distinct for the two players, $X$ and $Y$), elements in the payoff matrix associated with unification will undergo the quantum utility payoff enhancement,
+When implementing a quantum computation characterised by completely general computational scaling functions\index{Computational scaling functions}, $f^{X,Y}_\mathrm{sc}$ (which in general can be distinct for the two players, $X$ and $Y$), when using an \textsc{Isolation} strategy, the respective payoff matrix elements are simply given by,
+\begin{align}\label{eq:util_payoff_iso}
+\textsc{Payoff} = (f^X_\mathrm{sc}(n_X),f^Y_\mathrm{sc}(n_Y)),
+\end{align}
+where payoff matrix elements are assumed to be in units of classical-equivalent processing time\footnote{There's nothing unique or special about using classical-equivalent computational power as our utility measure. Any other measure of `payoff' could be equally well justified, depending on circumstance. For example, one could instead represent utility in terms of the monetary cost of computational power. In that case, we simply need to transform the matrix elements in the payoff matrix using the cost of computation\index{Cost of computation} identity presented in Post.~\ref{post:cost_comp}.} (i.e FLOPs), and resource-sharing is based on the methodology for arbitrage-free time-share allocation presented in Sec.~\ref{sec:arb_free_time_share}.
+
+Once cooperative strategies are introduced, the associated cooperative payoff matrix elements are transformed appropriately, according to the reallocation of resources.
+
+Elements associated with \textsc{License} strategies are transformed as,
+\begin{align}
+\begin{pmatrix}
+   f^X_\mathrm{sc}(n_X) \\
+   f^Y_\mathrm{sc}(n_Y)
+\end{pmatrix} \underset{\textsc{License}}{\longrightarrow} \begin{pmatrix}
+   (1-r) \cdot f^X_\mathrm{sc}(n_X) \\
+   f^Y_\mathrm{sc}(n_Y) + r \cdot f^Y_\mathrm{sc}(n_X)
+\end{pmatrix},
+\end{align}
+where \mbox{$0\leq r\leq 1$} denotes the proportion of $X$'s compute-cycles that are licensed to $Y$.
+
+Elements associated with \textsc{Unify} strategies will undergo the quantum utility payoff enhancement,
 \begin{align}\label{eq:util_payoff_enh_1}
-(f^X_\mathrm{sc}(n_X),f^Y_\mathrm{sc}(n_Y))	\underset{\textsc{Unify}}{\longrightarrow} (c_X,c_Y),
+(f^X_\mathrm{sc}(n_X),f^Y_\mathrm{sc}(n_Y)) \underset{\textsc{Unify}}{\longrightarrow} (c_X,c_Y),
 \end{align}
 where,
 \begin{align}\label{eq:util_payoff_enh_2}
 c_X &= \frac{n_X\cdot f^X_\mathrm{sc}(n_X+n_Y)}{n_X+n_Y},\nonumber\\
-c_Y &= \frac{n_Y\cdot f^Y_\mathrm{sc}(n_X+n_Y)}{n_X+n_Y},
+c_Y &= \frac{n_Y\cdot f^Y_\mathrm{sc}(n_X+n_Y)}{n_X+n_Y}.
 \end{align}
-and payoff matrix elements are assumed to be in units of classical-equivalent processing time\footnote{There's nothing unique or special about using classical-equivalent computational power as our utility measure. Any other measure of `payoff' could be equally well justified, depending on circumstance. For example, one could instead represent utility in terms of the monetary cost of computational power. In that case, we simply need to transform the matrix elements in the payoff matrix using the cost of computation\index{Cost of computation} identity presented in Post.~\ref{post:cost_comp}.} (i.e FLOPs), and resource-sharing is based on the methodology for arbitrage-free time-share allocation presented in Sec.~\ref{sec:arb_free_time_share}.
 
-Thus, it is evident that the enhancement in cooperative payoff matrix elements is highly dependent on:
+Thus, it is evident that the enhancement in \textsc{Unify} strategies is highly dependent on:
 \begin{itemize}
 	\item The total number of qubits held between the two players, \mbox{$n_X+n_Y$}.
 	\item The asymmetry in the distribution of qubits between them, \mbox{$n_X/n_Y$}.
