@@ -387,7 +387,7 @@ is the total number of qubits in the network, and,
 \end{definition}
 
 Based on this equitable model for time-sharing,
-\begin{definition}[Time-shared computing power]\index{Time-shared computing power}
+\begin{definition}[Time-shared computing power]\label{def:time_share_comp_power}\index{Time-shared computing power}
 The computing power allocated to each user under the arbitrage-free time-sharing model is,
 \begin{align}
 	c_n &= r_n \cdot f_\mathrm{sc}(n_\mathrm{global}) \nonumber \\
@@ -984,16 +984,16 @@ For the uninitiated to economic analysis, particularly game theory, a few key co
 To best develop an understanding of how a quantum internet game will be played out, we will begin by analysing the utility payoff space for classical computing. Currently we can easily define three key strategies for two market participants ($X$ and $Y$), who both act as both suppliers and consumers of computational resources. The three strategies we compare are:
 
 \begin{itemize}
-	\item \textsc{Isolation}: $X$ and $Y$ build their own systems in isolation, which they utilise independently. There is no cooperation or networking of computational resources between them. This can be considered the status quo ($S$) for the players, as it represents the autarky position and defines the von Neuman \& Morgenstern utility space\index{Utility!Space}.  This is represented in Fig.~\ref{fig:game_theory_1}. Importantly, any changes to $X$'s computational capacity has no impact on $Y$'s. So $X$ can take any position along the horizontal axis, and there is no change in $Y$'s utility, and vice versa. The resulting \textit{utility point}\index{Utility!Point}\comment{What's the utility point?} is described here as the intersecting minimum of these options, represented by the point \mbox{$(S_x, S_y)$}.
+	\item \textsc{Isolation}\index{Isolation strategies}: $X$ and $Y$ build their own systems in isolation, which they utilise independently. There is no cooperation or networking of computational resources between them. This can be considered the status quo ($S$) for the players, as it represents the autarky position and defines the von Neuman \& Morgenstern utility space\index{Utility!Space}.  This is represented in Fig.~\ref{fig:game_theory_1}. Importantly, any changes to $X$'s computational capacity has no impact on $Y$'s. So $X$ can take any position along the horizontal axis, and there is no change in $Y$'s utility, and vice versa. The resulting \textit{utility point}\index{Utility!Point}\comment{What's the utility point?} is described here as the intersecting minimum of these options, represented by the point \mbox{$(S_x, S_y)$}.
 
 \begin{figure}[!htbp]
 \includegraphics[clip=true, width=0.475\textwidth]{game_theory_1}
 \captionspacefig \caption{Utility space for two players with access to classical computing. The bold dashed lines show the minimum utility payoff for $X$ and $Y$.}\label{fig:game_theory_1}
 \end{figure}
 
-\item \textsc{License}: Either $X$ or $Y$ build their own systems, but then licence unused compute-cycles to the other. This means that the other player may still have access to their required net computational resources, but essentially outsources the setup costs and ongoing infrastructure maintenance. This improves the utilisation of the system for the player who licenses out, resulting in increased efficiency, profitability and subsequently utility (under the conditions of increasing economies of scale and assuming homogenous system requirements).
+\item \textsc{License}\index{License strategies}: Either $X$ or $Y$ build their own systems, but then licence unused compute-cycles to the other. This means that the other player may still have access to their required net computational resources, but essentially outsources the setup costs and ongoing infrastructure maintenance. This improves the utilisation of the system for the player who licenses out, resulting in increased efficiency, profitability and subsequently utility (under the conditions of increasing economies of scale and assuming homogenous system requirements).
 
-\item \textsc{Unify}: The two players consolidate their computational resources into a distributed cloud computing environment (Sec.~\ref{sec:dist_QC}), where the limitations of a single system are lifted, allowing for even better resource-sharing and improvement beyond what a single system solution can provide. In this scenario, both providers will be able to collaborate such that they can meet their individual computational needs, without having to fully build independent systems as before. Importantly though, while there may be a small loss in utility for one of the parties compared to the \textsc{License} strategy, unification allows an overall higher level of joint utility to be achieved, creating a Nash equilibrium\index{Nash equilibrium} at this point, $C$.
+\item \textsc{Unify}\index{Unify strategies}: The two players consolidate their computational resources into a distributed cloud computing environment (Sec.~\ref{sec:dist_QC}), where the limitations of a single system are lifted, allowing for even better resource-sharing and improvement beyond what a single system solution can provide. In this scenario, both providers will be able to collaborate such that they can meet their individual computational needs, without having to fully build independent systems as before. Importantly though, while there may be a small loss in utility for one of the parties compared to the \textsc{License} strategy, unification allows an overall higher level of joint utility to be achieved, creating a Nash equilibrium\index{Nash equilibrium} at this point, $C$.
 \end{itemize}
 
 \subsection{Utility payoff behaviour}
@@ -1054,13 +1054,23 @@ In this scenario, the \textsc{Isolation} and \textsc{License} strategies are ass
 
 \subsection{Cooperative payoff enhancement}\index{Cooperative payoff enhancement}\label{sec:coop_enh}
 
-When implementing a quantum computation characterised by completely general computational scaling functions\index{Computational scaling functions}, $f^{X,Y}_\mathrm{sc}$ (which in general can be distinct for the two players, $X$ and $Y$), when using an \textsc{Isolation} strategy, the respective payoff matrix elements are simply given by,
+An individual user of a quantum computer operating on their own, observes computational power characterised by the appropriate computational scaling function acting on the number qubits in their possession, $f_\mathrm{sc}(n)$. This stipulates the utility payoff for that individual, allowing for trivial  construction (and efficient mathematical representation) of multi-player payoff matrices simply by characterising single-player payoffs independently.
+
+Once cooperative strategies are introduced, the associated cooperative payoff matrix elements are transformed appropriately, according to the reallocation of resources and how they are collectively utilised.
+
+We refer to this phenomena as \textit{cooperative payoff enhancement}, one which, depending on what cooperative techniques are employed, drastically alters the economic landscape, and its associated game-theoretic analysis and outcomes.
+
+We will present an elementary analysis of this concept for the three different cooperation strategies introduced earlier, initially in the standard 2-player context, subsequently generalised to an arbitrary multi-player environment.
+
+\subsubsection{\textsc{Isolation} strategies}\index{Isolation strategies}
+
+When implementing quantum computations characterised by completely general computational scaling functions\index{Computational scaling functions}, $f^{X,Y}_\mathrm{sc}$ (which in general can be distinct for the two players, $X$ and $Y$), when using an \textsc{Isolation} strategy, the respective payoff matrix elements are simply given by,
 \begin{align}\label{eq:util_payoff_iso}
 \textsc{Payoff} = (f^X_\mathrm{sc}(n_X),f^Y_\mathrm{sc}(n_Y)),
 \end{align}
-where payoff matrix elements are assumed to be in units of classical-equivalent processing time\footnote{There's nothing unique or special about using classical-equivalent computational power as our utility measure. Any other measure of `payoff' could be equally well justified, depending on circumstance. For example, one could instead represent utility in terms of the monetary cost of computational power. In that case, we simply need to transform the matrix elements in the payoff matrix using the cost of computation\index{Cost of computation} identity presented in Post.~\ref{post:cost_comp}.} (i.e FLOPs), and resource-sharing is based on the methodology for arbitrage-free time-share allocation presented in Sec.~\ref{sec:arb_free_time_share}.
+where payoff matrix elements are assumed to be in units of classical-equivalent processing time\footnote{There's nothing unique or special about using classical-equivalent computational power as our utility measure. Any other measure of `payoff' could be equally well justified, depending on circumstance. For example, one could instead represent utility in terms of the monetary value of computational power. In that case, we simply need to transform the payoff matrix elements using the cost of computation\index{Cost of computation} identity presented in Post.~\ref{post:cost_comp}.} (i.e FLOPs), and resource-sharing is based on the methodology for arbitrage-free time-share allocation presented in Sec.~\ref{sec:arb_free_time_share}.
 
-Once cooperative strategies are introduced, the associated cooperative payoff matrix elements are transformed appropriately, according to the reallocation of resources.
+\subsubsection{\textsc{License} strategies}\index{License strategies}
 
 Elements associated with \textsc{License} strategies are transformed as,
 \begin{align}
@@ -1072,7 +1082,19 @@ Elements associated with \textsc{License} strategies are transformed as,
    f^Y_\mathrm{sc}(n_Y) + r \cdot f^Y_\mathrm{sc}(n_X)
 \end{pmatrix},
 \end{align}
-where \mbox{$0\leq r\leq 1$} denotes the proportion of $X$'s compute-cycles that are licensed to $Y$.
+where \mbox{$0\leq r\leq 1$} denotes the proportion of $X$'s compute-time licensed to $Y$. We have here implicitly assumed that $Y$'s compute-time is fully exploited by $Y$ alone, and none is licensed in the reverse direction\footnote{It would be a fruitless exercise for both $X$ and $Y$ to simultaneously license the same commodity to one another in both directions. Indeed, in a more realistic setting, in which transaction and communication costs are accommodated for, this would be inefficient and positively counterproductive.}.
+
+This is easily logically generalised to an arbitrary multi-player setting, in which case the transformation becomes,
+\begin{align}
+	f_\mathrm{sc}^i(n_i) \underset{\textsc{License}}{\longrightarrow} \sum_{j=1}^N r_{j\to i} f_\mathrm{sc}^i(n_j),
+\end{align}
+where there are $N$ players, all engaging with one another using licensing only. Here, $r_{i\to j}$ denotes the proportion of $i$'s compute-time licensed to $j$, which are normalised (assuming no wasted clock-cycles) for all users such that,
+\begin{align}
+\sum_{j=1}^N r_{i\to j} = 1\,\,\forall\,i.	
+\end{align}
+Note that when \mbox{$r_{i\to j}=\delta_{i,j}$} (i.e \mbox{$r=I_N$} is the \mbox{$N\times N$} identity matrix, and there is no inter-player licensing) the \textsc{License} strategy simply reduces back to the \textsc{Isolation} strategy.
+
+\subsubsection{\textsc{Unify} strategies}\index{Unify strategies}
 
 Elements associated with \textsc{Unify} strategies will undergo the quantum utility payoff enhancement,
 \begin{align}\label{eq:util_payoff_enh_1}
@@ -1080,20 +1102,36 @@ Elements associated with \textsc{Unify} strategies will undergo the quantum util
 \end{align}
 where,
 \begin{align}\label{eq:util_payoff_enh_2}
-c_X &= \frac{n_X\cdot f^X_\mathrm{sc}(n_X+n_Y)}{n_X+n_Y},\nonumber\\
-c_Y &= \frac{n_Y\cdot f^Y_\mathrm{sc}(n_X+n_Y)}{n_X+n_Y}.
+c_X &= \frac{n_X}{n_X+n_Y}\cdot f^X_\mathrm{sc}(n_X+n_Y),\nonumber\\
+c_Y &= \frac{n_Y}{n_X+n_Y}\cdot f^Y_\mathrm{sc}(n_X+n_Y),
+\end{align}
+from the definition for time-shared compute power given in Def.~\ref{def:time_share_comp_power}.
+
+As before, we can logically generalise the payoff enhancement of a generalised \textsc{Unify} strategy to the multi-player scenario as,
+\begin{align}
+	f_\mathrm{sc}^i(n_i) \underset{\textsc{Unify}}{\longrightarrow} \frac{n_i}{\sum_{j=1}^N n_j} \cdot f_\mathrm{sc}^i\left(\sum_{j=1}^N n_j\right).
 \end{align}
 
 Thus, it is evident that the enhancement in \textsc{Unify} strategies is highly dependent on:
 \begin{itemize}
-	\item The total number of qubits held between the two players, \mbox{$n_X+n_Y$}.
-	\item The asymmetry in the distribution of qubits between them, \mbox{$n_X/n_Y$}.
-	\item The respective algorithms to which the computational resources are being applied by each player, which influence the subjective scaling functions $f^X_\mathrm{sc}$ and $f^Y_\mathrm{sc}$ independently.
+	\item The total number of qubits held between the players,
+		\begin{align}
+			\sum_j n_j.
+		\end{align}
+	\item The asymmetry in the distribution of qubits between them,
+		\begin{align}
+			\frac{n_i}{\sum_{j=1}^N n_j}.
+		\end{align}
+	\item The respective algorithms to which the computational resources are being applied by each player, which influence the subjective scaling functions, $f^i_\mathrm{sc}$, independently.
 \end{itemize}
 
-The final point is particularly noteworthy, since it implies that optimal game-theoretic outcomes are not objective, but subjective, and highly dependent on how players are employing their computational resources, which may be highly asymmetric and change dynamically over time. If one player is employing an exponential scaling function, whereas the other is only employing a polynomial one, this could completely distort the utility payoff dynamics of the game in favour of the player who would otherwise have been weaker under symmetric scaling functions. This in turn could completely alter the landscape of how users choose strategies to play optimally.
+The final point is particularly noteworthy, since it implies that optimal game-theoretic outcomes are not objective, but subjective, and highly dependent on how players are employing their computational resources, which may be highly distinct and change dynamically over time. If one player is employing an exponential scaling function, whereas the other is only employing a polynomial one, this could completely distort the utility payoff dynamics of the game in favour of the player who would otherwise have been weaker under symmetric scaling functions. This in turn could completely alter the landscape of how users choose strategies to play optimally.
 
-The utility payoff enhancement characterised by these transformations is based on the simplest of toy models where unification is assumed to be perfectly efficient -- there no overheads (e.g transaction or communication costs) associated with cooperation, nor are there any externalities, such as taxes or regulations. However, such secondary effects can easily be incorporated into the model by modulating them with additional layers of transformations capturing these features. For example, consider the unification of computational resources between two players residing in different jurisdictions, which levy import/export tariffs\index{Tariffs} against one another, an externality introducing inefficiency into cooperative strategies. When expressed in terms of the monetary cost of computation, this would effectively modulate the payoffs of \textsc{Unify} matrix elements by a tariff-dependent function.
+\subsubsection{Inefficient markets}\index{Market inefficiency}
+
+The utility payoff enhancement characterised by these transformations is based on the simplest of toy models, where unification is assumed to be perfectly efficient -- there are no overheads (e.g transaction or communication costs) associated with cooperation, nor are there any externalities, such as taxes or regulations. In reality, these assumptions are of course completely unrealistic. Thankfully, such secondary effects can be relatively easily incorporated into the model by modulating them with additional layers of transformations capturing these features.
+
+For example, consider the unification of computational resources between two players residing in different jurisdictions, which levy import/export tariffs\index{Tariffs} against one another, an externality introducing inefficiency into cooperative strategies. When expressed in terms of the monetary cost of computation, this would effectively modulate the payoffs of \textsc{Unify} matrix elements by a tariff-dependent function.
 
 \subsection{Mixed strategies}
 
