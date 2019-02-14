@@ -236,6 +236,9 @@ it is evident that squeezing accumulates additively as well,
 
 The measures considered until now have quantified the preservation of quantum states. Alternately, one might consider information theoretic measures\index{Information theoretic!Measures}, which quantify the number of bits/qubits transmitted by a link, i.e the number of bits/qubits in common before and after the channel. This is an extremely powerful tool as it upper bounds the amount of information the receiver can extract from the transmitter under \textit{any} measurement scheme, very useful in a cryptographic context, where we want security to be attack-independent\index{Information-theoretic!Security} (Sec.~\ref{sec:comp_vs_inf_th_sec}). Before we delve into this, we have to introduce a few new quantities.
 
+
+\paragraph{Classical correlation measures}
+
 Suppose we have a random variable $X$, and a particular measurement outcome $x$ occurs with probability $p(x)$, the Shannon entropy of $X$ is given by,
 \begin{align}\index{Shannon entropy}
 H(X) = -\sum_x p_x\log_2(p_x).
@@ -296,8 +299,9 @@ I_c(\hat\rho_{A,B}) = \max_{\rho,\{\Lambda_A^x\},\{\Lambda_B^x\}} I(A;B). \label
 
 The intuitive interpretation is that this is the maximum mutual information between input and output states that can be achieved across the channel. This effectively places a physical upper bound on the achievable bitrate or bandwidth of the channel.
 
+\subparagraph{}
 
-And the \textit{classical channel capacity} of $\mathcal{E}$ is defined as
+The \textit{classical channel capacity} of $\mathcal{E}$ is defined as
 \begin{align}\index{Classical!Channels!Capacity}
 \mathcal{C}(\mathcal{E}) = \lim_{n \rightarrow \infty} \frac{I(\mathcal{E}^{\otimes n})}{n},
 \end{align}
@@ -309,8 +313,10 @@ which can be interpreted as the maximum bitrate of the channel, per use of the c
  For a noisy channel, if the input contains product states as well as separable measurements,, the classical capacity 
  is equal to Eq.\eqref{eq:quant_mut}, that is, the single-use and the asymptotic classical capacities are equal.
 
+\subparagraph{}
 
   If we also allow joint measurement (but not entanglement between input states), the classical channel capacity can be expressed as
+
 \begin{align}
 \chi(\mathcal{E}) = \max_{p_i,\hat\rho_i} S(\hat\rho) - \sum_i p_i S(\hat\rho_i) \label{eq:holevoinfo}
 \end{align}
@@ -328,7 +334,32 @@ C_\text{ent} = \lim _{n\to \infty} \frac{1}{n}\chi(\mathcal{E}^{\otimes n})
 \label{eq:ent_ent}
 \end{align}
 
+\subparagraph{}
 
+The private classical capacity $\mathcal{P(E)}$ of a quantum channel $\mathcal{E}$ describes the maximum rate at which the channel is able to send
+classical information through the channel reliably and privately, that is, the trusted parties do not want the environment to have access to their classical correlations.
+
+Here Alice prepares the quantum state $\rho_x^A$ according to the probability distribution $\{ p_X(x) \}$. The expected density operator of the ensemble is of the form
+\begin{align}
+\rho^{XA} \equiv \sum_x p_X(x)\ket{x}\bra{x}  \otimes p_x^A
+\end{align}
+
+The difference between the amount of classical correlation that she can establish with Bob, minus the correlation obtainable by Eve is given by
+\begin{align}
+I(X;B)_\rho - I(X;E)_\rho,
+\end{align}
+\noindent which leads to the definition of the \textit{private information of a quantum channel}, where Alice maximises over all of her imputs
+\begin{align}
+I_\mathcal{P} = \max_{\rho^{XA}} \{I(X;B)_\rho - I(X;E)_\rho   \}
+\end{align}
+
+The private classical capacity is defined as
+\begin{align}
+\mathcal{P(E)} = \lim_{n\rightarrow \infty} \frac{1}{n} I_\mathcal{P}(\mathcal{E}^{\otimes n })
+\end{align}
+
+
+\subparagraph{}
 The last capacity in regards to classical communication over quantum channel is the \textit{entanglement-assisted classical capacity}, $\mathcal{C}_E(\mathcal{E})$. This quantity measures the classical information that can be transmitted through the channel, if Alice and Bob possess shared entanglement prior to the transmission
 \begin{align}
 \mathcal{C}_E(\mathcal{E}) = \max_{p_i,\hat\rho_i} I(A:B).
@@ -339,8 +370,10 @@ The difference between $\mathcal{C(E)}$ and $\mathcal{C}_E(\mathcal{E}) $ is tha
 
 % The single-use 
 \vspace{1cm}
+\paragraph{Quantum correlation measures}
 
-We now move on to discuss quantum correlations. Whilst classical correlation measures have a clear operational meaning, quantum capacities 
+We now move on to discuss quantum correlations. Whilst classical correlation measures have a clear operational meaning, quantum channel capacities
+are less so -- these quantities can be interpreted as how well the channel preserves the quantum state.
 
 
 Analogous to the mutual information for classical systems is the \textit{coherent information} for quantum systems \cite{bib:PhysRevA.54.2629}, defined as,
@@ -371,6 +404,9 @@ The \textit{quantum channel capacity}\index{Quantum channel capacity} is then an
 Q(\mathcal{E}) = \lim_{n \rightarrow \infty} \frac{\mathcal{I}_Q(\mathcal{E}^{\otimes n})}{n}.
 \end{align}
 
+
+
+
 The most important distinction between quantum mutual information and quantum coherent information is that the mutual information is always additive, but the quantum coherent information is not.
 
 Analytic solutions to Eq.~(\ref{eq:quantcohinfo}) are notoriously difficult to calculate. However, once net dephasing or depolarisation rates have been calculated across a route, the \textit{single-use} quantities can be calculated, which can serve as a lower bound to the ultimately achievable rates, if a number representing \textit{cost}, rather than an analytic solution, is all we need.
@@ -379,19 +415,22 @@ Analytic solutions to Eq.~(\ref{eq:quantcohinfo}) are notoriously difficult to c
 
 
 A summary of the different measure of classical and quantum capacities are given in Table \ref{tab:capacities}.
-\begin{widetext}
-\begin{table}[hbt]
+
+
+\begin{widetext}\vspace{1cm}
+\begin{table}[t]
 \begin{tabular}{ |c | c | c| c| } \hline
 Capacity & Type of information & Correlation measure &Capacity formula  \\ \hline
 Classical &Classical information &Holevo information &Eq.~(\ref{eq:holevoinfo})       \\
-Entanglement Assisted Classical & Classical information & Quantum mutual information & See Ref.~\cite{PhysRevLett.83.3081} \\
+Private & Classical information & Private information  & See Ref.~\cite{bib:PhysRevLett.103.120501} \\
+Entanglement Assisted Classical & Classical information & Quantum mutual information & See Ref.~\cite{bib:PhysRevLett.83.3081} \\
 Quantum &Quantum information &Quantum Coherent Information &Eq.~(\ref{eq:quantcohinfo}) \\ \hline
 \end{tabular}
 \caption{\label{tab:capacities} Measure of classical and quantum channel capacities.}
-\end{table}
+\end{table}\vspace{1cm}
 \end{widetext}
 
-
+\paragraph{}
 
 We now discuss the quantum capacity for the erasure channel and the amplitude damping channel, both of which the quantum capacities can be calculated.
 
@@ -412,8 +451,46 @@ For $\gamma \in [0,1/2]$,the quantum capacity is equal to
 \end{align}
 \noindent where $h_2$ represents the binary entropy function. For $\gamma \in [1/2,1]$, the quantum capacity is equal to zero.
 
+\vspace{1cm}
+\paragraph{ }
+
 Two of the most surprising discoveries of quantum Shannon theory is the \textit{superadditivity} of coherent information for the depolarizing channel, and \textit{superactivation} of quantum capacity, where two channels whose indivicual capacities are zero can be combined to make a channel with non-zero capacity.
 
+\subparagraph{Superadditivity of coherent information}
+
+For qubits, the depolarizing channel transmits its input with probability $(1-p)$ and replaces it with the maximally mixed state $\openone/2$ with probability $p$,
+\begin{align}
+\rho \rightarrow (1-p) \rho + p \frac{\openone}{2}.
+\end{align}
+It is known that its coherent information is strictly superadditive when $p$ is large.
+
+\begin{align}
+5 I_\mathcal{Q}(\mathcal{E}) < 5 I_\mathcal{Q}(\mathcal{E}^{\otimes 5})
+\end{align}
+
+% We show this to be true by explicit computation
+It can be shown that the state which maximises the coherent information is the Bell state $\frac{1}{\sqrt2}(\ket{00}_{AA_1} + \ket{11}_{AA_1} )$, and the one-use coherent information is
+\begin{align}
+I_\mathcal{Q} = 1+ \left( 1-\frac{3p}{4} \right )\log\left[1-\frac{3p}{4}\right] + \frac{3p}{4}\log\left[\frac{p}{4}\right] \label{eq:qcohdepol}
+\end{align}
+
+At $p = 0.25$ Eq~\eqref{eq:qcohdepol} is equal to zero, but if we calculate the coherent information for a five-qubit repetition code
+\begin{align}
+\frac{1}{\sqrt2}&(\ket{00}_{AA_1} + \ket{11}_{AA_1} ) \rightarrow \nonumber \\ 
+\frac{1}{\sqrt2}&(\ket{000000}_{AA_1A_2 A_3 A_4 A_5} + \ket{111111}_{AA_1A_2 A_3 A_4 A_5}),
+\end{align}
+\noindent at $p$ just above $0.25$, the quantity of interest is positive \cite{bib:PhysRevA.57.830}. This demonstrates that the quantum capacity of the depolarizing channel
+is superadditive. Despite the fact that the channel looks simple, the best strategy for achieving the quantum capacity of the depolarizing channel remains very poorly understood \cite{wilde2013quantum}.
+
+ 
+\subparagraph{Superactivation}
+
+Suppose that Alice is connected to Bob by two quantum channel $\mathcal{E}_1,\mathcal{E}_2$ both with zero quantum capacity. Intuitively one would expect that Alice would not be able to transmit quantum information over the channel $\mathcal{E}_1\otimes \mathcal{E}_2$. However, examples of two zero-capacity channels are known to have non-zero joint quantum capacity. The phenomenon is known as \textit{superactivation}.
+
+One of the channels is a 50$\%$ erasure channel (which we know to have zero quantum capacity from the non-cloning theroem), and the other is known as an entanglement-binding channel (
+see Ref~\cite{horodecki2001separability} for details of such a channel).
+
+This phenomenon has important implications for quantum information transmission. It implies that if there are other seemingly useless channels available, one could transmit more quantum information than if the channels were used alone. It also implies that the coherent information is strongly non-additive, and there is much to be understood about reliable communication rates over quantum channels.
 
 
 
