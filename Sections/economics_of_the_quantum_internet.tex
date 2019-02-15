@@ -69,7 +69,6 @@ where $\beta_i$ characterise the share of processing time allocated to each node
 \begin{align}
 \sum_{i=1}^{n_\mathrm{nodes}} \beta_i = 1.
 \end{align}
-
 \end{definition}
 
 Thus, the joint scaling function of the entire network is simply given by a linear combination (weighted average) of the scaling functions of the different market participants.
@@ -303,10 +302,21 @@ The \mbox{$\xi_\textrm{comp}=0$} limit is really a fairly hypothetical regime wh
 
 \section{Cost of computation}\label{sec:cost_of_comp} \index{Cost of computation}
 
+As discussed in relation to combined computational scaling functions (Sec.~\ref{sec:comb_comp_sc_func})\index{Combined computational scaling functions}, different market participants will be executing different software applications on their share of the quantum computing resources, with differing QCLs\index{Quantum computational leverage}. Because the applications differ between users, as do their computational scaling functions ($f_\mathrm{sc}$), QCLs, so too does the monetary value of the computations they are performing. This yields the distinction between \textit{subjective}\index{Subjective value of computation} and \textit{objective}\index{Objective value of computation} value of computation:
+
+\begin{itemize}
+\item Subjective value of computation: the value to an end-user of a computation, measured in terms of their associated monetary profit from utilising its output, which is highly application-specific.
+\item Objective value of computation: the cost of the physical hardware and infrastructure, which is not application-specific, but rather stipulated by technological and manufacturing progress.
+\end{itemize}
+
+This effectively implies that some users pay more for computation (in terms of return on investment\index{Return on investment (RoI)}) than others. While the objective cost of computation is conceptually simple to model (as performed in a rudimentary fashion in Sec.~\ref{sec:cost_of_comp}), the subjective cost is a highly non-trivial one. It will depend heavily on the scaling function of the algorithm run by a user, and of course the economic objectives of their computation -- a quantum simulation algorithm executed by an R\&D lab\index{R\&D} is likely to be of greater monetary value than an undergrad using his university's resources to execute the same task for completing an assignment!
+
+\subsection{Objective value}\index{Objective value of computation}
+
 \dropcap{I}{n} the same scenario as before, where compute-time is being licensed out to end-users, the hardware owner's return over a single unit of time equates to the cost of computation over that period.
 
 Let $L(t)$ be the dollar-value of utilising the network's computing resources for a single unit of time. This is obtained as the return made on the value of the network per FLOP,
-\begin{postulate}[Cost of computation]\label{post:cost_comp}
+\begin{postulate}[Objective value of computation]\label{post:cost_comp}
 The efficient-market dollar-value of a computation for a single unit of time at time $t$, per FLOP is,
 \begin{align}\index{Cost of computation}
 	L(t) &= \frac{e^{\gamma_\mathrm{ror}} V(t)}{P(t)} \nonumber\\
@@ -346,6 +356,17 @@ Examples of the temporal dynamics of the cost of computation are shown in Fig.~\
 \captionspacefig \caption{Examples of the temporal dynamics of the cost of computation for different scaling functions and exponential growth rates. Units are \mbox{$C_0=N_0=n=1$}, with RoR \mbox{$\gamma_\mathrm{ror}=0$}. A non-zero RoR would simply scale these figures by a constant factor of $e^{\gamma_\mathrm{ror}}$.}\label{fig:econ_cost_of_comp}
 \end{figure*}
 \fi
+
+\subsection{Subjective value}\index{Subjective value of computation}
+
+With access to $n$ qubits, let the subjective value extracted by user $i$ from its execution for a unit of time be characterised by $f_\mathrm{sub}^\mathrm{(joint)}(n)$. Then, the joint subjective value of computation (i.e total market subjective return) follows the same form as the joint computational scaling function given in Def.~\ref{def:comb_sc_func},
+
+\begin{definition}[Subjective value of computation]\index{Subjective value of computation}\label{def:sub_val_comp}
+The joint subjective value of a time-share in the global network, $f_\mathrm{sub}^\mathrm{(joint)}$, of a group of participants, each with their own subjective valuation functions, $f_\mathrm{sub}^{(i)}$,
+\begin{align}
+	f_\mathrm{sub}^\mathrm{(joint)} = \sum_{i=1}^{n_{\mathrm{nodes}}} \beta_i \cdot f_\mathrm{sub}^{(i)}(n_\mathrm{global}).
+\end{align}
+\end{definition}
 
 %
 % Arbitrage-Free Time-Sharing
@@ -898,21 +919,6 @@ An important implication of the imposition of the tax is the share of the taxati
 Fig.~\ref{fig:supply_demand}(b), however, shows a longer-term view of the qubit market, where the supply of qubits has become more elastic in nature. That is, the quantity supplied to the market becomes more sensitive to price fluctuations. This change in elasticity results in a shift in the tax burden, with a greater proportion of the tax now being paid by consumers, with only a small shift from the efficient price, $P_e$, to the price suppliers will face, $P_s$. 
 
 From a policy implications perspective, this means that governments wanting to cash in on the new technology need to be cautious with the imposition of taxes relative to market maturity. Imposing a significant tax early on may only act as a disincentive to the development of the industry. However, once the market matures further, the imposition of a qubit tax would make strong economic sense, as there will be minimal loss of market efficiency. Importantly, such a tax on computational power alone could serve to be a relatively stable revenue generation tool for governments. 
-
-%
-% Subjective vs Objective Value of Computation
-%
-
-\subsection{Subjective vs. objective value of computation}\index{Subjective value of computation}\index{Objective value of computation}\label{sec:sub_vs_obj}
-
-As discussed in relation to combined computational scaling functions (Sec.~\ref{sec:comb_comp_sc_func})\index{Combined computational scaling functions}, different market participants will be executing different software applications on their share of the quantum computing resources, with differing QCLs\index{Quantum computational leverage}. Because the applications differ between users, as do their computational scaling functions ($f_\mathrm{sc}$), QCLs, so too does the monetary value of the computations they are performing. This yields the distinction between \textit{subjective}\index{Subjective value of computation} and \textit{objective}\index{Objective value of computation} value of computation:
-
-\begin{itemize}
-\item Subjective value of computation: the value to an end-user of a computation, measured in terms of their associated monetary profit from utilising its output, which is highly application-specific.
-\item Objective value of computation: the cost of the physical hardware and infrastructure, which is not application-specific, but rather stipulated by technological and manufacturing progress.
-\end{itemize}
-
-This effectively implies that some users pay more for computation (in terms of return on investment\index{Return on investment (RoI)}) than others. While the objective cost of computation is conceptually simple to model (as performed in a rudimentary fashion in Sec.~\ref{sec:cost_of_comp}), the subjective cost is a highly non-trivial one. It will depend heavily on the scaling function of the algorithm run by a user, and of course the economic objectives of their computation -- a quantum simulation algorithm executed by an R\&D lab\index{R\&D} is likely to be of greater monetary value than an undergrad using his university's resources to execute the same task for completing an assignment!
 
 %
 % The Quantum Stockmarket
