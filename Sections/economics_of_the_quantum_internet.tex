@@ -319,14 +319,14 @@ Let $L(t)$ be the dollar-value of utilising the network's computing resources fo
 \begin{postulate}[Objective value of computation]\label{post:cost_comp}
 The efficient-market dollar-value of a computation for a single unit of time at time $t$, per FLOP is,
 \begin{align}\index{Cost of computation}
-	L(t) &= \frac{e^{\gamma_\mathrm{ror}} V(t)}{P(t)} \nonumber\\
-	&= \frac{e^{\gamma_\mathrm{ror}} C_0{\gamma_C}^{-t}}{\chi_\mathrm{sc}(N_0 {\gamma_N}^t)}.
+	L(t) &= \frac{e^{\gamma_\mathrm{ror}t} V(t)}{P(t)} \nonumber\\
+	&= \frac{e^{\gamma_\mathrm{ror}t} C_0{\gamma_C}^{-t}}{\chi_\mathrm{sc}(N_0 {\gamma_N}^t)}.
 \end{align}
 \end{postulate}
 which implies,
 \begin{postulate}[Spot price of computation]\index{Spot price of computation} The present-day (\mbox{$t=0$}) spot price of a computation per FLOP is,
 \begin{align}
-L(0) = \frac{e^{\gamma_\mathrm{ror}}C_0}{\chi_\mathrm{sc}(N_0)}.	
+L(0) = \frac{C_0}{\chi_\mathrm{sc}(N_0)}.	
 \end{align}
 \end{postulate}
 That is, the value of computations simply approximates the return on initial hardware investment, scaled by its initial computational power, as is intuitively expected.
@@ -1082,44 +1082,54 @@ We will present an elementary analysis of this concept for the three different c
 
 When implementing quantum computations characterised by completely general computational scaling functions\index{Computational scaling functions}, $f^{(X,Y)}_\mathrm{sc}$ (which in general can be distinct for the two players, $X$ and $Y$), when using an \textsc{Isolation} strategy, the respective payoff matrix elements are simply given by,
 \begin{align}\label{eq:util_payoff_iso}
-\textsc{Payoff} = (f^{(X)}_\mathrm{sc}(n_X),f^{(Y)}_\mathrm{sc}(n_Y)),
+\textsc{Isolation} = \begin{pmatrix}
+ 	f^{(X)}_\mathrm{sc}(n_X)\\
+ 	f^{(Y)}_\mathrm{sc}(n_Y)
+ \end{pmatrix},
 \end{align}
 where payoff matrix elements are assumed to be in units of classical-equivalent processing time\footnote{There's nothing unique or special about using classical-equivalent computational power as our utility measure. Any other measure of `payoff' could be equally well justified, depending on circumstance. For example, one could instead represent utility in terms of the monetary value of computational power. In that case, we simply need to transform the payoff matrix elements using the cost of computation\index{Cost of computation} identity presented in Post.~\ref{post:cost_comp}.} (i.e FLOPs), and resource-sharing is based on the methodology for arbitrage-free time-share allocation presented in Sec.~\ref{sec:arb_free_time_share}.
 
 \subsubsection{\textsc{License} strategies}\index{License strategies}
 
 Elements associated with \textsc{License} strategies are transformed as,
+\begin{widetext}
 \begin{align}
 \begin{pmatrix}
    f^{(X)}_\mathrm{sc}(n_X) \\
    f^{(Y)}_\mathrm{sc}(n_Y)
 \end{pmatrix} \underset{\textsc{License}}{\longrightarrow} \begin{pmatrix}
-   (1-r) \cdot f^{(X)}_\mathrm{sc}(n_X) \\
-   f^{(Y)}_\mathrm{sc}(n_Y) + r \cdot f^{(Y)}_\mathrm{sc}(n_X)
+   r_{X\to X} \cdot f^{(X)}_\mathrm{sc}(n_X) + r_{Y\to X} \cdot f^{(X)}_\mathrm{sc}(n_Y) \\
+   r_{Y\to Y} \cdot f^{(Y)}_\mathrm{sc}(n_Y) + r_{X\to Y} \cdot f^{(Y)}_\mathrm{sc}(n_X)
 \end{pmatrix},
 \end{align}
-where \mbox{$0\leq r\leq 1$} denotes the proportion of $X$'s compute-time licensed to $Y$. We have here implicitly assumed that $Y$'s compute-time is fully exploited by $Y$ alone, and none is licensed in the reverse direction\footnote{It would be a fruitless exercise for both $X$ and $Y$ to simultaneously license the same commodity to one another in both directions. Indeed, in a more realistic setting, in which transaction and communication costs are accommodated for, this would be inefficient and positively counterproductive.}.
+\end{widetext}
+where \mbox{$0\leq r_{i\to j}\leq 1$} denotes the proportion of $i$'s compute-time licensed to $j$.
 
 This is easily logically generalised to an arbitrary multi-player setting, in which case the transformation becomes,
 \begin{align}
 	f_\mathrm{sc}^{(i)}(n_i) \underset{\textsc{License}}{\longrightarrow} \sum_{j=1}^N r_{j\to i} f_\mathrm{sc}^{(i)}(n_j),
 \end{align}
-where there are $N$ players, all engaging with one another using licensing only. Here, $r_{i\to j}$ denotes the proportion of $i$'s compute-time licensed to $j$, which are normalised (assuming no wasted clock-cycles) for all users such that,
+where there are $N$ players, all engaging with one another using licensing only. The $r_{i\to j}$ parameters are normalised for all users such that,
 \begin{align}
-\sum_{j=1}^N r_{i\to j} = 1\,\,\forall\,i.	
+\sum_{j=1}^N r_{i\to j} \leq 1\,\,\forall\,i.
 \end{align}
+
+With equality, this normalisation implies perfect licensing efficiency (i.e no overheads) and no wasted clock-cycles (full utilisation). Inequality implies either inefficiency or under-utilisation. Since under this strategy net computational power is conserved (at best), it might appear mindless to employ it at all, given that there is no net gain. Whilst this is true, there may be ulterior motives for employing it. For example, it might be employed for the purposes of load balancing\index{Load balancing} across a distributed architecture, or implementing arbitrage\index{Arbitrage} between inconsistent market pricing of computational power between nodes.
+
 Note that when \mbox{$r_{i\to j}=\delta_{i,j}$} (i.e \mbox{$r=I_N$} is the \mbox{$N\times N$} identity matrix, and there is no inter-player licensing) the \textsc{License} strategy simply reduces back to the \textsc{Isolation} strategy.
 
 \subsubsection{\textsc{Unify} strategies}\index{Unify strategies}
 
 Elements associated with \textsc{Unify} strategies will undergo the quantum utility payoff enhancement,
 \begin{align}\label{eq:util_payoff_enh_1}
-(f^{(X)}_\mathrm{sc}(n_X),f^{(Y)}_\mathrm{sc}(n_Y)) \underset{\textsc{Unify}}{\longrightarrow} (c_X,c_Y),
-\end{align}
-where,
-\begin{align}\label{eq:util_payoff_enh_2}
-c_X &= n_X \cdot \chi^{(X)}_\mathrm{sc}(n_X+n_Y),\nonumber\\
-c_Y &= n_Y \cdot \chi^{(Y)}_\mathrm{sc}(n_X+n_Y),
+\begin{pmatrix}
+	f^{(X)}_\mathrm{sc}(n_X)\\
+	f^{(Y)}_\mathrm{sc}(n_Y)
+\end{pmatrix}
+ \underset{\textsc{Unify}}{\longrightarrow} \begin{pmatrix}
+ 	n_X \cdot \chi^{(X)}_\mathrm{sc}(n_X+n_Y)\\
+ 	n_Y \cdot \chi^{(Y)}_\mathrm{sc}(n_X+n_Y)
+ \end{pmatrix},
 \end{align}
 from the definition for time-shared compute power given in Def.~\ref{def:time_share_comp_power}.
 
