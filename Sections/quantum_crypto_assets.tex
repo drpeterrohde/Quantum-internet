@@ -1,0 +1,57 @@
+%
+% Quantum Crypto-Assets
+%
+
+\section{Quantum crypto-assets}\label{sec:quantum_crypto_assets}\index{Quantum crypto-assets}\index{Blockchains}
+
+\comment{To do. Dropcap}
+
+% Secure Quantum Data
+
+\subsection{Secure quantum data}\label{sec:secure_quantum_date}\index{Secure quantum data}
+
+Suppose Alice wishes to store quantum data offsite, for example in a repository for safekeeping, or within remote or decentralised data structures (such as a blockchain\index{Blockchain}). Since her data is not held locally, there is the concern that an unauthorised third party might simply steal it. How can she ensure its integrity, without maintaining any quantum data (assuming she can locally maintain classical data)?
+
+This is a trivial problem to solve. Essentially we can think of this as a trivialised special case of blind quantum computing (Sec.~\ref{sec:blind_qc}), where the outsourced computation is just the identity operation. Employing the same ideas as the blind cluster state quantum computing protocol (Sec.~\ref{sec:blind_cs}), Alice simply takes each qubit in her quantum data structure, and with equal probability (\mbox{$p=1/4$}) applies one of the four Pauli operators to it ($\hat\openone$, $\hat{X}$, $\hat{Y}$ or $\hat{Z}$). She of course keeps track of which ones were applied, which requires 2 classical bits per qubit.
+
+From her perspective (or anyone she chooses to share the 2 classical bits with), she is always able to perfectly recover the hidden qubit, simply by applying the same Pauli operators a second time to invert them. However, from the perspective of a third party without access to the 2 classical bits, they observe a perfect depolarising channel\index{Depolarising channel},
+\begin{align}
+	\mathcal{E}^\text{depolarising}_{0}(\hat\rho) = \frac{\hat\openone}{4},
+\end{align}
+yielding the completely mixed state, independent of the input state, from which no state information can be inferred. Thus, this approach confers \textit{perfect} information-theoretic security\index{Information-theoretic security}.
+
+% Quantum Atomic Swaps
+
+\subsection{Quantum atomic swaps}\label{sec:quantum_atomic_swaps}\index{Quantum atomic swaps}\index{Atomic swaps}
+
+In a crypto-market we inherently wish to engage in the free exchange of different types of crypto-assets. In the context of blockchain-based asset ledgers, we may wish to directly exchange tokens residing on entirely distinct blockchains. For example, we may wish to trade a Bitcoin\index{Bitcoin} for an Ether\index{Ethereum} (Ethereum coin). Enabling this kind of exchange is vital for creating a fully functional crypto-market\index{Crypto-market} of arbitrarily interconvertible assets.
+
+It's essential that such exchanges be performed with integrity, such that in a potentially anonymous transaction one party cannot run off with everything. The obvious solution here is to employ a trusted third party to mediate the transaction. But this inherently requires trust, and comes at a cost. Can we implement such an exchange securely and directly in the absence of a trusted mediating authority?
+
+In classical blockchain technology, \textit{atomic swaps} can be employed for this purpose. Such algorithms allow the direct exchange of crypto-assets, cryptographically enforced to guarantee one of two outcomes: a successful mutual exchange, or no exchange at all. There is cryptographically no possibility for a partial exchange to occur, in which one party ends up with both assets.
+
+With quantum crypto-assets we can easily construct such \textit{quantum atomic swaps} by exploiting some well-known identities relating CNOT and SWAP gates. The first identity is that two consecutive CNOT gates cancel one another to yield an identity operation,
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {
+    \lstick{\ket\psi} & \ctrl{1} & \ctrl{1} & \qw & \ket\psi \\
+    \lstick{\ket\phi} & \targ & \targ & \qw & \ket\phi
+}\nonumber
+\end{align}
+Second, a sequence of three alternating CNOT gates in series yields a SWAP\index{SWAP gate} operation,
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {
+    \lstick{\ket\psi} & \ctrl{1} & \targ & \ctrl{1} & \qw & \ket\phi \\
+    \lstick{\ket\phi} & \targ & \ctrl{-1} & \targ & \qw & \ket\psi
+}\nonumber
+\end{align}
+Note that these two operations differ only via the presence of the central CNOT gate within the SWAP gate decomposition. By replacing it with a doubly-controlled CNOT gate, the additional control qubit effectively specifies whether or not a CNOT gate is applied between the first two qubits,
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {
+    \lstick{\ket\psi} & \ctrl{1} & \targ & \ctrl{1} & \qw \\
+    \lstick{\ket\phi} & \targ & \ctrl{-1} & \targ & \qw \\
+    \lstick{\ket{\text{execute}}} & \qw & \ctrl{-2} & \qw & \qw
+}\nonumber
+\end{align}
+Embedded into the CNOT-based SWAP gate decomposition, this ancillary `execute' qubit (restricted to $\ket{0}$ or $\ket{1}$, i.e effectively a classical bit), acts as a toggle between implementing an identity or SWAP operation between the first two qubits.
+
+This final implementation with the `execute' signal is particularly useful in an environment involving \textit{smart contracts}\index{Smart contracts} -- self-executing generalisations of conditional contracts, such as credit default swaps (CDSs) -- where the execution of an exchange depends upon an algorithmically-determined outcome. In this instance, the `execute' qubit will be held and controlled by the smart contract algorithm. This paves the way towards more general \textit{quantum smart contracts}\index{Quantum smart contracts}, the direct quantum extension of existing classical smart contract techniques.
