@@ -1,0 +1,77 @@
+%
+% Quantum Crypto-Assets
+%
+
+\section{Quantum crypto-assets}\label{sec:quantum_crypto_assets}\index{Quantum crypto-assets}\index{Blockchains}
+
+\dropcap{A}{side} from the value of outsourcing actual computations is the value of users' data itself. In the classical world we can generically refer to high-value data (especially in the context of digital tokens representing units of crypto-currencies\index{Crypto-currencies}) as \textit{crypto-assets}. Similarly, and especially given the nature of data likely to be subject to quantum treatment, we anticipate future \textit{quantum crypto-assets} -- high-value quantum states. Although the ways in which such assets are handled will be highly application-dependent, we comment on several specific use-cases that will foreseeably arise from observing recent developments in classical crypto-assets.
+
+% Secure Quantum Data
+
+\subsection{Secure quantum data}\label{sec:secure_quantum_date}\index{Secure quantum data}
+
+Suppose Alice wishes to store quantum data offsite, for example in a repository for safekeeping, or within remote or decentralised data structures (such as a blockchain\index{Blockchain}). Since her data is not held locally, there is the concern that an unauthorised third party might simply steal it. How can she ensure its integrity, without maintaining any quantum data (assuming she can locally maintain classical data)?
+
+This is a trivial problem to solve. Essentially we can think of this as a trivialised special case of blind quantum computing (Sec.~\ref{sec:blind_qc}), where the outsourced computation is just the identity operation. Employing the same ideas as the blind cluster state quantum computing protocol (Sec.~\ref{sec:blind_cs}), Alice simply takes each qubit in her quantum data structure, and with equal probability (\mbox{$p=1/4$}) applies one of the four Pauli operators to it ($\hat\openone$, $\hat{X}$, $\hat{Y}$ or $\hat{Z}$). She of course keeps track of which ones were applied, which requires 2 classical bits per qubit.
+
+From her perspective (or anyone she chooses to share the 2 classical bits with), she is always able to perfectly recover the hidden qubit, simply by applying the same Pauli operators a second time to invert them. However, from the perspective of a third party without access to the 2 classical bits, they observe a perfect depolarising channel\index{Depolarising channel},
+\begin{align}
+	\mathcal{E}^\text{depolarising}_{0}(\hat\rho) = \frac{\hat\openone}{4},
+\end{align}
+yielding the completely mixed state, independent of the input state, from which no state information can be inferred. Thus, this approach confers \textit{perfect} information-theoretic security\index{Information-theoretic security}.
+
+% Quantum Atomic Swaps
+
+\subsection{Quantum atomic swaps}\label{sec:quantum_atomic_swaps}\index{Quantum atomic swaps}\index{Atomic swaps}
+
+In a crypto-market we inherently wish to engage in the free exchange of different types of crypto-assets. In the context of blockchain-based asset ledgers, we may wish to directly exchange tokens residing on entirely distinct blockchains. For example, we may wish to trade a Bitcoin\index{Bitcoin} for an Ether\index{Ethereum} (Ethereum coin). Enabling this kind of exchange is vital for creating a fully functional crypto-market\index{Crypto-market} of arbitrarily interconvertible assets.
+
+It's essential that such exchanges be performed with integrity, such that in a potentially anonymous transaction one party cannot run off with everything. The obvious solution here is to employ a trusted third party to mediate the transaction, as is done in many real-world high-value exchanges. But this in undesirable for several reasons:
+\begin{itemize}
+\item Trust\index{Trust}: Both parties must have complete confidence in the integrity of the mediating third party. This necessarily introduces risk, which manifests itself as an indirect transaction cost.
+\item Monetary cost: A third party is most likely to charge for the service they provide. Even if this margin is slim, in high-volume markets this becomes a consideration.
+\item Latency\index{Latency}: Mediation introduces an additional layer of communication, with associated latency. Even in today's high-frequency markets, minute latency improvements yield major competitive advantage.
+\item Resource overheads: Mediation imposes greater resource requirements, most notably communication or computational ones.
+\item Regulatory\index{Regulations}: `Credible' mediators typically comply with regulatory and taxation agencies. Traders of an anarcho-capitalistic\index{Anarcho-capitalism} mindset would rather avoid such nonsense altogether, and establish a truly globalised free-market.
+\end{itemize}
+This motivates the question, can we securely implement \textit{direct} exchanges, in the absence of any trusted mediating authority or regulatory oversight?
+
+In classical blockchain technology, \textit{atomic swaps} can be employed for this purpose. Such algorithms allow the direct exchange of crypto-assets, cryptographically enforced to guarantee one of two outcomes: a successful mutual exchange, or no exchange at all. There is cryptographically no possibility for a partial exchange to occur, in which one party ends up with both assets.
+
+With quantum crypto-assets we can easily construct such \textit{quantum atomic swaps} by exploiting some well-known identities relating CNOT and SWAP gates. The first identity is that two consecutive CNOT gates cancel one another to yield an identity operation,
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {
+    \lstick{\ket\psi} & \ctrl{1} & \ctrl{1} & \qw & \ket\psi \\
+    \lstick{\ket\phi} & \targ & \targ & \qw & \ket\phi
+}\nonumber
+\end{align}
+Second, a sequence of three alternating CNOT gates in series yields a SWAP\index{SWAP gate} operation,
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {
+    \lstick{\ket\psi} & \ctrl{1} & \targ & \ctrl{1} & \qw & \ket\phi \\
+    \lstick{\ket\phi} & \targ & \ctrl{-1} & \targ & \qw & \ket\psi
+}\nonumber
+\end{align}
+
+Important is that in neither of the above two identities does partial implementation (i.e not executing one of the CNOTs) manifest itself as a one-way transaction, the key security consideration in the construction of a cryptographic atomic swap.
+
+Note that these two decompositions for the identity and SWAP gates differ only via the presence of the central CNOT gate within the latter decomposition. By replacing it with a doubly-controlled CNOT gate, the additional control qubit effectively specifies whether or not a regular CNOT gate is applied between the first two qubits,
+\begin{align}
+\Qcircuit @C=1em @R=1.6em {
+    \lstick{\ket\psi} & \ctrl{1} & \targ & \ctrl{1} & \qw \\
+    \lstick{\ket\phi} & \targ & \ctrl{-1} & \targ & \qw \\
+    \lstick{\ket{\text{execute}}} & \qw & \ctrl{-2} & \qw & \qw
+}\nonumber
+\end{align}
+
+This ancillary `execute' qubit (restricted to $\ket{0}$ or $\ket{1}$, i.e effectively a classical bit), acts as a toggle between the two modes of operation, without changing the underlying physical circuit implementation -- it's now software-controlled, rather than hardware-controlled.
+
+% Quantum Smart Contracts
+
+\subsection{Quantum smart contracts}\index{Quantum smart contracts}
+
+An atomic swap implementation with an `execute' control signal is particularly useful in an environment involving \textit{smart contracts}\index{Smart contracts} -- self-executing generalisations of conditional contracts, such as credit default swaps (CDSs) -- where the execution of an exchange depends upon an algorithmically-determined outcome. In this instance, the `execute' qubit will be held and controlled by the smart contract algorithm. The algorithm making this choice can essentially be arbitrary, enabling extremely sophisticated contractual arrangements and exotic derivative instruments to be implemented in a self-enforced manner, without reliance upon third parties.
+
+In the most general case in the quantum era, not only will the crypto-assets under exchange be quantum in nature, but the smart contract algorithms controlling their execution could be too (in principle any \textbf{BQP}\index{\textbf{BQP}} algorithm). This paves the way towards generic \textit{quantum smart contracts}\index{Quantum smart contracts}, the direct quantum extension of existing classical smart contract techniques.
+
+The implications of complimenting smart contracts with quantum algorithms (even if only trading classical crypto-assets) are potentially immense. Should quantum-enhanced algorithms facilitate improved pricing models for example, crypto-markets could benefit from improved market efficiency\index{Market efficiency}, more accurate price signals\index{Price signals} from futures markets\index{Futures markets} (i.e reduced risk spreads), enhanced allocation of capital, and greater investor confidence, with higher market volume and liquidity\index{Market volume}\index{Market liquidity}.

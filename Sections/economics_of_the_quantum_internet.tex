@@ -689,51 +689,42 @@ In Alg.~\ref{alg:quant_coin} we provide a very rough sketch for how a protocol b
 \begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
 \texttt{
-function QuantCoin($\hat{U}_\mathrm{comp}$, blockchain, data, reward):
+function QuantCoin($\hat{U}_\mathrm{comp}$, blockchain, data):
 \begin{enumerate}
 	\item Alice homomorphically/blindly encrypts $data$,
-		\begin{align}
-			encryptedInput = homoEncrypt(data)
-		\end{align}
+	\begin{align}
+		encryptedInput = homoEncrypt(data)
+	\end{align}
 	\item Alice commits the $encryptedInput$ to the public $blockchain$,
 	\begin{align}
-	blockchain.commit(encryptedInput)	
+		Alice.blockchain.commit(encryptedInput)	
 	\end{align}
-	\item Alice places into escrow Bob's $reward$,
+	\item Bob processes the $encryptedInput$,
 	\begin{align}
-		escrow.hold(reward)
-	\end{align}
-	\item Bob processes the $encryptedInput$,	\begin{align}
 		encryptedOutput = \hat{U}_\mathrm{comp}(encryptedInput)
 	\end{align}
 	\item Bob commits encrypted output to the $blockchain$,
 	\begin{align}
-	blockchain.commit(encryptedOutput)	
+		Bob.blockchain.commit(encryptedOutput)	
+	\end{align}
+	\item Alice decrypts the output.
+	\begin{align}
+		output = homoDecrypt(encryptedOutput)
 	\end{align}
 	\item Alice and Bob execute a verification protocol,
 	\begin{align}
-	proof = verify(encryptedOutput)	
+		proof = verify(encryptedOutput)	
 	\end{align}
-	\item The $proof$ is committed to the $blockchain$ (as is every step of the proof if it is an interactive one),
+	\item If successful, alice commits a zero-knowledge proof of the result to the $blockchain$,
 	\begin{align}
-		blockchain.commit(proof)
+		Alice.blockchain.commit(ZKP(input, output))
 	\end{align}
-	\item The $blockchain$ network inspects that the verification is valid.
-	\item If valid, the $blockchain$ hashes and signs the data and proof, encapsulating it into a QuantCoin\texttrademark\,token, which is given to Bob,
-	\begin{align}
-		&token = \mathrm{SHA256}(encryptedInput\nonumber\\
-		&+ encryptedOutput + proof)\nonumber\\
-		&token.sign(blockchain)\nonumber\\
-		&Bob.receive(token)
-	\end{align}
-	\item The $reward$ held in escrow is released to Bob,
-	\begin{align}
-		escrow.release(Bob)
-	\end{align}
+	This signs off on the legitimacy of the mining entry previously committed by Bob.
+	\item All users on the network can inspect the ZKP to validate the legitimacy of the execution, maintaining ignorance of the computational outcome.
 	\item $\Box$
 \end{enumerate}}
 \end{mdframed}
-\captionspacealg \caption{Sketch for how a quantum computation-backed cryptocurrency might be implemented. We have abstracted away the underlying Blockchain protocol, interfacing with it using a high-level API, since Blockchain technology is highly liable to evolve. We similarly call upon verification subroutines using a high-level implementation-independent API.} \label{alg:quant_coin}
+\captionspacealg \caption{Sketch for how a quantum computation-backed cryptocurrency might be implemented. We have abstracted away the underlying Blockchain protocol, interfacing with it using a high-level API, since Blockchain technology is highly liable to evolve. We similarly call upon verification subroutines using a high-level implementation-independent API. The key technique to signing off on the legitimacy of a newly mined QuantCoin is for Alice to provide a zero-knowledge proof of the decrypted result (Sec.~\ref{sec:ZKP}), which maintains the secrecy of her data.} \label{alg:quant_coin}
 \end{table}
 
 \begin{figure}[!htbp]
@@ -772,7 +763,7 @@ However, if the upfront payment were being made in pre-existing QuantCoins\textt
 
 \subsection{Futures market model}\index{Futures market}
 
-As described above, the cryptocurrency is effectively backed by the spot market in computation -- we exchange currency for the execution of computations \textit{immediately}. However, one might also envisage more complex cryptocurrencies being backed by the futures market in the licensing of quantum compute-time.
+As described above, the cryptocurrency is effectively backed by the spot market in computation -- we exchange currency for the execution of computations \textit{immediately}. However, one might also envisage more complex cryptocurrencies being backed by the futures market in the licensing of quantum compute-time down the line.
 
 Intuitively, one would expect such a form of cryptocurrency to be sounder than the one backed by the spot market. This is because our spot market-derived coins, once mined are not guaranteed to be convertible to anything of value, including computations. Recall that the execution of the computation takes place immediately when the coin is created.
 
