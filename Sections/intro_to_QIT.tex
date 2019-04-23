@@ -9,37 +9,50 @@
 
 \subsection{Probability, information and classical correlation measures}
 
-``Information theory begins with the observation that there is a fundamental link between probabilities and information." With any given event (we call this a random variable), associated with such an event is
-a set of outcomes, each with a certain probability of occuring. 
+% The fundamental unit in Shannon information is the \textit{bit}. 
+
+``Information theory begins with the observation that there is a fundamental link between probabilities and information." 
 
 
+With a given event (whose value is a random variable $X$), suppose that it has a set of outcomes $\{x\}$, each occuring with probability 
+$\{p_x \}$. Then the \textit{Shannon entropy} associated with the random variable is defined as
 
-Suppose we have a random variable $X$, and a particular measurement outcome $x$ occurs with probability $p(x)$, the Shannon entropy of $X$ is given by,
+
 \begin{align}\index{Shannon entropy}
 H(X) = -\sum_x p_x\log_2(p_x).
 \end{align}
 
-The information, or entropy, plays a central role in information theory. The intuitive interpretation is that it quantifies an experimenter's uncertainty about $X$ before measuring it, and his expected information gain is $H(X)$ bits upon learning the outcome. The information $H(X)$ is zero if and only if one of the probabilities $p(x)$ is unity, with the others being zero. In this case the value of $X$ is already known and so there is no information to be gained from observing it.  
+Entropy plays a central role in information theory. The intuitive interpretation is that it quantifies an experimenter's uncertainty about $X$ before measuring it, and his expected information gain is $H(X)$ bits upon learning the outcome. The information $H(X)$ is zero if and only if one of the probabilities $p(x)$ is unity, with the others being zero. In this case the value of $X$ is already known and so there is no information to be gained from observing it.  
 
- For a joint distribution over $X$ and $Y$ this generalises to,
+ If there are two random variables $X$ and $Y$, the joint entropy of the two is simply given by,
 \begin{align}\index{Joint Shannon entropy}
 H(X,Y) =  -\sum_{x,y} p_{x,y}\log_2(p_{x,y}).
 \end{align}
 
+Note that the joint entropy $H(X,Y)= H(X)+H(Y)$ if and only if $X$ and $Y$ are independent,i.e. the occurence of one does not change the probability of the other.  
 
 \begin{figure}[hbt]
-\includegraphics[clip=true, width=0.45\textwidth]{classical_mutual_info.pdf}
+\includegraphics[clip=true, width=0.4\textwidth]{classical_mutual_info.pdf}
 \captionspacefig \caption{\label{fig:mutual_info}}	
 \end{figure}
 
-We now introduce an entropic measure of common or mutual information shared by two parties. Suppose Alice possesses the random variable $A$ and Bob has the random variable $B$, the \textit{mutual information} specifies the number of bits in common between the two distributions. Equivalently, this represents the maximum number of bits that one party can learn about the other just by inspecting their own information.
+If the two distributions are not independent, i.e. knowing something about $X$ reveals information on $U$, the two variables are said to be \textit{correlated}. Suppose Alice possesses the random variable $X$ and Bob has the random variable $Y$, the \textit{mutual information} specifies the number of bits in common between the two distributions. Equivalently, this represents the maximum number of bits that one party can learn about the other just by inspecting their own information.
 
 For two classical distributions, the classical mutual information is given by,
 \begin{align}\index{Mutual information}
-I(A;B) = H(A) + H(B) - H(A,B).
+I(X;Y) = H(X) + H(Y) - H(X,Y).
+\label{classical_mutual_info}
 \end{align}
 
-It is a measure of the correlation between the events A and B. If these correspond, respectively, to the selection and receipts of a signal then H(A : B) is the information transferred by the communication. 
+It is a measure of the correlation between the events $X$ and $Y$. The quantity in Eq.~\eqref{classical_mutual_info} is important because it upper bounds the amount of information Alice and Bob can
+reliably communicate. For a discrete random variable with $d$ possible outcomes, the maximum mutual information between $X$ and $Y$ is $I(X,Y)=\log_2 d$ bits.
+
+
+Another quantity of interest is the \textit{conditional entropy}, which describes the entropy of $y$ should $X$ is known. The entropy of $Y$ conditioned on $X$ is given by
+\begin{align}
+H(X|Y) = - \sum_{x,y} p(x,y) \log_2 \frac{p(x,y)}{p(x)}.
+\end{align}
+\noindent Classically the conditional entropy is always positive, but as we will see later, this is not the case if quantum states are involved.
 
 The relationship between the quantities mentioned above is graphically summarised in Figure~\ref{fig:mutual_info}.
 
