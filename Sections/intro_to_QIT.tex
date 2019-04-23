@@ -1,6 +1,7 @@
 %
 % Introduction to quantum information theory
 %
+\clearpage
 
 \section{Introduction to quantum information theory}\index{Quantum information theory}
 
@@ -50,11 +51,20 @@ reliably communicate. For a discrete random variable with $d$ possible outcomes,
 
 Another quantity of interest is the \textit{conditional entropy}, which describes the entropy of $y$ should $X$ is known. The entropy of $Y$ conditioned on $X$ is given by
 \begin{align}
-H(X|Y) = - \sum_{x,y} p(x,y) \log_2 \frac{p(x,y)}{p(x)}.
+H(X|Y) &= H(X,Y)- H(Y) \\
+       &=- \sum_{x,y} p(x,y) \log_2 \frac{p(x,y)}{p(x)}.
 \end{align}
 \noindent Classically the conditional entropy is always positive, but as we will see later, this is not the case if quantum states are involved.
 
 The relationship between the quantities mentioned above is graphically summarised in Figure~\ref{fig:mutual_info}.
+
+
+
+% 
+% 
+% 
+% 
+% 
 
 \subsection{Quantum correlation measures}
 
@@ -64,6 +74,21 @@ S(\hat\rho) &= - \sum_x \lambda_x \log_2 (\lambda_x) \nonumber \\
 &= -\mathrm{tr}(\hat\rho\,\log \,\hat\rho),
 \end{align}
 where $\{\lambda\}$ is the eigenvalue spectrum of $\hat\rho$. This modification is logically justified, as the eigenvalues can be interpreted directly as a purely classical probability distribution of orthogonal states when the density operator is transformed into a basis with no coherences between basis states (i.e a diagonal basis or spectral decomposition\index{Spectral decomposition}). In that case, the Shannon and von Neuman entropies essentially have identical physical interpretations.
+
+There are a few properties of the Von Neumann entropy which are often useful \cite{}:
+\begin{enumerate}
+	\item For pure states $\hat \rho = \ket{\psi}\bra{\psi}, S(\hat\rho) =0$.
+	\item The Von Neumann entropy is unchanged by a unitary change of basis, 
+			\begin{align}
+			S(U\hat \rho U^\dagger) = S(\hat \rho)
+			\end{align}
+	\item For a state living on a Hilbert space of dimension $d$, $S(\hat\rho) \leq \log_2 d$, the equality is achieved when the quantum state is maximally mixed.
+	\item For a given bipartite system $AB$
+			\begin{align}
+			S(\hat \rho_{AB}) \leq S(\hat \rho_A) + S(\hat \rho_B).
+			\end{align}
+			Equality holds if $\rho_{AB}= \rho_A \otimes \rho_B$.
+\end{enumerate}
 
 
 
@@ -78,6 +103,20 @@ The mutual information between two quantum states is invariant under local unita
 I(A;B)_{\hat\rho} = I(\hat{U}_A\hat\rho_A \hat{U}_A^\dag; \hat{U}_B\hat\rho_B \hat{U}_B^\dag),
 \end{align}
 since the eigenvalue spectrum of a density operator is invariant under unitary transformations. Therefore, the mutual information represents the maximum amount of information Bob can learn about Alice's state under \textit{any} local operations.
+
+Now, in sharp contrast with the classical case, the conditional entropy for quantum states
+\begin{align}
+H(A| B) = S(\hat \rho_{AB}) - S(\hat \rho_B)
+\label{cond_quant_ent}
+\end{align}
+\noindent can be negative! If $\rho_{AB}$ is a maximally entangled state, then 
+$S(\hat \rho_{AB}) =0$, and $H(A|B) =- S(\hat \rho_{AB}) <0$.
+Intuitively, this can be interpreted as the fact that bipartite maximally entangled states can be more strongly correlated than classically possible, and that knowing the state of $A$ reveals an ``unnatural" amount of information about the state of $B$.
+
+
+
+
+
 
 A quantum process cannot increase the mutual information between two parties. This yields the \textit{data processing inequality}\index{Data processing inequality} that, for a sequence of channels \mbox{$X\to Y\to Z$},
 \begin{align}\index{Data processing inequality}\label{eq:data_proc_ineq}
@@ -106,21 +145,14 @@ We now move on to discuss quantum correlations. Whilst classical correlation mea
 
 Analogous to the mutual information for classical systems is the \textit{coherent information} for quantum systems \cite{bib:PhysRevA.54.2629}, defined as,
 \begin{align}\index{Coherent information}
-I(\hat\rho,\mathcal{E}) = S(\mathcal{E}(\hat\rho)) - S_e(\hat\rho,\mathcal{E}).
+I_\text{coh}(\hat\rho,\mathcal{E}) = S(\mathcal{E}(\hat\rho)) - S_e(\hat\rho,\mathcal{E}).
 \label{eq:mutual_info_classical_single}
 \end{align}
 Here $S_e$ is the \textit{exchange entropy}, a measure of how much information is exchanged between the state $\hat\rho$ and the environment under the action of the process. Specifically, it is given by the entropy of the environment subsystem in Eq.~(\ref{eq:proc_environment}), after application of the channel. This yields the intuitive interpretation that the coherent information is the information contained in the evolved state, discounted by the amount lost to the environment. It can be alternatively written as,
 \begin{align}
 I(A\rangle B) = H(B)_{\hat\rho} - H(A,B)_{\hat\rho},
 \end{align}
-which we recognise as the negative of the \textit{conditional quantum entropy}\index{Conditional quantum entropy},
-\begin{align}
-H(A|B) = H(A,B)_{\hat\rho} - H(B).
-\end{align}
+which we recognise as the negative of the conditional quantum entropy in Eq~\eqref{cond_quant_ent}.
+
 The fact that the information quantity $H(A|B)$ can be negative is a signature of the fundamental difference between the laws of classical and quantum information.
 
-The quantum coherent information exhibits much of the same mathematical structure as the classical mutual information. And analogously,
-\begin{align}\index{Quantum channels!Capacity}
-\mathcal{I}_Q(\mathcal{E}) = \max_{\hat\rho} I(\hat\rho,\mathcal{E}).
-\label{eq:mutual_info_quantum_single}
-\end{align}
