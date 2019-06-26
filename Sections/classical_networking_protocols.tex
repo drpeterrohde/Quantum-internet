@@ -2,6 +2,11 @@
 % Classical Networking Protocols
 %
 
+%\sectionby{Darryl Veitch \& Peter Rohde}
+
+\famousquote{Mobile phones should be left to the kids. They're the only ones who can operate them.}{Anthony Hincks}
+\newline
+
 \dropcap{T}{o} set the context for our upcoming treatment of quantum networks, we begin by discussing \textit{classical} networks, and some of the key protocols behind their operation.
 
 \section{Classical networking protocols} \label{sec:classical_nets} \index{Classical networking protocols}
@@ -9,10 +14,10 @@
 \dropcap{T}{here} have been numerous approaches employed in the past for sharing communications links between multiple users\index{Shared communication channels}. This includes:
 \begin{itemize}
 	\item Channel-switching: an entire communications channel is designated for exclusive use by a given user. \index{Channel-switched networks}
-	\item Packet-switching: data is divided into packets, which are routed independently by the network, being reconstructed by the recipient once all packets have been received.\index{Packet-switching}
-	\item Time- or frequency-multiplexing: each user is designated a particular frequency spectrum or series of time-slots exclusively for their use. \index{Time-multiplexing}\index{Frequency-multiplexing}
+	\item Packet-switching: data is divided into packets, which are routed independently by the network, being reconstructed by the recipient once all packets have been received.\index{Packet!Switching}
+	\item Time- or frequency-multiplexing: each user is designated a particular frequency spectrum or series of time-slots exclusively for their use. \index{Time-multiplexing}\index{Frequency!Multiplexing}
 	\item Code Division Multiple Access (CDMA): all users can broadcast over a channel simultaneously, and the construction of the coding technique enables demultiplexing of the distinct signals, despite their interference with one another.\index{Code Division Multiple Access (CDMA)}
-	\item Ethernet: all users are free to broadcast\index{Broadcast networks} over a shared channel at will, and \textit{collision detection}\index{Collision detection} identifies when packets interfere, after which they are discarded and rebroadcast following a random waiting period, repeating until success.\index{Ethernet}
+	\item Ethernet: all users are free to broadcast\index{Broadcast networks} over a shared channel at will, and \textit{collision detection}\index{Collisions!Detection} identifies when packets interfere, after which they are discarded and rebroadcast following a random waiting period, repeating until success.\index{Ethernet}
 \end{itemize}
 
 Nowadays packet-switched networks have become the norm in most digital networks, as they facilitate far greater efficiency in the use of network bandwidth, and are more easily scaled to greater numbers of users in a dynamic and ad hoc manner. It is foreseeable the same trend will continue with quantum technologies, especially given their initial high cost, where maximising network utility is paramount.
@@ -78,7 +83,7 @@ Ethernet is a networking protocol based on `broadcasting' on a shared network. T
 	\captionspacefig \caption{The topology of an Ethernet network, whereby all users share a common channel, which they can broadcast to at their leisure. If data packets collide, it is detected via the packets' checksums, and the corrupted packets may be re-broadcast after a random `backoff' waiting period, repeating this process until packet delivery is successful. Obviously the chance of collisions occurring increases with the number of connected users, thus network performance is inversely related to the number of nodes.} \label{fig:ethernet}
 \end{figure}
 
-In the Ethernet protocol, every user is free to broadcast data onto the shared channel as they please -- all users transmit to, and receive from a single shared channel. However, clearly sometimes packet `collisions' will occur\index{Collision handling}, resulting in packet corruption. To overcome this, Ethernet packets contain a checksum that can be used to verify upon arrival whether a packet has been corrupted by a collision. If a collision is detected, the respective users are able to re-broadcast, following a randomly chosen waiting period (known as `backoff')\index{Backoff}. Collisions therefore reduce network performance, and it follows that network bandwidth decreases with the number of users competing for bandwidth\footnote{Think of that awkward dinner table conversation, where two people start talking simultaneously (Peter \& Jon). It's immediately obvious to them both that they are interfering with one another, and if they were to just talk over one another (packet collision), no one would understand either of them. So, they both awkwardly pause, before starting to speak again. In a \textit{really} awkward conversation, they will both start again simultaneously, after which there will be an even longer awkward pause before recommencing. Eventually, this self-regulating system will resolve itself probabilistically, with a sole victor controlling the airwaves, commanding the attention of the listeners. Provided that all dinner guests adhere to social etiquette and backoff appropriately, with repeated conversations, all guests will statistically receive an equitable share of attention, albeit with some wastage of conversation time owing to the periods of silence. Clearly, the proportion of the time wasted due to collisions will scale up with the number of guests, limiting the protocol to not-too-large tables (or very quiet guests).}.
+In the Ethernet protocol, every user is free to broadcast data onto the shared channel as they please -- all users transmit to, and receive from a single shared channel. However, clearly sometimes packet `collisions' will occur\index{Collisions!Handling}, resulting in packet corruption. To overcome this, Ethernet packets contain a checksum that can be used to verify upon arrival whether a packet has been corrupted by a collision. If a collision is detected, the respective users are able to re-broadcast, following a randomly chosen waiting period (known as `backoff')\index{Backoff}. Collisions therefore reduce network performance, and it follows that network bandwidth decreases with the number of users competing for bandwidth\footnote{Think of that awkward dinner table conversation, where two people start talking simultaneously (Peter \& Jon). It's immediately obvious to them both that they are interfering with one another, and if they were to just talk over one another (packet collision), no one would understand either of them. So, they both awkwardly pause, before starting to speak again. In a \textit{really} awkward conversation, they will both start again simultaneously, after which there will be an even longer awkward pause before recommencing. Eventually, this self-regulating system will resolve itself probabilistically, with a sole victor controlling the airwaves, commanding the attention of the listeners. Provided that all dinner guests adhere to social etiquette and backoff appropriately, with repeated conversations, all guests will statistically receive an equitable share of attention, albeit with some wastage of conversation time owing to the periods of silence. Clearly, the proportion of the time wasted due to collisions will scale up with the number of guests, limiting the protocol to not-too-large tables (or very quiet guests).}.
 
 From this protocol, any given packet will eventually be successfully transmitted uncorrupted, collision-free, albeit with uncertain timing that grows with the number of competing users. For this reason, the Ethernet protocol is not ideal for time-critical applications requiring hard guarantees on network latency.
 
@@ -90,7 +95,7 @@ Another elegant feature of the Ethernet protocol is that bandwidth allocation is
 % Gateway Protocols & Routing Tables
 %
 
-\subsection{Gateway protocols \& routing tables} \label{sec:gateway} \index{Gateway protocols} \index{Routing tables}
+\subsection{Gateway protocols \& routing tables} \label{sec:gateway} \index{Gateway protocols} \index{Routing!Tables}
 
 In the absence of a central mediating authority, routing decisions must be made by individual nodes in the network, upon receipt of packets. For routers to make sensible routing decisions, they must have some idea of the overall structure and state of the network. This is achieved using gateway protocols, which communicate information about the state of the network on a nearest-neighbour basis. There are various gateway protocols in use, with the Exterior Gateway Protocol (EGP)\index{Exterior Gateway Protocol (EGP)} and Border Gateway Protocol (BGP)\index{Border Gateway Protocol (BGP)} being very common.
 
@@ -102,7 +107,7 @@ To mitigate the need for a central authority, nodes engage in only nearest neigh
 % Network Hierarchies
 %
 
-\subsection{Network hierarchies} \index{Network hierarchies}
+\subsection{Network hierarchies} \index{Network!Hierarchies}
 
 The disadvantage of Ethernet's \textsc{Broadcast and Backoff} principle is that packets are often wasted -- whenever a collision occurs. Because there is no mediating central authority, packet collisions are a certainty in a heavily-utilised shared network, each time resulting in packet loss, and an associated reduction in usable network bandwidth.
 
@@ -113,7 +118,11 @@ To address this dilemma, the topology and subdivision of networks need to be car
 Suppose our hypothetical organisation had several different departments, and users had a tendency to communicate primarily with other users in the same department. By defining distinct departmental subnets, which individually implement Ethernet, but interconnect with one another using an alternate routing framework, we can easily see that many unnecessary packet collisions may be entirely avoided. That is, why broadcast data to users who we know don't want it? A simple example of this is shown in Fig.~\ref{fig:net_hierarchy}.
 
 \begin{figure}[!htbp]
+\if 1\doublecol
 	\includegraphics[clip=true, width=0.475\textwidth]{network_hierarchy}
+\else
+	\includegraphics[clip=true, width=0.6\textwidth]{network_hierarchy}
+\fi
 	\captionspacefig \caption{Simple example of a network with two levels in its hierarchy. At the lowest level are 4 different subnets belonging to different departments within an organisation, each of which implements Ethernet networking. Above this, the subnets connect together in a star network via a central router. By subdividing the network hierarchy as such, if most traffic emanating within a subnet stays within that same subnet, collisions between packets on different subnets are avoided, thereby improving the efficiency of the subnets' Ethernet implementations.} \label{fig:net_hierarchy}
 \end{figure}
 

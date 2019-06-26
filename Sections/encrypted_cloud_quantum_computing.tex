@@ -3,16 +3,21 @@
 %
 
 \section{Encrypted cloud quantum computation} \label{sec:homo_blind} \index{Encrypted quantum computation}
-trial line..
-\dropcap{E}{xtremely} important to many high-performance data-processing applications is security, as proprietary or sensitive data may be being dealt with. To address this, there are two models for encrypted, outsourced quantum computation -- \textit{homomorphic encryption} \cite{???, gentry2009fully, van2010fully}\index{Homomorphic encryption} and \textit{blind quantum computation}\index{Blind quantum computation} \cite{???, bib:blind2, bib:blind3, bib:blind1, PhysRevLett.108.200502, bib:Morimae3486, bib:Morimae5460, bib:Morimae3966}.
+
+\sectionby{Atul Mantri, Si-Hui Tan \& Peter Rohde}\index{Atul Mantri}
+
+\dropcap{E}{xtremely} important to many high-performance data-processing applications is security, as proprietary or sensitive data may be being dealt with. To address this, there are two models for encrypted, outsourced quantum computation -- \textit{homomorphic encryption} \cite{bib:gentry2009fully, bib:van2010fully}\index{Homomorphic encryption} and \textit{blind quantum computation}\index{Blind quantum computation} \cite{bib:blind2, bib:broadbent2009universal, bib:barz2012demonstration, bib:PhysRevLett.108.200502, bib:Morimae3486, bib:Morimae5460, bib:Morimae5460}.
 
 In both cases, Alice has secret data$^\copyright$, and wishes to not only ensure that an interceptor is unable to read it, but that even the server performing the computation isn't able to either -- she trusts no one. That is, she wishes the data to be processed in encrypted form, without first requiring decryption.
 
-The difference between the two protocols lies in the treatment of algorithms. In homomorphic encryption, Alice provides only the data, whereas Bob provides the processing and the algorithm it implements (which \sihui{in some cases} he would also like to keep to himself). \sihui{When any circuit is allowed, the protocol is said to be a {\it fully} homomorphic encryption protocol (FHE). Otherwise, it is a somewhat-homomorphic encryption protocol. \sihui{Although homomorphic encryption protocols have been around for a few decades in the form of privacy homomorphisms \cite{Rivest1978}, classical FHE} has only been described very recently \cite{bib:gentry2009fully, bib:van2010fully}.} In blind computing, Alice provides both the algorithm \textit{and} the data, and wishes \textit{both} to remain secret. Both of these protocols seem like very challenging goals, yet significant developments have been made on both fronts \sihui{in the quantum world. Interestingly, there are no classical analogue for universal blind computation. Classical FHE will be discussed in the next subsection.}
+The difference between the two protocols lies in the treatment of algorithms:
+\begin{itemize}
+	\item Homomorphic encryption: Alice provides only the data, whereas Bob provides the processing and the algorithm it implements (which he would also like to keep to himself in general). When \textit{any} circuit is allowed, the protocol is said to be a \textit{fully homomorphic} encryption protocol (FHE). Otherwise, it is a \textit{somewhat-homomorphic} encryption protocol. Although homomorphic encryption protocols have been around for a few decades in the form of privacy homomorphisms \cite{bib:Rivest1978}, classical FHE has only been described very recently \cite{bib:gentry2009fully, bib:van2010fully}.
+	\item Blind quantum computing: Alice provides both the algorithm \textit{and} the data, and wishes \textit{both} to remain secret to her. It is known that universal blind \textit{classical} computation is not possible, universal blind \textit{quantum} computation is.
+\end{itemize}
+Both of these seem like very challenging goals, yet significant developments have been made on both fronts in the quantum world, with efficient resource overheads associated with the encryption.
 
-
-
-In the usual circuit model, blind quantum computation has been shown to be viable, and optimal bounds derived. Equivalently, such protocols have been described in the cluster state model (Sec.~\ref{sec:CSQC}). For universal computation, such protocols necessarily require classical interaction between the client and host. However, it was shown that in some restricted (i.e non-universal) models for optical quantum computation, specifically \textsc{BosonSampling}, quantum walks and coherent state passive linear optics, non-interactive \sihui{(somewhat-)}homomorphic encryption may be implemented.
+In the usual circuit model, blind quantum computation has been shown to be viable, and optimal bounds derived. Equivalently, such protocols have been described in the cluster state model (Sec.~\ref{sec:CSQC}). For universal computation, such protocols necessarily require classical interaction between the client and host. However, it was shown that in some restricted (i.e non-universal) models for optical quantum computation, specifically \textsc{BosonSampling}, quantum walks and coherent state passive linear optics, non-interactive, somewhat-homomorphic encryption may be implemented.
 
 These encryption protocols induce a resource overhead in circuit size and number of qubits involved in the computation, with efficient scaling. They deliver (at least partially) information-theoretically secure (Sec.~\ref{sec:comp_vs_inf_th_sec}) data-hiding, enabling trustworthy outsourced processing of encrypted data, independent of the attack.
 
@@ -22,23 +27,23 @@ These encryption protocols induce a resource overhead in circuit size and number
 
 \subsection{Classical computation} \index{Classical encrypted computation}
 \comment{A universal QC can implement any classical algorithm. So QCs with homo/BQC give us the means by which to perform encrypted classical computations, bypassing limitations imposed by purely classical protocols.}
-\sihui{[Comment: The polynomial hierarchy is not contained in BQP. In fact, NP-complete problems are not contained in BQP.]}
+\comment{[Comment: The polynomial hierarchy is not contained in BQP. In fact, NP-complete problems are not contained in BQP.]}
 
 
 To set the stage for our upcoming treatment of encrypted quantum computation protocols, we begin by reviewing recent developments in \textit{classical} homomorphic encryption, paying special interest to resource scaling and information-theoretic security.
 
-\sihui{The first FHE scheme was reported in Gentry's seminal paper \cite{bib:gentry2009fully}. He showed that if a homomorphic encryption scheme can evaluate its own decryption circuit, and also slightly augmented versions of it--a feature he calls {\it bootstrapping}, one can construct a FHE scheme from it. Then he constructed a somewhat homomorphic encryption protocol using ideal lattices, and via a clever transformation that decreases the complexity of its decryption circuit, showed that it is bootstrappable with respect to a universal set of gates. For a security parameter $\lambda$, Gentry's scheme has a $\widetilde{O}(\lambda^6)$ \footnote{The tilde in the big O notation means that we are ignoring logarithmic factors.} bit bound on complexity for refreshing a ciphertext corresponding to a 1-bit plaintext \cite{bib:Gentrythesis}. This was subsequently reduced to $\widetilde{O}(\lambda^{3.5})$ \cite{bib:Damien2010}, $\widetilde{O}(\lambda)$ \cite{bib:Brakerski2011}, and ${\rm polylog (\lambda)}$ for any width-$\Omega(\lambda)$ circuit with $t$ gates \cite{bib:Craig2012}. }
+\comment{The first FHE scheme was reported in Gentry's seminal paper \cite{bib:gentry2009fully}. He showed that if a homomorphic encryption scheme can evaluate its own decryption circuit, and also slightly augmented versions of it--a feature he calls {\it bootstrapping}, one can construct a FHE scheme from it. Then he constructed a somewhat homomorphic encryption protocol using ideal lattices, and via a clever transformation that decreases the complexity of its decryption circuit, showed that it is bootstrappable with respect to a universal set of gates. For a security parameter $\lambda$, Gentry's scheme has a $\widetilde{O}(\lambda^6)$ \footnote{The tilde in the big-O notation means that we are ignoring logarithmic factors.} bit bound on complexity for refreshing a ciphertext corresponding to a 1-bit plaintext \cite{bib:Gentrythesis}. This was subsequently reduced to $\widetilde{O}(\lambda^{3.5})$ \cite{bib:Damien2010}, $\widetilde{O}(\lambda)$ \cite{bib:Brakerski2011}, and ${\rm polylog (\lambda)}$ for any width-$\Omega(\lambda)$ circuit with $t$ gates \cite{bib:Craig2012}. }
 
-\sihui{A homomorphic encryption scheme is made up of four algorithms: a key generation algorithm, {\sc KeyGen}, an encryption algorithm, {\sc Encrypt}, an evaluation algorithm, {\sc Evaluate}, and a decryption algorithm, {\sc Decrypt}. The four algorithms have the following inputs and outputs:
+\comment{A homomorphic encryption scheme is made up of four algorithms: a key generation algorithm, \textsc{KeyGen}, an encryption algorithm, \textsc{Encrypt}, an evaluation algorithm, \textsc{Evaluate}, and a decryption algorithm, \textsc{Decrypt}. The four algorithms have the following inputs and outputs:
 \begin{itemize}
-\item 	 {\sc KeyGen}$(\lambda)$: Takes as input a security parameter $\lambda$, and outputs a public key $pk$, and a secret key $sk$.
-\item {\sc Encrypt}$(pk, \pi_i)$: Takes as input $pk$, and a plaintext $\pi_i$. It outputs a ciphertext $\psi_i$.
-\item {\sc Evaluate}$(pk, C, \Psi)$: Takes as input $pk$, a permitted circuit $C$, and $\Psi=(\psi_1,\ldots, \psi_t)$. It outputs a ciphertext $\psi$.
-\item {\sc Decrypt}$(sk,\psi)$: Takes as input $sk$, and $\psi$ and outputs $C(\pi_1,\ldots, \pi_t)$.
+\item \textsc{KeyGen}$(\lambda)$: Takes as input a security parameter $\lambda$, and outputs a public-key $pk$, and a secret-key $sk$.
+\item \textsc{Encrypt}$(pk, \pi_i)$: Takes as input $pk$, and a plaintext $\pi_i$. It outputs a ciphertext $\psi_i$.
+\item \textsc{Evaluate}$(pk, C, \Psi)$: Takes as input $pk$, a permitted circuit $C$, and $\Psi=(\psi_1,\ldots, \psi_t)$. It outputs a ciphertext $\psi$.
+\item \textsc{Decrypt}$(sk,\psi)$: Takes as input $sk$, and $\psi$ and outputs $C(\pi_1,\ldots, \pi_t)$.
 \end{itemize}
-The computational complexity of all these algorithms must be polynomial in $\lambda$, and in the case of the evaluation algorithm, polynomial in the size of the evaluation circuit $C$. The condition that {\sc Decrypt}$(sk,\psi)$ outputs $C(\pi_1,\ldots, \pi_t)$ is a condition known as correctness which we require of the homomorphic encryption scheme. Furthermore, we also require ciphertext size and decryption time to be upper bounded by a function of the security parameter $\lambda$, independently of $C$. This last condition is known as compactness, and is necessary to exclude trivial schemes such as that which decrypts the ciphertexts first, and then apply $C$.}
+The computational complexity of all these algorithms must be polynomial in $\lambda$, and in the case of the evaluation algorithm, polynomial in the size of the evaluation circuit $C$. The condition that \textsc{Decrypt}$(sk,\psi)$ outputs $C(\pi_1,\ldots, \pi_t)$ is a condition known as correctness which we require of the homomorphic encryption scheme. Furthermore, we also require ciphertext size and decryption time to be upper bounded by a function of the security parameter $\lambda$, independently of $C$. This last condition is known as compactness, and is necessary to exclude trivial schemes such as that which decrypts the ciphertexts first, and then apply $C$.}
 
-\sihui{The specifics of these algorithm vary from scheme to scheme, and as is in the case of FHE, usually contains sub-algorithms within them. Making FHE practical is an active area of research. Much of the problem lies in the bootstrapping required in Gentry's scheme, and some of these efforts lies in reducing the overhead required in bootstrapping or removing the need for bootstrapping entirely. Although there exists a plethora of FHE schemes, they are based mainly on two types of problems in lattice-based cryptography: the Shortest Vector Problem (SVP), and Learning with Errors (LWE) Problem. Gentry's original FHE was based on SVP, but over time, the schemes have moved towards a LWE approach because they offer lower overhead and are conceptually simpler . An overview of advances, and applications of homomorphic encryption can be found in a recent review \cite{bib:Halevi2017}.}
+\comment{The specifics of these algorithm vary from scheme to scheme, and as is in the case of FHE, usually contains sub-algorithms within them. Making FHE practical is an active area of research. Much of the problem lies in the bootstrapping required in Gentry's scheme, and some of these efforts lies in reducing the overhead required in bootstrapping or removing the need for bootstrapping entirely. Although there exists a plethora of FHE schemes, they are based mainly on two types of problems in lattice-based cryptography: the Shortest Vector Problem (SVP), and Learning with Errors (LWE) Problem. Gentry's original FHE was based on SVP, but over time, the schemes have moved towards a LWE approach because they offer lower overhead and are conceptually simpler . An overview of advances, and applications of homomorphic encryption can be found in a recent review \cite{bib:Halevi2017}.}
 
 %
 % Homomorphic Encryption
@@ -60,7 +65,7 @@ Yes
 % Cluster States
 %
 
-\subsection{Cluster states} \index{Encrypted cluster states}
+\subsection{Cluster states} \index{Encrypted quantum computation!Cluster states}
 
 Most simply, if Alice has the limited quantum resources required to perform single-qubit measurements, and she knows the algorithm she wishes to implement, then by outsourcing just the cluster state preparation stage, whilst performing the single-qubit measurements herself, she can obviously obtain \textit{perfect} secrecy of both her data and her algorithm, since no one else is involved in the processing stage.
 
@@ -90,7 +95,7 @@ However, Alice may have access to no quantum resources whatsoever -- even single
 % Circuit Model
 %
 
-\subsection{Circuit model} \index{Encrypted circuit model}
+\subsection{Circuit model} \index{Encrypted quantum computation!Circuit model}
 
 \comment{To do}
 
@@ -114,7 +119,7 @@ However, Alice may have access to no quantum resources whatsoever -- even single
 % Encryption Passive Optics
 %
 
-\subsection{Passive optics} \index{Encrypted passive optics}
+\subsection{Passive optics} \index{Encrypted quantum computation!Passive optics}
 
 The previously discussed schemes for encrypted universal quantum computation required a degree of client/server interaction via classical communication. But perhaps there are some restricted (i.e non-universal) models for optical quantum computation, which lend themselves to passive, non-interactive encryption? And perhaps these restrictions simplify the physical resource requirements for encryption?
 
@@ -160,8 +165,8 @@ Importantly, note that devising a scheme satisfying this commutation relation do
 
 In the following sections we introduce non-interactive techniques for passive optical quantum computation based upon this general formalism. As encoding techniques compatible with the commutation relation from Eq.~(\ref{eq:gen_pass_hom}), we specifically introduce:
 \begin{itemize}
-\item \textit{Polarisation-key encoding} (Sec.~\ref{sec:phot_homo_enc}): a uniform random polarisation rotation is applied to each input mode, which we apply to photonic linear optics.\index{Polarisation-key encoding}
-\item \textit{Phase-key encoding} (Sec.~\ref{sec:homo_coherent_state}): a uniform random phase-shift is applied to each input mode, which we apply to the encryption of coherent states under evolution via linear optics and generalised non-linear phase-shift operations.\index{Phase-key encoding}
+\item \textit{Polarisation-key encoding} (Sec.~\ref{sec:phot_homo_enc}): a uniform random polarisation rotation is applied to each input mode, which we apply to photonic linear optics.\index{Polarisation!Key encoding}
+\item \textit{Phase-key encoding} (Sec.~\ref{sec:homo_coherent_state}): a uniform random phase-shift is applied to each input mode, which we apply to the encryption of coherent states under evolution via linear optics and generalised non-linear phase-shift operations.\index{Phase!Key encoding}
 \item \textit{Displacement-key encoding} (Sec.~\ref{sec:disp_key_enc}): an arbitrary configuration of random phase-space displacements is applied to the input modes, which in principle applies to any optical encoding.\index{Displacement-key encoding}
 \end{itemize}
 However, we leave it as an open question for future work to fully characterise the set of compatible encoding, decoding and computational operations, and to evaluate their security for different choices of input states.
@@ -170,9 +175,9 @@ However, we leave it as an open question for future work to fully characterise t
 % Polarisation-Key Encoding
 %
 
-\subsubsection{Polarisation-key encoding} \label{sec:phot_homo_enc} \index{Polarisation-key encoding}
+\subsubsection{Polarisation-key encoding} \label{sec:phot_homo_enc} \index{Polarisation!Key encoding}
 
-It was recently shown that processing photonic states using passive linear optics -- i.e \textsc{BosonSampling} or quantum walks (Secs.~\ref{sec:BS} \& \ref{sec:QW}) -- may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}, so-called \textit{polarisation-key encoding}. This encryption does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy, hiding $O(\log (m))$ bits of information in an $m$-mode interferometer. Furthermore, it does not impose an overhead in circuit complexity, only in the number of input photons.
+It was recently shown that processing photonic states using passive linear optics -- i.e \textsc{BosonSampling} or quantum walks (Secs.~\ref{sec:boson_sampling} \& \ref{sec:QW}) -- may be trivially homomorphically encrypted with the addition of additional photons and randomised polarisation rotations on the inputs \cite{bib:RohdeQWEnc12}, so-called \textit{polarisation-key encoding}. This encryption does not require any client/server interaction, remaining completely passive, yet achieving near optimal secrecy, hiding $O(\log (m))$ bits of information in an $m$-mode interferometer. Furthermore, it does not impose an overhead in circuit complexity, only in the number of input photons.
 
 For $m$ modes, the resource requirements are:
 \begin{enumerate}
@@ -204,7 +209,7 @@ is the photon-number of the $i$th mode.
    \ket{1}&\to\ket{V},
    \end{align}
    to obtain $\ket\psi_\mathrm{pol}$, containing $m$ photons in total, one per mode.
-   \item Alice chooses a random private key $k$ as a real number from the uniform distribution,
+   \item Alice chooses a random private-key $k$ as a real number from the uniform distribution,
    \begin{align}
     k\in(0,2\pi).
     \end{align}
@@ -214,9 +219,10 @@ is the photon-number of the $i$th mode.
    \end{align}
    where,
    \begin{align}
-   \hat{R}(\theta) = \left(\begin{array}{cc}
+   \hat{R}(\theta) = \begin{pmatrix}
 \cos\theta & -\sin\theta \\
-\sin\theta & \cos\theta \end{array}\right).
+\sin\theta & \cos\theta
+\end{pmatrix}.
    \end{align}
     \item Alice sends $\ket\psi_\mathrm{enc}$ to Bob.
     \item Bob applies processing using his linear optics computer, to obtain,
@@ -238,7 +244,7 @@ is the photon-number of the $i$th mode.
 
 \begin{figure}[!htbp]
 \includegraphics[clip=true, width=0.425\textwidth]{BS_homo}
-\captionspacefig \caption{Protocol for implementing homomorphic encryption on photonic passive linear optics. Horizontal bars are wave-plates, implementing polarisation rotations $\hat{R}(\theta)$ -- the encryption and decryption operations performed by Alice. $\ket\psi_\mathrm{in}$ contains one photon per mode, polarisation-encoded such that vertically polarised photons belong to the desired computation, whilst the remaining horizontally polarised ones are dummies. The polarisation rotation angle, $k$, acts as Alice's private key. The photo-detectors are polarisation-resolving, discarding all dummy horizontally polarised photons at the output. The algorithm is described in detail in Alg.~\ref{alg:homo_LO}.} \label{fig:BS_homo}
+\captionspacefig \caption{Protocol for implementing homomorphic encryption on photonic passive linear optics. Horizontal bars are wave-plates, implementing polarisation rotations $\hat{R}(\theta)$ -- the encryption and decryption operations performed by Alice. $\ket\psi_\mathrm{in}$ contains one photon per mode, polarisation-encoded such that vertically polarised photons belong to the desired computation, whilst the remaining horizontally polarised ones are dummies. The polarisation rotation angle, $k$, acts as Alice's private-key. The photo-detectors are polarisation-resolving, discarding all dummy horizontally polarised photons at the output. The algorithm is described in detail in Alg.~\ref{alg:homo_LO}.} \label{fig:BS_homo}
 \end{figure}
 
 The key idea here is that orthogonal polarisations do not interfere with one another under linear optics evolution. Thus, by inserting additional orthogonally polarised `dummy' photons, and applying uniform, random polarisation rotations, we can confuse any eavesdropper as to which photons belong to the computation, thereby hiding the secret data from them. Note that the encryption protocol does not affect the computation, since uniform polarisation rotations commute through linear optics circuits,
@@ -258,7 +264,7 @@ P_\mathrm{guess} \leq \sqrt{\frac{8}{\pi m}},
 \end{align}
 for sufficiently large $m$ and $d$, which asymptotically (but unfortunately only polynomially\footnote{Note that an exponentially small bound is actually prohibited by no-go theorems for oblivious transfer and bit commitment \cite{bib:HKLo97, bib:SpekkensRudolphSecure}}) approaches 0.
 
-Alternately, the mutual information between Alice and Bob, \mbox{$I(A;B)$}, can be upper-bounded using the Holevo quantity, $\chi$ \cite{HolevoQuantity}. That is, \mbox{$I(A;B)\leq\chi$}. The Holevo quantity is defined as,\index{Holevo quantity}
+Alternately, the mutual information between Alice and Bob, \mbox{$I(A;B)$}, can be upper-bounded using the Holevo quantity, $\chi$ \cite{bib:HolevoQuantity}. That is, \mbox{$I(A;B)\leq\chi$}. The Holevo quantity is defined as,\index{Holevo quantity}
 \begin{align}
 \chi = S(\hat\rho) - \sum_i p_i S(\hat\rho_i),
 \end{align}
@@ -268,7 +274,7 @@ where,
 \end{align}
 and $S(\cdot)$ denotes the von Neuman entropy\index{von Neuman entropy} (Sec.~\ref{sec:channel_cap}). Here $\hat\rho_i$ are the individual codewords, in our case the set of all polarisation-encoded basis states, and $p_i$ are their respective probabilities, which are uniform here.
 
-The upper-bound stipulated by the Holevo quantity is an information-theoretic bound\index{Information-theoretic bound}, which holds under \textit{any} choice of measurement bases by Bob. Thus, it is impossible for Bob to extract more information about Alice's state than allowed by this bound.
+The upper-bound stipulated by the Holevo quantity is an information-theoretic bound\index{Information-theoretic!Bound}, which holds under \textit{any} choice of measurement bases by Bob. Thus, it is impossible for Bob to extract more information about Alice's state than allowed by this bound.
 
 For this protocol the Holevo quantity scales with the number of modes as,
 \begin{align}
@@ -294,7 +300,7 @@ This could include, for example, polarisation-independent non-linear operations.
 % Phase-Key Encoding
 %
 
-\subsubsection{Phase-key encoding} \label{sec:homo_coherent_state} \index{Phase-key encoding}
+\subsubsection{Phase-key encoding} \label{sec:homo_coherent_state} \index{Phase!Key encoding}
 
 As discussed in Sec.~\ref{sec:coherent_state_QC}, although not a \textit{quantum} computation, a system comprising multi-mode coherent state inputs, evolved via passive linear optics, implements simple matrix multiplication on the vector of input coherent state amplitudes,
 \begin{align} \label{eq:betaUalpha}
@@ -320,7 +326,7 @@ Phase-shift operators acting on coherent states simply implement the transformat
 \end{align}
 a simple rotation about the origin in phase-space.
 
-Like polarisation rotations, uniform phase-shifts commute through linear optics networks, as per Eq.~(\ref{eq:LO_key_commute}), and thus the protocol has similar mathematical structure to the photonic case. Now the phase-shift angle, $\phi$, acts as Alice's private key, which she applies uniformly to all input modes, applying inverse uniform phase-shifts after the computation to decrypt the state. The full algorithm is given in Alg.~\ref{alg:homo_coherent_LO}.
+Like polarisation rotations, uniform phase-shifts commute through linear optics networks, as per Eq.~(\ref{eq:LO_key_commute}), and thus the protocol has similar mathematical structure to the photonic case. Now the phase-shift angle, $\phi$, acts as Alice's private-key, which she applies uniformly to all input modes, applying inverse uniform phase-shifts after the computation to decrypt the state. The full algorithm is given in Alg.~\ref{alg:homo_coherent_LO}.
 
 \begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
@@ -331,7 +337,7 @@ function PhaseKeyEncoding($\vec\alpha$,$k$):
     \begin{align}
     \ket\psi_\mathrm{in} = \ket{\vec\alpha} = \ket{\alpha_1,\dots,\alpha_m}.
     \end{align}
-    \item Alice chooses a random private key $k$ as a real number from the uniform distribution,
+    \item Alice chooses a random private-key $k$ as a real number from the uniform distribution,
     \begin{align}
     k\in (0,2\pi).
     \end{align}
@@ -372,7 +378,7 @@ In fact, this encryption technique applies to more than just linear optics, but 
 \begin{align}
 \hat{H} = O(\mathrm{poly}(\hat{n}_1,\dots,\hat{n}_m)),
 \end{align}
-where $\hat{n}_i$ is the photon-number operator for the $i$th mode\index{Photon-number operator}. This observation follows trivially from the observation that the phase-shift encoding operations (which are generated by Hamiltonians linear in the photon-number operators) commute with any polynomial in the photon-number operators,
+where $\hat{n}_i$ is the photon-number operator for the $i$th mode\index{Photon-number!Operators}. This observation follows trivially from the observation that the phase-shift encoding operations (which are generated by Hamiltonians linear in the photon-number operators) commute with any polynomial in the photon-number operators,
 \begin{align}
 [\hat{n}_i,\mathrm{poly}(\hat{n}_1,\dots,\hat{n}_m)] = 0\,\,\forall \, i.
 \end{align}
@@ -398,7 +404,7 @@ as an indicator of data-hiding. \mbox{$R<1$} is indicative that information is h
 
 These relationships are illustrated in Figs.~\ref{fig:homo_coh_st_tr} \& \ref{fig:homo_coh_st_ratio}\footnote{Note that the distance between any arbitrary pair of codewords may be obtained by replacing $\mathrm{wt}(\cdot)$ with their Hamming distance (in the simple case where one of the codewords is the $\vec{0}$ bit-string, the Hamming weight and Hamming distance are equivalent).}. Clearly, the encoded basis states exhibit greater indistinguishability than the unencoded ones, demonstrating that information is hidden from Bob. The trace distance does not have the elegant interpretation of `number of bits hidden' that the mutual information does. Rather, it gives us the probability of Bob correctly guessing Alice's state, demonstrating the degree of partial hiding of information.
 
-\if 2\pubmode
+\if 1\doublecol
 \begin{figure}[!htbp]
 \includegraphics[clip=true, width=0.475\textwidth]{coherent_state_homo_unenc}\\
 \includegraphics[clip=true, width=0.475\textwidth]{coherent_state_homo_enc}
@@ -450,7 +456,7 @@ The algorithm for implementing displacement-key homomorphic encryption is shown 
 function DisplacementKeyEncoding($\ket\psi$,$k$):
 \begin{enumerate}
     \item Alice prepares the $m$-mode state $\ket\psi$.
-    \item Alice chooses a set of independent complex displacement amplitudes as her private key,
+    \item Alice chooses a set of independent complex displacement amplitudes as her private-key,
     \begin{align}
     k=\{\alpha_1,\dots,\alpha_m\}.
     \end{align}

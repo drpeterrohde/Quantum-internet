@@ -2,20 +2,28 @@
 % Optical Routers
 %
 
-\section{Optical routers} \index{Optical routers}
+\section{Optical routers} \index{Optical!Routers}
 
-\dropcap{P}{erhaps} the most fundamental building block in any network is routers, devices which switch data packets between multiple inputs and outputs so as to relay them to a destination. Indeed, in many real-world networks, many nodes will purely implement routing, and nothing more elaborate such as computations or other end-user protocols, to be discussed in Sec.~\ref{sec:protocols_quant_int}.
+\dropcap{P}{erhaps} the most fundamental building block in any network is routers, devices which switch data packets between multiple inputs and outputs so as to relay them to a destination. Indeed, in many real-world networks, many nodes will purely implement routing, and nothing more elaborate such as computations or other end-user protocols, to be discussed in Part.~\ref{part:protocols}.
 
 We now discuss the implementation of optical routers, beginning with the simplest two-port switch, upon which we build to construct more general and powerful routers.
 
-We will use the terminology that:
+There are many parameters of interest characterising the operation of optical routes. We will introduce the terminology convention that:
 \begin{itemize}
-	\item \textit{Ports}\index{Ports}: refers to the number of input and output optical modes in a device.
-	\item \textit{Channels}\index{Channels}: refers to the number of simultaneous communications streams running in parallel through the device.
-	\item \textit{Optical depth}\index{Optical depth}: is the number of primitive optical elements/devices an optical path traverses through the course of its trajectory from input to output.
+	\item \textit{Ports}\index{Ports}: number of input and output optical modes in a device.
+	\item \textit{Channels}\index{Channels}: number of simultaneous communications streams running in parallel through the device.
+	\item \textit{Optical depth}\index{Optical!Depth}: number of primitive optical elements/devices an optical path traverses through the course of its trajectory from input to output.
+	\item \textit{Directionality}\index{Directionality}: whether information is transferred in one (unidirectional) or two (bidirectional) directions.
+	\item \textit{Switching time}\index{Switching!Time}: time for the switch to be reconfigured from one state to another.
+	\item \textit{Delay time}\index{Delay time}: time taken by signal to reach the output line of the switch from input.
+	\item \textit{Throughput}\index{Throughput}: maximum data rate that can flow through the switch.
+	\item \textit{Switching energy}\index{Switching!Energy}: energy input required for activating and deactivating the switch.
+	\item \textit{Power dissipation}\index{Power!Dissipation}: power dissipated during the process of switching.
+	\item \textit{Insertion loss}\index{Insertion loss}: loss in signal power when the switch is connected.
+	\item \textit{Crosstalk}\index{Crosstalk}: coupling to other optical modes.
 \end{itemize}
 
-A summary of the routing devices we consider, and their associated resource requirements, is provided in Table.~\ref{tab:router_summary}.
+A summary of the routing devices we consider, and their associated resource requirements, is provided in Tab.~\ref{tab:router_summary}.
 
 Of course, real-world routers will not only switch optical paths, but also implement some (probably undesired) quantum processes across those paths, such as a loss channel or temporal mode-mismatch. Thus, proper analysis of optical router performance in quantum networks requires treating them as legitimate nodes in the network graph, with associated costs and attributes, as per the QTCP framework.
 
@@ -28,14 +36,14 @@ Of course, real-world routers will not only switch optical paths, but also imple
   		\hline
   		Two-channel two-port switch & \mbox{$N_\mathrm{bs}=2$}, \mbox{$N_\mathrm{ps}=1$} & \mbox{$d=1$} \\
   		Linear $n$-port multiplexer & \mbox{$N_\mathrm{s}=n-1$} & \mbox{$1\leq d\leq n-1$} \\
-  		Pyramid $n$-port multiplexer & \mbox{$N_\mathrm{s}=n-1$} & \mbox{$d=\log_2(n)$} \\
+  		Pyramid $n$-port multiplexer & \mbox{$N_\mathrm{s}=n-1$} & \mbox{$d=\log_2 n$} \\
     	Single-channel multi-port switch (linear) & \mbox{$N_\mathrm{s}=2n-3$} & \mbox{$2\leq d\leq 2n-3$} \\
-  		Single-channel multi-port switch (pyramid) & \mbox{$N_\mathrm{s}=2n-3$} & \mbox{$d=2\,\log_2(n)-1$} \\
+  		Single-channel multi-port switch (pyramid) & \mbox{$N_\mathrm{s}=2n-3$} & \mbox{$d=2\,\log_2 n-1$} \\
   		Multi-channel multi-port switch & \mbox{$N_\mathrm{s} = \left\lceil \frac{n^2}{2}\right\rceil - n + 1$} & \mbox{$\left\lceil \frac{n}{2} \right\rceil \leq d\leq n-1$} \\
   		Crossbar switch & \mbox{$N_\mathrm{s}=n^2$} & \mbox{$1\leq d\leq 2n-1$}\\
     	\hline
 	\end{tabular}
-	\captionspacetab \caption{Summary of different primitives for constructing optical routers. $n$, $N_\mathrm{bs}$, $N_\mathrm{ps}$ and $N_\mathrm{s}$ are the number of input/output ports, beamsplitters, phase-shifters, and two-port switches respectively. $d$ is the optical depth (in units of number of two-port switches). Since all of the multi-port devices are constructed from two-port switches, in all cases \mbox{$N_\mathrm{bs} = 2 N_\mathrm{s}$} and \mbox{$N_\mathrm{ps} = N_\mathrm{s}$}.} \label{tab:router_summary} \index{Optical routers}\index{Optical depth}\index{Router resource requirements}
+	\captionspacetab \caption{Summary of different primitives for constructing optical routers. $n$, $N_\mathrm{bs}$, $N_\mathrm{ps}$ and $N_\mathrm{s}$ are the number of input/output ports, beamsplitters, phase-shifters, and two-port switches respectively. $d$ is the optical depth (in units of number of two-port switches). Since all of the multi-port devices are constructed from two-port switches, in all cases \mbox{$N_\mathrm{bs} = 2 N_\mathrm{s}$} and \mbox{$N_\mathrm{ps} = N_\mathrm{s}$}.} \label{tab:router_summary} \index{Optical!Routers}\index{Optical!Depth}\index{Optical!Routers!Resource requirements}
 \end{table*}
 \startalgtable
 
@@ -53,65 +61,132 @@ A second disadvantage of mechanical switches is that the introduction of moving 
 % Interferometric Routers
 %
 
-\subsection{Interferometric routers} \index{Interferometric routers}
+\subsection{Interferometric switches} \index{Interferometric!Switches}\label{sec:interfer_switches}
+
+\sectionby{Rohit Ramakrishnan}\index{Rohit Ramakrishnan}
 
 Interferometric routers are based on the principle that the evolution implemented by interferometers are in general highly dependent on the phase relationships within them. This reduces the seemingly uphill task of high-speed, dynamic switching between modes to the problem of implementing dynamically-controllable phases. Thankfully there are a number of techniques for implementing such phase-switching. We will discuss these phase-modulation techniques, before moving onto combining them into more complex routing systems.
 
-%
-% Phase-Modulators
-%
-
-\subsubsection{Phase-modulators} \index{Phase-modulators}
-
-A phase-modulator is a classically-controlled device that lets us tune the local phase accumulated by an optical path, ideally over the full range of $\{0,2\pi\}$. These may be implemented in several ways:
-
-\comment{Rohit helps here}
+A phase modulator\index{Phase!Modulators} is a classically-controlled device that lets us tune the local phase accumulated by an optical path, ideally over the full range of $\{0,2\pi\}$. These may be implemented in several ways:
 
 %
 % Electro-Optic Modulators
 %
 
-\paragraph{Electro-optic modulators} \index{Electro-optic modulators}
+\subsubsection{Electro-optic modulators} \index{Electro-optic!Modulators}
 
-\comment{here an applied electric field induces a change in refractive index in a medium, causing a phase-shift.}
+Electro-optics modulators (EOMs) are based on anisotropic materials\index{Anisotropic materials}, in which the refractive index\index{Refractive index} changes according to an applied electric field. There are two primary variations on this:
+\begin{itemize}
+	\item Pockel's effect\index{Pockel's!Effect}: a linear electro-optic effect, where the refractive index\index{Refractive index} change is proportional to the applied electric field.
+	\item Kerr's effect\index{Kerr's!Effect}: a quadratic electro-optic effect, where the refractive index change is proportional to the square of the applied electric field.
+\end{itemize}
 
-\comment{To do! Explain how these work}
+These changes in refractive index are typically small, such that the effects are significant over propagation distances larger than the light's wavelength. For example, in a material where the refractive index increases by $10^{-4}$, an optical wave propagating a distance of $10^{-4}$ wavelengths will acquire a phase-shift of $2\pi$.
+
+The refractive index of an electro-optic medium\index{Electro-optic!Medium} is a function $n(E)$ of the applied electric field $E$. This function varies only slightly with $E$, such that using a Taylor series expansion\index{Taylor series} about \mbox{$E=0$} we obtain,
+\begin{align}
+n(E) = n+a_1E + \frac{1}{2}a_2E^2+\dots.
+\end{align}
+
+In a Pockel's medium\index{Pockel's!Medium} this relation becomes (after approximating and simplifying),
+\begin{align}
+n(E) = n-\frac{1}{2}\chi n^3 E,
+\end{align}
+where $\chi$ is called the Pockel's coefficient\index{Pockel's!Coefficient} or linear electro-optic coefficient. Typical values of $\chi$ lie in the range $10^{-12}-10^{-10}$mV$^{-1}$. The most common crystals used as the medium for Pockel's cells are NH$_4$H$_2$PO$_4$ (ADP), KH$_2$PO$_4$ (KDP), LiNbO$_3$, LiTaO$_3$, and CdTe.
+
+In a centrosymmetric material or Kerr's medium\index{Kerr's!Medium} this relation becomes (again after approximating and simplifying),
+\begin{align}
+n(E) = n-\frac{1}{2}\xi n^3 E^2,
+\end{align}
+where $\xi$ is the Kerr's coefficient\index{Kerr's!Coefficient} or the quadratic electro-optic coefficient. Typical values of $\xi$ lies in the range $10^{-18}-10^{-14}$m$^2$V$^{-2}$.
+
+The refractive index profiles as a function of applied electric field strength for Kerr's and Pockel's mediums are shown in Fig.~\ref{fig:EOM_ref_index}.
+
+\begin{figure}[!htbp]
+\includegraphics[clip=true, width=0.475\textwidth]{pockels_medium} \if 1\doublecol \\ \fi
+\includegraphics[clip=true, width=0.475\textwidth]{kerrs_medium}
+\captionspacefig \caption{Dependence of refractive index on electric field in: Pockel's medium\index{Pockel's!Medium}, exhibiting linear electric field dependence; Kerr's medium\index{Kerr's!Medium}, exhibiting quadratic electric field dependence. Graphs express qualitative behaviour only, hence no numbers are provided.}\label{fig:EOM_ref_index}
+\end{figure}
+
+Light transmitted through a transparent plate with controllable refractive index undergoes a controllable phase-shift. This plate can be used as an optical phase modulator.
+
+Consider light traversing a Pockets cell of length $L$ to which an electric field $E$ is applied. The phase-shift undergone is given by,
+\begin{align}
+\phi \approx \phi_0 - \pi\frac{\chi n^3 E L}{\lambda_0},
+\end{align}
+where,
+\begin{align}
+\phi_0 = \frac{2\pi nL}{\lambda_0}.
+\end{align}
+
+If the electric field generated by applying a voltage $V$ across the faces of the cell of dimension $d$ is,
+\begin{align}
+	E=\frac{V}{d},
+\end{align}
+then,
+\begin{align}
+	\phi=\phi_0-\pi \frac{V}{V_\pi},
+\end{align}
+where,
+\begin{align}
+	V_\pi=\frac{d\lambda_0}{L\chi n^3},
+\end{align}
+is the half-wave voltage\index{Half-wave voltage}, the voltage at which the phase-shift changes by $\pi$.
+
+The electric field is applied either perpendicular (transverse modulators\index{Transverse modulators}) or parallel (longitudinal modulators\index{Longitudinal modulators}) to the direction of the propagation light. The value of the electro-optic coefficient $\chi$ depends on the directions of propagation and the applied field. The speed of operation is limited by the capacitive effects and the transit time of the signal through the material. 
+
+State of the art electro-optic modulators are integrated optic devices based on LiNbO$_3$, in which materials like titanium are used to increase the refractive index. The typical operation speed is above 100GHz. Light signals can be coupled in and out using optical fibres.
 
 %
 % Acousto-Optic Modulators
 %
 
-\paragraph{Acousto-optic modulators} \index{Acousto-optic modulators}
+\subsubsection{Acousto-optic modulators} \index{Acousto-optic modulators}
 
-\comment{an applied acoustic wave generated by a piezoelectric transducer induces a change in refractive index in a medium, causing a phase-shift}
+Sound, or acoustic waves\index{Acoustic waves}, are vibrations that travel through a medium with a velocity characteristic of the medium. This can create perturbations in the refractive index of the optical medium, thus modifying the velocity of light passing through the medium. Thus sound can be used to modify the effect of the medium on light. That is, sound can control the direction of propagation of light. This acousto-optic effect is used to make a variety of devices like optical modulators, switches, deflectors\index{Deflectors}, filters\index{Filters}, isolators\index{Isolators}, frequency shifters\index{Frequency!Shifters} and spectrum analysers\index{Spectrum analysers}. This is shown in Fig.~\ref{fig:AOM}.
 
-\comment{To do! Explain how these work}
+\begin{figure}[!htbp]
+\includegraphics[clip=true, width=0.35\textwidth]{AOM}
+\captionspacefig \caption{Acousto-optic modulators as a classically-controlled optical switch. The light signal is refracted depending on the applied sound wave.}\label{fig:AOM}
+\end{figure}
+
+According to quantum theory, a light wave of angular frequency $\omega$ and wave-vector $k$ is a stream of photons each with energy $\hbar\omega$ and angular momentum $\hbar k$. Additionally, acoustic waves with frequency $\Omega$ and wave-vector $q$ are a stream of phonons each with energy $\hbar\Omega$ and momentum $\hbar q$. When light and sound interact, a photon combines with a phonon to generate a new photon with energy and wave-vector subject to energy and momentum conservation laws\index{Conservation!Energy}\index{Conservation!Momentum}, 
+\begin{align}\label{eq:AOM_energy}
+\hbar\omega_r &= \hbar\omega + \hbar\Omega,\nonumber\\
+\hbar k_r &= \hbar k + \hbar q.
+\end{align}
+The associated energy conservation diagram is shown in Fig.~\ref{fig:AOM_energy_diagram}.
+
+\begin{figure}[!htbp]
+\includegraphics[clip=true, width=0.25\textwidth]{AOM_energy_diagram}
+\captionspacefig \caption{Energy diagram for an acousto-optic modulator, based on Eq.~(\ref{eq:AOM_energy}). Energy and momentum must be conserved from the incident photon of energy $\hbar\omega$ and phonon of energy $\hbar\Omega$, yielding a scattered photon of energy $\hbar\omega_r$.}\label{fig:AOM_energy_diagram}
+\end{figure}
+
+Since the intensity of the reflected light is proportional to the intensity of the sound (provided the intensity of sound is low), the intensity of reflected light can be varied proportionally by using an electrically controlled acoustic transducer. This device can be used as a linear modulator of light.
+
+When the acoustic power increases beyond a certain threshold level, total reflection of light occurs whereby the modulator behaves as an optical switch. By switching the sound on and off, the reflected light can be turned on and off, yielding an acoustically-controlled switch.
 
 %
 % Magneto-Optic Modulators
 %
 
-\paragraph{Magneto-optic modulators} \index{Magneto-optic modulators}
+\subsubsection{Magneto-optic modulators} \index{Magneto-optic modulators}
 
-\comment{an applied magnetic field induces the change in refractive index}
+In the presence of a static magnetic field, certain materials act as polarisation rotators, known as the Faraday effect\index{Faraday effect}. The angle of rotation is proportional to distance and the rotary power\index{Rotary power} $\rho$ (angle per unit length), which is proportional to the component $B$ of the magnetic flux density in the direction of wave propagation,
+\begin{align}
+	\rho=VB,
+\end{align}
+where $V$ is known as the Verdet constant\index{Verdet constant}, which is a function of wavelength $\lambda_0$.
+ 
+Examples of materials that exhibit the Faraday effect include glass, Yttrium-iron-garnet (YIG), Terbium-gallium-garnet (TGG) and Terbium-aluminium-garnet (TbAlG).
 
-\comment{To do! Explain how these work}
-
-%
-% Pockels Cells
-%
-
-\paragraph{Pockels cells} \index{Pockels cells}
-
-\comment{act as voltage-controlled wave-plates, 	which take the place of phase-shifters in a polarisation-encoded version of Mach-Zehnder interference.}
-
-\comment{To do! Explain how these work}
+A simple form of magneto-optic modulator comprises a parallel-sided disk of material placed in a small coil. An alternating current in the coil provides a magnetic field normal to the plane of the disk. The material becomes magnetised in this direction and light propagating through the disk undergoes a polarisation rotation about its plane of polarisation. The modulation of the angle of the plane of polarisation induced by the alternating current may be converted to amplitude modulation\index{Amplitude modulation} by subsequently passing the beam through a polariser. 
 
 %
 % Two-Channel Two-Port Switches
 %
 
-\subsubsection{Two-channel two-port switches} \index{Two-channel two-port switches}
+\subsection{Two-channel two-port switches} \index{Two-channel two-port switches}
 
 The elementary primitive switch from which more complicated routers may be constructed is the two-channel two-port switch. This switch may be constructed from a Mach-Zehnder interferometer\index{Mach-Zehnder (MZ) interference}, with a classically-controlled phase-shifter in one arm. By switching the phase to either \mbox{$\phi=0$} or \mbox{$\phi=\pi$}, the MZ may be tuned to implement either an identity or swap operation respectively. This is shown in Fig.~\ref{fig:two_channel_two_port_switch}.
 
@@ -128,7 +203,7 @@ Because the two-port switch is based upon MZ interference, it will only function
 % Multiplexers & Demultiplexers
 %
 
-\subsubsection{Multiplexers \& demultiplexers} \index{Multiplexers}\index{Demultiplexers}
+\subsection{Multiplexers \& demultiplexers} \index{Multiplexers}\index{Demultiplexers}
 
 From the two-port switch, which implements a controlled permutation of two optical modes, we can construct multi-port multiplexers and demultiplexers, which controllably route a single input port to one of $n$ multiple output ports, or vice versa.
 
@@ -136,7 +211,7 @@ There are two main architectures that may be employed for implementing such mult
 \begin{align}
 N_\mathrm{s} = n-1,
 \end{align}
-two-port switches to implement. However, they differ in one important respect. In the linear multiplexer, different routes experience different optical depth\index{Optical depth}, ranging from \mbox{$d=1$} (for the first port) to \mbox{$d=n-1$} (for the final port). This will lead to asymmetry in accumulated errors. In the pyramid multiplexer, on the other hand, all optical paths have the same optical depth, \mbox{$d=\log_2(n)$}, yielding completely symmetric operation.
+two-port switches to implement. However, they differ in one important respect. In the linear multiplexer, different routes experience different optical depth\index{Optical!Depth}, ranging from \mbox{$d=1$} (for the first port) to \mbox{$d=n-1$} (for the final port). This will lead to asymmetry in accumulated errors. In the pyramid multiplexer, on the other hand, all optical paths have the same optical depth, \mbox{$d=\log_2 n$}, yielding completely symmetric operation.
 
 The differing optical depths of linear and pyramid multiplexers lend themselves naturally to different applications. Suppose that in a network a single input-to-output route through a multiplexer is used far more often than the others. In that case, utilising a linear multiplexer will minimise average optical depth since that route can be designated to the first output port, which has an optical depth of only \mbox{$d=1$}. On the other hand, in a very balanced network, in which all optical routes are used roughly uniformly, the average case logarithmic optical depth of the pyramid multiplexer outperforms the average case linear optical depth of the linear multiplexer.
 
@@ -156,9 +231,9 @@ Note that the logarithmic optical depth of the pyramid configuration grows less 
 % Single-Channel Multi-Port Switches
 %
 
-\subsubsection{Single-channel multi-port switches} \index{Single-channel multi-port switches}
+\subsection{Single-channel multi-port switches} \index{Single-channel multi-port switches}
 
-The multiplexers and demultiplexers route between one port and $n$ ports. In the more general and useful case, we wish to route between $n$ inputs and $n$ outputs. If we only require one active channel at a given time, such a router may be trivially constructed from an $n$-port multiplexer connected to and $n$-port demultiplexer, as shown in Fig.~\ref{fig:single_channel_multi_port_switch}. Here the demultiplexer chooses one of the input modes to route to its single output, which then feeds into the multiplexer to fan it out to the desired output. The multiplexers/demultiplexers could be implemented using either of the aforementioned layouts, yielding a total resource count of,
+The multiplexers and demultiplexers route between one port and $n$ ports. In the more general and useful case, we wish to route between $n$ inputs and $n$ outputs. If we only require one active channel at a given time, such a router may be trivially constructed from an $n$-port multiplexer connected to and $n$-port demultiplexer, as shown in Fig.~\ref{fig:single_channel_multi_port_switch}. Here, the demultiplexer chooses one of the input modes to route to its single output, which then feeds into the multiplexer to fan it out to the desired output. The multiplexers/demultiplexers could be implemented using either of the aforementioned layouts, yielding a total resource count of,
 \begin{align}
 	N_\mathrm{s} = 2n-3,
 \end{align}
@@ -173,7 +248,7 @@ two-port switches\footnote{Note that the multiplexer and demultiplexer each requ
 % Multi-Channel Multi-Port Switches
 %
 
-\subsubsection{Multi-channel multi-port switches} \index{Multi-channel multi-port switches}
+\subsection{Multi-channel multi-port switches} \index{Multi-channel multi-port switches}
 
 The single-channel multi-port switch enables switching between an arbitrary number of input/output ports, but suffers that it can only route a single channel at a time. The most general scenario to consider is multi-channel multi-port switching, which implements an arbitrary permutation between $n$ inputs and $n$ outputs. That is, all $n$ ports may be routing active channels, enabling simultaneous routing of multiple data-flows.
 
@@ -185,19 +260,19 @@ two-port switches.
 
 The operation implemented by this device can therefore be expressed as,
 \begin{align}
-	\left(\begin{matrix}{}
+	\begin{pmatrix}
   		\hat{b}^\dag_1 \\
   		\hat{b}^\dag_2 \\
   		\vdots \\
   		\hat{b}^\dag_m
-\end{matrix}\right)=\sigma\cdot\left(\begin{matrix}{}
+\end{pmatrix}=\hat\sigma \cdot \begin{pmatrix}
   		\hat{a}^\dag_1 \\
   		\hat{a}^\dag_2 \\
   		\vdots \\
   		\hat{a}^\dag_m
-\end{matrix}\right),
+\end{pmatrix},
 \end{align}
-where \mbox{$\sigma\in S_m$} is an arbitrary element of the symmetric group (i.e a permutation matrix), and $\hat{a}_i^\dag$ ($\hat{b}_i^\dag$) are the input (output) photonic creation operators.
+where \mbox{$\hat\sigma\in S_m$} is an arbitrary element of the symmetric group (i.e a permutation matrix), and $\hat{a}_i^\dag$ ($\hat{b}_i^\dag$) are the input (output) photonic creation operators.
 
 \begin{figure}[!htbp]
 \includegraphics[clip=true, width=0.475\textwidth]{multi_channel_multi_port_switch}
@@ -210,7 +285,7 @@ Note that this decomposition is more favourable than the completely general Reck
 % Crossbar Switches
 %
 
-\subsubsection{Crossbar switches}\index{Crossbar switches}
+\subsection{Crossbar switches}\index{Crossbar switches}
 
 A general multi-port switching architecture, that gained popularity in the early days of channel-switched telecommunications networks\index{Channel-switched networks}, is the crossbar architecture, whereby $n$ inputs are mapped to $n$ outputs via a binary permutation matrix, which controls a lattice of \mbox{$2\times 2$} switches. The general layout of the architecture is shown in Fig.~\ref{fig:crossbar_switch}, and an example of a routing sequence corresponding to a particular binary control matrix is shown in Fig.~\ref{fig:crossbar_example}.
 

@@ -6,15 +6,13 @@
 
 \section{Models for quantum computation} \label{sec:models_QC} \index{Models for quantum computation}
 
-\dropcap{W}{e} begin by reviewing the models for quantum computation that we will refer to throughout this work.
-
-There are various approaches to implementing and representing quantum computations. We now briefly introduce the ones most relevant to our discussions on networked quantum computation. Other formalisms, such as adiabatic quantum computation \cite{???} and quantum simulated annealing \cite{???}, which are not so obviously applicable to networking, will not be introduced, although many excellent introductions to these fields exist \cite{???}.
+\dropcap{W}{e} begin by reviewing the models for quantum computation that we will refer to throughout this work. There are various approaches to implementing and representing quantum computations. We now briefly introduce the ones most relevant to our discussions on networked quantum computation.
 
 %
 % Quantum Circuits
 %
 
-\subsection{Circuit model} \label{sec:circuit_model} \index{Circuit model}
+\subsection{Circuit model} \label{sec:circuit_model} \index{Circuit!Model}
 
 The \textit{circuit model} is the conventional and most intuitive approach for expressing quantum algorithms, decomposing them into chronological sequences of elementary operations, comprising state preparation, single- and multi-qubit gates, measurement, and classical feedforward. We recommend referring to the introductory sections of \cite{bib:NielsenChuang00} for a far more comprehensive introduction to quantum circuits than is presented here. This model will be naturally intuitive to those familiar with classical circuit diagrams, albeit with some important differences, such as time-ordering.
 
@@ -34,7 +32,7 @@ Fig.~\ref{fig:eg_circuit} illustrates a simple 3-qubit quantum circuit comprisin
 	\item Horizontal lines represent individual qubits.
 	\item Time flows from left to right (feedback is not allowed in the typical formalism for this representation).
 	\item The three input qubits are labelled on the far-left as $\ket{\psi_1}$, $\ket{\psi_2}$ and $\ket{\psi_3}$.
-	\item Single-qubit gates are denoted as boxes containing the name of the associated unitary operation. Here, the examples are the Hadamard ($\hat{H}$), Pauli bit-flip ($\hat{X}$), Pauli bit-phase-flip ($\hat{Y}$), and Pauli phase-flip ($\hat{Z}$) gates\index{Pauli operators}\index{Hadamard gate},
+	\item Single-qubit gates are denoted as boxes containing the name of the associated unitary operation. Here, the examples are the Hadamard ($\hat{H}$), Pauli bit-flip ($\hat{X}$), Pauli bit-phase-flip ($\hat{Y}$), and Pauli phase-flip ($\hat{Z}$) gates\index{Pauli!Operators}\index{Hadamard!Gate},
 	\begin{align}
 		\hat{H} &= \frac{1}{\sqrt{2}}\begin{pmatrix}
 		1 & 1 \\
@@ -54,7 +52,7 @@ Fig.~\ref{fig:eg_circuit} illustrates a simple 3-qubit quantum circuit comprisin
 		\end{pmatrix}.
 	\end{align}
 	\item 2-qubit gates are denoted by vertical lines between the respective qubits.
-	\item The maximally-entangling 2-qubit controlled-NOT (CNOT) gate\index{Controlled-NOT (CNOT) gate} is denoted via a control ($\bullet$) and a target ($\oplus$),
+	\item The maximally-entangling 2-qubit controlled-NOT (CNOT) gate\index{Controlled-NOT (CNOT) gates} is denoted via a control ($\bullet$) and a target ($\oplus$),
 	\begin{align}
 		\hat{\mathrm{CNOT}}=\begin{pmatrix}
 		1 & 0 & 0 & 0 \\
@@ -64,8 +62,8 @@ Fig.~\ref{fig:eg_circuit} illustrates a simple 3-qubit quantum circuit comprisin
 		\end{pmatrix}.
 	\end{align}
 	This is the quantum equivalent of the classical XOR gate, flipping the target ($\hat{X}$) if the control is on.
-	\item All quantum gates have the same number of input as output qubits. This is a necessary condition for the unitarity of quantum gates (\mbox{$\hat{U}^\dag \hat{U} = \hat{\mathbb{I}}$}).
-	\item The maximally-entangling 2-qubit controlled-phase (CZ)\index{Controlled-Z (CZ) gate} gate is denoted by two targets ($\bullet$) (the gate operates symmetrically on its two qubits),
+	\item All quantum gates have the same number of input as output qubits. This is a necessary condition for the unitarity of quantum gates (\mbox{$\hat{U}^\dag \hat{U} = \hat\openone$}).
+	\item The maximally-entangling 2-qubit controlled-phase (CZ)\index{Controlled-Z (CZ) gates} gate is denoted by two targets ($\bullet$) (the gate operates symmetrically on its two qubits),
 	\begin{align}
 		\hat{\mathrm{CZ}}=\begin{pmatrix}
 		1 & 0 & 0 & 0 \\
@@ -92,7 +90,7 @@ Using the circuit model, arbitrary quantum computations can be elegantly and int
 % Cluster States
 %
 
-\subsection{Cluster states} \label{sec:CSQC} \index{Cluster state model}
+\subsection{Cluster states} \label{sec:CSQC} \index{Cluster states!Model for quantum computation}
 
 The \textit{cluster state} model for quantum computation \cite{bib:Raussendorf01, bib:Raussendorf03, bib:Nielsen06} (also referred to as the \textit{one-way}, \textit{measurement-based}, or \textit{graph state} models for quantum computation) is an extremely powerful paradigm that warrants treatment of its own, owing to its significant distinction from the more familiar circuit model, and its applicability to distributed models for quantum computation, to be discussed in Sec.~\ref{sec:dist_QC}.
 
@@ -110,8 +108,8 @@ state, and edges represent the application of maximally entangling CZ gates betw
 \begin{align}
 	\ket\psi_\mathrm{cluster} = \prod_{e\in E} \hat{\mathrm{CZ}}_e \cdot \bigotimes_{v\in V}\ket{+}_v.
 \end{align}
-Alternately, but equivalently, cluster states may be defined in the stabiliser formalism\index{Stabiliser formalism}. Specifically, a cluster state is defined to be the joint +1 eigenstate of all the stabilisers,
-\begin{align} \label{eq:CS_stab} \index{Cluster state stabilisers}
+Alternately, but equivalently, cluster states may be defined in the stabiliser formalism\index{Stabiliser!Formalism}. Specifically, a cluster state is defined to be the joint +1 eigenstate of all the stabilisers,
+\begin{align} \label{eq:CS_stab} \index{Cluster states!Stabilisers}
 	\hat{S}_v = \hat{X}_v \prod_{i\in n_v} \hat{Z}_i,
 \end{align}
 where there is one stabiliser $\hat{S}_v$ per vertex $v$, and $n_v$ is the set of vertices neighbouring $v$. The cluster state therefore satisfies,
@@ -150,7 +148,7 @@ An alternate interpretation of the cluster state model is that it is a complicat
 	\captionspacefig \caption{The single-qubit teleporter, based upon a CZ gate, a single-qubit measurement, and classical feedforward.} \label{fig:single_qubit_teleporter} \index{Single-qubit teleporter}
 \end{figure}
 
-The cluster state formalism has proven very useful, enabling the development of models for linear optics quantum computing (Sec.~\ref{sec:KLM_univ}), orders of magnitude more efficient than the originally proposed protocol. It has been found that bonding strategies -- i.e the order in which smaller clusters are fused into larger ones when using non-deterministic gates -- plays a major role in resource overhead, and much work has been performed on efficient preparation strategies for various topologies \cite{bib:Nielsen04, bib:BarrettKok05, bib:BrowneRudolph05, bib:BenjaminEisert05, bib:Gross06, bib:RohdeStratCS07, bib:Kieling06, bib:KielingRudolphEisert06, bib:RohdeBarrett07, bib:Kieling07, bib:Campbell07, bib:Campbell07b}.
+The cluster state formalism has proven very useful, enabling the development of models for linear optics quantum computing (Sec.~\ref{sec:KLM_univ}), orders of magnitude more efficient than the originally proposed protocol. It has been found that bonding strategies -- i.e the order in which smaller clusters are fused into larger ones when using non-deterministic gates -- plays a major role in resource overhead, and much work has been performed on efficient preparation strategies for various topologies \cite{bib:Nielsen04, bib:BarrettKok05, bib:BrowneRudolph05, bib:BenjaminEisert05, bib:Gross06, bib:RohdeBarrett07, bib:Kieling06, bib:KielingRudolphEisert06, bib:RohdeBarrett07, bib:Kieling07, bib:Campbell07, bib:Campbell07b}.
 
 These cluster states are highly valuable, given their computational power, and the ability to communicate them from Alice, who is able to prepare them, to Bob, who lacks the technology, would be a boon for Bob.
 
@@ -163,23 +161,92 @@ Consider the scenario whereby Alice requests a large cluster state from Bob, but
 There are several cluster state identities we will utilise later, summarised in Fig.~\ref{fig:cluster_ident}.
 
 \begin{figure}[!htbp]
-	\includegraphics[clip=true, width=0.475\textwidth]{cluster_identities} \index{Cluster state identities}
+\if 1\doublecol
+	\includegraphics[clip=true, width=0.475\textwidth]{cluster_identities} 
+\else
+	\includegraphics[clip=true, width=0.7\textwidth]{cluster_identities} 
+\fi
+	\index{Cluster states!Identities}
 	\captionspacefig \caption{Several cluster state identities, demonstrated in the case of linear clusters. (a) a CZ gate between two qubits creates an edge between them in the graph. (b) Measurement of a qubit in the Pauli $\hat{Y}$ basis removes that qubit from the graph, whilst creating new edges between the neighbouring qubits. (c) Measurement of a qubit in the Pauli $\hat{Z}$ basis removes that qubit and any neighbouring edges. (d) Measurement of a qubit in the Pauli $\hat{X}$ basis removes that qubit, leaving one of its neighbours as a `dangling node'.} \label{fig:cluster_ident} 
 \end{figure}
 
 When using non-deterministic gates (i.e ones that probabilistically fail) to prepare cluster states\index{Non-deterministic cluster state preparation}, there are approaches to nonetheless preparing ideal cluster states. There have been two main approaches that have become particularly well known. 
 
-The first is to use the ideas of \textit{micro-clusters}\index{Micro-cluster states} and cluster state recycling\index{Cluster state recycling} to incrementally build up larger clusters, progressing as a random walk\index{Random walks}, which is biased in the direction of state growth. This approach is discussed in more detail in Secs.~\ref{sec:CS_LO} \& \ref{sec:module}.
+The first is to use the ideas of \textit{micro-clusters}\index{Micro-cluster states} and cluster state recycling\index{Cluster states!Recycling} to incrementally build up larger clusters, progressing as a random walk\index{Random!Walks}, which is biased in the direction of state growth. This approach is discussed in more detail in Secs.~\ref{sec:CS_LO} \& \ref{sec:module}.
 
-The second approach is to borrow techniques from percolation theory\index{Percolation theory} to simply tolerate defects in a cluster state lattice by working around them \cite{Brown}. Specifically, if the defect probability (i.e probability of a missing vertex or edge) is below some \textit{percolation threshold}\index{Percolation threshold}, \mbox{$p_\mathrm{defect}\leq \epsilon_\mathrm{threshold}$}, in the asymptotic limit we are guaranteed that routes exist through the lattice, enabling the required flow of information. This allows defective graphs to be employed for quantum computation.
+The second approach is to borrow techniques from percolation theory\index{Percolation!Theory} to simply tolerate defects in a cluster state lattice by working around them \cite{Brown}. Specifically, if the defect probability (i.e probability of a missing vertex or edge) is below some \textit{percolation threshold}\index{Percolation!Threshold}, \mbox{$p_\mathrm{defect}\leq \epsilon_\mathrm{threshold}$}, in the asymptotic limit we are guaranteed that routes exist through the lattice, enabling the required flow of information. This allows defective graphs to be employed for quantum computation.
 
 %
-% Adiabatic Quantum Computation & Quantum Annealing
+% Adiabatic Quantum Computation
 %
 
-\subsection{Adiabatic quantum computation \& quantum annealing} \label{sec:adiabatic_QC} \index{Adiabatic quantum computation} \index{Quantum annealing}
+\subsection{Adiabatic quantum computation} \label{sec:adiabatic_QC} \index{Adiabatic!Quantum computation}
 
-\comment{To do}
+\sectionby{Zixin Huang}\index{Zixin Huang}
+
+Adiabatic quantum computation (AQC) began as an approach for solving optimisation problems, but now has evolved into a universal alternative to the circuit model. AQC is based on an idea that is distinct from the circuit model \cite{bib:RevModPhys.90.015002}; in the circuit model, the computation is encoded into a series of gates, whereas in AQC the computation starts from an initial Hamiltonian whose ground state is easy to prepare, and evolves to a final state that encodes the solution to the computational problem.
+
+The adiabatic theorem\index{Adiabatic!Theorem} forms the backbone of AQC, which states that for a system initially prepared in an eigenstate of a time-dependent Hamiltonian $\hat{H}(t)$, the is dictated by the Schr{\"o}dinger equation\index{Schr{\" o}dinger!Equation},
+\begin{align}
+i \frac{\partial \ket{\psi(t)}}{\partial t} = \hat{H}(t)\ket{\psi(t)},
+\end{align}
+\noindent which will keep approximately to the instantaneous ground state, if $\hat{H}(t)$ varies sufficiently slowly.
+
+In the circuit model, the cost of the computation is equated with the number of gates. In AQC, the cost of adiabatic algorithms is defined to be the dimensionless quantity \cite{bib:aharonov2008adiabatic},
+\begin{align}
+\mathrm{cost} = t_f \cdot \mathrm{max}_s ||\hat{H}(s)||,
+\end{align}
+where $t_f$ is the algorithmic runtime, and $||\cdot||$ denotes the operator norm\index{Operator norm}, the largest singular value\index{Singular value} of the operator.
+ 
+The worst-case runtime of an adiabatic algorithm scales as,
+\begin{align}
+t_f = O\left(\frac{1}{\Delta^{(3)}}\right), 
+\end{align}
+where $\Delta^{(3)}$ is the minimum eigenvalue gap between the ground state and the first excited state of the Hamiltonian \cite{bib:jansen2007bounds}. This is the reason why AQC has generated much interest -- it has a rich connection to the well-studied field of condensed matter physics\index{Condensed matter physics}.
+
+The analysis for AQC involves bounding the eigenvalue gap of a complicated many-body Hamiltonian, which is a notoriously difficult problem. Nevertheless, a number of examples are known exhibiting a gap between the classical and quantum cases. 
+
+Some of the well-known examples of AQC algorithms\index{Adiabatic!Algorithms} include:
+\begin{itemize}
+\item Adiabatic Grover algorithm\index{Adiabatic!Grover algorithm}: as its name suggests, this is the adiabatic version of Grover's search algorithm. The initial Hamiltonian is,
+\begin{align}
+	\hat{H}_0 = \hat\openone - \ket{\phi}\bra{\phi},
+\end{align}
+where $\ket{\phi}$ is the uniform superposition state $\ket{+}^{\otimes n}$. The final Hamiltonian is given by,
+\begin{align}
+\hat{H}_1 = \hat\openone - \ket{m}\bra{m},
+\end{align}
+where $\ket{m}$ is the marked item we are searching for \cite{bib:PhysRevA.65.042308}.
+% 
+% 
+\item Adiabatic Deutsch-Jozsa algorithm\index{Adiabatic!Deutsch-Jozsa algorithm}\index{Deutsch-Jozsa algorithm}: given a binary function,
+\begin{align}
+f:\{0,1 \}^n \rightarrow \{0,1\},
+\end{align}
+which is either constant\index{Constant functions} or balanced\index{Balanced functions}, the Deutsch-Jozsa algorithm can determine which type of function it is, exhibiting quantum speedup. An adiabatic implementation \cite{bib:PhysRevLett.95.250503} is derived to match the speedup obtained in the original circuit model implementation.
+% 
+% 
+\item Adiabatic glued-trees problem\index{Adiabatic!Glued-trees problem}: we consider two binary trees\index{Binary trees} of depth $n$. Each tree has \mbox{$2^{n+1}-1$} vertices, and the two trees are randomly glued together, as shown in Fig.~\ref{fig:glued_trees}. A leaf is chosen from the left, connected to a random leaf on the right, which is in turn glued to another leaf on the left and so on. Every leaf on is connected to two on the other side, creating a random cycle that alternates between the two trees.
+% 
+ The computation problem is to start from the left root and find a path to the right root in the smallest possible number of steps, given that one can only see adjacent vertices. Classical algorithms require at least a sub-exponential number of queries, but there exists a polynomial-time quantum algorithm based on quantum walks \cite{bib:childs2003exponential}.
+% 
+ % 
+\item Adiabatic \textsc{PageRank} algorithm\index{Adiabatic!PageRank algorithm}: the \textsc{PageRank}\index{PageRank algorithm} vector is a crucial tool in data mining and information retrieval, employed heavily by the Google search engine. The goal of the algorithm is to rank the importance, impact or influence of some entity in a network (webpages on the internet in the case of a Google search). The algorithm achieves this by representing the network as a flow network\index{Flow networks}, whereby flow from one vertex to another represents a vote by the source vertex for the importance of the destination vertex. By finding a steady-state flow to each edge in the network, the net flow into vertices represents their cumulative importance, as determined collectively by participants in the network. However, the magnitude of votes cast by vertices is weighted by their own ranking. Therefore, the algorithm aims to filter out bogus gaming of the system via the creation of dummy nodes that cast votes en masse to rig the election. The \textsc{PageRank} approach to ranking webpages has been by far the most successful and robust such algorithm, and was perhaps the key development behind the global success of Google. The best-known classical algorithms for solving the \textsc{PageRank} problem are via: representing the flow network as a matrix equation, from which the solution is obtained via solving an eigenvalue equation; representing the flow network as a random walk, whereby walkers randomly follow paths influenced by the flows, which in the long-time limit yields walks approximating the solution. The current best-known quantum \textsc{PageRank} algorithm outperforms all currently known classical algorithms with polynomial or even exponential speedup \cite{bib:PhysRevLett.108.230506}, but better future classical algorithms have not been ruled out and are under active investigation.
+\end{itemize}
+
+\begin{figure}[!htbp]
+	\includegraphics[clip=true, width=0.475\textwidth]{glued_trees}
+	\captionspacefig \caption{A glued-trees graph of depth \mbox{$n=4$}. The `gluing' edges, chosen randomly such that each leaf vertex connects to exactly two of them, are shown in red.} \label{fig:glued_trees}\index{Glued-trees graph}
+\end{figure}
+
+The computational power of the circuit model and the adiabatic model for quantum computing are equivalent up to a polynomial overhead. In the circuit model, a set of gates is said to be universal if any unitary operation may be approximated to arbitrary accuracy by a quantum circuit involving only those gates. The analog of such a set of gates in AQC is to efficiently map any circuit to a Hamiltonian.
+
+If we have in the circuit model an $n$-particle pure state $\ket{\psi}$, acted upon by unitary $\hat{U}$ with circuit depth\index{Circuit depth} $L$, a time-dependent Hamiltonian $\hat{H}(t)$ is universal if:
+\begin{itemize}
+\item The ground state of $\hat{H}(t_f)$ is equal to $\hat{U}\ket{\psi}$ with non-zero probability.
+\item The number of particles in $\hat{H}(t_f)$ is polynomial in $n$ and $L$, and $t_f$ is also polynomial in $n$ and $L$.
+\end{itemize}
+It has been proven that AQC can efficiently simulate the entire circuit model \cite{bib:RevModPhys.90.015002}, which implies that it is itself universal for efficient quantum computation.
 
 %
 % Restricted Models for Quantum Computation
@@ -187,15 +254,17 @@ The second approach is to borrow techniques from percolation theory\index{Percol
 
 \subsection{Restricted models for quantum computation} \label{sec:restricted_models} \index{Restricted models for quantum computation}
 
-\comment{To do}
+In the near future we are unlikely to have devices with the full power and versatility of universal quantum computers. Instead, we will gradually evolve towards that challenging goal via many incremental, intermediate steps. Those steps will take us along a path of restricted quantum computers, that solve specific problems of relatively small size, and are not fault-tolerant. Probably we can expect them to contain on the order of hundreds of qubits in the coming few years, as of the time of writing this.
 
-\comment{Talk about Preskill's NISQ or whatever they're called QCs}
+We dedicate Sec.~\ref{sec:NISQ} to discussing these so-called \textit{Noisy Intermediate-Scale Quantum} (NISQ) devices \cite{bib:preskill2018quantum}, speculating on what that might exactly entail for our quantum journey in the near future.
+
+One thing is for certain -- full-fledged quantum computing will remain an extremely ambitious goal for some time, but we will learn a lot from traversing the path towards it, and hopefully uncover new restricted quantum applications along the way.
 
 %
 % Fault-Tolerance
 %
 
-\subsection{Fault-tolerance}\index{Fault-tolerance}
+\subsection{Fault-tolerance}\index{Fault-tolerance}\label{sec:fault_tolerance}
 
 \comment{To do. Help from Simon Devitt.}
 
@@ -207,4 +276,4 @@ This is achieved by extending techniques from QEC to achieve \textit{fault-toler
 
 Because a quantum computation is not a passive operation but highly active, fault-tolerance protocols are also active and it does not suffice to simply perform an encoding at the beginning and error correction at the end. Instead, error correction procedures must be applied repeatedly throughout execution, at each stage projecting the encoded computation onto an error-free state.
 
-As with conventional QEC, this introduces (potentially large, but efficient) overheads associated with encoding logical qubits into fault-tolerant codes. Similarly, there is the notion of \textit{fault-tolerance thresholds}\index{Fault-tolerance thresholds} -- thresholds on gate error rates that must be achieved if fault-tolerant execution is to be successful. These thresholds are typically depressingly low (well below 1\%) and are the primary reason humanity has not yet achieved scalable quantum computing.
+As with conventional QEC, this introduces (potentially large, but efficient) overheads associated with encoding logical qubits into fault-tolerant codes. Similarly, there is the notion of \textit{fault-tolerance thresholds}\index{Fault-tolerance!Thresholds} -- thresholds on gate error rates that must be achieved if fault-tolerant execution is to be successful. These thresholds are typically depressingly low (well below 1\%) and are the primary reason humanity has not yet achieved scalable quantum computing.

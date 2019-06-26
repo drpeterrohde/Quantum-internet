@@ -2,25 +2,48 @@
 % Network Topologies
 %
 
-\section{Network topologies} \index{Network topologies}\label{sec:network_topologies}
+\section{Network topologies} \index{Network!Topologies}\label{sec:network_topologies}
 
 \dropcap{A}{s} quantum (or classical) networks inherently reside on graphs, it is important to introduce some of the key graph structures of relevance to networking and some of their properties of relevance to quantum networking protocols.
 
 Let the graph $G$ representing the network be,
-\begin{align}
+\begin{align}\index{Graphs}
 G=(V,E),	
 \end{align}
 with vertices $V$ and edges $E$. In principle a network could be characterised by any connected graph whatsoever. However, there are certain structures and patterns that emerge very frequently and deserve special attention.
 
 It is paramount that QTCP protocols have the capacity to deal with the diverse network topologies that are likely to present themselves in the future real-world quantum internet. Some of the graph-theoretic algorithms that we rely on in our QTCP protocol (Sec.~\ref{sec:graph_theory}) are computationally efficient for \textit{arbitrary} graph topologies, even more so for certain classes of graphs exhibiting particular structure, such as tree graphs or complete graphs. Others, however, are computationally inefficient in general, but may have efficient approximation algorithms for some or all classes of topologies.
 
-We will now review some of the graph structures most likely to arise in quantum networks, learning from the structures that have become ubiquitous in classical networking.
+We will now review some of the graph structures most likely to arise in quantum networks, learning from the structures that have become ubiquitous in classical networking. Understanding the basic mathematical properties of these different network topologies is extremely important to take into consideration when designing future quantum networks, since they strongly impact important features such as construction cost of the network infrastructure, routing cost vector analysis (Sec.~\ref{sec:quantum_meas_cost}), likelihood of successful routing, and transmission time.
+
+A summary of the basic mathematical characteristics of the topologies presented is shown in Table.~\ref{tab:net_top_sum}, specifically showing the number of edges and vertices, the \textit{diameter} of the topologies (i.e the distance between extremal points in the network).
+
+\startnormtable
+\begin{table*}[!htbp]
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+  		Topology & Vertices ($|V|$) & Edges ($|E|$) & Diameter ($d$) \\
+      	\hline
+      	\hline
+      	Point-to-point & $2$ & $1$ & $1$ \\
+      	Linear & $|V|$ & \mbox{$O(|V|)$} & \mbox{$|V|$} \\
+      	Complete & $|V|$ & \mbox{$O(|V|^2)$} & $1$ \\
+      	Lattice & $mn$ & \mbox{$O(mn)$} & \mbox{$O(m+n)$} \\
+      	Tree & $|V|$ & \mbox{$O(|V|)$} & \mbox{$O(\log |V|)$} \\
+      	Percolation & \mbox{$p_\mathrm{vertex}\cdot |V|$} & \mbox{$p_\mathrm{edge}\cdot |E|$} & variable \\
+      	Random & \mbox{$p_\mathrm{vertex}\cdot |V|$} & \mbox{$p_\mathrm{edge}\cdot O(|V|^2)$} & variable \\
+      	Scale-free & $|V|$ & $|E|$ & \mbox{$O(\log\log |V|)$}\\
+      	\hline
+	\end{tabular}
+	\captionspacetab \caption{Summary of the mathematical characteristics of different network topologies.} \label{tab:net_top_sum}
+\end{table*}
+\startalgtable
 
 %
 % Point-To-Point
 %
 
-\subsection{Point-to-point} \index{Point-to-point topologies}
+\subsection{Point-to-point} \index{Point-to-point (P2P)!Topologies}\label{sec:P2P_topol}
 
 The most trivial network topology, which also acts as the elementary primitive from which our other topologies will be constructed is a simple dedicated point-to-point (P2P) connection between two parties, where the sender and recipient of a packet reside on neighbouring nodes.
 
@@ -31,10 +54,33 @@ In the case whereby the P2P connection is reserved exclusively for a particular 
 In the case whereby the P2P connection is not reserved for exclusive use between a single sender/recipient pair, but shared between different competing routes in the network, the importance of network routing strategies manifests itself. Now competition for access to the channel will reduce network efficiency, scaling inversely against the number of network participants, and the priorities and costs of packets must be tallied for the purpose of implementing routing strategies.
 
 %
+% Linear
+%
+
+\subsection{Linear}\index{Linear topologies}\label{sec:linear_topol}
+
+A linear graph topology, shown in Fig.~\ref{fig:linear_graph}, has very simple properties. The number of edges simply scales as,
+\begin{align}
+|E|=|V|-1,	
+\end{align}
+and the graph diameter is simply the number of vertices,
+\begin{align}
+d = |V|.	
+\end{align}
+There are limited routing considerations for such a topology since there is always exactly one route between two points, although buffering issues may still arise under congestion.
+
+\begin{figure}[!htbp]
+\includegraphics[clip=true, width=0.4\textwidth]{linear_graph}
+\caption{A simple linear graph topology with \mbox{$|V|=10$} vertices.}\label{fig:linear_graph}
+\end{figure}
+
+Because there is no path redundancy, linear graphs are vulnerable to node failures, since the deletion of a since node makes disconnects the network.
+
+%
 % Complete
 %
 
-\subsection{Complete} \index{Complete topologies}
+\subsection{Complete}\label{sec:complete_topol} \index{Complete topologies}
 
 The complete graph, denoted $K_{|V|}$, is a $|V|$-vertex graph where every vertex has an undirected link to every other. From a networking point of view, this can be regarded as the extremity of exclusive-use P2P networking, whereby every node has a direct link with every other. Thus, any sender can directly communicate with any receiver, via a dedicated direct channel, with no need to utilise any indirect routes. This topology has the favourable property that although any node can communicate with any other, by exclusively utilising direct P2P links we achieve several benefits:
 \begin{itemize}
@@ -65,7 +111,7 @@ Clearly route-finding is trivial, since there is always a direct P2P link from s
 % Lattice
 %
 
-\subsection{Lattice} \index{Lattice topologies}
+\subsection{Lattice}\label{sec:lattice_topol} \index{Lattice!Topologies}
 
 A lattice graph is simply an \mbox{$n\times m$} lattice of vertices (of any geometry, e.g squares), connecting each vertex to its immediate geometric neighbours. The number of edges scales obviously as,
 \begin{align}
@@ -93,7 +139,7 @@ In this case, route finding is simplified, since \textit{all} routes, which stri
 % Tree
 %
 
-\subsection{Tree} \label{sec:tree_graph} \index{Tree topologies}
+\subsection{Tree}\label{sec:tree_topol} \label{sec:tree_graph} \index{Tree topologies}
 
 A tree is a graph containing no cycles, only \textit{branches}\index{Branches}. There are many uses for tree graphs, but one property is of particular convenience in many applications: because the graph is acyclic, there is always exactly one path from any vertex to any other. This mitigates the need for shortest-path algorithms designed for general graphs, and simplifies route-finding algorithms (to be discussed in Sec.~\ref{sec:path_exp}). However, this brings with it the drawback that the topology is most vulnerable to link failures, since the removal of any link from the tree will separate it into a multipartite graph\index{Multipartite graphs}, making communication between the disjoint subgraphs (which are also trees) impossible, as there are no redundant routes. In a sense, tree graphs can be considered the polar opposites of complete graphs.
 
@@ -115,11 +161,11 @@ irrespective of the branching parameters, since because the graph is strictly ac
 % Balanced Tree
 %
 
-\subsubsection{Balanced tree} \label{sec:bal_tree} \index{Balanced tree topologies}
+\subsubsection{Balanced tree} \label{sec:bal_tree} \index{Balanced!Tree topologies}
 
 A balanced tree is a tree with a regular, self-similar structure, in which every node at a given depth is the parent of the same number of sub-nodes, all separated by the same edge weights. That is, the network has a hierarchical structure, subdividing into identically structured subnetworks. Such a network is characterised by just two parameters -- the branching parameter, $b$, and the depth, $d$. Some examples of balanced trees with different $b$ and $d$ are shown in Fig.~\ref{fig:tree_example}.
 
-\if 2\pubmode
+\if 1\doublecol
 	\begin{figure}[!htbp]
 	\includegraphics[clip=true, width=0.325\textwidth]{tree_3_8}\\
 	\includegraphics[clip=true, width=0.325\textwidth]{tree_4_8}\\
@@ -143,13 +189,13 @@ A special case is when \mbox{$d=1$}, which we refer to as a \textit{star} graph.
 % Random Tree
 %
 
-\subsubsection{Random tree} \index{Random tree topologies}
+\subsubsection{Random tree} \index{Random!Tree topologies}
 
 While balanced trees accurately capture the hierarchical nature of realistic networks, they are somewhat contrived in their perfect symmetry. The subnetworks in a given network are not likely to actually all be identical. Random trees are perhaps more realistic, in that their tree structure captures the hierarchical nature of real-world networks, and also their highly ad hoc nature.
 
 To construct a random tree we simply randomly choose a branching parameter, according to some arbitrary distribution, for every node. When a node has \mbox{$b_i=0$}, it terminates the lineage. Some examples of random trees are shown in Fig.~\ref{fig:random_tree}.
 
-\if 2\pubmode
+\if 1\doublecol
 	\begin{figure}[!htbp]
 	\includegraphics[clip=true, width=0.475\textwidth]{random_tree_1}\\
 	\includegraphics[clip=true, width=0.475\textwidth]{random_tree_2}
@@ -178,11 +224,13 @@ A \textit{spanning tree}\index{Spanning tree} $S$, of a graph $G$, is a tree sub
 
 The calculation of MSTs is most likely to come into consideration when actually performing the initial construction of networks, where we wish to connect all nodes in the network, but using the most frugal possible physical resources. MSTs serve this purpose, and since they are trees, inherit all the same properties of tree networks.
 
+In general, the MST of a graph is not unique, and there may be an arbitrarily large number of completely differently structured MSTs all with the same minimum weight.
+
 %
 % Percolation
 %
 
-\subsection{Percolation}\index{Percolation topologies}\label{sec:perc_topol}
+\subsection{Percolation}\index{Percolation!Topologies}\label{sec:perc_topol}
 
 A variation on any graph is to instead have a randomised implementation of it, whereby each of the possible edges or vertices occur with some probability, $p_\mathrm{edge}$ or $p_\mathrm{vertex}$, otherwise deleted. These are referred to as \textit{edge percolation} and \textit{site percolation} graphs respectively.
 
@@ -198,23 +246,23 @@ This model is very useful in real-world applications, allowing unreliable channe
 
 Note that percolation graphs might be disjoint with sufficient defects, in which case the respective network becomes unreliable. Specifically, with sufficiently low $p_\mathrm{edge/vertex}$, `islands' may form in the network topology -- small segregated networks, which are unable to interface with the remainder of the network.
 
-For asymptotically large percolation graphs, \textit{percolation theory}\index{Percolation theory} \cite{???} provides thresholds for $p_\mathrm{edge/vertex}$ such that routes across the network exist in asymptotic limits \cite{???}.
+For asymptotically large percolation graphs, \textit{percolation theory}\index{Percolation!Theory} \cite{???} provides thresholds for $p_\mathrm{edge/vertex}$ such that routes across the network exist in asymptotic limits \cite{???}.
 
 Fig.~\ref{fig:perc_graph} illustrates several square lattice graphs with different percolation probabilities, and how the larger network segregates into smaller disconnected islands as failure rates increase.
 
-\if 2\pubmode
+\if 1\doublecol
 	\begin{figure}[!htbp]
 	\includegraphics[clip=true, width=0.35\textwidth]{percolation_1}\\
 	\includegraphics[clip=true, width=0.35\textwidth]{percolation_2}\\
 	\includegraphics[clip=true, width=0.35\textwidth]{percolation_3}
-	\captionspacefig \caption{A square lattice graph subject to different percolation rates (node defects). As the failure rate increases (top to bottom), the larger network segregates into a multipartite graph of smaller disjoint islands (denoted by colour).} \label{fig:perc_graph}\index{Percolation topologies}
+	\captionspacefig \caption{A square lattice graph subject to different percolation rates (node defects). As the failure rate increases (top to bottom), the larger network segregates into a multipartite graph of smaller disjoint islands (denoted by colour).} \label{fig:perc_graph}\index{Percolation!Topologies}
 	\end{figure}
 \else
 	\begin{figure*}[!htbp]
 	\includegraphics[clip=true, width=0.325\textwidth]{percolation_1}
 	\includegraphics[clip=true, width=0.325\textwidth]{percolation_2}
 	\includegraphics[clip=true, width=0.325\textwidth]{percolation_3}
-	\captionspacefig \caption{A square lattice graph subject to different percolation rates (node defects). As the failure rate increases (left to right), the larger network segregates into a multipartite graph of smaller disjoint islands (denoted by colour).} \label{fig:perc_graph}\index{Percolation topologies}
+	\captionspacefig \caption{A square lattice graph subject to different percolation rates (node defects). As the failure rate increases (left to right), the larger network segregates into a multipartite graph of smaller disjoint islands (denoted by colour).} \label{fig:perc_graph}\index{Percolation!Topologies}
 	\end{figure*}
 \fi
 
@@ -222,23 +270,30 @@ Fig.~\ref{fig:perc_graph} illustrates several square lattice graphs with differe
 % Random
 %
 
-\subsection{Random}\index{Random topologies}
+\subsection{Random}\label{sec:rand_topol}\index{Random!Topologies}
 
-We refer to a random graph as being one in which edges between each pair of vertices occur with some probability $p_\mathrm{edge}$. No vertices are removed from the network, although some may have order \mbox{$|v|=0$}, i.e \mbox{$p_\mathrm{vertex}=1$}. This can be thought of as the edge percolation graph of the complete graph $K_{|V|}$. Some examples are shown in Fig.~\ref{fig:random_graph}.
+We refer to a random graph as being one in which edges between each pair of vertices occur with some probability $p_\mathrm{edge}$. No vertices are removed from the network, although some may have order \mbox{$|v|=0$}, i.e \mbox{$p_\mathrm{vertex}=1$}. This can be thought of as the edge percolation graph of the complete graph $K_{|V|}$.
 
-\if 2\pubmode
+The average number of edges in such a network scales as,
+\begin{align}
+|E|_\mathrm{av} = p_\mathrm{edge}\cdot O(|V|^2).	
+\end{align}
+
+Some examples are shown in Fig.~\ref{fig:random_graph}.
+
+\if 1\doublecol
 	\begin{figure}[!htbp]
 	\includegraphics[clip=true, width=0.325\textwidth]{random_0}\\
 	\includegraphics[clip=true, width=0.325\textwidth]{random_05}\\
 	\includegraphics[clip=true, width=0.325\textwidth]{random_1}
-	\captionspacefig \caption{The 15-vertex random graph. This is the same as $K_{15}$ in Fig.~\ref{fig:complete_graph}, but where edges are present with probabilities \mbox{$p_\mathrm{edge}=0,0.5,1$} (top to bottom).} \label{fig:random_graph}\index{Random topologies}
+	\captionspacefig \caption{The 15-vertex random graph. This is the same as $K_{15}$ in Fig.~\ref{fig:complete_graph}, but where edges are present with probabilities \mbox{$p_\mathrm{edge}=0,0.5,1$} (top to bottom).} \label{fig:random_graph}\index{Random!Topologies}
 	\end{figure}
 \else
 	\begin{figure*}[!htbp]
 	\includegraphics[clip=true, width=0.325\textwidth]{random_0}
 	\includegraphics[clip=true, width=0.325\textwidth]{random_05}
 	\includegraphics[clip=true, width=0.325\textwidth]{random_1}
-	\captionspacefig \caption{The 15-vertex random graph. This is the same as $K_{15}$ in Fig.~\ref{fig:complete_graph}, but where edges are present with probabilities \mbox{$p_\mathrm{edge}=0,0.5,1$} (left to right).} \label{fig:random_graph}\index{Random topologies}
+	\captionspacefig \caption{The 15-vertex random graph. This is the same as $K_{15}$ in Fig.~\ref{fig:complete_graph}, but where edges are present with probabilities \mbox{$p_\mathrm{edge}=0,0.5,1$} (left to right).} \label{fig:random_graph}\index{Random!Topologies}
 	\end{figure*}
 \fi
 
@@ -246,7 +301,7 @@ We refer to a random graph as being one in which edges between each pair of vert
 % Hybrid
 %
 
-\subsection{Hybrid} \index{Hybrid topologies}
+\subsection{Hybrid} \index{Hybrid!Topologies}
 
 Real networks are highly unlikely to fit the exact form factor of any of the classes of graphs presented above. Rather, a truly global internet is inevitably going to comprise many subnetworks, each structured completely independently of one another, with little consistency or large-scale planning between them. Who thinks about the broader structure of the global internet when setting up their office network?
 
@@ -262,7 +317,7 @@ This hybrid network topology is the norm today in our classical internet, and it
 
 \subsection{Scale-free networks}\index{Scale-free networks}\label{sec:scale_free_networks}
 
-Scale-free networks are not defined as obeying a specific topological structure, but rather as following a particular statistical distribution in the connectedness of their nodes. Specifically, the probability distribution function\index{Probability distribution function} for the order of vertices roughly follows a Pareto distribution or power law\index{Power law},
+Scale-free networks are not defined as obeying a specific topological structure, but rather as following a particular statistical distribution in the connectedness of their nodes. Specifically, the probability distribution function\index{Probability distribution function} for the order of vertices (degree distribution\index{Degree distribution}) roughly follows a Pareto distribution or power law\index{Power!Law},
 \begin{align}\label{eq:pareto_dist}
 	P(k) \sim k^{-\gamma},
 \end{align}
@@ -270,16 +325,49 @@ where $P(k)$ is the probability of a vertex having order $k$ (up to normalisatio
 
 \begin{figure}[!htbp]
 \includegraphics[clip=true, width=0.475\textwidth]{power_law}
-\captionspacefig \caption{Examples of the power law, characteristic of the vertex order distribution in scale-free networks.}\label{fig:power_law}\index{Scale-free networks}\index{Power law}	
+\captionspacefig \caption{Examples of the power law, characteristic of the vertex order distribution in scale-free networks.}\label{fig:power_law}\index{Scale-free networks}\index{Power!Law}	
 \end{figure}
 
-This distribution is observed empirically in many real-world networks, and as such is more an observation about the typical behaviour of naturally occurring and evolving human-made networks than an explicit definition for their construction. However, owing to this particular statistical behaviour, and the underlying causations for their Pareto distribution, much has been researched and is known about the properties of scale-free networks.
+This distribution is observed empirically in many real-world networks and sociological structures, and as such is more an observation about the typical behaviour of naturally occurring and evolving human-made networks than an explicit definition for their construction. However, owing to this particular statistical behaviour, and the underlying causations for their Pareto distribution, much has been researched and is known about the properties of scale-free networks.
 
-One notable characteristic is their hierarchical structure, with a small number of very highly-connected `hubs'\index{Hub nodes} at the top of the food chain, which quickly connect onto smaller hubs, and so on down the food chain with decreasing connectivity.
+Scale-free networks arise naturally in systems exhibiting \textit{preferential attachment}\index{Preferential attachment}, i.e when a new node is added to the system it preferentially attaches to nodes that are already more highly connected. This yields a so-called \textit{fitness model}\index{Fitness!Model}.
 
-A feature of scale-free networks of especial interest in the context of computer networks is their robustness against node failure. Suppose we constructed a percolated (Sec.~\ref{sec:perc_topol}) instance of a typical scale-free network. Such a network is highly robust against node/edge deletions compared to many other graph constructions, in the sense that a relatively large number of failures must occur to disconnect the graph. This makes the scale-free network characteristic a particularly attractive one from the perspective of the failure-tolerance of the network.
+According to the Bianconi-Barab{\'a}si fitness model\index{Bianconi-Barab{\'a}si fitness model} \cite{bib:BBfitness, bib:BAfitness}, let \mbox{$\eta_i>0$} be the \textit{fitness factor}\index{Fitness!Factors} of node $i$, which follow a distribution $\rho(\eta)$, a characteristic of the network. Then the fitness parameters\index{Fitness!Parameters} are defined to be normalised such that,
+\begin{align}
+\Pi_i = \frac{\eta_i k_i}{\sum_j \eta_j k_j}.	
+\end{align}
+Upon adding a new node of degree $m$ to the network, the temporal dynamics will satisfy,
+\begin{align}
+\frac{\partial P(k_i)}{\partial t}= m\Pi_i.	
+\end{align}
+The probability distribution can then be shown to have solution,
+\begin{align}
+P(k) \approx \int \rho(\eta)\frac{C}{\eta}\left(\frac{m}{k}\right)^\frac{C}{\eta+1}\,d\eta,
+\end{align}
+where,
+\begin{align}
+	C &= \int \frac{\rho(\eta)\cdot\eta}{1-\beta(\eta)}\,d\eta,\nonumber\\
+	\beta(\eta) &= \frac{\eta}{C},
+\end{align}
+which is a linear combination of power law relationships, as required for the definition for scale-free.
 
-Scale-free networks typically exhibit extremely small diameter (average distance between nodes), scaling as \cite{bib:PhysRevLett.90.058701},
+Intuitively, why would we expect computer networks (classical or quantum) to be scale-free? To answer this, we simply must establish whether the preferential attachment property will hold. In computer networks there are several reasons why we might expect this to be the case:
+\begin{itemize}
+	\item Distance\index{Cost vector analysis}: connecting to more highly-connected nodes reduces (on average) the number of channels data packets must traverse to reach their destination, making them `cheaper' in terms of their cost vector analysis (Sec.~\ref{sec:quantum_meas_cost}).
+	\item Availability\index{Availability}: larger nodes are more likely to have unused network sockets\index{Sockets} available for use by new nodes, and they are likely to be more readily accessible. For example, one is more likely to be able to successfully sign up for an internet connection with a major national ISP than a small, local upstart player.
+	\item Economies of scale\index{Economies of scale}: the dollar cost per connection of a larger node is likely to be less than for a smaller one, owing to economies of scale. For example, the cost per FLOP of a large-scale supercomputer is far less than for a desktop PC, and Google's data-centres experience lower cost-per-bandwidth on their internet connections than home-users connecting via their ISPs.
+\end{itemize}
+
+One notable characteristic of scale-free networks is their hierarchical structure, with a small number of very highly-connected `hubs'\index{Hubs} at the top of the food chain, which quickly connect onto smaller hubs, and so on down the food chain with decreasing connectivity, as shown in Fig.~\ref{fig:scale_free_net}.
+
+\begin{figure}[!htbp]
+\includegraphics[clip=true,width=0.4\textwidth]{scale_free_network}
+\captionspacefig \caption{Example of a scale-free network. The graph exhibits a highly hierarchical structure, with a small number of `hub' nodes that are highly connected (green, with vertex order 5), that connect downward to a larger number of less connected nodes (purple, with vertex order 1-2).}\label{fig:scale_free_net}
+\end{figure}
+
+A feature of scale-free networks of especial interest in the context of computer networks is their robustness against node failure. Suppose we constructed a percolated (Sec.~\ref{sec:perc_topol}) instance of a typical scale-free network. Such a network is highly robust against \textit{random} node/edge deletions compared to many other graph constructions, in the sense that a relatively large number of failures must occur to disconnect the graph. This makes the scale-free network characteristic a particularly attractive one from the perspective of the failure-tolerance of a network. It should be noted that, on the other hand, a scale-free network is highly vulnerable to \textit{targeted} node/edge deletions, that specifically target the highly-connected nodes. A targeted attack against major hubs could disconnect the network with relatively few successful attacks. This brings with it important geostrategic\index{Geostrategic politics} considerations when constructing network infrastructure.
+
+Scale-free networks typically exhibit extremely small diameter\index{Graphs!Diameter} (average distance between nodes), scaling as \cite{bib:PhysRevLett.90.058701},
 \begin{align}
 	d = O(\log \log |V|).
 \end{align}
@@ -295,17 +383,17 @@ Of course, all the topological structures described until now are in-principle c
 
 Fig.~\ref{fig:webgraph} illustrates some example web-graphs, constructed from subsets of data from the actual internet. The combination of random, densely and sparsely connected, and tree structures, and its clear hierarchy are all evident. This encourages our intuition of the different types of structures present in realistic networks.
 
-\if 2\pubmode
+\if 1\doublecol
 	\begin{figure}[!htbp]
 	\includegraphics[clip=true, width=0.475\textwidth]{webgraph_1}\\
 	\includegraphics[clip=true, width=0.475\textwidth]{webgraph_2}
-	\captionspacefig \caption{Examples of real-world web-graphs of the internet, capturing their high-level random tree-like structure. Graphics attributed to the Center for Applied Internet Data Analysis (CAIDA), \href{http://www.caida.org}{http://www.caida.org}.}\index{Internet web-graph} \label{fig:webgraph}
+	\captionspacefig \caption{Examples of real-world web-graphs of the internet, capturing their high-level random tree-like structure. Graphics attributed to the Center for Applied Internet Data Analysis (CAIDA), \url{http://www.caida.org}.}\index{Internet web-graph} \label{fig:webgraph}
 	\end{figure}
 \else
 	\begin{figure*}[!htbp]
 	\includegraphics[clip=true, width=0.481\textwidth]{webgraph_1}
 	\includegraphics[clip=true, width=0.475\textwidth]{webgraph_2}
-	\captionspacefig \caption{Examples of real-world web-graphs of the internet, capturing their high-level random tree-like structure. Graphics attributed to the Center for Applied Internet Data Analysis (CAIDA), \href{http://www.caida.org}{http://www.caida.org}.}\index{Internet web-graph} \label{fig:webgraph}
+	\captionspacefig \caption{Examples of real-world web-graphs of the internet, capturing their high-level random tree-like structure. Graphics attributed to the Center for Applied Internet Data Analysis (CAIDA), \url{http://www.caida.org}.}\index{Internet web-graph} \label{fig:webgraph}
 	\end{figure*}
 \fi
 
@@ -315,15 +403,19 @@ The internet web-graph has been observed to be a scale-free network (Sec.~\ref{s
 % Network Robustness
 %
 
-\subsection{Network robustness}\index{Network robustness}
+\subsection{Network robustness}\index{Network!Robustness}
 
-A key feature of any network topology is its robustness against node or channel failures. In general, the number of redundant paths between two points in a graph is an indicator of its robustness against failures.
+A key feature of any network topology is its robustness against node or channel failures. This is important from the perspective of naturally occurring hardware faults, and also from a geostrategic perspective, where adversaries may be launching attacks against the network. In general, there are two main contributing factors to network robustness:
+\begin{itemize}
+	\item Redundancy\index{Redundancy}: the number of redundant paths between two points in a graph stipulates how many backups there are to finding a route to a destination in the advent of one route failing.
+	\item Diameter\index{Diameter}: the chance of a data packet encountering a faulty node/channel increases with the number of hops required to the reach its destination. Graphs with smaller diameter are hence less vulnerable.
+\end{itemize}
 
-The extreme case of network robustness is the complete graph, $K_n$, which has P2P links between every pair of nodes. Therefore, if a single channel fails, there are always alternate paths taking us between nodes. On the opposing extreme are tree graphs, which contain no redundancy whatsoever, and just a single failure will disconnect the network. Scale-free networks sit in the intermediate zone, but are relatively robust against the failure of random nodes/links, but are vulnerable to conspiratorial failures, which target the highly connected hub nodes.
+The extreme case of network robustness is the complete graph, $K_n$, which has P2P links between every pair of nodes. Therefore, if a single channel fails, there are \textit{always} alternate paths taking us between nodes. On the opposing extreme are tree graphs, which contain no redundancy whatsoever, and just a single failure will disconnect the network, making certain routes impossible. Scale-free networks sit in the intermediate zone, but are relatively robust against the failure of random nodes/links, but are vulnerable to conspiratorial failures, which target the elite, highly connected hub-nodes\footnote{The 1\%.}.
 
-Fig.~\ref{fig:graph_deletions} illustrates some examples of these two extreme cases.
+Fig.~\ref{fig:graph_deletions} illustrates some examples of the robustness of these two extreme cases to link and node failure.
 
-\if 2\pubmode
+\if 1\doublecol
 	\begin{figure}[!htbp]
 	\includegraphics[clip=true, width=0.475\textwidth]{graph_deletions_long}
 	\captionspacefig \caption{Robustness of network topologies to node and link deletion. Examples of a tree graph (a) and a complete graph, $K_n$, with \mbox{$n=10$} (d). (b,e) The same graphs subject to a single link failure. The failure disconnects the tree graph into a bipartite graph (b), whereas the complete graph's connectivity is unhindered as alternate routes exist between all nodes (e). A single node failure disconnects the tree graph into a $|v|$-partite graph (c), where $|v|$ is the order of the vertex at which failure occurs. The complete graph, on the other hand, is simply reduced to a $K_{n-1}$ graph, with no loss of connectivity (f). Thus, tree graphs are the most vulnerable network topologies to node/link failures, whereas complete graphs are the most robust.}\label{fig:graph_deletions}

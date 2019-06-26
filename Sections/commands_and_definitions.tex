@@ -1,5 +1,6 @@
 \newcommand{\bra}[1]{\langle#1|}
 \newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\braket}[1]{\langle#1\rangle}
 
 \newcommand\gobbleone[1]{}
 \newcommand*{\seeonly}[2]{\ (\textit{\seename} #1)}
@@ -9,19 +10,20 @@
 \newcommand{\boldauthor}[1]{\author{\textbf{#1}}}
 
 \newcommand{\comment}[1]{{\color{blue}{\textbf{#1}}}}
-\newcommand{\sihui}[1]{{\color{Orchid}{#1}}}
 
 \newcommand{\captionspacealg}[0]{\vspace{-1.5em}}
 \newcommand{\captionspacefig}[0]{\vspace{-0.8em}}
 \newcommand{\captionspacetab}[0]{\vspace{-0.6em}}
 
-\if 1\pubmode
+\if 1\seriousmode
 	\newcommand{\latinquote}[1]{}
 \else
 	\newcommand{\latinquote}[1]{\textit{--- #1}\index{Latin}}
 \fi
 
-\newcommand{\famousquote}[2]{\textit{``#1"} --- #2.\index{Quotes}\index{#2}}
+\newcommand{\sectionby}[1]{\begin{center}\textit{--- by #1.}\end{center}}
+
+\newcommand{\famousquote}[2]{\noindent\textit{``#1''} --- #2.\index{Quotes}\index{#2}}
 
 \newcommand{\dropcap}[2]{\lettrine[lines=2, findent=3pt, nindent=0pt]{#1}{#2}}
 
@@ -31,13 +33,13 @@
 \setcounter{algcntr}{0}
 
 \newcommand{\startnormtable}{
-	\renewcommand{\tablename}{TABLE.}
+	\renewcommand{\tablename}{Table}
 	\setcounter{algcntr}{\value{table}}
 	\setcounter{table}{\value{regtablecntr}}
 }
 
 \newcommand{\startalgtable}{
-	\renewcommand{\tablename}{ALG.}
+	\renewcommand{\tablename}{Algorithm}
 	\setcounter{regtablecntr}{\value{table}}
 	\setcounter{table}{\value{algcntr}}
 }
@@ -49,12 +51,12 @@
 	\newcommand{\sketch}[1]{\begin{center}\includegraphics[clip=true, width=0.4\textwidth]{#1}\end{center}\index{Artwork}}
 \fi
 
-\addto\captionsenglish{\renewcommand{\figurename}{FIG.}}
-\renewcommand{\figurename}{FIG.}
-\renewcommand{\tablename}{ALG.}
-\renewcommand{\nomname}{List of Abbreviations}
+\addto\captionsenglish{\renewcommand{\figurename}{Figure}}
+\renewcommand{\figurename}{Figure}
+\renewcommand{\tablename}{Algorithm}
+\renewcommand{\nomname}{List of abbreviations}
 
-\if 2\pubmode
+\if 1\doublecol
 	\newmdtheoremenv[innertopmargin=3pt, innerbottommargin=3pt, nobreak]{definition}{Def}
 	\newmdtheoremenv[innertopmargin=3pt, innerbottommargin=3pt, nobreak]{postulate}{Post}
 \else
@@ -62,21 +64,25 @@
 	\newmdtheoremenv[innertopmargin=3pt, innerbottommargin=3pt, nobreak]{postulate}{Postulate}
 \fi
 
+\renewcommand{\cite}{\citep}
+
 \makeatletter
 \def\BState{\State\hskip-\ALG@thistlm}
 \makeatother
 
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
 \graphicspath{{./Figures/}}
 
-\renewcommand{\topfraction}{1} % (0.9) max fraction of floats at top
-\renewcommand{\bottomfraction}{1} % (0.8) max fraction of floats at bottom
-\setcounter{topnumber}{2}
-\setcounter{bottomnumber}{2}
-\setcounter{totalnumber}{4} % 2 may work better
-\setcounter{dbltopnumber}{2} % for 2-column pages
-\renewcommand{\dbltopfraction}{1}% (0.9) fit big float above 2-col. text
-\renewcommand{\textfraction}{0} % (0.07) allow minimal text w. figs
-\renewcommand{\floatpagefraction}{1} % (0.7) require fuller float pages
-\renewcommand{\dblfloatpagefraction}{1} % (0.7) require fuller float pages
-
 \afterpage{\clearpage}
+
+\makeatletter
+\let\UrlSpecialsOld\UrlSpecials
+\def\UrlSpecials{\UrlSpecialsOld\do\/{\Url@slash}\do\_{\Url@underscore}}%
+\def\Url@slash{\@ifnextchar/{\kern-.11em\mathchar47\kern-.2em}%
+    {\kern-.0em\mathchar47\kern-.08em\penalty\UrlBigBreakPenalty}}
+\def\Url@underscore{\nfss@text{\leavevmode \kern.06em\vbox{\hrule\@width.3em}}}
+\makeatother

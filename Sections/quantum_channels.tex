@@ -10,7 +10,7 @@
 % Quantum Processes
 %
 
-\subsection{Quantum processes} \index{Quantum processes}
+\subsection{Quantum processes}\label{sec:quantum_processes}\index{Quantum processes}
 
 To quantify the operation of nodes and links within our network, we must characterise the evolution they impose upon quantum states passing through them. Quantum processes, also known as \textit{trace-preserving, completely positive maps} (CP-maps) are able to capture all the physical processes relevant to quantum networking, such as: unitary evolution; decoherence; measurement; quantum memory; state preparation; switching; and, indeed entire quantum computations. And they are able to capture physical processes in any degree of freedom, most commonly in the qubit basis, but also, for photons, in the spatio-temporal, photon-number, phase-space, or polarisation degrees of freedom.
 
@@ -20,7 +20,7 @@ Quantum processes are most easily represented using \textit{Kraus operators}\ind
 \end{align}
 where,
 \begin{align}
-\sum_i \hat{K}_i^\dag \hat{K}_i = \hat{\mathbb{I}},
+\sum_i \hat{K}_i^\dag \hat{K}_i = \hat\openone,
 \end{align}
 for normalisation. Here $\mathcal{E}$ is a super-operator, denoting the action of the process on state $\hat\rho$. This is also referred to as the \textit{operator-sum representation}\index{Kraus operators}. This representation has the elegant interpretation as the probabilistic application of each of the Kraus operators $\hat{K}_i$, with probability,
 \begin{align}
@@ -37,11 +37,11 @@ where $S$ denotes the primary system to which the process is applied, and $E$ is
 \begin{figure}[!htbp]
 \begin{align}
 \Qcircuit @C=1em @R=1.6em {
-    \lstick{\hat\rho_S} & \multigate{1}{\hat{U}_{S,E}} & \qw & \,\,\,\,\,\mathcal{E}(\hat\rho_S) \\
+    \lstick{\hat\rho_S} & \multigate{1}{{U}_{S,E}} & \qw & \,\,\,\,\,\mathcal{E}(\hat\rho_S) \\
     \lstick{\ket{0}_E} & \ghost{\hat{U}_{S,E}} & \qw & \times \\
 } \nonumber
 \end{align}
-\captionspacefig \caption{Model for the quantum process formalism, as a system state $\hat\rho_S$ undergoing joint unitary evolution with an environment state $\ket{0}_E$, which is subsequently traced out, yielding an arbitrary quantum process $\mathcal{E}(\hat\rho_S)$ acting on the primary system.} \label{fig:q_proc}
+\captionspacefig \caption{Model for the quantum process formalism, as a system state $\hat\rho_S$ undergoing joint unitary evolution with an environment state $\ket{0}_E$, which is subsequently traced out, yielding an arbitrary quantum process $\mathcal{E}(\hat\rho_S)$ acting on the primary system. For the most general possible class of quantum processes to be enabled, the dimension of the environment Hilbert space must grows quadratically with the dimension of the primary Hilbert space.\index{Hilbert space}} \label{fig:q_proc}
 \end{figure}
 
 We will require that all our states are normalised,
@@ -57,7 +57,7 @@ Multiple consecutive processes may be composed using the notation,
 \begin{align}
 \mathcal{E}_n(\dots \mathcal{E}_2(\mathcal{E}_1(\hat\rho)))=(\mathcal{E}_n \circ \dots \circ \mathcal{E}_2\circ\mathcal{E}_1)(\hat\rho).
 \end{align}
-In general, processes do not commute, i.e \mbox{$\mathcal{E}_1\circ \mathcal{E}_2 \neq \mathcal{E}_2\circ \mathcal{E}_1$}. Unless unitary, quantum processes are irreversible, meaning that errors accumulate and cannot be overcome without the overhead of some form of quantum error correction (QEC) \cite{bib:Shor95, bib:CalderbankShor96, bib:NielsenChuang00}. The linearity of Eq.~(\ref{eq:kraus_rep}) implies that quantum processes are also linear,
+In general, processes do not commute, i.e \mbox{$\mathcal{E}_1\circ \mathcal{E}_2 \neq \mathcal{E}_2\circ \mathcal{E}_1$}. Unless unitary, quantum processes are irreversible, meaning that errors accumulate and cannot be overcome without the overhead of some form of quantum error correction (QEC) \cite{bib:Shor95, bib:CalderbankShor96, bib:NielsenChuang00}. The linearity of Eq.~(\ref{eq:kraus_rep}) implies that quantum processes are also linear\index{Linearity},
 \begin{align}
 	\mathcal{E}(\hat\rho_1+\hat\rho_2) = \mathcal{E}(\hat\rho_1)+\mathcal{E}(\hat\rho_2).
 \end{align}
@@ -78,14 +78,14 @@ In this work we will only make use of discrete-time quantum processes, since the
 
 In general, the Kraus operator representation for quantum processes is not unique -- there may be multiple choices of Kraus operators that implement identical physical processes. But if the representation is not unique, how do we compare different quantum processes? To address this, it is common to choose a `standard' basis for representing quantum processes, such that they may be consistently and fairly compared. This requires choosing a basis which is complete for operations on the Hilbert space acted upon by the process.
 
-For example, for a single qubit, the Pauli operators\index{Pauli operators} -- $\hat\sigma_1$ (identity, $\mathbb{\hat{I}}$), $\hat\sigma_2$ (bit-flip, $\hat{X}$), $\hat\sigma_3$ (bit-phase-flip, $\hat{Y}$), and $\hat\sigma_4$ (phase-flip, $\hat{Z}$) -- are complete for single-qubit operations ($\mathbb{C}_2$). Therefore by decomposing our Kraus operators into linear combinations of these basis operators we have a standardised representation for single-qubit processes. Formally, for one qubit,
+For example, for a single qubit, the Pauli operators\index{Pauli!Operators} -- $\hat\sigma_1$ (identity, $\hat\openone$), $\hat\sigma_2$ (bit-flip, $\hat{X}$), $\hat\sigma_3$ (bit-phase-flip, $\hat{Y}$), and $\hat\sigma_4$ (phase-flip, $\hat{Z}$) -- are complete for single-qubit operations ($\mathbb{C}_2$). Therefore by decomposing our Kraus operators into linear combinations of these basis operators we have a standardised representation for single-qubit processes. Formally, for one qubit,
 \begin{align} \label{eq:process_matrix}
 \mathcal{E}(\hat\rho) = \sum_{i,j=1}^4 \chi_{i,j} \hat{\sigma}_i\hat\rho\,\hat{\sigma}_j^\dag.
 \end{align}
 
 The Hermitian matrix $\chi$ is known as the \textit{process matrix}\index{Process matrices}, from which many other metrics of interest may be directly computed (some of which are discussed in Sec.~\ref{sec:quantum_meas_cost}).
 
-Process matrices share many algebraic properties and interpretations in common with density matrices. The diagonal elements can be regarded as the amplitudes associated with applying each of the four Pauli operators, all of which are non-negative, while the off-diagonal elements represent the coherences between them, i.e whether the operations on the diagonal are being applied probabilistically or coherently. For example, a process that simply randomly applies Pauli operators would have a diagonal process matrix in the Pauli basis. But off-diagonal elements would be indicative of applying coherent superpositions of the operators.
+Process matrices share many algebraic properties and interpretations in common with density matrices. The diagonal elements can be regarded as the amplitudes associated with applying each of the four Pauli operators, all of which are non-negative, while the off-diagonal elements represent the coherences between them, i.e whether the operations on the diagonal are being applied probabilistically or coherently. For example, a process that simply randomly applies Pauli operators would have a diagonal process matrix in the Pauli basis. But off-diagonal elements would be indicative of applying coherent superpositions of the operators. Like density matrices, the dimensionality of process matrices grows exponentially with the number of qubits in the system being characterised, and for exactly the same conceptual reasons.
 
 For the process to be trace preserving we require,
 \begin{align}
@@ -95,12 +95,12 @@ We will typically enforce this constraint on our processes. $\mathrm{tr}(\chi) <
 
 As an illustrative example of the interpretation of process matrices, in Fig.~\ref{fig:CNOT_proc_matrix} we show the process matrix for the CNOT gate, represented in the Pauli basis. The CNOT operator can be expressed in the Pauli operator basis as,
 \begin{align}
-\hat{U}_\mathrm{CNOT} = \frac{1}{2}(\hat{\mathbb{I}}\otimes \hat{\mathbb{I}} + \hat{\mathbb{I}} \otimes \hat{X} + \hat{Z}\otimes \hat{\mathbb{I}} - \hat{Z}\otimes \hat{X}).
+\hat{U}_\mathrm{CNOT} = \frac{1}{2}(\hat\openone\otimes \hat\openone + \hat\openone \otimes \hat{X} + \hat{Z}\otimes \hat\openone - \hat{Z}\otimes \hat{X}).
 \end{align}
 Then, some density operator evolved under the CNOT gate is simply \mbox{$\hat{U}_\mathrm{CNOT}\hat\rho \,\hat{U}_\mathrm{CNOT}^\dag$}. Expanding this out, we obtain a new state comprising 16 terms, each representing the action of some combination of Pauli operators from the left and from the right. The amplitudes of these terms exactly correspond to the 16 non-zero elements of the process matrix shown in Fig.~\ref{fig:CNOT_proc_matrix}.
 
 \begin{figure}[!htbp]
-\includegraphics[clip=true, width=0.35\textwidth]{CNOT_process}
+\includegraphics[clip=true, width=0.4\textwidth]{CNOT_process}
 \captionspacefig \caption{Process matrix for the CNOT gate, expressed in the Pauli basis. Colour coding: grey=0, white=$1/4$, black=$-1/4$.} \label{fig:CNOT_proc_matrix}
 \end{figure}
 
@@ -136,7 +136,7 @@ In general, both nodes and links in a quantum network may implement quantum proc
 
 Given a link implementing some arbitrary quantum process, it is essential that it can be experimentally determined such that network performance may be characterised. For example, if an optical channel is lossy, what is the loss rate? This is crucial when attempting to choose routing strategies that optimise certain cost metrics.
 
-Treating a link or node as an unknown black box, \textit{quantum process tomography} (QPT) \cite{bib:ChuangNielsen97, ???} is a technique that may be applied to fully characterise the quantum process it implements, reproducing its complete process matrix. QPT has become a standard procedure, demonstrated in numerous architectures, most notably in optics \cite{bib:OBrien04, bib:RohdeGateChar05}.
+Treating a link or node as an unknown black box, \textit{quantum process tomography} (QPT) \cite{bib:ChuangNielsen97} is a technique that may be applied to fully characterise the quantum process it implements, reproducing its complete process matrix. QPT has become a standard procedure, demonstrated in numerous architectures, most notably in optics \cite{bib:OBrien04, bib:RohdeGateChar05}.
 
 QPT works in general for processes in any degree of freedom, e.g the qubit degree of freedom. However, it is important to note that full QPT requires statistics across the entire basis over which measurements are defined, which typically grows exponentially with the size of the system. For example, the number of measurement bases required to perform full QPT on $n$ qubits grows exponentially with $n$.
 
@@ -160,13 +160,13 @@ The first stage in QPT is \textit{quantum state tomography} (QST), where the goa
 \end{align}
 where $\{\hat{E}_i\}$ forms a complete basis for the Hilbert space of $\hat\rho$. For a single qubit this decomposition is most often performed in the Pauli basis, 
 \begin{align}
-\hat\rho = \mathrm{tr}(\hat\rho)\cdot\hat{\mathbb{I}} + \mathrm{tr}(\hat{X}\hat\rho)\cdot\hat{X} + \mathrm{tr}(\hat{Y}\hat\rho)\cdot\hat{Y} +\mathrm{tr}(\hat{Z}\hat\rho)\cdot\hat{Z}.
+\hat\rho = \mathrm{tr}(\hat\rho)\cdot\hat\openone + \mathrm{tr}(\hat{X}\hat\rho)\cdot\hat{X} + \mathrm{tr}(\hat{Y}\hat\rho)\cdot\hat{Y} +\mathrm{tr}(\hat{Z}\hat\rho)\cdot\hat{Z}.
 \end{align}
 Of course, \mbox{$\mathrm{tr}(\hat{E}\hat\rho) = P(\hat{E}|\hat\rho)$} is just the expectation value of the measurement operator $\hat{E}$ when measuring $\hat\rho$. Thus, measuring the expectation values in each of the four Pauli bases reconstructs $\hat\rho$.
 
 This generalises straightforwardly to multi-qubit systems, where we measure all combinations of tensor products of the Pauli operators, the number of which grows exponentially with the number of qubits $n$, as $4^n$. This introduces scalability issues for systems comprising a large number of qubits.
 
-In the case of optical systems, entirely alternate, but equivalent, approaches may be used, such a probing the Wigner function directly using homodyne detection \cite{???}\index{Homodyne detection}.
+In the case of optical systems, entirely alternate, but equivalent, approaches may be used, such a probing the Wigner function directly using homodyne detection\index{Homodyne detection}.
 
 %
 % Quantum Process Tomography

@@ -1,0 +1,447 @@
+%
+% Introduction to quantum mechanics
+%
+
+\section{Introduction to quantum mechanics}\index{Quantum mechanics}\label{sec:intro_to_QM}
+
+\famousquote{I think I can safely say that nobody understands quantum mechanics.}{Richard Feynman}
+\newline
+
+\dropcap{T}{he} laws of quantum mechanics are inherently different to those of classical mechanics in virtually every respect, and bring with them their own unique mathematical notation for:
+\begin{itemize}
+	\item The representation of quantum states.
+	\item The evolution of quantum systems.
+	\item The measurement of quantum states.
+\end{itemize}
+
+\noindent We review all of these formalisms in the upcoming sections, and present the necessary mathematical framework to enable following the derivations presented here.
+
+%
+% Features of quantum mechanics
+%
+
+\subsection{Features of quantum mechanics}\index{Quantum mechanics!Features}
+
+Classical and quantum physics are fundamentally different in a number of extremely important ways. These differences are what allow quantum mechanics to enable the entire new field of quantum technologies, most notably quantum computing, which offers substantial computational gains over traditional classical computing. The same applies to the novel and groundbreaking promises of the other key quantum technologies, such as quantum cryptography, quantum teleportation, and quantum-enhanced metrology. All of these gains are achieved by exploiting these unique new characteristics offered by quantum systems, that are physically impossible in a classical context -- all technologies must obey the laws of physics, and therefore new laws of physics necessarily imply new technological possibilities.
+
+The key conceptual differences between classical and quantum mechanics are:
+\begin{itemize}
+	\item Superposition\index{Superpositions}: the ability of quantum systems to be in multiple states simultaneously (simultaneously, not probabilistically!). This arises since quantum states can always be interpreted as waves, which are inherently delocalised and non-particle-like.
+	\item Quantum amplitudes: quantum states are not governed by classical probabilities, but by \textit{quantum amplitudes}, which are complex numbers rather than real numbers.\index{Quantum amplitudes}
+	\item Entanglement: a type of non-local quantum correlation, stronger than any possible classical correlation.\index{Entanglement}
+	\item Unitary evolution: the free evolution of quantum systems is restricted to being described by unitary operators. This implies that all quantum evolution is perfectly time-reversible\index{Time-reversal}, since all unitary operators are invertible.\index{Evolution}
+	\item Measurement collapse: the measurement of a quantum system changes its state in general, \textit{collapsing} it to the state corresponding to the measurement outcome\footnote{An open and intuitively confusing conundrum in quantum theory is to resolve the question of what exactly it is that constitutes `measurement' -- the \textit{measurement paradox}\index{Measurement!Paradox}. Given that all quantum evolution is supposed to be governed by unitary dynamics, whereas measurements are not, at what point in physical reality does an operation transition from one to the other? This is an extremely important open question, particularly from the perspective of quantum foundations and the philosophy of physics. This has led to the emergence of countless theories for the interpretation of quantum mechanics\index{Interpretation of quantum mechanics}, which is an essentially untestable field of research, more akin to fundamentalist religious movements than physical science. However, the resolution is largely unimportant in a practical technological context, where it suffices to define `measurement' as being `when quantum information becomes classical information', e.g once we are able to read it off a measurement device's LCD screen!}.\index{Measurement!Collapse}
+	\item Non-determinism: quantum systems exhibit genuine non-determinism, associated with the randomness of the measurement collapse\index{Measurement!Collapse} process\footnote{When we say `random' we \textit{really} mean random, not `quasi-random but actually deterministic'\index{Quasi-randomness}. This true randomness is another of the unique and surprising features of quantum mechanics. Conversely to classical physics, quantum mechanics is inherently and provably non-deterministic! Specifically, it has been proven theoretically \cite{bib:BellNoHiddenVariables} that so-called `hidden variable theories'\index{Hidden variable theories} are incompatible with quantum physics, which rules out any form of quasi-randomness and mandates true randomness.}.\index{Non-determinism of quantum mechanics}
+	\item Exponential complexity: the number of unique parameters required to fully describe a quantum system grows exponentially with its `size' (e.g the number of constituent subsystems, such as quantum particles or qubits). This is in contrast to classical systems whose state complexity grows only linearly with system size, since it's always possible to describe constituent subsystems independently (there is no notion of entanglement). Therefore the number of parameters required to characterise classical systems accumulates additively, whereas for quantum systems it grows multiplicatively.\index{Exponential complexity}
+	\item Wave-particle duality: all quantum objects can simultaneously be considered to be particles and waves, where the wave-like and particle-like characteristics express themselves differently depending on the application.\index{Wave-particle duality}
+	\item Uncertainty principle: unlike classical systems, where we can essentially know everything about them to arbitrary accuracy, quantum systems necessarily exhibit uncertainties. Heisenberg's uncertainty principle places strict physical bounds on the amount of information that can be known about quantum systems, exhibiting tradeoffs between how much we can know about different parameters simultaneously. The best-known example of this is the position-momentum uncertainty principle, which tells us that the more information we know about an object's position, the less we can simultaneously know about its momentum, and vice versa. It is not possible even in principle to have perfect information about both (this is a physical limitation, not an engineering one!).\index{Uncertainty principle}
+\end{itemize}
+
+All of these phenomena will become more clear and intuitive as we introduce the basic relevant mathematical constructions in the upcoming sections.
+
+%
+% Quantum States
+%
+
+\subsection{Quantum states}\index{Quantum states}
+
+A quantum state is a mathematical description of a quantum object, fully characterising its quantum mechanical properties, much like classical attributes like momentum and position characterise the state of classical objects. This captures both the wave- and particle-like properties of quantum objects, given the quantum principle of \textit{wave-particle duality}\index{Wave-particle duality}. The key mathematical difference is that quantum objects exhibit unique, non-classical properties like superposition and entanglement. This requires introducing new constructs for their mathematical representation.
+
+%
+% State Vectors
+%
+
+\subsubsection{State vectors}\index{State vectors}
+
+The most fundamental mathematical object in representing quantum systems is the \textit{state vector}, a vector representation for the quantum wave-function\index{Wave-functions}.
+
+A state vector resides in an $N$-dimensional complex Hilbert space\index{Hilbert space}, \mbox{$\mathcal{H}\in\mathbb{C}^N$}, where $N$ denotes the number of basis states\index{Basis states} supporting the system. This support could be, for example, the available electron energy levels in an atom, or the two orthogonal polarisations available to a photon in an optical mode.
+
+These vector representations for quantum states can quickly become unwieldy, since their dimensionality grows exponentially with the number of constituent subsystems. For example, a single qubit resides in a 2-dimensional Hilbert space, \mbox{$\mathcal{H}\in\mathbb{C}^2$}, whereas an $n$-qubit system resides in a $2^n$-dimensional one, \mbox{$\mathcal{H}\in\mathbb{C}^{2^n}$}. This is in contrast to $n$ classical bits, which require just $n$ parameters to collectively describe. Note that the difference in scaling between the vector representations of quantum systems and classical ones is exponential in nature. It is from this simple observation that the first intuitive inkling arises that perhaps this inherent astronomical complexity can be exploited for our benefit! \latinquote{Ad astra!}
+
+Mathematically, we can employ the following alternate state vector representations, where the latter is referred to as \textit{Dirac notation} (with $\ket{n}$ denoting the basis states),
+\begin{align}\label{eq:gen_state_vec}
+	\ket\psi &= \begin{pmatrix}
+	\alpha_1\\
+	\alpha_2\\
+	\vdots\\
+	\alpha_N
+\end{pmatrix}\nonumber\\
+	&= \sum_{n=1}^N \alpha_n \ket{n}.
+\end{align}
+Here \mbox{$\alpha_n\in\mathbb{C}$} are referred to as the \textit{amplitudes} of the state, which for normalisation satisfy,
+\begin{align}\label{eq:state_norm_cond}\index{Normalisation}
+\sum_n |\alpha_n|^2 = 1.
+\end{align}
+Contrast this with the mathematical definition for the normalisation of classical probability distributions,
+\begin{align}\index{Normalisation}
+\sum_n p_n = 1.
+\end{align}
+The mathematical objects denoted as $\ket{\cdot}$ are commonly referred to as \textit{kets}\index{Kets}.
+
+In this book we will largely be dealing with qubits\index{Qubits}, the simplest unit of quantum information, which are supported by exactly two basis states, denoted $\ket{0}$ and $\ket{1}$. A qubit can therefore be expressed as,
+\begin{align}
+\ket\psi &= \begin{pmatrix}
+	\alpha \\
+	\beta
+\end{pmatrix}\nonumber\\
+&= \alpha\ket{0} + \beta\ket{1}.
+\end{align}
+These are referred to as the \textit{logical basis states}\index{Logical basis states}, which are treated abstractly, detached from a particular physical realisation (e.g by associating them with electron energy levels, photon polarisation, or indeed \textit{any} two-level quantum system), much in the same way that classical bits are treated abstractly as a unit of information, detached from physical reality.
+
+Also mathematically useful is the \textit{dual} of a state vector\index{Dual vector}, which is simply the complex conjugate transpose ($\dag$) of the vector, capturing the same information about the state in conjugate form,
+\begin{align}
+\bra\psi &= \begin{pmatrix}
+	\alpha \\
+	\beta
+\end{pmatrix}^\dag\nonumber\\
+&=\begin{pmatrix}
+	\alpha^*, \beta^*
+\end{pmatrix}\nonumber\\
+&= \alpha^*\bra{0} + \beta^*\bra{1}.
+\end{align}
+The objects $\bra{\cdot}$ are referred to as \textit{bras}\index{Bras}.
+
+% State overlap
+
+\paragraph{State overlap}\index{State!Overlap}
+
+For two generic state vectors, supported by the same basis,
+\begin{align}
+	\ket\psi = \sum_n \alpha_n \ket{n},\nonumber\\
+	\ket\phi = \sum_n \beta_n \ket{n},
+\end{align}
+the \textit{overlap}\index{State!Overlap} between them is defined as,
+\begin{align}
+\braket{\psi|\phi} = \sum_n \alpha_n\beta_n^*,
+\end{align}
+which is mathematically equivalent to their vector dot product\index{Dot product}. The magnitude of the overlap of two quantum states lies in the range,
+\begin{align}
+	0\leq|\braket{\psi|\phi}|\leq 1,
+\end{align}
+where \mbox{$|\braket{\psi|\phi}|=0$} indicates that the two states were orthogonal, and \mbox{$|\braket{\psi|\phi}|=1$} implies they are identical (up to an irrelevant global phase\index{Global phase}\footnote{In quantum mechanics, all quantum states are physically invariant under the introduction of a \textit{global} phase-factor, i.e \mbox{$\ket\psi\to e^{i\theta}\ket\psi$}. Thus, global phases may always be safely ignored without changing the underlying physical reality. This most certainly does not apply to \textit{local} phases, which are a part of physical reality, and critically affect interference dynamics.}). The object $\braket{\cdot|\cdot}$ is referred to as a \textit{braket}\footnote{We never quite appreciated the corny sense of humour of the author of the terms \textit{bra}, \textit{ket}, and \textit{braket}. But somehow it stuck.}\index{Braket}. The normalisation condition from Eq.~(\ref{eq:state_norm_cond}) can therefore equivalently be written,
+\begin{align}\index{Normalisation}
+\braket{\psi|\psi} = 1.	
+\end{align}
+Owing to the cyclic property of the trace operator\index{Trace operator}, it follows that the trace,
+\begin{align}
+\mathrm{tr}(\ket\psi\bra\phi)=\braket{\psi|\phi},	
+\end{align}
+is a state overlap. This quantity has the useful intuitive interpretation as the \textit{distinguishability}\index{Distinguishability} between quantum states, which plays an important role in measurement theory and the theory of quantum information. It is also widely used to characterise the quality of quantum experiments, as a way of comparing quantum states prepared in the lab with the ideal states obtained from the theory.
+
+Because basis states are orthonormal\index{Orthonormality}, this implies that for basis states $\ket{m}$ and $\ket{n}$ we have the trivial delta function overlap identity,
+\begin{align}
+	\braket{m|n}=\delta_{m,n}.
+\end{align}
+
+%
+% Composite Systems
+%
+
+\subsubsection{Composite systems}\index{Composite systems}
+
+The joint state vector of a multi-partite system is represented using a tensor\index{Tensor product} (or Kronecker) product Hilbert space, which has dimensionality equal to the product of their individual dimensions\footnote{This is in contrast to the dimensionality of composite classical systems, which grow additively.}, hence yielding the dreaded (cherished!) exponential growth in the complexity of quantum systems,
+\begin{align}
+\mathcal{H}_{A,B} = \mathcal{H}_A\otimes \mathcal{H}_B,	
+\end{align}
+where,
+\begin{align}
+\mathcal{H}_A &\in\mathbb{C}^M\,\,(\mathrm{system}\,A),\nonumber\\
+\mathcal{H}_B &\in\mathbb{C}^N\,\,(\mathrm{system}\,B),\nonumber\\
+\mathcal{H}_{A,B} &\in\mathbb{C}^{MN}\,\,(\mathrm{composite\,\,system}).	
+\end{align}
+
+The state vector of two \textit{independent} subsystems is simply given by their tensor product\footnote{Often the $\otimes$ symbol is omitted for brevity and left implicit.},
+\begin{align}
+\ket\psi_{A,B} &= \ket\psi_A \otimes \ket\phi_B\nonumber\\
+&=\sum_{m,n} \alpha_m\beta_n\ket{m}_A\otimes\ket{n}_B.
+\end{align}
+This is a so-called \textit{separable state}\index{Separable states}, since the state vector can be factorised into independent terms characterising each of the subsystems -- each subsystem has its own complete and independent physical description in isolation.
+
+%
+% Entangled states
+%
+
+\subsubsection{Entangled states}\index{Entanglement}
+
+More generally, we may also have states of the form,
+\begin{align}
+\ket\psi_{A,B} =\sum_{m,n} \lambda_{m,n}\ket{m}_A\otimes\ket{n}_B,
+\end{align}
+where in general $\lambda_{m,n}$ may not be separable as,
+\begin{align}
+\lambda_{m,n}=\alpha_m\beta_n.
+\end{align}
+In this case no complete physical description exists for either subsystem in isolation -- they may only be described collectively. Now the state is said to be \textit{entangled}\index{Entanglement}, a uniquely quantum class of physical states with no classical analogue. The simplest and best-known example is the \textit{Bell state}\index{Bell!States} on two qubits,
+\begin{align}\label{eq:bell_state_vec_def}
+\ket\Phi^+_{A,B} &= \frac{1}{\sqrt{2}}\begin{pmatrix}
+  1\\
+  0\\
+  0\\
+  1
+\end{pmatrix}\nonumber\\
+&= \frac{1}{\sqrt{2}}(\ket{0}_A\ket{0}_B+\ket{1}_A\ket{1}_B).
+\end{align}
+It's obvious upon inspection that the Bell state cannot be written in separable form,
+\begin{align}
+	\ket\Phi^+_{A,B} \neq \ket\psi_A \otimes \ket\phi_B,
+\end{align}
+and is hence entangled.
+
+Entanglement is one of the key unique features of quantum physics, which underpins the operation of most quantum information processing protocols, including quantum computing in particular, where extremely complex many-qubit entanglement is present and exploited for computational advantage. This immediately hints that in future quantum information systems, where information will be encoded into entangled states in general, information will be highly non-local\index{Non-locality}, in contrast to most standard methods for representing classical information.
+
+%
+% Density Operators
+%
+
+\subsubsection{Density operators}\index{Density operators}
+
+The state vector formalism presented above applies to \textit{pure states}\index{Pure states}, i.e ones which exhibit perfect quantum coherence\index{Coherence} (i.e superposition), and no classical randomness. But realistic physical systems combine both classical probabilities \textit{and} quantum superposition amplitudes, so-called \textit{mixed states}\index{Mixed states}. To capture both of these features simultaneously we employ \textit{density operators}. For an $N$-dimensional Hilbert space, the density operator, $\hat\rho$, is an \mbox{$N\times N$} complex Hermitian matrix\index{Hermitian matrices} of the form,
+\begin{align}
+	\hat\rho = \hat\rho^\dag,
+\end{align}
+which satisfies,
+\begin{align}
+\mathrm{tr}(\hat\rho)=\sum_i \hat\rho_{i,i} = 1,	
+\end{align}
+for normalisation.\index{Normalisation}
+
+Thus, in the special case of a qubit, density operators are \mbox{$2\times 2$} complex matrices,
+\begin{align}\label{eq:2x2density}
+\hat\rho = \begin{pmatrix}
+  a & b \\
+  b^* & 1-a
+\end{pmatrix},
+\end{align}
+where diagonal elements are necessarily real, and off-diagonal ones may be complex in general.
+
+The intuitive physical interpretation of density matrices is as follows:
+\begin{itemize}
+\item Rows and columns enumerate the basis states of the Hilbert space.
+\item Diagonal elements represent the classical probabilities\index{Classical probabilities} of the respective basis states.
+\item Off-diagonal elements represent \textit{coherences}\index{Coherences} between pairs of basis states, i.e whether they exist as a classical probability distribution (when the coherence is zero) or as a quantum superposition (when non-zero). The $\hat\rho_{m,n}$ matrix element (for \mbox{$m\neq n$}) represents the degree of coherence between basis states $\ket{m}$ and $\ket{n}$.
+\end{itemize}
+
+Therefore, referring back to the qubit example in Eq.~(\ref{eq:2x2density}), $a$ and \mbox{$1-a$} can be regarded as the \textit{classical} probability amplitudes associated with being in the $\ket{0}$ or $\ket{1}$ basis state, while $b$ characterises to what extent it is a classical mixture of these two states (for \mbox{$b=0$}) or a coherent superposition of them (for \mbox{$|b|=\sqrt{a(1-a)}$}).
+
+The density operator captures \textit{all} information (both classical and quantum) that can be known about a physical system under the standard laws of quantum physics, and is therefore the most general representation for quantum states, and a very powerful representation to employ.
+
+For a pure state (a qubit in this example), the density operator takes the form of a vector outer product\index{Outer product},
+\begin{align}
+\hat\rho &= \ket\psi\bra\psi\nonumber\\
+&= \begin{pmatrix}
+  |\alpha|^2 & \alpha\beta^* \nonumber\\
+  \alpha^*\beta & |\beta|^2
+\end{pmatrix}.
+\end{align}
+
+A classical mixture of quantum states $\hat\rho_i$ with probability distribution $p_i$ takes the form,
+\begin{align}\label{eq:rho_sum_interp}
+	\hat\rho = \sum_i p_i \hat\rho_i,
+\end{align}
+where the probabilities are normalised such that,
+\begin{align}
+	\sum_i p_i = 1.
+\end{align}
+Eq.~(\ref{eq:rho_sum_interp}) has the elegant interpretation that the state $\hat\rho$ is in quantum state $\hat\rho_i$ with classical probability $p_i$.
+
+% Purity
+
+\paragraph{Purity}
+
+An important measure on density operators is their \textit{purity}\index{Purity}, which quantifies to what extent the system is coherent (i.e \textit{not} classically probabilistic),
+\begin{align}
+\mathcal{P} = \mathrm{tr}(\hat\rho^2),
+\end{align}
+where,
+\begin{align}
+\frac{1}{N}\leq \mathcal{P}\leq 1,	
+\end{align}
+and \mbox{$\mathcal{P}=1$} only for pure states.
+
+%
+% Reduced States
+%
+
+\subsubsection{Reduced states}\index{Reduced states}
+
+Suppose there exists a bipartite system, to which we only have access to one subsystem. Since in general quantum states are not always separable, we now necessarily have an incomplete physical description of what we have access to. This physical description is obtained by taking the \textit{partial trace}\index{Partial trace} of the joint system, tracing out the subsystem to which we don't have access,
+\begin{align}
+\hat\rho_A = \mathrm{tr}_B(\hat\rho_{A,B}).	
+\end{align}
+$\hat\rho_A$ is referred to as the \textit{reduced state} of subsystem $A$, and captures all that can be known about  $A$ in isolation of $B$.
+
+In general, if $A$ and $B$ are entangled, the reduced state of either will provide an incomplete physical description, since it ignores the entanglement between them, capturing only local properties of the state. For this reason, attempting to reconstruct a joint density operator from its reduced density operators, in general does not faithfully reproduce the original joint density operator, unless the two subsystems were perfectly separable to begin with. That is, for,
+\begin{align}
+	\hat\rho_A &= \mathrm{tr}_B(\hat\rho_{A,B}),\nonumber\\
+	\hat\rho_B &= \mathrm{tr}_A(\hat\rho_{A,B}),
+\end{align}
+in general,
+\begin{align}
+	\hat\rho_{A,B} \neq \hat\rho_A \otimes \hat\rho_B.
+\end{align}
+
+The partial trace is a linear operator defined to satisfy the following properties\index{Partial trace!Properties},
+\begin{align}
+\mathrm{tr}_B(\hat\rho_A\otimes\hat\rho_B) &= \mathrm{tr}(\hat\rho_B) \cdot \hat\rho_A,\nonumber\\
+\mathrm{tr}_B(\ket{i}_A\bra{j}_A\otimes\ket{k}_B\bra{l}_B) &= \braket{k|l}\cdot\ket{i}_A\bra{j}_A,\nonumber\\
+\mathrm{tr}_B(\hat\rho+\hat\sigma) &= \mathrm{tr}_B(\hat\rho) + \mathrm{tr}_B(\hat\sigma).
+\end{align}
+
+A useful property of the reduced state of a larger pure state is that its purity\index{Purity} characterises how entangled that subsystem is with the peripheral system. For example, a joint system which is separable and pure exhibits reduced states which are also pure. But the reduced state of an entangled state, such as that shown in Eq.~(\ref{eq:bell_state_vec_def}), is necessarily mixed. Thus, the purity $\mathcal{P}$ of the reduced states of a joint system may be used as a metric for quantifying the degree of entanglement in the system. This provides an extremely important link between entanglement and decoherence -- the loss of coherence in an observed quantum system can always be attributed to it becoming entangled to the external environment, to which we don't have access.
+
+%
+% Evolution
+%
+
+\subsection{Evolution}\index{Evolution}
+
+Thus far we have only provided a description for the state of quantum systems. What about their evolution? We can't execute any algorithm without evolution! Evolution in quantum mechanics has two forms, discrete-time and continuous-time.
+
+% Discrete-time evolution
+
+\subsubsection{Discrete-time evolution}\index{Evolution!Discrete-time}
+
+In quantum mechanics the discrete-time evolution of an $N$-dimensional state is given by arbitrary \mbox{$N\times N$}-dimensional unitary transformations\index{Unitary!Operators}, $\mathrm{U}(N)$, satisfying,
+\begin{align}
+\hat{U}^\dag\hat{U}=\hat\openone.	
+\end{align}
+
+Intuitively, this corresponds to the class of higher-dimensional complex rotations that preserve the orthonormality of quantum states -- i.e just a change of basis in the higher-dimensional Hilbert space. In principle, any unitary operator is physically allowed, although most are challenging to artificially engineer, motivating quantum engineers to typically decompose quantum protocols into \textit{universal gate sets}\index{Universal gate sets} -- a restricted but accessible set of operations that are practical to implement, yet sufficient to constructively build up whatever complex transformations we need.
+
+The evolution of quantum state vectors under unitary transformation is simply given by matrix multiplication,
+\begin{align}
+\ket{\psi'} = \hat{U}\ket\psi,	
+\end{align}
+or for density operators by conjugation,
+\begin{align}
+\hat\rho' = \hat{U}\hat\rho\hat{U}^\dag.	
+\end{align}
+
+% Continuous-time evolution
+
+\subsubsection{Continuous-time evolution}\index{Evolution!Continuous-time}
+
+Sometimes an alternate continuous-time description is employed. Here the system is governed by a \textit{Hamiltonian} operator\index{Hamiltonians}, $\hat{H}$, the direct quantum analogue of a classical Hamiltonian, which simply relates to unitary evolution via exponentiation,
+\begin{align}
+	\hat{U} = e^{-i\hat{H}t},
+\end{align}
+over evolution time $t$.
+
+% Schroedinger vs Heisenberg pictures
+
+\subsubsection{Schr{\" o}dinger vs Heisenberg pictures}
+
+The above formalism describes quantum evolution by acting the unitary operator on the quantum state directly,
+\begin{align}
+\ket{\psi'} = \hat{U}\ket\psi.
+\end{align}
+This is known as the \textit{Schr{\" o}dinger picture}\index{Schr{\" o}dinger!Picture}. An alternate, but entirely mathematically equivalent approach is the \textit{Heisenberg picture}\index{Heisenberg!Picture}, whereby we evolve the operators acting upon a state, rather than the state itself. Now the operator evolution is described by conjugating the operators with the unitary operator describing the evolution. That is, representing the quantum state in terms of some operator $\hat{o}$, the operator evolution proceeds as,
+\begin{align}
+	\hat{o}' = \hat{U}\hat{o}\hat{U}^\dag.
+\end{align}
+
+For example, representing photonic states using creation operators $\hat{a}^\dag$ (introduced in Sec.~\ref{sec:creation_ann_ops}), the evolved creation operator is simply given by $\hat{U}\hat{a}^\dag\hat{U}^\dag$. In quantum optics in particular, where creation operator representations are highly convenient, this is a very useful formulation for describing quantum evolution.
+
+%
+% Measurement
+%
+
+\subsection{Measurement}\index{Measurement}
+
+The final ingredient in our toolbox of allowed quantum operations is measurement. After all, what use is a quantum protocol if we can't read out the answer?
+
+So-called \textit{projective measurements} in quantum mechanics are described by sets of \textit{measurement projectors}\index{Measurement!Projectors},
+\begin{align}
+\hat{M}_i = \ket{m_i}\bra{m_i},	
+\end{align}
+where,
+\begin{align}
+\sum_i \hat{M}_i = \hat\openone,
+\end{align}
+for normalisation. Each projector in the set corresponds to a possible allowed measurement outcome. After measuring a given outcome the state is disturbed and collapses\index{Measurement!Collapse} (i.e is \textit{projected}) into being in the state corresponding to the measurement outcome.
+
+If the set of projectors corresponds to the eigenbasis of some unitary operator $\hat{U}$, we can say that the measurement is performed in the $\hat{U}$-basis.
+
+Importantly -- and this is a key feature of quantum mechanics -- we cannot control what the measurement outcome is. It occurs randomly according to some classical probability distribution, given by the overlaps between the measurement projectors and the measured quantum state.
+
+The set of possible projected states following measurement is given by,
+\begin{align}\label{eq:meas_proj_def}
+\ket{\psi_i} &= \frac{\hat{M}_i \ket\psi}{\sqrt{p_i}},\nonumber\\
+\hat\rho_i &= \frac{\hat{M}_i\hat\rho\hat{M}_i^\dag}{p_i},
+\end{align}
+where those outcomes occur with probabilities,\index{Measurement!Probabilities}
+\begin{align}\label{eq:meas_prob_def}
+p_i &= \bra\psi \hat{M}_i^\dag \hat{M}_i\ket\psi,\nonumber\\
+p_i &= \mathrm{tr}(\hat{M}_i\hat\rho\hat{M}_i^\dag).
+\end{align}
+
+Taking the state vector representation from Eq.~(\ref{eq:gen_state_vec}), performing a measurement in the basis in which the vector is expressed (i.e measurement projectors \mbox{$\ket{n}\bra{n}$}), the measurement probabilities are simply given by the absolute squares of the respective amplitudes,
+\begin{align}
+p_i = |\alpha_i|^2.	
+\end{align}
+
+More general classes of measurements are allowed, given by measurement operators $\hat{M}_i$ comprised of linear combinations of projectors. The same rules above for the action of these measurement operators apply, Eqs.~(\ref{eq:meas_proj_def}, \ref{eq:meas_prob_def}).
+
+The described formalism in terms of measurement projectors gives us `singe-shot' information about a measurement -- what is the probability of a given single measurement outcome, and what is the state of the system following this measurement? Alternately, we might be interested not in single-shot events, but statistical measurement information, such as the average measurement outcome in the limit of a large number of repeated independent trials.
+
+We define a measurement \textit{observable}\index{Observables} as an operator $\hat{O}$ acting on a state-space, with eigenvalues $O_i$ over some range of $i$. The eigenvalues $O_i$ denote the allowed values of the measurement outcome for the associated eigenstate, which corresponds to the projected post-measurement state. The statistical expectation value\index{Expectation values} of these measurement outcomes for a given state $\ket\psi$ may now be obtained as the expectation value of the observable,
+\begin{align}
+	\braket{\hat{O}} = \braket{\psi|\hat{O}|\psi},
+\end{align}
+and their variance\index{Variance} by,
+\begin{align}
+	\braket{\hat{O}^2} - \braket{\hat{O}}^2.
+\end{align}
+Both of these are in the limit of an infinite number of independent trials of the measurement performed on identical copies of the state.
+
+% Example derivation
+
+\subsection{Example derivation}
+
+To illustrate the basic techniques presented above, we now present a derivation of the operation of a very simple quantum protocol comprising state preparation, evolution, and measurement.
+
+Let us begin by preparing a single-qubit state into the logical basis state,
+\begin{align}
+\ket\phi = \ket{0},
+\end{align}
+where we have employed Dirac notation for simplicity.
+
+Next we will apply the so-called Hadamard gate\index{Hadamard!Gate}, given by the \mbox{$2\times 2$} unitary matrix,
+\begin{align}
+\hat{H} = \frac{1}{\sqrt{2}}\begin{pmatrix}
+  1 & 1 \\
+  1 & -1
+\end{pmatrix}.
+\end{align}
+
+Applying this gate to our input state yields,
+\begin{align}
+	\ket\psi &= \hat{H}\ket{0}\nonumber\\
+	&= \frac{1}{\sqrt{2}}\begin{pmatrix}
+  1 & 1 \\
+  1 & -1
+\end{pmatrix}\begin{pmatrix}
+1\\
+0	
+\end{pmatrix}\nonumber\\
+&=\frac{1}{\sqrt{2}}\begin{pmatrix}
+1\\
+1	
+\end{pmatrix}\nonumber\\
+&= \frac{1}{\sqrt{2}}(\ket{0}+\ket{1}),
+\end{align}
+which is an equal superposition of the two logical basis states.
+
+Applying our measurement identities, we obtain measurement probabilities,
+\begin{align}
+p_0 = |\braket{0|\psi}|^2 = \frac{1}{2},\nonumber\\
+p_1 = |\braket{1|\psi}|^2 = \frac{1}{2},
+\end{align}
+and respective post-measurement projected states,
+\begin{align}
+\ket{\psi_0} &= \sqrt{2}\ket{0}\braket{0|\psi} = \ket{0},\nonumber\\
+\ket{\psi_1} &= \sqrt{2}\ket{1}\braket{1|\psi} = \ket{1}.
+\end{align}
+
+Thus, we see that with 50:50 probability the measurement randomly collapses the measured state onto the $\ket{0}$ or $\ket{1}$ states.

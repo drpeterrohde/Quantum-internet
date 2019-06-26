@@ -2,13 +2,13 @@
 % Network Algorithms
 %
 
-\section{Network algorithms} \label{sec:graph_theory} \index{Network algorithms}
+\section{Network algorithms} \label{sec:graph_theory} \index{Network!Algorithms}
 
 \dropcap{H}{aving} introduced some of the more relevant graph structures, we now introduce some of the key graph-theoretic algorithms of direct relevance to networking theory \cite{bib:RivestAlgBook}. In graph theory, many fundamental problems are believed to be computationally hard to solve, often \textbf{NP}-complete\index{NP \& NP-complete}. However, there are several important graph algorithms that are (very) classically efficient to solve, and which are of great utility to us as network architects.
 
 We will focus heavily on combinatorial optimisation techniques, where the goal is to allocate network resources so as to optimise some cost metric. This includes both single- and multi-user algorithms, the latter being the far more relevant ones in the context of shared networks like the internet.
 
-In Table.~\ref{tab:net_alg_sum} we summarise the upcoming discussion on important network algorithms, and their associated complexities.
+In Tab.~\ref{tab:net_alg_sum} we summarise the upcoming discussion on important network algorithms, and their associated complexities.
 
 \startnormtable
 \begin{table*}[!htbp]
@@ -21,7 +21,7 @@ In Table.~\ref{tab:net_alg_sum} we summarise the upcoming discussion on importan
   		\hline
   		\rowcolor{LimeGreen} Depth-first-search & (same as above) & \textbf{P} & $O(|V|+|E|)$ \\
 		\hline
-  		\rowcolor{LimeGreen} Shortest-path (Dijkstra) & Find the shortest route between two nodes & \textbf{P} & $O(|V|^2)$ \\
+  		\rowcolor{LimeGreen} Shortest-path (Dijkstra) & Find the shortest route between two nodes & \textbf{P} & $O(|E|+|V|\log|V|)$ \\
   		\rowcolor{LimeGreen} & in a directed graph & &  \\
   		  		\hline
 		\rowcolor{LimeGreen} Shortest-path (\textit{A*}) & (same as above) & \textbf{P} & (varying) \\
@@ -38,18 +38,18 @@ In Table.~\ref{tab:net_alg_sum} we summarise the upcoming discussion on importan
   		\rowcolor{LimeGreen} Maximum flow & Maximise flow in a network, regardless of costs & \textbf{P} & $O(|E|\cdot c_\mathrm{max})$ \\
   		\rowcolor{LimeGreen} (Ford-Fulkerson) & & & \\
   		\hline
-  		\rowcolor{Lavender} Multi-commodity flow & Same as maximum flow, but generalised to & \textbf{NP}-complete & ? \\
+  		\rowcolor{Lavender} Multi-commodity flow & Same as maximum flow, but generalised to & \textbf{NP}-complete & $O(\mathrm{exp}(|V|))$ \\
   		\rowcolor{Lavender} & arbitrary numbers of users & (exactly), & \\
   		\rowcolor{Lavender} & & \textbf{P} (approximation & \\
   		\rowcolor{Lavender} & & using heuristics) & \\
   		\hline
-  		\rowcolor{Lavender} Vehicle routing problem & Generalises the shortest-path algorithm to multiple & \textbf{NP}-complete & ? \\
+  		\rowcolor{Lavender} Vehicle routing problem & Generalises the shortest-path algorithm to multiple & \textbf{NP}-complete & $O(\mathrm{exp}(|V|))$ \\
   		\rowcolor{Lavender} & users, with distinct sources and destinations & & \\ 
   		\hline
-  		\rowcolor{Lavender} Vehicle rescheduling problem & Same as above but with dynamically changing costs & \textbf{NP}-complete & ? \\
+  		\rowcolor{Lavender} Vehicle rescheduling problem & Same as above but with dynamically changing costs & \textbf{NP}-complete & $O(\mathrm{exp}(|V|))$ \\
     	\hline
 	\end{tabular}
-	\captionspacetab \caption{Summary of some important network algorithms and their complexities. The \textbf{NP}-complete algorithms are not believed to have efficient classical algorithms, and their exact scaling is not well understood.} \label{tab:net_alg_sum} \index{Network algorithms}\index{Breadth-first-search (BFS) algorithm}\index{Depth-first-search (DFS) algorithm}\index{Shortest-path algorithm}\index{Single-source shortest path algorithm}\index{Minimum spanning tree algorithm}\index{Minimum-cost flow algorithm}\index{Maximum flow algorithm}\index{Multi-commodity flow algorithm}\index{Vehicle routing problem}\index{Vehicle rescheduling problem}
+	\captionspacetab \caption{Summary of some important network algorithms and their complexities. The \textbf{NP}-complete algorithms are not believed to have efficient classical algorithms, and their exact scaling is not well understood.} \label{tab:net_alg_sum} \index{Network!Algorithms}\index{Breadth-first-search (BFS) algorithm}\index{Depth-first-search (DFS) algorithm}\index{Shortest-path algorithm}\index{Single-source shortest path algorithm}\index{Minimum spanning tree!Algorithm}\index{Minimum-cost flow algorithm}\index{Maximum flow algorithm}\index{Multi-commodity flow algorithm}\index{Vehicle routing problem}\index{Vehicle rescheduling problem}
 \end{table*}
 \startalgtable
 
@@ -57,7 +57,7 @@ In Table.~\ref{tab:net_alg_sum} we summarise the upcoming discussion on importan
 % Network Exploration & Pathfinding
 %
 
-\subsection{Network exploration \& pathfinding} \label{sec:path_exp} \index{Network exploration}\index{Pathfinding}
+\subsection{Network exploration \& pathfinding} \label{sec:path_exp} \index{Network!Exploration}\index{Pathfinding}
 
 Here the goal is to systematically explore every vertex in an unknown graph exactly once, so as to reconstruct the entire network graph, or to find a target node with unknown location (which can obviously be achieved if the former can be). The two main approaches are \textit{breadth-first-search} (BFS) and \textit{depth-first-search} (DFS) algorithms\index{Breadth-first-search (BFS) algorithm} \index{Depth-first-search (DFS) algorithm}. In both cases we begin at a starting (root) node, from which we wish to explore the entire graph by only following edges to nearest neighbours one at a time.
 
@@ -67,7 +67,7 @@ In DFS, on the other hand, we begin by following a single arbitrary path until w
 
 Examples of these two algorithms are shown in Fig.~\ref{fig:BFS_DFS}.
 
-\if 2\pubmode
+\if 1\doublecol
 	\begin{figure}[!htbp]
 	\includegraphics[clip=true, width=0.3\textwidth]{BFS_DFS_long}
 	\captionspacefig \caption{Comparison of the order in which vertices are explored, using the breadth-first-search (BFS) and depth-first-search (DFS) algorithms, where vertex 1 is the root vertex.} \label{fig:BFS_DFS}
@@ -81,7 +81,7 @@ Examples of these two algorithms are shown in Fig.~\ref{fig:BFS_DFS}.
 
 Both BFS and DFS guarantee visiting every vertex in a connected graph, and do so using only nearest neighbour transitions. Such algorithms are therefore very useful for network discovery.
 
-The BFS algorithm is particularly applicable to pathfinding in ad hoc networks. Consider the situation where there is no central authority with full knowledge of the network, overseeing network operation. Rather, everyone needs to figure things out for themselves by only interrogating their neighbours, to whom they have direct connections. This directly leads to a BFS algorithm, where a node speaks to each of its neighbours in turn, who subsequently do the same thing, yielding a recursive algorithm. This can be naturally parallelised, as each node can be interrogating its neighbours independently, thereby implementing a distributed BFS algorithm. Note that, when searching for a target node, while the BFS algorithm obviously finds the target using the smallest number of hops (i.e a lowest-order route), it needn't necessarily find the route with the lowest cost (which is distinct from the number of hops in general). Shortest-path algorithms require a priori knowledge of the full network graph, discussed in Sec.~\ref{sec:shortest_path}.
+The BFS algorithm is particularly applicable to pathfinding in ad hoc networks. Consider the situation where there is no central authority with full knowledge of the network, overseeing network operation. Rather, everyone needs to figure things out for themselves by only interrogating their neighbours, to whom they have direct connections. This directly leads to a BFS algorithm, where a node speaks to each of its neighbours in turn, who subsequently do the same thing, yielding a recursive algorithm. This can be naturally parallelised, as each node can be interrogating its neighbours independently, thereby implementing a distributed BFS algorithm. Note that, when searching for a target node, while the BFS algorithm obviously finds the target using the smallest number of hops (i.e a lowest-order route), it needn't necessarily find the route with the lowest cost (which is distinct from the number of hops in general). Shortest-path algorithms require \textit{a priori} knowledge of the full network graph, discussed in Sec.~\ref{sec:shortest_path}.
 
 Both BFS and DFS exhibit runtime	,
 \begin{align}
@@ -101,7 +101,11 @@ The first proven shortest-path algorithm was invented by and named after Dijkstr
 \begin{align}
 	O(|V|^2),
 \end{align}
-also residing in \textbf{P}\index{P} (one of the relatively few, and highly valuable optimisation problems that is classically efficient). Subsequently, a number of improvements and variations on Dijkstra's algorithm have been proposed, most notably the $A^*$ algorithm \cite{bib:Astar}\index{Shortest-path algorithm}, which has found widespread modern use, using a heuristic approach to improve performance over Dijkstra.
+which has since been improved to,
+\begin{align}
+	O(|E|+|V|\log |V|),	
+\end{align}
+by \cite{bib:FredmanLawrence84} using min-priority queues\index{Min-priority queues} implemented via Fibonacci heaps\index{Fibonacci heaps}. Thus, the shortest-path algorithm resides in \textbf{P}\index{P} -- one of the relatively few, and highly valuable optimisation problems that is classically efficient. Subsequently, a number of improvements and variations on Dijkstra's algorithm have been proposed, most notably the $A^*$ algorithm \cite{bib:Astar}\index{Shortest-path algorithm}, which has found widespread modern use, using a heuristic approach to improve performance over Dijkstra. An alternate implementation of Dijkstra using
 
 Formally, let $\vec{R}$ be the set of all routes \mbox{$A\to B$}. Then,
 \begin{align}
@@ -125,7 +129,7 @@ function DijkstraShortestPath($G$,$A$,$B$):
     \item for(n$\in$neighbours) \{
     \setlength{\itemindent}{0.2in}
     \item newTentativeDist = \\ min(tentativeDistances[currentNode] \\+ edgeWeight[currentNode,n],\\
-        tentativeDistances[n])\\
+        tentativeDistances[n])
     \item nodesVisited[currentNode] = True
     \setlength{\itemindent}{0in}
     \item \}
@@ -136,14 +140,23 @@ function DijkstraShortestPath($G$,$A$,$B$):
     \setlength{\itemindent}{0in}
     \item \}
 	\item currentNode = \\
-	tentativeDistances[unvisitedNodes].\\
+	tentativeDistances[unvisitedNodes].
 	nodeWithSmallest()
-	\item goto(loop)
+	\item goto(loopStart)
     \item $\Box$
 \end{enumerate}}
 \end{mdframed}
-\captionspacealg \caption{Dijkstra's original shortest-path algorithm for finding the lowest weight path through a graph, $G$, between two vertices, $A$ (source) and $B$ (destination). The algorithm has $O(|V|^2)$ runtime (in \textbf{P}).} \label{alg:dijkstra}\index{Shortest-path algorithm}
+\captionspacealg \caption{Dijkstra's original shortest-path algorithm for finding the lowest weight path through a graph, $G$, between two vertices, $A$ (source) and $B$ (destination). The algorithm has $O(|E|+|V|\log|V|)$ runtime (in \textbf{P}). An example application of this algorithm is shown in Fig.~\ref{fig:dijkstra_eg}.} \label{alg:dijkstra}\index{Shortest-path algorithm}
 \end{table}
+
+\begin{figure}[!htbp]
+\if 1\doublecol
+\includegraphics[clip=true, width=0.475\textwidth]{dijkstra_example_long}
+\else
+\includegraphics[clip=true, width=0.7\textwidth]{dijkstra_example}
+\fi
+\captionspacefig \caption{Example of Dijkstra's shortest-path algorithm for finding the shortest route from $A$ to $B$ (blue route), yielding a shortest route of distance 20 using 5 algorithmic steps. Initially (\mbox{$t=0$}) all nodes are designated a tentative distance of $\infty$ and marked as unvisited (blue vertices), except the starting node $A$, which is designated distance $0$ and visited (red vertices). At each step we choose the lowest cost path to a previously unexplored node (red edges). This updates the tentative distance of the newly-visited neighbour, which is now marked as visited. This is iterated until all nodes have been visited. Each node is visited exactly once.}\label{fig:dijkstra_eg}\index{Shortest-path algorithm}
+\end{figure}
 
 Fig.~\ref{fig:simp_route_opt} illustrates a directed, edge-weighted graph. A shortest-path algorithm applied between vertices $A$ and $B$ would return \mbox{$R_\mathrm{shortest} = A\to F\to B$} as the minimum-cost route.
 
@@ -188,19 +201,19 @@ function ConstrainedShortestPath($G$,$A$,$B$,$C$):
 \captionspacealg \caption{Efficient algorithm for finding a constrained shortest-path, where the constraints are in terms of nearest-neighbour relationships.} \label{alg:const_short}\index{Constrained shortest-path algorithm}
 \end{table}
 
-\if 2\pubmode
+\if 1\doublecol
 \begin{figure}[!htbp]
 \includegraphics[clip=true, width=0.35\textwidth]{constrained_shortest_path_long}
-\caption{Example of a constrained shortest-path algorithm. Beginning with the initial graph we eliminate edges that do not satisfy imposed nearest-neighbour constraints. This is performed as a pre-processing stage. Then a usual shortest-path algorithm is applied to the reduced graph, yielding the optimal route subject to the required constraints.}\label{fig:constrained_shortest_path}
+\captionspacefig \caption{Example of a constrained shortest-path algorithm. Beginning with the initial graph we eliminate edges that do not satisfy imposed nearest-neighbour constraints. This is performed as a pre-processing stage. Then a usual shortest-path algorithm is applied to the reduced graph, yielding the optimal route subject to the required constraints.}\label{fig:constrained_shortest_path}
 \end{figure}
 \else
 \begin{figure*}[!htbp]
 \includegraphics[clip=true, width=\textwidth]{constrained_shortest_path}
-\caption{Example of a constrained shortest-path algorithm. Beginning with the initial graph we eliminate edges that do not satisfy imposed nearest-neighbour constraints. This is performed as a pre-processing stage. Then a usual shortest-path algorithm is applied to the reduced graph, yielding the optimal route subject to the required constraints.}\label{fig:constrained_shortest_path}
+\captionspacefig \caption{Example of a constrained shortest-path algorithm. Beginning with the initial graph we eliminate edges that do not satisfy imposed nearest-neighbour constraints. This is performed as a pre-processing stage. Then a usual shortest-path algorithm is applied to the reduced graph, yielding the optimal route subject to the required constraints.}\label{fig:constrained_shortest_path}
 \end{figure*}
 \fi
 
-A notable example of where this technique finds applicability is in entanglement swapping networks, discussed later in Secs.~\ref{sec:swapping} \& \ref{sec:rep_net}. Consider the network shown in Fig.~\ref{fig:racetime}. Here the entanglement swapping network comprises nodes alternating between two different functionalities: Bell-pair preparation, and entanglement swapping. Representing these as colours, this effectively introduces the edge constraint that edges between nearest neighbours of the same colour ought to be removed. Additionally, the end-points of the network must neighbour Bell-pair sources, not entanglement swappers. This enforces the additional constraint of removing edges between end-points with the wrong coloured neighbours. Having applies these edge deletions enforcing these constraints, the shortest-path algorithm will now find the constrained optimal route. Thus, this example of an entanglement swapping network is isomorphic to the example presented in Fig.~\ref{fig:constrained_shortest_path}.
+A notable example of where this technique finds applicability is in entanglement swapping networks, discussed later in Secs.~\ref{sec:swapping} \& \ref{sec:rep_net}. Consider the network shown in Fig.~\ref{fig:racetime}. Here the entanglement swapping network comprises nodes alternating between two different functionalities: Bell pair preparation, and entanglement swapping. Representing these as colours, this effectively introduces the edge constraint that edges between nearest neighbours of the same colour ought to be removed. Additionally, the end-points of the network must neighbour Bell pair sources, not entanglement swappers. This enforces the additional constraint of removing edges between end-points with the wrong coloured neighbours. Having applies these edge deletions enforcing these constraints, the shortest-path algorithm will now find the constrained optimal route. Thus, this example of an entanglement swapping network is isomorphic to the example presented in Fig.~\ref{fig:constrained_shortest_path}.
 
 %
 % Single-Source Shortest-Path Algorithm
@@ -222,7 +235,7 @@ Clearly this is more complex than Dijkstra's algorithm for finding a particular 
 % Minimum Spanning Tree
 %
 
-\subsection{Minimum spanning tree} \label{sec:min_tree} \index{Minimum spanning tree algorithm}
+\subsection{Minimum spanning tree} \label{sec:min_tree} \index{Minimum spanning tree!Algorithm}
 
 MST algorithms find an MST\footnote{There may be multiple distinct MSTs for a given graph.} of some arbitrary graph. Like the shortest-path problem, it has a polynomial-time, deterministic algorithm (i.e it resides in \textbf{P}\index{P}). The first MST algorithm \cite{bib:Boruvka26} required,
 \begin{align}
@@ -283,8 +296,8 @@ Unfortunately the computational complexity of solving this problem is much harde
 The vehicle routing problem (VRP) is a multi-user generalisation of the shortest-path problem, where the goal is to minimise total network cost (i.e the sum of all individual users' costs) when there are multiple users sharing the network, each with distinct sources and destinations.
 
 \begin{figure}[!hbtp]
-\includegraphics[clip=true, width=0.35\textwidth]{vehicle_routing_alg}
-	\caption{Example of the vehicle routing problem, the multi-user generalisation of the shortest-path problem, where the goal is to minimise the total cost across all users. Intuitively, because whenever individual shortest-paths intersect one must trial different prioritisations, the combinatorics of this grow exponentially with the number of competing users.}\label{fig:VRS}
+\includegraphics[clip=true, width=0.475\textwidth]{vehicle_routing_alg}
+	\captionspacefig \caption{Example of the vehicle routing problem, the multi-user generalisation of the shortest-path problem, where the goal is to minimise the total cost across all users. Intuitively, because whenever individual shortest-paths intersect one must trial different prioritisations, the combinatorics of this grow exponentially with the number of competing users.}\label{fig:VRS}
 \end{figure}
 
 Unlike the polynomial-time shortest-path algorithm, exactly solving the VRP is \textbf{NP}-hard\index{NP \& NP-complete} in general. However, heuristic methods can find approximate suboptimal solutions far more efficiently, and there is a multitude of software packages available for doing so.
@@ -311,7 +324,7 @@ In the context of communications over networks, the VRSP has obvious applicabili
 % Improving Network Algorithms Using Quantum Computers
 %
 
-\subsection{Improving network algorithms using quantum computers} \index{Network algorithms on quantum computers}
+\subsection{Improving network algorithms using quantum computers} \index{Network!Algorithms!on quantum computers}
 
 Given that we are directing this work at the upcoming quantum era, where quantum computing will become a reality, it is pertinent to ask whether quantum computers might improve the aforementioned network algorithms, some of which are computationally hard problems. Most notably, several of the discussed algorithms are \textbf{NP}-complete\index{NP \& NP-complete} in general, a complexity class strongly believed to be exponentially complex on classical computers. Can quantum computers help us out here, and improve network resource allocation? Can quantum computers help themselves?
 

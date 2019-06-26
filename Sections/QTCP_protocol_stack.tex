@@ -9,16 +9,20 @@ As with classical networking, our protocols for quantum networks will be separat
 The structure of the protocol stack for QTCP is shown in Fig.~\ref{fig:stack}. In summary, the layers in the protocol stack are, beginning from the lowest level:
 \begin{itemize}
 \item \textsc{Data (Message)}\index{Data (message) layer}: Raw data (`payload') Alice wishes to transmit to Bob. Comprises both \textsc{Quantum Data}\index{Quantum data layer} and \textsc{Classical Data}\index{Classical data layer}.
-\item \textsc{Packet}\index{Packet layer}: Decomposition of \textsc{Data} into blocks (\textsc{Packet Data}\index{Packet data layer}), and associated classical \textsc{Packet Headers}\index{Packet header layer} containing metadata (e.g routing information).
-\item \textsc{Strategy}\index{Strategy layer}: Construct \textsc{Packet} routing strategies based on a cost optimisation algorithm.
+\item \textsc{Packet}\index{Packet!Layer}: Decomposition of \textsc{Data} into blocks (\textsc{Packet Data}\index{Packet!Data layer}), and associated classical \textsc{Packet Headers}\index{Packet!Header layer} containing metadata (e.g routing information).
+\item \textsc{Strategy}\index{Strategy!Layer}: Construct \textsc{Packet} routing strategies based on a cost optimisation algorithm.
 \item \textsc{Transport}\index{Transport layer}: Physical routing of \textsc{Packets} to arrive at their destination, based upon metadata contained in \textsc{Packet Header}. Perform collision detection during transit.
 \item \textsc{Reconstruction}\index{Reconstruction layer}: Reconstruct \textsc{Data} from received \textsc{Packets}.
-\item \textsc{Quality of Service (QoS)}\index{Quality of service (QoS) layer}: Apply QEC and determine whether \textsc{QoS} requirements have been satisfied.
+\item \textsc{Quality of Service (QoS)}\index{Quality of service (QoS)!Layer}: Apply QEC and determine whether \textsc{QoS} requirements have been satisfied.
 \item \textsc{Services \& Applications}\index{Services \& applications layer}: High-level interface to \textsc{Data} presented to Bob's services and applications. The interface abstracts away lower levels of the protocol stack, presenting Bob with only \textsc{Data} and its associated metadata.
 \end{itemize}
 
 \begin{figure}[!htbp]\index{QTCP protocol stack}
+\if 1\doublecol
 \includegraphics[clip=true, width=0.475\textwidth]{stack}
+\else
+\includegraphics[clip=true, width=0.6\textwidth]{stack}
+\fi
 \captionspacefig \caption{Protocol stack for QTCP. The protocol stack mediates communication of quantum data from Alice to Bob using the shown layers of abstraction. The end goal is to provide Bob a virtual interface to Alice's transmitted data, while remaining oblivious to the underlying protocol.} \label{fig:stack}\index{QTCP protocol stack}
 \end{figure}
 
@@ -52,7 +56,7 @@ At the lowest level of the protocol we have the raw \textsc{Data} Alice wishes t
 % Packet
 %
 
-\subsubsection{Packet} \label{sec:packet_layer} \index{Packet layer}
+\subsubsection{Packet} \label{sec:packet_layer} \index{Packet!Layer}
 
 \textsc{Data} is transmitted as \textsc{Packets}, much in the same way as conventional TCP. The \textsc{Data} is decomposed into three components: \textsc{Quantum Data}, \textsc{Classical Data}, and \textsc{Packet Header}.
 
@@ -62,13 +66,13 @@ We can express the state of an entire \textsc{Packet} as,
 \end{align}
 where $i$ denotes the $i$th packet. Here $\hat\rho_\mathrm{quantum}$ ($\hat\rho_\mathrm{classical}$) is a block of \textsc{Quantum Block Size} qubits (\textsc{Classical Block Size} bits) taken from the user's \textsc{Quantum Data} (\textsc{Classical Data}), while $\hat\rho_\mathrm{header}$ is the \textsc{Packet's} classical \textsc{Packet Header}. As discussed earlier, since $\hat\rho_\mathrm{quantum}$ is quantum, and $\hat\rho_\mathrm{classical}$ and $\hat\rho_\mathrm{header}$ are classical, they needn't be transmitted together over the same quantum network. Instead all \textsc{Classical Data} and \textsc{Packet Header} could be transmitted over a classical network operating in parallel to and synchronised with the quantum network, which carries the \textsc{Quantum Data}.
 
-Note that while one can always measure classical data without disturbance, this is not the case with quantum data, where measurements cause wavefunction collapse. Thus, while Alice is always able to know $\hat\rho_\mathrm{classical}$ and $\hat\rho_\mathrm{header}$, she may or may not know $\hat\rho_\mathrm{quantum}$. Clearly if she prepared the state herself, she would (hopefully) know what she was doing. But in general, quantum networks could be used for far less trivial networking, where Alice is, for example, an intermediary in a distributed quantum computation. In this instance, Alice is unlikely to know what her \textsc{Quantum Data} is.
+Note that while one can always measure classical data without disturbance, this is not the case with quantum data, where measurements cause wave-function collapse. Thus, while Alice is always able to know $\hat\rho_\mathrm{classical}$ and $\hat\rho_\mathrm{header}$, she may or may not know $\hat\rho_\mathrm{quantum}$. Clearly if she prepared the state herself, she would (hopefully) know what she was doing. But in general, quantum networks could be used for far less trivial networking, where Alice is, for example, an intermediary in a distributed quantum computation. In this instance, Alice is unlikely to know what her \textsc{Quantum Data} is.
 
 %
 % Packet Data
 %
 
-\paragraph{Packet data} \index{Packet data layer}
+\paragraph{Packet data} \index{Packet!Data layer}
 
 Comprises blocks of both \textsc{Quantum Data} and \textsc{Classical Data}, of sizes \textsc{Quantum Block Size} and \textsc{Classical Block Size} respectively. \textsc{Packet Data} requires that \textsc{Data} be decomposed into distinct subsystems which are independently transmitted by QTCP. For easy of exposition, we will restrict ourselves to the case where the \textsc{Data} is encoded into a stream of qubits (\textsc{Quantum Data}) and bits (\textsc{Classical Data}). But of course other encodings could be used. Also bear in mind that any quantum (classical) information can be encoded into qubits (bits), and once represented as such, the decomposition of \textsc{Data} into \textsc{Packets} arises very naturally and intuitively. The \textsc{Packet's} \textsc{Quantum Data} is what is transmitted via the quantum channels, while the \textsc{Classical Data} is communicated via classical channels.
 
@@ -76,7 +80,7 @@ Comprises blocks of both \textsc{Quantum Data} and \textsc{Classical Data}, of s
 % Packet Header
 %
 
-\paragraph{Packet header} \label{sec:packet_header} \index{Packet header layer}
+\paragraph{Packet header} \label{sec:packet_header} \index{Packet!Header layer}
 
 \textsc{Packet Header} is purely classical and needn't be transmitted over the costly quantum network, instead being transmitted over a complementary classical network, running in parallel to, and synchronised with the quantum network. \textsc{Packet Header} contains no information content from \textsc{Data}, instead comprising only metadata relevant to the higher levels of the protocol stack. In particular, \textsc{Packet Header} contains the following fields:
 \begin{itemize}
@@ -88,11 +92,11 @@ Comprises blocks of both \textsc{Quantum Data} and \textsc{Classical Data}, of s
     \item \textsc{Order}\index{Order}: To which block taken from \textsc{Data} does this \textsc{Packet Data} belong? This is extremely important in networks where \textsc{Packets} may arrive out of order. The \textsc{Order} field forms the basis for the \textsc{Reconstruction} layer.
     \item \textsc{Quantum Block Size}\index{Quantum block size}: The number of qubits contained in the \textsc{Quantum} component of \textsc{Packet Data}. This is important for the \textsc{Reconstruction} layer.
     \item \textsc{Classical Block Size}\index{Classical block size}: The number of bits contained in the \textsc{Classical} component of \textsc{Packet Data}, also important for the \textsc{Reconstruction} layer.
-    \item \textsc{Routing Queue}\index{Routing queues}: A first in, first out (FIFO) queue of node identifiers, tracing out the entire route for the \textsc{Packet} to follow, in chronological order from the next node to visit all the way to the \textsc{Recipient}.
+    \item \textsc{Routing Queue}\index{Routing!Queues}: A first in, first out (FIFO) queue of node identifiers, tracing out the entire route for the \textsc{Packet} to follow, in chronological order from the next node to visit all the way to the \textsc{Recipient}.
     \item \textsc{Costs}\index{Costs}: A tuple characterising all the accumulated costs of the \textsc{Packet} at the current stage in the route. These are treated as accumulators that are incremented appropriately after each step, since costs are additive.
     \item \textsc{Attributes}\index{Attributes}: A tuple characterising all the non-\textsc{Cost} properties associated with the \textsc{Packet}. Examples include: the \textsc{Priority} of routing a \textsc{Packet} to its destination; suggesting a preferred routing \textsc{Strategy}; or, indicating whether or not a \textsc{Resend Until Success} protocol may be applied to this \textsc{Packet}.
     \item \textsc{Padding}\index{Padding}: Null data to pad the joint \textsc{Classical Packet Data} and \textsc{Packet Header} fields to be of the same length as the \textsc{Quantum Packet Data}. This ensures that the components of the \textsc{Packet} traversing the quantum and classical channels remain in perfect tandem -- bit for qubit. In Sec.~\ref{sec:transport} we show that this facilitates collision detection without the need to measure quantum states.
-    \item \textsc{Checksum}\index{Checksum}: A regular checksum of the entire \textsc{Classical} component of the \textsc{Packet}, including both \textsc{Classical Packet Data} and \textsc{Packet Header}. This also forms a part of the collision detection protocol.
+    \item \textsc{Checksum}\index{Checksums}: A regular checksum of the entire \textsc{Classical} component of the \textsc{Packet}, including both \textsc{Classical Packet Data} and \textsc{Packet Header}. This also forms a part of the collision detection protocol.
 \end{itemize}
 
 One might question why \textsc{Packet Headers} tally accumulated costs when we ought to already know all the costs, since these were employed by the algorithm for choosing strategies in the first case. In the ideal case where all strategies are determined \textit{a priori} and are implemented as intended, this is certainly valid. However, for generality we retain this option since more realistic networks may require dynamically updating strategies during the course of propagation, in which case dynamically tallying costs is appropriate.
@@ -101,7 +105,7 @@ One might question why \textsc{Packet Headers} tally accumulated costs when we o
 % Strategy
 %
 
-\subsubsection{Strategy} \label{sec:intro_strat} \index{Strategy layer}
+\subsubsection{Strategy} \label{sec:intro_strat} \index{Strategy!Layer}
 
 Based on the \textsc{Packet Headers} of all users sharing the network, choose routing strategies to optimise cost metrics. The notion of strategies is introduced in Sec.~\ref{sec:strat_opt}, and a detailed discussion of example strategies is presented in Sec.~\ref{sec:strategies}.
 
@@ -182,7 +186,7 @@ function Reconstruction(Packets):
 % Quality of Service (QoS)
 %
 
-\subsubsection{Quality of service} \label{sec:QOS} \index{Quality of service (QoS) layer}
+\subsubsection{Quality of service} \label{sec:QOS} \index{Quality of service (QoS)!Layer}
 
 In classical networking theory, error detection and correction is an important element of networking protocols. Communication links may be unreliable, or subject to external noise, which users must be able to detect so as to guarantee the quality of their data.
 
@@ -190,7 +194,7 @@ Classically, error detection is typically performed using checksums (hash functi
 
 In the quantum context the elegant notion of checksums is complicated by the fact that calculating a hash function of a quantum state would necessarily entangle the state with the output hash. This would have the undesired effect of causing measurement of the checksum to collapse the quantum state of the data, thereby altering it in an uncontrollable way.
 
-As an alternative to checksums, we could borrow the notion of quantum error correction (QEC)\index{Quantum error correction (QEC)} and fault-tolerance\index{Fault-tolerance} from quantum computing theory \cite{???}. Here we encode a quantum state into a (polynomially) larger Hilbert space. \textit{Syndrome measurements}\index{Syndrome measurements} on some of the states in this larger space allow us to both detect and correct universal error models, such as depolarisation or dephasing, provided that error rates are within the fault-tolerance threshold of the code being employed.
+As an alternative to checksums, we could borrow the notion of quantum error correction (QEC)\index{Quantum error correction (QEC)} and fault-tolerance\index{Fault-tolerance} from quantum computing theory. Here we encode a quantum state into a (polynomially) larger Hilbert space. \textit{Syndrome measurements}\index{Syndromes!Measurements} on some of the states in this larger space allow us to both detect and correct universal error models, such as depolarisation or dephasing, provided that error rates are within the fault-tolerance threshold of the code being employed.
 
 Thus, enforcing QoS in fundamentally different for quantum data packets than for classical ones, requiring entirely different techniques. Given how large a field this has become in its own right, we dedicate Sec.~\ref{sec:QOS_chap} entirely to protocols suited to the implementation of quantum QoS requirements in quantum networks.
 
