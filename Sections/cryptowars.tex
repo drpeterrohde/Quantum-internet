@@ -774,7 +774,8 @@ yielding the sum of all the votes.
 
 \sectionby{Zixin Huang}\index{Zixin Huang}
 
-\dropcap{F}{or} a QKD system, information-theoretic security\index{Information-theoretic!Security} is achieved only when security against collective, coherent attacks is proven. We mustn't make assumptions about the limitations of our adversaries.
+\dropcap{F}{or} a QKD system, information-theoretic security\index{Information-theoretic!Security} is achieved only when security against collective, coherent attacks is proven. We mustn't make assumptions about the limitations of our adversaries. For a more comprehensive review
+on quantum cryptography, see Ref.~\cite{pirandola2019advances}.
 
 Hacking attacks in this context exploit weaknesses in the physical implementation, rather than weakness of the theory -- so-called `side-channel attacks'\index{Side-channel attacks}. Some examples of weaknesses which allow zero-error attacks\index{Zero-error attacks} include:
 
@@ -786,25 +787,39 @@ Hacking attacks in this context exploit weaknesses in the physical implementatio
 
 When considering the security of noisy channels, one must assume that all noise is due to manipulation by an eavesdropper -- the worst-case scenario. An attempted attack is considered successful if it can be proven that the eavesdropper can gain a non-negligible (i.e not exponentially small) amount of mutual information with the final secret-key established between Alice and Bob, without alerting them. Some of the best-known attacks follow:
 
-\subsection{Trojan horse attacks}\index{Trojan horse attacks}
+\subsection{Hacking discrete-variable protocols}
 
-The family of Trojan horse attacks involves Eve probing the settings of Alice and Bob by sending light into their devices and collecting the reflected signal. The first of this kind of attack actually came for free for the eavesdropper \cite{bib:RevModPhys.81.1301}: it was discovered that some photon-counters emit light when a photon is detected \cite{bib:kurtsiefer2001breakdown}. If the emitted light carries correlated information about which detector was triggered, it must be prevented from leaking outside the secure space and becoming accessible to Eve.
+\subsubsection{Beamsplitter \& photon-number-splitting attacks}\index{Beamsplitter attacks}\index{Photon-number-splitting attacks}
 
-In general, Eve probes into the optical channel that Alice and Bob use to communicate. She send her own states into Alice's system, which will reflect off the same apparatus Alice uses used to encode her signal. Eve's states can be imprinted upon some information about the encoding used by Alice, when Eve measures them. She can then use the result of this measurement, combined with some operation on Alice's signals to make a best estimate of the quantum state that Alice sent to Bob, thus giving her some non-negligible mutual information with the key \cite{bib:PhysRevA.97.042335}.
-
-\subsection{Beamsplitter \& photon-number-splitting attacks}\index{Beamsplitter attacks}\index{Photon-number-splitting attacks}
+The security proofs for many discrete variable protocols assumes that Alice's signals consist of single photons. However, true single-photon soures are not yet widely available, and QKD systems often make use of strongly-attenuated laser pulses, and there is some probability of the source emitting multiple photons. This fact can be exploited 
+by Eve, who employs the photon number splitting (PNS) attack \cite{bib:PhysRevLett.68.3121}: Eve can perform a non-demolition measurement to determine the number of photons 
+in the signal, she steals the excess photons and sends the rest to bob. She stores these in her quantum memory and wait until the classical communication between Alice and Bob, hence finding out Alice's preparation basis. 
 
 A beamsplitting (BS) attack translates the fact that any signal lost over a channel is acquired by Eve. Here, Eve induces losses in the communications channel by putting a beamsplitter outside Alice's device, then forwards the remaining photons to Bob. The BS attack does not modify the optical mode that Bob receives: it's therefore always possible for lossy channels, and does not introduce any errors.
 
-If the state preparation consists of more than one photon, Eve can count the number of photons in each signal and act accordingly. Such attacks are called photon-number-splitting (PNS) attacks \cite{bib:PhysRevLett.68.3121}. The BS and PNS attacks were discovered as zero-error attacks against BB84 implemented with weak laser pulses. To counter the attack, the decoy-state\index{Decoy states} method \cite{bib:PhysRevLett.91.057901, bib:PhysRevLett.94.230504} was developed.
+ % The BS and PNS attacks were discovered as zero-error attacks against BB84 implemented with weak laser pulses.  
 
-\subsection{Detector attacks}\index{Detector!Attacks}
+A method used to counter the PNS attack is the decoy-state\index{Decoy states} method \cite{bib:PhysRevLett.91.057901, bib:PhysRevLett.94.230504} . In the decoy-state protocol, Alice randomly replaces some of her signal states with multi-photon pulses from a decoy source. Eve cannot distinguish between decoy pulses from the encoding signals, and can only act identially on both. In the post-process stage, Alice public announces which states were the decoy pulses. The trusted parties can then characterise the action of the channel on the multiple-photon pulses and detect the presence of a PNS attack.
+
+
+\subsubsection{Trojan horse and flash-back attacks}\index{Trojan horse attacks}
+
+Another family of hacking that can be used against discrete-variable QKD is the Trojan horse attacks.
+These attack involve Eve probing the settings of Alice and Bob by sending light into their devices and collecting the reflected signal. The first of this kind of attack actually came for free for the eavesdropper \cite{bib:RevModPhys.81.1301}: it was discovered that some photon-counters emit light when a photon is detected \cite{bib:kurtsiefer2001breakdown}. If the emitted light carries correlated information about which detector was triggered, it must be prevented from leaking outside the secure space and becoming accessible to Eve.
+
+In general, Eve probes into the optical channel that Alice and Bob use to communicate. She send her own states into Alice's system, which will reflect off the same apparatus Alice uses used to encode her signal. Eve's states can be imprinted upon some information about the encoding used by Alice, when Eve measures them. She can then use the result of this measurement, combined with some operation on Alice's signals to make a best estimate of the quantum state that Alice sent to Bob, thus giving her some non-negligible mutual information with the key \cite{bib:PhysRevA.97.042335}.
+
+
+
+\subsubsection{Detector attacks}\index{Detector!Attacks}
 
 The faked-state attack\index{Faked-state attack} is based on the weak-laser implementation of BB84. Here, Eve manipulates Bob's detectors to force him to measure in the same basis. It exploits the fact that the detectors may have a dead-time\index{Dead-time}, and the eavesdropper can trigger the detector whenever she chooses. It follows that Bob's detection outcomes are controlled by the eavesdropper.
 
 Eve can also go beyond detector blinding. She can send in a powerful laser pulse to optically damage components in the QKD system and permanently change its characteristics \cite{bib:jain2016attacks}. If the new characteristics then assist the eavesdropper in an attack without Alice or Bob being notified, the security of the QKD system would be severely compromised.
 
 A more detailed discussion on attacks on physical implementation can be found in \cite{bib:jain2016attacks}.
+
+\subsection{Attacks on continuous-variable protocols}
 
 % Quantum Crypto-Assets
 
