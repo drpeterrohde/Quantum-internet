@@ -5,7 +5,8 @@
 \famousquote{How long do you want these messages to remain secret?\ldots I want them to remain secret for as long as men are capable of evil.}{Neal Stephenson}
 \newline
  
-\dropcap{Q}{uantum} key distribution (QKD) is the first quantum information task to reach commercialisation. Its purpose is to distribute a secret-key between two trusted parties who share a quantum channel, as well as a classical channel for authentication. Unlike current cryptography systems, which are secure based on the presumed limitations of an adversary's computer (\textit{computational security}\index{Computational!Security}), the security of QKD is based on the laws of quantum mechanics, providing guaranteed security unless our understanding of quantum physics is inherently wrong (\textit{information theoretic security}\index{Information-theoretic!Security}).
+\dropcap{Q}{uantum} cryptography is the first field in quantum information task to reach commercialisation. At its early stages, quantum cryptography was almost synonymous with quantum key distribution (QKD), but has since branched and became one of the fastest growing areas in quantum information.
+The purpose of QKD is to distribute a secret-key between two trusted parties who share a quantum channel, as well as a classical channel for authentication. Unlike current cryptography systems, which are secure based on the presumed limitations of an adversary's computer (\textit{computational security}\index{Computational!Security}), the security of QKD is based on the laws of quantum mechanics, providing guaranteed security unless our understanding of quantum physics is inherently wrong (\textit{information theoretic security}\index{Information-theoretic!Security}). In this section we discuss some of the challenges in QKD, as well as other aspects of quantum cryptography beyond traditional QKD.
 
 The typical setting of QKD is as follows. There are two trusted parties who want to establish a secret-key, Alice and Bob. They share two channels: a quantum channel, which allows them to send quantum states (encoded in photons or other states of light) to one another; and, a classical channel, with which they can send classical messages. The communication over the classical channel is assumed to be public and completely insecure, and the eavesdropper, Eve, has full anonymous access to it. However, Eve cannot modify messages shared over the classical channel.
 
@@ -103,6 +104,44 @@ Another candidate is detector-device-independent (DDI) QKD \cite{bib:lim2014dete
 
 The MDI-QKD protocol has been extended to the continuous variable\index{Continuous-variables} framework. However, this system requires homodyne detectors\index{Homodyne detection} with efficiency $>85\%$, and a reliable phase reference\index{Phase!Reference} between Alice and Bob.  
 
+% \subsection{Quantum random number generation}
+
+\subsection{Quantum digital signatures}
+
+Classical digital signature is a cryptographic primitive whose purpose is to ensure that a message's 
+\begin{enumerate}
+\item Authenticity: it was created by the claimed sender
+\item Integrity: the message has not been altered
+\item Non-repudiation: the sender cannot deny having sent this message
+\end{enumerate}
+
+
+
+A quantum digital signature (QDS) scheme involves multiple parties, one sender, and potentially many receivers. It consists of three stages, each consists of a corresponding algorithm.
+
+\begin{itemize}
+\item Key generation: A private key ($sk$) is given to the sender, and (potentially multiple) public keys ($pk$) are given to the receivers.
+\item Signing algorithm: the sender chooses a message $M$ and uses the private key $sk$ to generate a signature, $\sigma = \sigma(M)$. She sends the pair ($M,\sigma(M)$) to the desired receiver(s)
+\item Verification: a receiver possesses the message and signature pair ($M,\sigma(M)$) and the public key $pk$, he/she checks whether to accept the message as having originated to the claimed sender.
+\end{itemize}
+
+However, to ensure that the parties receive the same and correct public becomes a non-trivial task, if the keys ar equantum. Instead, when dealing with QDS schemes, one often aims to ensure
+that the QDS scheme has the following properties:
+\begin{enumerate}
+\item Unforgeability: a third party cannot send a message pretending to be someone else
+\item Trasferability: if a receiver receives a signature, they should be confident that any other receiver should also accept the signature.
+\item Non-repudiation: the sender cannot deny having sent this message
+\end{enumerate}
+
+There are various protocols that falls under the catagory of QDS, here we deal with the notion
+of signing a classical message using quantum communication and quantum computation.
+
+\subsection{Quantum data locking - the quantum enigma machine}
+
+
 We have discussed some significant remaining challenges in QKD. These range from theoretical security proofs to hardware developments. Advances in QKD will not only enable point-to-point quantum communication\index{Point-to-point (P2P)!Communication}, but have implications for a range of network applications, such as quantum secret sharing\index{Quantum secret sharing} \cite{bib:cleve1999share, bib:PhysRevA.61.042311, bib:PhysRevA.71.044301}, blind quantum computing\index{Blind quantum computation} \cite{bib:broadbent2009universal, bib:barz2012demonstration}, quantum anonymous broadcasting\index{Quantum anonymous broadcasting} \cite{bib:christandl2005quantum}, and many more.
+
+
+
 
 As remarked in \cite{bib:diamanti2016practical}, \textit{``Determining the exact power and limitations of quantum communication is the subject of intense research efforts worldwide. The formidable developments that can be expected in the next few years will mark important milestones towards the quantum internet of the future.''}
