@@ -837,6 +837,69 @@ Continuous variable protocols are also vulnerable to trojan horse attacks. By se
 states into Alice's encoder, Eve can gain information on how Alice's states have been modulated. Active monitoring of incoming light is suggested as a countermeasure.
 
 
+\subsection{Quantum digital signatures}\index{Quantum digital signature}\label{sec:q_digital_signatures}
+
+\sectionby{Zixin Huang}\index{Zixin Huang}
+
+% \comment{Zixin to do: Say something about one way functions and hardness, computational complexity etc}
+
+
+A classical digital signature has three main tasks. It ensures the message's
+\begin{enumerate}
+\item Authenticity: it was created by the claimed sender.
+\item Integrity: the message has not been altered.
+\item Non-repudiation: the sender cannot deny having sent this message.
+\end{enumerate}
+\noindent A digital signature is a vital tool for a huge range of applications, ranging from software distribution, financial transaction, emails, cryptocurrencies and voting etc \cite{pirandola2019advances}.
+
+
+A quantum digital signature (QDS) scheme involves multiple parties, one sender, and potentially many receivers. It consists of three stages, each consists of a corresponding algorithm.
+
+\begin{itemize}
+\item Key generation: A private key ($sk$) is given to the sender, and (potentially multiple) public keys ($pk$) are given to the receivers.
+\item Signing: the sender chooses a message $M$ and uses the private key $sk$ to generate a signature, $\sigma = \sigma(M)$. She sends the pair ($M,\sigma(M)$) to the desired receiver(s)
+\item Verification: a receiver possesses the message and signature pair ($M,\sigma(M)$) and the public key $pk$, he/she checks whether to accept the message as having originated to the claimed sender.
+\end{itemize}
+
+After the key generation phase, it is important that the actions of the parties are already determined at this point. That is, they decide to accept or reject the signature without further classical or quatum communication.
+
+However, to ensure that the parties receive the same and correct public becomes a non-trivial task, if the keys ar equantum. Instead, when dealing with QDS schemes, one often aims to ensure
+that the QDS scheme has the following properties. Provided the private key is not leaked and they all share the correct public key, these are ensured:
+\begin{enumerate}
+\item Unforgeability: a third party cannot send a message pretending to be someone else
+\item Trasferability: if a receiver receives a signature, they should be confident that any other receiver should also accept the signature.
+\item Non-repudiation: the sender cannot deny having sent this message
+\end{enumerate}
+
+There are various protocols that falls under the catagory of QDS, here we deal with the notion
+of signing a classical message using quantum communication and quantum computation.
+
+\subsubsection{The (classical) Lamport one-time signature}
+
+
+QDS schemes are inspired Lamport's one-time signatures \cite{}.  Here we assume a classical 
+one-way function $f$. For such a function, given $x$, it is easy to evaluate $f(x)$. However, it is hard to invert to find $x$ from $f(x)$. The algorithm is as follows
+\begin{enumerate}
+\item Key generation: Alice chooses two random inputs $x_0$ and $x_1$, and evaluates $f(x_0)$, $f(x_1)$. She publically broacasts the pair $(0,f(x_0))$, $(1,f(x_1))$ whilst keeping $x_0, x_1$ secret. 
+\item Signing: Alice sends the message $b$ along with her stored corresponding secret key $x_b$.
+\item Verification: the receivers evaluate $f(x_b)$ and check if this agrees with the public key in order to choose to accept or reject.
+\end{enumerate}
+
+The security of such a scheme comes from the fact that $f$ is difficult to invert, and therefore an adversary who has access to only the public key cannot find the secret key in order to provide a valid (forged) signature.
+
+
+\subsubsection{The Gottesman-Chuang QDS}
+
+In 2001, Gottesman and Chuang \cite{} proposed the first QDS protocol. The idea is to use
+the non-orthogonality of state to realize a ``quantum one-way function".
+
+
+% \subsection{Quantum random number generation}
+
+% \subsection{Quantum data locking - the quantum enigma machine}
+
+
+
 % Quantum Crypto-Assets
 
 \input{Sections/quantum_crypto_assets}
