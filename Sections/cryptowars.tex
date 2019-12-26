@@ -562,20 +562,30 @@ This is problematic since when quantum computing becomes a reality it will immed
 
 \subsection{Quantum Enigma machines}\index{Quantum Enigma machines}
 
+ 
 While the BB84\index{BB84 protocol} and other related QKD\index{Quantum key distribution (QKD)} protocols are perfectly secure, they suffer the major drawback that because they are based upon the one-time pad\index{One-time pad}, the number of successfully communicated key-bits must equal the message length and cannot be reused (not even once). This means that for real-time or high-bandwidth applications, the quantum communications channel must have similarly high bandwidth to be applicable.
 
 What would be more useful would be a quantum equivalent of private-key cryptography\index{Private-key!Cryptography}, whereby a short key can be
 used to lock a much longer message.
  % reused over and over again for different messages, meaning that only a short, shared secret-key would need to be established once-off (or at least very infrequently).
 
-This led to the proposal for \textit{quantum Enigma machines}\footnote{The Enigma machine\index{Enigma machines} was the classical cryptosystem employed by the Germans during World War 2 for military and intelligence communication.} \cite{bib:LloydEnigma}. The protocol is shown in Fig.~\ref{fig:enigma}.
+This led to the proposal for \textit{quantum Enigma machines}\footnote{The Enigma machine\index{Enigma machines} was the classical cryptosystem employed by the Germans during World War 2 for military and intelligence communication.} \cite{bib:LloydEnigma}, based on the phenomenon of quantum data locking \cite{DiVin}. The protocol is shown in Fig.~\ref{fig:enigma}.
 
 \begin{figure}[!htbp]
 \includegraphics[clip=true, width=0.475\textwidth]{enigma_machines}
 \captionspacefig \caption{Schematic of the quantum Enigma machine protocol for quantum private-key cryptography. $\ket{j}$ is the message, $k$ is the key, and $\hat{U}_k$ is the encryption operation associated with key $k$, chosen randomly from the Haar measure\index{Haar measure}. The encrypted message is $\ket{j}_k$. An eavesdropper intercepting the channel without knowledge of the key observes the state $\hat\rho_\mathrm{enc}$.}\index{Quantum Enigma machines}\label{fig:enigma}	
 \end{figure}
 
-Here Alice and Bob share a short secret-key $k$ of length $m$, and wish to communicate a message $j$ of length $n$. The secret-key might be established via conventional QKD. First off, they agree upon a set of Haar-random unitaries\index{Haar measure}, $\{\hat{U}_k\}$, associating one with each of the possible $2^m$ keys. This needn't be performed in secret. Alice then encodes her message into the state $\ket{j}$. Her encryption operation is to apply $\hat{U}_k$ to this state according to Alice and Bob's shared secret-key, yielding the encoded state,
+Quantum data locking is a uniquely to quantum phenomenon, and presents one of the widest separations between the classical and quantum information theory \cite{bib:guha2014enigma}.
+Quantum data locking occurs when the accessible information about a classical message encoded into a quantum state decreases by a much larger amount, when ``locked" with a much smaller key.
+
+% Shannon proved that such a locking effect is impossible classically. 
+
+
+Here Alice and Bob share a short secret-key of length $K$, and wish to communicate a message $M$ of length $n-$bits. The secret-key is assumed to be unconditionally secure, and can be established via conventional QKD. First off, they agree upon a set of $K$ Haar-random unitaries (but it is sufficient to consider 2-designs) \index{Haar measure}, $\{\hat{U}_k\}$, associating one with each of the possible $K$ keys. The set of $\{\hat{U}_k\}$ unitaries need not be a secret. 
+
+Alice then encodes her message into the state $\ket{j}$. Her encryption operation is to apply $\hat{U}_k$ to this state according to Alice and Bob's shared secret-key. 
+
 \begin{align}
 \ket{j}_k=\hat{U}_k\ket{j},
 \end{align}
@@ -584,24 +594,38 @@ which Bob is easily able to decrypt using the inverse unitary,
 \hat{U}_k^\dag\ket{j}_k=\ket{j}.
 \end{align}
 
+
+
+
 To characterise the security of the scheme, we first note that in the absence of knowing the key or message, and assuming all $j$ and $k$ are equally likely, Eve observes the mixed state,
-\begin{align}
-\hat\rho_\mathrm{enc} &= \frac{1}{2^{m+n}} \sum_{j,k} \hat{U}_k\ket{j}\bra{j}\hat{U}^\dag_k \nonumber\\
-&= \frac{1}{2^{m+n}} \sum_{j,k} \ket{j}_k\bra{j}_k.
+
+\begin{align}\label{eq:ghwoirsfjnk}
+ \hat \rho_\text{enc}= \frac{1}{2^n} \sum_{j=1}^{2^n} \ket{j}_A\bra{j} \otimes \frac{1}{K}\sum_{k=1}^K U_k\ket{\psi_j}_E\bra{\psi_j}U_k^\dagger   .
 \end{align}
-The security can now be quantified in terms of the accessible information\footnote{The accessible information is the maximum of the mutual information between Alice's input states and measurements performed on the encoded state by Eve.}\index{Accessible information} between this state and the plaintext state, which can be upper-bounded as,
+
+
+
+The security can now be quantified in terms of the accessible information
+\footnote{The accessible information is the maximum of the mutual information between Alice's input states and measurements performed on the encoded state by Eve.}\index{Accessible information} between this state and the plaintext state, which can be upper-bounded as \cite{lupo2015NJP,lupo2014pra},
+% 
+% 
 \begin{align}
-	I_c \leq n + \frac{1}{2^m}\max_{\ket\phi}\sum_{j,k} |\braket{ \phi|j}_k|^2 \log |\braket{ \phi|j}_k|^2.
+	I_c \leq n + \frac{1}{2^n}\max_{\ket\phi}\sum_{j,k} |\braket{ \phi|j}_k|^2 \log |\braket{ \phi|j}_k|^2.
 \end{align}
 It was shown that this quantity can be made arbitrarily small with key-size scaling as,
 \begin{align}
-m=O(\log n),
+m=O(\epsilon\log n),
 \end{align}
-which represents very frugal requirements in key-size versus message length. They further showed that the scheme can be made robust against noise and loss.
+\noindent for an $\epsilon$ that can be made arbitrarily small, given $\log K \sim \log{(1/\epsilon)}$, therefore the key size is exponentially smaller than the length of the message. Thus, we have an encryption scheme that requires very frugal requirements in key-size versus message length. It is further showed that such a scheme can be made robust against noise and loss \cite{lupo2014pra, lupo2015NJP}.
 
-Note that the security of the scheme is information-theoretic\index{Information-theoretic!Security}, and does not make any assumptions about computational security\index{Computational!Security} (except we require the assumption that Eve has finite quantum memory). Thus, this represents a strong form of quantum private-key cryptography, requiring only very short keys compared to message length that may be reused.
+Note that the security of the scheme is information-theoretic\index{Information-theoretic!Security}, and does not make any assumptions about computational security\index{Computational!Security} (except we require the assumption that Eve has finite-time quantum memory \cite{lupo2015Entropy} in order to preserve composable security required for QKD \cite{muller2009composability}). Thus, this represents a strong form of quantum private-key cryptography, requiring only very short keys compared to the message length.
 
+Since then, quantum data locking has found its application for Boson Sampling \cite{huang2019boson}. 
 However, the scheme is very challenging to implement on a large scale over long distances. Consider an optical implementation, where the message is photonically encoded. Now the scheme represents a complex, multi-mode, generalised Mach-Zehnder interferometer\index{Mach-Zehnder (MZ) interference}, meaning that the channel between Alice and Bob, who might be far apart, must be interferometrically stabilised\index{Interferometric!Stability} (Sec.~\ref{sec:opt_stab}) on the order of the photons' wavelength (hundreds of nanometers for optical frequencies), which is extremely challenging over long distances.
+
+
+
+
 
 %
 % Hybrid Quantum/Classical Cryptography
@@ -950,9 +974,8 @@ function QDS():
 \end{table}
 
 
-% \subsection{Quantum random number generation}
 
-% \subsection{Quantum data locking - the quantum enigma machine}
+
 
 
 
