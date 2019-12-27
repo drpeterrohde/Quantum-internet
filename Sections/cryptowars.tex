@@ -573,11 +573,11 @@ This led to the proposal for \textit{quantum Enigma machines}\footnote{The Enigm
 
 \begin{figure}[!htbp]
 \includegraphics[clip=true, width=0.475\textwidth]{enigma_machines}
-\captionspacefig \caption{Schematic of the quantum Enigma machine protocol for quantum private-key cryptography. $\ket{j}$ is the message, $k$ is the key, and $\hat{U}_k$ is the encryption operation associated with key $k$, chosen randomly from the Haar measure\index{Haar measure}. The encrypted message is $\ket{j}_k$. An eavesdropper intercepting the channel without knowledge of the key observes the state $\hat\rho_\mathrm{enc}$.}\index{Quantum Enigma machines}\label{fig:enigma}	
+\captionspacefig \caption{Schematic of the quantum Enigma machine protocol for quantum private-key cryptography. $\ket{j}$ is the message, $k$ is the key, and $\hat{U}_k$ is the encryption operation associated with key $k$, chosen randomly from the Haar measure\index{Haar measure}. The encrypted message is $\ket{j}_k$. An eavesdropper intercepting the channel without knowledge of the key observes the state $\hat\rho_\mathrm{enc}$.}\index{Quantum Enigma machines}\label{fig:enigma}    
 \end{figure}
 
-Quantum data locking is a uniquely to quantum phenomenon, and presents one of the widest separations between the classical and quantum information theory \cite{bib:guha2014enigma}.
-Quantum data locking occurs when the accessible information about a classical message encoded into a quantum state decreases by a much larger amount, when ``locked" with a much smaller key.
+Quantum data locking is a uniquely quantum phenomenon, and presents one of the most striking differences between classical and quantum information theory \cite{bib:guha2014enigma}.
+Quantum data locking occurs when the accessible information about a classical message encoded into a quantum state decreases by a much larger amount when ``locked" with a much smaller key.
 
 % Shannon proved that such a locking effect is impossible classically. 
 
@@ -610,7 +610,7 @@ The security can now be quantified in terms of the accessible information
 % 
 % 
 \begin{align}
-	I_c \leq n + \frac{1}{2^n}\max_{\ket\phi}\sum_{j,k} |\braket{ \phi|j}_k|^2 \log |\braket{ \phi|j}_k|^2.
+    I_c \leq n + \frac{1}{2^n}\max_{\ket\phi}\sum_{j,k} |\braket{ \phi|j}_k|^2 \log |\braket{ \phi|j}_k|^2.
 \end{align}
 It was shown that this quantity can be made arbitrarily small with key-size scaling as,
 \begin{align}
@@ -855,7 +855,7 @@ between Alice's and Bob's LO, often the Alice sends through the LO through the c
 
 \subsubsection{Saturation attacks on the detector}
 
-The security proofs of CV-QKD assume a linear relationship between the quadratures of the state and the measurements, but in reality, homodyne detection have a finite range of linearity. The detectors can be saturated \cite{pirandola2019advances}. By causing Bob's measurement results to overlap with the saturation region, Eve can artificially reduce the trusted parties' error estimation.
+The security proofs of CV-QKD assume a linear relationship between the quadratures of the state and the measurements, but in reality, homodyne detection have a finite range of linearity. The detectors can also be saturated. By causing Bob's measurement results to overlap with the saturation region, Eve can artificially reduce the trusted parties' error estimation.
 
 Proposed countermeasures include using a Gaussian post-selection filter to ensure that the measurement results used for key generation fall within the linear region of the detector, and to use random attentuation of Bob's signal to monitor whether the measurements are linearly related to the inputs \cite{bib:qin2016pra}
 
@@ -873,49 +873,45 @@ states into Alice's encoder, Eve can gain information on how Alice's states have
 
 % \comment{Zixin to do: Say something about one way functions and hardness, computational complexity etc}
 
-
-A classical digital signature has three main tasks. It ensures the message's
-\begin{enumerate}
-\item Authenticity: it was created by the claimed sender.
-\item Integrity: the message has not been altered.
-\item Non-repudiation: the sender cannot deny having sent this message.
-\end{enumerate}
-\noindent A digital signature is a vital tool for a huge range of applications, ranging from software distribution, financial transaction, emails, cryptocurrencies and voting etc \cite{pirandola2019advances}.
-
-
-A quantum digital signature (QDS) scheme involves multiple parties, one sender, and potentially many receivers. It consists of three stages, each consists of a corresponding algorithm.
-
+As discussed previously, a classical digital signature has three main tasks. It ensures that the message
 \begin{itemize}
-\item Key generation: A private key ($sk$) is given to the sender, and (potentially multiple) public keys ($pk$) are given to the receivers.
-\item Signing: the sender chooses a message $M$ and uses the private key $sk$ to generate a signature, $\sigma = \sigma(M)$. She sends the pair ($M,\sigma(M)$) to the desired receiver(s)
-\item Verification: a receiver possesses the message and signature pair ($M,\sigma(M)$) and the public key $pk$, he/she checks whether to accept the message as having originated to the claimed sender.
+\item was created by the claimed sender.
+\item has not been altered.
+\item is non-repudiable: the sender cannot deny having sent this message.
 \end{itemize}
+\noindent A digital signature is a vital tool for a huge range of modern applications, ranging from software distribution, financial transaction, emails, cryptocurrencies and voting etc \cite{pirandola2019advances}.
 
-After the key generation phase, it is important that the actions of the parties are already determined at this point. That is, they decide to accept or reject the signature without further classical or quatum communication.
 
-However, to ensure that the parties receive the same and correct public becomes a non-trivial task, if the keys ar equantum. Instead, when dealing with QDS schemes, one often aims to ensure
-that the QDS scheme has the following properties. Provided the private key is not leaked and they all share the correct public key, these are ensured:
+A quantum digital signature (QDS) scheme involves one sender and potentially many receivers. It consists of three stages, each consists of a corresponding algorithm.
+
 \begin{enumerate}
-\item Unforgeability: a third party cannot send a message pretending to be someone else
-\item Trasferability: if a receiver receives a signature, they should be confident that any other receiver should also accept the signature.
-\item Non-repudiation: the sender cannot deny having sent this message
+\item Key generation: a private key is obtained by the sender, and public keys are delivered to the receivers.
+\item Signature: the sender chooses a message $M$ and uses the private key to generate a signature, $\sigma = \sigma(M)$. She sends the pair $(M,\sigma(M))$ to the desired receiver(s)
+\item Verification: a receiver receives the message and signature pair $(M,\sigma(M))$ and the public key, he/she checks whether to accept the message as having originated from the claimed sender.
 \end{enumerate}
 
-There are various protocols that falls under the catagory of QDS, here we deal with the notion
-of signing a classical message using quantum communication and quantum computation.
+After the key generation phase, it is important that the actions of the involved parties are determined by this point. That is, they decide to accept or reject the signature without further classical or quantum communication.
+
+Ensuring all the parties receive the same and correct quantum public key is a non-trivial task, given that quantum states need to be distributed. Instead of using the cryptographic primitives from classical digital signatures, when dealing with QDS schemes, one often aims to ensure
+that the QDS scheme has the following properties:
+\begin{enumerate}
+\item Unforgeability: a dishonest party cannot send a message pretending to be someone else.
+\item Transferability: if a receiver receives a signature, they should be confident that any other receiver should also accept the signature.
+\item Non-repudiation: the sender cannot deny having sent the message.
+\end{enumerate}
+
+There are various protocols that fall under the category of QDS. The protocols we describe in this section deal with the notion of signing a classical message using tools from quantum information theory.
 
 \subsubsection{The (classical) Lamport one-time signature}
 
-
-QDS schemes are inspired Lamport's one-time signatures \cite{lamport1979constructing}.  Here we assume a classical 
-one-way function $f$. For such a function, given $x$, it is easy to evaluate $f(x)$. However, it is hard to invert to find $x$ from $f(x)$. The algorithm is as follows
+QDS schemes are inspired Lamport's one-time signatures \cite{lamport1979constructing}.  Here we rely on a classical one-way function $f$. Given $x$, it is easy to evaluate $f(x)$, but if $f(x)$ is given, it is hard to invert $f(x)$ to find $x$. The algorithm is as follows
 \begin{enumerate}
 \item Key generation: Alice chooses two random inputs $x_0$ and $x_1$, and evaluates $f(x_0)$, $f(x_1)$. She publically broacasts the pair $(0,f(x_0))$, $(1,f(x_1))$ whilst keeping $x_0, x_1$ secret. 
 \item Signing: Alice sends the message $b$ along with her stored corresponding secret key $x_b$.
 \item Verification: the receivers evaluate $f(x_b)$ and check if this agrees with the public key in order to choose to accept or reject.
 \end{enumerate}
 
-The security of such a scheme comes from the fact that $f(x)$ is classically difficult to invert, and therefore an adversary who has access to only the public key cannot find the secret key in order to provide a valid (forged) signature. However, any scheme that is based on computational-complexity arguements cannot offer information-theoretic security, and schemes based purely on the physics of quantum mechanics are much more desirable.
+The security of such a scheme comes from the fact that $f(x)$ is classically difficult to invert, and therefore an adversary who has access to only the public key cannot find the secret key to forge a signature. However, any scheme that is based on computational-complexity arguments cannot offer information-theoretic security, and schemes based purely on the physics of quantum mechanics are much more desirable.
 
 
 \subsubsection{The Gottesman-Chuang QDS}
@@ -923,36 +919,33 @@ The security of such a scheme comes from the fact that $f(x)$ is classically dif
 In 2001, Gottesman and Chuang \cite{gottesman2001quantum} proposed the first QDS protocol. The idea is to use
 the non-orthogonality of state to realize a ``quantum one-way function", where the difficulty to invert the function is based on the laws of physics rather than computational complexity.
 
-Here if we have a quantum state $\ket{f(x)}$ based on the classical description $f(x)$, no one should be able to determine $f(x)$ with high probability, unless they are the authentic party. The function $f$ does not need to be classically difficult, since the one-wayness in the classical protocol is replaced by non-orthogonality in the quantum analogue.
-	% 
-	\begin{enumerate}
+If we have a quantum state $\ket{f(x)}$ based on the classical description $f(x)$, no one should be able to characterize $\ket{f(x)}$ with certainty, unless they already know $f(x)$. The function $f$ does not need to be difficult to invert, since the computational complexity  in the classical protocol is replaced by non-orthogonality.
+    % 
+    \begin{enumerate}
 \item A function $f$ is chosen and is made public, it takes the input $x$ and generates $f(x)$ that describes the quantum state.
  % 
 \item Key generation: for the private key, Alice chooses a pair of bit-string 
 $\{x_0^i,x_1^i\}$ where $1\leq i \leq L$. The bit-string $x_0$ ($x_1$) will be used to sign the 0's (1's) in the message. $L$ is determined by the security level required.
 % 
-\item For the public key, Alice generates multiple copies of $\{\ket{x_0^i},\ket{x_1^i}\}$. She distributes to each receiver the corresponding states. To check that the public keys are the same, each of the receivers interact by performing SWAP tests. This provides an affirmative answer without disturbing the states, if two are identical.
+\item For the public key, Alice generates multiple copies of $\{\ket{x_0^i},\ket{x_1^i}\}$. She distributes to each receiver the corresponding states. To check that the public keys are the same, each of the receivers interacts by performing SWAP tests. A SWAP test provides an affirmative answer without disturbing the states.
 % 
-\item Signing: to sign a message, Alice chooses the mesasge vale $b$, and sends $(b,x_b^i)$ to the receiver. This can be done classically
+\item Signing: to sign a message, Alice chooses the message vale $b$, and sends $(b,x_b^i)$ to the receiver. This can be done classically.
 \item Verification: the receiver uses $x_b^i$ and generates the corresponding quantum state
-$\ket{f(x)_b^i}$ and checks whether this is consistant with the stored public key.
+$\ket{f(x)_b^i}$ and checks whether this is consistent with the stored public key.
 \end{enumerate}
 
-Whilst the GC-QDS protocol is intuitive, it is also highly impractical due to the experimental requirements. Firstly, the protocol requires for long-storage quantum memories, since the signature and the verification can be separated by long periods of time -- this requirement is one of the major bottle-necks for building a scalable quantum computer. Secondly, multiple copies of the public key is needed, and each reciving party need to perform the SWAP test, the latter involves more quantum communication and ancillary qubits
+Whilst the GC-QDS protocol is intuitive, it is also highly impractical due to the experimental requirements. Firstly, the protocol requires for long-storage quantum memories, since the signature and the verification can be separated by long periods of time -- this requirement is one of the major bottle-necks for building a scalable quantum computer. Secondly, multiple copies of the public key are needed, and each receiving party need to perform the SWAP test, the latter involves more quantum communication and ancillary qubits
 
 \subsubsection{A practical QDS protocol}
 
 Since the development of the GC-QDS protocol, the field has undergone major developments and lifted all the restricting requirements of the protocol.
 
-The storage of the quantum state until verification renders the scheme impractical. This requirement can be removed by replacing the quantum public key with a classical verification key, which is now different for all the receivers \cite{bib:Dunjko2014prl}.
-After removing the quantum memory requirement, the other experimentally challenging task is ensuring that the same quantum public key was send to different receivers. This step can be bypassed by adding an extra step, replacing the state comparison SWAP test with a "symmetrization" \cite{bib:Wallden2015pra}. This step ensures that even if the states distributed by Alice are not identical, the classical verification keys shared by the receivers will be symmetric. 
+The storage of the quantum state until verification renders the scheme impractical. This requirement can be removed by replacing the quantum public key with classical verification keys, which is now different for each receiver \cite{bib:Dunjko2014prl}.
+After removing the quantum memory requirement, the other experimentally challenging task is ensuring that the same quantum public key was sent to different receivers. This step can be bypassed by adding an extra step, replacing the SWAP test with a "symmetrization" \cite{bib:Wallden2015pra}. This ensures that even if the states distributed by Alice are not identical, the classical verification keys shared by the receivers will be ``symmetric" \cite{pirandola2019advances}. 
 
-We explain the the symmetrization protocol here: Alice generates two sets of BB84 states and sends them to Bob and Charlie respectively. Bob (Charlie) either measures it or forwards it to Charlie (Bob), and he similarly measures the states he receives from Charlie (Bob). Depending on the outcome, Bob knows for certainty which state Alice did \textit{not} send. For example, if the measurement outcome is $\ket{0}$, he knows for sure Alice did not send $\ket{1}$. Bob stores the sequence of eliminated state, and whether it was received directly from Alice or Charlie. This classical information will be Bob's (Charlie's) verification key.
+We explain the symmetrization protocol now: Alice generates two sets of BB84 states and sends them to Bob and Charlie respectively. Bob (Charlie) either measures it or forwards it to Charlie (Bob), and he similarly measures the states he receives from Charlie (Bob). Depending on the outcome, Bob knows for certainty which state Alice did \textit{not} send. For example, if the measurement outcome is $\ket{0}$, he knows for sure Alice did not send $\ket{1}$. Bob stores the sequence of eliminated state, and whether it was received directly from Alice or Charlie. This classical information forms Bob’s and Charlie’s eliminated signatures, and will be the verification keys. 
 
-
-Making the public keys (or verification keys) different for each receiver.
-
-Now we are able to describe a memory-less QDS protocol that can be realized with the same technology as QKD. The protocol works for three parties, but can be generalised. In this protocol, Alice signs the message, Bob first receives the message and needs to authenticate it, and Charlie receives the forwarded message from Bob, and verifies that the initial source was indeed Alice.
+Now we are equipped to describe a memory-less QDS protocol that can be realized with the same technology as QKD. The protocol works for three parties, but can be generalised. In this protocol, Alice signs the message, Bob first receives the message and needs to authenticate it, and Charlie receives the forwarded message from Bob, and verifies that the initial source was indeed Alice.
 
 \begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
@@ -960,18 +953,18 @@ Now we are able to describe a memory-less QDS protocol that can be realized with
 function QDS():
 \begin{enumerate}
 % 
-	\item Key generation: Alice performs the first part of a QKD protocol separately, twice with
-	Bob and Charlie. Alice has has four bit strings $A_0^B, A_1^B, A_0^C, A_1^C$, Bob has two strings $K_0^B, K_1^B$, and Charlie has $K_0^C, K_1^C$. The private key $sk$ is the concatenation of the two corresponding strings, $sk=(A_0^B||A_0^C, A_1^B||A_1^C)$. At this stage, error rates of the quantum channel are estimated.
-	% 
-	\item Bob and Charlie perform a symmetrization by exchanging secretly half of their strings (via another QKD link). The new strings for Bob are $S_0^B, S_1^B$ and Charlie $S_0^C,S_1^C$. They are composed from half of the string initially sent to Bob and half of that to Charlie, but Alice does not know from which parts of Bob's and Charlie's strings they came from.
-	% 
-	\item The verification keys for Bob and Charlie are $pk_B = (S_0^B,S_1^B)$, and 
-	      $pk_C=(S_0^C,S_1^C)$.
-	% 
-	\item Signing: to sign a message $M$, Alice sends $(M, A_M^B||A_M^C)$ to Bob.
-	% 
-	\item Verification: Bob checks the mismatch rate between the signature received 
-	      $A_M^B||A_M^C$ and his stored verification key $S_M^B$. If the error is compatible with the channel noise, he accepts. Charlie receives a message with Alice's signature, but from Bob. He performs a similar check and may choose to accept the message as having originated from Alice. 
+    \item Key generation: Alice performs QKD (up to the point where the raw keys are obtained) with Bob and Charlie separately, twice. Now, Alice has four bit-strings: $A_0^B, A_1^B, A_0^C, A_1^C$, Bob has two: $K_0^B, K_1^B$, and Charlie has $K_0^C, K_1^C$. The private key is the concatenation of the two corresponding strings, $(A_0^B||A_0^C, A_1^B||A_1^C)$.
+    \item Error rates of the quantum channel are estimated at this stage.
+    % 
+    \item Bob and Charlie perform a symmetrization by exchanging secretly half of their strings via another QKD link. The new strings for Bob are $S_0^B, S_1^B$ and Charlie $S_0^C,S_1^C$. They are composed of half of the string initially sent to Bob and half of that to Charlie, but Alice does not know from which parts of Bob's and Charlie's strings they came from.
+    % 
+    \item The verification keys for Bob and Charlie are $(S_0^B,S_1^B)$ and 
+          $(S_0^C,S_1^C)$.
+    % 
+    \item Signing: to sign a message $M$, Alice sends $(M, A_M^B||A_M^C)$ to Bob.
+    % 
+    \item Verification: Bob checks the mismatch rate between the signature received 
+          $A_M^B||A_M^C$ and his stored verification key $S_M^B$. If the error is compatible with the channel noise, he accepts. Charlie receives a message with Alice's signature, but from Bob. He performs a similar check and may choose to accept the message as having originated from Alice. 
 \item $\Box$
 \end{enumerate}}
 \end{mdframed}
