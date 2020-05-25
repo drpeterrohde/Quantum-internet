@@ -265,9 +265,6 @@ One thing is for certain -- full-fledged quantum computing will remain an extrem
 %
 
 \subsection{Fault-tolerance}\index{Fault-tolerance}\label{sec:fault_tolerance}
-
-\comment{To do. Help from Simon Devitt.}
-
 In Sec.~\ref{sec:QOS_chap} we discussed QoS\index{Quality of service (QoS)} in the context of quantum networks, where we wish to protect the quantum information being communicated via packets of quantum data. In particular, QEC\index{Quantum error correction (QEC)} allows us to detect and correct errors introduced into quantum data during transmission across noisy channels.
 
 Much more broadly, in the context of an entire quantum computation we will want to achieve the same goal, except that our techniques will need to extend far beyond defending individual quantum states against errors during transmission, but defending an entire computation and all the information residing within it at every stage throughout its execution.
@@ -276,4 +273,90 @@ This is achieved by extending techniques from QEC to achieve \textit{fault-toler
 
 Because a quantum computation is not a passive operation but highly active, fault-tolerance protocols are also active and it does not suffice to simply perform an encoding at the beginning and error correction at the end. Instead, error correction procedures must be applied repeatedly throughout execution, at each stage projecting the encoded computation onto an error-free state.
 
-As with conventional QEC, this introduces (potentially large, but efficient) overheads associated with encoding logical qubits into fault-tolerant codes. Similarly, there is the notion of \textit{fault-tolerance thresholds}\index{Fault-tolerance!Thresholds} -- thresholds on gate error rates that must be achieved if fault-tolerant execution is to be successful. These thresholds are typically depressingly low (well below 1\%) and are the primary reason humanity has not yet achieved scalable quantum computing.
+%As with conventional QEC, this introduces (potentially large, but efficient) overheads associated with encoding logical qubits into fault-tolerant codes. Similarly, there is the notion of \textit{fault-tolerance thresholds}\index{Fault-tolerance!Thresholds} -- thresholds on gate error rates that must be achieved if fault-tolerant execution is to be successful. These thresholds are typically depressingly low (well below 1\%) and are the primary reason humanity has not yet achieved scalable quantum computing.
+
+The concept of Fault-tolerance in computation is not a new idea, it was first developed 
+in relation to classical computing~\cite{bib:N55,bib:G83,bib:A87}.  However, in recent years the precise manufacturing 
+of digital circuitry has made large scale error correction and fault-tolerant circuits largely unnecessary.
+
+The basic principle of Fault-tolerance is that the circuits used for gate operations and 
+error correction procedures should not cause errors to cascade.  Quantum gates not only covert errors, i.e. a Hadamard operation can convert an $X$-error into a $Z$-error and visa versa, but multi-qubit gates can also {\it copy} errors.  
+Hence if quantum circuits are not designed carefully, a correctable number of {\it physical} errors could occur which are consequently copied so many times that they overwhelm the error-correction capabilities of the encoding scheme.  
+
+Fault-tolerance, in the context of error correction, is a function of how circuits and protocols are implemented, not a function of the underlying physical hardware.  It is assumed that all single qubit gates can introduce single qubit errors at some probability, $p$, and it is assumed that all two-qubit gates will {\it copy} pre-existing errors that exist at the input and also has the possibility of introducing a two-qubit correlated error on the two-qubits, with probability, $p$.  
+
+In some cases there are examples of higher order gates being defined as primitives, for example the three qubit Toffoli gate.  However, it should be noted that in almost all cases, the physical implementation of these multi-qubit gates occur through an implicit decomposition into single and two-qubit gates.  This is due to the fact that the vast majority of physical systems, the highest order coupling term in a system Hamiltonian is weight two.  Higher weight coupling terms, which would be required to enable native multi-qubit gates (i.e. weight three terms in the Hamiltonian would be needed to natively enact a Toffoli gate), simply do not arise in natural and easily controllable quantum systems.  
+
+To determine how errors are copied by gate operations, and error operator $E$ is conjugated through the gate operation to create a new error operator, $E' = G^{\dagger}EG$, for some gate unitary, $G$.  A single qubit example is the transformation of $X$-errors to $Z$-errors and visa versa through a Hadamard gate, due to the identity $\hat{X} = \hat{H}\hat{Z}\hat{H}$ and $\hat{Z} = \hat{H}\hat{X}\hat{H}$.  
+
+A two-qubit example is more involved as we need to check all combinations of error mappings on both qubits involved in the gate.  If $\hat{G} = \hat{\mathrm{CNOT}}$, we can examine how $X$- and $Z$-errors change via $G$,
+\begin{equation}
+\begin{aligned}
+&\mathrm{CNOT} (I\otimes X) \mathrm{CNOT} = I \otimes X \\
+&\mathrm{CNOT} (X\otimes I) \mathrm{CNOT} = X \otimes X \\
+&\mathrm{CNOT} (I\otimes Z) \mathrm{CNOT} = Z \otimes Z \\
+&\mathrm{CNOT} (Z\otimes I) \mathrm{CNOT} = Z \otimes I \\
+\end{aligned}
+\end{equation}
+where the notation, $A \otimes B$, are error operators, $\{A,B\} \in \{I,X,Y,Z\}$, on qubits one and two of the gate and, 
+$\hat{G} = \hat{G}^{\dagger} = \hat{\mathrm{CNOT}}$.
+
+So, for a controlled-not operation, $X$-errors are copied from control qubit to target, and $Z$-errors are copied from target to control.  pre-existing $X$-errors on the target qubit or $Z$-errors on the control qubit are unchanged through the gate.  
+
+The fact that quantum circuits can cause errors to be copied implies that if circuits are designed badly, errors can cascade during error correction protocols even when only one or two {\it physical} errors actually took place.  Considering that error correction codes have a finite correcting power, i.e. the Steane code will deterministically correct an arbitrary {\it single} qubit error, but if more than a single error occurs between correction cycles, logical errors are likely to be induced.  
+
+Fault-tolerance is a discrete feature of a quantum circuit construction, either a construction is fault-tolerant or it is not. However, what is defined to be fault-tolerant can be a function of what type of error-correction code is used.  For example, for a single error correcting code, fault-tolerance is defined as:
+\begin{enumerate}
+\item A single error will cause \textbf{at most} one error in the output for each logical qubit block.
+\end{enumerate}
+However, if the quantum code employed is able to correct multiple errors, then the definition of fault-tolerance can be relaxed, i.e. if the code can correct three errors then circuits may be designed such that a single failure results in at most two errors in the output (which is then correctable).  In general, for a code correcting $t=\lfloor (d-1)/2 \rfloor$ errors, fault-tolerance requires that $\leq t$ errors during an operation does not result in $> t$ errors in the output for each logical qubit.    
+ 
+\subsection{The threshold theorem}
+The threshold theorem is a consequence 
+of fault-tolerant circuit design and the ability to perform dynamical error correction.  
+Rather than present a detailed derivation of the theorem for a variety of noise models, we will 
+instead take a very simple case where we utilize a quantum code that can only correct for a 
+single error, using a model that assumes uncorrelated, errors on individual qubits.  For 
+more rigorous derivations of the theorem see~\cite{bib:AB97,bib:G97+,bib:A07}.  
+
+Consider a quantum computer where each physical 
+qubit experiences either an $X$ and/or $Z$ error independently 
+with probability $p$, per gate operation.  
+Furthermore, it is assumed that each logical gate operation and error 
+correction circuit is designed fault-tolerantly and that a cycle of 
+error correction is performed after each elementary {\em logical} gate operation.  If an error occurs 
+during a logical gate operation, then the fault-tolerant constructions ensure this error will only propagate 
+to at most one error in each block, after which a cycle of error correction will remove the error.  
+
+Hence if the failure probability of un-encoded qubits per time step is $p$, then a single level 
+of error correction will ensure that the logical step fails only when two (or more) errors occur.  Hence 
+the failure rate of each logical operation, to leading order, is now $p^1_L = cp^2$, where $p^1_L$ is the 
+failure rate (per logical gate operation) of a 1st level logical qubit and $c$ is the upper bound for the 
+number of possible 2-error combinations 
+which can occur at a physical level within the circuit consisting of the 
+correction cycle $+$ gate operation $+$ 
+correction cycle~\cite{bib:A07}.  
+
+We now repeat the process, re-encoding the computer 
+such that a level-2 logical qubit is formed, using the same $[[n,k,d]]$ 
+quantum code, from $n$, level-1 encoded 
+qubits.  It is assumed that all error correcting procedures and gate operations at the 2nd level are 
+self-similar to the level-1 operations (i.e. the circuit structures for the level-2 encoding are 
+identical to the level-1 encoding).  Therefore, if the level-1 failure rate per logical time step is $p^1_L$, 
+then by the same argument, the failure rate of a 2-level operation is given by,
+$p^2_L = c(p^1_L)^2 = c^3p^4$.  This iterative procedure is then repeated (referred to as concatenation) 
+up to the $k$th level, such that the logical failure rate, per time step, of a $k$-level encoded qubit is given by,
+\begin{equation}
+p^k_L = \frac{(cp)^{2^k}}{c}.
+\label{eq:threshold}
+\end{equation}   
+Eq. \ref{eq:threshold} implies that for a finite {\em physical} error rate, $p$, per qubit, per time step, 
+the failure rate of the $k$th-level encoded qubit can be made arbitrarily small by simply increasing $k$,  
+dependent on $cp < 1$.  This inequality defines the threshold.  The physical error rate 
+experienced by each qubit per time step must be $p_{th} < 1/c$ to ensure that multiple levels of 
+error correction reduce the failure rate of logical components.
+
+Hence, provided sufficient resources are available, an arbitrarily large quantum circuit can be 
+successfully implemented, to arbitrary accuracy, once the physical error rate is below threshold.  Initial estimates at the threshold, which gave $p_{th} \approx 10^{-4}$~\cite{bib:K97,bib:AB97,bib:G97+} did not sufficiently model physical systems in an accurate way.  Recent results~\cite{bib:SFH07,bib:SDT07,bib:SBFRYSGF06,bib:MCTBCCC04,bib:BSO05} have been estimated for more realistic quantum processor architectures, showing significant differences in threshold when architectural considerations are taken into account.  The most promising thresholds that have been calculated for expected, circuit level noise, are based on surface codes~\cite{bib:WFSH09,bib:WFH11,bib:FMMC12,bib:S14}, with thresholds slightly less than 1\%.  This has now become the target for experimental groups as a large number of scalable systems architectures utilise the surface code as the underlying correction model~\cite{bib:Gimeno-Segovia:2015aa,bib:Hill:2015aa,Lekitsch:2017aa,Nemoto:2014aa,Jones:2012aa,bib:Mukai_2020}.
+
+

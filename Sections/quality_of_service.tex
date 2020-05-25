@@ -122,9 +122,88 @@ and thus the purification protocol improves fidelity provided that \mbox{$F_\mat
 
 \subsection{3-qubit code}\index{3-qubit code}
 
-The first described QEC\index{Quantum error correction (QEC)} code was the 3-qubit code\index{3-qubit code} (or redundancy code) by \cite{bib:Shor95} for redundantly encoding a single logical qubit into three encoded qubits, allowing the detection and correction of at most a single bit-flip error between the encoded qubits. Measurement of the three ancillary qubits yields a \textit{syndrome}\index{Syndromes}, which identifies where the error took place, allowing it to be subsequently corrected with feedforward. This protocol is shown in Alg.~\ref{alg:three_QEC}.
+The 3-qubit bit-flip code is traditionally used as a basic introduction to the concept of Quantum Error Correction.  
+However, the 3-qubit code {\em does not} represent a full quantum code.  This is 
+due to the fact that the code cannot simultaneously correct for both $X$-errors and $Z$-errors, which is 
+required for correcting errors for an arbitrary error mapping on a single qubit.  
+This code is a quantum analogue of the classical repetition code.
 
-By switching into a Hadamard-rotated basis, the same code could equivalently correct against at most a single phase-flip error (since \mbox{$\hat{H}\hat{X}\hat{H}=\hat{Z}$}).
+The 3-qubit code encodes a single logical qubit into three physical qubits with the property that 
+it can correct for a single $X$-error.  The two logical basis states 
+$\ket{0}_L$ and $\ket{1}_L$ are defined as,
+\begin{equation}
+\ket{0}_L = \ket{000}, \quad \quad \ket{1}_L = \ket{111},
+\end{equation}
+such that an arbitrary single qubit state $\ket{\psi} = \alpha\ket{0} + \beta\ket{1}$ is mapped to,
+\begin{equation}
+\begin{aligned}
+\alpha\ket{0} + \beta\ket{1} &\rightarrow \alpha\ket{0}_L + \beta\ket{1}_L \\
+&= \alpha\ket{000} + 
+\beta\ket{111} = \ket{\psi}_L.
+\end{aligned}
+\end{equation}
+
+As three individual $X$-errors are required to switch between logical states, $\ket{0}_L \leftrightarrow \ket{1}_L$, 
+any single $X$-error, for example if the encoded state is $\ket{0}_L$. results in a erred state that is 
+closer to $\ket{0}_L$ than $\ket{1}_L$.  The distance between two codeword states, $d$, defines the 
+number of errors that can be corrected, $t$, as, $t = \lfloor(d-1)/2\rfloor$.  In this case, $d=3$, hence $t=1$.  
+
+How do we detect and correct errors without directly measuring or obtaining information 
+about the logical state, which would collapse the computational wave-function and destroy the encoded information? 
+Two additional ancilla qubits, which are used to extract {\em syndrome} information (information 
+regarding possible errors) are introduced.  
+
+Assuming all gate operations are perfect and the only place where the 
+qubits are susceptible to error is the region between encoding and correction, correction 
+proceeds by introducing two ancilla qubits and performing a sequence of CNOT gates, which checks the 
+parity of the three qubits.  Algorithm~\ref{tab:errors} summarizes the state of the whole system, for each possible error, just prior to measurement.
+\begin{table}[ht!]
+\begin{center}
+\vspace*{4pt}   
+\begin{tabular}{c|c}
+Error Location & Final State, $\ket{\text{data}}\ket{\text{ancilla}}$ \\
+\hline
+No Error & $\alpha\ket{000}\ket{00} + \beta\ket{111}\ket{00}$ \\
+Qubit 1 & $\alpha\ket{100}\ket{11} + \beta\ket{011}\ket{11}$ \\
+Qubit 2 & $\alpha\ket{010}\ket{10} + \beta\ket{101}\ket{10}$ \\
+Qubit 3 & $\alpha\ket{001}\ket{01} + \beta\ket{110}\ket{01}$ \\
+\end{tabular}
+\caption{Final state of the five qubit system prior to the syndrome measurement for no error or a single 
+$X$ error on one of the qubits.  The last two qubits represent the state of the ancilla.  Note that each possible 
+error will result in a unique measurement result (syndrome) 
+of the ancilla qubits.  This allows for a $X$ correction gate to be applied 
+to the data block which is classically controlled from the syndrome result.  At no point during correction do 
+we learn anything about $\alpha$ or $\beta$.} 
+\label{tab:errors}
+\end{center}
+\end{table} 
+
+For each possible situation, either no error or a single bit-flip error, the ancilla qubits are flipped to a unique state based on 
+the parity of the data block.  These qubits are then measured to obtain the classical {\em syndrome} result.  The 
+result of the measurement will then dictate if an $X$ correction gate needs to be applied to a specific qubit, i.e. 
+\begin{widetext}
+\begin{equation}
+\begin{aligned}
+&\text{Ancilla Measurement:} \quad \ket{00}, \quad \text{Collapsed State:} \quad \alpha\ket{000} + \beta\ket{111} \quad \therefore \text{Clean State} \\
+&\text{Ancilla Measurement:} \quad \ket{01}, \quad \text{Collapsed State:} \quad \alpha\ket{001} + \beta\ket{110} \quad \therefore \text{Bit Flip on Qubit 3} \\
+&\text{Ancilla Measurement:} \quad \ket{10}, \quad \text{Collapsed State:} \quad \alpha\ket{010} + \beta\ket{101} \quad \therefore \text{Bit Flip on Qubit 2} \\
+&\text{Ancilla Measurement:} \quad \ket{11}, \quad \text{Collapsed State:} \quad \alpha\ket{100} + \beta\ket{011} \quad \therefore \text{Bit Flip on Qubit 1} \\
+\end{aligned}
+\end{equation}
+\end{widetext}
+Provided that only a single error has occurred, the data block is restored.  
+
+This code will only work if a maximum of one error occurs.  
+If two $X$ errors occur, then the syndrome result becomes ambiguous.  
+For example, if an $X$ error occurs on both 
+qubits one and two, then the syndrome result will be $\ket{01}$.  
+This will cause us to mis-correct by applying an $X$ gate 
+to qubit 3.  Therefore, two errors will induce a logical bit flip and causes the code to fail.  
+This flow is illustrated in Algorithm \ref{alg:three_QEC}.
+
+%The first described QEC\index{Quantum error correction (QEC)} code was the 3-qubit code\index{3-qubit code} (or redundancy code) by \cite{bib:Shor95} for redundantly encoding a single logical qubit into three encoded qubits, allowing the detection and correction of at most a single bit-flip error between the encoded qubits. Measurement of the three ancillary qubits yields a \textit{syndrome}\index{Syndromes}, which identifies where the error took place, allowing it to be subsequently corrected with feedforward. This protocol is shown in Alg.~\ref{alg:three_QEC}.
+
+%By switching into a Hadamard-rotated basis, the same code could equivalently correct against at most a single phase-flip error (since \mbox{$\hat{H}\hat{X}\hat{H}=\hat{Z}$}).
 
 \begin{table}[!htbp]
 \begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
@@ -173,9 +252,80 @@ into the 3-qubit state,
 
 \subsection{9-qubit code}\index{9-qubit code}
 
-By taking two instances of the 3-qubit code, one implementing bit-flip correction and the other implementing phase-flip correction, and concatenating them, we can define a 9-qubit code, which protects against at most a single bit-flip and a single phase-flip. Joint protection against both the bit-flip and phase-flip operators ($\hat{X}$ and $\hat{Z}$) in turn allows error correction against a single depolarising error, the most general type of logical error, which completely destroys a single qubit.
+The nine qubit error correcting code was first developed by Shor~\cite{bib:S95} in 1995 and is based on the 3-qubit repetition code.  The Shor code can correct a logical qubit from one discrete bit flip, one discrete phase flip or 
+one of each on any of the nine physical qubits and is therefore 
+sufficient to correct for any continuous linear combination of errors on a single qubit.  
+The two basis states for the code are,
+\begin{equation}
+\begin{aligned}
+\ket{0}_L = \frac{1}{\sqrt{8}}(\ket{000}+\ket{111})(\ket{000}+\ket{111})(\ket{000}+\ket{111}) \\
+\ket{1}_L = \frac{1}{\sqrt{8}}(\ket{000}-\ket{111})(\ket{000}-\ket{111})(\ket{000}-\ket{111}) \\
+\end{aligned}
+\end{equation}
 
-This is the simplest construction of a code which protects against a single depolarising event. But it is not the most efficient, and numerous more resource-savvy codes for protecting against Pauli errors exist, such as Steane's 7-qubit code\index{Steane code} \cite{bib:SteaneCode}.
+Correction for $X$-errors occurs by treating each block of three qubits in the code identically to the three qubit code
+[Algorithm \ref{alg:three_QEC}].  Phase errors 
+($Z$-errors) are corrected by examining the sign differences between the 
+three blocks.  
+
+\begin{table}[!htbp]
+\begin{mdframed}[innertopmargin=3pt, innerbottommargin=3pt, nobreak]
+\texttt{
+function NineQubitCode($\ket\psi$):
+\begin{enumerate}
+\item Using eight CNOT gates and three Hadamards, redundantly encode the logical single-qubit state,
+\begin{align}
+\ket\psi=\alpha\ket{0}+\beta\ket{1},
+\end{align}
+into the 9-qubit state,
+\begin{align}
+& \ket\psi\ket{00000000} \rightarrow \ket\psi_R \nonumber \\
+&= \frac{\alpha}{\sqrt{8}}(\ket{000}+\ket{111})(\ket{000}+\ket{111})(\ket{000}+\ket{111}) \nonumber \\
+& + \frac{\beta}{\sqrt{8}}(\ket{000}-\ket{111})(\ket{000}-\ket{111})(\ket{000}-\ket{111}) 
+\end{align}
+\item Independently apply both bit-flip channels $\mathcal{E}_X$ and phase-flip channels $\mathcal{E}_Z$
+to each of the three encoded qubits.
+\item The nine qubit code is degenerate, meaning that multiple single qubit errors have the same effect on the code-state.  For all possible single qubit phase errors , there are only three possible changes to the logic state.
+\begin{align}
+\ket\psi_1 &= \hat{Z}_{1,2,3} \ket\psi_R \nonumber \\
+&= \frac{\alpha}{\sqrt{8}}(\ket{000}-\ket{111})(\ket{000}+\ket{111})(\ket{000}+\ket{111}) \nonumber \\
+& + \frac{\beta}{\sqrt{8}}(\ket{000}+\ket{111})(\ket{000}-\ket{111})(\ket{000}-\ket{111}) 
+, \nonumber \\
+\ket\psi_2 &= \hat{Z}_{4,5,6} \ket\psi_R \nonumber \\
+&= \frac{\alpha}{\sqrt{8}}(\ket{000}+\ket{111})(\ket{000}-\ket{111})(\ket{000}+\ket{111}) \nonumber \\
+& + \frac{\beta}{\sqrt{8}}(\ket{000}-\ket{111})(\ket{000}+\ket{111})(\ket{000}-\ket{111}) 
+, \nonumber \\
+\ket\psi_3 &= \hat{Z}_{7,8,9} \ket\psi_R \nonumber \\
+&= \frac{\alpha}{\sqrt{8}}(\ket{000}+\ket{111})(\ket{000}+\ket{111})(\ket{000}-\ket{111}) \nonumber \\
+& + \frac{\beta}{\sqrt{8}}(\ket{000}-\ket{111})(\ket{000}-\ket{111})(\ket{000}+\ket{111}).
+\end{align}
+\item Correct all $X$-errors by applying the three qubit correction protocol to each of the three block.
+\item To check for $Z$-errors, compare the $\pm$ signs between blocks by first coupling all qubits in 
+blocks one and two via CNOT gates to one ancilla and all qubits in blocks two and three to a second ancilla.
+\item To correct for $Z$-errors, apply a physical $Z$-gate to any of the physical qubits in a block identified by the 
+ancilla measurements (for a degenerate code, the correction gate does not need to be identical to the original error).
+\item $\Box$
+\end{enumerate}}
+\end{mdframed}
+\captionspacealg \caption{9-qubit code for protecting against at most a single bit- and/or phase flip error. The code is a concatenation of three blocks of three bit flip codes.  Bit flips are corrected within blocks of three qubits, while phase flips are corrected by comparing blocks.} \label{alg:nine_QEC}
+\end{table}
+
+The nine qubit code is effectively a concatenation of two bit-flip codes. By combining three bit-flip encoded qubits into a 
+second level encoded qubit, the lower level codes can correct for a single bit-flip error in any single block, while the 
+upper level code corrects for a single phase flip error in any single block. 
+
+Note that a phase flip on {\em any} one qubit in a block of three has the same effect, this is why the 9-qubit 
+code is referred to as a degenerate code.  In other error correcting codes, such as the 5- or 7-qubit codes~\cite{bib:S96,bib:LMPZ96}, there is a one-to-one 
+mapping between correctable errors and unique states, in degenerate codes such as this, the mapping is not unique.  If we know which block the error occurs it does not matter which qubit we apply the correction operator.  
+
+Even if a bit {\em and} phase error occurs on the same qubit (i.e. a $Y$-error), the $X$ correction circuit will detect and correct for 
+bit flips while the $Z$ correction circuit will detect and correct for phase flips.  The $X$-error correction 
+has the ability to correct for up to three individual bit flips (provided each bit flip occurs in a different block of three).  However, in general 
+the 9-qubit code is only a single error correcting code as it cannot handle more than a single bit flip error if they occur in certain locations.
+
+%By taking two instances of the 3-qubit code, one implementing bit-flip correction and the other implementing phase-flip correction, and concatenating them, we can define a 9-qubit code, which protects against at most a single bit-flip and a single phase-flip. Joint protection against both the bit-flip and phase-flip operators ($\hat{X}$ and $\hat{Z}$) in turn allows error correction against a single depolarising error, the most general type of logical error, which completely destroys a single qubit.
+
+%This is the simplest construction of a code which protects against a single depolarising event. But it is not the most efficient, and numerous more resource-savvy codes for protecting against Pauli errors exist, such as Steane's 7-qubit code\index{Steane code} \cite{bib:SteaneCode}.
 
 %
 % Stabiliser Codes
@@ -183,11 +333,227 @@ This is the simplest construction of a code which protects against a single depo
 
 \subsection{Stabiliser codes}\index{Stabiliser!Codes}\label{sec:stab_code}
 
-\comment{To do}
+So far we have presented error correcting codes from the perspective of their state representations and their preparation and correction circuits.  
+This is a rather inefficient method for describing the codes as the state representations and circuits clearly differ from code to code.  The majority 
+of error correcting codes that are used within the literature are members of a class known as stabilizer codes.  Stabilizer codes are 
+very useful to work with.  The general formalism applies broadly and there exists general rules to construct preparation circuits, correction circuits 
+and fault-tolerant logical gate operations once the stabilizer structure of the code is specified.  
 
-%
-% Surface Codes
-%
+The stabilizer formalism which was first introduced by Daniel Gottesman~\cite{G97+} uses essentially the Heisenberg 
+representation for quantum mechanics which describes quantum states in terms of operators rather that the 
+basis states themselves.  An arbitrary state $\ket{\psi}$ is defined to be stabilized by some operator, $K$, if it is a 
+$+1$ eigenstate of $K$, i.e.
+\begin{equation}
+K\ket{\psi} = \ket{\psi}.
+\end{equation}
+For example, the single qubit state $\ket{0}$ is stabilized by the operator $K = \sigma_z$, i.e.
+\begin{equation}
+\sigma_z\ket{0} = \ket{0}
+\end{equation}
+Defining multi-qubit states with respect to this formalism relies on the group structure of multi-qubit operators.  
+
+Within the group of all possible, 
+single qubit operators, there exists a subgoup, denoted the Pauli group, 
+$\mathcal{P}$, which contains the following elements,
+\begin{equation}
+\mathcal{P} = \{\pm \sigma_I, \pm i \sigma_I, \pm \sigma_x, 
+\pm i \sigma_x,\pm \sigma_y, \pm i \sigma_y,\pm \sigma_z, \pm i \sigma_z\}.
+\end{equation}
+It is easy to check that these matrices form a group under multiplication 
+through the commutation and anti-commutation 
+rules for the Pauli set, $\{\sigma_i \} = \{ \sigma_x,\sigma_y,\sigma_z\}$,
+\begin{equation}
+[\sigma_i,\sigma_j] = 2i\epsilon_{ijk}\sigma_k, \quad \quad \{\sigma_i,\sigma_j\} = 2\delta_{ij},
+\end{equation}
+where,
+\begin{equation}
+\epsilon_{ijk} = \Bigg \{
+\begin{array}{l}
++1\text{ for } (i,j,k) \in \{(1,2,3), (2,3,1), (3,1,2)\}\\
+-1 \text{ for } (i,j,k) \in \{(1,3,2), (3,2,1), (2,1,3)\}\\
+0 \text{    for } i=j, j=k, \text{ or } k=i
+\end{array}
+\end{equation}
+and
+\begin{equation}
+\delta_{ij} = \Bigg \{
+\begin{array}{cr}
+1\text{ for } i = j\\
+0 \text{ for } i \neq j.
+\end{array}
+\end{equation}
+The Pauli group extends over N-qubits by simply taking the $N$ fold tensor product of $\mathcal{P}$, i.e.
+\begin{equation}
+\begin{aligned}
+\mathcal{P}_N &= \mathcal{P}^{\otimes N} \\
+&= \{\pm \sigma_I, \pm i \sigma_I, \pm \sigma_x, 
+\pm i \sigma_x,\pm \sigma_y, \pm i \sigma_y,\pm \sigma_z, \pm i \sigma_z\}^{\otimes N}.
+\end{aligned}
+\end{equation}
+An $N$-qubit stabilizer state, $\ket{\psi}_N$ is then defined via an $N$-element Abelian 
+subgroup, $\mathcal{G}$, of the $N$-qubit Pauli group, in which $\ket{\psi}_N$ is a $+1$ 
+eigenstate of each element, 
+\begin{equation}
+\begin{aligned}
+\mathcal{G}  &= \\
+&\{\; G_i \;|\; G_i\ket{\psi} = \ket{\psi}, \; [G_i,G_j] = 0 \; \forall \; (i,j) \} \subset \mathcal{P}_N.
+\label{eq:stabdef}
+\end{aligned}
+\end{equation}
+Given this definition, the state $\ket{\psi}_N$ can be equivalently defined either through the 
+state vector representation {\em or} by specifying the stabilizer set, $\mathcal{G}$.
+
+Many extremely useful multi-qubit states are stabilizer states, including two-qubit Bell states, 
+Greenberger-Horne-Zeilinger (GHZ) states~\cite{GHZ89,GHSZ90}, Cluster states~\cite{BR01,RB01} 
+and codeword states for QEC.  As an example, consider a three qubit GHZ state, defined as,
+\begin{equation}
+\ket{\text{GHZ}}_3 = \frac{\ket{000} + \ket{111}}{\sqrt{2}}.
+\end{equation}
+This state can be expressed via any three linearly independent elements 
+of the $\ket{\text{GHZ}}_3$ stabilizer group for example,
+\begin{equation}
+\begin{aligned}
+G_1 &= \sigma_x\otimes \sigma_x \otimes \sigma_x \equiv XXX, \\
+G_2 &= \sigma_z\otimes \sigma_z \otimes \sigma_I \equiv ZZI, \\
+G_3 &= \sigma_I \otimes \sigma_z \otimes \sigma_z \equiv IZZ. 
+\end{aligned}
+\end{equation}
+where the right-hand side of each equation is the short-hand representation of stabilizers.  
+Note that these three operators form an Abelian group [Eq.~\ref{eq:stabdef}] as,
+\begin{equation}
+\begin{aligned}
+[G_i,G_j]\ket{\psi} &= G_iG_j\ket{\psi} - G_jG_i\ket{\psi} \\
+&= \ket{\psi}-\ket{\psi} = 0, \quad \forall \quad [i,j,\ket{\psi}].
+\end{aligned}
+\end{equation}
+Similarly, the four orthogonal Bell states,
+\begin{equation}
+\begin{aligned}
+\ket{\Phi^{\pm}} &= \frac{\ket{00} \pm \ket{11}}{\sqrt{2}}, \\
+\ket{\Psi^{\pm}} &= \frac{\ket{01} \pm \ket{10}}{\sqrt{2}},
+\end{aligned}
+\end{equation}
+are stabilized by the operators, $G_1 = (-1)^aXX$, and $G_2 = (-1)^b ZZ$.  Where $[a,b] \in \{0,1\}$ and each of the 
+four Bell states correspond to the four unique pairs, 
+$\{\Phi^+,\Psi^+,\Phi^-,\Psi^-\} = \{ [0,0],[0,1],[1,0],[1,1]\}$.  
+ 
+\section{QEC with stabilizer codes}\label{sec:sec:QEC2}
+The use of the stabilizer formalism to describe quantum error correction codes is extremely useful since it 
+allows for easy synthesis of correction circuits and also clearly shows how logical operations can be performed 
+directly on encoded data.  As an introduction we will focus on arguably the most well known quantum code, the 
+7-qubit Steane code, first proposed in 1996~\cite{bib:S96}.  
+
+The 7-qubit code represents a full quantum code that encodes seven physical qubits into one logical qubit, with 
+the ability to correct for a single $X$ and/or $Z$ error.  
+The $\ket{0}_L$ and $\ket{1}_L$ basis states are 
+defined as,
+\begin{widetext}
+\begin{equation}
+\begin{aligned}
+|0\rangle_L = \frac{1}{\sqrt{8}}(&|0000000\rangle + |1010101\rangle + |0110011\rangle + |1100110\rangle + 
+|0001111\rangle + |1011010\rangle + |0111100\rangle + |1101001\rangle),\\
+|1\rangle_L = \frac{1}{\sqrt{8}}(&|1111111\rangle + |0101010\rangle + |1001100\rangle + |0011001\rangle + 
+|1110000\rangle + |0100101\rangle + |1000011\rangle + |0010110\rangle).
+\label{eq:log}
+\end{aligned}
+\end{equation}
+\end{widetext}
+The stabilizer set for the 7-qubit code is fully specified by the six operators,
+\begin{equation}
+\begin{aligned}
+&K^1 = IIIXXXX, \quad \quad K^2 = XIXIXIX,\\ 
+&K^3 = IXXIIXX, \quad \quad K^4 = IIIZZZZ \\
+&K^5 = ZIZIZIZ, \quad \quad K^6 = IZZIIZZ.
+\end{aligned}
+\label{eq:stab7}
+\end{equation}
+As the 7-qubit codeword states are specified by only six stabilizers, the code contains two basis states, 
+which are the logical states.  With a final operator, $K^7 = ZZZZZZZ=Z^{\otimes 7}$ 
+fixing the state to one of the codewords,
+$K^7\ket{0}_L = \ket{0}_L$ and $K^7\ket{1}_L = -\ket{1}_L$.  The 7-qubit code is 
+defined as a $[[n,k,d]] = [[7,1,3]]$ 
+quantum code, where $n=7$ physical qubits encode $k=1$ logical qubit with a distance between basis states $d=3$, 
+correcting $t = (d-1)/2 = 1$ error.  Notice that the stabilizer set separates into $X$ and $Z$ sectors which defines the 
+code as a Calderbank-Shor-Steane (CSS) code.  CSS codes are extreamly useful since they allow for straightforward 
+logical gate operations to be applied directly to the encoded data 
+and are easy to derive from classical codes.
+
+Although the 7-qubit code is the most well known Stabilizer code, there are other stabilizer codes 
+which encode multiple logical qubits and correct for more errors~\cite{bib:G97+}.  
+The downside to these lager codes is 
+that they require more physical qubits and more complicated error correction circuits.  
+Tables~\ref{tab:9qubit} 
+and~\ref{tab:5qubit} shows the stabilizer structure of two other well known codes, the 9-qubit 
+code~\cite{bib:S95} which we have examined and the 5-qubit code~\cite{bib:LMPZ96} which 
+represents the smallest possible quantum code that corrects for a single error.  
+\begin{table}[ht]
+\begin{center}
+\vspace*{4pt}   
+\begin{tabular}{c|c|c|c|c|c|c|c|c|c}
+$K^1$ & $Z$&$Z$&$I$&$I$&$I$&$I$&$I$&$I$&$I$ \\
+$K^2$ & $Z$&$I$&$Z$&$I$&$I$&$I$&$I$&$I$&$I$ \\
+$K^3$ & $I$&$I$&$I$&$Z$&$Z$&$I$&$I$&$I$&$I$ \\
+$K^4$ & $I$&$I$&$I$&$Z$&$I$&$Z$&$I$&$I$&$I$ \\
+$K^5$ & $I$&$I$&$I$&$I$&$I$&$I$&$Z$&$Z$&$I$ \\
+$K^6$ & $I$&$I$&$I$&$I$&$I$&$I$&$Z$&$I$&$Z$ \\
+$K^7$ & $X$&$X$&$X$&$X$&$X$&$X$&$I$&$I$&$I$ \\
+$K^8$ & $X$&$X$&$X$&$I$&$I$&$I$&$X$&$X$&$X$ \\
+\end{tabular}
+\caption{The eight Stabilizers for the 9-qubit Shor code, encoding nine physical qubits into one logical 
+qubit to correct for a single $X$ and/or $Z$ error. } 
+\label{tab:9qubit}
+\end{center}
+\end{table} 
+\begin{table}[ht]
+\begin{center}
+\vspace*{4pt}   
+\begin{tabular}{c|c|c|c|c|c}
+$K^1$ & $X$&$Z$&$Z$&$X$&$I$ \\
+$K^2$ & $I$&$X$&$Z$&$Z$&$X$ \\
+$K^3$ & $X$&$I$&$X$&$Z$&$Z$ \\
+$K^4$ & $Z$&$X$&$I$&$X$&$Z$ \\
+\end{tabular}
+\caption{The Four Stabilizers for the [[5,1,3]] quantum code, encoding five physical qubits into one logical qubit
+to correct for a single $X$ and/or $Z$ error.  Unlike the 7- and 9-qubit codes, the [[5,1,3]] code is a non-CSS 
+code, since the stabilizer set does not separate into $X$ and $Z$ sectors.} 
+\label{tab:5qubit}
+\end{center}
+\end{table} 
+
+\subsubsection{Performing error correction}\label{sec:stabilizer_correction}
+Error correction using stabilizer codes is a straightforward extension of state preparation.  Consider an arbitrary single 
+qubit state that has been encoded, 
+\begin{equation}
+\alpha\ket{0} + \beta\ket{1} \rightarrow \alpha\ket{0}_L + \beta\ket{1}_L = \ket{\psi}_L.  
+\end{equation}
+Now assume that an error occurs on one (or multiple) qubits which is described via the operator $E$, where $E$ is 
+a combination of $X$ and/or $Z$ errors over the $N$ physical qubits of the logical state.  
+By definition of stabilizer 
+codes, $K^i\ket{\psi}_L = \ket{\psi}_L$, $i \in [1,..,N-k]$, for a code encoding $k$ logical qubits.  
+Hence the erred state, 
+$E\ket{\psi}_L$, satisfies,
+\begin{equation}
+K^iE\ket{\psi}_L = (-1)^m EK^i\ket{\psi}_L = (-1)^m E\ket{\psi}_L.
+\end{equation}
+where $m$ is defined as, $m=0$, if $[E,K^i]=0$ and $m=1$, if $\{E,K^i\} = 0$.  Therefore, if the error operator commutes 
+with the stabilizer, the state remains a $+1$ eigenstate of $K^i$, if the error operator anti-commutes with the 
+stabilizer then the logical state is flips to now be a $-1$ eigenstate of $K^i$.  
+
+Each of the code 
+stabilizers are sequentially measured.  Since a error free state is already a $+1$ eigenstate of all the 
+stabilizers, any error which anti-commutes with a stabilizer will flip the eigenstate and consequently the 
+parity measurement will return a result of $\ket{1}$.
+
+Taking the $[[7,1,3]]$ code as an example, if the error operator is 
+$E = X_i$, where $i = (1,...,7)$, 
+representing a bit-flip on any {\em one} of the 7 physical qubits, then regardless of the location, $E$ will 
+anti-commute with a unique combination of $(K^4,K^5,K^6)$.  Hence the classical results of measuring these 
+three operators will indicate if and where a single $X$ error has occurred.  Similarly, if $E=Z_i$, then the 
+error operator will anti-commute with a unique combination of, $(K^1,K^2,K^3)$.  Consequently, the first three 
+stabilizers for the $[[7,1,3]]$ code correspond to $Z$ sector correction 
+while the second three stabilizers correspond to $X$ sector correction.  Note, that correction for Pauli $Y$ errors 
+are also taken care of by correcting in the $X$ and $Z$ sector since a $Y$ error on a single qubit is 
+equivalent to both an $X$ and $Z$ error on the same qubit, i.e. $Y = iXZ$.  
 
 \subsection{Surface codes}\index{Surface codes}\label{sec:surface_codes}
 
