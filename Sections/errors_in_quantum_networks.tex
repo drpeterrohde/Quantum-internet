@@ -260,7 +260,7 @@ A qubit dephasing channel is often quoted in terms of its $T_2$-time, a characte
 p_\mathrm{no\,error} = e^{-t/T_2},	
 \end{align}
 yielding a the equivalent dephasing channel,
-\begin{align}
+\begin{align} \label{eq:T2_time}
 \mathcal{E}_t^\mathrm{dephasing}(\hat\rho) = e^{-t/T_2} \hat\rho + \frac{1}{2}(1-e^{-t/T_2})(\hat\rho + \hat{Z}\hat\rho\hat{Z}),
 \end{align}
 as shown in Fig.~\ref{fig:T2_time}. For a qubit density matrix,
@@ -277,6 +277,16 @@ this is equivalent to adding a factor of $e^{-t/T_2}$ to the two off-diagonal (c
  e^{-t/T_2}\gamma^* & \beta
 \end{pmatrix}.
 \end{align}
+
+Note that Eq.~\eqref{eq:T2_time} is parameterised into an ideal term ($\hat\rho$) and a completely dephased term ($(\hat\rho+\hat{Z}\hat\rho\hat{Z})/2$), and thus multiple rounds of this channel yields an equivalent channel where the probability associated with the former term accumulates multiplicatively,
+\begin{align}
+e^{-t'/T_2} = \prod_i e^{-t_i/T_2}	
+\end{align}
+or in logarithmic form additively, making it applicable to cost vector analysis (Sec.~\ref{sec:cost_as_dist}),
+\begin{align}
+t' = \sum_i t_i,	
+\end{align}
+providing a direct mechanism for calculating the effective dephasing rate across multiple subsequent sections in a qubit network route. The same can easily be seen to apply to depolarising (Sec.~\ref{sec:depolarising_channel}), amplitude damping (Sec.~\ref{sec:amp_damp} and loss channels (Sec.~\ref{sec:eff_err}).
 
 \begin{figure}[!htbp]
 	\includegraphics[clip=true, width=0.475\textwidth]{T2_time}
@@ -311,7 +321,7 @@ For number states not in superposition, this corresponds to a simple unimportant
 % Depolarisation
 %
 
-\subsection{Depolarisation} \index{Depolarising channel}
+\subsection{Depolarisation} \index{Depolarising channel} \label{sec:depolarising_channel}
 
 Depolarisation is a noise model more general than dephasing, that probabilistically replaces a state with the completely mixed state (regardless of the input state). That is, with some probability we lose \textit{all} quantum \textit{and} classical information, i.e both coherences and probability amplitudes. Note that the dephasing channel introduced above only destroys quantum coherence, whilst preserving amplitudes. Formally, the depolarising channel can be expressed as,
 \begin{align} \label{eq:depolarizing_channel}
