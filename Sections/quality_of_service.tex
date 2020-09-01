@@ -2,7 +2,7 @@
 % Quality of Service
 %
 
-\section{Quality of service}\index{Quantum error correction (QEC)}\index{Quality of service (QoS)}\label{sec:QOS_chap}
+\section{Error correction}\index{Quantum error correction (QEC)}\index{Quality of service (QoS)}\label{sec:QOS_chap}
 
 \famousquote{Beware of bugs in the above code. I have only proved it correct, not tried it.}{Donald Knuth}\\
 
@@ -14,109 +14,109 @@ For some simple quantum communications protocols, simple error correction (or ev
 % Entanglement Purification
 %
 
-\subsection{Entanglement purification}\index{Entanglement!Purification}
-
-As we will later see in Sec.~\ref{sec:ent_ultimate}, Bell pairs are a ubiquitous resource for many quantum information processing applications, and warrant special treatment in their own right.
-
-Entanglement purification (or distillation) is a process by which two imperfect distributed Bell pairs can be condensed into a single Bell pair of higher quality (as measured by a fidelity metric, Sec.~\ref{sec:fid_metric}).
-
-More concretely, we distribute two Bell pairs of fidelity $F$ between Alice and Bob. Let us assume a bit-flip error model in this instance\footnote{The same protocol can be employed to correct against phase-flip errors by operating in a Hadamard-rotated basis.}, in which case the imperfect Bell pairs are of the form,
-\begin{align}
-\hat\rho^F_{A,B} &= F\ket{\Phi^+}\bra{\Phi^+} + (1-F)\hat{X}_1\ket{\Phi^+}\bra{\Phi^+}\hat{X}_1 \nonumber \\
-&= F\ket{\Phi^+}\bra{\Phi^+} + (1-F)\ket{\Psi^+}\bra{\Psi^+},
-\end{align}
-That is, we have a mixture of,
-\begin{align}
-\ket{\Phi^+} = \frac{1}{\sqrt{2}}(\ket{0}_A\ket{0}_B + \ket{1}_A\ket{1}_B),	
-\end{align}
-with probability $F$, and,
-\begin{align}
-\ket{\Psi^+} = \frac{1}{\sqrt{2}}(\ket{0}_A\ket{1}_B + \ket{1}_A\ket{0}_B),	
-\end{align}
-with probability \mbox{$1-F$}. The goal is to `filter' out the latter of these.
-x 
-Alice and Bob then perform their entanglement purification protocol -- operations to reduce them to a single Bell pair of higher fidelity,
-\begin{align}
-\mathcal{E}_\mathrm{purif}(\hat\rho^{F_\mathrm{in}}_{A,B} \otimes \hat\rho^{F_\mathrm{in}}_{A,B}) \to \hat\rho^{F_\mathrm{out}}_{A,B},
-\end{align}
-where,
-\begin{align}
-F_\mathrm{out}>F_\mathrm{in}.
-\end{align}
-
-The purification process $\mathcal{E}_\mathrm{purif}$ is realised very simply by Alice and Bob both performing parity measurements\index{Bell!Measurements} on their two qubits, whose measurement outcomes indicate whether the two qubits were equal ($+$) or different ($-$) -- their parity. These are easily implemented using CNOT gates, using the construction shown in Fig.~\ref{fig:parity_meas}, which implement the projectors,
-\begin{align}\index{Bell!Measurements}\index{Parity!Projectors}
-\hat\Pi^+ &= \ket{0,0}\bra{0,0} + \ket{1,1}\bra{1,1}, \nonumber \\
-\hat\Pi^- &= \ket{0,1}\bra{0,1} + \ket{1,0}\bra{1,0}.
-\end{align}
-
-They complete the protocol by classically communicating their measurement outcomes, and performing appropriate local corrections.
-
-\begin{figure}[!htbp]
-	\begin{align}
-		\Qcircuit @C=.7em @R=.4em @! {
-		\lstick{} & \qw & \targ & \meter \\
-		\lstick{} & \qw & \ctrl{-1} & \qw
-		} \nonumber
-	\end{align}
-	\captionspacefig \caption{Construction of a parity measurement circuit using a single CNOT gate and a single-qubit measurement. The measurement outcome indicates whether the two input qubits were the same (\mbox{$\ket{0}\ket{0}$}, \mbox{$\ket{1}\ket{1}$}) or different (\mbox{$\ket{0}\ket{1}$}, \mbox{$\ket{1}\ket{0}$}). See Sec.~\ref{sec:bell_proj} for a simple linear optics construction for this operation.}\label{fig:parity_meas}\index{Bell!Measurements}
-\end{figure}
-
-Two such parity projections project a 4-qubit state down to a 2-qubit state. The full circuit for this entanglement purification protocol is shown in Fig.~\ref{fig:ent_purif_circ}.
-
-\begin{figure}[!htbp]
-\includegraphics[clip=true, width=0.39\textwidth]{entanglement_purification}
-\captionspacefig \caption{Protocol for entanglement purification of two noisy Bell pairs (blue) into a single less noisy Bell pair. Not shown are trivial single-qubit local corrections that may need to be made, depending upon measurement outcomes.} \label{fig:ent_purif_circ}\index{Entanglement!Purification}
-\end{figure}
-
-Let us illustrate the operation of the circuit by example of different possible input states.
-
-Suppose there were no errors, the ideal case. Then the input state was,
-\begin{align}
-\ket\psi_\mathrm{in} &= \ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4}\\
-&= \frac{1}{2}(\ket{0}_1\ket{0}_2+\ket{1}_1\ket{1}_2)(\ket{0}_3\ket{0}_4+\ket{1}_3\ket{1}_4).\nonumber
-\end{align}
-Upon parity measurement we obtain,
-\begin{align}
-\hat\Pi^+_{1,3} \ket{\Phi^+}_{1,2}\ket{\Phi^+}_{3,4} &= \ket{\Phi^+}_{2,4},\nonumber \\
-\hat\Pi^-_{1,3} \ket{\Phi^+}_{1,2}\ket{\Phi^+}_{3,4} &= \hat{X}_2\ket{\Phi^+}_{2,4},
-\end{align}
-and we obtain the desired output Bell pair (with an $\hat{X}$ correction in the case of the odd-parity outcome).
-
-Note that if both qubits from one Bell pair are subject to bit-flips, this is equivalent to no error, since,
-\begin{align}
-	\hat{X}_1\hat{X}_2\ket{\Phi^+}_{1,2}=\ket{\Phi^+}_{1,2}.
-\end{align}
-
-Now suppose there was a bit-flip error on the first qubit of the first pair. Now the input state is,
-\begin{align}
-\ket\psi_\mathrm{in} &= \hat{X}_1 \ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4}\\
-&= \frac{1}{2}(\ket{1}_1\ket{0}_2+\ket{0}_1\ket{1}_2)(\ket{0}_3\ket{0}_4+\ket{1}_3\ket{1}_4).\nonumber
-\end{align}
-Now upon parity measurement we obtain,
-\begin{align}
-\hat\Pi^+_{1,3} \hat{X}_1\ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4} &= \hat{X}_2\ket{\Phi^+}_{2,4},\nonumber \\
-\hat\Pi^-_{1,3} \hat{X}_1\ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4} &= \ket{\Phi^+}_{2,4},
-\end{align}
-and following correction we achieve a bit-flipped Bell pair.
-
-Finally, with both Bell pairs subject to a single bit-flip,
-\begin{align}
-\ket\psi_\mathrm{in} &= \hat{X}_1\hat{X}_3 \ket{\Phi^+}_{1,2}\ket{\Phi^+}_{3,4} \\
-&= \frac{1}{2}(\ket{1}_1\ket{0}_2+\ket{0}_1\ket{1}_2)(\ket{1}_3\ket{0}_4+\ket{0}_3\ket{1}_4).\nonumber
-\end{align}
-Upon performing the parity measurement,
-\begin{align}
-\hat\Pi^+_{1,3} \hat{X}_1\hat{X}_3\ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4} &= \ket{\Phi^+}_{2,4},\nonumber \\
-\hat\Pi^-_{1,3} \hat{X}_1\hat{X}_3\ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4} &= \hat{X}_2\ket{\Phi^+}_{2,4},
-\end{align}
-recovering the expected Bell pair, without an erroneous bit-flip.
-
-Evidently, the output Bell pair is subject to an unexpected bit-flip iff one of the Bell pairs was subject to a bit-flip error. This yields the output fidelity,
-\begin{align}
-F_\mathrm{out} = \frac{{F_\mathrm{in}}^2}{{F_\mathrm{in}}^2 + (1-F_\mathrm{in})^2},
-\end{align}
-and thus the purification protocol improves fidelity provided that \mbox{$F_\mathrm{out}>F_\mathrm{in}$}, which implies the input fidelity must satisfy \mbox{$F_\mathrm{in}>1/2$}.
+%\subsection{Entanglement purification}\index{Entanglement!Purification}
+%
+%As we will later see in Sec.~\ref{sec:ent_ultimate}, Bell pairs are a ubiquitous resource for many quantum information processing applications, and warrant special treatment in their own right.
+%
+%Entanglement purification (or distillation) is a process by which two imperfect distributed Bell pairs can be condensed into a single Bell pair of higher quality (as measured by a fidelity metric, Sec.~\ref{sec:fid_metric}).
+%
+%More concretely, we distribute two Bell pairs of fidelity $F$ between Alice and Bob. Let us assume a bit-flip error model in this instance\footnote{The same protocol can be employed to correct against phase-flip errors by operating in a Hadamard-rotated basis.}, in which case the imperfect Bell pairs are of the form,
+%\begin{align}
+%\hat\rho^F_{A,B} &= F\ket{\Phi^+}\bra{\Phi^+} + (1-F)\hat{X}_1\ket{\Phi^+}\bra{\Phi^+}\hat{X}_1 \nonumber \\
+%&= F\ket{\Phi^+}\bra{\Phi^+} + (1-F)\ket{\Psi^+}\bra{\Psi^+},
+%\end{align}
+%That is, we have a mixture of,
+%\begin{align}
+%\ket{\Phi^+} = \frac{1}{\sqrt{2}}(\ket{0}_A\ket{0}_B + \ket{1}_A\ket{1}_B),	
+%\end{align}
+%with probability $F$, and,
+%\begin{align}
+%\ket{\Psi^+} = \frac{1}{\sqrt{2}}(\ket{0}_A\ket{1}_B + \ket{1}_A\ket{0}_B),	
+%\end{align}
+%with probability \mbox{$1-F$}. The goal is to `filter' out the latter of these.
+%x 
+%Alice and Bob then perform their entanglement purification protocol -- operations to reduce them to a single Bell pair of higher fidelity,
+%\begin{align}
+%\mathcal{E}_\mathrm{purif}(\hat\rho^{F_\mathrm{in}}_{A,B} \otimes \hat\rho^{F_\mathrm{in}}_{A,B}) \to \hat\rho^{F_\mathrm{out}}_{A,B},
+%\end{align}
+%where,
+%\begin{align}
+%F_\mathrm{out}>F_\mathrm{in}.
+%\end{align}
+%
+%The purification process $\mathcal{E}_\mathrm{purif}$ is realised very simply by Alice and Bob both performing parity measurements\index{Bell!Measurements} on their two qubits, whose measurement outcomes indicate whether the two qubits were equal ($+$) or different ($-$) -- their parity. These are easily implemented using CNOT gates, using the construction shown in Fig.~\ref{fig:parity_meas}, which implement the projectors,
+%\begin{align}\index{Bell!Measurements}\index{Parity!Projectors}
+%\hat\Pi^+ &= \ket{0,0}\bra{0,0} + \ket{1,1}\bra{1,1}, \nonumber \\
+%\hat\Pi^- &= \ket{0,1}\bra{0,1} + \ket{1,0}\bra{1,0}.
+%\end{align}
+%
+%They complete the protocol by classically communicating their measurement outcomes, and performing appropriate local corrections.
+%
+%\begin{figure}[!htbp]
+%	\begin{align}
+%		\Qcircuit @C=.7em @R=.4em @! {
+%		\lstick{} & \qw & \targ & \meter \\
+%		\lstick{} & \qw & \ctrl{-1} & \qw
+%		} \nonumber
+%	\end{align}
+%	\captionspacefig \caption{Construction of a parity measurement circuit using a single CNOT gate and a single-qubit measurement. The measurement outcome indicates whether the two input qubits were the same (\mbox{$\ket{0}\ket{0}$}, \mbox{$\ket{1}\ket{1}$}) or different (\mbox{$\ket{0}\ket{1}$}, \mbox{$\ket{1}\ket{0}$}). See Sec.~\ref{sec:bell_proj} for a simple linear optics construction for this operation.}\label{fig:parity_meas}\index{Bell!Measurements}
+%\end{figure}
+%
+%Two such parity projections project a 4-qubit state down to a 2-qubit state. The full circuit for this entanglement purification protocol is shown in Fig.~\ref{fig:ent_purif_circ}.
+%
+%\begin{figure}[!htbp]
+%\includegraphics[clip=true, width=0.39\textwidth]{entanglement_purification}
+%\captionspacefig \caption{Protocol for entanglement purification of two noisy Bell pairs (blue) into a single less noisy Bell pair. Not shown are trivial single-qubit local corrections that may need to be made, depending upon measurement outcomes.} \label{fig:ent_purif_circ}\index{Entanglement!Purification}
+%\end{figure}
+%
+%Let us illustrate the operation of the circuit by example of different possible input states.
+%
+%Suppose there were no errors, the ideal case. Then the input state was,
+%\begin{align}
+%\ket\psi_\mathrm{in} &= \ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4}\\
+%&= \frac{1}{2}(\ket{0}_1\ket{0}_2+\ket{1}_1\ket{1}_2)(\ket{0}_3\ket{0}_4+\ket{1}_3\ket{1}_4).\nonumber
+%\end{align}
+%Upon parity measurement we obtain,
+%\begin{align}
+%\hat\Pi^+_{1,3} \ket{\Phi^+}_{1,2}\ket{\Phi^+}_{3,4} &= \ket{\Phi^+}_{2,4},\nonumber \\
+%\hat\Pi^-_{1,3} \ket{\Phi^+}_{1,2}\ket{\Phi^+}_{3,4} &= \hat{X}_2\ket{\Phi^+}_{2,4},
+%\end{align}
+%and we obtain the desired output Bell pair (with an $\hat{X}$ correction in the case of the odd-parity outcome).
+%
+%Note that if both qubits from one Bell pair are subject to bit-flips, this is equivalent to no error, since,
+%\begin{align}
+%	\hat{X}_1\hat{X}_2\ket{\Phi^+}_{1,2}=\ket{\Phi^+}_{1,2}.
+%\end{align}
+%
+%Now suppose there was a bit-flip error on the first qubit of the first pair. Now the input state is,
+%\begin{align}
+%\ket\psi_\mathrm{in} &= \hat{X}_1 \ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4}\\
+%&= \frac{1}{2}(\ket{1}_1\ket{0}_2+\ket{0}_1\ket{1}_2)(\ket{0}_3\ket{0}_4+\ket{1}_3\ket{1}_4).\nonumber
+%\end{align}
+%Now upon parity measurement we obtain,
+%\begin{align}
+%\hat\Pi^+_{1,3} \hat{X}_1\ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4} &= \hat{X}_2\ket{\Phi^+}_{2,4},\nonumber \\
+%\hat\Pi^-_{1,3} \hat{X}_1\ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4} &= \ket{\Phi^+}_{2,4},
+%\end{align}
+%and following correction we achieve a bit-flipped Bell pair.
+%
+%Finally, with both Bell pairs subject to a single bit-flip,
+%\begin{align}
+%\ket\psi_\mathrm{in} &= \hat{X}_1\hat{X}_3 \ket{\Phi^+}_{1,2}\ket{\Phi^+}_{3,4} \\
+%&= \frac{1}{2}(\ket{1}_1\ket{0}_2+\ket{0}_1\ket{1}_2)(\ket{1}_3\ket{0}_4+\ket{0}_3\ket{1}_4).\nonumber
+%\end{align}
+%Upon performing the parity measurement,
+%\begin{align}
+%\hat\Pi^+_{1,3} \hat{X}_1\hat{X}_3\ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4} &= \ket{\Phi^+}_{2,4},\nonumber \\
+%\hat\Pi^-_{1,3} \hat{X}_1\hat{X}_3\ket{\Phi^+}_{1,2} \ket{\Phi^+}_{3,4} &= \hat{X}_2\ket{\Phi^+}_{2,4},
+%\end{align}
+%recovering the expected Bell pair, without an erroneous bit-flip.
+%
+%Evidently, the output Bell pair is subject to an unexpected bit-flip iff one of the Bell pairs was subject to a bit-flip error. This yields the output fidelity,
+%\begin{align}
+%F_\mathrm{out} = \frac{{F_\mathrm{in}}^2}{{F_\mathrm{in}}^2 + (1-F_\mathrm{in})^2},
+%\end{align}
+%and thus the purification protocol improves fidelity provided that \mbox{$F_\mathrm{out}>F_\mathrm{in}$}, which implies the input fidelity must satisfy \mbox{$F_\mathrm{in}>1/2$}.
 
 %
 % 3-Qubit Code
